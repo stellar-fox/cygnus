@@ -21,6 +21,10 @@ const styles = {
 };
 
 class App extends Component {
+  publicKeyChanged(event, value) {
+    console.log(value)
+    // TODO: validate public key and either login/warn
+  }
 
   render() {
     return (
@@ -36,8 +40,12 @@ class App extends Component {
           <header className="App-header">
             <h1 className="App-title">Welcome to Stellar Fox</h1>
           </header>
+          <div className="App-intro">
+            To access account explorer enter your Stellar <b>Public</b> Key
+          </div>
           <MuiThemeProvider>
           <TextField
+            onChange={this.publicKeyChanged.bind(this)}
             floatingLabelText="Stellar Public Key"
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineStyle}
@@ -46,11 +54,15 @@ class App extends Component {
           />
           </MuiThemeProvider>
           <p className="App-intro">
-            For full account functionality please login with your hardware wallet:
+            For full account functionality please sign-in with your hardware wallet:
           </p>
           <MuiThemeProvider>
             <RaisedButton label="Ledger Nano S" />
           </MuiThemeProvider>
+          <div className="App-instructions">
+            Connect your Ledger Nano S hardware wallet. Choose Stellar wallet on
+            the device and click the Hardware Login button above.
+          </div>
         </div>
       </div>
     );

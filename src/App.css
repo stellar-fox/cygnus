@@ -15,8 +15,22 @@
 
 .App-navbar {
   background-color: #607D8B !important;
+  font-family: 'Roboto-Bold' !important;
 }
 
 .App-navbar h1 {
   color: #FFC107 !important;
+  letter-spacing: 1px !important;
+}
+
+.App-intro {
+  font-size: 0.85rem;
+}
+
+.App-instructions {
+  padding-top: 0.9rem;
+  font-size: 0.65rem;
+  display: flex;
+  justify-content: space-around;
+  text-align: justify;
 }
