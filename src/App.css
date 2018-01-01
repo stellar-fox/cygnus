@@ -1,0 +1,22 @@
+.App {
+  font-size: 0.95rem;
+  color: #455A64;
+}
+
+.App-title {
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.App-content {
+  text-align: center;
+  padding: 1rem;
+}
+
+.App-navbar {
+  background-color: #607D8B !important;
+}
+
+.App-navbar h1 {
+  color: #FFC107 !important;
+}
