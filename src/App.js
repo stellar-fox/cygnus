@@ -1,71 +1,30 @@
-import React, { Component } from 'react';
-import AppBar from 'material-ui/AppBar';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import './App.css';
+import React, { Component } from 'react'
+import {
+  BrowserRouter as Router,
+  Route
+} from 'react-router-dom'
+import './App.css'
+import Welcome from './pages/Welcome/Welcome'
+import AccountExplorer from './pages/AccountExplorer/AccountExplorer'
 
-const styles = {
-  errorStyle: {
-    color: '#757575',
-  },
-  underlineStyle: {
-    borderColor: '#FFC107',
-  },
-  floatingLabelStyle: {
-    color: '#CFD8DC',
-  },
-  floatingLabelFocusStyle: {
-    color: '#455A64',
-  },
-};
 
 class App extends Component {
-  publicKeyChanged(event, value) {
-    console.log(value)
-    // TODO: validate public key and either login/warn
+  constructor(props) {
+    super(props)
+    this.state = {
+      error: null,
+      aexp: true,
+    }
   }
-
   render() {
     return (
-      <div className="App">
-        <MuiThemeProvider>
-          <AppBar
-            title="Stellar Fox"
-            iconClassNameRight="muidocs-icon-navigation-expand-more"
-            className="App-navbar"
-          />
-        </MuiThemeProvider>
-        <div className="App-content">
-          <header className="App-header">
-            <h1 className="App-title">Welcome to Stellar Fox</h1>
-          </header>
-          <div className="App-intro">
-            To access account explorer enter your Stellar <b>Public</b> Key
-          </div>
-          <MuiThemeProvider>
-          <TextField
-            onChange={this.publicKeyChanged.bind(this)}
-            floatingLabelText="Stellar Public Key"
-            underlineStyle={styles.underlineStyle}
-            underlineFocusStyle={styles.underlineStyle}
-            floatingLabelStyle={styles.floatingLabelStyle}
-            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-          />
-          </MuiThemeProvider>
-          <p className="App-intro">
-            For full account functionality please sign-in with your hardware wallet:
-          </p>
-          <MuiThemeProvider>
-            <RaisedButton label="Ledger Nano S" />
-          </MuiThemeProvider>
-          <div className="App-instructions">
-            Connect your Ledger Nano S hardware wallet. Choose Stellar wallet on
-            the device and click the Hardware Login button above.
-          </div>
+      <Router>
+        <div className="App">
+          <Route exact path="/" component={Welcome} />
+          <Route exact path="/aexp" component={AccountExplorer} />
         </div>
-      </div>
-    );
+      </Router>
+    )
   }
 }
 
