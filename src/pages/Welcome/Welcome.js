@@ -20,6 +20,9 @@ const styles = {
   floatingLabelFocusStyle: {
     color: '#455A64',
   },
+  inputStyle: {
+    color: 'rgb(244,176,4)',
+  },
 }
 
 export default class Contact extends Component {
@@ -29,6 +32,17 @@ export default class Contact extends Component {
       error: null,
       aexp: false,
     }
+  }
+
+  componentDidMount(){
+    new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
+      function() {
+        console.log('Ledger Nano S is now connected.')
+      },
+      function(err) {
+        console.error(err)
+      }
+    )
   }
 
   publicKeyChanged(event, value) {
@@ -60,7 +74,7 @@ export default class Contact extends Component {
         }}/> : null}
         <MuiThemeProvider>
           <AppBar
-            title="Stellar Fox"
+            title="Stellar Fox [Cygnus] - Alpha Preview"
             className="App-navbar"
           />
         </MuiThemeProvider>
@@ -80,6 +94,7 @@ export default class Contact extends Component {
               underlineFocusStyle={styles.underlineStyle}
               floatingLabelStyle={styles.floatingLabelStyle}
               floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+              inputStyle={styles.inputStyle}
             />
           </MuiThemeProvider>
           <p className="App-intro">

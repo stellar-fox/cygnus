@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 100;
   src: local('Roboto'),
-       url('./fonts/Roboto-Thin.ttf') format('truetype')
+       url('./fonts/Roboto-Regular.ttf') format('truetype')
 }
 
 @font-face {
@@ -11,7 +11,7 @@
   font-style: normal;
   font-weight: 100;
   src: local('Roboto-Italic'),
-       url('./fonts/Roboto-ThinItalic.ttf') format('truetype')
+       url('./fonts/Roboto-Italic.ttf') format('truetype')
 }
 
 @font-face {
@@ -19,13 +19,14 @@
   font-style: normal;
   font-weight: 100;
   src: local('Roboto-Bold'),
-       url('./fonts/Roboto-Regular.ttf') format('truetype')
+       url('./fonts/Roboto-Bold.ttf') format('truetype')
 }
 
 body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
+  background-color: rgb(15,46,83);
 }
 
 i {

@@ -11,15 +11,16 @@
 .App-content {
   text-align: center;
   padding: 1rem;
+  color: rgb(244,176,4);
 }
 
 .App-navbar {
-  background-color: #607D8B !important;
+  background-color: rgb(244,176,4) !important;
   font-family: 'Roboto-Bold' !important;
 }
 
 .App-navbar h1 {
-  color: #FFC107 !important;
+  color: rgb(15,46,83) !important;
   letter-spacing: 1px !important;
 }
 
