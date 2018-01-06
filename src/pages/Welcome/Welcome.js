@@ -6,6 +6,7 @@ import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import AppBar from 'material-ui/AppBar'
+import CircularProgress from 'material-ui/CircularProgress'
 
 const styles = {
   errorStyle: {
@@ -31,6 +32,7 @@ export default class Contact extends Component {
     this.state = {
       error: null,
       aexp: false,
+      isLoading: false,
     }
   }
 
@@ -38,6 +40,16 @@ export default class Contact extends Component {
     new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
       function() {
         console.log('Ledger Nano S is now connected.')
+        let bip32Path = "44'/148'/0'";
+        window.StellarLedger.comm.create_async().then(function(comm) {
+          let api = new window.StellarLedger.Api(comm)
+          return api.getPublicKey_async(bip32Path).then(function (result) {
+            let publicKey = result['publicKey']
+            console.log(publicKey)
+          }).catch(function (err) {
+              console.error(err)
+          })
+        })
       },
       function(err) {
         console.error(err)
@@ -45,17 +57,26 @@ export default class Contact extends Component {
     )
   }
 
+
   publicKeyChanged(event, value) {
     if(value.length === 56) {
       try {
-        window.StellarBase.Keypair.fromPublicKey(value)
+        window.StellarSdk.Keypair.fromPublicKey(value)
         sessionStorage.setItem('pubKey', value);
-        setTimeout(() => {
-          this.setState({
-            error: null,
-            aexp: true,
-          })
-        }, 500)
+
+        this.setState({
+          isLoading: true
+        }, (prevState) => {
+          setTimeout(() => {
+            this.setState({
+              error: null,
+              aexp: true,
+              isLoading: false,
+            })
+          }, 1500)
+        })
+
+
 
       } catch (e) {
         this.setState({
@@ -97,11 +118,17 @@ export default class Contact extends Component {
               inputStyle={styles.inputStyle}
             />
           </MuiThemeProvider>
-          <p className="App-intro">
-            For full account functionality please sign-in with your hardware wallet:
+          <MuiThemeProvider>
+            <div>
+              {this.state.isLoading ? <CircularProgress/> : null}
+            </div>
+          </MuiThemeProvider>
+
+          <p className="App-intro p-t-large">
+            For full account functionality please sign-in with your hardware wallet.
           </p>
           <MuiThemeProvider>
-            <RaisedButton label="Ledger Nano S" />
+            <RaisedButton backgroundColor="rgb(244,176,4)" label="Ledger Nano S" />
           </MuiThemeProvider>
           <div className="App-instructions">
             Connect your Ledger Nano S hardware wallet. Choose Stellar wallet on

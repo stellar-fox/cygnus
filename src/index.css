@@ -36,3 +36,19 @@ i {
 b {
   font-family: 'Roboto-Bold', sans-serif;
 }
+
+.p-t {
+  padding-top: 1rem;
+}
+
+.p-t-large {
+  padding-top: 2rem;
+}
+
+.spinner-modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
