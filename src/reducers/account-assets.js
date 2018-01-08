@@ -1,8 +1,12 @@
 export default function () {
   return [
     {
-      CNY: 1.2001,
-      HUG: 1.00001,
+      asset_code: 'CNY',
+      balance: 3.20003,
+    },
+    {
+      asset_code: 'HUG',
+      balance: 1.00001,
     }
   ]
 }
