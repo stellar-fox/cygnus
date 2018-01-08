@@ -22,14 +22,16 @@
        url('./fonts/Roboto-Bold.ttf') format('truetype')
 }
 
-body {
+html, body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
   background-color: rgb(15,46,83);
+  color: rgb(244,176,4);
+  height: 100%;
 }
 
-i {
+/* i {
   font-family: 'Roboto-Italic', sans-serif;
 }
 
@@ -51,4 +53,4 @@ b {
   top: 50%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-}
+} */
