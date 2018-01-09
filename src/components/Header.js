@@ -2,14 +2,22 @@ import React, {Component} from 'react'
 
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import {sideBarMenuSelect, sideBarMenuToggle} from '../actions/index'
+import {
+  sideBarMenuSelect,
+  sideBarMenuToggle,
+  logOutButtonPress,
+  logInViaPublicKey,
+} from '../actions/index'
 
 import {NavLink} from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
 import './Header.css'
-
+import AppBarTitle from './AppBarTitle'
+import AppBarItems from './AppBarItems'
+import IconButton from 'material-ui/IconButton'
+import PowerSettingsNew from 'material-ui/svg-icons/action/power-settings-new'
 
 class Header extends Component {
   handleToggle() {
@@ -20,11 +28,9 @@ class Header extends Component {
     setTimeout(() => {
       this.props.sideBarMenuToggle(false)
     }, 300)
-
   }
-
-  componentDidMount() {
-    // this.props.sideBarMenuSelect('Stellar Fox')
+  handleLogOutClick(state) {
+    this.props.logOutButtonPress(state)
   }
 
   render() {
@@ -32,7 +38,12 @@ class Header extends Component {
       <MuiThemeProvider>
         <div>
         <AppBar
-          title={"Stellar Fox - " + this.props.view}
+          title={
+            <div className="flex-row">
+              <AppBarTitle title="Stellar Fox" subtitle={this.props.view}/>
+              <AppBarItems accountNumber={this.props.currentAccount}/>
+            </div>
+          }
           className="navbar"
           style={{
             position:'fixed',
@@ -40,6 +51,11 @@ class Header extends Component {
             top:0
           }}
           onLeftIconButtonClick={this.handleToggle.bind(this)}
+          iconElementRight={this.props.isAuthenticated ?
+            <IconButton onClick={this.handleLogOutClick.bind(this, false)}>
+              <PowerSettingsNew />
+            </IconButton> : null
+          }
         />
         <Drawer containerStyle={{
           width: 180,
@@ -52,20 +68,22 @@ class Header extends Component {
           borderBottomRightRadius: '3px',
           backgroundColor: '#2e5077'
         }} open={this.props.drawer}>
-            <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Balances')} exact activeClassName="active" to="/balances/">
-              <i style={{fontSize: 21, verticalAlign: 'text-bottom', paddingRight: 10}} className="material-icons">account_balance_wallet</i>Balances
+            <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Balances')} exact activeClassName="active" to="/">
+              <i className="material-icons">account_balance_wallet</i>Balances
             </NavLink>
             <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Payments')} exact activeClassName="active" to="/payments/">
-              <i style={{fontSize: 21, verticalAlign: 'text-bottom', paddingRight: 10}} className="material-icons">payment</i>Payments
+              <i className="material-icons">payment</i>Payments
             </NavLink>
             <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Account')} exact activeClassName="active" to="/account/">
-              <i style={{fontSize: 21, verticalAlign: 'text-bottom', paddingRight: 10}} className="material-icons">account_balance</i>Account
+              <i className="material-icons">account_balance</i>Account
             </NavLink>
-            <div>{this.props.assets.map((asset) => {
-              return (
-                <p key={asset.asset_code}>{asset.asset_code} : {asset.balance}</p>
-              )
-            })}</div>
+            <div>
+              {this.props.assets.map((asset) => {
+                return (
+                  <p key={asset.asset_code}>{asset.asset_code} : {asset.balance}</p>
+                )
+              })}
+            </div>
         </Drawer>
         </div>
       </MuiThemeProvider>
@@ -78,11 +96,18 @@ function mapStateToProps(state) {
     assets: state.accountAssets,
     view: state.selectedView,
     drawer: state.drawerState,
+    isAuthenticated: state.isAuthenticated,
+    currentAccount: state.currentAccount,
   }
 }
 
 function matchDispatchToProps(dispatch) {
-  return bindActionCreators({sideBarMenuSelect, sideBarMenuToggle}, dispatch)
+  return bindActionCreators({
+    sideBarMenuSelect,
+    sideBarMenuToggle,
+    logOutButtonPress,
+    logInViaPublicKey,
+  }, dispatch)
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(Header)

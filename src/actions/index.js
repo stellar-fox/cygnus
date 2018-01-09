@@ -11,3 +11,24 @@ export const sideBarMenuToggle = (state) => {
     payload: state,
   }
 }
+
+export const logOutButtonPress = (state) => {
+  return {
+    type: 'LOG_OUT',
+    payload: state,
+  }
+}
+
+export const logInViaPublicKey = (state) => {
+  return {
+    type: 'LOG_IN',
+    payload: state,
+  }
+}
+
+export const updateAccountNumber = (state) => {
+  return {
+    type: 'ACCOUNT_NUMBER_UPDATED',
+    payload: state,
+  }
+}

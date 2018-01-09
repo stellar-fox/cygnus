@@ -34,3 +34,9 @@ a.active {
   white-space: nowrap;
   padding-left: 10px;
 }
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

@@ -1,29 +1,41 @@
-import React from 'react'
-import {BrowserRouter as Router, Route} from 'react-router-dom'
+import React, {Component} from 'react'
+import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom'
+import {connect} from 'react-redux'
 import './Layout.css'
 import Header from './Header'
 import Content from './Content'
 import Footer from './Footer'
 import Welcome from './Welcome'
-import Faq from './Faq'
 
-const isAuthenticated = true
-
-const Layout = () => (
-  <div>
-    <Router>
+class Layout extends Component {
+  render() {
+    return (
       <div>
-      <Route exact path="/" component={Welcome}/>
-      <Route exact path="/faq" component={Faq}/>
-      {isAuthenticated ?
-      <div>
-        <Header/>
-        <Content />
-        <Footer />
-      </div> : null}
+        <Router>
+          <div>
+            {this.props.isAuthenticated ?
+              <div>
+                <Header/>
+                <Content />
+                <Footer />
+              </div> : (
+                <Switch>
+                  <Route exact path="/" component={Welcome}/>
+                  <Redirect to="/"/>
+                </Switch>
+              )
+            }
+          </div>
+        </Router>
       </div>
-    </Router>
-  </div>
-)
+    )
+  }
+}
 
-export default Layout
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.isAuthenticated,
+  }
+}
+
+export default connect(mapStateToProps)(Layout)

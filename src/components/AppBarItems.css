@@ -1,0 +1,7 @@
+div.app-bar-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 15px;
+  color: rgb(15,46,83);
+}

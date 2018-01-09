@@ -1,0 +1,12 @@
+div.app-bar-title {
+  display: flex;
+  flex-direction: column;
+  color: rgb(15,46,83);
+}
+div.title {
+  line-height: 45px;
+}
+div.subtitle {
+  line-height: 5px;
+  font-size: 15px;
+}

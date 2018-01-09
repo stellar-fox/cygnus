@@ -31,6 +31,12 @@ html, body {
   height: 100%;
 }
 
+.material-icons {
+  font-size: 21px !important;
+  vertical-align: text-bottom;
+  padding-right: 10px;
+}
+
 /* i {
   font-family: 'Roboto-Italic', sans-serif;
 }

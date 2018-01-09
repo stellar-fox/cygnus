@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
-import {Route} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 import {connect} from 'react-redux'
 import './Content.css'
-
 
 import Balances from './Balances'
 import Payments from './Payments'
@@ -15,9 +14,13 @@ class Content extends Component {
       <div style={{
         paddingLeft: this.props.drawer ? 200 : 20
       }} className='content'>
-        <Route exact path="/balances" component={Balances}/>
+      <Switch>
+        <Route exact path="/" component={Balances}/>
         <Route exact path="/payments" component={Payments}/>
         <Route exact path="/account" component={Account}/>
+      </Switch>
+
+
       </div>
     )
   }

@@ -1,10 +1,14 @@
-import React from 'react'
+import React, {Component} from 'react'
 import './Balances.css'
 
-const Balances = () => (
-  <div>
-    Balances
-  </div>
-)
+class Balances extends Component {
+  render() {
+    return (
+      <div>
+        Balances
+      </div>
+    )
+  }
+}
 
 export default Balances
