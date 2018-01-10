@@ -31,6 +31,7 @@ class Header extends Component {
   }
   handleLogOutClick(state) {
     this.props.logOutButtonPress(state)
+    sessionStorage.clear()
   }
 
   render() {
@@ -77,13 +78,6 @@ class Header extends Component {
             <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Account')} exact activeClassName="active" to="/account/">
               <i className="material-icons">account_balance</i>Account
             </NavLink>
-            <div>
-              {this.props.assets.map((asset) => {
-                return (
-                  <p key={asset.asset_code}>{asset.asset_code} : {asset.balance}</p>
-                )
-              })}
-            </div>
         </Drawer>
         </div>
       </MuiThemeProvider>

@@ -1,0 +1,118 @@
+.faded-image.cash {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(244,176,4,0.2);
+  border-bottom: 1px solid rgba(244,176,4,0.2);
+  background-color: rgba(244,176,4,0.2);
+  opacity: 1;
+}
+
+.faded-image.cash:before {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+    background-image: url("/img/money01.jpg");
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+.faded-image.cash:hover {
+  transition: background-color 1s ease-in-out;
+  background-color: rgba(244,176,4,0.2);
+}
+
+.faded-image.cash:not(:hover) {
+  transition: background-color 1s ease-in-out;
+  background-color: unset;
+}
+
+.hero {
+	text-align: center;
+	font-size: 2rem;
+	padding: 1rem;
+  position: relative;
+  text-shadow: 0px 0px 5px rgb(15,46,83);
+}
+
+.container {
+  position: relative;
+  padding: 1rem;
+}
+
+.centered {
+  text-align: center;
+}
+
+.mui-text-input {
+  margin-top: -0.8rem;
+}
+
+.title-small {
+  font-size: 0.8rem;
+}
+
+.subtitle {
+  padding-top: 5px;
+  padding-bottom: 1rem;
+  color: rgb(212,228,188);
+  font-size: 1.1rem;
+}
+
+.columns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.column {
+  font-size: 1.1rem;
+  text-align: left;
+}
+
+.col-header {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.col-item {
+  font-size: 0.91rem;
+  color: rgb(212,228,188);
+  text-align: left;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+.progress {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.progress-label {
+  padding-top: 0.3rem;
+  font-size: 0.7rem;
+}
+
+.svg {
+  width: 100px;
+}
+
+.svg-logo-ledger {
+  fill: rgba(244,176,4,1);
+}
+
+.svg-logo-stellar {
+  fill: rgb(77,186,232);
+}
+
+.p-t-large {
+  padding-top: 3rem;
+}

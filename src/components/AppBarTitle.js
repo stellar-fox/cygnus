@@ -5,10 +5,10 @@ class AppBarTitle extends Component {
   render() {
     return (
       <div className="app-bar-title">
-        <div className="title">
+        <div className="bar-title">
           {this.props.title}
         </div>
-        <div className="subtitle">
+        <div className="bar-subtitle">
           {this.props.subtitle}
         </div>
       </div>
