@@ -91,14 +91,28 @@
   padding-bottom: 0.2rem;
 }
 
-.progress {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+.progress-modal {
+  position: absolute;
+  display: block;
+  background-color: rgb(15,46,83);
+  opacity: 0.8;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
 }
 
-.progress-label {
-  padding-top: 0.3rem;
-  font-size: 0.7rem;
+.progress-spinner {
+  position: absolute;
+  display: block;
+  top: 40%;
+  left: 50%;
+}
+
+.progress-message {
+  position: absolute;
+  display: block;
+  top: 1%;
+  left: 1%;
 }
 
 .svg {
@@ -113,6 +127,18 @@
   fill: rgb(77,186,232);
 }
 
+.p-t {
+  padding-top: 1rem;
+}
+
 .p-t-large {
   padding-top: 3rem;
+}
+
+div.flex-centered {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+  margin-right: 5%;
+  /* align-items: center; */
 }

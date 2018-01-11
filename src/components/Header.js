@@ -72,12 +72,18 @@ class Header extends Component {
             <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Balances')} exact activeClassName="active" to="/">
               <i className="material-icons">account_balance_wallet</i>Balances
             </NavLink>
-            <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Payments')} exact activeClassName="active" to="/payments/">
-              <i className="material-icons">payment</i>Payments
-            </NavLink>
-            <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Account')} exact activeClassName="active" to="/account/">
-              <i className="material-icons">account_balance</i>Account
-            </NavLink>
+            {this.props.accountExists ?
+            (
+              <div>
+                <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Payments')} exact activeClassName="active" to="/payments/">
+                  <i className="material-icons">payment</i>Payments
+                </NavLink>
+                <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Account')} exact activeClassName="active" to="/account/">
+                  <i className="material-icons">account_balance</i>Account
+                </NavLink>
+              </div>
+            ) : null}
+
         </Drawer>
         </div>
       </MuiThemeProvider>
@@ -87,6 +93,7 @@ class Header extends Component {
 
 function mapStateToProps(state) {
   return {
+    accountExists: state.accountExists,
     assets: state.accountAssets,
     view: state.selectedView,
     drawer: state.drawerState,

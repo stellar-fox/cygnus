@@ -1,3 +1,17 @@
+export const setAccountExists = (state) => {
+  return {
+    type: 'SET_ACCOUNT_EXISTS',
+    payload: state,
+  }
+}
+
+export const setProgressMessage = (state) => {
+  return {
+    type: 'SET_PROGRESS_MESSAGE',
+    payload: state,
+  }
+}
+
 export const sideBarMenuSelect = (path) => {
   return {
     type: 'SIDE_MENU_ITEM_CLICKED',

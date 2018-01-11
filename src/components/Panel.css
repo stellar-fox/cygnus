@@ -1,0 +1,25 @@
+article.message {
+  border: 1px solid rgba(244,176,4,0.8);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+div.message-header {
+  background-color: rgba(244,176,4,0.85);
+}
+
+div.message-header p {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  margin-left: 5px;
+  margin-right: 5px;
+  color: rgba(15,46,83,0.9);
+  font-size: smaller;
+  font-weight: 600;
+}
+
+div.message-body {
+  margin: 1.5rem;
+  text-align: left;
+}
