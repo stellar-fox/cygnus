@@ -21,9 +21,6 @@ import IconButton from 'material-ui/IconButton'
 import PowerSettingsNew from 'material-ui/svg-icons/action/power-settings-new'
 
 class Header extends Component {
-  componentDidMount() {
-    this.props.openDrawer()
-  }
   handleToggle() {
     this.props.ui.drawer.isOpened ?
      this.props.closeDrawer() : this.props.openDrawer()

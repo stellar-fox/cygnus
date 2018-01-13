@@ -7,23 +7,8 @@ import Content from './Content'
 import Footer from './Footer'
 import Welcome from './Welcome'
 
+
 class Layout extends Component {
-  // componentDidMount() {
-  //   if (sessionStorage.getItem('pubKey') !== null) {
-  //     if (sessionStorage.getItem('accountExists') === 'true') {
-  //       this.props.setAccountExists(true)
-  //     } else {
-  //       this.props.setAccountExists(false)
-  //     }
-  //     this.props.logInViaPublicKey(true)
-  //     this.props.sideBarMenuToggle(true)
-  //     this.props.sideBarMenuSelect('Balances')
-  //     this.props.updateAccountNumber(
-  //       sessionStorage.getItem('pubKey').slice(0, 6) + '-' +
-  //       sessionStorage.getItem('pubKey').slice(50)
-  //     )
-  //   }
-  // }
   render() {
     return (
       <div>
@@ -55,5 +40,6 @@ function mapStateToProps(state) {
     auth: state.auth,
   }
 }
+
 
 export default connect(mapStateToProps)(Layout)

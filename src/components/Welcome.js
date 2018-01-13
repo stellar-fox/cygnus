@@ -21,7 +21,7 @@ import Panel from './Panel'
 
 const styles = {
   errorStyle: {
-    color: '#757575',
+    color: '#912d35',
   },
   underlineStyle: {
     borderColor: '#FFC107',
@@ -252,6 +252,7 @@ class Welcome extends Component {
                       onChange={this.publicKeyChanged.bind(this)}
                       floatingLabelText="Stellar Public Key"
                       errorText={this.props.accountInfo.message}
+                      errorStyle={styles.errorStyle}
                       underlineStyle={styles.underlineStyle}
                       underlineFocusStyle={styles.underlineStyle}
                       floatingLabelStyle={styles.floatingLabelStyle}

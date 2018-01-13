@@ -11,9 +11,15 @@ import registerServiceWorker from './registerServiceWorker';
 
 import {createLogger} from 'redux-logger'
 import thunk from 'redux-thunk'
+import {loadState, saveState} from './load-state'
 
+const persistedState = loadState()
 const middleware = applyMiddleware(thunk, createLogger())
-const store = createStore(reducers, middleware)
+const store = createStore(reducers, persistedState, middleware)
+
+store.subscribe(() => {
+  saveState(store.getState())
+})
 
 // store.dispatch((dispatch) => {
 //   try {
