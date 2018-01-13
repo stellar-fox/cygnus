@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
-
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {
-  sideBarMenuSelect,
-  sideBarMenuToggle,
-  logOutButtonPress,
-  logInViaPublicKey,
+  logOut,
+  logIn,
+  openDrawer,
+  closeDrawer,
+  clearAccountInfo,
+  selectView,
 } from '../actions/index'
 
 import {NavLink} from 'react-router-dom'
@@ -20,17 +21,23 @@ import IconButton from 'material-ui/IconButton'
 import PowerSettingsNew from 'material-ui/svg-icons/action/power-settings-new'
 
 class Header extends Component {
-  handleToggle() {
-    this.props.sideBarMenuToggle(!this.props.drawer)
+  componentDidMount() {
+    this.props.openDrawer()
   }
-  handleMenuClick(title, obj) {
-    this.props.sideBarMenuSelect(title)
+  handleToggle() {
+    this.props.ui.drawer.isOpened ?
+     this.props.closeDrawer() : this.props.openDrawer()
+  }
+  handleMenuClick(view, obj) {
+    this.props.selectView(view)
     setTimeout(() => {
-      this.props.sideBarMenuToggle(false)
+      this.props.closeDrawer()
     }, 300)
   }
   handleLogOutClick(state) {
-    this.props.logOutButtonPress(state)
+    this.props.logOut()
+    this.props.clearAccountInfo()
+    this.props.selectView('/')
     sessionStorage.clear()
   }
 
@@ -38,53 +45,63 @@ class Header extends Component {
     return (
       <MuiThemeProvider>
         <div>
-        <AppBar
-          title={
-            <div className="flex-row">
-              <AppBarTitle title="Stellar Fox" subtitle={this.props.view}/>
-              <AppBarItems accountNumber={this.props.currentAccount}/>
-            </div>
-          }
-          className="navbar"
-          style={{
-            position:'fixed',
-            left:0,
-            top:0
-          }}
-          onLeftIconButtonClick={this.handleToggle.bind(this)}
-          iconElementRight={this.props.isAuthenticated ?
-            <IconButton onClick={this.handleLogOutClick.bind(this, false)}>
-              <PowerSettingsNew />
-            </IconButton> : null
-          }
-        />
-        <Drawer containerStyle={{
-          width: 180,
-          height: 'calc(100% - 100px)',
-          top: 65,
-          borderTop: '1px solid #052f5f',
-          borderBottom: '1px solid #052f5f',
-          borderLeft: '1px solid #052f5f',
-          borderTopRightRadius: '3px',
-          borderBottomRightRadius: '3px',
-          backgroundColor: '#2e5077'
-        }} open={this.props.drawer}>
-            <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Balances')} exact activeClassName="active" to="/">
-              <i className="material-icons">account_balance_wallet</i>Balances
-            </NavLink>
-            {this.props.accountExists ?
-            (
-              <div>
-                <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Payments')} exact activeClassName="active" to="/payments/">
-                  <i className="material-icons">payment</i>Payments
-                </NavLink>
-                <NavLink className='menu-item' onClick={this.handleMenuClick.bind(this, 'Account')} exact activeClassName="active" to="/account/">
-                  <i className="material-icons">account_balance</i>Account
-                </NavLink>
+          <AppBar
+            title={
+              <div className="flex-row">
+                <AppBarTitle title="Stellar Fox" subtitle={
+                  this.props.nav.view
+                }/>
+                <AppBarItems accountNumber={
+                  this.props.accountInfo.pubKey.slice(0,6) +
+                  '-' + this.props.accountInfo.pubKey.slice(50)
+                }/>
               </div>
-            ) : null}
-
-        </Drawer>
+            }
+            className="navbar"
+            style={{
+              position:'fixed',
+              left:0,
+              top:0
+            }}
+            onLeftIconButtonClick={this.handleToggle.bind(this)}
+            iconElementRight={this.props.auth.isAuthenticated ?
+              <IconButton onClick={this.handleLogOutClick.bind(this, false)}>
+                <PowerSettingsNew />
+              </IconButton> : null
+            }
+          />
+          <Drawer containerStyle={{
+            width: 180,
+            height: 'calc(100% - 100px)',
+            top: 65,
+            borderTop: '1px solid #052f5f',
+            borderBottom: '1px solid #052f5f',
+            borderLeft: '1px solid #052f5f',
+            borderTopRightRadius: '3px',
+            borderBottomRightRadius: '3px',
+            backgroundColor: '#2e5077'
+          }} open={this.props.ui.drawer.isOpened}>
+              <NavLink className='menu-item'
+                onClick={this.handleMenuClick.bind(this, 'Balances')}
+                exact activeClassName="active" to="/">
+                <i className="material-icons">account_balance_wallet</i>Balances
+              </NavLink>
+              {this.props.accountInfo.exists ?
+              (
+                <div>
+                  <NavLink className='menu-item'
+                    onClick={this.handleMenuClick.bind(this, 'Payments')}
+                    exact activeClassName="active" to="/payments/">
+                    <i className="material-icons">payment</i>Payments
+                  </NavLink>
+                  <NavLink className='menu-item'
+                    onClick={this.handleMenuClick.bind(this, 'Account')}
+                    exact activeClassName="active" to="/account/">
+                    <i className="material-icons">account_balance</i>Account
+                  </NavLink>
+                </div>
+              ) : null}
+          </Drawer>
         </div>
       </MuiThemeProvider>
     )
@@ -93,21 +110,21 @@ class Header extends Component {
 
 function mapStateToProps(state) {
   return {
-    accountExists: state.accountExists,
-    assets: state.accountAssets,
-    view: state.selectedView,
-    drawer: state.drawerState,
-    isAuthenticated: state.isAuthenticated,
-    currentAccount: state.currentAccount,
+    accountInfo: state.accountInfo,
+    auth: state.auth,
+    nav: state.nav,
+    ui: state.ui
   }
 }
 
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({
-    sideBarMenuSelect,
-    sideBarMenuToggle,
-    logOutButtonPress,
-    logInViaPublicKey,
+    logOut,
+    logIn,
+    openDrawer,
+    closeDrawer,
+    clearAccountInfo,
+    selectView,
   }, dispatch)
 }
 

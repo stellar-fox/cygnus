@@ -6,12 +6,16 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import TextField from 'material-ui/TextField'
 import CircularProgress from 'material-ui/CircularProgress'
 import {
-  setAccountExists,
-  setProgressMessage,
-  logInViaPublicKey,
-  sideBarMenuToggle,
-  sideBarMenuSelect,
-  updateAccountNumber,
+  setPublicKeyValid,
+  setPublicKeyInvalid,
+  accountExistsOnLedger,
+  accountMissingOnLedger,
+  setModalLoading,
+  setModalLoaded,
+  updateLoadingMessage,
+  logIn,
+  logOut,
+  selectView,
 } from '../actions/index'
 import Panel from './Panel'
 
@@ -34,62 +38,70 @@ const styles = {
 }
 
 class Welcome extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      error: null,
-      isLoading: false,
-    }
-  }
 
   publicKeyChanged(event, value) {
-    if(value.length === 56) {
-      try {
-        window.StellarSdk.Keypair.fromPublicKey(value)
-        this.setState({
-          isLoading: true,
-          error: null,
-        }, (prevState) => {
-          sessionStorage.setItem('pubKey', value);
-          this.props.setProgressMessage('Querying Stellar Network ...')
-          setTimeout(() => {
-            let that = this
-            let server = new window.StellarSdk.Server('https://horizon.stellar.org')
-            server.loadAccount(value)
-              .catch(window.StellarSdk.NotFoundError, function (error) {
-                throw new Error('The destination account does not exist!');
-              })
-              .then(function() {
-                that.props.setProgressMessage('Account Found. Loading account info ...')
-                return server.loadAccount(value);
-              })
-              .then(function(sourceAccount) {
-                that.props.setAccountExists(true)
-                that.props.logInViaPublicKey(true)
-                that.props.sideBarMenuToggle(true)
-                that.props.sideBarMenuSelect('Balances')
-                that.props.updateAccountNumber(
-                  sessionStorage.getItem('pubKey').slice(0, 6) + '-' +
-                  sessionStorage.getItem('pubKey').slice(50)
-                )
-              }, function (e) {
-                that.props.setAccountExists(false)
-                that.props.logInViaPublicKey(true)
-                that.props.sideBarMenuToggle(true)
-                that.props.sideBarMenuSelect('Balances')
-                that.props.updateAccountNumber(
-                  sessionStorage.getItem('pubKey').slice(0, 6) + '-' +
-                  sessionStorage.getItem('pubKey').slice(50)
-                )
-                console.log(e.message)
-              })
-          }, 300)
+    switch (true) {
+      case value.length < 56:
+        this.props.setPublicKeyInvalid({
+          pubKey: value,
+          message: ('Needs ' + (56-value.length) + ' characters.'),
         })
-      } catch (e) {
-        this.setState({
-          error: e.message
-        })
-      }
+        break;
+      case value.length === 56:
+        try {
+          // 1. validate public key
+          window.StellarSdk.Keypair.fromPublicKey(value)
+          this.props.setPublicKeyValid({
+            pubKey: value,
+            message: null,
+          })
+          sessionStorage.setItem('SFOX.ACCT_PUBKEY', value)
+
+          // 2. show loading modal
+          this.props.setModalLoading()
+
+          // 3. load account info
+          let that = this
+          let server = new window.StellarSdk.Server('https://horizon.stellar.org')
+          this.props.updateLoadingMessage({
+            message: 'Searching for Account ...',
+          })
+          server.loadAccount(value)
+            .catch(window.StellarSdk.NotFoundError, function (error) {
+              throw new Error('The destination account does not exist!');
+            })
+            .then(function(account) {
+              that.props.updateLoadingMessage({
+                message: 'Account found. Loading account info ...',
+              })
+              that.props.accountExistsOnLedger({account}) // ===> THAT <=== !!!!
+              sessionStorage.setItem('SFOX.ACCT_EXISTS', true)
+              that.props.selectView('Balances')
+              that.props.logIn()
+              that.props.setModalLoaded()
+              that.props.updateLoadingMessage({
+                message: null,
+              })
+            }, function (e) {
+              that.props.accountMissingOnLedger() // ===> THAT <=== !!!!
+              sessionStorage.setItem('SFOX.ACCT_EXISTS', false)
+              that.props.selectView('Balances')
+              that.props.logIn()
+              that.props.setModalLoaded()
+              that.props.updateLoadingMessage({
+                message: null,
+              })
+            })
+
+        } catch (e) {
+          this.props.setPublicKeyInvalid({
+            pubKey: value,
+            message: (e.message),
+          })
+        }
+        break;
+      default:
+        break;
     }
   }
 
@@ -98,13 +110,13 @@ class Welcome extends Component {
       <div>
         <MuiThemeProvider>
         <div>
-          {this.state.isLoading ? (
+          {this.props.loadingModal.loading ? (
             <div className="progress-modal">
               <div className="progress-spinner">
                 <CircularProgress thickness={5} size={80} color='rgb(244,176,4)'/>
               </div>
               <div className="progress-message">
-                {this.props.progressMessage}
+                {this.props.loadingModal.message}
               </div>
             </div>
           ) : null}
@@ -239,7 +251,7 @@ class Welcome extends Component {
                     <TextField
                       onChange={this.publicKeyChanged.bind(this)}
                       floatingLabelText="Stellar Public Key"
-                      errorText={this.state.error}
+                      errorText={this.props.accountInfo.message}
                       underlineStyle={styles.underlineStyle}
                       underlineFocusStyle={styles.underlineStyle}
                       floatingLabelStyle={styles.floatingLabelStyle}
@@ -259,18 +271,27 @@ class Welcome extends Component {
 
 function mapStateToProps(state) {
   return {
-    progressMessage: state.progressMessage
+    progressMessage: state.progressMessage,
+
+    accountInfo: state.accountInfo,
+    loadingModal: state.loadingModal,
+    auth: state.auth,
+    nav: state.nav,
   }
 }
 
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({
-    setAccountExists,
-    setProgressMessage,
-    logInViaPublicKey,
-    sideBarMenuToggle,
-    sideBarMenuSelect,
-    updateAccountNumber,
+    setPublicKeyValid,
+    setPublicKeyInvalid,
+    accountExistsOnLedger,
+    accountMissingOnLedger,
+    setModalLoading,
+    setModalLoaded,
+    updateLoadingMessage,
+    logIn,
+    logOut,
+    selectView,
   }, dispatch)
 }
 

@@ -1,20 +1,16 @@
 import {combineReducers} from 'redux'
-import AccountExistenceReducer from './account-existence-reducer'
-import ProgressMessageReducer from './progress-message-reducer'
-import AccountAssetsReducer from './account-assets'
-import SelectedViewReducer from './selected-view-reducer'
-import DrawerStateReducer from './drawer-state-reducer'
 import AuthenticationReducer from './authentication-reducer'
-import AccountNumberReducer from './account-number-reducer'
+import AccountInfoReducer from './account-info-reducer'
+import LoadingModalReducer from './loading-modal-reducer'
+import SelectViewReducer from './select-view-reducer'
+import UiStateReducer from './ui-state-reducer'
 
 const reducers = combineReducers({
-  accountExists: AccountExistenceReducer,
-  progressMessage: ProgressMessageReducer,
-  accountAssets: AccountAssetsReducer,
-  selectedView: SelectedViewReducer,
-  drawerState: DrawerStateReducer,
-  isAuthenticated: AuthenticationReducer,
-  currentAccount: AccountNumberReducer,
+  auth: AuthenticationReducer,
+  accountInfo: AccountInfoReducer,
+  loadingModal: LoadingModalReducer,
+  nav: SelectViewReducer,
+  ui: UiStateReducer,
 })
 
 export default reducers

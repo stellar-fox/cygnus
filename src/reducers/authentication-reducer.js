@@ -1,9 +1,13 @@
 export default function (state=false, action) {
-  if (action.type === 'LOG_OUT') {
-    return action.payload
-  }
-  if (action.type === 'LOG_IN') {
-    return action.payload
+  switch (action.type) {
+    case 'LOG_IN':
+      state = {...state, isAuthenticated: true}
+      break;
+    case 'LOG_OUT':
+      state = {...state, isAuthenticated: false}
+      break;
+    default:
+      break;
   }
   return state
 }

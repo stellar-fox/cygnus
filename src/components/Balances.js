@@ -6,8 +6,8 @@ class Balances extends Component {
   render() {
     return (
       <div>
-        {this.props.accountExists ? (
-          <div>Account Info</div>
+        {this.props.accountInfo.exists ? (
+          <div>Balance Info</div>
         ) : (
           <div>This account does not exist on Stellar ledger.</div>
         )}
@@ -18,7 +18,7 @@ class Balances extends Component {
 
 function mapStateToProps(state) {
   return {
-    accountExists: state.accountExists,
+    accountInfo: state.accountInfo,
   }
 }
 

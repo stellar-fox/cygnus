@@ -12,15 +12,13 @@ class Content extends Component {
   render() {
     return (
       <div style={{
-        paddingLeft: this.props.drawer ? 200 : 20
+        paddingLeft: this.props.ui.drawer.isOpened ? 200 : 20
       }} className='content'>
-      <Switch>
-        <Route exact path="/" component={Balances}/>
-        <Route exact path="/payments" component={Payments}/>
-        <Route exact path="/account" component={Account}/>
-      </Switch>
-
-
+        <Switch>
+          <Route exact path="/" component={Balances}/>
+          <Route exact path="/payments" component={Payments}/>
+          <Route exact path="/account" component={Account}/>
+        </Switch>
       </div>
     )
   }
@@ -29,7 +27,7 @@ class Content extends Component {
 function mapStateToProps(state) {
   return {
     view: state.selectedView,
-    drawer: state.drawerState,
+    ui: state.ui
   }
 }
 

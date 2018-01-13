@@ -10,6 +10,8 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",
     "redux": "^3.7.2",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.2.0",
     "stellar-base": "^0.7.6",
     "stellar-sdk": "^0.8.0"
   },
