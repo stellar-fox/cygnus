@@ -135,6 +135,10 @@
   padding-top: 3rem;
 }
 
+.p-b {
+  padding-bottom: 1rem;
+}
+
 div.flex-centered {
   display: flex;
   flex-direction: column;

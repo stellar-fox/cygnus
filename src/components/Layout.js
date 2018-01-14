@@ -7,7 +7,6 @@ import Content from './Content'
 import Footer from './Footer'
 import Welcome from './Welcome'
 
-
 class Layout extends Component {
   render() {
     return (
@@ -40,6 +39,5 @@ function mapStateToProps(state) {
     auth: state.auth,
   }
 }
-
 
 export default connect(mapStateToProps)(Layout)
