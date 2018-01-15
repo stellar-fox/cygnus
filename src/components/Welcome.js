@@ -68,14 +68,14 @@ class Welcome extends Component {
       let api = new window.StellarLedger.Api(comm)
       return api.getPublicKey_async(bip32Path).then(function (result) {
         let publicKey = result['publicKey']
-        that.logInViaPublicKey(publicKey)
+        that.logInViaPublicKey(publicKey, false)
       }).catch(function (err) {
           console.error(err)
       })
     })
   }
 
-  logInViaPublicKey(pubKey) {
+  logInViaPublicKey(pubKey, isReadOnly=true) {
     try {
       // 1. validate public key
       window.StellarSdk.Keypair.fromPublicKey(pubKey)
@@ -102,7 +102,7 @@ class Welcome extends Component {
           that.props.accountExistsOnLedger({account}) // ===> THAT <=== !!!!
           sessionStorage.setItem('SFOX.ACCT_EXISTS', true)
           that.props.selectView('Balances')
-          that.props.logIn()
+          that.props.logIn({isReadOnly})
           that.props.setModalLoaded()
           that.props.updateLoadingMessage({
             message: null,
@@ -111,7 +111,7 @@ class Welcome extends Component {
           that.props.accountMissingOnLedger() // ===> THAT <=== !!!!
           sessionStorage.setItem('SFOX.ACCT_EXISTS', false)
           that.props.selectView('Balances')
-          that.props.logIn()
+          that.props.logIn({isReadOnly})
           that.props.setModalLoaded()
           that.props.updateLoadingMessage({
             message: null,

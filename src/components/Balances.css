@@ -17,3 +17,8 @@
 .other-assets {
   font-size: 1.5rem;
 }
+
+.faded {
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.54) !important;
+}

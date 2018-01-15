@@ -104,6 +104,13 @@ export const disableAuthenticateButton = (state) => {
     payload: state,
   }
 }
+
+export const getEurRate = (state) => {
+  return {
+    type: 'GET_EXCHANGE_RATE',
+    payload: state,
+  }
+}
 // =================
 
 

@@ -25,6 +25,9 @@ export default function (state={}, action) {
     case 'ACCOUNT_MISSING_ON_LEDGER':
       state = {...state, account: null, exists: false}
       break;
+    case 'GET_EXCHANGE_RATE':
+      state = {...state, rates: action.payload}
+      break;
     default:
       return state
   }
