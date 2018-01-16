@@ -6,6 +6,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import TextField from 'material-ui/TextField'
 import CircularProgress from 'material-ui/CircularProgress'
 import RaisedButton from 'material-ui/RaisedButton'
+import Input from '../frontend/input/Input'
+import Checkbox from '../frontend/checkbox/Checkbox'
 import {
   setPublicKeyValid,
   setPublicKeyInvalid,
@@ -41,6 +43,15 @@ const styles = {
 }
 
 class Welcome extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      derivationPath: '0',
+      derivationPrefix: "44'/148'/",
+      pathEditable: false,
+      useDefaultAccount: true,
+    }
+  }
 
   componentDidMount(){
     this.props.disableAuthenticateButton()
@@ -56,6 +67,35 @@ class Welcome extends Component {
     )
   }
 
+  handleCheckboxClick(event) {
+    const target = event.target
+    this.setState({
+      useDefaultAccount: target.checked
+    })
+    this.setState((prevState) => ({
+      pathEditable: !target.checked
+    }))
+    // reset derivation path index to 0
+    if(target.checked) {
+      this.setState((prevState) => ({
+        derivationPath: '0',
+        derivationPathIndex: 0
+      }))
+    }
+  }
+
+  handlePathChange(event) {
+    const target = event.target
+    if (isNaN(target.value)) {
+      return false
+    }
+    const index = parseInt(target.value, 10)
+    this.setState({
+      derivationPath: target.value,
+      derivationPathIndex: index
+    })
+  }
+
   handleOnClickAuthenticate() {
     this.props.disableAuthenticateButton()
     this.logInViaLedger()
@@ -63,7 +103,7 @@ class Welcome extends Component {
 
   logInViaLedger() {
     let that = this
-    let bip32Path = "44'/148'/0'";
+    let bip32Path = "44'/148'/" + this.state.derivationPath + "'";
     window.StellarLedger.comm.create_async().then(function(comm) {
       let api = new window.StellarLedger.Api(comm)
       return api.getPublicKey_async(bip32Path).then(function (result) {
@@ -237,6 +277,25 @@ class Welcome extends Component {
                   Simply connect your Ledger Nano S hardware wallet. Make sure Stellar
                   wallet is selected and browser support enabled.
                 </div>
+                <div className='p-b p-t'>
+                  <Checkbox
+                    isChecked={this.state.useDefaultAccount}
+                    handleChange={this.handleCheckboxClick.bind(this)}
+                    label='Use Default Account' />
+                </div>
+                {this.state.pathEditable ?
+                <div className="p-b p-t flex-start">
+                <Input
+                  label="Account Index"
+                  inputType="text"
+                  maxLength="100"
+                  autoComplete="off"
+                  value={this.state.derivationPath}
+                  handleChange={this.handlePathChange.bind(this)}
+                  subLabel={
+                    "Account Derivation Path: [" + this.state.derivationPrefix +
+                    this.state.derivationPath + "']"
+                  }/></div> : null }
                 <MuiThemeProvider>
                   <RaisedButton
                     onClick={this.handleOnClickAuthenticate.bind(this)}

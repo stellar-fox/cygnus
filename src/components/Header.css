@@ -40,3 +40,8 @@ a.active {
   flex-direction: row;
   justify-content: space-between;
 }
+
+.account-home-domain {
+  font-weight: bolder;
+  font-variant: small-caps;
+}

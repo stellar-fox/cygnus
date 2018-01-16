@@ -47,7 +47,14 @@ class Balances extends Component {
       if (balance.asset_type !== 'native') {
         return (
           <p className='other-assets' key={balance.asset_code}>
-            {balance.asset_code}: {balance.balance}
+            <span className='other-asset-balance'>
+              {
+                Number.parseFloat(balance.balance).toFixed(2)
+              }
+            </span>
+            <span className='other-asset-code'>
+              {balance.asset_code}
+            </span>
           </p>
         )
       }

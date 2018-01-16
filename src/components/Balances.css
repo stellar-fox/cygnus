@@ -15,7 +15,15 @@
 }
 
 .other-assets {
-  font-size: 1.5rem;
+  font-size: 1rem;
+}
+
+.other-asset-balance {
+  padding-right: 5px;
+  font-size: larger;
+}
+.other-asset-code {
+  font-size: smaller;
 }
 
 .faded {

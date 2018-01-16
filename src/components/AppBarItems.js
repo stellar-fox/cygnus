@@ -7,7 +7,7 @@ class AppBarTitle extends Component {
       <div className="app-bar-items">
         <div className="app-bar-title">
           <div className="bar-title-account">
-            Account Number
+            {this.props.accountTitle}
           </div>
           <div className="bar-subtitle-account">
             {this.props.accountNumber}

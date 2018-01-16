@@ -48,7 +48,14 @@ class Header extends Component {
                 <AppBarTitle title="Stellar Fox" subtitle={
                   this.props.nav.view
                 }/>
-                <AppBarItems accountNumber={
+                <AppBarItems accountTitle={
+                    (this.props.accountInfo.exists === true &&
+                      this.props.accountInfo.account.account.home_domain !== undefined) ?
+                      <div className="account-home-domain">
+                        {this.props.accountInfo.account.account.home_domain}
+                      </div> : <div>Account Number</div>
+
+                } accountNumber={
                   this.props.accountInfo.pubKey.slice(0,6) +
                   '-' + this.props.accountInfo.pubKey.slice(50)
                 }/>

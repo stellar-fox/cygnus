@@ -50,6 +50,12 @@ div.flex-row {
   justify-content: space-between;
 }
 
+div.flex-start {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
 /* i {
   font-family: 'Roboto-Italic', sans-serif;
 }
