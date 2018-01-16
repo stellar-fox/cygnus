@@ -22,3 +22,17 @@
   font-size: 14px !important;
   color: rgba(0, 0, 0, 0.54) !important;
 }
+
+.md-icon-small {
+  font-size: 18px !important;
+  padding-right: 3px !important;
+}
+
+.modal-body {
+  background-color: rgb(244,176,4) !important;
+  color: rgb(15,46,83) !important;
+}
+
+.modal-title {
+  color: rgb(15,46,83) !important;
+}

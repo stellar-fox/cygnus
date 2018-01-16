@@ -111,6 +111,20 @@ export const getEurRate = (state) => {
     payload: state,
   }
 }
+
+export const showAlert = (state) => {
+  return {
+    type: 'SHOW_ALERT',
+    payload: state,
+  }
+}
+
+export const hideAlert = (state) => {
+  return {
+    type: 'HIDE_ALERT',
+    payload: state,
+  }
+}
 // =================
 
 

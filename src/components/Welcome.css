@@ -138,11 +138,3 @@
 .p-b {
   padding-bottom: 1rem;
 }
-
-div.flex-centered {
-  display: flex;
-  flex-direction: column;
-  margin-left: 5%;
-  margin-right: 5%;
-  /* align-items: center; */
-}

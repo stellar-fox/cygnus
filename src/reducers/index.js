@@ -4,6 +4,7 @@ import AccountInfoReducer from './account-info-reducer'
 import LoadingModalReducer from './loading-modal-reducer'
 import SelectViewReducer from './select-view-reducer'
 import UiStateReducer from './ui-state-reducer'
+import ModalReducer from './modal-reducer'
 
 const reducers = combineReducers({
   auth: AuthenticationReducer,
@@ -11,6 +12,7 @@ const reducers = combineReducers({
   loadingModal: LoadingModalReducer,
   nav: SelectViewReducer,
   ui: UiStateReducer,
+  modal: ModalReducer,
 })
 
 export default reducers

@@ -5,9 +5,12 @@ import {bindActionCreators} from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
+import Dialog from 'material-ui/Dialog';
 import axios from 'axios'
 import {
   getEurRate,
+  showAlert,
+  hideAlert,
 } from '../actions/index'
 class Balances extends Component {
 
@@ -52,6 +55,15 @@ class Balances extends Component {
     })
   }
 
+  handleOpen = () => {
+    this.props.showAlert()
+  }
+
+  handleClose = () => {
+    this.props.hideAlert()
+  }
+
+
   render() {
     let otherBalances
     if (this.props.accountInfo.exists) {
@@ -59,8 +71,37 @@ class Balances extends Component {
         this, this.props.accountInfo.account.account
       )
     }
+
+    const actions = [
+      <RaisedButton
+        backgroundColor="rgb(15,46,83)"
+        labelColor="rgb(244,176,4)"
+        label="OK"
+        keyboardFocused={true}
+        onClick={this.handleClose}
+      />,
+    ]
+
     return (
+
       <div>
+        <MuiThemeProvider>
+          <div>
+            <Dialog
+              title="Not Yet Implemented"
+              actions={actions}
+              modal={false}
+              open={this.props.modal.isShowing}
+              onRequestClose={this.handleClose}
+              paperClassName="modal-body"
+              titleClassName="modal-title"
+            >
+              Pardon the mess. We are working hard to bring you this feature very
+              soon. Please check back in a while as the feature implementation
+              is being continuously deployed.
+            </Dialog>
+          </div>
+        </MuiThemeProvider>
         {this.props.accountInfo.exists ? (
           <div>
             <MuiThemeProvider>
@@ -72,27 +113,43 @@ class Balances extends Component {
                   showExpandableButton={true}
                 />
                 <CardText>
-                  <div className='balance'>
-                    {Number.parseFloat(this.getNativeBalance.call(
-                      this, this.props.accountInfo.account.account
-                    )).toFixed(2)} XLM
+                  <div className='flex-row'>
+                    <div>
+                      <div className='balance'>
+                        {Number.parseFloat(this.getNativeBalance.call(
+                          this, this.props.accountInfo.account.account
+                        )).toFixed(2)} XLM
+                      </div>
+                      <div>
+                        {this.props.accountInfo.rates !== undefined ?
+                          (Number.parseFloat(this.getNativeBalance.call(
+                            this, this.props.accountInfo.account.account
+                          )) * Number.parseFloat(
+                            this.props.accountInfo.rates.xlmeur)
+                          ).toFixed(2) : '0.00'
+                        } EUR
+                      </div>
+                    </div>
+                    <div></div>
                   </div>
-                  <div>
-                    {this.props.accountInfo.rates !== undefined ?
-                      (Number.parseFloat(this.getNativeBalance.call(
-                        this, this.props.accountInfo.account.account
-                      )) * Number.parseFloat(
-                        this.props.accountInfo.rates.xlmeur)
-                      ).toFixed(2) : '---'
-                    } EUR
-                  </div>
+
                 </CardText>
-                {this.props.auth.isReadOnly ? null :
-                  <CardActions>
-                    <RaisedButton backgroundColor="rgb(244,176,4)" label="Deposit" />
-                    <RaisedButton backgroundColor="rgb(244,176,4)" label="Send" />
-                  </CardActions>
-                }
+                <CardActions>
+                  <RaisedButton
+                    backgroundColor="rgb(15,46,83)"
+                    labelColor="rgb(244,176,4)"
+                    label="Deposit"
+                    onClick={this.handleOpen.bind(this)}
+                  />
+                  {this.props.auth.isReadOnly ? null :
+                    <RaisedButton
+                      backgroundColor="rgb(15,46,83)"
+                      labelColor="rgb(244,176,4)"
+                      label="Send"
+                      onClick={this.handleOpen.bind(this)}
+                    />
+                  }
+                </CardActions>
                 <CardText expandable={true}>
                   <div>
                     <div>Other Assets</div>
@@ -112,14 +169,33 @@ class Balances extends Component {
           <MuiThemeProvider>
             <Card className='account'>
               <CardHeader
-                title="This account does not exist on Stellar ledger."
-                subtitle="Please deposit a minimum of 0.5 XLM to activate the account."
+                title="Current Balance"
+                subtitle="Stellar Lumens"
                 actAsExpander={false}
                 showExpandableButton={false}
               />
+              <CardText>
+                <div className='balance'>
+                  0 XLM
+                </div>
+                <div className='faded'>
+                  0 EUR
+                </div>
+              </CardText>
               <CardActions>
-                <RaisedButton backgroundColor="rgb(244,176,4)" label="Deposit" />
+                <RaisedButton
+                  onClick={this.handleOpen.bind(this)}
+                  backgroundColor="rgb(15,46,83)"
+                  labelColor="rgb(244,176,4)"
+                  label="Deposit" />
               </CardActions>
+              <CardText>
+                <div className='faded'>
+                  <i className="material-icons md-icon-small">info_outline</i>
+                  Your account is currently inactive. Please deposit required
+                  minimum reserve of 0.5 XLM in order to activate it.
+                </div>
+              </CardText>
             </Card>
           </MuiThemeProvider>
         )}
@@ -132,13 +208,15 @@ function mapStateToProps(state) {
   return {
     accountInfo: state.accountInfo,
     auth: state.auth,
-    // exchangeRates: state.exchangeRates,
+    modal: state.modal,
   }
 }
 
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({
     getEurRate,
+    showAlert,
+    hideAlert,
   }, dispatch)
 }
 

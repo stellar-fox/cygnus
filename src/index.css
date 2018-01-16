@@ -37,6 +37,19 @@ html, body {
   padding-right: 10px;
 }
 
+div.flex-centered {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+div.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 /* i {
   font-family: 'Roboto-Italic', sans-serif;
 }
