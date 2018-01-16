@@ -53,9 +53,12 @@ class Balances extends Component {
   }
 
   render() {
-    let otherBalances = this.getOtherBalances.call(
-      this, this.props.accountInfo.account.account
-    )
+    let otherBalances
+    if (this.props.accountInfo.exists) {
+      otherBalances = this.getOtherBalances.call(
+        this, this.props.accountInfo.account.account
+      )
+    }
     return (
       <div>
         {this.props.accountInfo.exists ? (
