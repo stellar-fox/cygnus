@@ -127,10 +127,10 @@ class Account extends Component {
                 <div className="flex-row">
                   <div>
                     <h2 style={styles.headline}>Account Profile</h2>
-                    <div className="title">
+                    <div className="account-title">
                       Fill out your profile details.
                     </div>
-                    <div className="subtitle">
+                    <div className="account-subtitle">
                       Only your payment address is visible to public.
                       The details of your account profile contribute to KYC/AML
                       compliance.
