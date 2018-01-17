@@ -125,6 +125,13 @@ export const hideAlert = (state) => {
     payload: state,
   }
 }
+
+export const setAccountTab = (state) => {
+  return {
+    type: 'SET_TAB',
+    payload: state,
+  }
+}
 // =================
 
 
