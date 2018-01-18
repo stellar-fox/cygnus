@@ -5,7 +5,8 @@ import {bindActionCreators} from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Input from '../frontend/input/Input'
 import RaisedButton from 'material-ui/RaisedButton'
-import Dialog from 'material-ui/Dialog';
+import Dialog from 'material-ui/Dialog'
+import MD5 from '../lib/md5'
 import './Account.css'
 import {
   showAlert,
@@ -34,6 +35,8 @@ const styles = {
   },
 }
 
+const emailValidatorRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
 class Account extends Component {
   constructor(props) {
     super(props);
@@ -42,6 +45,7 @@ class Account extends Component {
       lastNameDisplay: '',
       emailDisplay: '',
       paymentAddressDisplay: '',
+      gravatarPath: '/img/gravatar.jpg',
     }
   }
 
@@ -58,6 +62,14 @@ class Account extends Component {
   }
 
   handleEmailChange = (event) => {
+    if (emailValidatorRegex.test(event.target.value) === true) {
+      this.setState({
+        gravatarPath: (
+          'https://www.gravatar.com/avatar/' + MD5(event.target.value) +
+          '?s=96'
+        )
+      })
+    }
     this.setState({
       emailDisplay: event.target.value
     })
@@ -139,7 +151,7 @@ class Account extends Component {
                   <div className="gravatar">
                     <figure>
                       <img className="image"
-                        src="/img/gravatar.jpg"
+                        src={this.state.gravatarPath}
                         alt="Gravatar"
                       />
                     </figure>
@@ -154,7 +166,7 @@ class Account extends Component {
                       autoComplete="off"
                       handleChange={this.handleFirstNameChange.bind(this)}
                       subLabel={
-                        "First Name Entered: " + this.state.firstNameDisplay
+                        "First Name: " + this.state.firstNameDisplay
                       }/>
                   </div>
                   <div className="p-t p-b">
@@ -165,7 +177,7 @@ class Account extends Component {
                       autoComplete="off"
                       handleChange={this.handleLastNameChange.bind(this)}
                       subLabel={
-                        "Last Name Entered: " + this.state.lastNameDisplay
+                        "Last Name: " + this.state.lastNameDisplay
                       }/>
                   </div>
                   <div className="p-t p-b">
@@ -176,18 +188,18 @@ class Account extends Component {
                       autoComplete="off"
                       handleChange={this.handleEmailChange.bind(this)}
                       subLabel={
-                        "Email Entered: " + this.state.emailDisplay
+                        "Email: " + this.state.emailDisplay
                       }/>
                   </div>
                   <div className="p-t p-b">
                     <Input
-                      label="Payment Address"
+                      label="Payment Address Alias"
                       inputType="text"
                       maxLength="100"
                       autoComplete="off"
                       handleChange={this.handlePaymentAddressChange.bind(this)}
                       subLabel={
-                        "Payment Address Entered: " +
+                        "Payment Address: " +
                         this.state.paymentAddressDisplay +
                         (this.state.paymentAddressDisplay === '' ?
                           "" : "*stellarfox.net")
