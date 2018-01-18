@@ -5,7 +5,9 @@ import {bindActionCreators} from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Input from '../frontend/input/Input'
 import RaisedButton from 'material-ui/RaisedButton'
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Dialog from 'material-ui/Dialog'
+import Toggle from 'material-ui/Toggle';
 import MD5 from '../lib/md5'
 import './Account.css'
 import {
@@ -33,6 +35,31 @@ const styles = {
     backgroundColor: '#2e5077',
     borderRadius: '3px',
   },
+  radioButton: {
+    label: {
+      color: 'rgba(244,176,4,0.9)',
+    },
+    icon: {
+      fill: 'rgba(244,176,4,1)',
+    },
+  },
+  toggleSwitch: {
+    thumbOff: {
+      backgroundColor: '#2e5077',
+    },
+    trackOff: {
+      backgroundColor: '#2e5077',
+    },
+    thumbSwitched: {
+      backgroundColor: 'rgb(244,176,4)',
+    },
+    trackSwitched: {
+      backgroundColor: 'rgb(244,176,4)',
+    },
+    labelStyle: {
+      color: 'rgb(244,176,4)',
+    },
+  },
 }
 
 const emailValidatorRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -46,6 +73,12 @@ class Account extends Component {
       emailDisplay: '',
       paymentAddressDisplay: '',
       gravatarPath: '/img/gravatar.jpg',
+    }
+  }
+
+  handleAccountDiscoverableToggle = (event, isInputChecked) => {
+    if (isInputChecked === true) {
+      console.log('Account is discoverable')
     }
   }
 
@@ -219,9 +252,64 @@ class Account extends Component {
             <Tab style={styles.tab} label="Settings" value="2">
               <div>
                 <h2 style={styles.headline}>Account Settings</h2>
-                <p>
+                <div className="account-title">
                   Adjust settings for your account.
-                </p>
+                </div>
+                <div className="account-subtitle">
+                  General account related settings. This configuration specifies
+                  how the account related views are displayed to the user.
+                </div>
+
+                <div className="p-t p-b"></div>
+                <div className="account-title p-t">
+                  Display Currency:
+                </div>
+                <div className="account-subtitle">
+                  Choose the currency you want to use in your account.
+                </div>
+                <MuiThemeProvider>
+                  <RadioButtonGroup className="account-radio-group" name="shipSpeed" defaultSelected="eur">
+                    <RadioButton
+                      className="p-b-small"
+                      value="eur"
+                      label="EUR"
+                      labelStyle={styles.radioButton.label}
+                      iconStyle={styles.radioButton.icon}
+                    />
+                    <RadioButton
+                      value="usd"
+                      label="USD"
+                      labelStyle={styles.radioButton.label}
+                      iconStyle={styles.radioButton.icon}
+                    />
+                  </RadioButtonGroup>
+                </MuiThemeProvider>
+
+                <div className="p-t p-b"></div>
+                <div className="flex-row outline">
+                  <div>
+                    <div className="account-title">
+                      Make Account Discoverable
+                    </div>
+                    <div className="account-subtitle">
+                      Your account will be publicly discoverable and can be found
+                      by your payment address.
+                    </div>
+                  </div>
+                  <div>
+                    <MuiThemeProvider>
+                      <Toggle
+                        onToggle={this.handleAccountDiscoverableToggle.bind(this)}
+                        labelPosition="right"
+                        thumbStyle={styles.toggleSwitch.thumbOff}
+                        trackStyle={styles.toggleSwitch.trackOff}
+                        thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
+                        trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
+                        labelStyle={styles.toggleSwitch.labelStyle}
+                      />
+                    </MuiThemeProvider>
+                  </div>
+                </div>
               </div>
             </Tab>
             <Tab style={styles.tab} label="Security" value="3">

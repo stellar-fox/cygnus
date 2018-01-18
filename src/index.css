@@ -56,6 +56,16 @@ div.flex-start {
   justify-content: flex-start;
 }
 
+.p-b-small {
+  padding-bottom: 5px;
+}
+
+.outline {
+  border: 1px solid rgba(244,176,4,0.75);
+  border-radius: 3px;
+  padding: 10px;
+}
+
 /* i {
   font-family: 'Roboto-Italic', sans-serif;
 }
