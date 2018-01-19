@@ -6,6 +6,7 @@ import SelectViewReducer from './select-view-reducer'
 import UiStateReducer from './ui-state-reducer'
 import ModalReducer from './modal-reducer'
 import TabBarReducer from './tab-bar-reducer'
+import CurrencyReducer from './currency-reducer'
 
 const reducers = combineReducers({
   auth: AuthenticationReducer,
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   ui: UiStateReducer,
   modal: ModalReducer,
   tabBar: TabBarReducer,
+  currency: CurrencyReducer,
 })
 
 export default reducers

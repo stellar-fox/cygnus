@@ -1,4 +1,4 @@
-export default function (state={}, action) {
+export default function (state={rates:{}}, action) {
   switch (action.type) {
     case 'CLEAR_ACCOUNT_INFO':
       state = {}
@@ -25,8 +25,8 @@ export default function (state={}, action) {
     case 'ACCOUNT_MISSING_ON_LEDGER':
       state = {...state, account: null, exists: false}
       break;
-    case 'GET_EXCHANGE_RATE':
-      state = {...state, rates: action.payload}
+    case 'SET_EXCHANGE_RATE':
+      state = {...state, rates: Object.assign(state.rates, action.payload)}
       break;
     default:
       return state

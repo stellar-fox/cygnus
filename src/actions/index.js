@@ -105,9 +105,9 @@ export const disableAuthenticateButton = (state) => {
   }
 }
 
-export const getEurRate = (state) => {
+export const setExchangeRate = (state) => {
   return {
-    type: 'GET_EXCHANGE_RATE',
+    type: 'SET_EXCHANGE_RATE',
     payload: state,
   }
 }
@@ -132,42 +132,10 @@ export const setAccountTab = (state) => {
     payload: state,
   }
 }
-// =================
 
-
-// export const setAccountExists = (state) => {
-//   return {
-//     type: 'SET_ACCOUNT_EXISTS',
-//     payload: state,
-//   }
-// }
-//
-// export const setProgressMessage = (state) => {
-//   return {
-//     type: 'SET_PROGRESS_MESSAGE',
-//     payload: state,
-//   }
-// }
-//
-// export const sideBarMenuSelect = (path) => {
-//   return {
-//     type: 'SIDE_MENU_ITEM_CLICKED',
-//     payload: path,
-//   }
-// }
-//
-// export const sideBarMenuToggle = (state) => {
-//   return {
-//     type: 'SIDE_MENU_STATE_CHANGED',
-//     payload: state,
-//   }
-// }
-//
-//
-//
-// export const updateAccountNumber = (state) => {
-//   return {
-//     type: 'ACCOUNT_NUMBER_UPDATED',
-//     payload: state,
-//   }
-// }
+export const setCurrency = (state) => {
+  return {
+    type: 'SET_CURRENCY',
+    payload: state,
+  }
+}

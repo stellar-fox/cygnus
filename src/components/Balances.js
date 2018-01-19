@@ -8,14 +8,15 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Dialog from 'material-ui/Dialog';
 import axios from 'axios'
 import {
-  getEurRate,
+  setExchangeRate,
   showAlert,
   hideAlert,
+  setCurrency,
 } from '../actions/index'
 class Balances extends Component {
 
   componentDidMount() {
-    this.getExchangeRate('eur')
+    this.getExchangeRate(this.props.currency.default)
   }
 
   getNativeBalance(account) {
@@ -28,18 +29,44 @@ class Balances extends Component {
     return nativeBalance
   }
 
+  exchangeRateFetched() {
+    if (
+      this.props.accountInfo.rates !== undefined &&
+      this.props.accountInfo.rates[this.props.currency.default] !== undefined
+    ) {
+      return true
+    }
+    return false
+  }
+
+  exchangeRateStale() {
+    if (
+      this.props.accountInfo.rates === undefined ||
+      this.props.accountInfo.rates[this.props.currency.default] === undefined ||
+      this.props.accountInfo.rates[this.props.currency.default].lastFetch + 300000 < Date.now()
+    ) {
+      return true
+    }
+    return false
+  }
+
   getExchangeRate(currency) {
     const cryptonatorXlmTicker = 'https://api.cryptonator.com/api/ticker/xlm-'
     let that = this
-    axios.get(cryptonatorXlmTicker + currency)
-      .then(function (response) {
-        if (response.data.success === true) {
-          that.props.getEurRate({xlmeur: response.data.ticker.price})
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (this.exchangeRateStale()) {
+      axios.get(cryptonatorXlmTicker + currency)
+        .then(function (response) {
+          if (response.data.success === true) {
+            that.props.setExchangeRate({[currency]: {
+              rate: response.data.ticker.price,
+              lastFetch: Date.now()
+            }})
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   }
 
   getOtherBalances(account) {
@@ -128,13 +155,13 @@ class Balances extends Component {
                         )).toFixed(2)} XLM
                       </div>
                       <div>
-                        {this.props.accountInfo.rates !== undefined ?
+                        {this.exchangeRateFetched() ?
                           (Number.parseFloat(this.getNativeBalance.call(
                             this, this.props.accountInfo.account.account
                           )) * Number.parseFloat(
-                            this.props.accountInfo.rates.xlmeur)
+                            this.props.accountInfo.rates[this.props.currency.default].rate)
                           ).toFixed(2) : '0.00'
-                        } EUR
+                        } {this.props.currency.default.toUpperCase()}
                       </div>
                     </div>
                     <div></div>
@@ -186,7 +213,7 @@ class Balances extends Component {
                   0 XLM
                 </div>
                 <div className='faded'>
-                  0 EUR
+                  0 {this.props.currency.default}
                 </div>
               </CardText>
               <CardActions>
@@ -216,14 +243,16 @@ function mapStateToProps(state) {
     accountInfo: state.accountInfo,
     auth: state.auth,
     modal: state.modal,
+    currency: state.currency,
   }
 }
 
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({
-    getEurRate,
+    setExchangeRate,
     showAlert,
     hideAlert,
+    setCurrency,
   }, dispatch)
 }
 

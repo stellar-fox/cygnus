@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Input from '../frontend/input/Input'
+import SnackBar from '../frontend/snackbar/SnackBar'
 import RaisedButton from 'material-ui/RaisedButton'
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Dialog from 'material-ui/Dialog'
@@ -14,6 +15,7 @@ import {
   showAlert,
   hideAlert,
   setAccountTab,
+  setCurrency,
 } from '../actions/index'
 
 const styles = {
@@ -73,12 +75,69 @@ class Account extends Component {
       emailDisplay: '',
       paymentAddressDisplay: '',
       gravatarPath: '/img/gravatar.jpg',
+      sbAccountDiscoverable: false,
+      sbCurrency: false,
+      sbMultisig: false,
+      sb2FA: false,
+      currency: '',
     }
+  }
+
+  handleCurrencyChange = (event) => {
+    this.props.setCurrency(event.target.value)
+    this.setState({
+      currency: event.target.parentElement.innerText
+    })
+    this.setState((prevState) => {
+      return {sbCurrency: true};
+    })
+  }
+
+  handleCurrencyChangeSnackBarClose = () => {
+    this.setState({
+      sbCurrency: false
+    })
+  }
+
+  handleAccountDiscoverableSnackBarClose = () => {
+    this.setState({
+      sbAccountDiscoverable: false
+    })
+  }
+
+  handleMultisigSnackBarClose = () => {
+    this.setState({
+      sbMultisig: false
+    })
+  }
+
+  handle2FASnackBarClose = () => {
+    this.setState({
+      sb2FA: false
+    })
   }
 
   handleAccountDiscoverableToggle = (event, isInputChecked) => {
     if (isInputChecked === true) {
-      console.log('Account is discoverable')
+      this.setState({
+        sbAccountDiscoverable: true
+      })
+    }
+  }
+
+  handleMultisigToggle = (event, isInputChecked) => {
+    if (isInputChecked === true) {
+      this.setState({
+        sbMultisig: true
+      })
+    }
+  }
+
+  handle2FAToggle = (event, isInputChecked) => {
+    if (isInputChecked === true) {
+      this.setState({
+        sb2FA: true
+      })
     }
   }
 
@@ -268,21 +327,39 @@ class Account extends Component {
                   Choose the currency you want to use in your account.
                 </div>
                 <MuiThemeProvider>
-                  <RadioButtonGroup className="account-radio-group" name="shipSpeed" defaultSelected="eur">
-                    <RadioButton
-                      className="p-b-small"
-                      value="eur"
-                      label="EUR"
-                      labelStyle={styles.radioButton.label}
-                      iconStyle={styles.radioButton.icon}
-                    />
-                    <RadioButton
-                      value="usd"
-                      label="USD"
-                      labelStyle={styles.radioButton.label}
-                      iconStyle={styles.radioButton.icon}
-                    />
-                  </RadioButtonGroup>
+                  <div className="flex-start">
+                  <SnackBar
+                    open={this.state.sbCurrency}
+                    message={"Currency set to " + this.state.currency}
+                    onRequestClose={this.handleCurrencyChangeSnackBarClose.bind(this)}
+                  />
+                    <RadioButtonGroup
+                      onChange={this.handleCurrencyChange.bind(this)}
+                      className="account-radio-group"
+                      name="currencySelect"
+                      defaultSelected={this.props.currency.default}>
+                      <RadioButton
+                        className="p-b-small"
+                        value="eur"
+                        label="Euro [EUR]"
+                        labelStyle={styles.radioButton.label}
+                        iconStyle={styles.radioButton.icon}
+                      />
+                      <RadioButton
+                        className="p-b-small"
+                        value="usd"
+                        label="U.S. Dollar [USD]"
+                        labelStyle={styles.radioButton.label}
+                        iconStyle={styles.radioButton.icon}
+                      />
+                      <RadioButton
+                        value="aud"
+                        label="Australian Dollar [AUD]"
+                        labelStyle={styles.radioButton.label}
+                        iconStyle={styles.radioButton.icon}
+                      />
+                    </RadioButtonGroup>
+                  </div>
                 </MuiThemeProvider>
 
                 <div className="p-t p-b"></div>
@@ -292,21 +369,28 @@ class Account extends Component {
                       Make Account Discoverable
                     </div>
                     <div className="account-subtitle">
-                      Your account will be publicly discoverable and can be found
-                      by your payment address.
+                      Your account number will be publicly discoverable and can
+                      be found by others via your payment address.
                     </div>
                   </div>
                   <div>
                     <MuiThemeProvider>
-                      <Toggle
-                        onToggle={this.handleAccountDiscoverableToggle.bind(this)}
-                        labelPosition="right"
-                        thumbStyle={styles.toggleSwitch.thumbOff}
-                        trackStyle={styles.toggleSwitch.trackOff}
-                        thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
-                        trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
-                        labelStyle={styles.toggleSwitch.labelStyle}
-                      />
+                      <div>
+                        <SnackBar
+                          open={this.state.sbAccountDiscoverable}
+                          message="Account is now discoverable."
+                          onRequestClose={this.handleAccountDiscoverableSnackBarClose.bind(this)}
+                        />
+                        <Toggle
+                          onToggle={this.handleAccountDiscoverableToggle.bind(this)}
+                          labelPosition="right"
+                          thumbStyle={styles.toggleSwitch.thumbOff}
+                          trackStyle={styles.toggleSwitch.trackOff}
+                          thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
+                          trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
+                          labelStyle={styles.toggleSwitch.labelStyle}
+                        />
+                      </div>
                     </MuiThemeProvider>
                   </div>
                 </div>
@@ -315,9 +399,77 @@ class Account extends Component {
             <Tab style={styles.tab} label="Security" value="3">
               <div>
                 <h2 style={styles.headline}>Account Security</h2>
-                <p>
-                  Set your security here.
-                </p>
+                <div className="account-title">
+                  Adjust security settings for your account.
+                </div>
+                <div className="account-subtitle">
+                  Protect your account with additional security options.
+                </div>
+                <div className="p-t p-b"></div>
+                <div className="flex-row outline">
+                  <div>
+                    <div className="account-title">
+                      Enable two-factor authentication. (2FA)
+                    </div>
+                    <div className="account-subtitle">
+                      Confirm your account transations with second
+                      authentication factor.
+                    </div>
+                  </div>
+                  <div>
+                    <MuiThemeProvider>
+                      <div>
+                        <SnackBar
+                          open={this.state.sb2FA}
+                          message={"Two factor authentication is now enabled."}
+                          onRequestClose={this.handle2FASnackBarClose.bind(this)}
+                        />
+                        <Toggle
+                          onToggle={this.handle2FAToggle.bind(this)}
+                          labelPosition="right"
+                          thumbStyle={styles.toggleSwitch.thumbOff}
+                          trackStyle={styles.toggleSwitch.trackOff}
+                          thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
+                          trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
+                          labelStyle={styles.toggleSwitch.labelStyle}
+                        />
+                      </div>
+                    </MuiThemeProvider>
+                  </div>
+                </div>
+
+                <div className="p-t p-b"></div>
+                <div className="flex-row outline">
+                  <div>
+                    <div className="account-title">
+                      Add co-signers to your account. (Multisignature Verification)
+                    </div>
+                    <div className="account-subtitle">
+                      Multisignature account requires two or more signatures on
+                      every transaction.
+                    </div>
+                  </div>
+                  <div>
+                    <MuiThemeProvider>
+                      <div>
+                        <SnackBar
+                          open={this.state.sbMultisig}
+                          message={"Account set to multisig."}
+                          onRequestClose={this.handleMultisigSnackBarClose.bind(this)}
+                        />
+                        <Toggle
+                          onToggle={this.handleMultisigToggle.bind(this)}
+                          labelPosition="right"
+                          thumbStyle={styles.toggleSwitch.thumbOff}
+                          trackStyle={styles.toggleSwitch.trackOff}
+                          thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
+                          trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
+                          labelStyle={styles.toggleSwitch.labelStyle}
+                        />
+                      </div>
+                    </MuiThemeProvider>
+                  </div>
+                </div>
               </div>
             </Tab>
           </Tabs>
@@ -331,6 +483,7 @@ function mapStateToProps(state) {
   return {
     modal: state.modal,
     tabBar: state.tabBar,
+    currency: state.currency,
   }
 }
 
@@ -339,6 +492,7 @@ function matchDispatchToProps(dispatch) {
     showAlert,
     hideAlert,
     setAccountTab,
+    setCurrency
   }, dispatch)
 }
 
