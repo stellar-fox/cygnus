@@ -28,6 +28,9 @@ export default function (state={}, action) {
     case 'SET_EXCHANGE_RATE':
       state = {...state, rates: Object.assign(state.rates || {}, action.payload)}
       break;
+    case 'SET_ACCOUNT_OPERATIONS':
+      state = {...state, operations: action.payload}
+      break;
     default:
       return state
   }

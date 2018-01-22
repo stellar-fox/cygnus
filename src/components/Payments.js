@@ -1,6 +1,12 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Tabs, Tab} from 'material-ui/Tabs'
+import {List, ListItem} from 'material-ui/List';
+import {
+  setAccountOperations,
+} from '../actions/index'
 import './Payments.css'
 
 const styles = {
@@ -31,6 +37,21 @@ class Payments extends Component {
       tabSelected: '1'
     }
   }
+
+  componentDidMount() {
+    let that = this
+    let server = new window.StellarSdk.Server('https://horizon.stellar.org')
+    server.payments()
+      .forAccount(this.props.accountInfo.pubKey)
+      .call()
+      .then(function (operationsResult) {
+        that.props.setAccountOperations(operationsResult)
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+  }
+
   handleTabSelect = (value) => {
     this.setState({
       tabSelected: value,
@@ -58,6 +79,24 @@ class Payments extends Component {
                   <div className="account-subtitle">
                     Newest history shown as first.
                   </div>
+                  {this.props.accountInfo.operations ?
+                  <List>
+                    {this.props.accountInfo.operations.records.reverse().map((payment) => (
+                      <ListItem
+                        key={payment.id}
+                        primaryText={
+                          <span className="payment-date">
+                            {new Date(payment.created_at).toLocaleString()}
+                          </span>
+                        }
+                        secondaryText={
+                          payment.type === 'create_account' ?
+                            payment.starting_balance : payment.amount
+                        }
+                      />
+                    ))}
+                  </List>
+                  : null}
                 </div>
               </div>
             </div>
@@ -84,4 +123,16 @@ class Payments extends Component {
   }
 }
 
-export default Payments
+function mapStateToProps(state) {
+  return {
+    accountInfo: state.accountInfo,
+  }
+}
+
+function matchDispatchToProps(dispatch) {
+  return bindActionCreators({
+    setAccountOperations,
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(Payments)
