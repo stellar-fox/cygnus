@@ -140,9 +140,9 @@ export const setCurrency = (state) => {
   }
 }
 
-export const setAccountOperations = (state) => {
+export const setAccountPayments = (state) => {
   return {
-    type: 'SET_ACCOUNT_OPERATIONS',
+    type: 'SET_ACCOUNT_PAYMENTS',
     payload: state,
   }
 }

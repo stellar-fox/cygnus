@@ -1,13 +1,60 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Tabs, Tab} from 'material-ui/Tabs'
-import {List, ListItem} from 'material-ui/List';
+import {List, ListItem, makeSelectable} from 'material-ui/List'
+
+import Avatar from 'material-ui/Avatar'
+import Chip from 'material-ui/Chip'
 import {
-  setAccountOperations,
+  Step,
+  Stepper,
+  StepLabel,
+  StepButton,
+  StepContent,
+} from 'material-ui/Stepper'
+
+import {
+  setAccountPayments,
 } from '../actions/index'
 import './Payments.css'
+import {pubKeyAbbr} from '../lib/utils'
+
+let SelectableList = makeSelectable(List)
+
+function wrapState(ComposedComponent) {
+  return class SelectableList extends Component {
+    static propTypes = {
+      children: PropTypes.node.isRequired,
+      defaultValue: PropTypes.number.isRequired,
+    }
+
+    componentWillMount() {
+      this.setState({
+        selectedIndex: this.props.defaultValue,
+      })
+    }
+
+    handleRequestChange = (event, index) => {
+      this.setState({
+        selectedIndex: index,
+      })
+    }
+
+    render() {
+      return (
+        <ComposedComponent
+          value={this.state.selectedIndex}
+          onChange={this.handleRequestChange}
+        >{this.props.children}</ComposedComponent>
+      )
+    }
+  }
+}
+
+SelectableList = wrapState(SelectableList)
 
 const styles = {
   headline: {
@@ -28,13 +75,42 @@ const styles = {
     backgroundColor: '#2e5077',
     borderRadius: '3px',
   },
+  listItem: {
+    width: '100%',
+    border: '2px solid rgba(244,176,4,0.8)',
+    borderRadius: '3px',
+    marginTop: '12px',
+    backgroundColor: 'rgba(244,176,4,1)',
+  },
+  listItemInnerDiv: {
+    background: 'rgba(244,176,4,0.65) none repeat scroll 0% 0%',
+    color: 'rgb(15,46,83)',
+  },
+  avatar: {
+    border: '2px solid rgba(244,176,4,0.75)',
+    borderRadius: '3px',
+  },
+  stepperIcon: {
+    borderRadius: '3px',
+    backgroundColor: '#2e5077',
+    color: 'rgb(244,176,4)',
+  },
+  stepperButton: {
+    border: '2px solid rgba(244,176,4,0.75)',
+    backgroundColor: '#2e5077',
+    borderRadius: '3px',
+  },
 }
 
 class Payments extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tabSelected: '1'
+      tabSelected: '1',
+      paymentDetails: {
+        txid: null,
+        effects: [],
+      },
     }
   }
 
@@ -42,10 +118,41 @@ class Payments extends Component {
     let that = this
     let server = new window.StellarSdk.Server('https://horizon.stellar.org')
     server.payments()
+      // .limit(5)
       .forAccount(this.props.accountInfo.pubKey)
+      .order('desc')
       .call()
-      .then(function (operationsResult) {
-        that.props.setAccountOperations(operationsResult)
+      .then(function (paymentsResult) {
+        that.props.setAccountPayments(paymentsResult)
+        paymentsResult.records[0].effects().then((effects) => {
+          that.setState({paymentDetails: {
+            txid: paymentsResult.records[0].id,
+            created_at: paymentsResult.records[0].created_at,
+            effects: effects._embedded.records.reverse(),
+          }})
+        })
+        // paymentsResult.records.map((payment) => {
+        //
+        //   payment.transaction().then((tx) => {
+        //     let txJSON = window.StellarSdk.xdr.TransactionMeta.fromXDR(
+        //       tx.result_meta_xdr, 'base64'
+        //     )
+        //     console.log(tx)
+        //     console.log(txJSON)
+        //   })
+        //
+        //   payment.effects().then((effects) => {
+        //     console.log('-------- ' + payment.transaction_hash +  ' -------')
+        //     effects._embedded.records.map((effect) => {
+        //       console.log({[payment.transaction_hash]: effect})
+        //       that.props.setPaymentEffects({[payment.transaction_hash]: effect})
+        //       return true
+        //     })
+        //   })
+        //   return true
+        // })
+
+
       })
       .catch(function (err) {
         console.log(err)
@@ -58,7 +165,96 @@ class Payments extends Component {
     })
   }
 
+  handleOnClickListItem = (payment) => {
+    let that = this
+    payment.effects().then((effects) => {
+      console.log(effects)
+      that.setState({paymentDetails: {
+        txid: payment.id,
+        created_at: payment.created_at,
+        effects: effects._embedded.records.reverse(),
+      }})
+    })
+  }
+
+  decodeEffectType = (effect, index) => {
+    let humanizedEffectType = ''
+    switch (effect.type) {
+      case 'account_created':
+        humanizedEffectType = 'Acccount created'
+        break;
+      case 'account_removed':
+        humanizedEffectType = 'Acccount removed'
+        break;
+      case 'account_credited':
+        humanizedEffectType = (
+          <div>
+            <div className="flex-row">
+              <div>
+                <i className="material-icons">filter_{index+1}</i>
+                <span>Acccount Credited</span>
+              </div>
+              <div>
+                <span className='credit'>➕ {effect.amount}</span>
+              </div>
+            </div>
+            <div className="payment-details-body">
+              <div>
+                <span className="smaller">
+                  {pubKeyAbbr(effect.account)}
+                </span>
+                <p>Proin condimentum tempus ultrices. Suspendisse vestibulum suscipit erat, ac efficitur lorem. Nullam non ex vel turpis imperdiet maximus sit amet nec odio. Donec mauris nisl, vestibulum id efficitur at, convallis id dui. Sed enim nisl, ultrices vitae sodales eu, vestibulum a mi. Morbi consectetur pulvinar sagittis. Phasellus pharetra diam id leo gravida pharetra. In rutrum est gravida, maximus mi ac, mattis metus. Ut at tempus sem. Vivamus condimentum erat eget aliquet dignissim. </p>
+              </div>
+            </div>
+          </div>
+        )
+        break;
+      case 'account_debited':
+        humanizedEffectType = (
+          <div>
+            <div className="flex-row">
+              <div>
+                <i className="material-icons">filter_{index+1}</i>
+                <span>Acccount Debited</span>
+              </div>
+              <div>
+                <span className='debit'>➖ {effect.amount}</span>
+              </div>
+            </div>
+            <div className="payment-details-body">
+              <div>
+                <span className="smaller">
+                  {pubKeyAbbr(effect.account)}
+                </span>
+                <div className="payment-details-fieldset">
+                  Proin condimentum tempus ultrices. Suspendisse vestibulum
+                  suscipit erat, ac efficitur lorem. Nullam non ex vel turpis
+                  imperdiet maximus sit amet nec odio. Donec mauris nisl,
+                  vestibulum id efficitur at, convallis id dui. Sed enim nisl,
+                  ultrices vitae sodales eu, vestibulum a mi. Morbi consectetur
+                  pulvinar sagittis. Phasellus pharetra diam id leo gravida
+                  pharetra. In rutrum est gravida, maximus mi ac, mattis metus.
+                  Ut at tempus sem. Vivamus condimentum erat eget aliquet
+                  dignissim.
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+        break;
+      case 'signer_created':
+        humanizedEffectType = 'Signer created ✎'
+        break;
+      default:
+        humanizedEffectType = effect.type
+        break;
+    }
+    return humanizedEffectType
+  }
+
+
   render() {
+
     return (
       <div>
         <MuiThemeProvider>
@@ -79,24 +275,62 @@ class Payments extends Component {
                   <div className="account-subtitle">
                     Newest history shown as first.
                   </div>
-                  {this.props.accountInfo.operations ?
-                  <List>
-                    {this.props.accountInfo.operations.records.reverse().map((payment) => (
-                      <ListItem
-                        key={payment.id}
-                        primaryText={
-                          <span className="payment-date">
-                            {new Date(payment.created_at).toLocaleString()}
-                          </span>
-                        }
-                        secondaryText={
-                          payment.type === 'create_account' ?
-                            payment.starting_balance : payment.amount
-                        }
-                      />
+                  {this.props.accountInfo.payments ?
+                  <SelectableList defaultValue={1}>
+                    {this.props.accountInfo.payments.records.map((payment, index) => (
+
+                        <ListItem
+                          value={index+1}
+                          onClick={this.handleOnClickListItem.bind(this, payment)}
+                          innerDivStyle={styles.listItemInnerDiv}
+                          style={styles.listItem}
+                          key={payment.id}
+                          leftIcon={<i className="material-icons">payment</i>}
+                          hoverColor="rgb(244,176,4)"
+                          primaryText={
+                            <span className="payment-date">
+                              {new Date(payment.created_at).toLocaleString()}
+                            </span>
+                          }
+                          secondaryText={
+                            payment.type === 'create_account' ?
+                              ('Initial Fund: ' + payment.starting_balance) : payment.amount
+                          }
+                        />
+
                     ))}
-                  </List>
+                  </SelectableList>
                   : null}
+                </div>
+                <div className="payment-details">
+                  <div className="transaction-id">
+                    <div className="flex-row">
+                      <div>
+                        Payment ID: {this.state.paymentDetails.txid}
+                      </div>
+                      <div>
+                        {this.state.paymentDetails.created_at}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-b p-t"></div>
+
+                  {this.state.paymentDetails.effects.map((effect, index) => {
+                    return (
+                      <div key={index} className="payment-details-item">
+                        <span className="effect-title">
+                          {this.decodeEffectType(effect, index)}
+                        </span>
+
+                        <div className="p-b p-t"></div>
+                      </div>
+                    )
+                  })}
+
+
+
+
+
                 </div>
               </div>
             </div>
@@ -131,7 +365,7 @@ function mapStateToProps(state) {
 
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({
-    setAccountOperations,
+    setAccountPayments,
   }, dispatch)
 }
 

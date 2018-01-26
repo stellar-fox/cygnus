@@ -1,0 +1,46 @@
+.payment-details {
+  margin-right: 1rem;
+  margin-top: 2rem;
+  border: 2px solid rgba(244,176,4,0.8);
+  border-radius: 3px;
+  padding: 1rem;
+  max-width: 65%;
+  width: 60%;
+  height: 100%;
+}
+
+.transaction-id {
+  background-color: rgba(244,176,4,0.8);
+  color: rgb(15,46,83);
+  border-radius: 3px;
+  padding: 5px 10px 5px 10px;
+}
+
+.payment-details-item {
+  margin: 0px 20px 0px 20px;
+}
+
+.payment-details-body {
+  margin: 0px 20px 0px 20px;
+}
+
+.credit {
+  color: #228B22;
+}
+
+.debit {
+  color: #B22222
+}
+
+.effect-title {
+  font-weight: bolder;
+}
+
+.payment-details-fieldset {
+  padding: 20px 0px 0px 0px;
+}
+
+.smaller {
+  font-size: 12px;
+  font-weight: 600;
+}
