@@ -73,22 +73,8 @@ const styles = {
     backgroundColor: 'rgba(244,176,4,1)',
   },
   listItemInnerDiv: {
-    background: 'rgba(244,176,4,0.65) none repeat scroll 0% 0%',
+    background: 'rgba(244,176,4,0.75) none repeat scroll 0% 0%',
     color: 'rgb(15,46,83)',
-  },
-  avatar: {
-    border: '2px solid rgba(244,176,4,0.75)',
-    borderRadius: '3px',
-  },
-  stepperIcon: {
-    borderRadius: '3px',
-    backgroundColor: '#2e5077',
-    color: 'rgb(244,176,4)',
-  },
-  stepperButton: {
-    border: '2px solid rgba(244,176,4,0.75)',
-    backgroundColor: '#2e5077',
-    borderRadius: '3px',
   },
 }
 
@@ -118,9 +104,22 @@ class Payments extends Component {
           that.setState({paymentDetails: {
             txid: paymentsResult.records[0].id,
             created_at: paymentsResult.records[0].created_at,
-            effects: effects._embedded.records.reverse(),
+            effects: effects._embedded.records,
           }})
         })
+
+        // paymentsResult.records[0].transaction().then((tx) => {
+        //   let txJSONEnv = (window.StellarSdk.xdr.TransactionEnvelope
+        //     .fromXDR(tx.envelope_xdr, 'base64'))
+        //   console.log(JSON.stringify(txJSONEnv))
+        //   let txJSONRes = (window.StellarSdk.xdr.TransactionResult
+        //     .fromXDR(tx.result_xdr, 'base64'))
+        //   console.log(JSON.stringify(txJSONRes))
+        //   let txJSONMeta = (window.StellarSdk.xdr.TransactionMeta
+        //     .fromXDR(tx.result_meta_xdr, 'base64'))
+        //   console.log(JSON.stringify(txJSONMeta))
+        // })
+
         // paymentsResult.records.map((payment) => {
         //
         //   payment.transaction().then((tx) => {
@@ -162,7 +161,7 @@ class Payments extends Component {
       that.setState({paymentDetails: {
         txid: payment.id,
         created_at: payment.created_at,
-        effects: effects._embedded.records.reverse(),
+        effects: effects._embedded.records,
       }})
     })
   }
@@ -197,8 +196,7 @@ class Payments extends Component {
                 {pubKeyAbbr(effect.account)}
               </span>
               <div className="payment-details-fieldset">
-                <div>ID: {effect.id}</div>
-                <div>Paging Token: {effect.paging_token}</div>
+                <div className="tiny">ID: {effect.id}</div>
               </div>
             </div>
           </div>
@@ -235,8 +233,7 @@ class Payments extends Component {
                   {pubKeyAbbr(effect.account)}
                 </span>
                 <div className="payment-details-fieldset">
-                  <div>ID: {effect.id}</div>
-                  <div>Paging Token: {effect.paging_token}</div>
+                  <div className="tiny">ID: {effect.id}</div>
                 </div>
               </div>
             </div>
@@ -270,8 +267,7 @@ class Payments extends Component {
                   {pubKeyAbbr(effect.account)}
                 </span>
                 <div className="payment-details-fieldset">
-                  <div>ID: {effect.id}</div>
-                  <div>Paging Token: {effect.paging_token}</div>
+                  <div className="tiny">ID: {effect.id}</div>
                 </div>
               </div>
             </div>
@@ -286,7 +282,7 @@ class Payments extends Component {
                 <i className="material-icons">filter_{index+1}</i>
                 <span>Signer Created ✎ </span>
                 <span className="account-direction">
-                  {effect.account === this.props.accountInfo.pubKey ?
+                  {effect.public_key === this.props.accountInfo.pubKey ?
                     'You' : 'They'}
                 </span>
               </div>
@@ -299,8 +295,7 @@ class Payments extends Component {
                   {pubKeyAbbr(effect.account)}
                 </span>
                 <div className="payment-details-fieldset">
-                  <div>ID: {effect.id}</div>
-                  <div>Paging Token: {effect.paging_token}</div>
+                  <div className="tiny">ID: {effect.id}</div>
                 </div>
               </div>
             </div>
@@ -340,23 +335,33 @@ class Payments extends Component {
                   {this.props.accountInfo.payments ?
                   <SelectableList defaultValue={1}>
                     {this.props.accountInfo.payments.records.map((payment, index) => (
-
                         <ListItem
                           value={index+1}
                           onClick={this.handleOnClickListItem.bind(this, payment)}
                           innerDivStyle={styles.listItemInnerDiv}
                           style={styles.listItem}
                           key={payment.id}
-                          leftIcon={<i className="material-icons">payment</i>}
+                          leftIcon={
+                            payment.type === 'create_account' ?
+                            (<i className="material-icons">account_balance</i>) :
+                            (payment.to === this.props.accountInfo.pubKey ?
+                              (<i className="material-icons">account_balance_wallet</i>) :
+                              (<i className="material-icons">payment</i>))
+                          }
                           hoverColor="rgb(244,176,4)"
-                          primaryText={
+                          secondaryText={
                             <span className="payment-date">
-                              {new Date(payment.created_at).toLocaleString()}
+                              {utcToLocaleDateTime(payment.created_at)}
                             </span>
                           }
-                          secondaryText={
+                          primaryText={
                             payment.type === 'create_account' ?
-                              ('Initial Fund: ' + payment.starting_balance) : payment.amount
+                              ('+' + Number.parseFloat(payment.starting_balance)
+                                .toFixed(this.props.accountInfo.precision) + ' XLM') :
+                              ((payment.to === this.props.accountInfo.pubKey ?
+                                '+' : '-') + Number.parseFloat(payment.amount)
+                                  .toFixed(this.props.accountInfo.precision) +
+                                  ' ' + getAssetCode(payment))
                           }
                         />
 
@@ -388,10 +393,6 @@ class Payments extends Component {
                       </div>
                     )
                   })}
-
-
-
-
 
                 </div>
               </div>

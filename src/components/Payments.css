@@ -1,7 +1,7 @@
 .payment-details {
   margin-right: 1rem;
   margin-top: 2rem;
-  border: 1px solid rgba(244,176,4,0.8);
+  border: 1px solid rgba(244,176,4,0.75);
   border-radius: 3px;
   padding: 1rem;
   max-width: 65%;
@@ -10,7 +10,7 @@
 }
 
 .transaction-id {
-  background-color: rgba(244,176,4,0.8);
+  background-color: rgba(244,176,4,1);
   color: rgb(15,46,83);
   border-radius: 3px;
   padding: 5px 10px 5px 10px;
@@ -39,7 +39,8 @@
 .account-direction {
   font-size: 0.7rem;
   border: 1px solid rgba(244,176,4,0.8);
-  color: rgba(244,176,4,0.75);
+  background: rgba(244,176,4,1);
+  color: rgb(15,46,83);
   border-radius: 3px;
   padding: 2px;
   margin: 5px;
@@ -51,6 +52,11 @@
 
 .payment-details-fieldset {
   padding: 20px 0px 0px 0px;
+}
+
+.tiny {
+  font-size: 11px;
+  font-weight: 100;
 }
 
 .smaller {
