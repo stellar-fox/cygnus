@@ -45,7 +45,13 @@ class Header extends Component {
           <AppBar
             title={
               <div className="flex-row">
-                <AppBarTitle title="Stellar Fox - TESTNET" subtitle={
+                <AppBarTitle title={
+                  <span>
+                    <span>Stellar Fox</span> <span className="header-badge">
+                      testnet
+                    </span>
+                  </span>
+                } subtitle={
                   this.props.nav.view
                 }/>
                 <AppBarItems accountTitle={

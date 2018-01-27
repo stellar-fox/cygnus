@@ -45,3 +45,11 @@ a.active {
   font-weight: bolder;
   font-variant: small-caps;
 }
+
+.header-badge {
+  background-color: rgb(15,46,83);
+  color: rgb(244,176,4);
+  padding: 0px 5px 0px 5px;
+  border-radius: 3px;
+  margin-left: 5px;
+}
