@@ -45,7 +45,7 @@ class Header extends Component {
           <AppBar
             title={
               <div className="flex-row">
-                <AppBarTitle title="Stellar Fox" subtitle={
+                <AppBarTitle title="Stellar Fox - TESTNET" subtitle={
                   this.props.nav.view
                 }/>
                 <AppBarItems accountTitle={

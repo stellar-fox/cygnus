@@ -31,6 +31,12 @@ export default function (state={}, action) {
     case 'SET_ACCOUNT_PAYMENTS':
       state = {...state, payments: action.payload}
       break;
+    case 'SET_HORIZON_END_POINT':
+      state = {...state, horizon: action.payload}
+      break;
+    case 'SET_CURRENCY_PRECISION':
+      state = {...state, precision: action.payload}
+      break;
     default:
       return state
   }

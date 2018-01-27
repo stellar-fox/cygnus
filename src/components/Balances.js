@@ -70,13 +70,14 @@ class Balances extends Component {
   }
 
   getOtherBalances(account) {
-    return account.balances.map(function(balance) {
+    return account.balances.map((balance) => {
       if (balance.asset_type !== 'native') {
         return (
           <p className='other-assets' key={balance.asset_code}>
             <span className='other-asset-balance'>
               {
-                Number.parseFloat(balance.balance).toFixed(2)
+                Number.parseFloat(balance.balance)
+                  .toFixed(this.props.accountInfo.precision)
               }
             </span>
             <span className='other-asset-code'>
@@ -152,7 +153,7 @@ class Balances extends Component {
                       <div className='balance'>
                         {Number.parseFloat(this.getNativeBalance.call(
                           this, this.props.accountInfo.account.account
-                        )).toFixed(2)} XLM
+                        )).toFixed(this.props.accountInfo.precision)} XLM
                       </div>
                       <div>
                         {this.exchangeRateFetched() ?

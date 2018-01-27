@@ -16,6 +16,7 @@ import {
   hideAlert,
   setAccountTab,
   setCurrency,
+  setCurrencyPrecision,
 } from '../actions/index'
 
 const styles = {
@@ -77,9 +78,11 @@ class Account extends Component {
       gravatarPath: '/img/gravatar.jpg',
       sbAccountDiscoverable: false,
       sbCurrency: false,
+      sbCurrencyPrecision: false,
       sbMultisig: false,
       sb2FA: false,
       currency: '',
+      currencyPrecision: '0',
     }
   }
 
@@ -89,13 +92,29 @@ class Account extends Component {
       currency: event.target.parentElement.innerText
     })
     this.setState((prevState) => {
-      return {sbCurrency: true};
+      return {sbCurrency: true}
     })
   }
 
   handleCurrencyChangeSnackBarClose = () => {
     this.setState({
       sbCurrency: false
+    })
+  }
+
+  handleCurrencyPrecisionChange = (event) => {
+    this.props.setCurrencyPrecision(event.target.value)
+    this.setState({
+      currencyPrecision: event.target.parentElement.innerText
+    })
+    this.setState((prevState) => {
+      return {sbCurrencyPrecision: true}
+    })
+  }
+
+  handleCurrencyPrecisionChangeSnackBarClose = () => {
+    this.setState({
+      sbCurrencyPrecision: false
     })
   }
 
@@ -363,6 +382,43 @@ class Account extends Component {
                 </MuiThemeProvider>
 
                 <div className="p-t p-b"></div>
+                <div className="account-title p-t">
+                  Set Currency Precision:
+                </div>
+                <div className="account-subtitle">
+                  Set decimal precision point for fractional currency representation.
+                </div>
+                <MuiThemeProvider>
+                  <div className="flex-start">
+                  <SnackBar
+                    open={this.state.sbCurrencyPrecision}
+                    message={"Currency set to " + this.state.currencyPrecision}
+                    onRequestClose={this.handleCurrencyPrecisionChangeSnackBarClose.bind(this)}
+                  />
+                    <RadioButtonGroup
+                      onChange={this.handleCurrencyPrecisionChange.bind(this)}
+                      className="account-radio-group"
+                      name="currencyPrecision"
+                      defaultSelected={this.props.accountInfo.precision}>
+                      <RadioButton
+                        className="p-b-small"
+                        value="2"
+                        label="Fiat Style"
+                        labelStyle={styles.radioButton.label}
+                        iconStyle={styles.radioButton.icon}
+                      />
+                      <RadioButton
+                        className="p-b-small"
+                        value="7"
+                        label="Crypto Style"
+                        labelStyle={styles.radioButton.label}
+                        iconStyle={styles.radioButton.icon}
+                      />
+                    </RadioButtonGroup>
+                  </div>
+                </MuiThemeProvider>
+
+                <div className="p-t p-b"></div>
                 <div className="flex-row outline">
                   <div>
                     <div className="account-title">
@@ -484,6 +540,7 @@ function mapStateToProps(state) {
     modal: state.modal,
     tabBar: state.tabBar,
     currency: state.currency,
+    accountInfo: state.accountInfo,
   }
 }
 
@@ -492,7 +549,8 @@ function matchDispatchToProps(dispatch) {
     showAlert,
     hideAlert,
     setAccountTab,
-    setCurrency
+    setCurrency,
+    setCurrencyPrecision,
   }, dispatch)
 }
 

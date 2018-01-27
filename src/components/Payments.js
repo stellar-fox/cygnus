@@ -6,21 +6,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {List, ListItem, makeSelectable} from 'material-ui/List'
 
-import Avatar from 'material-ui/Avatar'
-import Chip from 'material-ui/Chip'
-import {
-  Step,
-  Stepper,
-  StepLabel,
-  StepButton,
-  StepContent,
-} from 'material-ui/Stepper'
-
 import {
   setAccountPayments,
 } from '../actions/index'
 import './Payments.css'
-import {pubKeyAbbr} from '../lib/utils'
+import {pubKeyAbbr, utcToLocaleDateTime, getAssetCode} from '../lib/utils'
 
 let SelectableList = makeSelectable(List)
 
@@ -116,7 +106,7 @@ class Payments extends Component {
 
   componentDidMount() {
     let that = this
-    let server = new window.StellarSdk.Server('https://horizon.stellar.org')
+    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
       // .limit(5)
       .forAccount(this.props.accountInfo.pubKey)
@@ -181,7 +171,39 @@ class Payments extends Component {
     let humanizedEffectType = ''
     switch (effect.type) {
       case 'account_created':
-        humanizedEffectType = 'Acccount created'
+      humanizedEffectType = (
+        <div>
+          <div className="flex-row">
+            <div>
+              <i className="material-icons">filter_{index+1}</i>
+              <span>New Acccount Created </span>
+              <span className="account-direction">
+                {effect.account === this.props.accountInfo.pubKey ?
+                  'Yours' : 'Theirs'}
+              </span>
+            </div>
+            <div>
+              <span className="credit">
+                + {
+                  Number.parseFloat(effect.starting_balance)
+                    .toFixed(this.props.accountInfo.precision)
+                } XLM
+              </span>
+            </div>
+          </div>
+          <div className="payment-details-body">
+            <div>
+              <span className="smaller">
+                {pubKeyAbbr(effect.account)}
+              </span>
+              <div className="payment-details-fieldset">
+                <div>ID: {effect.id}</div>
+                <div>Paging Token: {effect.paging_token}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
         break;
       case 'account_removed':
         humanizedEffectType = 'Acccount removed'
@@ -192,10 +214,19 @@ class Payments extends Component {
             <div className="flex-row">
               <div>
                 <i className="material-icons">filter_{index+1}</i>
-                <span>Acccount Credited</span>
+                <span>Acccount Credited </span>
+                <span className="account-direction">
+                  {effect.account === this.props.accountInfo.pubKey ?
+                    'Yours' : 'Theirs'}
+                </span>
               </div>
               <div>
-                <span className='credit'>➕ {effect.amount}</span>
+                <span className="credit">
+                  + {
+                    Number.parseFloat(effect.amount)
+                      .toFixed(this.props.accountInfo.precision)
+                  } {getAssetCode(effect)}
+                </span>
               </div>
             </div>
             <div className="payment-details-body">
@@ -203,7 +234,10 @@ class Payments extends Component {
                 <span className="smaller">
                   {pubKeyAbbr(effect.account)}
                 </span>
-                <p>Proin condimentum tempus ultrices. Suspendisse vestibulum suscipit erat, ac efficitur lorem. Nullam non ex vel turpis imperdiet maximus sit amet nec odio. Donec mauris nisl, vestibulum id efficitur at, convallis id dui. Sed enim nisl, ultrices vitae sodales eu, vestibulum a mi. Morbi consectetur pulvinar sagittis. Phasellus pharetra diam id leo gravida pharetra. In rutrum est gravida, maximus mi ac, mattis metus. Ut at tempus sem. Vivamus condimentum erat eget aliquet dignissim. </p>
+                <div className="payment-details-fieldset">
+                  <div>ID: {effect.id}</div>
+                  <div>Paging Token: {effect.paging_token}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -215,10 +249,19 @@ class Payments extends Component {
             <div className="flex-row">
               <div>
                 <i className="material-icons">filter_{index+1}</i>
-                <span>Acccount Debited</span>
+                <span>Acccount Debited </span>
+                <span className="account-direction">
+                  {effect.account === this.props.accountInfo.pubKey ?
+                    'Yours' : 'Theirs'}
+                </span>
               </div>
               <div>
-                <span className='debit'>➖ {effect.amount}</span>
+                <span className='debit'>
+                  - {
+                    Number.parseFloat(effect.amount)
+                      .toFixed(this.props.accountInfo.precision)
+                  } {getAssetCode(effect)}
+                </span>
               </div>
             </div>
             <div className="payment-details-body">
@@ -227,15 +270,8 @@ class Payments extends Component {
                   {pubKeyAbbr(effect.account)}
                 </span>
                 <div className="payment-details-fieldset">
-                  Proin condimentum tempus ultrices. Suspendisse vestibulum
-                  suscipit erat, ac efficitur lorem. Nullam non ex vel turpis
-                  imperdiet maximus sit amet nec odio. Donec mauris nisl,
-                  vestibulum id efficitur at, convallis id dui. Sed enim nisl,
-                  ultrices vitae sodales eu, vestibulum a mi. Morbi consectetur
-                  pulvinar sagittis. Phasellus pharetra diam id leo gravida
-                  pharetra. In rutrum est gravida, maximus mi ac, mattis metus.
-                  Ut at tempus sem. Vivamus condimentum erat eget aliquet
-                  dignissim.
+                  <div>ID: {effect.id}</div>
+                  <div>Paging Token: {effect.paging_token}</div>
                 </div>
               </div>
             </div>
@@ -243,7 +279,33 @@ class Payments extends Component {
         )
         break;
       case 'signer_created':
-        humanizedEffectType = 'Signer created ✎'
+        humanizedEffectType = (
+          <div>
+            <div className="flex-row">
+              <div>
+                <i className="material-icons">filter_{index+1}</i>
+                <span>Signer Created ✎ </span>
+                <span className="account-direction">
+                  {effect.account === this.props.accountInfo.pubKey ?
+                    'You' : 'They'}
+                </span>
+              </div>
+              <div>
+              </div>
+            </div>
+            <div className="payment-details-body">
+              <div>
+                <span className="smaller">
+                  {pubKeyAbbr(effect.account)}
+                </span>
+                <div className="payment-details-fieldset">
+                  <div>ID: {effect.id}</div>
+                  <div>Paging Token: {effect.paging_token}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
         break;
       default:
         humanizedEffectType = effect.type
@@ -309,7 +371,7 @@ class Payments extends Component {
                         Payment ID: {this.state.paymentDetails.txid}
                       </div>
                       <div>
-                        {this.state.paymentDetails.created_at}
+                        {utcToLocaleDateTime(this.state.paymentDetails.created_at)}
                       </div>
                     </div>
                   </div>

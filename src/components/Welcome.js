@@ -21,6 +21,7 @@ import {
   selectView,
   disableAuthenticateButton,
   enableAuthenticateButton,
+  setHorizonEndPoint,
 } from '../actions/index'
 import Panel from './Panel'
 
@@ -54,6 +55,11 @@ class Welcome extends Component {
   }
 
   componentDidMount(){
+    /*
+    * Horizon end point is set to testnet by default.
+    */
+    this.props.setHorizonEndPoint('https://horizon-testnet.stellar.org')
+
     this.props.disableAuthenticateButton()
     let that = this
     new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
@@ -130,7 +136,7 @@ class Welcome extends Component {
 
       // 3. load account info
       let that = this
-      let server = new window.StellarSdk.Server('https://horizon.stellar.org')
+      let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
       this.props.updateLoadingMessage({
         message: 'Searching for Account ...',
       })
@@ -398,6 +404,7 @@ function matchDispatchToProps(dispatch) {
     selectView,
     disableAuthenticateButton,
     enableAuthenticateButton,
+    setHorizonEndPoint,
   }, dispatch)
 }
 

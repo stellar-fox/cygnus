@@ -146,3 +146,17 @@ export const setAccountPayments = (state) => {
     payload: state,
   }
 }
+
+export const setHorizonEndPoint = (state) => {
+  return {
+    type: 'SET_HORIZON_END_POINT',
+    payload: state,
+  }
+}
+
+export const setCurrencyPrecision = (state) => {
+  return {
+    type: 'SET_CURRENCY_PRECISION',
+    payload: state,
+  }
+}

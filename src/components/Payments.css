@@ -1,7 +1,7 @@
 .payment-details {
   margin-right: 1rem;
   margin-top: 2rem;
-  border: 2px solid rgba(244,176,4,0.8);
+  border: 1px solid rgba(244,176,4,0.8);
   border-radius: 3px;
   padding: 1rem;
   max-width: 65%;
@@ -26,14 +26,27 @@
 
 .credit {
   color: #228B22;
+  font-size: 1.1rem;
+  font-weight: bolder;
 }
 
 .debit {
-  color: #B22222
+  color: #B22222;
+  font-size: 1.1rem;
+  font-weight: bolder;
+}
+
+.account-direction {
+  font-size: 0.7rem;
+  border: 1px solid rgba(244,176,4,0.8);
+  color: rgba(244,176,4,0.75);
+  border-radius: 3px;
+  padding: 2px;
+  margin: 5px;
 }
 
 .effect-title {
-  font-weight: bolder;
+  /* font-weight: bolder; */
 }
 
 .payment-details-fieldset {
