@@ -5,9 +5,17 @@ import {bindActionCreators} from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {List, ListItem, makeSelectable} from 'material-ui/List'
-
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
 import {
   setAccountPayments,
+  setAccountTransactions,
 } from '../actions/index'
 import './Payments.css'
 import {pubKeyAbbr, utcToLocaleDateTime, getAssetCode} from '../lib/utils'
@@ -76,6 +84,9 @@ const styles = {
     background: 'rgba(244,176,4,0.75) none repeat scroll 0% 0%',
     color: 'rgb(15,46,83)',
   },
+  table: {
+    backgroundColor: 'rgb(15,46,83)',
+  },
 }
 
 class Payments extends Component {
@@ -85,63 +96,32 @@ class Payments extends Component {
       tabSelected: '1',
       paymentDetails: {
         txid: null,
+        created_at: null,
+        memo: '',
         effects: [],
       },
     }
   }
 
   componentDidMount() {
-    let that = this
     let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
       // .limit(5)
       .forAccount(this.props.accountInfo.pubKey)
       .order('desc')
       .call()
-      .then(function (paymentsResult) {
-        that.props.setAccountPayments(paymentsResult)
+      .then((paymentsResult) => {
+        this.props.setAccountPayments(paymentsResult)
         paymentsResult.records[0].effects().then((effects) => {
-          that.setState({paymentDetails: {
-            txid: paymentsResult.records[0].id,
-            created_at: paymentsResult.records[0].created_at,
-            effects: effects._embedded.records,
-          }})
+          paymentsResult.records[0].transaction().then((tx) => {
+            this.setState({paymentDetails: {
+              txid: paymentsResult.records[0].id,
+              created_at: paymentsResult.records[0].created_at,
+              effects: effects._embedded.records,
+              memo: tx.memo,
+            }})
+          })
         })
-
-        // paymentsResult.records[0].transaction().then((tx) => {
-        //   let txJSONEnv = (window.StellarSdk.xdr.TransactionEnvelope
-        //     .fromXDR(tx.envelope_xdr, 'base64'))
-        //   console.log(JSON.stringify(txJSONEnv))
-        //   let txJSONRes = (window.StellarSdk.xdr.TransactionResult
-        //     .fromXDR(tx.result_xdr, 'base64'))
-        //   console.log(JSON.stringify(txJSONRes))
-        //   let txJSONMeta = (window.StellarSdk.xdr.TransactionMeta
-        //     .fromXDR(tx.result_meta_xdr, 'base64'))
-        //   console.log(JSON.stringify(txJSONMeta))
-        // })
-
-        // paymentsResult.records.map((payment) => {
-        //
-        //   payment.transaction().then((tx) => {
-        //     let txJSON = window.StellarSdk.xdr.TransactionMeta.fromXDR(
-        //       tx.result_meta_xdr, 'base64'
-        //     )
-        //     console.log(tx)
-        //     console.log(txJSON)
-        //   })
-        //
-        //   payment.effects().then((effects) => {
-        //     console.log('-------- ' + payment.transaction_hash +  ' -------')
-        //     effects._embedded.records.map((effect) => {
-        //       console.log({[payment.transaction_hash]: effect})
-        //       that.props.setPaymentEffects({[payment.transaction_hash]: effect})
-        //       return true
-        //     })
-        //   })
-        //   return true
-        // })
-
-
       })
       .catch(function (err) {
         console.log(err)
@@ -152,17 +132,32 @@ class Payments extends Component {
     this.setState({
       tabSelected: value,
     })
+    if (value === "2") {
+      let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+      server.transactions()
+        // .limit(5)
+        .forAccount(this.props.accountInfo.pubKey)
+        .order('desc')
+        .call()
+        .then((txs) => {
+          this.props.setAccountTransactions(txs)
+        })
+        .catch(function (err) {
+          console.log(err)
+        })
+    }
   }
 
   handleOnClickListItem = (payment) => {
-    let that = this
     payment.effects().then((effects) => {
-      console.log(effects)
-      that.setState({paymentDetails: {
-        txid: payment.id,
-        created_at: payment.created_at,
-        effects: effects._embedded.records,
-      }})
+      payment.transaction().then((tx) => {
+        this.setState({paymentDetails: {
+          txid: payment.id,
+          created_at: payment.created_at,
+          effects: effects._embedded.records,
+          memo: tx.memo,
+        }})
+      })
     })
   }
 
@@ -196,6 +191,7 @@ class Payments extends Component {
                 {pubKeyAbbr(effect.account)}
               </span>
               <div className="payment-details-fieldset">
+                <div className="tiny">Memo: {this.state.paymentDetails.memo}</div>
                 <div className="tiny">ID: {effect.id}</div>
               </div>
             </div>
@@ -233,6 +229,7 @@ class Payments extends Component {
                   {pubKeyAbbr(effect.account)}
                 </span>
                 <div className="payment-details-fieldset">
+                  <div className="tiny">Memo: {this.state.paymentDetails.memo}</div>
                   <div className="tiny">ID: {effect.id}</div>
                 </div>
               </div>
@@ -267,6 +264,7 @@ class Payments extends Component {
                   {pubKeyAbbr(effect.account)}
                 </span>
                 <div className="payment-details-fieldset">
+                  <div className="tiny">Memo: {this.state.paymentDetails.memo}</div>
                   <div className="tiny">ID: {effect.id}</div>
                 </div>
               </div>
@@ -398,17 +396,61 @@ class Payments extends Component {
               </div>
             </div>
           </Tab>
-          <Tab style={styles.tab} label="Operations" value="2">
+          <Tab style={styles.tab} label="Transactions" value="2">
             <div className="tab-content">
               <div className="flex-row">
                 <div>
-                  <h2 style={styles.headline}>Account Operations</h2>
+                  <h2 style={styles.headline}>Account Transactions</h2>
                   <div className="account-title">
-                    Account related operations.
+                    Each transaction represents a change to the account state.
                   </div>
                   <div className="account-subtitle">
-                    Newest operations shown as first.
+                    Newest transactions shown as first.
                   </div>
+                  <div className="p-b p-t"></div>
+                  {this.props.accountInfo.transactions ? (
+                  <Table style={styles.table}>
+                    <TableHeader className="tx-table-header" displaySelectAll={false} adjustForCheckbox={false}>
+                      <TableRow className="tx-table-row" style={styles.tableRow}>
+
+                        <TableHeaderColumn className="tx-table-header-column">Transaction Time</TableHeaderColumn>
+                        <TableHeaderColumn className="tx-table-header-column">Account</TableHeaderColumn>
+                        <TableHeaderColumn className="tx-table-header-column">Memo</TableHeaderColumn>
+                        <TableHeaderColumn className="tx-table-header-column">Fee Paid</TableHeaderColumn>
+                        <TableHeaderColumn className="tx-table-header-column">Signature Count</TableHeaderColumn>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={false}>
+                      {this.props.accountInfo.transactions.records.map((tx, index) => (
+                        <TableRow selectable={false} key={index} className="tx-table-row">
+
+                          <TableRowColumn className="tx-table-row-column">
+                            {utcToLocaleDateTime(tx.created_at)}
+                          </TableRowColumn>
+                          <TableRowColumn className="tx-table-row-column">
+                            <span>
+                              <span>
+                                {pubKeyAbbr(tx.source_account)}
+                              </span>
+                              <span className="account-direction">
+                                {tx.source_account === this.props.accountInfo.pubKey ?
+                                  'Yours' : 'Theirs'}
+                              </span>
+                            </span>
+                          </TableRowColumn>
+                          <TableRowColumn className="tx-table-row-column">
+                            {tx.memo}
+                          </TableRowColumn>
+                          <TableRowColumn className="tx-table-row-column">
+                            {tx.fee_paid}
+                          </TableRowColumn>
+                          <TableRowColumn className="tx-table-row-column">
+                            {tx.signatures.length}
+                          </TableRowColumn>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>) : null }
                 </div>
               </div>
             </div>
@@ -429,6 +471,7 @@ function mapStateToProps(state) {
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({
     setAccountPayments,
+    setAccountTransactions,
   }, dispatch)
 }
 

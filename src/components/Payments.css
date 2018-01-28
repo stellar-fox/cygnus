@@ -63,3 +63,20 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+.tx-table-header {
+  background-color: rgb(15,46,83);
+}
+
+.tx-table-header-column {
+  color: rgba(244,176,4,0.8) !important;
+  font-size: 1rem !important;
+}
+
+.tx-table-row {
+  border-bottom: 1px solid rgba(244,176,4,0.8) !important;
+}
+
+.tx-table-row-column {
+  color: rgba(244,176,4,0.8) !important;
+}

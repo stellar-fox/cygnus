@@ -22,6 +22,7 @@ import {
   disableAuthenticateButton,
   enableAuthenticateButton,
   setHorizonEndPoint,
+  setCurrencyPrecision,
 } from '../actions/index'
 import Panel from './Panel'
 
@@ -59,7 +60,7 @@ class Welcome extends Component {
     * Horizon end point is set to testnet by default.
     */
     this.props.setHorizonEndPoint('https://horizon-testnet.stellar.org')
-
+    this.props.setCurrencyPrecision('2')
     this.props.disableAuthenticateButton()
     let that = this
     new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
@@ -405,6 +406,7 @@ function matchDispatchToProps(dispatch) {
     disableAuthenticateButton,
     enableAuthenticateButton,
     setHorizonEndPoint,
+    setCurrencyPrecision,
   }, dispatch)
 }
 

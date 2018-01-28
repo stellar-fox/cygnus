@@ -147,6 +147,13 @@ export const setAccountPayments = (state) => {
   }
 }
 
+export const setAccountTransactions = (state) => {
+  return {
+    type: 'SET_ACCOUNT_TRANSACTIONS',
+    payload: state,
+  }
+}
+
 export const setHorizonEndPoint = (state) => {
   return {
     type: 'SET_HORIZON_END_POINT',

@@ -82,7 +82,7 @@ class Account extends Component {
       sbMultisig: false,
       sb2FA: false,
       currency: '',
-      currencyPrecision: '0',
+      currencyPrecision: '',
     }
   }
 
