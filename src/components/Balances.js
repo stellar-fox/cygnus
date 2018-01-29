@@ -6,22 +6,107 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 import Dialog from 'material-ui/Dialog';
+import SnackBar from '../frontend/snackbar/SnackBar'
 import axios from 'axios'
+import {formatAmount} from '../lib/utils'
 import {
   setExchangeRate,
   showAlert,
   hideAlert,
   setCurrency,
+  setStreamer,
+  accountExistsOnLedger,
 } from '../actions/index'
+
 class Balances extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      sbPayment: false,
+      sbPaymentAmount: null,
+      sbPaymentAssetCode: null,
+    }
+  }
 
   componentDidMount() {
     this.getExchangeRate(this.props.currency.default)
+    this.props.setStreamer(this.paymentsStreamer.call(this))
+  }
+
+  componentWillUnmount() {
+    this.props.accountInfo.streamer.call(this)
+  }
+
+  paymentsStreamer() {
+    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    return server.payments()
+      .cursor('now')
+      .stream({
+        onmessage: (message) => {
+          /*
+          * Initial Account Funding
+          */
+          if (message.type === 'create_account' && message.account === this.props.accountInfo.pubKey) {
+            this.updateAccount.call(this)
+            this.setState({
+              sbPayment: true,
+              sbPaymentText: 'Account Funded: ',
+              sbPaymentAmount: formatAmount(
+                message.starting_balance, this.props.accountInfo.precision),
+              sbPaymentAssetCode: 'XLM'
+            })
+          }
+
+          /*
+          * Receiving Payment
+          */
+          if (message.type === 'payment' && message.to === this.props.accountInfo.pubKey) {
+            this.updateAccount.call(this)
+            this.setState({
+              sbPayment: true,
+              sbPaymentText: 'Payment Received: ',
+              sbPaymentAmount: formatAmount(
+                message.amount, this.props.accountInfo.precision),
+              sbPaymentAssetCode: (
+                message.asset_type === 'native' ? 'XLM' : message.asset_code)
+            })
+          }
+
+          /*
+          * Sending Payment
+          */
+          if (message.type === 'payment' && message.from === this.props.accountInfo.pubKey) {
+            this.updateAccount.call(this)
+            this.setState({
+              sbPayment: true,
+              sbPaymentText: 'Payment Sent: ',
+              sbPaymentAmount: formatAmount(
+                message.amount, this.props.accountInfo.precision),
+              sbPaymentAssetCode: (
+                message.asset_type === 'native' ? 'XLM' : message.asset_code)
+            })
+          }
+
+        }
+      })
+  }
+
+  updateAccount() {
+    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    server.loadAccount(this.props.accountInfo.pubKey)
+      .catch(window.StellarSdk.NotFoundError, function (error) {
+        throw new Error('The destination account does not exist!');
+      })
+      .then((account) => {
+        this.props.accountExistsOnLedger({account})
+      }, (e) => {
+        this.props.accountMissingOnLedger()
+      })
   }
 
   getNativeBalance(account) {
     let nativeBalance = 0
-    account.balances.forEach(function(balance) {
+    account.balances.forEach((balance) => {
       if (balance.asset_type === 'native') {
         nativeBalance = balance.balance
       }
@@ -52,15 +137,16 @@ class Balances extends Component {
 
   getExchangeRate(currency) {
     const cryptonatorXlmTicker = 'https://api.cryptonator.com/api/ticker/xlm-'
-    let that = this
     if (this.exchangeRateStale()) {
       axios.get(cryptonatorXlmTicker + currency)
-        .then(function (response) {
+        .then((response) => {
           if (response.data.success === true) {
-            that.props.setExchangeRate({[currency]: {
+            this.props.setExchangeRate({[currency]: {
               rate: response.data.ticker.price,
               lastFetch: Date.now()
             }})
+          } else {
+            console.log(`Cryptonator: ${response.data.error}`)
           }
         })
         .catch(function (error) {
@@ -98,6 +184,11 @@ class Balances extends Component {
     this.props.hideAlert()
   }
 
+  handlePaymentSnackBarClose = () => {
+    this.setState({
+      sbPayment: false
+    })
+  }
 
   render() {
     let otherBalances
@@ -122,6 +213,11 @@ class Balances extends Component {
       <div>
         <MuiThemeProvider>
           <div>
+            <SnackBar
+              open={this.state.sbPayment}
+              message={`${this.state.sbPaymentText} ${this.state.sbPaymentAmount} ${this.state.sbPaymentAssetCode}`}
+              onRequestClose={this.handlePaymentSnackBarClose.bind(this)}
+            />
             <Dialog
               title="Not Yet Implemented"
               actions={actions}
@@ -142,7 +238,12 @@ class Balances extends Component {
             <MuiThemeProvider>
               <Card className='account'>
                 <CardHeader
-                  title="Current Balance"
+                  title={
+                    <span>
+                      <span>Current Balance </span>
+                      <i className="material-icons">hearing</i>
+                    </span>
+                  }
                   subtitle="Stellar Lumens"
                   actAsExpander={true}
                   showExpandableButton={true}
@@ -228,7 +329,7 @@ class Balances extends Component {
                 <div className='faded'>
                   <i className="material-icons md-icon-small">info_outline</i>
                   Your account is currently inactive. Please deposit required
-                  minimum reserve of 0.5 XLM in order to activate it.
+                  minimum reserve of 1 XLM in order to activate it.
                 </div>
               </CardText>
             </Card>
@@ -254,6 +355,8 @@ function matchDispatchToProps(dispatch) {
     showAlert,
     hideAlert,
     setCurrency,
+    setStreamer,
+    accountExistsOnLedger,
   }, dispatch)
 }
 

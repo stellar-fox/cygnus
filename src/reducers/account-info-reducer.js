@@ -40,6 +40,9 @@ export default function (state={}, action) {
     case 'SET_CURRENCY_PRECISION':
       state = {...state, precision: action.payload}
       break;
+    case 'SET_STREAMER':
+      state = {...state, streamer: action.payload}
+      break;
     default:
       return state
   }

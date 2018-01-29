@@ -163,13 +163,14 @@ class Payments extends Component {
 
   decodeEffectType = (effect, index) => {
     let humanizedEffectType = ''
+    const icon = `filter_${index+1}`
     switch (effect.type) {
       case 'account_created':
       humanizedEffectType = (
         <div>
           <div className="flex-row">
             <div>
-              <i className="material-icons">filter_{index+1}</i>
+              <i className="material-icons">{icon}</i>
               <span>New Acccount Created </span>
               <span className="account-direction">
                 {effect.account === this.props.accountInfo.pubKey ?
@@ -207,7 +208,7 @@ class Payments extends Component {
           <div>
             <div className="flex-row">
               <div>
-                <i className="material-icons">filter_{index+1}</i>
+                <i className="material-icons">{icon}</i>
                 <span>Acccount Credited </span>
                 <span className="account-direction">
                   {effect.account === this.props.accountInfo.pubKey ?
@@ -242,7 +243,7 @@ class Payments extends Component {
           <div>
             <div className="flex-row">
               <div>
-                <i className="material-icons">filter_{index+1}</i>
+                <i className="material-icons">{icon}</i>
                 <span>Acccount Debited </span>
                 <span className="account-direction">
                   {effect.account === this.props.accountInfo.pubKey ?
@@ -277,7 +278,7 @@ class Payments extends Component {
           <div>
             <div className="flex-row">
               <div>
-                <i className="material-icons">filter_{index+1}</i>
+                <i className="material-icons">{icon}</i>
                 <span>Signer Created ✎ </span>
                 <span className="account-direction">
                   {effect.public_key === this.props.accountInfo.pubKey ?

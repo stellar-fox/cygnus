@@ -167,3 +167,10 @@ export const setCurrencyPrecision = (state) => {
     payload: state,
   }
 }
+
+export const setStreamer = (state) => {
+  return {
+    type: 'SET_STREAMER',
+    payload: state,
+  }
+}

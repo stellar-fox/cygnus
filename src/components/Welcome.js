@@ -130,13 +130,11 @@ class Welcome extends Component {
         pubKey: pubKey,
         message: null,
       })
-      sessionStorage.setItem('SFOX.ACCT_PUBKEY', pubKey)
 
       // 2. show loading modal
       this.props.setModalLoading()
 
       // 3. load account info
-      let that = this
       let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
       this.props.updateLoadingMessage({
         message: 'Searching for Account ...',
@@ -145,22 +143,20 @@ class Welcome extends Component {
         .catch(window.StellarSdk.NotFoundError, function (error) {
           throw new Error('The destination account does not exist!');
         })
-        .then(function(account) {
-          that.props.accountExistsOnLedger({account}) // ===> THAT <=== !!!!
-          sessionStorage.setItem('SFOX.ACCT_EXISTS', true)
-          that.props.selectView('Balances')
-          that.props.logIn({isReadOnly})
-          that.props.setModalLoaded()
-          that.props.updateLoadingMessage({
+        .then((account) => {
+          this.props.accountExistsOnLedger({account})
+          this.props.selectView('Balances')
+          this.props.logIn({isReadOnly})
+          this.props.setModalLoaded()
+          this.props.updateLoadingMessage({
             message: null,
           })
-        }, function (e) {
-          that.props.accountMissingOnLedger() // ===> THAT <=== !!!!
-          sessionStorage.setItem('SFOX.ACCT_EXISTS', false)
-          that.props.selectView('Balances')
-          that.props.logIn({isReadOnly})
-          that.props.setModalLoaded()
-          that.props.updateLoadingMessage({
+        }, (e) => {
+          this.props.accountMissingOnLedger()
+          this.props.selectView('Balances')
+          this.props.logIn({isReadOnly})
+          this.props.setModalLoaded()
+          this.props.updateLoadingMessage({
             message: null,
           })
         })

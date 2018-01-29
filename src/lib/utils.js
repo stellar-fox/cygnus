@@ -16,3 +16,7 @@ export const getAssetCode = (asset) => {
   }
   return asset.asset_code
 }
+
+export const formatAmount = (amount, precision=2) => {
+  return Number.parseFloat(amount).toFixed(precision)
+}
