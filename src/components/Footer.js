@@ -5,7 +5,9 @@ import './Footer.css'
 export default class Footer extends Component {
   render() {
     return (
-      <div className='footer'>© <span>Stellar Fox</span> 2017.</div>
+      <div className='footer'>
+        © <span>Stellar Fox</span> 2017.
+      </div>
     )
   }
 }

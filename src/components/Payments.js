@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {List, ListItem, makeSelectable} from 'material-ui/List'
+import SnackBar from '../frontend/snackbar/SnackBar'
 import {
   Table,
   TableBody,
@@ -16,9 +17,12 @@ import {
 import {
   setAccountPayments,
   setAccountTransactions,
+  setStreamer,
+  accountExistsOnLedger,
+  accountMissingOnLedger,
 } from '../actions/index'
 import './Payments.css'
-import {pubKeyAbbr, utcToLocaleDateTime, getAssetCode} from '../lib/utils'
+import {pubKeyAbbr, utcToLocaleDateTime, getAssetCode, formatAmount} from '../lib/utils'
 
 let SelectableList = makeSelectable(List)
 
@@ -57,7 +61,6 @@ SelectableList = wrapState(SelectableList)
 const styles = {
   headline: {
     fontSize: 24,
-    paddingTop: 16,
     marginBottom: 12,
     fontWeight: 400,
   },
@@ -72,17 +75,6 @@ const styles = {
   container: {
     backgroundColor: '#2e5077',
     borderRadius: '3px',
-  },
-  listItem: {
-    width: '100%',
-    border: '2px solid rgba(244,176,4,0.8)',
-    borderRadius: '3px',
-    marginTop: '12px',
-    backgroundColor: 'rgba(244,176,4,1)',
-  },
-  listItemInnerDiv: {
-    background: 'rgba(244,176,4,0.75) none repeat scroll 0% 0%',
-    color: 'rgb(15,46,83)',
   },
   table: {
     backgroundColor: 'rgb(15,46,83)',
@@ -99,14 +91,24 @@ class Payments extends Component {
         created_at: null,
         memo: '',
         effects: [],
+        selectedPaymentId: null,
       },
+      sbPayment: false,
+      sbPaymentAmount: null,
+      sbPaymentAssetCode: null,
     }
   }
 
+  componentWillUnmount() {
+    this.props.accountInfo.streamer.call(this)
+  }
+
   componentDidMount() {
+    this.props.setStreamer(this.paymentsStreamer.call(this))
+
     let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
-      // .limit(5)
+      .limit(5)
       .forAccount(this.props.accountInfo.pubKey)
       .order('desc')
       .call()
@@ -119,6 +121,7 @@ class Payments extends Component {
               created_at: paymentsResult.records[0].created_at,
               effects: effects._embedded.records,
               memo: tx.memo,
+              selectedPaymentId: paymentsResult.records[0].id,
             }})
           })
         })
@@ -126,6 +129,114 @@ class Payments extends Component {
       .catch(function (err) {
         console.log(err)
       })
+  }
+
+  paymentsStreamer() {
+    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    return server.payments()
+      .cursor('now')
+      .stream({
+        onmessage: (message) => {
+          /*
+          * Initial Account Funding
+          */
+          if (message.type === 'create_account' && message.account === this.props.accountInfo.pubKey) {
+            this.updateAccount.call(this)
+            this.setState({
+              sbPayment: true,
+              sbPaymentText: 'Account Funded: ',
+              sbPaymentAmount: formatAmount(
+                message.starting_balance, this.props.accountInfo.precision),
+              sbPaymentAssetCode: 'XLM'
+            })
+          }
+
+          /*
+          * Receiving Payment
+          */
+          if (message.type === 'payment' && message.to === this.props.accountInfo.pubKey) {
+            this.updateAccount.call(this)
+            this.setState({
+              sbPayment: true,
+              sbPaymentText: 'Payment Received: ',
+              sbPaymentAmount: formatAmount(
+                message.amount, this.props.accountInfo.precision),
+              sbPaymentAssetCode: (
+                message.asset_type === 'native' ? 'XLM' : message.asset_code)
+            })
+          }
+
+          /*
+          * Sending Payment
+          */
+          if (message.type === 'payment' && message.from === this.props.accountInfo.pubKey) {
+            this.updateAccount.call(this)
+            this.setState({
+              sbPayment: true,
+              sbPaymentText: 'Payment Sent: ',
+              sbPaymentAmount: formatAmount(
+                message.amount, this.props.accountInfo.precision),
+              sbPaymentAssetCode: (
+                message.asset_type === 'native' ? 'XLM' : message.asset_code)
+            })
+          }
+
+        }
+      })
+  }
+
+  // let server = new StellarSdk.Server('https://horizon-testnet.stellar.org')
+  // server.loadAccount('GAQOQBU5FUXT3VXMP6C7LUDVVXQXLXJHG6IISBM4CLUPLZKUFDPFWCCV')
+  //   .catch(window.StellarSdk.NotFoundError, function (error) {
+  //     throw new Error('The destination account does not exist!');
+  //   })
+  //   .then((account) => {
+  //
+  //     account.payments({order: 'desc'}).then((payments) => {
+  //       console.log(payments)
+  //     })
+  //   }, (e) => {
+  //     console.log(e)
+  //   })
+  //
+  //   let server = new StellarSdk.Server('https://horizon-testnet.stellar.org')
+  //   server.payments()
+  //     .limit(1)
+  //     .forAccount('GAQOQBU5FUXT3VXMP6C7LUDVVXQXLXJHG6IISBM4CLUPLZKUFDPFWCCV')
+  //     .order('desc')
+  //     .call()
+  //     .then((payments) => {
+  //       console.log(payments)
+  //     })
+
+
+  updateAccount() {
+    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    server.loadAccount(this.props.accountInfo.pubKey)
+      .catch(window.StellarSdk.NotFoundError, function (error) {
+        throw new Error('The destination account does not exist!');
+      })
+      .then((account) => {
+        this.props.accountExistsOnLedger({account})
+
+        server.payments()
+          .limit(5)
+          .forAccount(this.props.accountInfo.pubKey)
+          .order('desc')
+          .call()
+          .then((payments) => {
+            this.props.setAccountPayments(payments)
+          })
+      }, (e) => {
+        this.props.accountMissingOnLedger()
+      })
+  }
+
+
+  handlePaymentSnackBarClose = () => {
+    this.setState({
+      sbPayment: false
+    })
   }
 
   handleTabSelect = (value) => {
@@ -148,7 +259,7 @@ class Payments extends Component {
     }
   }
 
-  handleOnClickListItem = (payment) => {
+  handlePaymentClick = (payment, paymentId) => {
     payment.effects().then((effects) => {
       payment.transaction().then((tx) => {
         this.setState({paymentDetails: {
@@ -156,6 +267,7 @@ class Payments extends Component {
           created_at: payment.created_at,
           effects: effects._embedded.records,
           memo: tx.memo,
+          selectedPaymentId: paymentId
         }})
       })
     })
@@ -182,18 +294,22 @@ class Payments extends Component {
                 + {
                   Number.parseFloat(effect.starting_balance)
                     .toFixed(this.props.accountInfo.precision)
-                } XLM
+                } <span className="smaller">XLM</span>
               </span>
             </div>
           </div>
           <div className="payment-details-body">
             <div>
-              <span className="smaller">
+              <span className="payment-details-account">
                 {pubKeyAbbr(effect.account)}
               </span>
               <div className="payment-details-fieldset">
-                <div className="tiny">Memo: {this.state.paymentDetails.memo}</div>
-                <div className="tiny">ID: {effect.id}</div>
+                <div className="payment-details-memo">
+                  Memo: {this.state.paymentDetails.memo}
+                </div>
+                <div className="payment-details-id">
+                  ID: {effect.id}
+                </div>
               </div>
             </div>
           </div>
@@ -220,18 +336,22 @@ class Payments extends Component {
                   + {
                     Number.parseFloat(effect.amount)
                       .toFixed(this.props.accountInfo.precision)
-                  } {getAssetCode(effect)}
+                  } <span className="smaller">{getAssetCode(effect)}</span>
                 </span>
               </div>
             </div>
             <div className="payment-details-body">
               <div>
-                <span className="smaller">
+                <span className="payment-details-account">
                   {pubKeyAbbr(effect.account)}
                 </span>
                 <div className="payment-details-fieldset">
-                  <div className="tiny">Memo: {this.state.paymentDetails.memo}</div>
-                  <div className="tiny">ID: {effect.id}</div>
+                  <div className="payment-details-memo">
+                    Memo: {this.state.paymentDetails.memo}
+                  </div>
+                  <div className="payment-details-id">
+                    ID: {effect.id}
+                  </div>
                 </div>
               </div>
             </div>
@@ -255,18 +375,22 @@ class Payments extends Component {
                   - {
                     Number.parseFloat(effect.amount)
                       .toFixed(this.props.accountInfo.precision)
-                  } {getAssetCode(effect)}
+                  } <span className="smaller">{getAssetCode(effect)}</span>
                 </span>
               </div>
             </div>
             <div className="payment-details-body">
               <div>
-                <span className="smaller">
+                <span className="payment-details-account">
                   {pubKeyAbbr(effect.account)}
                 </span>
                 <div className="payment-details-fieldset">
-                  <div className="tiny">Memo: {this.state.paymentDetails.memo}</div>
-                  <div className="tiny">ID: {effect.id}</div>
+                  <div className="payment-details-memo">
+                    Memo: {this.state.paymentDetails.memo}
+                  </div>
+                  <div className="payment-details-id">
+                    ID: {effect.id}
+                  </div>
                 </div>
               </div>
             </div>
@@ -290,11 +414,11 @@ class Payments extends Component {
             </div>
             <div className="payment-details-body">
               <div>
-                <span className="smaller">
+                <span className="payment-details-account">
                   {pubKeyAbbr(effect.account)}
                 </span>
                 <div className="payment-details-fieldset">
-                  <div className="tiny">ID: {effect.id}</div>
+                  <div className="payment-details-id">ID: {effect.id}</div>
                 </div>
               </div>
             </div>
@@ -314,6 +438,12 @@ class Payments extends Component {
     return (
       <div>
         <MuiThemeProvider>
+        <div>
+        <SnackBar
+          open={this.state.sbPayment}
+          message={`${this.state.sbPaymentText} ${this.state.sbPaymentAmount} ${this.state.sbPaymentAssetCode}`}
+          onRequestClose={this.handlePaymentSnackBarClose.bind(this)}
+        />
         <Tabs
           tabItemContainerStyle={styles.container}
           inkBarStyle={styles.inkBar}
@@ -322,32 +452,41 @@ class Payments extends Component {
         >
           <Tab style={styles.tab} label="History" value="1">
             <div className="tab-content">
-              <div className="flex-row">
-                <div>
-                  <h2 style={styles.headline}>Payment History</h2>
-                  <div className="account-title">
-                    Credit and debit operations for your account.
-                  </div>
-                  <div className="account-subtitle">
-                    Newest history shown as first.
-                  </div>
+              <h2 style={styles.headline}>
+                <i className="material-icons">hearing</i> Payment History
+              </h2>
+              <div className="account-title">
+                Credit and debit operations for your account.
+              </div>
+              <div className="account-subtitle">
+                Newest history shown as first.
+              </div>
+              
+              <div className="p-b p-t"></div>
+              <div className="flex-row-space-between">
+                <div className="flex-row-column">
                   {this.props.accountInfo.payments ?
+                  <div>
                   <SelectableList defaultValue={1}>
                     {this.props.accountInfo.payments.records.map((payment, index) => (
+                        <div key={payment.id}
+                          className={
+                            this.state.paymentDetails.selectedPaymentId === payment.id ?
+                              'payment-item-active' : 'payment-item'
+                          }>
                         <ListItem
                           value={index+1}
-                          onClick={this.handleOnClickListItem.bind(this, payment)}
-                          innerDivStyle={styles.listItemInnerDiv}
-                          style={styles.listItem}
-                          key={payment.id}
+                          onClick={this.handlePaymentClick.bind(this, payment, payment.id)}
                           leftIcon={
                             payment.type === 'create_account' ?
-                            (<i className="material-icons">account_balance</i>) :
+                            ((payment.funder === this.props.accountInfo.pubKey ?
+                              <i className="material-icons">card_giftcard</i> :
+                              <i className="material-icons">account_balance</i>)) :
                             (payment.to === this.props.accountInfo.pubKey ?
                               (<i className="material-icons">account_balance_wallet</i>) :
                               (<i className="material-icons">payment</i>))
                           }
-                          hoverColor="rgb(244,176,4)"
+                          hoverColor="rgba(244,176,4,0.95)"
                           secondaryText={
                             <span className="payment-date">
                               {utcToLocaleDateTime(payment.created_at)}
@@ -355,7 +494,8 @@ class Payments extends Component {
                           }
                           primaryText={
                             payment.type === 'create_account' ?
-                              ('+' + Number.parseFloat(payment.starting_balance)
+                              ((payment.funder === this.props.accountInfo.pubKey ?
+                                '-' : '+') + Number.parseFloat(payment.starting_balance)
                                 .toFixed(this.props.accountInfo.precision) + ' XLM') :
                               ((payment.to === this.props.accountInfo.pubKey ?
                                 '+' : '-') + Number.parseFloat(payment.amount)
@@ -363,36 +503,38 @@ class Payments extends Component {
                                   ' ' + getAssetCode(payment))
                           }
                         />
+                        </div>
 
                     ))}
                   </SelectableList>
+                  </div>
                   : null}
+
                 </div>
-                <div className="payment-details">
-                  <div className="transaction-id">
-                    <div className="flex-row">
-                      <div>
-                        Payment ID: {this.state.paymentDetails.txid}
-                      </div>
-                      <div>
-                        {utcToLocaleDateTime(this.state.paymentDetails.created_at)}
+                <div className="flex-row-column">
+                  <div>
+                    <div className="transaction-details-header">
+                      <div className="flex-row">
+                        <div>
+                          Payment ID: {this.state.paymentDetails.txid}
+                        </div>
+                        <div>
+                          {utcToLocaleDateTime(this.state.paymentDetails.created_at)}
+                        </div>
                       </div>
                     </div>
+                    <div className="transaction-details-body">
+                      {this.state.paymentDetails.effects.map((effect, index) => {
+                        return (
+                          <div key={index} className="payment-details-item">
+                            <span className="effect-title">
+                              {this.decodeEffectType(effect, index)}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
-                  <div className="p-b p-t"></div>
-
-                  {this.state.paymentDetails.effects.map((effect, index) => {
-                    return (
-                      <div key={index} className="payment-details-item">
-                        <span className="effect-title">
-                          {this.decodeEffectType(effect, index)}
-                        </span>
-
-                        <div className="p-b p-t"></div>
-                      </div>
-                    )
-                  })}
-
                 </div>
               </div>
             </div>
@@ -457,6 +599,7 @@ class Payments extends Component {
             </div>
           </Tab>
         </Tabs>
+        </div>
         </MuiThemeProvider>
       </div>
     )
@@ -473,6 +616,9 @@ function matchDispatchToProps(dispatch) {
   return bindActionCreators({
     setAccountPayments,
     setAccountTransactions,
+    setStreamer,
+    accountExistsOnLedger,
+    accountMissingOnLedger,
   }, dispatch)
 }
 

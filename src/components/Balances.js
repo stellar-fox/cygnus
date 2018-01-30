@@ -16,6 +16,7 @@ import {
   setCurrency,
   setStreamer,
   accountExistsOnLedger,
+  accountMissingOnLedger,
 } from '../actions/index'
 
 class Balances extends Component {
@@ -357,6 +358,7 @@ function matchDispatchToProps(dispatch) {
     setCurrency,
     setStreamer,
     accountExistsOnLedger,
+    accountMissingOnLedger,
   }, dispatch)
 }
 
