@@ -283,7 +283,7 @@ class Payments extends Component {
               </span>
               <div className="payment-details-fieldset">
                 <div className="payment-details-memo">
-                  Memo: {this.state.paymentDetails.memo}
+                  <span className="smaller">Memo:</span> {this.state.paymentDetails.memo}
                 </div>
                 <div className="payment-details-id">
                   ID: {effect.id}
@@ -325,7 +325,7 @@ class Payments extends Component {
                 </span>
                 <div className="payment-details-fieldset">
                   <div className="payment-details-memo">
-                    Memo: {this.state.paymentDetails.memo}
+                    <span className="smaller">Memo:</span> {this.state.paymentDetails.memo}
                   </div>
                   <div className="payment-details-id">
                     ID: {effect.id}
@@ -364,7 +364,7 @@ class Payments extends Component {
                 </span>
                 <div className="payment-details-fieldset">
                   <div className="payment-details-memo">
-                    Memo: {this.state.paymentDetails.memo}
+                    <span className="smaller">Memo:</span> {this.state.paymentDetails.memo}
                   </div>
                   <div className="payment-details-id">
                     ID: {effect.id}
@@ -517,9 +517,14 @@ class Payments extends Component {
                           }
                           rightAvatar={
                             <Avatar
+                              className="square-avatar"
                               backgroundColor="rgba(244,176,4,1)"
-                              size={43}
-                              src="/img/uxceo-128.jpg" />
+                              size={54}
+                              src={
+                                parseInt(payment.id.charAt(payment.id.length-2),10) % 2 ?
+                                '/img/mimi.jpg' : (parseInt(payment.id.charAt(payment.id.length-3),10) % 2 ?
+                                  '/img/igor.jpg' : '/img/gravatar.jpg')
+                              } />
                           }
                         />
                         </div>

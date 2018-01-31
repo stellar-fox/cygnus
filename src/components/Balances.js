@@ -137,18 +137,14 @@ class Balances extends Component {
   }
 
   getExchangeRate(currency) {
-    const cryptonatorXlmTicker = 'https://api.cryptonator.com/api/ticker/xlm-'
+    const cryptonatorXlmTicker = 'https://api.coinmarketcap.com/v1/ticker/stellar/?convert='
     if (this.exchangeRateStale()) {
       axios.get(cryptonatorXlmTicker + currency)
         .then((response) => {
-          if (response.data.success === true) {
-            this.props.setExchangeRate({[currency]: {
-              rate: response.data.ticker.price,
-              lastFetch: Date.now()
-            }})
-          } else {
-            console.log(`Cryptonator: ${response.data.error}`)
-          }
+          this.props.setExchangeRate({[currency]: {
+            rate: response.data[0][`price_${currency}`],
+            lastFetch: Date.now()
+          }})
         })
         .catch(function (error) {
           console.log(error);
@@ -253,11 +249,6 @@ class Balances extends Component {
                   <div className='flex-row'>
                     <div>
                       <div className='balance'>
-                        {Number.parseFloat(this.getNativeBalance.call(
-                          this, this.props.accountInfo.account.account
-                        )).toFixed(this.props.accountInfo.precision)} XLM
-                      </div>
-                      <div>
                         {this.exchangeRateFetched() ?
                           (Number.parseFloat(this.getNativeBalance.call(
                             this, this.props.accountInfo.account.account
@@ -266,6 +257,12 @@ class Balances extends Component {
                           ).toFixed(2) : '0.00'
                         } {this.props.currency.default.toUpperCase()}
                       </div>
+                      <div>
+                        {Number.parseFloat(this.getNativeBalance.call(
+                          this, this.props.accountInfo.account.account
+                        )).toFixed(this.props.accountInfo.precision)} XLM
+                      </div>
+
                     </div>
                     <div></div>
                   </div>

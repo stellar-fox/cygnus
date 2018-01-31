@@ -5,9 +5,9 @@ div.flex-row-space-between {
 }
 
 div.flex-row-column {
-  width: 100%;
+  width: 48%;
   /* border: 1px solid rgba(244,176,4,0.75); */
-  border-radius: 3px;
+  /* border-radius: 3px; */
   margin: 0px 5px 0px 5px;
 }
 
@@ -36,6 +36,15 @@ div.payment-item-active {
   border: 1px solid rgba(244,176,4,1);
   border-radius: 3px;
   background: rgba(244,176,4,1);
+}
+
+.square-avatar {
+  border-radius: 3px !important;
+  /* border: 3px double rgba(15,46,83,0.2); */
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  top: 5px !important;
+  right: 5px !important;
+  opacity: 0.85;
 }
 
 .payment-details {

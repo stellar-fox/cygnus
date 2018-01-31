@@ -372,8 +372,29 @@ class Account extends Component {
                         iconStyle={styles.radioButton.icon}
                       />
                       <RadioButton
+                        className="p-b-small"
                         value="aud"
                         label="Australian Dollar [AUD]"
+                        labelStyle={styles.radioButton.label}
+                        iconStyle={styles.radioButton.icon}
+                      />
+                      <RadioButton
+                        className="p-b-small"
+                        value="nzd"
+                        label="New Zealand Dollar [NZD]"
+                        labelStyle={styles.radioButton.label}
+                        iconStyle={styles.radioButton.icon}
+                      />
+                      <RadioButton
+                        className="p-b-small"
+                        value="pln"
+                        label="Polish Złoty [PLN]"
+                        labelStyle={styles.radioButton.label}
+                        iconStyle={styles.radioButton.icon}
+                      />
+                      <RadioButton
+                        value="thb"
+                        label="Thai Baht [THB]"
                         labelStyle={styles.radioButton.label}
                         iconStyle={styles.radioButton.icon}
                       />
