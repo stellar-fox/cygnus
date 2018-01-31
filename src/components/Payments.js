@@ -6,6 +6,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {List, ListItem, makeSelectable} from 'material-ui/List'
 import SnackBar from '../frontend/snackbar/SnackBar'
+import Avatar from 'material-ui/Avatar';
+import RaisedButton from 'material-ui/RaisedButton';
 import {
   Table,
   TableBody,
@@ -185,30 +187,6 @@ class Payments extends Component {
       })
   }
 
-  // let server = new StellarSdk.Server('https://horizon-testnet.stellar.org')
-  // server.loadAccount('GAQOQBU5FUXT3VXMP6C7LUDVVXQXLXJHG6IISBM4CLUPLZKUFDPFWCCV')
-  //   .catch(window.StellarSdk.NotFoundError, function (error) {
-  //     throw new Error('The destination account does not exist!');
-  //   })
-  //   .then((account) => {
-  //
-  //     account.payments({order: 'desc'}).then((payments) => {
-  //       console.log(payments)
-  //     })
-  //   }, (e) => {
-  //     console.log(e)
-  //   })
-  //
-  //   let server = new StellarSdk.Server('https://horizon-testnet.stellar.org')
-  //   server.payments()
-  //     .limit(1)
-  //     .forAccount('GAQOQBU5FUXT3VXMP6C7LUDVVXQXLXJHG6IISBM4CLUPLZKUFDPFWCCV')
-  //     .order('desc')
-  //     .call()
-  //     .then((payments) => {
-  //       console.log(payments)
-  //     })
-
 
   updateAccount() {
     let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
@@ -246,7 +224,7 @@ class Payments extends Component {
     if (value === "2") {
       let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
       server.transactions()
-        // .limit(5)
+        .limit(5)
         .forAccount(this.props.accountInfo.pubKey)
         .order('desc')
         .call()
@@ -433,6 +411,43 @@ class Payments extends Component {
   }
 
 
+  getNextPaymentsPage() {
+    this.props.accountInfo.payments.next().then((payments) => {
+      if (payments.records.length > 0) {
+        this.props.setAccountPayments(payments)
+      } else {
+        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+        server.payments()
+          .limit(5)
+          .forAccount(this.props.accountInfo.pubKey)
+          .order('desc')
+          .call()
+          .then((payments) => {
+            this.props.setAccountPayments(payments)
+          })
+      }
+    })
+  }
+
+  getNextTransactionsPage() {
+    this.props.accountInfo.transactions.next().then((txs) => {
+      if (txs.records.length > 0) {
+        this.props.setAccountTransactions(txs)
+      } else {
+        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+        server.transactions()
+          .limit(5)
+          .forAccount(this.props.accountInfo.pubKey)
+          .order('desc')
+          .call()
+          .then((txs) => {
+            this.props.setAccountTransactions(txs)
+          })
+      }
+    })
+  }
+
+
   render() {
 
     return (
@@ -452,19 +467,17 @@ class Payments extends Component {
         >
           <Tab style={styles.tab} label="History" value="1">
             <div className="tab-content">
-              <h2 style={styles.headline}>
-                <i className="material-icons">hearing</i> Payment History
-              </h2>
+
               <div className="account-title">
-                Credit and debit operations for your account.
+                Payment History
               </div>
               <div className="account-subtitle">
-                Newest history shown as first.
+                Newest payments shown as first.
               </div>
-              
-              <div className="p-b p-t"></div>
+
               <div className="flex-row-space-between">
                 <div className="flex-row-column">
+                  <div>
                   {this.props.accountInfo.payments ?
                   <div>
                   <SelectableList defaultValue={1}>
@@ -502,6 +515,12 @@ class Payments extends Component {
                                   .toFixed(this.props.accountInfo.precision) +
                                   ' ' + getAssetCode(payment))
                           }
+                          rightAvatar={
+                            <Avatar
+                              backgroundColor="rgba(244,176,4,1)"
+                              size={43}
+                              src="/img/uxceo-128.jpg" />
+                          }
                         />
                         </div>
 
@@ -509,7 +528,16 @@ class Payments extends Component {
                   </SelectableList>
                   </div>
                   : null}
-
+                  <div>
+                    <MuiThemeProvider>
+                      <RaisedButton
+                        backgroundColor="rgba(244,176,4,1)"
+                        onClick={this.getNextPaymentsPage.bind(this)}
+                        label="Next Page"
+                      />
+                    </MuiThemeProvider>
+                  </div>
+                  </div>
                 </div>
                 <div className="flex-row-column">
                   <div>
@@ -543,19 +571,17 @@ class Payments extends Component {
             <div className="tab-content">
               <div className="flex-row">
                 <div>
-                  <h2 style={styles.headline}>Account Transactions</h2>
                   <div className="account-title">
-                    Each transaction represents a change to the account state.
+                    Account Transactions
                   </div>
                   <div className="account-subtitle">
                     Newest transactions shown as first.
                   </div>
-                  <div className="p-b p-t"></div>
+                  <div className="p-t"></div>
                   {this.props.accountInfo.transactions ? (
                   <Table style={styles.table}>
                     <TableHeader className="tx-table-header" displaySelectAll={false} adjustForCheckbox={false}>
                       <TableRow className="tx-table-row" style={styles.tableRow}>
-
                         <TableHeaderColumn className="tx-table-header-column">Transaction Time</TableHeaderColumn>
                         <TableHeaderColumn className="tx-table-header-column">Account</TableHeaderColumn>
                         <TableHeaderColumn className="tx-table-header-column">Memo</TableHeaderColumn>
@@ -566,7 +592,6 @@ class Payments extends Component {
                     <TableBody displayRowCheckbox={false}>
                       {this.props.accountInfo.transactions.records.map((tx, index) => (
                         <TableRow selectable={false} key={index} className="tx-table-row">
-
                           <TableRowColumn className="tx-table-row-column">
                             {utcToLocaleDateTime(tx.created_at)}
                           </TableRowColumn>
@@ -594,6 +619,14 @@ class Payments extends Component {
                       ))}
                     </TableBody>
                   </Table>) : null }
+                  <div className="p-b"></div>
+                  <MuiThemeProvider>
+                    <RaisedButton
+                      backgroundColor="rgba(244,176,4,1)"
+                      onClick={this.getNextTransactionsPage.bind(this)}
+                      label="Next Page"
+                    />
+                  </MuiThemeProvider>
                 </div>
               </div>
             </div>

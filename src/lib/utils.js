@@ -2,10 +2,13 @@ export const pubKeyAbbr = (pubKey) => {
   return (pubKey.slice(0,6) + '-' + pubKey.slice(50))
 }
 
-export const utcToLocaleDateTime = (utcDateTime) => {
+export const utcToLocaleDateTime = (utcDateTime, includeTime=true) => {
   if (utcDateTime !== undefined) {
     let date = new Date(utcDateTime)
-    return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`
+    if (includeTime === true) {
+      return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`
+    }
+    return `${date.toLocaleDateString()}`
   }
   return undefined
 }

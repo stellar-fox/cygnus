@@ -190,6 +190,7 @@ div.payment-item-active {
 
 .tx-table-header {
   background-color: rgb(15,46,83);
+  border-bottom: 1px solid rgba(244,176,4,0.65) !important;
 }
 
 .tx-table-header-column {
@@ -198,7 +199,12 @@ div.payment-item-active {
 }
 
 .tx-table-row {
-  border-bottom: 1px solid rgba(244,176,4,0.8) !important;
+  border-bottom: 1px solid rgba(244,176,4,0.2) !important;
+}
+
+.tx-table-row:last-child {
+  border-bottom: none !important;
+  border-top: none !important;
 }
 
 .tx-table-row-column {
