@@ -22,6 +22,7 @@ import {
   setStreamer,
   accountExistsOnLedger,
   accountMissingOnLedger,
+  setTab,
 } from '../actions/index'
 import './Payments.css'
 import {pubKeyAbbr, utcToLocaleDateTime, getAssetCode, formatAmount} from '../lib/utils'
@@ -218,6 +219,7 @@ class Payments extends Component {
   }
 
   handleTabSelect = (value) => {
+    this.props.setTab({payments: value})
     this.setState({
       tabSelected: value,
     })
@@ -462,7 +464,7 @@ class Payments extends Component {
         <Tabs
           tabItemContainerStyle={styles.container}
           inkBarStyle={styles.inkBar}
-          value={this.state.tabSelected}
+          value={this.props.ui.tabs.payments}
           onChange={this.handleTabSelect}
         >
           <Tab style={styles.tab} label="History" value="1">
@@ -647,6 +649,7 @@ class Payments extends Component {
 function mapStateToProps(state) {
   return {
     accountInfo: state.accountInfo,
+    ui: state.ui,
   }
 }
 
@@ -657,6 +660,7 @@ function matchDispatchToProps(dispatch) {
     setStreamer,
     accountExistsOnLedger,
     accountMissingOnLedger,
+    setTab,
   }, dispatch)
 }
 

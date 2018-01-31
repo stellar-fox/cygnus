@@ -6,7 +6,6 @@ import {
   logIn,
   openDrawer,
   closeDrawer,
-  clearAccountInfo,
   selectView,
 } from '../actions/index'
 
@@ -33,9 +32,7 @@ class Header extends Component {
   }
   handleLogOutClick(state) {
     this.props.logOut()
-    this.props.clearAccountInfo()
     this.props.selectView('/')
-    sessionStorage.clear()
   }
 
   render() {
@@ -133,7 +130,6 @@ function matchDispatchToProps(dispatch) {
     logIn,
     openDrawer,
     closeDrawer,
-    clearAccountInfo,
     selectView,
   }, dispatch)
 }

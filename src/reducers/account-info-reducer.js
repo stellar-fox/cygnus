@@ -1,6 +1,6 @@
 export default function (state={}, action) {
   switch (action.type) {
-    case 'CLEAR_ACCOUNT_INFO':
+    case 'LOG_OUT':
       state = {}
       break;
     case 'PUBKEY_VALID':

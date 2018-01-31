@@ -28,13 +28,6 @@ export const accountMissingOnLedger = (state) => {
   }
 }
 
-export const clearAccountInfo = (state) => {
-  return {
-    type: 'CLEAR_ACCOUNT_INFO',
-    payload: state,
-  }
-}
-
 export const setModalLoading = (state) => {
   return {
     type: 'SET_LOADING',
@@ -126,9 +119,9 @@ export const hideAlert = (state) => {
   }
 }
 
-export const setAccountTab = (state) => {
+export const setTab = (state) => {
   return {
-    type: 'SET_TAB',
+    type: 'SET_TAB_SELECTED',
     payload: state,
   }
 }

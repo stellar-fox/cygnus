@@ -4,7 +4,8 @@ const initState = {
   },
   authenticateButton: {
     isDisabled: true,
-  }
+  },
+  tabs: {},
 }
 export default function (state=initState, action) {
   switch (action.type) {
@@ -20,6 +21,11 @@ export default function (state=initState, action) {
     case 'ENABLE_AUTHENTICATE_BUTTON':
       state = {...state, authenticateButton: {isDisabled: false}}
       break;
+    case 'SET_TAB_SELECTED':
+      state = {...state, tabs: Object.assign(state.tabs || {}, action.payload)}
+      break;
+    case 'LOG_OUT':
+      state = initState
     default:
       break;
   }

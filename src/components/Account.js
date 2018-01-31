@@ -14,9 +14,9 @@ import './Account.css'
 import {
   showAlert,
   hideAlert,
-  setAccountTab,
   setCurrency,
   setCurrencyPrecision,
+  setTab,
 } from '../actions/index'
 
 const styles = {
@@ -197,7 +197,7 @@ class Account extends Component {
   }
 
   handleChange = (value) => {
-    this.props.setAccountTab(value)
+    this.props.setTab({accounts: value})
   }
 
   handleOpen = () => {
@@ -241,7 +241,7 @@ class Account extends Component {
           <Tabs
             tabItemContainerStyle={styles.container}
             inkBarStyle={styles.inkBar}
-            value={this.props.tabBar.tabSelected}
+            value={this.props.ui.tabs.accounts}
             onChange={this.handleChange}
             className="tabs-container"
           >
@@ -559,7 +559,7 @@ class Account extends Component {
 function mapStateToProps(state) {
   return {
     modal: state.modal,
-    tabBar: state.tabBar,
+    ui: state.ui,
     currency: state.currency,
     accountInfo: state.accountInfo,
   }
@@ -569,9 +569,9 @@ function matchDispatchToProps(dispatch) {
   return bindActionCreators({
     showAlert,
     hideAlert,
-    setAccountTab,
     setCurrency,
     setCurrencyPrecision,
+    setTab,
   }, dispatch)
 }
 
