@@ -26,6 +26,7 @@ export default function (state=initState, action) {
       break;
     case 'LOG_OUT':
       state = initState
+      break;
     default:
       break;
   }
