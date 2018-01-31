@@ -12,11 +12,10 @@ div.message-header {
 div.message-header p {
   margin-top: 3px;
   margin-bottom: 3px;
-  margin-left: 5px;
+  margin-left: 15px;
   margin-right: 5px;
   color: rgba(15,46,83,0.9);
-  font-size: smaller;
-  font-weight: 600;
+  font-size: 1.1rem;
 }
 
 div.message-body {

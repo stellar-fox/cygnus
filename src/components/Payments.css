@@ -6,8 +6,11 @@ div.flex-row-space-between {
 
 div.flex-row-column {
   width: 48%;
-  /* border: 1px solid rgba(244,176,4,0.75); */
-  /* border-radius: 3px; */
+  margin: 0px 5px 0px 5px;
+}
+
+div.flex-row-column-50 {
+  width: 50%;
   margin: 0px 5px 0px 5px;
 }
 

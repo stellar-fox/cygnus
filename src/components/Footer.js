@@ -6,7 +6,14 @@ export default class Footer extends Component {
   render() {
     return (
       <div className='footer'>
-        © <span>Stellar Fox</span> 2017.
+        <div className="flex-row-space-between">
+          <div>
+            © <span>Stellar Fox</span> 2017.
+          </div>
+          <div>
+            ver. 0.1.15
+          </div>
+        </div>
       </div>
     )
   }
