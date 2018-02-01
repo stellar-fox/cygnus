@@ -19,10 +19,6 @@ store.subscribe(throttle(() => {
   saveState(store.getState())
 }, 1000))
 
-// store.dispatch((dispatch) => {
-//
-// })
-
 ReactDOM.render(
   <Provider store={store}>
     <Layout/>

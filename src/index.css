@@ -1,25 +1,51 @@
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
-  font-weight: 100;
-  src: local('Roboto'),
-       url('./fonts/Roboto-Regular.ttf') format('truetype')
+  font-weight: 400;
+  src: url('./fonts/roboto/roboto-v18-latin-regular.eot');
+  src: local('Roboto'), local('Roboto-Regular'),
+       url('./fonts/roboto/roboto-v18-latin-regular.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/roboto/roboto-v18-latin-regular.woff2') format('woff2'),
+       url('./fonts/roboto/roboto-v18-latin-regular.woff') format('woff'),
+       url('./fonts/roboto/roboto-v18-latin-regular.ttf') format('truetype'),
+       url('./fonts/roboto/roboto-v18-latin-regular.svg#Roboto') format('svg');
 }
 
 @font-face {
-  font-family: 'Roboto-Italic';
+  font-family: 'Material Icons';
   font-style: normal;
-  font-weight: 100;
-  src: local('Roboto-Italic'),
-       url('./fonts/Roboto-Italic.ttf') format('truetype')
+  font-weight: 400;
+  src: url('./fonts/iconfont/MaterialIcons-Regular.eot');
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url('./fonts/iconfont/MaterialIcons-Regular.woff2') format('woff2'),
+       url('./fonts/iconfont/MaterialIcons-Regular.woff') format('woff'),
+       url('./fonts/iconfont/MaterialIcons-Regular.ttf') format('truetype');
 }
 
-@font-face {
-  font-family: 'Roboto-Bold';
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
   font-style: normal;
-  font-weight: 100;
-  src: local('Roboto-Bold'),
-       url('./fonts/Roboto-Bold.ttf') format('truetype')
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
 }
 
 html, body {
@@ -82,27 +108,3 @@ a {
 strong {
   color: rgb(212,228,188);
 }
-
-/* i {
-  font-family: 'Roboto-Italic', sans-serif;
-}
-
-b {
-  font-family: 'Roboto-Bold', sans-serif;
-}
-
-.p-t {
-  padding-top: 1rem;
-}
-
-.p-t-large {
-  padding-top: 2rem;
-}
-
-.spinner-modal {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-} */

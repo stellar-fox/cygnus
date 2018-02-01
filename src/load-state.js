@@ -1,3 +1,9 @@
+/*
+ * This persists current state of the application. When the page is reloaded
+ * the current Redux state is restored from the sessionStorage. Redux state
+ * is saved in index.js.
+*/
+
 export const loadState = () => {
   try {
     const serializedState = sessionStorage.getItem('SFOX.APP_STATE')
