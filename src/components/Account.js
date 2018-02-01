@@ -6,10 +6,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Input from '../frontend/input/Input'
 import SnackBar from '../frontend/snackbar/SnackBar'
 import RaisedButton from 'material-ui/RaisedButton'
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 import Dialog from 'material-ui/Dialog'
-import Toggle from 'material-ui/Toggle';
+import Toggle from 'material-ui/Toggle'
 import MD5 from '../lib/md5'
+import {emailValid} from '../lib/utils'
 import './Account.css'
 import {
   showAlert,
@@ -64,8 +65,6 @@ const styles = {
     },
   },
 }
-
-const emailValidatorRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 class Account extends Component {
   constructor(props) {
@@ -173,7 +172,7 @@ class Account extends Component {
   }
 
   handleEmailChange = (event) => {
-    if (emailValidatorRegex.test(event.target.value) === true) {
+    if (emailValid(event.target.value)) {
       this.setState({
         gravatarPath: (
           'https://www.gravatar.com/avatar/' + MD5(event.target.value) +

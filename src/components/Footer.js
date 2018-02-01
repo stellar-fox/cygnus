@@ -8,7 +8,7 @@ export default class Footer extends Component {
       <div className='footer'>
         <div className="flex-row-space-between">
           <div>
-            © <span>Stellar Fox</span> 2017.
+            © <span>Stellar Fox</span> 2017-2018.
           </div>
           <div>
             ver. 0.1.16

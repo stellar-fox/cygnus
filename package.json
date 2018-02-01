@@ -16,7 +16,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "stellar-base": "^0.7.6",
-    "stellar-sdk": "^0.8.0"
+    "stellar-sdk": "^0.8.0",
+    "toml": "^2.3.3"
   },
   "scripts": {
     "start": "react-scripts start",

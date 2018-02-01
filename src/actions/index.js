@@ -167,3 +167,10 @@ export const setStreamer = (state) => {
     payload: state,
   }
 }
+
+export const setInvalidInputMessage = (state) => {
+  return {
+    type: 'SET_INVALID_INPUT_MESSAGE',
+    payload: state,
+  }
+}

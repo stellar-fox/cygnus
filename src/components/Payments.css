@@ -4,6 +4,12 @@ div.flex-row-space-between {
   justify-content: space-between;
 }
 
+div.flex-row-centered {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 div.flex-row-column {
   width: 48%;
   margin: 0px 5px 0px 5px;
@@ -193,6 +199,16 @@ div.payment-item-active {
 .tiny {
   font-size: 11px;
   font-weight: 100;
+}
+
+.small {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.link {
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
 }
 
 .smaller {

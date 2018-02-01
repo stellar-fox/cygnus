@@ -9,6 +9,8 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Input from '../frontend/input/Input'
 import Checkbox from '../frontend/checkbox/Checkbox'
 import Footer from './Footer'
+import {emailValid, federationAddressValid, federationLookup} from '../lib/utils'
+import axios from 'axios'
 import {
   setPublicKeyValid,
   setPublicKeyInvalid,
@@ -24,6 +26,7 @@ import {
   enableAuthenticateButton,
   setHorizonEndPoint,
   setCurrencyPrecision,
+  setInvalidInputMessage,
 } from '../actions/index'
 import Panel from './Panel'
 
@@ -53,6 +56,8 @@ class Welcome extends Component {
       derivationPrefix: "44'/148'/",
       pathEditable: false,
       useDefaultAccount: true,
+      textFieldEmail: '',
+      textFieldFederationAddress: '',
     }
   }
 
@@ -173,6 +178,9 @@ class Welcome extends Component {
   publicKeyChanged(event, value) {
     switch (true) {
       case value.length < 56:
+        this.props.setInvalidInputMessage({
+          textFieldPublicKey: ('Needs ' + (56-value.length) + ' characters.')
+        })
         this.props.setPublicKeyInvalid({
           pubKey: value,
           message: ('Needs ' + (56-value.length) + ' characters.'),
@@ -184,6 +192,78 @@ class Welcome extends Component {
       default:
         break;
     }
+  }
+
+  federationAddressChanged(event, value) {
+    this.setState({
+      textFieldFederationAddress: value
+    })
+    return federationAddressValid(value) ? (
+      this.props.setInvalidInputMessage({
+        textFieldFederationAddress: null
+      })
+    ) : null
+  }
+
+  handleOnClickCheck() {
+    if (federationAddressValid(this.state.textFieldFederationAddress)) {
+      this.props.setInvalidInputMessage({
+        textFieldFederationAddress: null
+      })
+
+      federationLookup(this.state.textFieldFederationAddress)
+        .then((federationEndpoint) => {
+          axios.get(`${federationEndpoint}?q=${this.state.textFieldFederationAddress}&type=name`)
+            .then((response) => {
+              this.logInViaPublicKey(response.data.account_id)
+            })
+            .catch((error) => {
+              if (error.response && error.response.data) {
+                this.props.setInvalidInputMessage({
+                  textFieldFederationAddress: error.response.data.message
+                })
+              } else {
+                this.props.setInvalidInputMessage({
+                  textFieldFederationAddress: error.message
+                })
+              }
+            });
+        })
+
+
+    } else {
+      this.props.setInvalidInputMessage({
+        textFieldFederationAddress: 'Invalid address format.'
+      })
+    }
+  }
+
+  emailChanged(event, value) {
+    this.setState({
+      textFieldEmail: value
+    })
+    return emailValid(value) ? (
+      this.props.setInvalidInputMessage({
+        textFieldEmail: null
+      })
+    ) : null
+  }
+
+  handleOnClickLogin() {
+    if (emailValid(this.state.textFieldEmail)) {
+      this.props.setInvalidInputMessage({
+        textFieldEmail: null
+      })
+    } else {
+      this.props.setInvalidInputMessage({
+        textFieldEmail: 'Invalid email format.'
+      })
+    }
+  }
+
+  handleSignup() {
+    console.log('signup')
+    return false
   }
 
   render() {
@@ -227,6 +307,16 @@ class Welcome extends Component {
             <div className="subtitle">
               Open your own <em><b>lifetime bank</b></em> today and reserve your payment address.
             </div>
+          </div>
+
+          <div className="flex-row-centered">
+            <MuiThemeProvider>
+              <RaisedButton
+                onClick={this.handleSignup.bind(this)}
+                backgroundColor="rgb(244,176,4)"
+                label="Get Started"
+              />
+            </MuiThemeProvider>
           </div>
 
           <div className="container">
@@ -331,13 +421,14 @@ class Welcome extends Component {
               </div>
             </div>
             <div className="flex-row-column">
-              <div className="p-r p-t">
+              <div className="p-t">
                 <div>
                   <Panel title="Explore" content={
                     <div>
                       <img src="/img/stellar.svg" width="120px" alt="Stellar"/>
                       <div className="title">
                         To access account explorer enter your Stellar <b>Public</b> Key
+                        or <em>Stellar Federation Address</em>.
                       </div>
                       <div className="title-small p-t p-b">
                         Once the correct Public key is entered, the account
@@ -349,7 +440,73 @@ class Welcome extends Component {
                           <TextField
                             onChange={this.publicKeyChanged.bind(this)}
                             floatingLabelText="Stellar Public Key"
-                            errorText={this.props.accountInfo.message}
+                            errorText={this.props.ui.messages.textFieldPublicKey}
+                            errorStyle={styles.errorStyle}
+                            underlineStyle={styles.underlineStyle}
+                            underlineFocusStyle={styles.underlineStyle}
+                            floatingLabelStyle={styles.floatingLabelStyle}
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                            inputStyle={styles.inputStyle}
+                          />
+                          <TextField
+                            onChange={this.federationAddressChanged.bind(this)}
+                            floatingLabelText="Federation Address"
+                            errorText={this.props.ui.messages.textFieldFederationAddress}
+                            errorStyle={styles.errorStyle}
+                            underlineStyle={styles.underlineStyle}
+                            underlineFocusStyle={styles.underlineStyle}
+                            floatingLabelStyle={styles.floatingLabelStyle}
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                            inputStyle={styles.inputStyle}
+                          />
+                          <div>
+                            <RaisedButton
+                              onClick={this.handleOnClickCheck.bind(this)}
+                              backgroundColor="rgb(244,176,4)"
+                              label="Check"
+                            />
+                          </div>
+                        </div>
+                      </MuiThemeProvider>
+                    </div>
+                  }/>
+                </div>
+              </div>
+            </div>
+            <div className="flex-row-column">
+              <div className="p-r p-t">
+                <div>
+                  <Panel title="Customize" content={
+                    <div>
+                      <img
+                        style={{marginBottom: '4px'}}
+                        src="/img/sf.svg" width="154px" alt="Stellar Fox"/>
+                      <div className="title">
+                        Configure your account settings via our backend API.
+                      </div>
+                      <div className="title-small p-t p-b">
+                        Sign-in to your online banking terminal. The account
+                        will let you customize your settings and manage your
+                        contacts.
+                      </div>
+                      <MuiThemeProvider>
+                      <div>
+                        <div className="mui-text-input">
+                          <TextField
+                            type="email"
+                            onChange={this.emailChanged.bind(this)}
+                            floatingLabelText="Email"
+                            errorText={this.props.ui.messages.textFieldEmail}
+                            errorStyle={styles.errorStyle}
+                            underlineStyle={styles.underlineStyle}
+                            underlineFocusStyle={styles.underlineStyle}
+                            floatingLabelStyle={styles.floatingLabelStyle}
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                            inputStyle={styles.inputStyle}
+                          />
+                          <TextField
+                            type="password"
+                            floatingLabelText="Password"
                             errorStyle={styles.errorStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineStyle}
@@ -358,6 +515,27 @@ class Welcome extends Component {
                             inputStyle={styles.inputStyle}
                           />
                         </div>
+                        <div className="flex-row-space-between">
+                          <div>
+                            <RaisedButton
+                              onClick={this.handleOnClickLogin.bind(this)}
+                              backgroundColor="rgb(244,176,4)"
+                              label="Login"
+                            />
+                          </div>
+                          <div className="small">
+                            <div>No account yet?</div>
+                            <div>
+                              <div className="link" onClick={this.handleSignup.bind(this)}>
+                                Signup
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+                      </div>
                       </MuiThemeProvider>
                     </div>
                   }/>
@@ -399,6 +577,7 @@ function matchDispatchToProps(dispatch) {
     enableAuthenticateButton,
     setHorizonEndPoint,
     setCurrencyPrecision,
+    setInvalidInputMessage,
   }, dispatch)
 }
 
