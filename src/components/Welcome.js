@@ -212,22 +212,29 @@ class Welcome extends Component {
       })
 
       federationLookup(this.state.textFieldFederationAddress)
-        .then((federationEndpoint) => {
-          axios.get(`${federationEndpoint}?q=${this.state.textFieldFederationAddress}&type=name`)
-            .then((response) => {
-              this.logInViaPublicKey(response.data.account_id)
+        .then((federationEndpointObj) => {
+          if (federationEndpointObj.ok) {
+            axios.get(`${federationEndpointObj.endpoint}?q=${this.state.textFieldFederationAddress}&type=name`)
+              .then((response) => {
+                this.logInViaPublicKey(response.data.account_id)
+              })
+              .catch((error) => {
+                if (error.response && error.response.data) {
+                  this.props.setInvalidInputMessage({
+                    textFieldFederationAddress: error.response.data.message
+                  })
+                } else {
+                  this.props.setInvalidInputMessage({
+                    textFieldFederationAddress: error.message
+                  })
+                }
+              });
+          } else {
+            this.props.setInvalidInputMessage({
+              textFieldFederationAddress: federationEndpointObj.error
             })
-            .catch((error) => {
-              if (error.response && error.response.data) {
-                this.props.setInvalidInputMessage({
-                  textFieldFederationAddress: error.response.data.message
-                })
-              } else {
-                this.props.setInvalidInputMessage({
-                  textFieldFederationAddress: error.message
-                })
-              }
-            });
+          }
+
         })
 
 

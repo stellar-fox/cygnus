@@ -43,10 +43,10 @@ export const federationLookup = (federationAddress) => {
     return axios.get(`https://${federationAddressDomain[0]}/.well-known/stellar.toml`)
       .then((response) => {
         let data = toml.parse(response.data)
-        return data.FEDERATION_SERVER
+        return {ok: true, endpoint: data.FEDERATION_SERVER}
       })
       .catch((error) => {
-        console.log(error.message)
+        return {error: error.message}
       });
   }
 
