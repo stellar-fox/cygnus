@@ -192,14 +192,30 @@ class Welcome extends Component {
         <MuiThemeProvider>
         <div>
           {this.props.loadingModal.loading ? (
-            <div className="progress-modal">
-              <div className="progress-spinner">
-                <CircularProgress thickness={5} size={80} color='rgb(244,176,4)'/>
-              </div>
-              <div className="progress-message">
-                {this.props.loadingModal.message}
+
+            <div>
+              <div className="progress-modal-background"></div>
+              <div className="progress-modal">
+                <div className="progress-modal-header">
+                  <div>...</div>
+                  <div>...</div>
+                </div>
+                <div className="progress-modal-content">
+                  <CircularProgress style={{
+                    backgroundColor: "rgb(15,46,83)"
+                  }} color="rgb(244,176,4)" />
+                </div>
+                <div className="progress-modal-content">
+                  {this.props.loadingModal.message}
+                </div>
+                <div className="progress-modal-content">
+                  <i className="material-icons">search</i>
+                  <i className="material-icons">language</i>
+                  <i className="material-icons">fingerprint</i>
+                </div>
               </div>
             </div>
+
           ) : null}
         </div>
         </MuiThemeProvider>

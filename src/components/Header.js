@@ -33,6 +33,7 @@ class Header extends Component {
   handleLogOutClick(state) {
     this.props.logOut()
     this.props.selectView('/')
+    sessionStorage.clear()
   }
 
   render() {

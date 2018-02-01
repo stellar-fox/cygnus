@@ -271,14 +271,20 @@ class Balances extends Component {
                 <CardActions>
                   <RaisedButton
                     backgroundColor="rgb(15,46,83)"
-                    labelColor="rgb(244,176,4)"
+                    labelColor="#228B22"
                     label="Deposit"
+                    onClick={this.handleOpen.bind(this)}
+                  />
+                  <RaisedButton
+                    backgroundColor="rgb(15,46,83)"
+                    labelColor="rgb(244,176,4)"
+                    label="Request"
                     onClick={this.handleOpen.bind(this)}
                   />
                   {this.props.auth.isReadOnly ? null :
                     <RaisedButton
                       backgroundColor="rgb(15,46,83)"
-                      labelColor="rgb(244,176,4)"
+                      labelColor="#d32f2f"
                       label="Send"
                       onClick={this.handleOpen.bind(this)}
                     />
