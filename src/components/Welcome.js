@@ -207,6 +207,8 @@ class Welcome extends Component {
 
   handleOnClickCheck() {
     if (federationAddressValid(this.state.textFieldFederationAddress)) {
+      this.props.setModalLoading()
+      this.props.updateLoadingMessage({message: "Looking up federation endpoint ..."})
       this.props.setInvalidInputMessage({
         textFieldFederationAddress: null
       })
@@ -219,9 +221,10 @@ class Welcome extends Component {
                 this.logInViaPublicKey(response.data.account_id)
               })
               .catch((error) => {
+                this.props.setModalLoaded()
                 if (error.response && error.response.data) {
                   this.props.setInvalidInputMessage({
-                    textFieldFederationAddress: error.response.data.message
+                    textFieldFederationAddress: error.response.data.detail
                   })
                 } else {
                   this.props.setInvalidInputMessage({
@@ -230,14 +233,12 @@ class Welcome extends Component {
                 }
               });
           } else {
+            this.props.setModalLoaded()
             this.props.setInvalidInputMessage({
               textFieldFederationAddress: federationEndpointObj.error
             })
           }
-
         })
-
-
     } else {
       this.props.setInvalidInputMessage({
         textFieldFederationAddress: 'Invalid address format.'
