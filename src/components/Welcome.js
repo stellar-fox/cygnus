@@ -4,11 +4,11 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import TextField from 'material-ui/TextField'
-import CircularProgress from 'material-ui/CircularProgress'
 import RaisedButton from 'material-ui/RaisedButton'
 import Input from '../frontend/input/Input'
 import Checkbox from '../frontend/checkbox/Checkbox'
 import Footer from './Footer'
+import LoadingModal from './LoadingModal'
 import {emailValid, federationAddressValid, federationLookup} from '../lib/utils'
 import axios from 'axios'
 import {
@@ -276,36 +276,7 @@ class Welcome extends Component {
   render() {
     return (
       <div>
-        <MuiThemeProvider>
-        <div>
-          {this.props.loadingModal.loading ? (
-
-            <div>
-              <div className="progress-modal-background"></div>
-              <div className="progress-modal">
-                <div className="progress-modal-header">
-                  <div>...</div>
-                  <div>...</div>
-                </div>
-                <div className="progress-modal-content">
-                  <CircularProgress style={{
-                    backgroundColor: "rgb(15,46,83)"
-                  }} color="rgb(244,176,4)" />
-                </div>
-                <div className="progress-modal-content">
-                  {this.props.loadingModal.message}
-                </div>
-                <div className="progress-modal-content">
-                  <i className="material-icons">search</i>
-                  <i className="material-icons">language</i>
-                  <i className="material-icons">fingerprint</i>
-                </div>
-              </div>
-            </div>
-
-          ) : null}
-        </div>
-        </MuiThemeProvider>
+        <LoadingModal/>
 
         <div className="faded-image cash">
 
@@ -439,8 +410,9 @@ class Welcome extends Component {
                       </div>
                       <div className="title-small p-t p-b">
                         Once the correct Public key is entered, the account
-                        explorer will load automatically. Please note that
-                        this application will <strong>never</strong> ask you to enter Secret key.
+                        explorer will load automatically. <strong>Please note that
+                        this application will <u>never</u> ask you to
+                        enter your Secret key.</strong>
                       </div>
                       <MuiThemeProvider>
                         <div className="mui-text-input">
@@ -487,7 +459,7 @@ class Welcome extends Component {
                     <div>
                       <img
                         style={{marginBottom: '4px'}}
-                        src="/img/sf.svg" width="154px" alt="Stellar Fox"/>
+                        src="/img/sf.svg" width="140px" alt="Stellar Fox"/>
                       <div className="title">
                         Configure your account settings via our backend API.
                       </div>
@@ -539,9 +511,6 @@ class Welcome extends Component {
                             </div>
                           </div>
                         </div>
-
-
-
                       </div>
                       </MuiThemeProvider>
                     </div>
@@ -553,7 +522,6 @@ class Welcome extends Component {
         </div>
         <Footer />
       </div>
-
     )
   }
 }
