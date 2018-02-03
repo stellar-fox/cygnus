@@ -6,8 +6,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {List, ListItem, makeSelectable} from 'material-ui/List'
 import SnackBar from '../frontend/snackbar/SnackBar'
-import Avatar from 'material-ui/Avatar';
-import RaisedButton from 'material-ui/RaisedButton';
+import Avatar from 'material-ui/Avatar'
+import RaisedButton from 'material-ui/RaisedButton'
+import LoadingModal from './LoadingModal'
 import {
   Table,
   TableBody,
@@ -23,6 +24,9 @@ import {
   accountExistsOnLedger,
   accountMissingOnLedger,
   setTab,
+  setModalLoading,
+  setModalLoaded,
+  updateLoadingMessage,
 } from '../actions/index'
 import './Payments.css'
 import {pubKeyAbbr, utcToLocaleDateTime, getAssetCode, formatAmount} from '../lib/utils'
@@ -107,6 +111,11 @@ class Payments extends Component {
   }
 
   componentDidMount() {
+    console.log("WTF???")
+    this.props.setModalLoading()
+    this.props.updateLoadingMessage({
+      message: "Loading payments data ..."
+    })
     this.props.setStreamer(this.paymentsStreamer.call(this))
 
     let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
@@ -126,6 +135,7 @@ class Payments extends Component {
               memo: tx.memo,
               selectedPaymentId: paymentsResult.records[0].id,
             }})
+            this.props.setModalLoaded()
           })
         })
       })
@@ -454,6 +464,7 @@ class Payments extends Component {
 
     return (
       <div>
+        <LoadingModal/>
         <MuiThemeProvider>
         <div>
         <SnackBar
@@ -649,6 +660,7 @@ class Payments extends Component {
 function mapStateToProps(state) {
   return {
     accountInfo: state.accountInfo,
+    loadingModal: state.loadingModal,
     ui: state.ui,
   }
 }
@@ -661,6 +673,9 @@ function matchDispatchToProps(dispatch) {
     accountExistsOnLedger,
     accountMissingOnLedger,
     setTab,
+    setModalLoading,
+    setModalLoaded,
+    updateLoadingMessage,
   }, dispatch)
 }
 
