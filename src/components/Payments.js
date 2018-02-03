@@ -111,7 +111,6 @@ class Payments extends Component {
   }
 
   componentDidMount() {
-    console.log("WTF???")
     this.props.setModalLoading()
     this.props.updateLoadingMessage({
       message: "Loading payments data ..."
