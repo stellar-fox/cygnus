@@ -438,6 +438,11 @@ class Welcome extends Component {
                             floatingLabelStyle={styles.floatingLabelStyle}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             inputStyle={styles.inputStyle}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                this.handleOnClickCheck.call(this)
+                              }
+                            }}
                           />
                           <div>
                             <RaisedButton
