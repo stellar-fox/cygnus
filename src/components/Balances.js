@@ -9,6 +9,7 @@ import Dialog from 'material-ui/Dialog';
 import SnackBar from '../frontend/snackbar/SnackBar'
 import axios from 'axios'
 import {formatAmount} from '../lib/utils'
+import {config} from '../config'
 import {
   setExchangeRate,
   showAlert,
@@ -137,18 +138,17 @@ class Balances extends Component {
   }
 
   getExchangeRate(currency) {
-    const cryptonatorXlmTicker = 'https://api.coinmarketcap.com/v1/ticker/stellar/?convert='
     if (this.exchangeRateStale()) {
-      axios.get(cryptonatorXlmTicker + currency)
-        .then((response) => {
-          this.props.setExchangeRate({[currency]: {
-            rate: response.data[0][`price_${currency}`],
-            lastFetch: Date.now()
-          }})
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      axios.get(`${config.api}/ticker/latest/${currency}`)
+      .then((response) => {
+        this.props.setExchangeRate({[currency]: {
+          rate: response.data.data[`price_${currency}`],
+          lastFetch: Date.now()
+        }})
+      })
+      .catch(function (error) {
+        console.log(error.message)
+      })
     }
   }
 
