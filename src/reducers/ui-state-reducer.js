@@ -31,7 +31,7 @@ export default function (state=initState, action) {
         messages: Object.assign(state.messages || {}, action.payload)
       }
       break;
-    case 'LOG_OUT':
+    case 'LOG_OUT_OF_HORIZON':
       state = initState
       break;
     default:

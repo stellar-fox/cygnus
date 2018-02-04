@@ -244,6 +244,7 @@ class Account extends Component {
             onChange={this.handleChange}
             className="tabs-container"
           >
+            {this.props.auth.isAuthenticated ?
             <Tab style={styles.tab} label="Profile" value="1">
               <div className="tab-content">
                 <div className="flex-row">
@@ -325,7 +326,7 @@ class Account extends Component {
                   />
                 </div>
               </div>
-            </Tab>
+            </Tab> : null}
             <Tab style={styles.tab} label="Settings" value="2">
               <div>
                 <h2 style={styles.headline}>Account Settings</h2>
@@ -438,40 +439,44 @@ class Account extends Component {
                   </div>
                 </MuiThemeProvider>
 
-                <div className="p-t p-b"></div>
-                <div className="flex-row outline">
-                  <div>
-                    <div className="account-title">
-                      Make Account Discoverable
-                    </div>
-                    <div className="account-subtitle">
-                      Your account number will be publicly discoverable and can
-                      be found by others via your payment address.
-                    </div>
-                  </div>
-                  <div>
-                    <MuiThemeProvider>
-                      <div>
-                        <SnackBar
-                          open={this.state.sbAccountDiscoverable}
-                          message="Account is now discoverable."
-                          onRequestClose={this.handleAccountDiscoverableSnackBarClose.bind(this)}
-                        />
-                        <Toggle
-                          onToggle={this.handleAccountDiscoverableToggle.bind(this)}
-                          labelPosition="right"
-                          thumbStyle={styles.toggleSwitch.thumbOff}
-                          trackStyle={styles.toggleSwitch.trackOff}
-                          thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
-                          trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
-                          labelStyle={styles.toggleSwitch.labelStyle}
-                        />
+                {this.props.auth.isAuthenticated ?
+                <div>
+                  <div className="p-t p-b"></div>
+                  <div className="flex-row outline">
+                    <div>
+                      <div className="account-title">
+                        Make Account Discoverable
                       </div>
-                    </MuiThemeProvider>
+                      <div className="account-subtitle">
+                        Your account number will be publicly discoverable and can
+                        be found by others via your payment address.
+                      </div>
+                    </div>
+                    <div>
+                      <MuiThemeProvider>
+                        <div>
+                          <SnackBar
+                            open={this.state.sbAccountDiscoverable}
+                            message="Account is now discoverable."
+                            onRequestClose={this.handleAccountDiscoverableSnackBarClose.bind(this)}
+                          />
+                          <Toggle
+                            onToggle={this.handleAccountDiscoverableToggle.bind(this)}
+                            labelPosition="right"
+                            thumbStyle={styles.toggleSwitch.thumbOff}
+                            trackStyle={styles.toggleSwitch.trackOff}
+                            thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
+                            trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
+                            labelStyle={styles.toggleSwitch.labelStyle}
+                          />
+                        </div>
+                      </MuiThemeProvider>
+                    </div>
                   </div>
-                </div>
+                </div> : null}
               </div>
             </Tab>
+            {this.props.auth.isAuthenticated ?
             <Tab style={styles.tab} label="Security" value="3">
               <div>
                 <h2 style={styles.headline}>Account Security</h2>
@@ -547,7 +552,7 @@ class Account extends Component {
                   </div>
                 </div>
               </div>
-            </Tab>
+            </Tab> : null}
           </Tabs>
         </MuiThemeProvider>
       </div>
@@ -561,6 +566,7 @@ function mapStateToProps(state) {
     ui: state.ui,
     currency: state.currency,
     accountInfo: state.accountInfo,
+    auth: state.auth,
   }
 }
 

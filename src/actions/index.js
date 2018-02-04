@@ -49,16 +49,16 @@ export const updateLoadingMessage = (state) => {
   }
 }
 
-export const logOut = (state) => {
+export const logOutOfHorizon = (state) => {
   return {
-    type: 'LOG_OUT',
+    type: 'LOG_OUT_OF_HORIZON',
     payload: state,
   }
 }
 
-export const logIn = (state) => {
+export const logInToHorizon = (state) => {
   return {
-    type: 'LOG_IN',
+    type: 'LOG_IN_TO_HORIZON',
     payload: state,
   }
 }

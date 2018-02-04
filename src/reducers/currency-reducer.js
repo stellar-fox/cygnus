@@ -6,7 +6,7 @@ export default function (state=initState, action) {
     case 'SET_CURRENCY':
       state = {...state, default: action.payload}
       break;
-    case 'LOG_OUT':
+    case 'LOG_OUT_OF_HORIZON':
       state = initState
       break;
     default:

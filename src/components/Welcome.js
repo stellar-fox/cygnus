@@ -19,8 +19,8 @@ import {
   setModalLoading,
   setModalLoaded,
   updateLoadingMessage,
-  logIn,
-  logOut,
+  logInToHorizon,
+  logOutOfHorizon,
   selectView,
   disableAuthenticateButton,
   enableAuthenticateButton,
@@ -152,7 +152,7 @@ class Welcome extends Component {
         .then((account) => {
           this.props.accountExistsOnLedger({account})
           this.props.selectView('Balances')
-          this.props.logIn({isReadOnly})
+          this.props.logInToHorizon({isReadOnly})
           this.props.setModalLoaded()
           this.props.updateLoadingMessage({
             message: null,
@@ -160,7 +160,7 @@ class Welcome extends Component {
         }, (e) => {
           this.props.accountMissingOnLedger()
           this.props.selectView('Balances')
-          this.props.logIn({isReadOnly})
+          this.props.logInToHorizon({isReadOnly})
           this.props.setModalLoaded()
           this.props.updateLoadingMessage({
             message: null,
@@ -551,8 +551,8 @@ function matchDispatchToProps(dispatch) {
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
-    logIn,
-    logOut,
+    logInToHorizon,
+    logOutOfHorizon,
     selectView,
     disableAuthenticateButton,
     enableAuthenticateButton,

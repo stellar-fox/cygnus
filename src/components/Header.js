@@ -2,8 +2,7 @@ import React, {Component} from 'react'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {
-  logOut,
-  logIn,
+  logOutOfHorizon,
   openDrawer,
   closeDrawer,
   selectView,
@@ -17,7 +16,6 @@ import './Header.css'
 import AppBarTitle from './AppBarTitle'
 import AppBarItems from './AppBarItems'
 import IconButton from 'material-ui/IconButton'
-import PowerSettingsNew from 'material-ui/svg-icons/action/power-settings-new'
 
 class Header extends Component {
   handleToggle() {
@@ -31,7 +29,7 @@ class Header extends Component {
     }, 300)
   }
   handleLogOutClick(state) {
-    this.props.logOut()
+    this.props.logOutOfHorizon()
     this.props.selectView('/')
     sessionStorage.clear()
   }
@@ -72,10 +70,10 @@ class Header extends Component {
               top:0
             }}
             onLeftIconButtonClick={this.handleToggle.bind(this)}
-            iconElementRight={this.props.auth.isAuthenticated ?
-              <IconButton onClick={this.handleLogOutClick.bind(this, false)}>
-                <PowerSettingsNew />
-              </IconButton> : null
+            iconElementRight={
+              <IconButton iconStyle={{color: 'rgba(15,46,83,0.45)'}} onClick={this.handleLogOutClick.bind(this, false)}>
+                <i className="material-icons">power_settings_new</i>
+              </IconButton>
             }
           />
           <Drawer containerStyle={{
@@ -127,8 +125,7 @@ function mapStateToProps(state) {
 
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({
-    logOut,
-    logIn,
+    logOutOfHorizon,
     openDrawer,
     closeDrawer,
     selectView,

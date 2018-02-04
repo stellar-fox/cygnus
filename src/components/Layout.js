@@ -13,7 +13,7 @@ class Layout extends Component {
       <div>
         <Router>
           <div>
-            {this.props.auth.isAuthenticated ?
+            {this.props.auth.isHorizonLoggedIn ?
               (
                 <div>
                   <Header/>
