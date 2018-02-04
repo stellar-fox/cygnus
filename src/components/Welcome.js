@@ -10,6 +10,7 @@ import Checkbox from '../frontend/checkbox/Checkbox'
 import Footer from './Footer'
 import LoadingModal from './LoadingModal'
 import {emailValid, federationAddressValid, federationLookup} from '../lib/utils'
+import {config} from '../config'
 import axios from 'axios'
 import {
   setPublicKeyValid,
@@ -21,11 +22,11 @@ import {
   updateLoadingMessage,
   logInToHorizon,
   logOutOfHorizon,
+  logIn,
   selectView,
   disableAuthenticateButton,
   enableAuthenticateButton,
   setHorizonEndPoint,
-  setCurrencyPrecision,
   setInvalidInputMessage,
 } from '../actions/index'
 import Panel from './Panel'
@@ -66,7 +67,6 @@ class Welcome extends Component {
     * Horizon end point is set to testnet by default.
     */
     this.props.setHorizonEndPoint('https://horizon-testnet.stellar.org')
-    this.props.setCurrencyPrecision('2')
     this.props.disableAuthenticateButton()
     let that = this
     new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
@@ -262,6 +262,33 @@ class Welcome extends Component {
       this.props.setInvalidInputMessage({
         textFieldEmail: null
       })
+      this.props.setInvalidInputMessage({
+        textFieldPassword: null
+      })
+      axios.post(`${config.api}/user/authenticate/${this.state.textFieldEmail}/${this.textInput.input.value}`)
+        .then((response) => {
+          console.log(response.data)
+          this.props.logIn()
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            console.log("Invalid Credentials")
+            this.props.setInvalidInputMessage({
+              textFieldEmail: 'Possibly Incorrect Email'
+            })
+            this.props.setInvalidInputMessage({
+              textFieldPassword: 'Possibly Incorrect Password'
+            })
+          } else {
+            this.props.setInvalidInputMessage({
+              textFieldEmail: null
+            })
+            this.props.setInvalidInputMessage({
+              textFieldPassword: null
+            })
+            console.log(error.response.statusText)
+          }
+        });
     } else {
       this.props.setInvalidInputMessage({
         textFieldEmail: 'Invalid email format.'
@@ -488,16 +515,28 @@ class Welcome extends Component {
                             floatingLabelStyle={styles.floatingLabelStyle}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             inputStyle={styles.inputStyle}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                this.handleOnClickLogin.call(this)
+                              }
+                            }}
                           />
                           <TextField
                             type="password"
                             floatingLabelText="Password"
                             errorStyle={styles.errorStyle}
+                            errorText={this.props.ui.messages.textFieldPassword}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineStyle}
                             floatingLabelStyle={styles.floatingLabelStyle}
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             inputStyle={styles.inputStyle}
+                            ref={(input) => { this.textInput = input; }}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                this.handleOnClickLogin.call(this)
+                              }
+                            }}
                           />
                         </div>
                         <div className="flex-row-space-between">
@@ -553,11 +592,11 @@ function matchDispatchToProps(dispatch) {
     updateLoadingMessage,
     logInToHorizon,
     logOutOfHorizon,
+    logIn,
     selectView,
     disableAuthenticateButton,
     enableAuthenticateButton,
     setHorizonEndPoint,
-    setCurrencyPrecision,
     setInvalidInputMessage,
   }, dispatch)
 }

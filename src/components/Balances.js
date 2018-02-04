@@ -16,6 +16,7 @@ import {
   hideAlert,
   setCurrency,
   setStreamer,
+  setCurrencyPrecision,
   accountExistsOnLedger,
   accountMissingOnLedger,
 } from '../actions/index'
@@ -31,6 +32,7 @@ class Balances extends Component {
   }
 
   componentDidMount() {
+    this.props.setCurrencyPrecision('2')
     this.getExchangeRate(this.props.currency.default)
     this.props.setStreamer(this.paymentsStreamer.call(this))
   }
@@ -360,6 +362,7 @@ function matchDispatchToProps(dispatch) {
     hideAlert,
     setCurrency,
     setStreamer,
+    setCurrencyPrecision,
     accountExistsOnLedger,
     accountMissingOnLedger,
   }, dispatch)

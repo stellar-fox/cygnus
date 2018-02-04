@@ -63,6 +63,20 @@ export const logInToHorizon = (state) => {
   }
 }
 
+export const logIn = (state) => {
+  return {
+    type: 'LOG_IN',
+    payload: state,
+  }
+}
+
+export const logOut = (state) => {
+  return {
+    type: 'LOG_OUT',
+    payload: state,
+  }
+}
+
 export const selectView = (state) => {
   return {
     type: 'SELECT_VIEW',

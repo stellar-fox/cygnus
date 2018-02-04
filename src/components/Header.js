@@ -3,6 +3,7 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {
   logOutOfHorizon,
+  logOut,
   openDrawer,
   closeDrawer,
   selectView,
@@ -30,6 +31,7 @@ class Header extends Component {
   }
   handleLogOutClick(state) {
     this.props.logOutOfHorizon()
+    this.props.logOut()
     this.props.selectView('/')
     sessionStorage.clear()
   }
@@ -126,6 +128,7 @@ function mapStateToProps(state) {
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({
     logOutOfHorizon,
+    logOut,
     openDrawer,
     closeDrawer,
     selectView,

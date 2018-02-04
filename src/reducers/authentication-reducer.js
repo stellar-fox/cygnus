@@ -5,6 +5,12 @@ const initState = {
 }
 export default function (state=initState, action) {
   switch (action.type) {
+    case 'LOG_IN':
+      state = {...state, isAuthenticated: true}
+      break;
+    case 'LOG_OUT':
+      state = {...state, isAuthenticated: false}
+      break;
     case 'LOG_IN_TO_HORIZON':
       state = {...state, isHorizonLoggedIn: true, isReadOnly: action.payload.isReadOnly}
       break;
