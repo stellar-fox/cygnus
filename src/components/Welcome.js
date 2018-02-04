@@ -222,13 +222,13 @@ class Welcome extends Component {
               })
               .catch((error) => {
                 this.props.setModalLoaded()
-                if (error.response && error.response.data) {
+                if (error.response.data.detail) {
                   this.props.setInvalidInputMessage({
                     textFieldFederationAddress: error.response.data.detail
                   })
                 } else {
                   this.props.setInvalidInputMessage({
-                    textFieldFederationAddress: error.message
+                    textFieldFederationAddress: error.response.data.message
                   })
                 }
               });
