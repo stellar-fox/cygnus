@@ -497,9 +497,8 @@ class Welcome extends Component {
                         Configure your account settings via our backend API.
                       </div>
                       <div className="title-small p-t p-b">
-                        Sign-in to your online banking terminal. The account
-                        will let you customize your settings and manage your
-                        contacts.
+                        Once you have opened your account with your Ledger device
+                        you can sign in here directly to your banking terminal.
                       </div>
                       <MuiThemeProvider>
                       <div>
