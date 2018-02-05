@@ -296,7 +296,7 @@ class Welcome extends Component {
             })
             console.log(error.response.statusText)
           }
-        });
+        })
     } else {
       this.props.setInvalidInputMessage({
         textFieldEmail: 'Invalid email format.'

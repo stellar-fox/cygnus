@@ -11,6 +11,8 @@ import Dialog from 'material-ui/Dialog'
 import Toggle from 'material-ui/Toggle'
 import MD5 from '../lib/md5'
 import {emailValid} from '../lib/utils'
+import {config} from '../config'
+import axios from 'axios'
 import './Account.css'
 import {
   showAlert,
@@ -75,6 +77,7 @@ class Account extends Component {
       emailDisplay: '',
       paymentAddressDisplay: '',
       gravatarPath: '/img/gravatar.jpg',
+      sbAccountProfileSaved: false,
       sbAccountDiscoverable: false,
       sbCurrency: false,
       sbCurrencyPrecision: false,
@@ -83,6 +86,33 @@ class Account extends Component {
       currency: '',
       currencyPrecision: '',
     }
+  }
+
+  componentDidMount() {
+    axios.get(`${config.api}/user/1`)
+      .then((response) => {
+        this.setState({
+          firstNameDisplay: (response.data.data.first_name),
+          lastNameDisplay: response.data.data.last_name,
+          emailDisplay: response.data.data.email,
+          gravatarPath: (
+            'https://www.gravatar.com/avatar/' + MD5(response.data.data.email) +
+            '?s=96'
+          )
+        })
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+    axios.get(`${config.api}/account/1`)
+      .then((response) => {
+        this.setState({
+          paymentAddressDisplay: response.data.data.alias,
+        })
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
   }
 
   handleCurrencyChange = (event) => {
@@ -120,6 +150,12 @@ class Account extends Component {
   handleAccountDiscoverableSnackBarClose = () => {
     this.setState({
       sbAccountDiscoverable: false
+    })
+  }
+
+  handleAccountProfileSnackBarClose = () => {
+    this.setState({
+      sbAccountProfileSaved: false
     })
   }
 
@@ -193,6 +229,16 @@ class Account extends Component {
 
   handleProfileUpdate = (event) => {
     console.log('Update Pressed')
+    axios.post(`${config.api}/user/update/1?first_name=${this.state.firstNameDisplay}&last_name=${this.state.lastNameDisplay}`)
+      .then((response) => {
+        console.log(response)
+        this.setState({
+          sbAccountProfileSaved: true,
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   handleChange = (value) => {
@@ -247,6 +293,11 @@ class Account extends Component {
             {this.props.auth.isAuthenticated ?
             <Tab style={styles.tab} label="Profile" value="1">
               <div className="tab-content">
+                <SnackBar
+                  open={this.state.sbAccountProfileSaved}
+                  message="Account profile saved."
+                  onRequestClose={this.handleAccountProfileSnackBarClose.bind(this)}
+                />
                 <div className="flex-row">
                   <div>
                     <h2 style={styles.headline}>Account Profile</h2>
@@ -271,6 +322,7 @@ class Account extends Component {
                 <div className="flex-centered">
                   <div className="p-b">
                     <Input
+                      value={this.state.firstNameDisplay}
                       label="First Name"
                       inputType="text"
                       maxLength="100"
@@ -282,6 +334,7 @@ class Account extends Component {
                   </div>
                   <div className="p-t p-b">
                     <Input
+                      value={this.state.lastNameDisplay}
                       label="Last Name"
                       inputType="text"
                       maxLength="100"
@@ -293,6 +346,7 @@ class Account extends Component {
                   </div>
                   <div className="p-t p-b">
                     <Input
+                      value={this.state.emailDisplay}
                       label="Email"
                       inputType="text"
                       maxLength="100"
@@ -304,6 +358,7 @@ class Account extends Component {
                   </div>
                   <div className="p-t p-b">
                     <Input
+                      value={this.state.paymentAddressDisplay}
                       label="Payment Address Alias"
                       inputType="text"
                       maxLength="100"
@@ -311,9 +366,7 @@ class Account extends Component {
                       handleChange={this.handlePaymentAddressChange.bind(this)}
                       subLabel={
                         "Payment Address: " +
-                        this.state.paymentAddressDisplay +
-                        (this.state.paymentAddressDisplay === '' ?
-                          "" : "*stellarfox.net")
+                        this.state.paymentAddressDisplay
                       }/>
                   </div>
                 </div>
@@ -322,7 +375,7 @@ class Account extends Component {
                     backgroundColor="rgb(244,176,4)"
                     labelColor="rgb(15,46,83)"
                     label="Update"
-                    onClick={this.handleOpen.bind(this)}
+                    onClick={this.handleProfileUpdate.bind(this)}
                   />
                 </div>
               </div>
