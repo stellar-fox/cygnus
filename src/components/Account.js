@@ -78,6 +78,8 @@ class Account extends Component {
       paymentAddressDisplay: '',
       gravatarPath: '/img/gravatar.jpg',
       sbAccountProfileSaved: false,
+      accountDiscoverable: true,
+      accountDiscoverableMessage: '',
       sbAccountDiscoverable: false,
       sbCurrency: false,
       sbCurrencyPrecision: false,
@@ -108,6 +110,7 @@ class Account extends Component {
       .then((response) => {
         this.setState({
           paymentAddressDisplay: response.data.data.alias,
+          accountDiscoverable: response.data.data.visible,
         })
       })
       .catch((error) => {
@@ -173,9 +176,29 @@ class Account extends Component {
 
   handleAccountDiscoverableToggle = (event, isInputChecked) => {
     if (isInputChecked === true) {
-      this.setState({
-        sbAccountDiscoverable: true
-      })
+      axios.post(`${config.api}/account/update/1?visible=true`)
+        .then((response) => {
+          this.setState({
+            sbAccountDiscoverable: true,
+            accountDiscoverable: true,
+            accountDiscoverableMessage: 'Account is now discoverable by your payment address.',
+          })
+        })
+        .catch((error) => {
+          console.log(error.message)
+        })
+    } else {
+      axios.post(`${config.api}/account/update/1?visible=false`)
+        .then((response) => {
+          this.setState({
+            accountDiscoverable: false,
+            sbAccountDiscoverable: true,
+            accountDiscoverableMessage: 'Account is now set to non-discoverable mode.',
+          })
+        })
+        .catch((error) => {
+          console.log(error.message)
+        })
     }
   }
 
@@ -230,8 +253,11 @@ class Account extends Component {
   handleProfileUpdate = (event) => {
     console.log('Update Pressed')
     axios.post(`${config.api}/user/update/1?first_name=${this.state.firstNameDisplay}&last_name=${this.state.lastNameDisplay}`)
+      .catch((error) => {
+        console.log(error)
+      })
+    axios.post(`${config.api}/account/update/1?alias=${this.state.paymentAddressDisplay}`)
       .then((response) => {
-        console.log(response)
         this.setState({
           sbAccountProfileSaved: true,
         })
@@ -510,10 +536,11 @@ class Account extends Component {
                         <div>
                           <SnackBar
                             open={this.state.sbAccountDiscoverable}
-                            message="Account is now discoverable."
+                            message={this.state.accountDiscoverableMessage}
                             onRequestClose={this.handleAccountDiscoverableSnackBarClose.bind(this)}
                           />
                           <Toggle
+                            toggled={this.state.accountDiscoverable}
                             onToggle={this.handleAccountDiscoverableToggle.bind(this)}
                             labelPosition="right"
                             thumbStyle={styles.toggleSwitch.thumbOff}
