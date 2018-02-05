@@ -32,7 +32,10 @@ export default function (state=initState, action) {
       }
       break;
     case 'LOG_OUT_OF_HORIZON':
-      state = initState
+      state = Object.assign(state || {}, initState)
+      break;
+    case 'LOG_OUT':
+      state = Object.assign(state || {}, initState)
       break;
     default:
       break;

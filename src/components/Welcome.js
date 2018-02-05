@@ -63,6 +63,15 @@ class Welcome extends Component {
   }
 
   componentDidMount(){
+    this.props.setInvalidInputMessage({
+      textFieldEmail: null
+    })
+    this.props.setInvalidInputMessage({
+      textFieldPassword: null
+    })
+    this.props.setInvalidInputMessage({
+      textFieldFederationAddress: null
+    })
     /*
     * Horizon end point is set to testnet by default.
     */
@@ -267,12 +276,11 @@ class Welcome extends Component {
       })
       axios.post(`${config.api}/user/authenticate/${this.state.textFieldEmail}/${this.textInput.input.value}`)
         .then((response) => {
-          console.log(response.data)
           this.props.logIn()
+          this.logInViaPublicKey(response.data.pubkey)
         })
         .catch((error) => {
           if (error.response.status === 401) {
-            console.log("Invalid Credentials")
             this.props.setInvalidInputMessage({
               textFieldEmail: 'Possibly Incorrect Email'
             })
