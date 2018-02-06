@@ -32,6 +32,11 @@ export const emailValid = (email) => {
   return (regex.test(email) === true) ? true : false
 }
 
+export const federationIsAliasOnly = (federationAddress) => {
+  const regex = /^[a-zA-Z\-0-9.@][^*]+$/
+  return (regex.test(federationAddress) === true) ? true : false
+}
+
 export const federationAddressValid = (federationAddress) => {
   const regex = /^[a-zA-Z\-0-9.@]+\*((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return (regex.test(federationAddress) === true) ? true : false
@@ -49,5 +54,4 @@ export const federationLookup = (federationAddress) => {
         return {error: error.message}
       });
   }
-
 }

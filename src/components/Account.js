@@ -10,6 +10,7 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 import Dialog from 'material-ui/Dialog'
 import Toggle from 'material-ui/Toggle'
 import MD5 from '../lib/md5'
+import {federationIsAliasOnly} from '../lib/utils'
 import {emailValid} from '../lib/utils'
 import {config} from '../config'
 import axios from 'axios'
@@ -391,8 +392,10 @@ class Account extends Component {
                       autoComplete="off"
                       handleChange={this.handlePaymentAddressChange.bind(this)}
                       subLabel={
-                        "Payment Address: " +
-                        this.state.paymentAddressDisplay
+                        (federationIsAliasOnly(this.state.paymentAddressDisplay) ?
+                          (`Payment Address: ${this.state.paymentAddressDisplay}*stellarfox.net`) :
+                          (`Payment Address: ${this.state.paymentAddressDisplay}`)
+                        )
                       }/>
                   </div>
                 </div>
