@@ -332,7 +332,7 @@ class Balances extends Component {
                   0 XLM
                 </div>
                 <div className='faded'>
-                  0 {this.props.accountInfo.currency.default.toUpperCase()}
+                  0 {this.props.accountInfo.currency.toUpperCase()}
                 </div>
               </CardText>
               <CardActions>
