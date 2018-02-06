@@ -32,8 +32,19 @@ class Balances extends Component {
   }
 
   componentDidMount() {
-    this.props.setCurrencyPrecision('2')
-    this.getExchangeRate(this.props.currency.default)
+    if (this.props.auth.isAuthenticated) {
+      axios.get(`${config.api}/account/${this.props.auth.userId}`)
+        .then((response) => {
+          this.props.setCurrency(response.data.data.currency)
+          this.props.setCurrencyPrecision(response.data.data.precision)
+          this.getExchangeRate(response.data.data.currency)
+        })
+        .catch((error) => {
+          console.log(error.message)
+        })
+    } else {
+      this.getExchangeRate(this.props.accountInfo.currency)
+    }
     this.props.setStreamer(this.paymentsStreamer.call(this))
   }
 
@@ -121,7 +132,7 @@ class Balances extends Component {
   exchangeRateFetched() {
     if (
       this.props.accountInfo.rates !== undefined &&
-      this.props.accountInfo.rates[this.props.currency.default] !== undefined
+      this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined
     ) {
       return true
     }
@@ -131,8 +142,8 @@ class Balances extends Component {
   exchangeRateStale() {
     if (
       this.props.accountInfo.rates === undefined ||
-      this.props.accountInfo.rates[this.props.currency.default] === undefined ||
-      this.props.accountInfo.rates[this.props.currency.default].lastFetch + 300000 < Date.now()
+      this.props.accountInfo.rates[this.props.accountInfo.currency] === undefined ||
+      this.props.accountInfo.rates[this.props.accountInfo.currency].lastFetch + 300000 < Date.now()
     ) {
       return true
     }
@@ -255,9 +266,9 @@ class Balances extends Component {
                           (Number.parseFloat(this.getNativeBalance.call(
                             this, this.props.accountInfo.account.account
                           )) * Number.parseFloat(
-                            this.props.accountInfo.rates[this.props.currency.default].rate)
+                            this.props.accountInfo.rates[this.props.accountInfo.currency].rate)
                           ).toFixed(2) : '0.00'
-                        } {this.props.currency.default.toUpperCase()}
+                        } {this.props.accountInfo.currency.toUpperCase()}
                       </div>
                       <div>
                         {Number.parseFloat(this.getNativeBalance.call(
@@ -321,7 +332,7 @@ class Balances extends Component {
                   0 XLM
                 </div>
                 <div className='faded'>
-                  0 {this.props.currency.default.toUpperCase()}
+                  0 {this.props.accountInfo.currency.default.toUpperCase()}
                 </div>
               </CardText>
               <CardActions>
@@ -351,7 +362,7 @@ function mapStateToProps(state) {
     accountInfo: state.accountInfo,
     auth: state.auth,
     modal: state.modal,
-    currency: state.currency,
+    // currency: state.currency,
   }
 }
 

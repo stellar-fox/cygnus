@@ -276,7 +276,6 @@ class Welcome extends Component {
       })
       axios.post(`${config.api}/user/authenticate/${this.state.textFieldEmail}/${this.textInput.input.value}`)
         .then((response) => {
-          console.log(response.data)
           this.props.logIn({
             userId: response.data.user_id,
             token: response.data.token,

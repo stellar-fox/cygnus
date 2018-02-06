@@ -1,7 +1,15 @@
-export default function (state={}, action) {
+const initState = {
+  currency: 'eur',
+  precision: 2
+}
+
+export default function (state=initState, action) {
   switch (action.type) {
     case 'LOG_OUT_OF_HORIZON':
-      state = {}
+      state = initState
+      break;
+    case 'LOG_OUT':
+      state = initState
       break;
     case 'PUBKEY_VALID':
       state = {
@@ -36,6 +44,9 @@ export default function (state={}, action) {
       break;
     case 'SET_HORIZON_END_POINT':
       state = {...state, horizon: action.payload}
+      break;
+    case 'SET_CURRENCY':
+      state = {...state, currency: action.payload}
       break;
     case 'SET_CURRENCY_PRECISION':
       state = {...state, precision: action.payload}

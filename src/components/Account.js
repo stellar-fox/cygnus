@@ -92,41 +92,62 @@ class Account extends Component {
   }
 
   componentDidMount() {
-    axios.get(`${config.api}/user/${this.props.auth.userId}`)
-      .then((response) => {
-        this.setState({
-          firstNameDisplay: (response.data.data.first_name),
-          lastNameDisplay: response.data.data.last_name,
-          emailDisplay: response.data.data.email,
-          gravatarPath: (
-            'https://www.gravatar.com/avatar/' + MD5(response.data.data.email) +
-            '?s=96'
-          )
+    if(this.props.auth.isAuthenticated) {
+      axios.get(`${config.api}/user/${this.props.auth.userId}`)
+        .then((response) => {
+          this.setState({
+            firstNameDisplay: (response.data.data.first_name),
+            lastNameDisplay: response.data.data.last_name,
+            emailDisplay: response.data.data.email,
+            gravatarPath: (
+              'https://www.gravatar.com/avatar/' + MD5(response.data.data.email) +
+              '?s=96'
+            )
+          })
         })
-      })
-      .catch((error) => {
-        console.log(error.message)
-      })
-    axios.get(`${config.api}/account/${this.props.auth.userId}`)
-      .then((response) => {
-        this.setState({
-          paymentAddressDisplay: response.data.data.alias,
-          accountDiscoverable: response.data.data.visible,
+        .catch((error) => {
+          console.log(error.message)
         })
-      })
-      .catch((error) => {
-        console.log(error.message)
-      })
+      axios.get(`${config.api}/account/${this.props.auth.userId}`)
+        .then((response) => {
+          this.setState({
+            paymentAddressDisplay: response.data.data.alias,
+            accountDiscoverable: response.data.data.visible,
+            currency: response.data.data.currency,
+            currencyPrecision: response.data.data.precision,
+          })
+        })
+        .catch((error) => {
+          console.log(error.message)
+        })
+    }
   }
 
   handleCurrencyChange = (event) => {
-    this.props.setCurrency(event.target.value)
-    this.setState({
-      currency: event.target.parentElement.innerText
-    })
-    this.setState((prevState) => {
-      return {sbCurrency: true}
-    })
+    if(this.props.auth.isAuthenticated) {
+      event.persist()
+      axios.post(`${config.api}/account/update/${this.props.auth.userId}?token=${this.props.auth.token}&currency=${event.target.value}`)
+        .then((response) => {
+          this.props.setCurrency(event.target.value)
+          this.setState({
+            currency: event.target.parentElement.innerText
+          })
+          this.setState((prevState) => {
+            return {sbCurrency: true}
+          })
+        })
+        .catch((error) => {
+          console.log(error.message)
+        })
+    } else {
+      this.props.setCurrency(event.target.value)
+      this.setState({
+        currency: event.target.parentElement.innerText
+      })
+      this.setState((prevState) => {
+        return {sbCurrency: true}
+      })
+    }
   }
 
   handleCurrencyChangeSnackBarClose = () => {
@@ -136,13 +157,30 @@ class Account extends Component {
   }
 
   handleCurrencyPrecisionChange = (event) => {
-    this.props.setCurrencyPrecision(event.target.value)
-    this.setState({
-      currencyPrecision: event.target.parentElement.innerText
-    })
-    this.setState((prevState) => {
-      return {sbCurrencyPrecision: true}
-    })
+    if(this.props.auth.isAuthenticated) {
+      event.persist()
+      axios.post(`${config.api}/account/update/${this.props.auth.userId}?token=${this.props.auth.token}&precision=${event.target.value}`)
+        .then((response) => {
+          this.props.setCurrencyPrecision(event.target.value)
+          this.setState({
+            currencyPrecision: event.target.parentElement.innerText
+          })
+          this.setState((prevState) => {
+            return {sbCurrencyPrecision: true}
+          })
+        })
+        .catch((error) => {
+          console.log(error.message)
+        })
+    } else {
+      this.props.setCurrencyPrecision(event.target.value)
+      this.setState({
+        currencyPrecision: event.target.parentElement.innerText
+      })
+      this.setState((prevState) => {
+        return {sbCurrencyPrecision: true}
+      })
+    }
   }
 
   handleCurrencyPrecisionChangeSnackBarClose = () => {
@@ -438,7 +476,7 @@ class Account extends Component {
                       onChange={this.handleCurrencyChange.bind(this)}
                       className="account-radio-group"
                       name="currencySelect"
-                      defaultSelected={this.props.currency.default}>
+                      defaultSelected={this.props.accountInfo.currency}>
                       <RadioButton
                         className="p-b-small"
                         value="eur"
@@ -505,14 +543,14 @@ class Account extends Component {
                       defaultSelected={this.props.accountInfo.precision}>
                       <RadioButton
                         className="p-b-small"
-                        value="2"
+                        value={2}
                         label="Fiat Style"
                         labelStyle={styles.radioButton.label}
                         iconStyle={styles.radioButton.icon}
                       />
                       <RadioButton
                         className="p-b-small"
-                        value="7"
+                        value={7}
                         label="Crypto Style"
                         labelStyle={styles.radioButton.label}
                         iconStyle={styles.radioButton.icon}
@@ -647,7 +685,6 @@ function mapStateToProps(state) {
   return {
     modal: state.modal,
     ui: state.ui,
-    currency: state.currency,
     accountInfo: state.accountInfo,
     auth: state.auth,
   }
