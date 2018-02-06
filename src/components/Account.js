@@ -92,7 +92,7 @@ class Account extends Component {
   }
 
   componentDidMount() {
-    axios.get(`${config.api}/user/1`)
+    axios.get(`${config.api}/user/${this.props.auth.userId}`)
       .then((response) => {
         this.setState({
           firstNameDisplay: (response.data.data.first_name),
@@ -107,7 +107,7 @@ class Account extends Component {
       .catch((error) => {
         console.log(error.message)
       })
-    axios.get(`${config.api}/account/1`)
+    axios.get(`${config.api}/account/${this.props.auth.userId}`)
       .then((response) => {
         this.setState({
           paymentAddressDisplay: response.data.data.alias,
@@ -177,7 +177,7 @@ class Account extends Component {
 
   handleAccountDiscoverableToggle = (event, isInputChecked) => {
     if (isInputChecked === true) {
-      axios.post(`${config.api}/account/update/1?visible=true`)
+      axios.post(`${config.api}/account/update/${this.props.auth.userId}?visible=true`)
         .then((response) => {
           this.setState({
             sbAccountDiscoverable: true,
@@ -189,7 +189,7 @@ class Account extends Component {
           console.log(error.message)
         })
     } else {
-      axios.post(`${config.api}/account/update/1?visible=false`)
+      axios.post(`${config.api}/account/update/${this.props.auth.userId}?visible=false`)
         .then((response) => {
           this.setState({
             accountDiscoverable: false,
@@ -253,11 +253,11 @@ class Account extends Component {
 
   handleProfileUpdate = (event) => {
     console.log('Update Pressed')
-    axios.post(`${config.api}/user/update/1?first_name=${this.state.firstNameDisplay}&last_name=${this.state.lastNameDisplay}`)
+    axios.post(`${config.api}/user/update/${this.props.auth.userId}?first_name=${this.state.firstNameDisplay}&last_name=${this.state.lastNameDisplay}`)
       .catch((error) => {
         console.log(error)
       })
-    axios.post(`${config.api}/account/update/1?alias=${this.state.paymentAddressDisplay}`)
+    axios.post(`${config.api}/account/update/${this.props.auth.userId}?alias=${this.state.paymentAddressDisplay}`)
       .then((response) => {
         this.setState({
           sbAccountProfileSaved: true,
