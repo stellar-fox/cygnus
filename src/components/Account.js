@@ -177,7 +177,7 @@ class Account extends Component {
 
   handleAccountDiscoverableToggle = (event, isInputChecked) => {
     if (isInputChecked === true) {
-      axios.post(`${config.api}/account/update/${this.props.auth.userId}?visible=true`)
+      axios.post(`${config.api}/account/update/${this.props.auth.userId}?token=${this.props.auth.token}&visible=true`)
         .then((response) => {
           this.setState({
             sbAccountDiscoverable: true,
@@ -189,7 +189,7 @@ class Account extends Component {
           console.log(error.message)
         })
     } else {
-      axios.post(`${config.api}/account/update/${this.props.auth.userId}?visible=false`)
+      axios.post(`${config.api}/account/update/${this.props.auth.userId}?token=${this.props.auth.token}&visible=false`)
         .then((response) => {
           this.setState({
             accountDiscoverable: false,
@@ -253,11 +253,11 @@ class Account extends Component {
 
   handleProfileUpdate = (event) => {
     console.log('Update Pressed')
-    axios.post(`${config.api}/user/update/${this.props.auth.userId}?first_name=${this.state.firstNameDisplay}&last_name=${this.state.lastNameDisplay}`)
+    axios.post(`${config.api}/user/update/${this.props.auth.userId}?token=${this.props.auth.token}&first_name=${this.state.firstNameDisplay}&last_name=${this.state.lastNameDisplay}`)
       .catch((error) => {
         console.log(error)
       })
-    axios.post(`${config.api}/account/update/${this.props.auth.userId}?alias=${this.state.paymentAddressDisplay}`)
+    axios.post(`${config.api}/account/update/${this.props.auth.userId}?token=${this.props.auth.token}&alias=${this.state.paymentAddressDisplay}`)
       .then((response) => {
         this.setState({
           sbAccountProfileSaved: true,

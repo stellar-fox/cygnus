@@ -6,10 +6,15 @@ const initState = {
 export default function (state=initState, action) {
   switch (action.type) {
     case 'LOG_IN':
-      state = {...state, isAuthenticated: true, userId: action.payload}
+      state = {
+        ...state,
+        isAuthenticated: true,
+        userId: action.payload.userId,
+        token: action.payload.token,
+      }
       break;
     case 'LOG_OUT':
-      state = {...state, isAuthenticated: false, userId: null}
+      state = {...state, isAuthenticated: false, userId: null, token: null}
       break;
     case 'LOG_IN_TO_HORIZON':
       state = {...state, isHorizonLoggedIn: true, isReadOnly: action.payload.isReadOnly}
