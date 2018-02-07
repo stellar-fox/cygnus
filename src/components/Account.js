@@ -161,7 +161,7 @@ class Account extends Component {
       event.persist()
       axios.post(`${config.api}/account/update/${this.props.auth.userId}?token=${this.props.auth.token}&precision=${event.target.value}`)
         .then((response) => {
-          this.props.setCurrencyPrecision(event.target.value)
+          this.props.setCurrencyPrecision(parseInt(event.target.value, 10))
           this.setState({
             currencyPrecision: event.target.parentElement.innerText
           })
@@ -173,7 +173,7 @@ class Account extends Component {
           console.log(error.message)
         })
     } else {
-      this.props.setCurrencyPrecision(event.target.value)
+      this.props.setCurrencyPrecision(parseInt(event.target.value, 10))
       this.setState({
         currencyPrecision: event.target.parentElement.innerText
       })
