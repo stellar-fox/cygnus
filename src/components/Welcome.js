@@ -455,33 +455,37 @@ class Welcome extends Component {
                       </div>
                       <MuiThemeProvider>
                         <div className="mui-text-input">
-                          <TextField
-                            onChange={this.publicKeyChanged.bind(this)}
-                            floatingLabelText="Stellar Public Key"
-                            errorText={this.props.ui.messages.textFieldPublicKey}
-                            errorStyle={styles.errorStyle}
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={styles.underlineStyle}
-                            floatingLabelStyle={styles.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            inputStyle={styles.inputStyle}
-                          />
-                          <TextField
-                            onChange={this.federationAddressChanged.bind(this)}
-                            floatingLabelText="Federation Address"
-                            errorText={this.props.ui.messages.textFieldFederationAddress}
-                            errorStyle={styles.errorStyle}
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={styles.underlineStyle}
-                            floatingLabelStyle={styles.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            inputStyle={styles.inputStyle}
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                this.handleOnClickCheck.call(this)
-                              }
-                            }}
-                          />
+                          <div>
+                            <TextField
+                              onChange={this.publicKeyChanged.bind(this)}
+                              floatingLabelText="Stellar Public Key"
+                              errorText={this.props.ui.messages.textFieldPublicKey}
+                              errorStyle={styles.errorStyle}
+                              underlineStyle={styles.underlineStyle}
+                              underlineFocusStyle={styles.underlineStyle}
+                              floatingLabelStyle={styles.floatingLabelStyle}
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                              inputStyle={styles.inputStyle}
+                            />
+                          </div>
+                          <div>
+                            <TextField
+                              onChange={this.federationAddressChanged.bind(this)}
+                              floatingLabelText="Federation Address"
+                              errorText={this.props.ui.messages.textFieldFederationAddress}
+                              errorStyle={styles.errorStyle}
+                              underlineStyle={styles.underlineStyle}
+                              underlineFocusStyle={styles.underlineStyle}
+                              floatingLabelStyle={styles.floatingLabelStyle}
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                              inputStyle={styles.inputStyle}
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  this.handleOnClickCheck.call(this)
+                                }
+                              }}
+                            />
+                          </div>
                           <div>
                             <RaisedButton
                               onClick={this.handleOnClickCheck.bind(this)}
@@ -514,40 +518,44 @@ class Welcome extends Component {
                       <MuiThemeProvider>
                       <div>
                         <div className="mui-text-input">
-                          <TextField
-                            type="email"
-                            onChange={this.emailChanged.bind(this)}
-                            floatingLabelText="Email"
-                            errorText={this.props.ui.messages.textFieldEmail}
-                            errorStyle={styles.errorStyle}
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={styles.underlineStyle}
-                            floatingLabelStyle={styles.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            inputStyle={styles.inputStyle}
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                this.handleOnClickLogin.call(this)
-                              }
-                            }}
-                          />
-                          <TextField
-                            type="password"
-                            floatingLabelText="Password"
-                            errorStyle={styles.errorStyle}
-                            errorText={this.props.ui.messages.textFieldPassword}
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={styles.underlineStyle}
-                            floatingLabelStyle={styles.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            inputStyle={styles.inputStyle}
-                            ref={(input) => { this.textInput = input; }}
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                this.handleOnClickLogin.call(this)
-                              }
-                            }}
-                          />
+                          <div>
+                            <TextField
+                              type="email"
+                              onChange={this.emailChanged.bind(this)}
+                              floatingLabelText="Email"
+                              errorText={this.props.ui.messages.textFieldEmail}
+                              errorStyle={styles.errorStyle}
+                              underlineStyle={styles.underlineStyle}
+                              underlineFocusStyle={styles.underlineStyle}
+                              floatingLabelStyle={styles.floatingLabelStyle}
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                              inputStyle={styles.inputStyle}
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  this.handleOnClickLogin.call(this)
+                                }
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <TextField
+                              type="password"
+                              floatingLabelText="Password"
+                              errorStyle={styles.errorStyle}
+                              errorText={this.props.ui.messages.textFieldPassword}
+                              underlineStyle={styles.underlineStyle}
+                              underlineFocusStyle={styles.underlineStyle}
+                              floatingLabelStyle={styles.floatingLabelStyle}
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                              inputStyle={styles.inputStyle}
+                              ref={(input) => { this.textInput = input; }}
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  this.handleOnClickLogin.call(this)
+                                }
+                              }}
+                            />
+                          </div>
                         </div>
                         <div className="flex-row-space-between">
                           <div>
