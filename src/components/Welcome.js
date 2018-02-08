@@ -75,7 +75,7 @@ class Welcome extends Component {
     /*
     * Horizon end point is set to testnet by default.
     */
-    this.props.setHorizonEndPoint('https://horizon-testnet.stellar.org')
+    this.props.setHorizonEndPoint(config.horizon)
     this.props.disableAuthenticateButton()
     let that = this
     new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
