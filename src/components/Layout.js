@@ -6,6 +6,8 @@ import Header from './Header'
 import Content from './Content'
 import Footer from './Footer'
 import Welcome from './Welcome'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import stellarTheme from '../frontend/themes/stellar'
 
 class Layout extends Component {
   render() {
@@ -15,11 +17,13 @@ class Layout extends Component {
           <div>
             {this.props.auth.isHorizonLoggedIn ?
               (
-                <div>
-                  <Header/>
-                  <Content />
-                  <Footer />
-                </div>
+                <MuiThemeProvider muiTheme={stellarTheme}>
+                  <div>
+                    <Header/>
+                    <Content />
+                    <Footer />
+                  </div>
+                </MuiThemeProvider>
               ) : (
                 <Switch>
                   <Route exact path="/" component={Welcome}/>

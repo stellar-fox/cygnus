@@ -188,8 +188,8 @@ div.payment-item-active {
   margin: 5px;
 }
 
-.effect-title {
-  /* font-weight: bolder; */
+.paging-icon {
+  color: rgba(244,176,4,0.85) !important;
 }
 
 .payment-details-fieldset {

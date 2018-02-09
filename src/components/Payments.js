@@ -2,12 +2,11 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {List, ListItem, makeSelectable} from 'material-ui/List'
 import SnackBar from '../frontend/snackbar/SnackBar'
 import Avatar from 'material-ui/Avatar'
-import RaisedButton from 'material-ui/RaisedButton'
+import IconButton from 'material-ui/IconButton';
 import LoadingModal from './LoadingModal'
 import {
   Table,
@@ -86,12 +85,20 @@ const styles = {
   table: {
     backgroundColor: 'rgb(15,46,83)',
   },
+  tooltip: {
+    backgroundColor: 'rgba(244,176,4,0.8)',
+    fontSize: '0.9rem',
+  },
 }
 
 class Payments extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      cursorLeft: null,
+      cursorRight: null,
+      txCursorLeft: null,
+      txCursorRight: null,
       tabSelected: '1',
       paymentDetails: {
         txid: null,
@@ -119,12 +126,13 @@ class Payments extends Component {
 
     let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
-      .limit(5)
       .forAccount(this.props.accountInfo.pubKey)
       .order('desc')
+      .limit(5)
       .call()
       .then((paymentsResult) => {
         this.props.setAccountPayments(paymentsResult)
+        this.updateCursors(paymentsResult.records)
         paymentsResult.records[0].effects().then((effects) => {
           paymentsResult.records[0].transaction().then((tx) => {
             this.setState({paymentDetails: {
@@ -206,7 +214,6 @@ class Payments extends Component {
       })
       .then((account) => {
         this.props.accountExistsOnLedger({account})
-
         server.payments()
           .limit(5)
           .forAccount(this.props.accountInfo.pubKey)
@@ -232,15 +239,16 @@ class Payments extends Component {
     this.setState({
       tabSelected: value,
     })
-    if (value === "2") {
+    if (value === "2" && this.state.txCursorLeft === null && this.state.txCursorRight === null) {
       let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
       server.transactions()
-        .limit(5)
         .forAccount(this.props.accountInfo.pubKey)
         .order('desc')
+        .limit(5)
         .call()
-        .then((txs) => {
-          this.props.setAccountTransactions(txs)
+        .then((transactionsResult) => {
+          this.props.setAccountTransactions(transactionsResult)
+          this.updateTransactionsCursors(transactionsResult.records)
         })
         .catch(function (err) {
           console.log(err)
@@ -422,40 +430,100 @@ class Payments extends Component {
   }
 
 
-  getNextPaymentsPage() {
-    this.props.accountInfo.payments.next().then((payments) => {
-      if (payments.records.length > 0) {
-        this.props.setAccountPayments(payments)
-      } else {
-        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
-        server.payments()
-          .limit(5)
-          .forAccount(this.props.accountInfo.pubKey)
-          .order('desc')
-          .call()
-          .then((payments) => {
-            this.props.setAccountPayments(payments)
-          })
-      }
+  updateCursors(records) {
+    this.setState({
+      cursorLeft: records[0].paging_token,
+      cursorRight: records[records.length - 1].paging_token,
     })
   }
 
-  getNextTransactionsPage() {
-    this.props.accountInfo.transactions.next().then((txs) => {
-      if (txs.records.length > 0) {
-        this.props.setAccountTransactions(txs)
-      } else {
-        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
-        server.transactions()
-          .limit(5)
-          .forAccount(this.props.accountInfo.pubKey)
-          .order('desc')
-          .call()
-          .then((txs) => {
-            this.props.setAccountTransactions(txs)
-          })
-      }
+  updateTransactionsCursors(records) {
+    this.setState({
+      txCursorLeft: records[0].paging_token,
+      txCursorRight: records[records.length - 1].paging_token,
     })
+  }
+
+
+  getNextPaymentsPage() {
+    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    server.payments()
+      .forAccount(this.props.accountInfo.pubKey)
+      .order('desc')
+      .cursor(this.state.cursorRight)
+      .limit(5)
+      .call()
+      .then((paymentsResult) => {
+        if (paymentsResult.records.length > 0) {
+          this.props.setAccountPayments(paymentsResult)
+          this.updateCursors(paymentsResult.records)
+        }
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+  }
+
+
+  getPrevPaymentsPage() {
+    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    server.payments()
+      .forAccount(this.props.accountInfo.pubKey)
+      .order('asc')
+      .cursor(this.state.cursorLeft)
+      .limit(5)
+      .call()
+      .then((paymentsResult) => {
+        if (paymentsResult.records.length > 0) {
+          paymentsResult.records.reverse()
+          this.props.setAccountPayments(paymentsResult)
+          this.updateCursors(paymentsResult.records)
+        }
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+  }
+
+
+  getNextTransactionsPage() {
+    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    server.transactions()
+      .forAccount(this.props.accountInfo.pubKey)
+      .order('desc')
+      .cursor(this.state.txCursorRight)
+      .limit(5)
+      .call()
+      .then((transactionsResult) => {
+        if (transactionsResult.records.length > 0) {
+          this.props.setAccountTransactions(transactionsResult)
+          this.updateTransactionsCursors(transactionsResult.records)
+        }
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+  }
+
+
+  getPrevTransactionsPage() {
+    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    server.transactions()
+      .forAccount(this.props.accountInfo.pubKey)
+      .order('asc')
+      .cursor(this.state.txCursorLeft)
+      .limit(5)
+      .call()
+      .then((transactionsResult) => {
+        if (transactionsResult.records.length > 0) {
+          transactionsResult.records.reverse()
+          this.props.setAccountTransactions(transactionsResult)
+          this.updateTransactionsCursors(transactionsResult.records)
+        }
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
   }
 
 
@@ -464,7 +532,7 @@ class Payments extends Component {
     return (
       <div>
         <LoadingModal/>
-        <MuiThemeProvider>
+
         <div>
         <SnackBar
           open={this.state.sbPayment}
@@ -546,13 +614,27 @@ class Payments extends Component {
                   </div>
                   : null}
                   <div>
-                    <MuiThemeProvider>
-                      <RaisedButton
-                        backgroundColor="rgba(244,176,4,1)"
+                    <div className="flex-row-space-between p-t">
+                      <IconButton
+                        className="paging-icon"
+                        tooltip="Previous Records"
+                        tooltipStyles={styles.tooltip}
+                        tooltipPosition="top-right"
+                        onClick={this.getPrevPaymentsPage.bind(this)}
+                        disabled={false}>
+                          <i className="material-icons">fast_rewind</i>
+                      </IconButton>
+
+                      <IconButton
+                        className="paging-icon"
+                        tooltip="Next Records"
+                        tooltipStyles={styles.tooltip}
+                        tooltipPosition="top-left"
                         onClick={this.getNextPaymentsPage.bind(this)}
-                        label="Next Page"
-                      />
-                    </MuiThemeProvider>
+                        disabled={false}>
+                          <i className="material-icons">fast_forward</i>
+                      </IconButton>                        
+                    </div>
                   </div>
                   </div>
                 </div>
@@ -637,20 +719,34 @@ class Payments extends Component {
                     </TableBody>
                   </Table>) : null }
                   <div className="p-b"></div>
-                  <MuiThemeProvider>
-                    <RaisedButton
-                      backgroundColor="rgba(244,176,4,1)"
+                  <div className="flex-row-space-between p-t">
+                    <IconButton
+                      className="paging-icon"
+                      tooltip="Previous Records"
+                      tooltipStyles={styles.tooltip}
+                      tooltipPosition="top-right"
+                      onClick={this.getPrevTransactionsPage.bind(this)}
+                      disabled={false}>
+                      <i className="material-icons">fast_rewind</i>
+                    </IconButton>
+
+                    <IconButton
+                      className="paging-icon"
+                      tooltip="Next Records"
+                      tooltipStyles={styles.tooltip}
+                      tooltipPosition="top-left"
                       onClick={this.getNextTransactionsPage.bind(this)}
-                      label="Next Page"
-                    />
-                  </MuiThemeProvider>
+                      disabled={false}>
+                      <i className="material-icons">fast_forward</i>
+                    </IconButton>
+                  </div>
                 </div>
               </div>
             </div>
           </Tab>
         </Tabs>
         </div>
-        </MuiThemeProvider>
+
       </div>
     )
   }
