@@ -12,28 +12,28 @@ import stellarTheme from '../frontend/themes/stellar'
 class Layout extends Component {
   render() {
     return (
-      <div>
-        <Router>
-          <div>
-            {this.props.auth.isHorizonLoggedIn ?
-              (
-                <MuiThemeProvider muiTheme={stellarTheme}>
+      <MuiThemeProvider muiTheme={stellarTheme}>
+        <div>
+          <Router>
+            <div>
+              {this.props.auth.isHorizonLoggedIn ?
+                (
                   <div>
                     <Header/>
                     <Content />
                     <Footer />
-                  </div>
-                </MuiThemeProvider>
-              ) : (
-                <Switch>
-                  <Route exact path="/" component={Welcome}/>
-                  <Redirect to="/"/>
-                </Switch>
-              )
-            }
-          </div>
-        </Router>
-      </div>
+                  </div> 
+                ) : (
+                  <Switch>
+                    <Route exact path="/" component={Welcome}/>
+                    <Redirect to="/"/>
+                  </Switch>
+                )
+              }
+            </div>
+          </Router>
+        </div>
+      </MuiThemeProvider>
     )
   }
 }

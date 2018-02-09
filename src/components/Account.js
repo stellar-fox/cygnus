@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Input from '../frontend/input/Input'
 import SnackBar from '../frontend/snackbar/SnackBar'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -330,273 +329,262 @@ class Account extends Component {
     ]
     return (
       <div>
-        <MuiThemeProvider>
-          <div>
-            <Dialog
-              title="Not Yet Implemented"
-              actions={actions}
-              modal={false}
-              open={this.props.modal.isShowing}
-              onRequestClose={this.handleClose}
-              paperClassName="modal-body"
-              titleClassName="modal-title"
-            >
-              Pardon the mess. We are working hard to bring you this feature very
-              soon. Please check back in a while as the feature implementation
-              is being continuously deployed.
-            </Dialog>
-          </div>
-        </MuiThemeProvider>
-        <MuiThemeProvider>
-          <Tabs
-            tabItemContainerStyle={styles.container}
-            inkBarStyle={styles.inkBar}
-            value={this.props.ui.tabs.accounts}
-            onChange={this.handleChange}
-            className="tabs-container"
+        <div>
+          <Dialog
+            title="Not Yet Implemented"
+            actions={actions}
+            modal={false}
+            open={this.props.modal.isShowing}
+            onRequestClose={this.handleClose}
+            paperClassName="modal-body"
+            titleClassName="modal-title"
           >
-            {this.props.auth.isAuthenticated ?
-            <Tab style={styles.tab} label="Profile" value="1">
-              <div className="tab-content">
-                <SnackBar
-                  open={this.state.sbAccountProfileSaved}
-                  message="Account profile saved."
-                  onRequestClose={this.handleAccountProfileSnackBarClose.bind(this)}
+            Pardon the mess. We are working hard to bring you this feature very
+            soon. Please check back in a while as the feature implementation
+            is being continuously deployed.
+          </Dialog>
+        </div>
+
+        <Tabs
+          tabItemContainerStyle={styles.container}
+          inkBarStyle={styles.inkBar}
+          value={this.props.ui.tabs.accounts}
+          onChange={this.handleChange}
+          className="tabs-container"
+        >
+          {this.props.auth.isAuthenticated ?
+          <Tab style={styles.tab} label="Profile" value="1">
+            <div className="tab-content">
+              <SnackBar
+                open={this.state.sbAccountProfileSaved}
+                message="Account profile saved."
+                onRequestClose={this.handleAccountProfileSnackBarClose.bind(this)}
+              />
+              <div className="flex-row">
+                <div>
+                  <h2 style={styles.headline}>Account Profile</h2>
+                  <div className="account-title">
+                    Fill out your profile details.
+                  </div>
+                  <div className="account-subtitle">
+                    Only your payment address is visible to public.
+                    The details of your account profile contribute to KYC/AML
+                    compliance.
+                  </div>
+                </div>
+                <div className="gravatar">
+                  <figure>
+                    <img className="image"
+                      src={this.state.gravatarPath}
+                      alt="Gravatar"
+                    />
+                  </figure>
+                </div>
+              </div>
+              <div className="flex-centered">
+                <div className="p-b">
+                  <Input
+                    value={this.state.firstNameDisplay}
+                    label="First Name"
+                    inputType="text"
+                    maxLength="100"
+                    autoComplete="off"
+                    handleChange={this.handleFirstNameChange.bind(this)}
+                    subLabel={
+                      "First Name: " + this.state.firstNameDisplay
+                    }/>
+                </div>
+                <div className="p-t p-b">
+                  <Input
+                    value={this.state.lastNameDisplay}
+                    label="Last Name"
+                    inputType="text"
+                    maxLength="100"
+                    autoComplete="off"
+                    handleChange={this.handleLastNameChange.bind(this)}
+                    subLabel={
+                      "Last Name: " + this.state.lastNameDisplay
+                    }/>
+                </div>
+                <div className="p-t p-b">
+                  <Input
+                    value={this.state.emailDisplay}
+                    label="Email"
+                    inputType="text"
+                    maxLength="100"
+                    autoComplete="off"
+                    handleChange={this.handleEmailChange.bind(this)}
+                    subLabel={
+                      "Email: " + this.state.emailDisplay
+                    }/>
+                </div>
+                <div className="p-t p-b">
+                  <Input
+                    value={this.state.paymentAddressDisplay}
+                    label="Payment Address Alias"
+                    inputType="text"
+                    maxLength="100"
+                    autoComplete="off"
+                    handleChange={this.handlePaymentAddressChange.bind(this)}
+                    subLabel={
+                      (federationIsAliasOnly(this.state.paymentAddressDisplay) ?
+                        (`Payment Address: ${this.state.paymentAddressDisplay}*stellarfox.net`) :
+                        (`Payment Address: ${this.state.paymentAddressDisplay}`)
+                      )
+                    }/>
+                </div>
+              </div>
+              <div className="p-t">
+                <RaisedButton
+                  backgroundColor="rgb(244,176,4)"
+                  labelColor="rgb(15,46,83)"
+                  label="Update"
+                  onClick={this.handleProfileUpdate.bind(this)}
                 />
-                <div className="flex-row">
+              </div>
+            </div>
+          </Tab> : null}
+          <Tab style={styles.tab} label="Settings" value="2">
+            <div>
+              <h2 style={styles.headline}>Account Settings</h2>
+              <div className="account-title">
+                Adjust settings for your account.
+              </div>
+              <div className="account-subtitle">
+                General account related settings. This configuration specifies
+                how the account related views are displayed to the user.
+              </div>
+              <div className="p-t p-b"></div>
+              <div className="account-title p-t">
+                Display Currency:
+              </div>
+              <div className="account-subtitle">
+                Choose the currency you want to use in your account.
+              </div>
+              <div className="flex-start">
+              <SnackBar
+                open={this.state.sbCurrency}
+                message={"Currency set to " + this.state.currency}
+                onRequestClose={this.handleCurrencyChangeSnackBarClose.bind(this)}
+              />
+                <RadioButtonGroup
+                  onChange={this.handleCurrencyChange.bind(this)}
+                  className="account-radio-group"
+                  name="currencySelect"
+                  defaultSelected={this.props.accountInfo.currency}>
+                  <RadioButton
+                    className="p-b-small"
+                    value="eur"
+                    label="Euro [EUR]"
+                    labelStyle={styles.radioButton.label}
+                    iconStyle={styles.radioButton.icon}
+                  />
+                  <RadioButton
+                    className="p-b-small"
+                    value="usd"
+                    label="U.S. Dollar [USD]"
+                    labelStyle={styles.radioButton.label}
+                    iconStyle={styles.radioButton.icon}
+                  />
+                  <RadioButton
+                    className="p-b-small"
+                    value="aud"
+                    label="Australian Dollar [AUD]"
+                    labelStyle={styles.radioButton.label}
+                    iconStyle={styles.radioButton.icon}
+                  />
+                  <RadioButton
+                    className="p-b-small"
+                    value="nzd"
+                    label="New Zealand Dollar [NZD]"
+                    labelStyle={styles.radioButton.label}
+                    iconStyle={styles.radioButton.icon}
+                  />
+                  <RadioButton
+                    className="p-b-small"
+                    value="pln"
+                    label="Polish Złoty [PLN]"
+                    labelStyle={styles.radioButton.label}
+                    iconStyle={styles.radioButton.icon}
+                  />
+                  <RadioButton
+                    value="thb"
+                    label="Thai Baht [THB]"
+                    labelStyle={styles.radioButton.label}
+                    iconStyle={styles.radioButton.icon}
+                  />
+                </RadioButtonGroup>
+              </div>
+              <div className="p-t p-b"></div>
+              <div className="account-title p-t">
+                Set Currency Precision:
+              </div>
+              <div className="account-subtitle">
+                Set decimal precision point for fractional currency representation.
+              </div>
+              <div className="flex-start">
+              <SnackBar
+                open={this.state.sbCurrencyPrecision}
+                message={"Currency set to " + this.state.currencyPrecision}
+                onRequestClose={this.handleCurrencyPrecisionChangeSnackBarClose.bind(this)}
+              />
+                <RadioButtonGroup
+                  onChange={this.handleCurrencyPrecisionChange.bind(this)}
+                  className="account-radio-group"
+                  name="currencyPrecision"
+                  defaultSelected={this.props.accountInfo.precision}>
+                  <RadioButton
+                    className="p-b-small"
+                    value={2}
+                    label="Fiat Style"
+                    labelStyle={styles.radioButton.label}
+                    iconStyle={styles.radioButton.icon}
+                  />
+                  <RadioButton
+                    className="p-b-small"
+                    value={7}
+                    label="Crypto Style"
+                    labelStyle={styles.radioButton.label}
+                    iconStyle={styles.radioButton.icon}
+                  />
+                </RadioButtonGroup>
+              </div>
+              {this.props.auth.isAuthenticated ?
+              <div>
+                <div className="p-t p-b"></div>
+                <div className="flex-row outline">
                   <div>
-                    <h2 style={styles.headline}>Account Profile</h2>
                     <div className="account-title">
-                      Fill out your profile details.
+                      Make Account Discoverable
                     </div>
                     <div className="account-subtitle">
-                      Only your payment address is visible to public.
-                      The details of your account profile contribute to KYC/AML
-                      compliance.
+                      Your account number will be publicly discoverable and can
+                      be found by others via your payment address.
                     </div>
                   </div>
-                  <div className="gravatar">
-                    <figure>
-                      <img className="image"
-                        src={this.state.gravatarPath}
-                        alt="Gravatar"
-                      />
-                    </figure>
-                  </div>
-                </div>
-                <div className="flex-centered">
-                  <div className="p-b">
-                    <Input
-                      value={this.state.firstNameDisplay}
-                      label="First Name"
-                      inputType="text"
-                      maxLength="100"
-                      autoComplete="off"
-                      handleChange={this.handleFirstNameChange.bind(this)}
-                      subLabel={
-                        "First Name: " + this.state.firstNameDisplay
-                      }/>
-                  </div>
-                  <div className="p-t p-b">
-                    <Input
-                      value={this.state.lastNameDisplay}
-                      label="Last Name"
-                      inputType="text"
-                      maxLength="100"
-                      autoComplete="off"
-                      handleChange={this.handleLastNameChange.bind(this)}
-                      subLabel={
-                        "Last Name: " + this.state.lastNameDisplay
-                      }/>
-                  </div>
-                  <div className="p-t p-b">
-                    <Input
-                      value={this.state.emailDisplay}
-                      label="Email"
-                      inputType="text"
-                      maxLength="100"
-                      autoComplete="off"
-                      handleChange={this.handleEmailChange.bind(this)}
-                      subLabel={
-                        "Email: " + this.state.emailDisplay
-                      }/>
-                  </div>
-                  <div className="p-t p-b">
-                    <Input
-                      value={this.state.paymentAddressDisplay}
-                      label="Payment Address Alias"
-                      inputType="text"
-                      maxLength="100"
-                      autoComplete="off"
-                      handleChange={this.handlePaymentAddressChange.bind(this)}
-                      subLabel={
-                        (federationIsAliasOnly(this.state.paymentAddressDisplay) ?
-                          (`Payment Address: ${this.state.paymentAddressDisplay}*stellarfox.net`) :
-                          (`Payment Address: ${this.state.paymentAddressDisplay}`)
-                        )
-                      }/>
-                  </div>
-                </div>
-                <div className="p-t">
-                  <RaisedButton
-                    backgroundColor="rgb(244,176,4)"
-                    labelColor="rgb(15,46,83)"
-                    label="Update"
-                    onClick={this.handleProfileUpdate.bind(this)}
-                  />
-                </div>
-              </div>
-            </Tab> : null}
-            <Tab style={styles.tab} label="Settings" value="2">
-              <div>
-                <h2 style={styles.headline}>Account Settings</h2>
-                <div className="account-title">
-                  Adjust settings for your account.
-                </div>
-                <div className="account-subtitle">
-                  General account related settings. This configuration specifies
-                  how the account related views are displayed to the user.
-                </div>
-
-                <div className="p-t p-b"></div>
-                <div className="account-title p-t">
-                  Display Currency:
-                </div>
-                <div className="account-subtitle">
-                  Choose the currency you want to use in your account.
-                </div>
-                <MuiThemeProvider>
-                  <div className="flex-start">
-                  <SnackBar
-                    open={this.state.sbCurrency}
-                    message={"Currency set to " + this.state.currency}
-                    onRequestClose={this.handleCurrencyChangeSnackBarClose.bind(this)}
-                  />
-                    <RadioButtonGroup
-                      onChange={this.handleCurrencyChange.bind(this)}
-                      className="account-radio-group"
-                      name="currencySelect"
-                      defaultSelected={this.props.accountInfo.currency}>
-                      <RadioButton
-                        className="p-b-small"
-                        value="eur"
-                        label="Euro [EUR]"
-                        labelStyle={styles.radioButton.label}
-                        iconStyle={styles.radioButton.icon}
-                      />
-                      <RadioButton
-                        className="p-b-small"
-                        value="usd"
-                        label="U.S. Dollar [USD]"
-                        labelStyle={styles.radioButton.label}
-                        iconStyle={styles.radioButton.icon}
-                      />
-                      <RadioButton
-                        className="p-b-small"
-                        value="aud"
-                        label="Australian Dollar [AUD]"
-                        labelStyle={styles.radioButton.label}
-                        iconStyle={styles.radioButton.icon}
-                      />
-                      <RadioButton
-                        className="p-b-small"
-                        value="nzd"
-                        label="New Zealand Dollar [NZD]"
-                        labelStyle={styles.radioButton.label}
-                        iconStyle={styles.radioButton.icon}
-                      />
-                      <RadioButton
-                        className="p-b-small"
-                        value="pln"
-                        label="Polish Złoty [PLN]"
-                        labelStyle={styles.radioButton.label}
-                        iconStyle={styles.radioButton.icon}
-                      />
-                      <RadioButton
-                        value="thb"
-                        label="Thai Baht [THB]"
-                        labelStyle={styles.radioButton.label}
-                        iconStyle={styles.radioButton.icon}
-                      />
-                    </RadioButtonGroup>
-                  </div>
-                </MuiThemeProvider>
-
-                <div className="p-t p-b"></div>
-                <div className="account-title p-t">
-                  Set Currency Precision:
-                </div>
-                <div className="account-subtitle">
-                  Set decimal precision point for fractional currency representation.
-                </div>
-                <MuiThemeProvider>
-                  <div className="flex-start">
-                  <SnackBar
-                    open={this.state.sbCurrencyPrecision}
-                    message={"Currency set to " + this.state.currencyPrecision}
-                    onRequestClose={this.handleCurrencyPrecisionChangeSnackBarClose.bind(this)}
-                  />
-                    <RadioButtonGroup
-                      onChange={this.handleCurrencyPrecisionChange.bind(this)}
-                      className="account-radio-group"
-                      name="currencyPrecision"
-                      defaultSelected={this.props.accountInfo.precision}>
-                      <RadioButton
-                        className="p-b-small"
-                        value={2}
-                        label="Fiat Style"
-                        labelStyle={styles.radioButton.label}
-                        iconStyle={styles.radioButton.icon}
-                      />
-                      <RadioButton
-                        className="p-b-small"
-                        value={7}
-                        label="Crypto Style"
-                        labelStyle={styles.radioButton.label}
-                        iconStyle={styles.radioButton.icon}
-                      />
-                    </RadioButtonGroup>
-                  </div>
-                </MuiThemeProvider>
-
-                {this.props.auth.isAuthenticated ?
-                <div>
-                  <div className="p-t p-b"></div>
-                  <div className="flex-row outline">
+                  <div>
                     <div>
-                      <div className="account-title">
-                        Make Account Discoverable
-                      </div>
-                      <div className="account-subtitle">
-                        Your account number will be publicly discoverable and can
-                        be found by others via your payment address.
-                      </div>
-                    </div>
-                    <div>
-                      <MuiThemeProvider>
-                        <div>
-                          <SnackBar
-                            open={this.state.sbAccountDiscoverable}
-                            message={this.state.accountDiscoverableMessage}
-                            onRequestClose={this.handleAccountDiscoverableSnackBarClose.bind(this)}
-                          />
-                          <Toggle
-                            toggled={this.state.accountDiscoverable}
-                            onToggle={this.handleAccountDiscoverableToggle.bind(this)}
-                            labelPosition="right"
-                            thumbStyle={styles.toggleSwitch.thumbOff}
-                            trackStyle={styles.toggleSwitch.trackOff}
-                            thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
-                            trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
-                            labelStyle={styles.toggleSwitch.labelStyle}
-                          />
-                        </div>
-                      </MuiThemeProvider>
+                      <SnackBar
+                        open={this.state.sbAccountDiscoverable}
+                        message={this.state.accountDiscoverableMessage}
+                        onRequestClose={this.handleAccountDiscoverableSnackBarClose.bind(this)}
+                      />
+                      <Toggle
+                        toggled={this.state.accountDiscoverable}
+                        onToggle={this.handleAccountDiscoverableToggle.bind(this)}
+                        labelPosition="right"
+                        thumbStyle={styles.toggleSwitch.thumbOff}
+                        trackStyle={styles.toggleSwitch.trackOff}
+                        thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
+                        trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
+                        labelStyle={styles.toggleSwitch.labelStyle}
+                      />
                     </div>
                   </div>
-                </div> : null}
-              </div>
-            </Tab>
+                </div>
+              </div> : null}
+            </div>
+          </Tab>
             {this.props.auth.isAuthenticated ?
             <Tab style={styles.tab} label="Security" value="3">
               <div>
@@ -619,27 +607,24 @@ class Account extends Component {
                     </div>
                   </div>
                   <div>
-                    <MuiThemeProvider>
-                      <div>
-                        <SnackBar
-                          open={this.state.sb2FA}
-                          message={"Two factor authentication is now enabled."}
-                          onRequestClose={this.handle2FASnackBarClose.bind(this)}
-                        />
-                        <Toggle
-                          onToggle={this.handle2FAToggle.bind(this)}
-                          labelPosition="right"
-                          thumbStyle={styles.toggleSwitch.thumbOff}
-                          trackStyle={styles.toggleSwitch.trackOff}
-                          thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
-                          trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
-                          labelStyle={styles.toggleSwitch.labelStyle}
-                        />
-                      </div>
-                    </MuiThemeProvider>
+                    <div>
+                      <SnackBar
+                        open={this.state.sb2FA}
+                        message={"Two factor authentication is now enabled."}
+                        onRequestClose={this.handle2FASnackBarClose.bind(this)}
+                      />
+                      <Toggle
+                        onToggle={this.handle2FAToggle.bind(this)}
+                        labelPosition="right"
+                        thumbStyle={styles.toggleSwitch.thumbOff}
+                        trackStyle={styles.toggleSwitch.trackOff}
+                        thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
+                        trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
+                        labelStyle={styles.toggleSwitch.labelStyle}
+                      />
+                    </div>
                   </div>
                 </div>
-
                 <div className="p-t p-b"></div>
                 <div className="flex-row outline">
                   <div>
@@ -652,30 +637,27 @@ class Account extends Component {
                     </div>
                   </div>
                   <div>
-                    <MuiThemeProvider>
-                      <div>
-                        <SnackBar
-                          open={this.state.sbMultisig}
-                          message={"Account set to multisig."}
-                          onRequestClose={this.handleMultisigSnackBarClose.bind(this)}
-                        />
-                        <Toggle
-                          onToggle={this.handleMultisigToggle.bind(this)}
-                          labelPosition="right"
-                          thumbStyle={styles.toggleSwitch.thumbOff}
-                          trackStyle={styles.toggleSwitch.trackOff}
-                          thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
-                          trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
-                          labelStyle={styles.toggleSwitch.labelStyle}
-                        />
-                      </div>
-                    </MuiThemeProvider>
+                    <div>
+                      <SnackBar
+                        open={this.state.sbMultisig}
+                        message={"Account set to multisig."}
+                        onRequestClose={this.handleMultisigSnackBarClose.bind(this)}
+                      />
+                      <Toggle
+                        onToggle={this.handleMultisigToggle.bind(this)}
+                        labelPosition="right"
+                        thumbStyle={styles.toggleSwitch.thumbOff}
+                        trackStyle={styles.toggleSwitch.trackOff}
+                        thumbSwitchedStyle={styles.toggleSwitch.thumbSwitched}
+                        trackSwitchedStyle={styles.toggleSwitch.trackSwitched}
+                        labelStyle={styles.toggleSwitch.labelStyle}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </Tab> : null}
           </Tabs>
-        </MuiThemeProvider>
       </div>
     )
   }

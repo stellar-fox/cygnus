@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import './Welcome.css'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import Input from '../frontend/input/Input'
@@ -322,26 +321,20 @@ class Welcome extends Component {
     return (
       <div>
         <LoadingModal/>
-
         <div className="faded-image cash">
-
           <div className="hero">
             <div className="title">Welcome to the money revolution.</div>
             <div className="subtitle">
               Open your own <em><b>lifetime bank</b></em> today and reserve your payment address.
             </div>
           </div>
-
           <div className="flex-row-centered">
-            <MuiThemeProvider>
-              <RaisedButton
-                onClick={this.handleSignup.bind(this)}
-                backgroundColor="rgb(244,176,4)"
-                label="Get Started"
-              />
-            </MuiThemeProvider>
+            <RaisedButton
+              onClick={this.handleSignup.bind(this)}
+              backgroundColor="rgb(244,176,4)"
+              label="Get Started"
+            />
           </div>
-
           <div className="container">
             <div className="columns">
               <div className="column">
@@ -392,7 +385,6 @@ class Welcome extends Component {
             </div>
           </div>
         </div>
-
         <div>
           <div className="flex-row-space-between">
             <div className="flex-row-column-50">
@@ -430,14 +422,12 @@ class Welcome extends Component {
                           "Account Derivation Path: [" + this.state.derivationPrefix +
                           this.state.derivationPath + "']"
                         }/></div> : null }
-                      <MuiThemeProvider>
                         <RaisedButton
                           onClick={this.handleOnClickAuthenticate.bind(this)}
                           disabled={this.props.ui.authenticateButton.isDisabled}
                           backgroundColor="rgb(244,176,4)"
                           label="Authenticate"
                         />
-                      </MuiThemeProvider>
                         {this.state.ledgerSupported ? null : 
                           (
                             <div className="title-small p-t">
@@ -469,48 +459,46 @@ class Welcome extends Component {
                         this application will <u>never</u> ask you to
                         enter your Secret key.</strong>
                       </div>
-                      <MuiThemeProvider>
-                        <div className="mui-text-input">
-                          <div>
-                            <TextField
-                              onChange={this.publicKeyChanged.bind(this)}
-                              floatingLabelText="Stellar Public Key"
-                              errorText={this.props.ui.messages.textFieldPublicKey}
-                              errorStyle={styles.errorStyle}
-                              underlineStyle={styles.underlineStyle}
-                              underlineFocusStyle={styles.underlineStyle}
-                              floatingLabelStyle={styles.floatingLabelStyle}
-                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                              inputStyle={styles.inputStyle}
-                            />
-                          </div>
-                          <div>
-                            <TextField
-                              onChange={this.federationAddressChanged.bind(this)}
-                              floatingLabelText="Federation Address"
-                              errorText={this.props.ui.messages.textFieldFederationAddress}
-                              errorStyle={styles.errorStyle}
-                              underlineStyle={styles.underlineStyle}
-                              underlineFocusStyle={styles.underlineStyle}
-                              floatingLabelStyle={styles.floatingLabelStyle}
-                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                              inputStyle={styles.inputStyle}
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                  this.handleOnClickCheck.call(this)
-                                }
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <RaisedButton
-                              onClick={this.handleOnClickCheck.bind(this)}
-                              backgroundColor="rgb(244,176,4)"
-                              label="Check"
-                            />
-                          </div>
+                      <div className="mui-text-input">
+                        <div>
+                          <TextField
+                            onChange={this.publicKeyChanged.bind(this)}
+                            floatingLabelText="Stellar Public Key"
+                            errorText={this.props.ui.messages.textFieldPublicKey}
+                            errorStyle={styles.errorStyle}
+                            underlineStyle={styles.underlineStyle}
+                            underlineFocusStyle={styles.underlineStyle}
+                            floatingLabelStyle={styles.floatingLabelStyle}
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                            inputStyle={styles.inputStyle}
+                          />
                         </div>
-                      </MuiThemeProvider>
+                        <div>
+                          <TextField
+                            onChange={this.federationAddressChanged.bind(this)}
+                            floatingLabelText="Federation Address"
+                            errorText={this.props.ui.messages.textFieldFederationAddress}
+                            errorStyle={styles.errorStyle}
+                            underlineStyle={styles.underlineStyle}
+                            underlineFocusStyle={styles.underlineStyle}
+                            floatingLabelStyle={styles.floatingLabelStyle}
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                            inputStyle={styles.inputStyle}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                this.handleOnClickCheck.call(this)
+                              }
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <RaisedButton
+                            onClick={this.handleOnClickCheck.bind(this)}
+                            backgroundColor="rgb(244,176,4)"
+                            label="Check"
+                          />
+                        </div>
+                      </div>
                     </div>
                   }/>
                 </div>
@@ -531,7 +519,6 @@ class Welcome extends Component {
                         Once you have opened your account with your Ledger device
                         you can sign in here directly to your banking terminal.
                       </div>
-                      <MuiThemeProvider>
                       <div>
                         <div className="mui-text-input">
                           <div>
@@ -591,7 +578,6 @@ class Welcome extends Component {
                           </div>
                         </div>
                       </div>
-                      </MuiThemeProvider>
                     </div>
                   }/>
                 </div>
