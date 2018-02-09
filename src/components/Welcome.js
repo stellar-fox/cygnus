@@ -59,10 +59,16 @@ class Welcome extends Component {
       useDefaultAccount: true,
       textFieldEmail: '',
       textFieldFederationAddress: '',
+      ledgerSupported: false,
     }
   }
 
   componentDidMount(){
+    if (navigator.userAgent.indexOf("Chrome") !== -1) {
+      this.setState({
+        ledgerSupported: true
+      })
+    }
     this.props.setInvalidInputMessage({
       textFieldEmail: null
     })
@@ -432,6 +438,16 @@ class Welcome extends Component {
                           label="Authenticate"
                         />
                       </MuiThemeProvider>
+                        {this.state.ledgerSupported ? null : 
+                          (
+                            <div className="title-small p-t">
+                              This browser doesn’t support the FIDO U2F standard yet.
+                              We recommend updating to the latest <a target="_blank"
+                              rel="noopener noreferrer" href="https://www.google.com/chrome/">
+                              Google Chrome</a> to start using security key devices.
+                            </div>
+                          )
+                        }
                     </div>
                   }/>
                 </div>
