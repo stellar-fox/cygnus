@@ -55,3 +55,27 @@ export const federationLookup = (federationAddress) => {
       });
   }
 }
+
+export const pubKeyValid = (pubKey) => {
+  let validity = {}
+  switch (true) {
+    case pubKey.length < 56:
+      validity = Object.assign(validity || {}, {
+        valid: false,
+        length: (56- pubKey.length),
+        message: (pubKey.length !== 0 ? `needs ${56 - pubKey.length} more characters` : null),
+      })
+      break;
+    case pubKey.length === 56:
+      try {
+        window.StellarSdk.Keypair.fromPublicKey(pubKey)
+        validity = Object.assign(validity || {}, {valid: true, message: null})
+      } catch (error) {
+        validity = Object.assign(validity || {}, {valid: false, message: error.message})
+      }
+      break;
+    default:
+      break;
+  }
+  return validity
+}

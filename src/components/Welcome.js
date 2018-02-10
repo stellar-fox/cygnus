@@ -8,7 +8,7 @@ import Input from '../frontend/input/Input'
 import Checkbox from '../frontend/checkbox/Checkbox'
 import Footer from './Footer'
 import LoadingModal from './LoadingModal'
-import {emailValid, federationAddressValid, federationLookup} from '../lib/utils'
+import {emailValid, pubKeyValid, federationAddressValid, federationLookup} from '../lib/utils'
 import {config} from '../config'
 import axios from 'axios'
 import {
@@ -57,11 +57,16 @@ class Welcome extends Component {
       pathEditable: false,
       useDefaultAccount: true,
       textFieldEmail: '',
-      textFieldFederationAddress: '',
       ledgerSupported: false,
+      explorerInputValue: '',
+      explorerInputIsValid: true,
+      explorerInputMessage: '',
+      explorerInputMessageToDisplay: '',
     }
   }
 
+
+  // ...
   componentDidMount(){
     if (navigator.userAgent.indexOf("Chrome") !== -1) {
       this.setState({
@@ -73,9 +78,6 @@ class Welcome extends Component {
     })
     this.props.setInvalidInputMessage({
       textFieldPassword: null
-    })
-    this.props.setInvalidInputMessage({
-      textFieldFederationAddress: null
     })
     /*
     * Horizon end point is set to testnet by default.
@@ -94,6 +96,8 @@ class Welcome extends Component {
     )
   }
 
+
+  // ...
   handleCheckboxClick(event) {
     const target = event.target
     this.setState({
@@ -111,6 +115,8 @@ class Welcome extends Component {
     }
   }
 
+
+  // ...
   handlePathChange(event) {
     const target = event.target
     if (isNaN(target.value)) {
@@ -123,11 +129,15 @@ class Welcome extends Component {
     })
   }
 
+
+  // ...
   handleOnClickAuthenticate() {
     this.props.disableAuthenticateButton()
     this.logInViaLedger()
   }
 
+
+  // ...
   logInViaLedger() {
     let that = this
     let bip32Path = "44'/148'/" + this.state.derivationPath + "'";
@@ -142,6 +152,8 @@ class Welcome extends Component {
     })
   }
 
+
+  // ...
   logInViaPublicKey(pubKey, isReadOnly=true) {
     try {
       // 1. validate public key
@@ -189,77 +201,113 @@ class Welcome extends Component {
     }
   }
 
-  publicKeyChanged(event, value) {
+
+  // ...
+  federationAddressChanged(event, value) {
+    let pubKeyCheck = pubKeyValid(value)
+    let fedAddrIsValid = federationAddressValid(value)
+    
+    this.setState({
+      explorerInputValue: value,
+    })
+
     switch (true) {
-      case value.length < 56:
-        this.props.setInvalidInputMessage({
-          textFieldPublicKey: ('Needs ' + (56-value.length) + ' characters.')
-        })
-        this.props.setPublicKeyInvalid({
-          pubKey: value,
-          message: ('Needs ' + (56-value.length) + ' characters.'),
+      // Valid Stellar PublicKey
+      case pubKeyCheck.valid:
+        this.setState({
+          explorerInputIsValid: true,
+          explorerInputMessage: null,
         })
         break;
-      case value.length === 56:
-        this.logInViaPublicKey(value)
+      // Valid Federation Address
+      case fedAddrIsValid:
+        this.setState({
+          explorerInputIsValid: true,
+          explorerInputMessage: null,
+        })
+        break;
+      // // Invalid Stellar Public Key
+      case !pubKeyCheck.valid:
+        this.setState({
+          explorerInputIsValid: false,
+          explorerInputMessage: pubKeyCheck.message
+        })
+        break;
+      // 0 Length Input
+      case value.length === 0:
+        this.setState({
+          explorerInputIsValid: true,
+          explorerInputMessage: null,
+        })
         break;
       default:
         break;
     }
-  }
 
-  federationAddressChanged(event, value) {
-    this.setState({
-      textFieldFederationAddress: value
-    })
-    return federationAddressValid(value) ? (
-      this.props.setInvalidInputMessage({
-        textFieldFederationAddress: null
+    // Looks like user is entering Federation Address format.
+    if (value.match(/\*/) && !fedAddrIsValid) {
+      this.setState({
+        explorerInputIsValid: false,
+        explorerInputMessage: 'Invalid Federation Address'
       })
-    ) : null
-  }
+    }
 
-  handleOnClickCheck() {
-    if (federationAddressValid(this.state.textFieldFederationAddress)) {
-      this.props.setModalLoading()
-      this.props.updateLoadingMessage({message: "Looking up federation endpoint ..."})
-      this.props.setInvalidInputMessage({
-        textFieldFederationAddress: null
-      })
-
-      federationLookup(this.state.textFieldFederationAddress)
-        .then((federationEndpointObj) => {
-          if (federationEndpointObj.ok) {
-            axios.get(`${federationEndpointObj.endpoint}?q=${this.state.textFieldFederationAddress}&type=name`)
-              .then((response) => {
-                this.logInViaPublicKey(response.data.account_id)
-              })
-              .catch((error) => {
-                this.props.setModalLoaded()
-                if (error.response.data.detail) {
-                  this.props.setInvalidInputMessage({
-                    textFieldFederationAddress: error.response.data.detail
-                  })
-                } else {
-                  this.props.setInvalidInputMessage({
-                    textFieldFederationAddress: error.response.data.message
-                  })
-                }
-              });
-          } else {
-            this.props.setModalLoaded()
-            this.props.setInvalidInputMessage({
-              textFieldFederationAddress: federationEndpointObj.error
-            })
-          }
-        })
-    } else {
-      this.props.setInvalidInputMessage({
-        textFieldFederationAddress: 'Invalid address format.'
+    if (!value.match(/^G/) && !value.match(/\*/)) {
+      this.setState({
+        explorerInputIsValid: false,
+        explorerInputMessage: 'Invalid Input'
       })
     }
   }
 
+
+  // ...
+  handleOnClickCheck() {
+    this.setState({
+      explorerInputMessageToDisplay: this.state.explorerInputMessage,
+    })
+    // Input entered is a valid Federation Address
+    if (federationAddressValid(this.state.explorerInputValue)) {
+      this.props.setModalLoading()
+      this.props.updateLoadingMessage({message: "Looking up federation endpoint ..."})
+      this.setState({
+        explorerInputMessageToDisplay: null,
+      })
+      federationLookup(this.state.explorerInputValue)
+      .then((federationEndpointObj) => {
+        if (federationEndpointObj.ok) {
+          axios.get(`${federationEndpointObj.endpoint}?q=${this.state.explorerInputValue}&type=name`)
+            .then((response) => {
+              this.logInViaPublicKey(response.data.account_id)
+            })
+            .catch((error) => {
+              this.props.setModalLoaded()
+              if (error.response.data.detail) {
+                this.setState({
+                  explorerInputMessageToDisplay: error.response.data.detail,
+                })
+              } else {
+                this.setState({
+                  explorerInputMessageToDisplay: error.response.data.message,
+                })
+              }
+            });
+        } else {
+          this.props.setModalLoaded()
+          this.setState({
+            explorerInputMessageToDisplay: federationEndpointObj.error,
+          })
+        }
+      })
+    }
+    // Input entered is a valid Stellar PublicKey
+    if (pubKeyValid(this.state.explorerInputValue).valid) {
+      this.logInViaPublicKey(this.state.explorerInputValue)
+    }
+  }
+
+
+  // ...
   emailChanged(event, value) {
     this.setState({
       textFieldEmail: value
@@ -271,6 +319,8 @@ class Welcome extends Component {
     ) : null
   }
 
+
+  // ...
   handleOnClickLogin() {
     if (emailValid(this.state.textFieldEmail)) {
       this.props.setInvalidInputMessage({
@@ -312,11 +362,15 @@ class Welcome extends Component {
     }
   }
 
+
+  // ...
   handleSignup() {
     console.log('signup')
     return false
   }
 
+
+  // ...
   render() {
     return (
       <div>
@@ -394,7 +448,7 @@ class Welcome extends Component {
                     <div>
                       <img src="/img/ledger.svg" width="120px" alt="Ledger"/>
                       <div className="title">
-                        For full account functionality, authenticate with your hardware wallet.
+                        For full account functionality, authenticate with your hardware key.
                       </div>
                       <div className="title-small p-t p-b">
                         Connect your Ledger Nano S hardware wallet. Make sure Stellar
@@ -434,7 +488,7 @@ class Welcome extends Component {
                               This browser doesn’t support the FIDO U2F standard yet.
                               We recommend updating to the latest <a target="_blank"
                               rel="noopener noreferrer" href="https://www.google.com/chrome/">
-                              Google Chrome</a> to start using security key devices.
+                              Google Chrome</a> in order to use your Ledger device.
                             </div>
                           )
                         }
@@ -443,81 +497,21 @@ class Welcome extends Component {
                 </div>
               </div>
             </div>
+            
             <div className="flex-row-column">
               <div className="p-t">
-                <div>
-                  <Panel title="Explore" content={
-                    <div>
-                      <img src="/img/stellar.svg" width="120px" alt="Stellar"/>
-                      <div className="title">
-                        To access account explorer enter your Stellar <b>Public</b> Key
-                        or <em>Stellar Federation Address</em>.
-                      </div>
-                      <div className="title-small p-t p-b">
-                        Once the correct Public key is entered, the account
-                        explorer will load automatically. <strong>Please note that
-                        this application will <u>never</u> ask you to
-                        enter your Secret key.</strong>
-                      </div>
-                      <div className="mui-text-input">
-                        <div>
-                          <TextField
-                            onChange={this.publicKeyChanged.bind(this)}
-                            floatingLabelText="Stellar Public Key"
-                            errorText={this.props.ui.messages.textFieldPublicKey}
-                            errorStyle={styles.errorStyle}
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={styles.underlineStyle}
-                            floatingLabelStyle={styles.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            inputStyle={styles.inputStyle}
-                          />
-                        </div>
-                        <div>
-                          <TextField
-                            onChange={this.federationAddressChanged.bind(this)}
-                            floatingLabelText="Federation Address"
-                            errorText={this.props.ui.messages.textFieldFederationAddress}
-                            errorStyle={styles.errorStyle}
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={styles.underlineStyle}
-                            floatingLabelStyle={styles.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            inputStyle={styles.inputStyle}
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                this.handleOnClickCheck.call(this)
-                              }
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <RaisedButton
-                            onClick={this.handleOnClickCheck.bind(this)}
-                            backgroundColor="rgb(244,176,4)"
-                            label="Check"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  }/>
-                </div>
-              </div>
-            </div>
-            <div className="flex-row-column">
-              <div className="p-r p-t">
                 <div>
                   <Panel title="Customize" content={
                     <div>
                       <img
-                        style={{marginBottom: '4px'}}
-                        src="/img/sf.svg" width="140px" alt="Stellar Fox"/>
+                        style={{ marginBottom: '4px' }}
+                        src="/img/sf.svg" width="140px" alt="Stellar Fox" />
                       <div className="title">
-                        Configure your account settings via our backend API.
+                        Manage your account with ease.
                       </div>
                       <div className="title-small p-t p-b">
-                        Once you have opened your account with your Ledger device
-                        you can sign in here directly to your banking terminal.
+                        Once you have opened your account you can log in here
+                        to your banking terminal.
                       </div>
                       <div>
                         <div className="mui-text-input">
@@ -579,10 +573,64 @@ class Welcome extends Component {
                         </div>
                       </div>
                     </div>
+                  } />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-row-column">
+              <div className="p-r p-t">
+                <div>
+                  <Panel title="Explore" content={
+                    <div>
+                      <img src="/img/stellar.svg" width="120px" alt="Stellar"/>
+                      <div className="title">
+                        To access global ledger explorer enter your <em>
+                        Payment Address</em> or <em>Account Number</em>.
+                      </div>
+                      <div className="title-small p-t p-b">
+                        Your account operations are publicly accessible on the global
+                        ledger. Anyone who knows your account number or payment address
+                        can view your public transactions.
+                      </div>
+                      <div className="title-small p-t p-b">
+                        <strong>Please note that
+                        this application will <u>never</u> ask you to
+                        enter your Secret key.</strong>
+                      </div>
+                      <div className="mui-text-input">
+                        <div>
+                          <TextField
+                            onChange={this.federationAddressChanged.bind(this)}
+                            floatingLabelText="Payment Address"
+                            errorText={this.state.explorerInputMessageToDisplay}
+                            errorStyle={styles.errorStyle}
+                            underlineStyle={styles.underlineStyle}
+                            underlineFocusStyle={styles.underlineStyle}
+                            floatingLabelStyle={styles.floatingLabelStyle}
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                            inputStyle={styles.inputStyle}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                this.handleOnClickCheck.call(this)
+                              }
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <RaisedButton
+                            onClick={this.handleOnClickCheck.bind(this)}
+                            backgroundColor="rgb(244,176,4)"
+                            label="Check"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   }/>
                 </div>
               </div>
             </div>
+            
           </div>
         </div>
         <Footer />
