@@ -10,3 +10,6 @@ div.bar-subtitle {
   line-height: 5px;
   font-size: 15px;
 }
+div.bar-subtitle-account {
+  text-align: end;
+}

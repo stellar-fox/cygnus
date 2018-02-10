@@ -369,7 +369,9 @@ class Payments extends Component {
                 </span>
                 <div className="payment-details-fieldset">
                   <div className="payment-details-memo">
-                    <span className="smaller">Account Closed: {pubKeyAbbr(effect.account)}</span>
+                    <span className="smaller">
+                      Account Closed: {pubKeyAbbr(effect.account)}
+                    </span>
                   </div>
                   <div className="payment-details-id">
                     ID: {effect.id}
