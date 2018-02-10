@@ -97,8 +97,12 @@ class Payments extends Component {
     this.state = {
       cursorLeft: null,
       cursorRight: null,
+      prevDisabled: false,
+      nextDisabled: false,
       txCursorLeft: null,
       txCursorRight: null,
+      txNextDisabled: false,
+      txPrevDisabled: false,
       tabSelected: '1',
       paymentDetails: {
         txid: null,
@@ -110,6 +114,8 @@ class Payments extends Component {
       sbPayment: false,
       sbPaymentAmount: null,
       sbPaymentAssetCode: null,
+      sbNoMorePayments: false,
+      sbNoMoreTransactions: false,
     }
   }
 
@@ -149,6 +155,34 @@ class Payments extends Component {
       .catch(function (err) {
         console.log(err)
       })
+  }
+
+  noMorePaymentsNotice(state) {
+    this.setState({
+      sbNoMorePayments: true,
+    }, (prevState) => {
+      this.setState(state)
+    })
+  }
+
+  noMoreTransactionsNotice(state) {
+    this.setState({
+      sbNoMoreTransactions: true,
+    }, (prevState) => {
+      this.setState(state)
+    })
+  }
+
+  handleNoMorePaymentsSnackBarClose = () => {
+    this.setState({
+      sbNoMorePayments: false
+    })
+  }
+
+  handleNoMoreTransactionsSnackBarClose = () => {
+    this.setState({
+      sbNoMoreTransactions: false
+    })
   }
 
   paymentsStreamer() {
@@ -455,8 +489,13 @@ class Payments extends Component {
       .call()
       .then((paymentsResult) => {
         if (paymentsResult.records.length > 0) {
+          this.setState({
+            prevDisabled: false,
+          })
           this.props.setAccountPayments(paymentsResult)
           this.updateCursors(paymentsResult.records)
+        } else {
+          this.noMorePaymentsNotice.call(this, {nextDisabled: true})
         }
       })
       .catch(function (err) {
@@ -475,9 +514,14 @@ class Payments extends Component {
       .call()
       .then((paymentsResult) => {
         if (paymentsResult.records.length > 0) {
+          this.setState({
+            nextDisabled: false,
+          })
           paymentsResult.records.reverse()
           this.props.setAccountPayments(paymentsResult)
           this.updateCursors(paymentsResult.records)
+        } else {
+          this.noMorePaymentsNotice.call(this, {prevDisabled: true})
         }
       })
       .catch(function (err) {
@@ -496,8 +540,13 @@ class Payments extends Component {
       .call()
       .then((transactionsResult) => {
         if (transactionsResult.records.length > 0) {
+          this.setState({
+            txPrevDisabled: false,
+          })
           this.props.setAccountTransactions(transactionsResult)
           this.updateTransactionsCursors(transactionsResult.records)
+        } else {
+          this.noMoreTransactionsNotice.call(this, {txNextDisabled: true})
         }
       })
       .catch(function (err) {
@@ -516,9 +565,14 @@ class Payments extends Component {
       .call()
       .then((transactionsResult) => {
         if (transactionsResult.records.length > 0) {
+          this.setState({
+            txNextDisabled: false,
+          })
           transactionsResult.records.reverse()
           this.props.setAccountTransactions(transactionsResult)
           this.updateTransactionsCursors(transactionsResult.records)
+        } else {
+          this.noMoreTransactionsNotice.call(this, {txPrevDisabled: true})
         }
       })
       .catch(function (err) {
@@ -538,6 +592,16 @@ class Payments extends Component {
           open={this.state.sbPayment}
           message={`${this.state.sbPaymentText} ${this.state.sbPaymentAmount} ${this.state.sbPaymentAssetCode}`}
           onRequestClose={this.handlePaymentSnackBarClose.bind(this)}
+        />
+        <SnackBar
+          open={this.state.sbNoMorePayments}
+          message="No more payments found."
+          onRequestClose={this.handleNoMorePaymentsSnackBarClose.bind(this)}
+        />
+        <SnackBar
+          open={this.state.sbNoMoreTransactions}
+          message="No more transactions found."
+          onRequestClose={this.handleNoMoreTransactionsSnackBarClose.bind(this)}
         />
         <Tabs
           tabItemContainerStyle={styles.container}
@@ -617,21 +681,21 @@ class Payments extends Component {
                     <div className="flex-row-space-between p-t">
                       <IconButton
                         className="paging-icon"
-                        tooltip="Previous Records"
+                        tooltip="Previous Payments"
                         tooltipStyles={styles.tooltip}
                         tooltipPosition="top-right"
                         onClick={this.getPrevPaymentsPage.bind(this)}
-                        disabled={false}>
+                        disabled={this.state.prevDisabled}>
                           <i className="material-icons">fast_rewind</i>
                       </IconButton>
 
                       <IconButton
                         className="paging-icon"
-                        tooltip="Next Records"
+                        tooltip="Next Payments"
                         tooltipStyles={styles.tooltip}
                         tooltipPosition="top-left"
                         onClick={this.getNextPaymentsPage.bind(this)}
-                        disabled={false}>
+                        disabled={this.state.nextDisabled}>
                           <i className="material-icons">fast_forward</i>
                       </IconButton>                        
                     </div>
@@ -722,21 +786,21 @@ class Payments extends Component {
                   <div className="flex-row-space-between p-t">
                     <IconButton
                       className="paging-icon"
-                      tooltip="Previous Records"
+                      tooltip="Previous Transactions"
                       tooltipStyles={styles.tooltip}
                       tooltipPosition="top-right"
                       onClick={this.getPrevTransactionsPage.bind(this)}
-                      disabled={false}>
+                      disabled={this.state.txPrevDisabled}>
                       <i className="material-icons">fast_rewind</i>
                     </IconButton>
 
                     <IconButton
                       className="paging-icon"
-                      tooltip="Next Records"
+                      tooltip="Next Transactions"
                       tooltipStyles={styles.tooltip}
                       tooltipPosition="top-left"
                       onClick={this.getNextTransactionsPage.bind(this)}
-                      disabled={false}>
+                      disabled={this.state.txNextDisabled}>
                       <i className="material-icons">fast_forward</i>
                     </IconButton>
                   </div>
