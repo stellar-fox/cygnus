@@ -4,11 +4,14 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 import Input from '../frontend/input/Input'
 import Checkbox from '../frontend/checkbox/Checkbox'
 import Footer from './Footer'
 import LoadingModal from './LoadingModal'
+import Dialog from 'material-ui/Dialog'
 import {emailValid, pubKeyValid, federationAddressValid, federationLookup} from '../lib/utils'
+import CreateAccountStepper from './CreateAccount/CreateAccount'
 import {config} from '../config'
 import axios from 'axios'
 import {
@@ -62,6 +65,8 @@ class Welcome extends Component {
       explorerInputIsValid: true,
       explorerInputMessage: '',
       explorerInputMessageToDisplay: '',
+      modalShown: false,
+      modalButtonText: 'CANCEL',
     }
   }
 
@@ -365,15 +370,57 @@ class Welcome extends Component {
 
   // ...
   handleSignup() {
-    console.log('signup')
-    return false
+    this.setState({
+      modalButtonText: 'CANCEL',
+      modalShown: true,
+    })
+  }
+
+
+  // ...
+  handleModalClose() {
+    this.setState({
+      modalShown: false,
+    })
+  }
+
+  
+  // ...
+  setModalButtonText(text) {
+    this.setState({
+      modalButtonText: text
+    })
   }
 
 
   // ...
   render() {
+    
+    const actions = [
+      <FlatButton
+        backgroundColor="rgb(244,176,4)"
+        labelStyle={{ color: "rgb(15,46,83)"}}
+        label={this.state.modalButtonText}
+        keyboardFocused={false}
+        onClick={this.handleModalClose.bind(this)}
+      />,
+    ]
+
     return (
       <div>
+        
+        <Dialog
+          title="Opening Your Account"
+          actions={actions}
+          modal={true}
+          open={this.state.modalShown}
+          onRequestClose={this.handleModalClose.bind(this)}
+          paperClassName="modal-body"
+          titleClassName="modal-title"
+        >
+          <CreateAccountStepper onComplete={this.setModalButtonText.bind(this)}/>
+        </Dialog>
+
         <LoadingModal/>
         <div className="faded-image cash">
           <div className="hero">
@@ -561,14 +608,6 @@ class Welcome extends Component {
                               backgroundColor="rgb(244,176,4)"
                               label="Login"
                             />
-                          </div>
-                          <div className="small">
-                            <div>No account yet?</div>
-                            <div>
-                              <div className="link" onClick={this.handleSignup.bind(this)}>
-                                Signup
-                              </div>
-                            </div>
                           </div>
                         </div>
                       </div>

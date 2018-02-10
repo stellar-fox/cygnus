@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
-import Dialog from 'material-ui/Dialog';
+import Dialog from 'material-ui/Dialog'
 import SnackBar from '../frontend/snackbar/SnackBar'
 import axios from 'axios'
 import {formatAmount} from '../lib/utils'

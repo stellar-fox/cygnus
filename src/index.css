@@ -108,3 +108,7 @@ a {
 strong {
   color: rgb(212,228,188);
 }
+
+input:invalid {
+    box-shadow:none;
+}
