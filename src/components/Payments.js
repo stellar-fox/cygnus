@@ -348,7 +348,37 @@ class Payments extends Component {
       )
         break;
       case 'account_removed':
-        humanizedEffectType = 'Acccount removed'
+        humanizedEffectType = (
+          <div>
+            <div>
+              <div className="flex-row">
+                <div>
+                  <i className="material-icons">{icon}</i>
+                  <span>Acccount Removed </span>
+                  <span className="account-direction">
+                    {effect.account === this.props.accountInfo.pubKey ?
+                      'Yours' : 'Theirs'}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="payment-details-body">
+              <div>
+                <span className="payment-details-account">
+                  {pubKeyAbbr(effect.account)}
+                </span>
+                <div className="payment-details-fieldset">
+                  <div className="payment-details-memo">
+                    <span className="smaller">Account Closed: {pubKeyAbbr(effect.account)}</span>
+                  </div>
+                  <div className="payment-details-id">
+                    ID: {effect.id}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
         break;
       case 'account_credited':
         humanizedEffectType = (
@@ -580,6 +610,48 @@ class Payments extends Component {
       })
   }
 
+  determineLeftIcon(payment) {
+    let rendered = ''
+    switch (payment.type) {
+      case 'create_account':
+        rendered = ((payment.funder === this.props.accountInfo.pubKey ?
+          <i className="material-icons">card_giftcard</i> :
+          <i className="material-icons">account_balance</i>))
+        break;
+      case 'account_merge':
+        rendered = (<i className="material-icons">merge_type</i>)
+        break;
+      default:
+        rendered = (payment.to === this.props.accountInfo.pubKey ?
+          (<i className="material-icons">account_balance_wallet</i>) :
+          (<i className="material-icons">payment</i>))
+        break;
+    }
+    return rendered
+  }
+
+
+  determinePrimaryText(payment) {
+    let rendered = ''
+    switch (payment.type) {
+      case 'create_account':
+        rendered = ((payment.funder === this.props.accountInfo.pubKey ?
+          '-' : '+') + Number.parseFloat(payment.starting_balance)
+            .toFixed(this.props.accountInfo.precision) + ' XLM')
+        break;
+      case 'account_merge':
+        rendered = 'Account Merged'
+        break;
+      default:
+        rendered = ((payment.to === this.props.accountInfo.pubKey ?
+          '+' : '-') + Number.parseFloat(payment.amount)
+            .toFixed(this.props.accountInfo.precision) +
+          ' ' + getAssetCode(payment))
+        break;
+    }
+    return rendered
+  }
+
 
   render() {
 
@@ -634,31 +706,14 @@ class Payments extends Component {
                         <ListItem
                           value={index+1}
                           onClick={this.handlePaymentClick.bind(this, payment, payment.id)}
-                          leftIcon={
-                            payment.type === 'create_account' ?
-                            ((payment.funder === this.props.accountInfo.pubKey ?
-                              <i className="material-icons">card_giftcard</i> :
-                              <i className="material-icons">account_balance</i>)) :
-                            (payment.to === this.props.accountInfo.pubKey ?
-                              (<i className="material-icons">account_balance_wallet</i>) :
-                              (<i className="material-icons">payment</i>))
-                          }
+                          leftIcon={this.determineLeftIcon.call(this, payment)}
                           hoverColor="rgba(244,176,4,0.95)"
                           secondaryText={
                             <span className="payment-date">
                               {utcToLocaleDateTime(payment.created_at)}
                             </span>
                           }
-                          primaryText={
-                            payment.type === 'create_account' ?
-                              ((payment.funder === this.props.accountInfo.pubKey ?
-                                '-' : '+') + Number.parseFloat(payment.starting_balance)
-                                .toFixed(this.props.accountInfo.precision) + ' XLM') :
-                              ((payment.to === this.props.accountInfo.pubKey ?
-                                '+' : '-') + Number.parseFloat(payment.amount)
-                                  .toFixed(this.props.accountInfo.precision) +
-                                  ' ' + getAssetCode(payment))
-                          }
+                          primaryText={this.determinePrimaryText.call(this, payment)}
                           rightAvatar={
                             <Avatar
                               className="square-avatar"
