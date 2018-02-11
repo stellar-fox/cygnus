@@ -10,6 +10,23 @@
   background-clip: padding-box;
 }
 
+.welcome-card {
+  margin: 20px;
+  color: rgb(15,46,83) !important;
+  background-color: #eceff1 !important;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  background-clip: padding-box;
+}
+
+.bigger-emphasize {
+  font-size: 1.4rem;
+  color: rgb(15,46,83);
+}
+
 .balance {
   font-size: 2rem;
 }

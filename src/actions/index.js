@@ -188,3 +188,10 @@ export const setInvalidInputMessage = (state) => {
     payload: state,
   }
 }
+
+export const setAccountRegistered = (state) => {
+  return {
+    type: 'SET_ACCOUNT_REGISTERED',
+    payload: state,
+  }
+}

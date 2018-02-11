@@ -79,3 +79,39 @@ export const pubKeyValid = (pubKey) => {
   }
   return validity
 }
+
+export const signTransaction = (pubKey, signature, transaction) => {
+  let keyPair = window.StellarSdk.Keypair.fromPublicKey(pubKey)
+  let hint = keyPair.signatureHint()
+  let decoratedSignature = new window.StellarSdk.xdr.DecoratedSignature({
+    hint: hint,
+    signature: signature,
+  })
+  transaction.signatures.push(decoratedSignature)
+}
+
+export const ledgerGetSignature = (transaction, pathIndex=0) => {
+  let bip32Path = `44'/148'/${pathIndex}'`
+  window.StellarSdk.Network.useTestNetwork();
+  return window.StellarLedger.comm.create_async().then((comm) => {
+    let api = new window.StellarLedger.Api(comm)
+    return api.signTx_async(bip32Path, transaction).then((result) => {
+      return result['signature']
+    })
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
+
+export const ledgerGetPubKey = (pathIndex=0) => {
+  let bip32Path = `44'/148'/${pathIndex}'`
+  return window.StellarLedger.comm.create_async().then((comm) => {
+    let api = new window.StellarLedger.Api(comm)
+    return api.getPublicKey_async(bip32Path).then((result) => {
+      return result['publicKey']
+    }).catch(function (err) {
+      console.error(err)
+    })
+  })
+}

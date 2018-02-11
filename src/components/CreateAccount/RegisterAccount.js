@@ -1,5 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import {
     Step,
     Stepper,
@@ -9,12 +10,16 @@ import {
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
+import {
+    setAccountRegistered,
+} from '../../actions/index'
 
 
-class CreateAccountStepper extends Component {
+class RegisterAccountStepper extends Component {
     state = {
         finished: false,
         stepIndex: 0,
+        email: '',
     };
 
     handleNext = () => {
@@ -23,8 +28,9 @@ class CreateAccountStepper extends Component {
             stepIndex: stepIndex + 1,
             finished: stepIndex >= 1,
         })
-        if(stepIndex >= 1) {
+        if (stepIndex >= 1) {
             this.props.onComplete('DONE')
+            this.props.setAccountRegistered(true)
         }
     };
 
@@ -35,17 +41,10 @@ class CreateAccountStepper extends Component {
         }
     };
 
-    buttonLabelAssigner = (stepIndex) => {
-        let buttonLabel
-        switch (stepIndex) {
-            case 1:
-                buttonLabel = 'AUTHENTICATE'
-                break;
-            default:
-                buttonLabel = 'NEXT'
-                break;
-        }
-        return buttonLabel
+    updateEmail = (event) => {
+        this.setState({
+            email: event.target.value
+        })
     }
 
     renderStepActions(step) {
@@ -54,28 +53,14 @@ class CreateAccountStepper extends Component {
         return (
             <div style={{ margin: '12px 0' }}>
                 <RaisedButton
-                    label={this.buttonLabelAssigner.call(this, step)}
+                    label="Next"
                     disableTouchRipple={true}
                     disableFocusRipple={true}
                     backgroundColor="rgb(15,46,83)"
                     labelColor="rgb(244,176,4)"
                     onClick={this.handleNext}
                     style={{ marginRight: 12 }}
-                    disabled={step === 1 ? this.props.ui.authenticateButton.isDisabled : false}
                 />
-                
-                {step === 1 && (
-                    <FlatButton
-                        label="OPT OUT"
-                        disableTouchRipple={true}
-                        disableFocusRipple={true}
-                        labelStyle={{ color: "rgb(244,176,4)" }}
-                        style={{
-                            marginRight: 12,
-                            backgroundColor: "#546e7a",
-                        }}
-                    />
-                )}
                 {step > 0 && (
                     <FlatButton
                         label="Back"
@@ -119,7 +104,7 @@ class CreateAccountStepper extends Component {
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">perm_identity</i>}>
                             Choose Email and Password
                         </StepLabel>
-                        <StepContent style={{borderLeft: '1px solid rgba(15,46,83,0.2)'}}>
+                        <StepContent style={{ borderLeft: '1px solid rgba(15,46,83,0.2)' }}>
                             <div>
                                 <TextField
                                     type="email"
@@ -130,6 +115,7 @@ class CreateAccountStepper extends Component {
                                     floatingLabelStyle={styles.floatingLabelStyle}
                                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                     inputStyle={styles.inputStyle}
+                                    onChange={this.updateEmail.bind(this)}
                                 />
                             </div>
                             <div>
@@ -142,7 +128,7 @@ class CreateAccountStepper extends Component {
                                     floatingLabelStyle={styles.floatingLabelStyle}
                                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                     inputStyle={styles.inputStyle}
-                                    
+
                                 />
                             </div>
                             <div>
@@ -161,19 +147,13 @@ class CreateAccountStepper extends Component {
                         </StepContent>
                     </Step>
                     <Step>
-                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">fingerprint</i>}>Connect your Ledger Nano S Device</StepLabel>
-                        <StepContent style={{borderLeft: 'none'}}>
+                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">fingerprint</i>}>Confirmation</StepLabel>
+                        <StepContent style={{ borderLeft: 'none' }}>
                             <p>
-                                To open an account, simply connect your
-                                Ledger device and press "Authenticate" button.
-                                Your account will be created instantly.
+                                The following email will be associate with this account:
                             </p>
-                            <p className="small">
-                                If you do
-                                not currently own a Ledger Nano S device you can
-                                still open an account with us by clicking the
-                                'OPT OUT' button. Please make sure you
-                                know the security differences before proceeding.
+                            <p className="bigger-emphasize">
+                                {this.state.email}
                             </p>
                             {this.renderStepActions(1)}
                         </StepContent>
@@ -195,4 +175,10 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(CreateAccountStepper)
+function matchDispatchToProps(dispatch) {
+    return bindActionCreators({
+        setAccountRegistered,
+    }, dispatch)
+}
+
+export default connect(mapStateToProps, matchDispatchToProps)(RegisterAccountStepper)

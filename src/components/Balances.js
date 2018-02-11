@@ -4,11 +4,13 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 import Dialog from 'material-ui/Dialog'
 import SnackBar from '../frontend/snackbar/SnackBar'
 import axios from 'axios'
 import {formatAmount} from '../lib/utils'
 import {config} from '../config'
+import RegisterAccountStepper from './CreateAccount/RegisterAccount'
 import {
   setExchangeRate,
   showAlert,
@@ -27,6 +29,8 @@ class Balances extends Component {
       sbPayment: false,
       sbPaymentAmount: null,
       sbPaymentAssetCode: null,
+      modalShown: false,
+      modalButtonText: 'CANCEL',
     }
   }
 
@@ -199,6 +203,28 @@ class Balances extends Component {
     })
   }
 
+  // ...
+  handleModalClose() {
+    this.setState({
+      modalShown: false,
+    })
+  }
+
+  // ...
+  handleSignup() {
+    this.setState({
+      modalButtonText: 'CANCEL',
+      modalShown: true,
+    })
+  }
+
+  // ...
+  setModalButtonText(text) {
+    this.setState({
+      modalButtonText: text
+    })
+  }
+
   render() {
     let otherBalances
     if (this.props.accountInfo.exists) {
@@ -214,6 +240,16 @@ class Balances extends Component {
         label="OK"
         keyboardFocused={true}
         onClick={this.handleClose}
+      />,
+    ]
+
+    const registerAccountActions = [
+      <FlatButton
+        backgroundColor="rgb(244,176,4)"
+        labelStyle={{ color: "rgb(15,46,83)" }}
+        label={this.state.modalButtonText}
+        keyboardFocused={false}
+        onClick={this.handleModalClose.bind(this)}
       />,
     ]
 
@@ -238,7 +274,72 @@ class Balances extends Component {
             soon. Please check back in a while as the feature implementation
             is being continuously deployed.
           </Dialog>
+          <Dialog
+            title="Registering Your Account"
+            actions={registerAccountActions}
+            modal={true}
+            open={this.state.modalShown}
+            onRequestClose={this.handleModalClose.bind(this)}
+            paperClassName="modal-body"
+            titleClassName="modal-title"
+            repositionOnUpdate={false}
+          >
+            <RegisterAccountStepper onComplete={this.setModalButtonText.bind(this)} />
+          </Dialog>
         </div>
+
+        {(!this.props.accountInfo.registered && !this.props.auth.isReadOnly) ? (
+          <div className="p-t">
+            <Card className="welcome-card">
+              <CardText>
+                <div className="flex-row">
+                  <div>
+                    <div className="balance">
+                      Hi there!
+                    </div>
+                    <div>
+                      <p>
+                        It looks like this account is not yet registered with our service.
+                        Registered accounts allow you to transact easily with anyone and
+                        have a lot of cool features! Here are some of them:
+                      </p>
+                      <ul>
+                        <li>Pay to contact</li>
+                        <li>Customize and manage your payment address</li>
+                        <li>Address book of your payment contacts</li>
+                        <li>Manage powerful account settings</li>
+                      </ul>
+                      <p>Would you like to open one today? It's super easy!</p>
+                    </div>
+                  </div>
+                  <div></div>
+                </div>
+              </CardText>
+              <CardActions>
+                <RaisedButton
+                  onClick={this.handleSignup.bind(this)}
+                  backgroundColor="rgb(15,46,83)"
+                  labelColor="rgb(244,176,4)"
+                  label="Open Account"
+                />
+                <FlatButton
+                  label="MAYBE LATER"
+                  disableTouchRipple={true}
+                  disableFocusRipple={true}
+                  labelStyle={{ color: "rgb(15,46,83)" }}
+                  onClick={this.handleOpen.bind(this)}
+                />
+              </CardActions>
+              <CardText>
+                <div className='faded'>
+                  <i className="material-icons md-icon-small">info_outline</i>
+                  Registering with our service is free. Forever. We only charge fractional fees when you choose to use our remittance service.
+              </div>
+              </CardText>
+            </Card>
+          </div>
+        ) : null}
+
         {this.props.accountInfo.exists ? (
           <div>
             <Card className='account'>
@@ -313,17 +414,27 @@ class Balances extends Component {
         ) : (
           <Card className='account'>
             <CardHeader
-              title="Current Balance"
+              title={
+                <span>
+                  <span>Current Balance </span>
+                  <i className="material-icons">hearing</i>
+                </span>
+              }
               subtitle="Stellar Lumens"
               actAsExpander={false}
               showExpandableButton={false}
             />
             <CardText>
-              <div className='balance'>
-                0 XLM
-              </div>
-              <div className='faded'>
-                0 {this.props.accountInfo.currency.toUpperCase()}
+              <div className='flex-row'>
+                <div>
+                  <div className='balance'>
+                    0 {this.props.accountInfo.currency.toUpperCase()}
+                  </div>
+                  <div>
+                    0 XLM
+                </div>
+                </div>
+                <div></div>
               </div>
             </CardText>
             <CardActions>
@@ -341,7 +452,8 @@ class Balances extends Component {
               </div>
             </CardText>
           </Card>
-          )}
+        )}
+
       </div>
     )
   }

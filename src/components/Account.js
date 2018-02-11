@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux'
 import Input from '../frontend/input/Input'
 import SnackBar from '../frontend/snackbar/SnackBar'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 import Dialog from 'material-ui/Dialog'
 import Toggle from 'material-ui/Toggle'
@@ -13,6 +14,7 @@ import {federationIsAliasOnly} from '../lib/utils'
 import {emailValid} from '../lib/utils'
 import {config} from '../config'
 import axios from 'axios'
+import RegisterAccountStepper from './CreateAccount/RegisterAccount'
 import './Account.css'
 import {
   showAlert,
@@ -87,6 +89,8 @@ class Account extends Component {
       sb2FA: false,
       currency: '',
       currencyPrecision: '',
+      modalShown: false,
+      modalButtonText: 'CANCEL',
     }
   }
 
@@ -317,6 +321,29 @@ class Account extends Component {
     this.props.hideAlert()
   }
 
+
+  // ...
+  handleModalClose() {
+    this.setState({
+      modalShown: false,
+    })
+  }
+
+  // ...
+  handleSignup() {
+    this.setState({
+      modalButtonText: 'CANCEL',
+      modalShown: true,
+    })
+  }
+
+  // ...
+  setModalButtonText(text) {
+    this.setState({
+      modalButtonText: text
+    })
+  }
+
   render() {
     const actions = [
       <RaisedButton
@@ -327,6 +354,17 @@ class Account extends Component {
         onClick={this.handleClose}
       />,
     ]
+
+    const registerAccountActions = [
+      <FlatButton
+        backgroundColor="rgb(244,176,4)"
+        labelStyle={{ color: "rgb(15,46,83)" }}
+        label={this.state.modalButtonText}
+        keyboardFocused={false}
+        onClick={this.handleModalClose.bind(this)}
+      />,
+    ]
+
     return (
       <div>
         <div>
@@ -342,6 +380,18 @@ class Account extends Component {
             Pardon the mess. We are working hard to bring you this feature very
             soon. Please check back in a while as the feature implementation
             is being continuously deployed.
+          </Dialog>
+          <Dialog
+            title="Registering Your Account"
+            actions={registerAccountActions}
+            modal={true}
+            open={this.state.modalShown}
+            onRequestClose={this.handleModalClose.bind(this)}
+            paperClassName="modal-body"
+            titleClassName="modal-title"
+            repositionOnUpdate={false}
+          >
+            <RegisterAccountStepper onComplete={this.setModalButtonText.bind(this)} />
           </Dialog>
         </div>
 
@@ -549,6 +599,26 @@ class Account extends Component {
                   />
                 </RadioButtonGroup>
               </div>
+              {(!this.props.accountInfo.registered && !this.props.auth.isReadOnly) ? (
+                <div>
+                  <div className="p-t p-b"></div>
+                  <div className="account-title p-t">
+                    Register this account with Stellar Fox:
+                  </div>
+                  <div className="account-subtitle">
+                    Get access to unique services and remittance service.
+                  </div>
+                  <div className="p-b"></div>
+                  <RaisedButton
+                    label="Register"
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    backgroundColor="rgb(244,176,4)"
+                    labelColor="rgb(15,46,83)"
+                    onClick={this.handleSignup.bind(this)}
+                  />
+                </div>
+              ) : null}
               {this.props.auth.isAuthenticated ?
               <div>
                 <div className="p-t p-b"></div>

@@ -54,6 +54,9 @@ export default function (state=initState, action) {
     case 'SET_STREAMER':
       state = {...state, streamer: action.payload}
       break;
+    case 'SET_ACCOUNT_REGISTERED':
+      state = {...state, registered: action.payload}
+      break;
     default:
       return state
   }

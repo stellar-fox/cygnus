@@ -10,7 +10,7 @@ import Checkbox from '../frontend/checkbox/Checkbox'
 import Footer from './Footer'
 import LoadingModal from './LoadingModal'
 import Dialog from 'material-ui/Dialog'
-import {emailValid, pubKeyValid, federationAddressValid, federationLookup} from '../lib/utils'
+import { emailValid, pubKeyValid, federationAddressValid, federationLookup } from '../lib/utils'
 import CreateAccountStepper from './CreateAccount/CreateAccount'
 import {config} from '../config'
 import axios from 'axios'
@@ -30,6 +30,7 @@ import {
   enableAuthenticateButton,
   setHorizonEndPoint,
   setInvalidInputMessage,
+  setAccountRegistered,
 } from '../actions/index'
 import Panel from './Panel'
 
@@ -89,13 +90,13 @@ class Welcome extends Component {
     */
     this.props.setHorizonEndPoint(config.horizon)
     this.props.disableAuthenticateButton()
-    let that = this
+
     new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
-      function() {
+      () => {
         console.log('Ledger Nano S is now connected.')
-        that.props.enableAuthenticateButton()
+        this.props.enableAuthenticateButton()
       },
-      function(err) {
+      function (err) {
         console.error(err)
       }
     )
@@ -144,15 +145,14 @@ class Welcome extends Component {
 
   // ...
   logInViaLedger() {
-    let that = this
     let bip32Path = "44'/148'/" + this.state.derivationPath + "'";
-    window.StellarLedger.comm.create_async().then(function(comm) {
+    window.StellarLedger.comm.create_async().then((comm) => {
       let api = new window.StellarLedger.Api(comm)
-      return api.getPublicKey_async(bip32Path).then(function (result) {
+      return api.getPublicKey_async(bip32Path).then((result) => {
         let publicKey = result['publicKey']
-        that.logInViaPublicKey(publicKey, false)
+        this.logInViaPublicKey(publicKey, false)
       }).catch(function (err) {
-          console.error(err)
+        console.error(err)
       })
     })
   }
@@ -197,6 +197,19 @@ class Welcome extends Component {
             message: null,
           })
         })
+
+      // check if user created account with Stellar Fox
+      axios.get(`${config.api}/find/publickey/${pubKey}`)
+        .then((response) => {
+          if (parseInt(response.data.data.count, 10) === 0) {
+            this.props.setAccountRegistered(false)
+          } else {
+            this.props.setAccountRegistered(true)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        });
 
     } catch (e) {
       this.props.setPublicKeyInvalid({
@@ -417,6 +430,7 @@ class Welcome extends Component {
           onRequestClose={this.handleModalClose.bind(this)}
           paperClassName="modal-body"
           titleClassName="modal-title"
+          repositionOnUpdate={false}
         >
           <CreateAccountStepper onComplete={this.setModalButtonText.bind(this)}/>
         </Dialog>
@@ -705,6 +719,7 @@ function matchDispatchToProps(dispatch) {
     enableAuthenticateButton,
     setHorizonEndPoint,
     setInvalidInputMessage,
+    setAccountRegistered,
   }, dispatch)
 }
 

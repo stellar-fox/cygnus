@@ -99,13 +99,14 @@ class Header extends Component {
                   exact activeClassName="active" to="/payments/">
                   <i className="material-icons">payment</i>Payments
                 </NavLink>
-                <NavLink className='menu-item'
-                  onClick={this.handleMenuClick.bind(this, 'Account')}
-                  exact activeClassName="active" to="/account/">
-                  <i className="material-icons">account_balance</i>Account
-                </NavLink>
+                
               </div>
             ) : null}
+            <NavLink className='menu-item'
+              onClick={this.handleMenuClick.bind(this, 'Account')}
+              exact activeClassName="active" to="/account/">
+              <i className="material-icons">account_balance</i>Account
+            </NavLink>
         </Drawer>
       </div>
     )
