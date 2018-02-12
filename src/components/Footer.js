@@ -11,7 +11,7 @@ export default class Footer extends Component {
             © <span>Stellar Fox</span> 2017-2018.
           </div>
           <div>
-            ver. 0.1.17
+            ver. 0.1.18
           </div>
         </div>
       </div>
