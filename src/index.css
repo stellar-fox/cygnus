@@ -112,3 +112,17 @@ strong {
 input:invalid {
     box-shadow:none;
 }
+
+.announcement-top-first {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    opacity: 1;
+    background: #aeea00;
+    color: #3e2723;
+    padding: 5px;
+    font-size: 1rem;
+}

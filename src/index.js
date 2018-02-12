@@ -5,7 +5,8 @@ import reducers from './reducers'
 import {Provider} from 'react-redux'
 import './index.css';
 import Layout from './components/Layout'
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './registerServiceWorker';
+import { unregister } from './registerServiceWorker';
 import {createLogger} from 'redux-logger'
 import thunk from 'redux-thunk'
 import {loadState, saveState} from './load-state'
@@ -24,4 +25,5 @@ ReactDOM.render(
     <Layout/>
   </Provider>, document.getElementById('root')
 );
-registerServiceWorker();
+// registerServiceWorker();
+unregister();

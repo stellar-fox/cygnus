@@ -421,7 +421,7 @@ class Welcome extends Component {
 
     return (
       <div>
-        
+        <div className="announcement-top-first">This is software is in alpha preview. Please hard reload [Ctrl+Shift+R] this page to update your local cache.</div>
         <Dialog
           title="Opening Your Account"
           actions={actions}
