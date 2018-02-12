@@ -16,6 +16,8 @@ import {
     enableAuthenticateButton,
 } from '../../actions/index'
 
+import { LedgerAuthenticator } from "../LedgerAuthenticator"
+
 class CreateAccountStepper extends Component {
     state = {
         finished: false,
@@ -93,21 +95,8 @@ class CreateAccountStepper extends Component {
     handlePrev = () => {
         const { stepIndex } = this.state;
         if (stepIndex > 0) {
-            this.setState({ stepIndex: stepIndex - 1 });
+            this.setState({ stepIndex: stepIndex - 1 })
         }
-    };
-
-    buttonLabelAssigner = (stepIndex) => {
-        let buttonLabel
-        switch (stepIndex) {
-            case 1:
-                buttonLabel = 'AUTHENTICATE'
-                break;
-            default:
-                buttonLabel = 'NEXT'
-                break;
-        }
-        return buttonLabel
     }
 
     renderStepActions(step) {
@@ -115,39 +104,65 @@ class CreateAccountStepper extends Component {
 
         return (
             <div style={{ margin: '12px 0' }}>
-                <RaisedButton
-                    label={this.buttonLabelAssigner.call(this, step)}
-                    disableTouchRipple={true}
-                    disableFocusRipple={true}
-                    backgroundColor="rgb(15,46,83)"
-                    labelColor="rgb(244,176,4)"
-                    onClick={this.handleNext.bind(this)}
-                    style={{ marginRight: 12 }}
-                    disabled={step === 1 ? this.props.ui.authenticateButton.isDisabled : false}
-                />
-                
-                {step === 1 && (
-                    <FlatButton
-                        label="OPT OUT"
+
+                {step === 0 && (
+                    <RaisedButton
+                        label="Next"
                         disableTouchRipple={true}
                         disableFocusRipple={true}
-                        onClick={this.handleOptOut.bind(this)}
-                        labelStyle={{ color: "rgb(244,176,4)" }}
-                        style={{
-                            marginRight: 12,
-                            backgroundColor: "#546e7a",
-                        }}
+                        backgroundColor="rgb(15,46,83)"
+                        labelColor="rgb(244,176,4)"
+                        onClick={this.handleNext.bind(this)}
+                        style={{ marginRight: 12 }}
                     />
                 )}
-                {step > 0 && (
-                    <FlatButton
-                        label="Back"
-                        disabled={stepIndex === 0}
-                        disableTouchRipple={true}
-                        disableFocusRipple={true}
-                        labelStyle={{ color: "rgb(15,46,83)" }}
-                        onClick={this.handlePrev.bind(this)}
-                    />
+                
+                {step === 1 && (
+                    <div>
+                        <div className="dark">
+                            <div>You are pairing <span className="emphasize-light">{this.state.email}</span> to your Ledger device.</div>
+                            <div className="p-t small">
+                                To open an account, simply connect your
+                                Ledger device, choose Stellar wallet,
+                                make sure that wallet web support is enabled
+                                and press "Authenticate" button below.
+                                Your account will be created instantly.
+                            </div>
+                            <LedgerAuthenticator
+                                className="p-t"
+                                onClick={this.handleNext.bind(this)}
+                                disabled={this.props.ui.authenticateButton.isDisabled}
+                            />
+                        </div>
+                        <div className="p-t"></div>
+                        <p className="tiny">
+                            If you do
+                            not currently own a Ledger device you can
+                            still open an account with us by clicking the
+                            'OPT OUT' button. Please make sure you
+                            understand the security implications before
+                            proceeding.
+                        </p>
+                        <FlatButton
+                            label="OPT OUT"
+                            disableTouchRipple={true}
+                            disableFocusRipple={true}
+                            onClick={this.handleOptOut.bind(this)}
+                            labelStyle={{ color: "rgb(244,176,4)" }}
+                            style={{
+                                marginRight: 12,
+                                backgroundColor: "rgba(84,110,122,0.3)",
+                            }}
+                        />
+                        <FlatButton
+                            label="Back"
+                            disabled={stepIndex === 0}
+                            disableTouchRipple={true}
+                            disableFocusRipple={true}
+                            labelStyle={{ color: "rgb(15,46,83)" }}
+                            onClick={this.handlePrev.bind(this)}
+                        />
+                    </div>
                 )}
             </div>
         );
@@ -274,21 +289,6 @@ class CreateAccountStepper extends Component {
                         </StepLabel>
                         <StepContent style={{borderLeft: 'none'}}>
                             <div className="p-b"></div>
-                            <div className="flex-centered">
-                                <div>You are pairing <span className="emphasize">{this.state.email}</span> to your Ledger device.</div>
-                            </div>
-                            <p>
-                                To open an account, simply connect your
-                                Ledger device and press "Authenticate" button below.
-                                Your account will be created instantly.
-                            </p>
-                            <p className="small">
-                                If you do
-                                not currently own a Ledger Nano S device you can
-                                still open an account with us by clicking the
-                                'OPT OUT' button. Please make sure you
-                                know the security differences before proceeding.
-                            </p>
                             {this.renderStepActions(1)}
                         </StepContent>
                     </Step>

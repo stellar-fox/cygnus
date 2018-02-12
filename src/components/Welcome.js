@@ -5,8 +5,6 @@ import {bindActionCreators} from 'redux'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
-import Input from '../frontend/input/Input'
-import Checkbox from '../frontend/checkbox/Checkbox'
 import Footer from './Footer'
 import LoadingModal from './LoadingModal'
 import Dialog from 'material-ui/Dialog'
@@ -34,6 +32,8 @@ import {
 } from '../actions/index'
 import Panel from './Panel'
 
+import { LedgerAuthenticator } from "./LedgerAuthenticator"
+
 const styles = {
   errorStyle: {
     color: '#912d35',
@@ -56,10 +56,6 @@ class Welcome extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      derivationPath: '0',
-      derivationPrefix: "44'/148'/",
-      pathEditable: false,
-      useDefaultAccount: true,
       textFieldEmail: '',
       ledgerSupported: false,
       explorerInputValue: '',
@@ -74,11 +70,6 @@ class Welcome extends Component {
 
   // ...
   componentDidMount(){
-    if (navigator.userAgent.indexOf("Chrome") !== -1) {
-      this.setState({
-        ledgerSupported: true
-      })
-    }
     this.props.setInvalidInputMessage({
       textFieldEmail: null
     })
@@ -100,39 +91,6 @@ class Welcome extends Component {
         console.error(err)
       }
     )
-  }
-
-
-  // ...
-  handleCheckboxClick(event) {
-    const target = event.target
-    this.setState({
-      useDefaultAccount: target.checked
-    })
-    this.setState((prevState) => ({
-      pathEditable: !target.checked
-    }))
-    // reset derivation path index to 0
-    if(target.checked) {
-      this.setState((prevState) => ({
-        derivationPath: '0',
-        derivationPathIndex: 0
-      }))
-    }
-  }
-
-
-  // ...
-  handlePathChange(event) {
-    const target = event.target
-    if (isNaN(target.value)) {
-      return false
-    }
-    const index = parseInt(target.value, 10)
-    this.setState({
-      derivationPath: target.value,
-      derivationPathIndex: index
-    })
   }
 
 
@@ -431,6 +389,7 @@ class Welcome extends Component {
           paperClassName="modal-body"
           titleClassName="modal-title"
           repositionOnUpdate={false}
+          autoScrollBodyContent={true}
         >
           <CreateAccountStepper onComplete={this.setModalButtonText.bind(this)}/>
         </Dialog>
@@ -509,50 +468,19 @@ class Welcome extends Component {
                     <div>
                       <img src="/img/ledger.svg" width="120px" alt="Ledger"/>
                       <div className="title">
-                        For full account functionality, authenticate with your hardware key.
+                        For full account functionality, authenticate with your Ledger device.
                       </div>
                       <div className="title-small p-t p-b">
-                        Connect your Ledger Nano S hardware wallet. Make sure Stellar
+                        Connect your Ledger Nano S device. Make sure Stellar
                         application is selected and browser support enabled.
                         For more information visit <a target="_blank" rel="noopener noreferrer"
                         href="https://support.ledgerwallet.com/hc/en-us/articles/115003797194">
                         Ledger Support</a>
                       </div>
-                      <div className='p-b p-t'>
-                        <Checkbox
-                          isChecked={this.state.useDefaultAccount}
-                          handleChange={this.handleCheckboxClick.bind(this)}
-                          label='Use Default Account' />
-                      </div>
-                      {this.state.pathEditable ?
-                      <div className="p-b p-t flex-start">
-                      <Input
-                        label="Account Index"
-                        inputType="text"
-                        maxLength="100"
-                        autoComplete="off"
-                        value={this.state.derivationPath}
-                        handleChange={this.handlePathChange.bind(this)}
-                        subLabel={
-                          "Account Derivation Path: [" + this.state.derivationPrefix +
-                          this.state.derivationPath + "']"
-                        }/></div> : null }
-                        <RaisedButton
-                          onClick={this.handleOnClickAuthenticate.bind(this)}
-                          disabled={this.props.ui.authenticateButton.isDisabled}
-                          backgroundColor="rgb(244,176,4)"
-                          label="Authenticate"
-                        />
-                        {this.state.ledgerSupported ? null : 
-                          (
-                            <div className="title-small p-t">
-                              This browser doesn’t support the FIDO U2F standard yet.
-                              We recommend updating to the latest <a target="_blank"
-                              rel="noopener noreferrer" href="https://www.google.com/chrome/">
-                              Google Chrome</a> in order to use your Ledger device.
-                            </div>
-                          )
-                        }
+                      <LedgerAuthenticator
+                        onClick={this.handleOnClickAuthenticate.bind(this)}
+                        disabled={this.props.ui.authenticateButton.isDisabled}
+                      />
                     </div>
                   }/>
                 </div>

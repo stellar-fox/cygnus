@@ -124,6 +124,10 @@ select:-webkit-autofill:focus {
   padding-top: 1rem;
 }
 
+.p-t-medium {
+  padding-top: 2rem;
+}
+
 .p-t-large {
   padding-top: 3rem;
 }

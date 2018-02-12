@@ -1,0 +1,10 @@
+.dark {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    border: 1px solid rgb(15,46,83);
+    border-radius: 3px;
+    padding: 1rem;
+    background-color: rgb(15,46,83);
+    color: rgb(244,176,4);
+}
