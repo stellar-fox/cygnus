@@ -26,39 +26,44 @@ export class LedgerAuthenticator extends Component {
     }
 
     initQueryDevice() {
-      this.setState({
-        ledgerStatusMessage: 'Waiting for device ...'
-      })
-      new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
-        () => {
-          console.log('Ledger Nano S is now connected.')
-          this.setState({
-            ledgerStatusMessage: (
-              this.state.derivationPath === "0" ?
-               'Device found. Authenticating ...' :
-                `Device found. Authenticating with path ${this.state.derivationPath} ...`
-              )
-          })
-          let derivationPath = `${this.state.derivationPrefix}${this.state.derivationPath}'`
-          this.props.onConnected.call(this, derivationPath)
+        this.setState({
+            ledgerStatusMessage: 'Waiting for device ...'
+        })
+        new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(() => {
+            console.log('Ledger Nano S is now connected.')
+            this.setState({
+                ledgerStatusMessage: (
+                    this.state.derivationPath === "0" ?
+                    'Device found. Authenticating ...' :
+                    `Device found. Authenticating with path ${this.state.derivationPath} ...`
+                )
+            })
+
+            let bip32Path
+            if (this.state.derivationPath === "") {
+                bip32Path = `${this.state.derivationPrefix}0'`
+            } else {
+                bip32Path = `${this.state.derivationPrefix}${this.state.derivationPath}'`
+            } 
+            this.props.onConnected.call(this, bip32Path)
         },
         function (err) {
-          this.setState({
-            ledgerStatusMessage: `Device error code: ${err.code}`
-          })
-          console.error(err)
-        }
-      )
+            this.setState({
+                ledgerStatusMessage: `Device error code: ${err.code}`
+            })
+            console.error(err)
+        })
     }
 
     handlePathChange(event) {
         event.persist()
         if (isNaN(event.target.value)) {
             return false
+        } else {
+            this.setState({
+                derivationPath: event.target.value,
+            })
         }
-        this.setState({
-            derivationPath: event.target.value,
-        })
     }
 
     handleCheckboxClick(event) {
