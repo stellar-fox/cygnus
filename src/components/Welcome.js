@@ -24,8 +24,6 @@ import {
   logOutOfHorizon,
   logIn,
   selectView,
-  disableAuthenticateButton,
-  enableAuthenticateButton,
   setHorizonEndPoint,
   setInvalidInputMessage,
   setAccountRegistered,
@@ -80,30 +78,11 @@ class Welcome extends Component {
     * Horizon end point is set to testnet by default.
     */
     this.props.setHorizonEndPoint(config.horizon)
-    this.props.disableAuthenticateButton()
-
-    new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
-      () => {
-        console.log('Ledger Nano S is now connected.')
-        this.props.enableAuthenticateButton()
-      },
-      function (err) {
-        console.error(err)
-      }
-    )
   }
 
 
   // ...
-  handleOnClickAuthenticate() {
-    this.props.disableAuthenticateButton()
-    this.logInViaLedger()
-  }
-
-
-  // ...
-  logInViaLedger() {
-    let bip32Path = "44'/148'/" + this.state.derivationPath + "'";
+  logInViaLedger(bip32Path) {
     window.StellarLedger.comm.create_async().then((comm) => {
       let api = new window.StellarLedger.Api(comm)
       return api.getPublicKey_async(bip32Path).then((result) => {
@@ -182,7 +161,7 @@ class Welcome extends Component {
   federationAddressChanged(event, value) {
     let pubKeyCheck = pubKeyValid(value)
     let fedAddrIsValid = federationAddressValid(value)
-    
+
     this.setState({
       explorerInputValue: value,
     })
@@ -355,7 +334,7 @@ class Welcome extends Component {
     })
   }
 
-  
+
   // ...
   setModalButtonText(text) {
     this.setState({
@@ -366,7 +345,7 @@ class Welcome extends Component {
 
   // ...
   render() {
-    
+
     const actions = [
       <FlatButton
         backgroundColor="rgb(244,176,4)"
@@ -476,16 +455,13 @@ class Welcome extends Component {
                         href="https://support.ledgerwallet.com/hc/en-us/articles/115003797194">
                         Ledger Support</a>
                       </div>
-                      <LedgerAuthenticator
-                        onClick={this.handleOnClickAuthenticate.bind(this)}
-                        disabled={this.props.ui.authenticateButton.isDisabled}
-                      />
+                      <LedgerAuthenticator onConnected={this.logInViaLedger.bind(this)}/>
                     </div>
                   }/>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex-row-column">
               <div className="p-t">
                 <div>
@@ -610,7 +586,7 @@ class Welcome extends Component {
                 </div>
               </div>
             </div>
-            
+
           </div>
         </div>
         <Footer />
@@ -642,8 +618,6 @@ function matchDispatchToProps(dispatch) {
     logOutOfHorizon,
     logIn,
     selectView,
-    disableAuthenticateButton,
-    enableAuthenticateButton,
     setHorizonEndPoint,
     setInvalidInputMessage,
     setAccountRegistered,

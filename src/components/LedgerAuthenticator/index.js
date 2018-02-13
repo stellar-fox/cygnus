@@ -11,9 +11,9 @@ export class LedgerAuthenticator extends Component {
             ledgerSupported: false,
             derivationPath: "0",
             derivationPrefix: "44'/148'/",
-            derivationPathIndex: 0,
             pathEditable: false,
             useDefaultAccount: true,
+            ledgerStatusMessage: '',
         }
     }
 
@@ -25,6 +25,32 @@ export class LedgerAuthenticator extends Component {
         }
     }
 
+    initQueryDevice() {
+      this.setState({
+        ledgerStatusMessage: 'Waiting for device ...'
+      })
+      new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(
+        () => {
+          console.log('Ledger Nano S is now connected.')
+          this.setState({
+            ledgerStatusMessage: (
+              this.state.derivationPath === "0" ?
+               'Device found. Authenticating ...' :
+                `Device found. Authenticating with path ${this.state.derivationPath} ...`
+              )
+          })
+          let derivationPath = `${this.state.derivationPrefix}${this.state.derivationPath}'`
+          this.props.onConnected.call(this, derivationPath)
+        },
+        function (err) {
+          this.setState({
+            ledgerStatusMessage: `Device error code: ${err.code}`
+          })
+          console.error(err)
+        }
+      )
+    }
+
     handlePathChange(event) {
         event.persist()
         if (isNaN(event.target.value)) {
@@ -32,7 +58,6 @@ export class LedgerAuthenticator extends Component {
         }
         this.setState({
             derivationPath: event.target.value,
-            derivationPathIndex: parseInt(event.target.value, 10)
         })
     }
 
@@ -44,11 +69,10 @@ export class LedgerAuthenticator extends Component {
         this.setState((prevState) => ({
             pathEditable: !event.target.checked
         }))
-        // reset derivation path index to 0
+        // reset derivation path to 0
         if (event.target.checked) {
             this.setState((prevState) => ({
                 derivationPath: '0',
-                derivationPathIndex: 0
             }))
         }
     }
@@ -78,11 +102,13 @@ export class LedgerAuthenticator extends Component {
                 ) : null}
                 <div className="p-t">
                     <RaisedButton
-                        onClick={this.props.onClick.bind(this)}
-                        disabled={this.props.disabled}
+                        onClick={this.initQueryDevice.bind(this)}
                         backgroundColor="rgb(244,176,4)"
                         label="Authenticate"
                     />
+                    <div className="tiny">
+                      {this.state.ledgerStatusMessage}
+                    </div>
                 </div>
             </div>
         )
