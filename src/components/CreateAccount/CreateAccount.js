@@ -1,43 +1,46 @@
-import React, {Component} from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import React, {Component} from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 import {
     Step,
     Stepper,
     StepLabel,
     StepContent,
-} from 'material-ui/Stepper'
-import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
-import TextField from 'material-ui/TextField'
-import {emailValid, passwordValid} from '../../lib/utils'
+} from "material-ui/Stepper"
+import RaisedButton from "material-ui/RaisedButton"
+import FlatButton from "material-ui/FlatButton"
+import TextField from "material-ui/TextField"
+import {emailValid, passwordValid} from "../../lib/utils"
 import {
     disableAuthenticateButton,
     enableAuthenticateButton,
-} from '../../actions/index'
+} from "../../actions/index"
 
 import { LedgerAuthenticator } from "../LedgerAuthenticator"
 
 class CreateAccountStepper extends Component {
-    state = {
-        finished: false,
-        stepIndex: 0,
-        email: '',
-        password: '',
-        passwordConf: '',
-        emailError: null,
-        passwordError: null,
-        passwordConfError: null,
-    };
+    constructor(props) {
+        super(props)
+        this.state = {
+            finished: false,
+            stepIndex: 0,
+            email: "",
+            password: "",
+            passwordConf: "",
+            emailError: null,
+            passwordError: null,
+            passwordConfError: null,
+        }
+    }
 
-    handleNext = (event) => {
+    handleNext(event) {
         const { stepIndex } = this.state
         let proceed = true
         // check email validity and password/pass-conf pair
         if (stepIndex === 0) {
             if(!emailValid(this.state.email)) {
                 this.setState({
-                    emailError: 'invalid email address'
+                    emailError: "invalid email address"
                 })
                 proceed = false
             } else {
@@ -48,7 +51,7 @@ class CreateAccountStepper extends Component {
 
             if(!passwordValid(this.state.password)) {
                 this.setState({
-                    passwordError: 'invalid password'
+                    passwordError: "invalid password"
                 })
                 proceed = false
             } else {
@@ -59,7 +62,7 @@ class CreateAccountStepper extends Component {
 
             if (this.state.password !== this.state.passwordConf) {
                 this.setState({
-                    passwordConfError: 'password mismatch'
+                    passwordConfError: "password mismatch"
                 })
                 proceed = false
             } else {
@@ -67,16 +70,14 @@ class CreateAccountStepper extends Component {
                     passwordConfError: null
                 })
             }
-            // TODO: REMOVE LATER (LEDGER CONNECTED SIMULATION)
-            // this.props.enableAuthenticateButton()
         }
 
         if (stepIndex === 1) {
             event.persist()
             if (event.target.textContent === "AUTHENTICATE") {
-                console.log('create account via ledger')
+                console.log("create account via ledger... but not here") // eslint-disable-line no-console
             } else {
-                console.log('opt out')
+                console.log("opt out") // eslint-disable-line no-console
             }
         }
 
@@ -88,22 +89,26 @@ class CreateAccountStepper extends Component {
         }
 
         if(stepIndex >= 1) {
-            this.props.onComplete('DONE')
+            this.props.onComplete("DONE")
         }
-    };
+    }
 
-    handlePrev = () => {
-        const { stepIndex } = this.state;
+    handlePrev() {
+        const { stepIndex } = this.state
         if (stepIndex > 0) {
             this.setState({ stepIndex: stepIndex - 1 })
         }
     }
 
+    createAccount(bip32Path) {
+        console.log("creating an account with path: ", bip32Path) // eslint-disable-line no-console
+    }
+
     renderStepActions(step) {
-        const { stepIndex } = this.state;
+        const { stepIndex } = this.state
 
         return (
-            <div style={{ margin: '12px 0' }}>
+            <div style={{ margin: "12px 0" }}>
 
                 {step === 0 && (
                     <RaisedButton
@@ -120,18 +125,25 @@ class CreateAccountStepper extends Component {
                 {step === 1 && (
                     <div>
                         <div className="dark">
-                            <div>You are pairing <span className="emphasize-light">{this.state.email}</span> to your Ledger device.</div>
+                            
+                            <div className="emphasize-light-success">
+                                {this.state.email}
+                            </div>
+                            <div className="small">
+                                will be associated with your Ledger device.
+                            </div>
+                            
                             <div className="p-t small">
-                                To open an account, simply connect your
-                                Ledger device, choose Stellar wallet,
+                                While your device is connected,
+                                choose Stellar wallet,
                                 make sure that wallet web support is enabled
                                 and press "Authenticate" button below.
                                 Your account will be created instantly.
                             </div>
                             <LedgerAuthenticator
                                 className="p-t"
+                                onConnected={this.createAccount.bind(this)}
                                 onClick={this.handleNext.bind(this)}
-                                disabled={this.props.ui.authenticateButton.isDisabled}
                             />
                         </div>
                         <div className="p-t"></div>
@@ -165,61 +177,61 @@ class CreateAccountStepper extends Component {
                     </div>
                 )}
             </div>
-        );
+        )
     }
 
-    updateEmail = (event) => {
+    updateEmail(event) {
         this.setState({
             email: event.target.value
         })
     }
 
-    updatePassword = (event) => {
+    updatePassword(event) {
         this.setState({
             password: event.target.value
         })
     }
 
-    updatePasswordConf = (event) => {
+    updatePasswordConf(event) {
         this.setState({
             passwordConf: event.target.value
         })
     }
 
-    handleOptOut = (event) => {
-        console.log('out out')
+    handleOptOut() {
+        console.log("out out") // eslint-disable-line no-console
     }
 
     render() {
-        const { finished, stepIndex } = this.state;
+        const { finished, stepIndex } = this.state
         const styles = {
             stepLabel: {
-                fontSize: '1rem',
+                fontSize: "1rem",
             },
             errorStyle: {
-                color: '#912d35',
+                color: "#912d35",
             },
             underlineStyle: {
-                borderColor: 'rgba(15,46,83,0.6)',
+                borderColor: "rgba(15,46,83,0.6)",
             },
             floatingLabelStyle: {
-                color: 'rgba(15,46,83,0.5)',
+                color: "rgba(15,46,83,0.5)",
             },
             floatingLabelFocusStyle: {
-                color: 'rgba(15,46,83,0.35)',
+                color: "rgba(15,46,83,0.35)",
             },
             inputStyle: {
-                color: 'rgba(15,46,83,0.8)',
+                color: "rgba(15,46,83,0.8)",
             },
         }
         return (
-            <div style={{ maxWidth: 580, maxHeight: 400, margin: 'auto' }}>
+            <div style={{ maxWidth: 580, maxHeight: 580, margin: "auto" }}>
                 <Stepper connector={null} activeStep={stepIndex} orientation="vertical">
                     <Step>
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">perm_identity</i>}>
                             Choose email and password.
                         </StepLabel>
-                        <StepContent style={{borderLeft: '1px solid rgba(15,46,83,0.2)'}}>
+                        <StepContent style={{borderLeft: "1px solid rgba(15,46,83,0.2)"}}>
                             <div>
                                 <TextField
                                     type="email"
@@ -234,7 +246,7 @@ class CreateAccountStepper extends Component {
                                     onChange={this.updateEmail.bind(this)}
                                     value={this.state.email}
                                     onKeyPress={(e) => {
-                                        if (e.key === 'Enter') {
+                                        if (e.key === "Enter") {
                                             this.handleNext.call(this)
                                         }
                                     }}
@@ -254,7 +266,7 @@ class CreateAccountStepper extends Component {
                                     onChange={this.updatePassword.bind(this)}
                                     value={this.state.password}
                                     onKeyPress={(e) => {
-                                        if (e.key === 'Enter') {
+                                        if (e.key === "Enter") {
                                             this.handleNext.call(this)
                                         }
                                     }}
@@ -274,7 +286,7 @@ class CreateAccountStepper extends Component {
                                     onChange={this.updatePasswordConf.bind(this)}
                                     value={this.state.passwordConf}
                                     onKeyPress={(e) => {
-                                        if (e.key === 'Enter') {
+                                        if (e.key === "Enter") {
                                             this.handleNext.call(this)
                                         }
                                     }}
@@ -287,19 +299,19 @@ class CreateAccountStepper extends Component {
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">fingerprint</i>}>
                             Authenticate with Ledger device.
                         </StepLabel>
-                        <StepContent style={{borderLeft: 'none'}}>
+                        <StepContent style={{borderLeft: "none"}}>
                             <div className="p-b"></div>
                             {this.renderStepActions(1)}
                         </StepContent>
                     </Step>
                 </Stepper>
                 {finished && (
-                    <p style={{ margin: '20px 0', textAlign: 'center' }}>
+                    <p style={{ margin: "20px 0", textAlign: "center" }}>
                         Your account has been setup. (simulation)
                     </p>
                 )}
             </div>
-        );
+        )
     }
 }
 

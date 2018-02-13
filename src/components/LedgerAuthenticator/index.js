@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import "./style.css"
 import Input from "../../frontend/input/Input"
-import Checkbox from '../../frontend/checkbox/Checkbox'
-import RaisedButton from 'material-ui/RaisedButton'
+import Checkbox from "../../frontend/checkbox/Checkbox"
+import RaisedButton from "material-ui/RaisedButton"
 
 export class LedgerAuthenticator extends Component {
     constructor(props) {
@@ -13,7 +13,7 @@ export class LedgerAuthenticator extends Component {
             derivationPrefix: "44'/148'/",
             pathEditable: false,
             useDefaultAccount: true,
-            ledgerStatusMessage: '',
+            ledgerStatusMessage: "",
         }
     }
 
@@ -27,15 +27,15 @@ export class LedgerAuthenticator extends Component {
 
     initQueryDevice() {
         this.setState({
-            ledgerStatusMessage: 'Waiting for device ...'
+            ledgerStatusMessage: "Waiting for device ..."
         })
         new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(() => {
-            console.log('Ledger Nano S is now connected.')
+            console.log("Ledger Nano S is now connected.") // eslint-disable-line no-console
             this.setState({
                 ledgerStatusMessage: (
                     this.state.derivationPath === "0" ?
-                    'Device found. Authenticating ...' :
-                    `Device found. Authenticating with path ${this.state.derivationPath} ...`
+                        "Device found. Authenticating ..." :
+                        `Device found. Authenticating with path ${this.state.derivationPath} ...`
                 )
             })
 
@@ -51,7 +51,7 @@ export class LedgerAuthenticator extends Component {
             this.setState({
                 ledgerStatusMessage: `Device error code: ${err.code}`
             })
-            console.error(err)
+            console.error(err) // eslint-disable-line no-console
         })
     }
 
@@ -71,13 +71,13 @@ export class LedgerAuthenticator extends Component {
         this.setState({
             useDefaultAccount: event.target.checked
         })
-        this.setState((prevState) => ({
+        this.setState(() => ({
             pathEditable: !event.target.checked
         }))
         // reset derivation path to 0
         if (event.target.checked) {
-            this.setState((prevState) => ({
-                derivationPath: '0',
+            this.setState(() => ({
+                derivationPath: "0",
             }))
         }
     }
@@ -112,7 +112,7 @@ export class LedgerAuthenticator extends Component {
                         label="Authenticate"
                     />
                     <div className="tiny">
-                      {this.state.ledgerStatusMessage}
+                        {this.state.ledgerStatusMessage}
                     </div>
                 </div>
             </div>
@@ -124,7 +124,7 @@ export class LedgerAuthenticator extends Component {
             <div className="title-small p-t">
                 This browser doesn’t support the FIDO U2F standard yet.
                 We recommend updating to the latest <a target="_blank"
-                rel="noopener noreferrer" href="https://www.google.com/chrome/">
+                    rel="noopener noreferrer" href="https://www.google.com/chrome/">
                 Google Chrome</a> in order to use your Ledger device.
             </div>
         )
