@@ -1,53 +1,54 @@
-import React, {Component} from 'react'
-import './Welcome.css'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import TextField from 'material-ui/TextField'
-import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
-import Footer from './Footer'
-import LoadingModal from './LoadingModal'
-import Dialog from 'material-ui/Dialog'
-import { emailValid, pubKeyValid, federationAddressValid, federationLookup } from '../lib/utils'
-import CreateAccountStepper from './CreateAccount/CreateAccount'
-import {config} from '../config'
-import axios from 'axios'
+import React, {Component} from "react"
+import "./Welcome.css"
+import {connect} from "react-redux"
+import {bindActionCreators} from "redux"
+import TextField from "material-ui/TextField"
+import RaisedButton from "material-ui/RaisedButton"
+import FlatButton from "material-ui/FlatButton"
+import Footer from "./Footer"
+import LoadingModal from "./LoadingModal"
+import Dialog from "material-ui/Dialog"
+import { emailValid, pubKeyValid, federationAddressValid, federationLookup } from "../lib/utils"
+import CreateAccountStepper from "./CreateAccount/CreateAccount"
+import {config} from "../config"
+import axios from "axios"
 import {
-  setPublicKeyValid,
-  setPublicKeyInvalid,
-  accountExistsOnLedger,
-  accountMissingOnLedger,
-  setModalLoading,
-  setModalLoaded,
-  updateLoadingMessage,
-  logInToHorizon,
-  logOutOfHorizon,
-  logIn,
-  selectView,
-  setHorizonEndPoint,
-  setInvalidInputMessage,
-  setAccountRegistered,
-} from '../actions/index'
-import Panel from './Panel'
+    setPublicKeyValid,
+    setPublicKeyInvalid,
+    accountExistsOnLedger,
+    accountMissingOnLedger,
+    setModalLoading,
+    setModalLoaded,
+    updateLoadingMessage,
+    logInToHorizon,
+    logOutOfHorizon,
+    logIn,
+    selectView,
+    setHorizonEndPoint,
+    setInvalidInputMessage,
+    setAccountRegistered,
+} from "../actions/index"
+import Panel from "./Panel"
 
 import { LedgerAuthenticator } from "./LedgerAuthenticator"
+import TextInputField from "./TextInputField"
 
 const styles = {
-  errorStyle: {
-    color: '#912d35',
-  },
-  underlineStyle: {
-    borderColor: '#FFC107',
-  },
-  floatingLabelStyle: {
-    color: 'rgba(212,228,188,0.4)',
-  },
-  floatingLabelFocusStyle: {
-    color: 'rgba(212,228,188,0.2)',
-  },
-  inputStyle: {
-    color: 'rgb(244,176,4)',
-  },
+    errorStyle: {
+        color: "#912d35",
+    },
+    underlineStyle: {
+        borderColor: "#FFC107",
+    },
+    floatingLabelStyle: {
+        color: "rgba(212,228,188,0.4)",
+    },
+    floatingLabelFocusStyle: {
+        color: "rgba(212,228,188,0.2)",
+    },
+    inputStyle: {
+        color: "rgb(244,176,4)",
+    },
 }
 
 class Welcome extends Component {
@@ -263,62 +264,6 @@ class Welcome extends Component {
 
 
   // ...
-  emailChanged(event, value) {
-    this.setState({
-      textFieldEmail: value
-    })
-    return emailValid(value) ? (
-      this.props.setInvalidInputMessage({
-        textFieldEmail: null
-      })
-    ) : null
-  }
-
-
-  // ...
-  handleOnClickLogin() {
-    if (emailValid(this.state.textFieldEmail)) {
-      this.props.setInvalidInputMessage({
-        textFieldEmail: null
-      })
-      this.props.setInvalidInputMessage({
-        textFieldPassword: null
-      })
-      axios.post(`${config.api}/user/authenticate/${this.state.textFieldEmail}/${this.textInput.input.value}`)
-        .then((response) => {
-          this.props.logIn({
-            userId: response.data.user_id,
-            token: response.data.token,
-          })
-          this.logInViaPublicKey(response.data.pubkey)
-        })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            this.props.setInvalidInputMessage({
-              textFieldEmail: 'Possibly Incorrect Email'
-            })
-            this.props.setInvalidInputMessage({
-              textFieldPassword: 'Possibly Incorrect Password'
-            })
-          } else {
-            this.props.setInvalidInputMessage({
-              textFieldEmail: null
-            })
-            this.props.setInvalidInputMessage({
-              textFieldPassword: null
-            })
-            console.log(error.response.statusText)
-          }
-        })
-    } else {
-      this.props.setInvalidInputMessage({
-        textFieldEmail: 'Invalid email format.'
-      })
-    }
-  }
-
-
-  // ...
   handleSignup() {
     this.setState({
       modalButtonText: 'CANCEL',
@@ -341,6 +286,43 @@ class Welcome extends Component {
       modalButtonText: text
     })
   }
+
+    // ...
+    authenticateUser() {
+        axios.post(`${config.api}/user/authenticate/${this.textInputFieldEmail.state.value}/${this.textInputFieldPassword.state.value}`)
+            .then((response) => {
+                this.textInputFieldEmail.setState({
+                    error: null,
+                })
+                this.textInputFieldPassword.setState({
+                    error: null,
+                })
+                this.props.logIn({
+                    userId: response.data.user_id,
+                    token: response.data.token,
+                })
+                this.logInViaPublicKey(response.data.pubkey)
+            })
+            .catch((error) => {
+                if (error.response.status === 401) {
+                    this.textInputFieldEmail.setState({
+                        error: "possibly incorrect email"
+                    })
+                    this.textInputFieldPassword.setState({
+                        error: "possibly incorrect password"
+                    })
+                } else {
+                    console.log(error.response.statusText)
+                }
+            })
+    }
+
+    
+    // ...
+    emailValidator(email) {
+        return !emailValid(email) ? "invalid email" : null
+    }
+
 
 
   // ...
@@ -366,13 +348,12 @@ class Welcome extends Component {
           onRequestClose={this.handleModalClose.bind(this)}
           paperClassName="modal-body"
           titleClassName="modal-title"
-          repositionOnUpdate={false}
-          autoScrollBodyContent={true}
         >
           <CreateAccountStepper onComplete={this.setModalButtonText.bind(this)}/>
         </Dialog>
 
         <LoadingModal/>
+
         <div className="faded-image cash">
           <div className="hero">
             <div className="title">Welcome to the money revolution.</div>
@@ -480,50 +461,31 @@ class Welcome extends Component {
                       <div>
                         <div className="mui-text-input">
                           <div>
-                            <TextField
-                              type="email"
-                              onChange={this.emailChanged.bind(this)}
-                              floatingLabelText="Email"
-                              errorText={this.props.ui.messages.textFieldEmail}
-                              errorStyle={styles.errorStyle}
-                              underlineStyle={styles.underlineStyle}
-                              underlineFocusStyle={styles.underlineStyle}
-                              floatingLabelStyle={styles.floatingLabelStyle}
-                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                              inputStyle={styles.inputStyle}
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                  this.handleOnClickLogin.call(this)
-                                }
-                              }}
+                            <TextInputField
+                                type="email"
+                                floatingLabelText="Email"
+                                styles={styles}
+                                validator={this.emailValidator.bind(this)}
+                                action={this.authenticateUser.bind(this)}
+                                ref={(self) => { this.textInputFieldEmail = self }}
                             />
                           </div>
                           <div>
-                            <TextField
-                              type="password"
-                              floatingLabelText="Password"
-                              errorStyle={styles.errorStyle}
-                              errorText={this.props.ui.messages.textFieldPassword}
-                              underlineStyle={styles.underlineStyle}
-                              underlineFocusStyle={styles.underlineStyle}
-                              floatingLabelStyle={styles.floatingLabelStyle}
-                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                              inputStyle={styles.inputStyle}
-                              ref={(input) => { this.textInput = input; }}
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                  this.handleOnClickLogin.call(this)
-                                }
-                              }}
+                            <TextInputField
+                                type="password"
+                                floatingLabelText="Password"
+                                styles={styles}
+                                action={this.authenticateUser.bind(this)}
+                                ref={(self) => { this.textInputFieldPassword = self }}
                             />
                           </div>
                         </div>
                         <div className="flex-row-space-between">
                           <div>
                             <RaisedButton
-                              onClick={this.handleOnClickLogin.bind(this)}
-                              backgroundColor="rgb(244,176,4)"
-                              label="Login"
+                                onClick={this.authenticateUser.bind(this)}
+                                backgroundColor="rgb(244,176,4)"
+                                label="Login"
                             />
                           </div>
                         </div>

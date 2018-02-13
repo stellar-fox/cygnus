@@ -27,8 +27,8 @@
   font-size: 1rem;
 }
 
-.emphasize-light {
-  color: #bf360c;
+.emphasize-light-success {
+  color: #4CAF50;
   font-size: 1rem;
 }
 
@@ -66,6 +66,8 @@
 .modal-body {
   background-color: rgb(244,176,4) !important;
   color: rgb(15,46,83) !important;
+  /* max-height: 60vh !important;
+  min-height: 60vh !important; */
 }
 
 .modal-title {
