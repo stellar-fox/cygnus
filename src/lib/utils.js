@@ -37,6 +37,10 @@ export const passwordValid = (password) => {
   return regex.test(password)
 }
 
+export const passwordsMatch = (pass1, pass2) => {
+    return pass1 === pass2
+}
+
 export const federationIsAliasOnly = (federationAddress) => {
   const regex = /^[a-zA-Z\-0-9.@][^*]+$/
   return (regex.test(federationAddress) === true) ? true : false

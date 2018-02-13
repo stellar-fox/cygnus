@@ -14,7 +14,7 @@ import {federationIsAliasOnly} from '../lib/utils'
 import {emailValid} from '../lib/utils'
 import {config} from '../config'
 import axios from 'axios'
-import RegisterAccountStepper from './CreateAccount/RegisterAccount'
+import RegisterAccount from './RegisterAccount'
 import './Account.css'
 import {
   showAlert,
@@ -391,7 +391,7 @@ class Account extends Component {
             titleClassName="modal-title"
             repositionOnUpdate={false}
           >
-            <RegisterAccountStepper onComplete={this.setModalButtonText.bind(this)} />
+            <RegisterAccount onComplete={this.setModalButtonText.bind(this)} />
           </Dialog>
         </div>
 

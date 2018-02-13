@@ -11,6 +11,9 @@ export default function (state=initState, action) {
     case 'LOG_OUT':
       state = initState
       break;
+    case 'SET_ACCOUNT_PATH':
+      state = {...state, accountPath: action.payload}
+      break;
     case 'PUBKEY_VALID':
       state = {
         ...state,

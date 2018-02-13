@@ -4,7 +4,7 @@ import Input from "../../frontend/input/Input"
 import Checkbox from "../../frontend/checkbox/Checkbox"
 import RaisedButton from "material-ui/RaisedButton"
 
-export class LedgerAuthenticator extends Component {
+export default class LedgerAuthenticator extends Component {
     constructor(props) {
         super(props)
         this.state = {

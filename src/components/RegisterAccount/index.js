@@ -1,4 +1,5 @@
-import React, {Component} from "react"
+import React, { Component } from "react"
+import { connect } from "react-redux"
 import {
     Step,
     Stepper,
@@ -7,13 +8,13 @@ import {
 } from "material-ui/Stepper"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
-import {emailValid, passwordValid, passwordsMatch} from "../../lib/utils"
-
-import LedgerAuthenticator from "../LedgerAuthenticator"
+import { emailValid, passwordValid, passwordsMatch } from "../../lib/utils"
 import TextInputField from "../TextInputField"
 
 
-export default class CreateAccount extends Component {
+class RegisterAccount extends Component {
+    
+    // ...
     constructor(props) {
         super(props)
         this.state = {
@@ -24,6 +25,8 @@ export default class CreateAccount extends Component {
         }
     }
 
+
+    // ...
     handleNext() {
         const { stepIndex } = this.state
 
@@ -32,11 +35,13 @@ export default class CreateAccount extends Component {
             finished: stepIndex >= 1,
         })
 
-        if(stepIndex >= 1) {
+        if (stepIndex >= 1) {
             this.props.onComplete("DONE")
         }
     }
 
+
+    // ...
     handlePrev() {
         const { stepIndex } = this.state
         if (stepIndex > 0) {
@@ -44,11 +49,15 @@ export default class CreateAccount extends Component {
         }
     }
 
-    createAccount(bip32Path) {
-        console.log("creating an account with path: ", bip32Path) // eslint-disable-line no-console
+
+    // ...
+    createAccount() {
+        console.log("creating an account with path: ", this.props.accountInfo.accountPath) // eslint-disable-line no-console
         this.handleNext.call(this)
     }
 
+
+    // ...
     renderStepActions(step) {
         const { stepIndex } = this.state
 
@@ -66,50 +75,23 @@ export default class CreateAccount extends Component {
                         style={{ marginRight: 12 }}
                     />
                 )}
-                
                 {step === 1 && (
                     <div>
-                        <div className="dark">
-                            
-                            <div className="emphasize-light-success">
-                                {this.state.email}
-                            </div>
-                            <div className="small">
-                                will be associated with your Ledger device.
-                            </div>
-                            
-                            <div className="p-t small">
-                                While your device is connected,
-                                choose Stellar wallet,
-                                make sure that wallet web support is enabled
-                                and press "Authenticate" button below.
-                                Your account will be created instantly.
-                            </div>
-                            <LedgerAuthenticator
-                                className="p-t"
-                                onConnected={this.createAccount.bind(this)}
-                                onClick={this.handleNext.bind(this)}
-                            />
+                        <div className="emphasize-light-success">
+                            {this.state.email}
+                        </div>
+                        <div className="small">
+                            will be associated with account {this.props.accountInfo.accountPath} on your Ledger device.
                         </div>
                         <div className="p-t"></div>
-                        <p className="tiny">
-                            If you do
-                            not currently own a Ledger device you can
-                            still open an account with us by clicking the
-                            'OPT OUT' button. Please make sure you
-                            understand the security implications before
-                            proceeding.
-                        </p>
-                        <FlatButton
-                            label="OPT OUT"
+                        <RaisedButton
+                            label="Register"
                             disableTouchRipple={true}
                             disableFocusRipple={true}
-                            onClick={this.handleOptOut.bind(this)}
-                            labelStyle={{ color: "rgb(244,176,4)" }}
-                            style={{
-                                marginRight: 12,
-                                backgroundColor: "rgba(84,110,122,0.3)",
-                            }}
+                            backgroundColor="rgb(15,46,83)"
+                            labelColor="rgb(244,176,4)"
+                            onClick={this.createAccount.bind(this)}
+                            style={{ marginRight: 12 }}
                         />
                         <FlatButton
                             label="Back"
@@ -121,13 +103,9 @@ export default class CreateAccount extends Component {
                         />
                     </div>
                 )}
+
             </div>
         )
-    }
-
-
-    handleOptOut() {
-        console.log("out out") // eslint-disable-line no-console
     }
 
 
@@ -167,7 +145,7 @@ export default class CreateAccount extends Component {
             })
             proceed = false
         }
-        
+
         if (proceed) {
             this.setState({
                 email: this.textInputFieldEmail.state.value,
@@ -178,6 +156,7 @@ export default class CreateAccount extends Component {
     }
 
 
+    // ...
     render() {
         const { finished, stepIndex } = this.state
         const styles = {
@@ -204,10 +183,10 @@ export default class CreateAccount extends Component {
             <div style={{ maxWidth: 580, maxHeight: 580, margin: "auto" }}>
                 <Stepper connector={null} activeStep={stepIndex} orientation="vertical">
                     <Step>
-                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">perm_identity</i>}>
+                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">person</i>}>
                             Choose email and password.
                         </StepLabel>
-                        <StepContent style={{borderLeft: "1px solid rgba(15,46,83,0.2)"}}>
+                        <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)" }}>
                             <div>
                                 <TextInputField
                                     type="email"
@@ -242,11 +221,10 @@ export default class CreateAccount extends Component {
                         </StepContent>
                     </Step>
                     <Step>
-                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">fingerprint</i>}>
-                            Authenticate with Ledger device.
+                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">verified_user</i>}>
+                            Verify Data
                         </StepLabel>
-                        <StepContent style={{borderLeft: "none"}}>
-                            <div className="p-b"></div>
+                        <StepContent style={{ borderLeft: "none" }}>
                             {this.renderStepActions(1)}
                         </StepContent>
                     </Step>
@@ -268,3 +246,14 @@ export default class CreateAccount extends Component {
         )
     }
 }
+
+
+// ...
+function mapStateToProps(state) {
+    return {
+        accountInfo: state.accountInfo,
+    }
+}
+
+
+export default connect(mapStateToProps)(RegisterAccount)

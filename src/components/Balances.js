@@ -10,7 +10,7 @@ import SnackBar from '../frontend/snackbar/SnackBar'
 import axios from 'axios'
 import {formatAmount} from '../lib/utils'
 import {config} from '../config'
-import RegisterAccountStepper from './CreateAccount/RegisterAccount'
+import RegisterAccount from './RegisterAccount'
 import {
   setExchangeRate,
   showAlert,
@@ -284,7 +284,7 @@ class Balances extends Component {
             titleClassName="modal-title"
             repositionOnUpdate={false}
           >
-            <RegisterAccountStepper onComplete={this.setModalButtonText.bind(this)} />
+            <RegisterAccount onComplete={this.setModalButtonText.bind(this)} />
           </Dialog>
         </div>
 

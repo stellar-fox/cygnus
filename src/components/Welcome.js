@@ -27,10 +27,11 @@ import {
     setHorizonEndPoint,
     setInvalidInputMessage,
     setAccountRegistered,
+    setAccountPath,
 } from "../actions/index"
 import Panel from "./Panel"
 
-import { LedgerAuthenticator } from "./LedgerAuthenticator"
+import LedgerAuthenticator from "./LedgerAuthenticator"
 import TextInputField from "./TextInputField"
 
 const styles = {
@@ -88,6 +89,7 @@ class Welcome extends Component {
       let api = new window.StellarLedger.Api(comm)
       return api.getPublicKey_async(bip32Path).then((result) => {
         let publicKey = result['publicKey']
+        this.props.setAccountPath(bip32Path)
         this.logInViaPublicKey(publicKey, false)
       }).catch(function (err) {
         console.error(err)
@@ -312,7 +314,7 @@ class Welcome extends Component {
                         error: "possibly incorrect password"
                     })
                 } else {
-                    console.log(error.response.statusText)
+                    console.log(error.response.statusText) // eslint-disable-line no-console
                 }
             })
     }
@@ -583,6 +585,7 @@ function matchDispatchToProps(dispatch) {
     setHorizonEndPoint,
     setInvalidInputMessage,
     setAccountRegistered,
+    setAccountPath,
   }, dispatch)
 }
 

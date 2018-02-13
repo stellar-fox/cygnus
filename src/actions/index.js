@@ -195,3 +195,10 @@ export const setAccountRegistered = (state) => {
     payload: state,
   }
 }
+
+export const setAccountPath = (state) => {
+    return {
+        type: "SET_ACCOUNT_PATH",
+        payload: state,
+    }
+}
