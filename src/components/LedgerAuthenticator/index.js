@@ -5,6 +5,8 @@ import Checkbox from "../../frontend/checkbox/Checkbox"
 import RaisedButton from "material-ui/RaisedButton"
 
 export default class LedgerAuthenticator extends Component {
+    
+    // ...
     constructor(props) {
         super(props)
         this.state = {
@@ -17,6 +19,8 @@ export default class LedgerAuthenticator extends Component {
         }
     }
 
+
+    // ...
     componentDidMount() {
         if (navigator.userAgent.indexOf("Chrome") !== -1) {
             this.setState({
@@ -25,6 +29,8 @@ export default class LedgerAuthenticator extends Component {
         }
     }
 
+
+    // ...
     initQueryDevice() {
         this.setState({
             ledgerStatusMessage: "Waiting for device ..."
@@ -55,6 +61,8 @@ export default class LedgerAuthenticator extends Component {
         })
     }
 
+
+    // ...
     handlePathChange(event) {
         event.persist()
         if (isNaN(event.target.value)) {
@@ -66,6 +74,8 @@ export default class LedgerAuthenticator extends Component {
         }
     }
 
+
+    // ...
     handleCheckboxClick(event) {
         event.persist()
         this.setState({
@@ -82,6 +92,8 @@ export default class LedgerAuthenticator extends Component {
         }
     }
 
+
+    // ...
     _widgetOn() {
         return (
             <div className={this.props.className}>
@@ -119,6 +131,8 @@ export default class LedgerAuthenticator extends Component {
         )
     }
 
+
+    // ...
     _widgetOff() {
         return (
             <div className="title-small p-t">
@@ -130,6 +144,8 @@ export default class LedgerAuthenticator extends Component {
         )
     }
 
+
+    // ...
     render() {
         return (
             <div>

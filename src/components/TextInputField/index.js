@@ -4,6 +4,7 @@ import TextField from "material-ui/TextField"
 
 
 export default class TextInputField extends Component {
+    
     // ...
     constructor(props) {
         super(props)
@@ -12,6 +13,7 @@ export default class TextInputField extends Component {
             value: "",
         }
     }
+
 
     // ...
     handleChange(event) {
@@ -31,6 +33,7 @@ export default class TextInputField extends Component {
         }
     }
 
+
     // ...
     handleOnKeyPress(event) {
         if (event.key === "Enter" && this.props.validator !== undefined) {
@@ -48,6 +51,7 @@ export default class TextInputField extends Component {
         }
     }
 
+    
     // ...
     render() {
         return (

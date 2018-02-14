@@ -8,7 +8,6 @@ import {
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import {emailValid, passwordValid, passwordsMatch} from "../../lib/utils"
-
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
 
@@ -24,6 +23,8 @@ export default class CreateAccount extends Component {
         }
     }
 
+
+    // ...
     handleNext() {
         const { stepIndex } = this.state
 
@@ -37,6 +38,8 @@ export default class CreateAccount extends Component {
         }
     }
 
+
+    // ...
     handlePrev() {
         const { stepIndex } = this.state
         if (stepIndex > 0) {
@@ -44,11 +47,15 @@ export default class CreateAccount extends Component {
         }
     }
 
+
+    // ...
     createAccount(bip32Path) {
         console.log("creating an account with path: ", bip32Path) // eslint-disable-line no-console
         this.handleNext.call(this)
     }
 
+
+    // ...
     renderStepActions(step) {
         const { stepIndex } = this.state
 
@@ -126,6 +133,7 @@ export default class CreateAccount extends Component {
     }
 
 
+    // ...
     handleOptOut() {
         console.log("out out") // eslint-disable-line no-console
     }
@@ -178,6 +186,7 @@ export default class CreateAccount extends Component {
     }
 
 
+    // ...
     render() {
         const { finished, stepIndex } = this.state
         const styles = {
