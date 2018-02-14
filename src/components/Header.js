@@ -42,9 +42,15 @@ class Header extends Component {
             <div className="flex-row">
               <AppBarTitle title={
                 <span>
-                  <span>Stellar Fox</span> <span className="header-badge">
+                  <span>Stellar Fox</span>
+                  <span className="header-badge">
                     testnet
                   </span>
+                  {this.props.auth.ledgerSoftwareVersion && (
+                    <span className="p-l">
+                      <img src="/img/ledger.svg" width="50px" alt="Ledger" />
+                    </span>
+                  )}
                 </span>
               } subtitle={
                 this.props.nav.view

@@ -11,6 +11,7 @@ import axios from 'axios'
 import {formatAmount} from '../lib/utils'
 import {config} from '../config'
 import RegisterAccount from './RegisterAccount'
+import { signTransaction } from "../lib/ledger"
 import {
   setExchangeRate,
   showAlert,
@@ -225,6 +226,13 @@ class Balances extends Component {
     })
   }
 
+
+  // ...
+  async sendPayment() {
+   
+    console.log('work in progress')
+  }
+
   render() {
     let otherBalances
     if (this.props.accountInfo.exists) {
@@ -393,7 +401,7 @@ class Balances extends Component {
                     backgroundColor="rgb(15,46,83)"
                     labelColor="#d32f2f"
                     label="Send"
-                    onClick={this.handleOpen.bind(this)}
+                    onClick={this.sendPayment.bind(this)}
                   />
                 }
               </CardActions>

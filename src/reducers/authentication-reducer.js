@@ -14,7 +14,7 @@ export default function (state=initState, action) {
         }
         break
     case "LOG_OUT":
-        state = initState //{...state, isAuthenticated: false, userId: null, token: null}
+        state = initState
         break
     case "LOG_IN_TO_HORIZON":
         state = {
