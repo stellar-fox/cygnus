@@ -11,22 +11,11 @@ export default class LedgerAuthenticator extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            ledgerSupported: false,
             derivationPath: "0",
             derivationPrefix: "44'/148'/",
             pathEditable: false,
             useDefaultAccount: true,
             ledgerStatusMessage: "",
-        }
-    }
-
-
-    // ...
-    componentDidMount() {
-        if (navigator.userAgent.indexOf("Chrome") !== -1) {
-            this.setState({
-                ledgerSupported: true
-            })
         }
     }
 
@@ -140,25 +129,10 @@ export default class LedgerAuthenticator extends Component {
 
 
     // ...
-    _widgetOff() {
-        return (
-            <div className="title-small p-t">
-                This browser doesn’t support the FIDO U2F standard yet.
-                We recommend updating to the latest <a target="_blank"
-                    rel="noopener noreferrer" href="https://www.google.com/chrome/">
-                Google Chrome</a> in order to use your Ledger device.
-            </div>
-        )
-    }
-
-
-    // ...
     render() {
         return (
             <div>
-                {this.state.ledgerSupported ?
-                    this._widgetOn.call(this) :
-                    this._widgetOff.call(this)}
+                {this._widgetOn.call(this)}
             </div>
         )
     }
