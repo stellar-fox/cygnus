@@ -1,26 +1,31 @@
-import axios from 'axios'
-import toml from 'toml'
+import axios from "axios"
+import toml from "toml"
 
+// ...
 export const pubKeyAbbr = (pubKey) => {
-  return (pubKey.slice(0,6) + '-' + pubKey.slice(50))
+    return `${pubKey.slice(0,6)}-${pubKey.slice(50)}`
 }
 
+
+// ...
 export const utcToLocaleDateTime = (utcDateTime, includeTime=true) => {
-  if (utcDateTime !== undefined) {
-    let date = new Date(utcDateTime)
-    if (includeTime === true) {
-      return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`
+    if (utcDateTime !== undefined) {
+        let date = new Date(utcDateTime)
+        if (includeTime === true) {
+            return `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`
+        }
+        return `${date.toLocaleDateString()}`
     }
-    return `${date.toLocaleDateString()}`
-  }
-  return undefined
+    return undefined
 }
+
+
 
 export const getAssetCode = (asset) => {
-  if (asset.asset_type === 'native') {
-    return 'XLM'
-  }
-  return asset.asset_code
+    if (asset.asset_type === "native") {
+        return "XLM"
+    }
+    return asset.asset_code
 }
 
 export const formatAmount = (amount, precision=2) => {
@@ -89,14 +94,16 @@ export const pubKeyValid = (pubKey) => {
   return validity
 }
 
+
+// ...
 export const signTransaction = (pubKey, signature, transaction) => {
-  let keyPair = window.StellarSdk.Keypair.fromPublicKey(pubKey)
-  let hint = keyPair.signatureHint()
-  let decoratedSignature = new window.StellarSdk.xdr.DecoratedSignature({
-    hint: hint,
-    signature: signature,
-  })
-  transaction.signatures.push(decoratedSignature)
+    let keyPair = window.StellarSdk.Keypair.fromPublicKey(pubKey)
+    let hint = keyPair.signatureHint()
+    let decoratedSignature = new window.StellarSdk.xdr.DecoratedSignature({
+        hint: hint,
+        signature: signature,
+    })
+    transaction.signatures.push(decoratedSignature)
 }
 
 export const ledgerGetSignature = (transaction, pathIndex=0) => {
@@ -113,14 +120,15 @@ export const ledgerGetSignature = (transaction, pathIndex=0) => {
 }
 
 
+// ...
 export const ledgerGetPubKey = (pathIndex=0) => {
-  let bip32Path = `44'/148'/${pathIndex}'`
-  return window.StellarLedger.comm.create_async().then((comm) => {
-    let api = new window.StellarLedger.Api(comm)
-    return api.getPublicKey_async(bip32Path).then((result) => {
-      return result['publicKey']
-    }).catch(function (err) {
-      console.error(err)
+    let bip32Path = `44'/148'/${pathIndex}'`
+    return window.StellarLedger.comm.create_async().then((comm) => {
+        let api = new window.StellarLedger.Api(comm)
+        return api.getPublicKey_async(bip32Path).then((result) => {
+            return result["publicKey"]
+        }).catch(function (err) {
+            console.error(err) // eslint-disable-line no-console
+        })
     })
-  })
 }

@@ -202,3 +202,10 @@ export const setAccountPath = (state) => {
         payload: state,
     }
 }
+
+export const setLedgerSoftwareVersion = (state) => {
+    return {
+        type: "SET_LEDGER_SOFTWARE_VERSION",
+        payload: state,
+    }
+}

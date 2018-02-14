@@ -28,6 +28,8 @@ import {
     setInvalidInputMessage,
     setAccountRegistered,
     setAccountPath,
+    setLedgerSoftwareVersion,
+    
 } from "../actions/index"
 import Panel from "./Panel"
 
@@ -83,19 +85,12 @@ class Welcome extends Component {
   }
 
 
-  // ...
-  logInViaLedger(bip32Path) {
-    window.StellarLedger.comm.create_async().then((comm) => {
-      let api = new window.StellarLedger.Api(comm)
-      return api.getPublicKey_async(bip32Path).then((result) => {
-        let publicKey = result['publicKey']
-        this.props.setAccountPath(bip32Path)
-        this.logInViaPublicKey(publicKey, false)
-      }).catch(function (err) {
-        console.error(err)
-      })
-    })
-  }
+    // ...
+    logInViaLedger(ledgerParams) {
+        this.props.setAccountPath(ledgerParams.bip32Path)
+        this.props.setLedgerSoftwareVersion(ledgerParams.softwareVersion)
+        this.logInViaPublicKey(ledgerParams.publicKey, false)
+    }
 
 
   // ...
@@ -586,6 +581,7 @@ function matchDispatchToProps(dispatch) {
     setInvalidInputMessage,
     setAccountRegistered,
     setAccountPath,
+    setLedgerSoftwareVersion,
   }, dispatch)
 }
 

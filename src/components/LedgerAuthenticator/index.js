@@ -3,6 +3,7 @@ import "./style.css"
 import Input from "../../frontend/input/Input"
 import Checkbox from "../../frontend/checkbox/Checkbox"
 import RaisedButton from "material-ui/RaisedButton"
+import {awaitConnection, getPublicKey} from "../../lib/ledger"
 
 export default class LedgerAuthenticator extends Component {
     
@@ -31,34 +32,39 @@ export default class LedgerAuthenticator extends Component {
 
 
     // ...
-    initQueryDevice() {
+    async initQueryDevice() {
         this.setState({
             ledgerStatusMessage: "Waiting for device ..."
         })
-        new window.StellarLedger.Api(new window.StellarLedger.comm(Number.MAX_VALUE)).connect(() => {
-            console.log("Ledger Nano S is now connected.") // eslint-disable-line no-console
+        let bip32Path = this.formBip32Path.call(this)
+        const softwareVersion = await awaitConnection().catch((error) => {
             this.setState({
-                ledgerStatusMessage: (
-                    this.state.derivationPath === "0" ?
-                        "Device found. Authenticating ..." :
-                        `Device found. Authenticating with path ${this.state.derivationPath} ...`
-                )
+                ledgerStatusMessage: `${error.id}. ${error.message}`
             })
-
-            let bip32Path
-            if (this.state.derivationPath === "") {
-                bip32Path = `${this.state.derivationPrefix}0'`
-            } else {
-                bip32Path = `${this.state.derivationPrefix}${this.state.derivationPath}'`
-            } 
-            this.props.onConnected.call(this, bip32Path)
-        },
-        function (err) {
-            this.setState({
-                ledgerStatusMessage: `Device error code: ${err.code}`
-            })
-            console.error(err) // eslint-disable-line no-console
         })
+        if (softwareVersion) {
+            this.setState({
+                ledgerStatusMessage: `Connected. Software Ver. ${softwareVersion}`
+            })
+            const publicKey = await getPublicKey(bip32Path).catch((error) => {
+                this.setState({
+                    ledgerStatusMessage: `${error.id}. ${error.message}`
+                })
+            })
+            this.props.onConnected.call(
+                this, { publicKey, softwareVersion, bip32Path }
+            )
+        }
+    }
+
+
+    // ...
+    formBip32Path() {
+        if (this.state.derivationPath === "") {
+            return `${this.state.derivationPrefix}0'`
+        } else {
+            return `${this.state.derivationPrefix}${this.state.derivationPath}'`
+        } 
     }
 
 
@@ -123,6 +129,7 @@ export default class LedgerAuthenticator extends Component {
                         backgroundColor="rgb(244,176,4)"
                         label="Authenticate"
                     />
+                    <div className="p-b-small"></div>
                     <div className="tiny">
                         {this.state.ledgerStatusMessage}
                     </div>
