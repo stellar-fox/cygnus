@@ -8,7 +8,7 @@ import FlatButton from "material-ui/FlatButton"
 import Footer from "./Footer"
 import LoadingModal from "./LoadingModal"
 import Dialog from "material-ui/Dialog"
-import { emailValid, pubKeyValid, federationAddressValid, federationLookup } from "../lib/utils"
+import { emailValid, passwordValid, pubKeyValid, federationAddressValid, federationLookup } from "../lib/utils"
 import CreateAccountStepper from "./CreateAccount/CreateAccount"
 import {config} from "../config"
 import axios from "axios"
@@ -323,6 +323,12 @@ class Welcome extends Component {
     }
 
 
+    // ...
+    passwordValidator(password) {
+        return !passwordValid(password) ? "invalid password" : null
+    }
+
+
 
   // ...
   render() {
@@ -474,6 +480,7 @@ class Welcome extends Component {
                                 type="password"
                                 floatingLabelText="Password"
                                 styles={styles}
+                                validator={this.passwordValidator.bind(this)}
                                 action={this.authenticateUser.bind(this)}
                                 ref={(self) => { this.textInputFieldPassword = self }}
                             />
