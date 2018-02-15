@@ -1,10 +1,10 @@
 .faded-image.cash {
-  position: relative;
-  overflow: hidden;
-  border-top: 1px solid rgba(244,176,4,0.2);
-  border-bottom: 1px solid rgba(244,176,4,0.2);
-  background-color: rgba(244,176,4,0.2);
-  opacity: 1;
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid rgba(244,176,4,0.2);
+    border-bottom: 1px solid rgba(244,176,4,0.2);
+    background-color: rgba(244,176,4,0.2);
+    opacity: 1;
 }
 
 .faded-image.cash:before {
@@ -26,95 +26,95 @@
 }
 
 .faded-image.cash:hover {
-  transition: background-color 1s ease-in-out;
-  background-color: rgba(244,176,4,0.2);
+    transition: background-color 1s ease-in-out;
+    background-color: rgba(244,176,4,0.2);
 }
 
 .faded-image.cash:not(:hover) {
-  transition: background-color 1s ease-in-out;
-  background-color: unset;
+    transition: background-color 1s ease-in-out;
+    background-color: unset;
 }
 
 .hero {
-	text-align: center;
-	font-size: 2rem;
-	padding: 1rem;
-  position: relative;
-  text-shadow: 0px 0px 5px rgb(15,46,83);
+    text-align: center;
+    font-size: 2rem;
+    padding: 1rem;
+    position: relative;
+    text-shadow: 0px 0px 5px rgb(15,46,83);
 }
 
 .container {
-  position: relative;
-  padding: 1rem;
+    position: relative;
+    padding: 1rem;
 }
 
 .centered {
-  text-align: center;
+    text-align: center;
 }
 
 .mui-text-input {
-  margin-top: -0.8rem;
+    margin-top: -0.8rem;
 }
 
 .title-small {
-  font-size: 0.8rem;
+    font-size: 0.8rem;
 }
 
 .subtitle {
-  padding-top: 5px;
-  padding-bottom: 1rem;
-  color: rgb(212,228,188);
-  font-size: 1.1rem;
+    padding-top: 5px;
+    padding-bottom: 1rem;
+    color: rgb(212,228,188);
+    font-size: 1.1rem;
 }
 
 .columns {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 .column {
-  font-size: 1.3rem;
-  text-align: left;
+    font-size: 1.3rem;
+    text-align: left;
 }
 
 .col-header {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .col-item {
-  font-size: 1rem;
-  color: rgb(212,228,188);
-  text-align: left;
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
+    font-size: 1rem;
+    color: rgb(212,228,188);
+    text-align: left;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
 }
 
 .svg {
-  width: 100px;
+    width: 100px;
 }
 
 .svg-logo-ledger {
-  fill: rgba(244,176,4,1);
+    fill: rgba(244,176,4,1);
 }
 
 .svg-logo-stellar {
-  fill: rgb(77,186,232);
+    fill: rgb(77,186,232);
 }
 
 .p-t {
-  padding-top: 1rem;
+    padding-top: 1rem;
 }
 
 .p-t-medium {
-  padding-top: 2rem;
+    padding-top: 2rem;
 }
 
 .p-t-large {
-  padding-top: 3rem;
+    padding-top: 3rem;
 }
 
 .p-b {
-  padding-bottom: 1rem;
+    padding-bottom: 1rem;
 }
