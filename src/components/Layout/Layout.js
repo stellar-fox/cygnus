@@ -8,7 +8,7 @@ import {
 import { connect } from "react-redux"
 import Header from "../Header"
 import Content from "../Content"
-import Footer from "../Footer"
+import Footer from "./Footer"
 import Welcome from "../Welcome/Welcome"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "../../frontend/themes/stellar"

@@ -7,7 +7,7 @@ import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 
 import LoadingModal from "../LoadingModal"
-import Footer from "../Footer"
+import Footer from "../Layout/Footer"
 import Panel from "../Panel"
 
 import { config } from "../../config"
