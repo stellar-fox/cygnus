@@ -42,8 +42,8 @@
         "comma-dangle": [
             "error",
             {
-                "arrays": "ignore",
-                "objects": "ignore",
+                "arrays": "always",
+                "objects": "always",
                 "imports": "ignore",
                 "exports": "ignore",
                 "functions": "ignore"

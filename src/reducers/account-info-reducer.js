@@ -1,12 +1,10 @@
 const initState = {
     currency: "eur",
-    precision: 2
+    precision: 2,
 }
 
 export default function (state = initState, action) {
-
     switch (action.type) {
-
         case "LOG_OUT_OF_HORIZON":
             state = initState
             break
@@ -18,14 +16,14 @@ export default function (state = initState, action) {
         case "SET_ACCOUNT_PATH":
             state = {
                 ...state,
-                accountPath: action.payload
+                accountPath: action.payload,
             }
             break
 
         case "SET_PUBKEY":
             state = {
                 ...state,
-                pubKey: action.payload
+                pubKey: action.payload,
             }
             break
 
@@ -33,7 +31,7 @@ export default function (state = initState, action) {
             state = {
                 ...state,
                 account: action.payload,
-                exists: true
+                exists: true,
             }
             break
 
@@ -41,66 +39,63 @@ export default function (state = initState, action) {
             state = {
                 ...state,
                 account: null,
-                exists: false
+                exists: false,
             }
             break
 
         case "SET_EXCHANGE_RATE":
             state = {
                 ...state,
-                rates: Object.assign(
-                    state.rates || {},
-                    action.payload
-                )
+                rates: Object.assign(state.rates || {}, action.payload),
             }
             break
 
         case "SET_ACCOUNT_PAYMENTS":
             state = {
                 ...state,
-                payments: action.payload
+                payments: action.payload,
             }
             break
 
         case "SET_ACCOUNT_TRANSACTIONS":
             state = {
                 ...state,
-                transactions: action.payload
+                transactions: action.payload,
             }
             break
 
         case "SET_HORIZON_END_POINT":
             state = {
                 ...state,
-                horizon: action.payload
+                horizon: action.payload,
             }
             break
 
         case "SET_CURRENCY":
             state = {
                 ...state,
-                currency: action.payload
+                currency: action.payload,
             }
             break
 
         case "SET_CURRENCY_PRECISION":
             state = {
                 ...state,
-                precision: action.payload
+                precision: action.payload,
             }
             break
 
         case "SET_STREAMER":
             state = {
                 ...state,
-                streamer: action.payload
+                streamer: action.payload,
             }
             break
 
         case "SET_ACCOUNT_REGISTERED":
             state = {
                 ...state,
-                registered: action.payload
+                registered: action.payload,
             }
             break
 
