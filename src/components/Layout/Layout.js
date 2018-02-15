@@ -6,7 +6,7 @@ import {
     Switch,
 } from "react-router-dom"
 import { connect } from "react-redux"
-import Header from "../Header"
+import Header from "./Header"
 import Content from "../Content"
 import Footer from "./Footer"
 import Welcome from "../Welcome/Welcome"

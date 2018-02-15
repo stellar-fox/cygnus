@@ -7,14 +7,15 @@ import {
   openDrawer,
   closeDrawer,
   selectView,
-} from '../actions/index'
+} from '../../actions/index'
 import {NavLink} from 'react-router-dom'
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
-import './Header.css'
-import AppBarTitle from './AppBarTitle'
-import AppBarItems from './AppBarItems'
+import AppBarTitle from '../AppBarTitle'
+import AppBarItems from '../AppBarItems'
 import IconButton from 'material-ui/IconButton'
+
+import './Header.css'
 
 class Header extends Component {
   handleToggle() {
@@ -105,7 +106,7 @@ class Header extends Component {
                   exact activeClassName="active" to="/payments/">
                   <i className="material-icons">payment</i>Payments
                 </NavLink>
-                
+
               </div>
             ) : null}
             <NavLink className='menu-item'
