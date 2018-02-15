@@ -286,32 +286,34 @@ class Welcome extends Component {
 
     // ...
     authenticateUser() {
-        axios.post(`${config.api}/user/authenticate/${this.textInputFieldEmail.state.value}/${this.textInputFieldPassword.state.value}`)
-            .then((response) => {
-                this.textInputFieldEmail.setState({
-                    error: null,
-                })
-                this.textInputFieldPassword.setState({
-                    error: null,
-                })
-                this.props.logIn({
-                    userId: response.data.user_id,
-                    token: response.data.token,
-                })
-                this.logInViaPublicKey(response.data.pubkey)
-            })
-            .catch((error) => {
-                if (error.response.status === 401) {
+        if (this.textInputFieldEmail.state.value !== "" && this.textInputFieldPassword.state.value !== "") {
+            axios.post(`${config.api}/user/authenticate/${this.textInputFieldEmail.state.value}/${this.textInputFieldPassword.state.value}`)
+                .then((response) => {
                     this.textInputFieldEmail.setState({
-                        error: "possibly incorrect email"
+                        error: null,
                     })
                     this.textInputFieldPassword.setState({
-                        error: "possibly incorrect password"
+                        error: null,
                     })
-                } else {
-                    console.log(error.response.statusText) // eslint-disable-line no-console
-                }
-            })
+                    this.props.logIn({
+                        userId: response.data.user_id,
+                        token: response.data.token,
+                    })
+                    this.logInViaPublicKey(response.data.pubkey)
+                })
+                .catch((error) => {
+                    if (error.response.status === 401) {
+                        this.textInputFieldEmail.setState({
+                            error: "possibly incorrect email"
+                        })
+                        this.textInputFieldPassword.setState({
+                            error: "possibly incorrect password"
+                        })
+                    } else {
+                        console.log(error.response.statusText) // eslint-disable-line no-console
+                    }
+                })
+        }
     }
 
     
