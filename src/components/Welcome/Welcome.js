@@ -206,50 +206,50 @@ class Welcome extends Component {
     enterExplorer () {
         const textInputValue = this.textInputFieldFederationAddress.state.value
         this.props.setModalLoading()
-        this.props.updateLoadingMessage({
-            message: "Looking up federation endpoint ...",
-        })
-
-        // Input entered is a valid Stellar Federation address
-        federationLookup(textInputValue)
-            .then((federationEndpointObj) => {
-                if (federationEndpointObj.ok) {
-                    axios
-                        .get(
-                            `${
-                                federationEndpointObj.endpoint
-                            }?q=${textInputValue}&type=name`
-                        )
-                        .then((response) => {
-                            this.logInViaPublicKey(response.data.account_id)
-                        })
-                        .catch((error) => {
-                            this.props.setModalLoaded()
-                            if (error.response.data.detail) {
-                                this.textInputFieldFederationAddress.setState({
-                                    error: error.response.data.detail,
-                                })
-                            } else {
-                                this.textInputFieldFederationAddress.setState({
-                                    error: error.response.data.message,
-                                })
-                            }
-                        })
-                } else {
-                    this.props.setModalLoaded()
-                    this.textInputFieldFederationAddress.setState({
-                        error: federationEndpointObj.error,
-                    })
-                }
+        
+        /**
+         * textInputValue is either VALID federation or VALID pubkey
+         * check for '*' character - if present then it is federation address
+         * otherwise a public key
+         */
+        if (textInputValue.match(/\*/)) {
+            this.props.updateLoadingMessage({
+                message: "Looking up federation endpoint ...",
             })
-            .catch((error) => {
-                console.log(error) // eslint-disable-line no-console
-            })
-
-        // Input entered is a valid Stellar PublicKey
-        if (pubKeyValid(textInputValue).valid) {
+            federationLookup(textInputValue)
+                .then((federationEndpointObj) => {
+                    if (federationEndpointObj.ok) {
+                        axios
+                            .get(`${federationEndpointObj.endpoint}?q=${textInputValue}&type=name`)
+                            .then((response) => {
+                                this.logInViaPublicKey(response.data.account_id)
+                            })
+                            .catch((error) => {
+                                this.props.setModalLoaded()
+                                if (error.response.data.detail) {
+                                    this.textInputFieldFederationAddress.setState({
+                                        error: error.response.data.detail,
+                                    })
+                                } else {
+                                    this.textInputFieldFederationAddress.setState({
+                                        error: error.response.data.message,
+                                    })
+                                }
+                            })
+                    } else {
+                        this.props.setModalLoaded()
+                        this.textInputFieldFederationAddress.setState({
+                            error: federationEndpointObj.error,
+                        })
+                    }
+                })
+                .catch((error) => {
+                    console.log(error) // eslint-disable-line no-console
+                })
+        } else {
             this.logInViaPublicKey(textInputValue)
         }
+        
     }
 
     // ...
