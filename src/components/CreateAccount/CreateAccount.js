@@ -10,23 +10,25 @@ import FlatButton from "material-ui/FlatButton"
 import {emailValid, passwordValid, passwordsMatch} from "../../lib/utils"
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
-
+import axios from "axios"
+import { config } from "../../config"
 
 export default class CreateAccount extends Component {
-    constructor(props) {
+    constructor (props) {
         super(props)
         this.state = {
             finished: false,
             stepIndex: 0,
             email: "",
             password: "",
+            accountCreated: false,
         }
     }
 
 
     // ...
-    handleNext() {
-        const { stepIndex } = this.state
+    handleNext () {
+        const { stepIndex, } = this.state
 
         this.setState({
             stepIndex: stepIndex + 1,
@@ -40,27 +42,58 @@ export default class CreateAccount extends Component {
 
 
     // ...
-    handlePrev() {
-        const { stepIndex } = this.state
+    handlePrev () {
+        const { stepIndex, } = this.state
         if (stepIndex > 0) {
-            this.setState({ stepIndex: stepIndex - 1 })
+            this.setState({
+                stepIndex: stepIndex - 1,
+            })
         }
     }
 
 
     // ...
-    createAccount(bip32Path) {
-        console.log("creating an account with path: ", bip32Path) // eslint-disable-line no-console
+    async createAccount (ledgerData) {
+
+        const userId = await axios
+            .post(
+                `${config.api}/user/create/${this.state.email}/${this.state.password}`
+            )
+            .then((response) => {
+                return response.data.id
+            })
+            .catch((error) => {
+                console.log(error) // eslint-disable-line no-console
+                return null
+            })
+            
+        if (userId) {
+            const accountId = await axios
+                .post(
+                    `${config.api}/account/create/${userId}/${ledgerData.publicKey}`
+                )
+                .then((response) => {
+                    return response.data.account_id
+                })
+            
+            if (accountId) {
+                this.setState({
+                    accountCreated: true,
+                })
+            }
+        }
+        
         this.handleNext.call(this)
+        
     }
 
 
     // ...
-    renderStepActions(step) {
-        const { stepIndex } = this.state
+    renderStepActions (step) {
+        const { stepIndex, } = this.state
 
         return (
-            <div style={{ margin: "12px 0" }}>
+            <div style={{ margin: "12px 0", }}>
 
                 {step === 0 && (
                     <RaisedButton
@@ -70,7 +103,7 @@ export default class CreateAccount extends Component {
                         backgroundColor="rgb(15,46,83)"
                         labelColor="rgb(244,176,4)"
                         onClick={this.compoundValidate.bind(this)}
-                        style={{ marginRight: 12 }}
+                        style={{ marginRight: 12, }}
                     />
                 )}
                 
@@ -112,7 +145,7 @@ export default class CreateAccount extends Component {
                             disableTouchRipple={true}
                             disableFocusRipple={true}
                             onClick={this.handleOptOut.bind(this)}
-                            labelStyle={{ color: "rgb(244,176,4)" }}
+                            labelStyle={{ color: "rgb(244,176,4)", }}
                             style={{
                                 marginRight: 12,
                                 backgroundColor: "rgba(84,110,122,0.3)",
@@ -123,7 +156,7 @@ export default class CreateAccount extends Component {
                             disabled={stepIndex === 0}
                             disableTouchRipple={true}
                             disableFocusRipple={true}
-                            labelStyle={{ color: "rgb(15,46,83)" }}
+                            labelStyle={{ color: "rgb(15,46,83)", }}
                             onClick={this.handlePrev.bind(this)}
                         />
                     </div>
@@ -134,44 +167,44 @@ export default class CreateAccount extends Component {
 
 
     // ...
-    handleOptOut() {
+    handleOptOut () {
         console.log("out out") // eslint-disable-line no-console
     }
 
 
     // ...
-    emailValidator(email) {
+    emailValidator (email) {
         return !emailValid(email) ? "invalid email" : null
     }
 
 
     // ...
-    passwordValidator(password) {
+    passwordValidator (password) {
         return !passwordValid(password) ? "invalid password" : null
     }
 
 
     // ...
-    compoundValidate() {
+    compoundValidate () {
         let proceed = true
 
         if (!emailValid(this.textInputFieldEmail.state.value)) {
             this.textInputFieldEmail.setState({
-                error: "invalid email"
+                error: "invalid email",
             })
             proceed = false
         }
 
         if (!passwordValid(this.textInputFieldPassword.state.value)) {
             this.textInputFieldPassword.setState({
-                error: "invalid password"
+                error: "invalid password",
             })
             proceed = false
         }
 
         if (!passwordsMatch(this.textInputFieldPassword.state.value, this.textInputFieldPasswordConf.state.value)) {
             this.textInputFieldPasswordConf.setState({
-                error: "password mismatch"
+                error: "password mismatch",
             })
             proceed = false
         }
@@ -187,8 +220,8 @@ export default class CreateAccount extends Component {
 
 
     // ...
-    render() {
-        const { finished, stepIndex } = this.state
+    render () {
+        const { finished, stepIndex, } = this.state
         const styles = {
             stepLabel: {
                 fontSize: "1rem",
@@ -210,13 +243,13 @@ export default class CreateAccount extends Component {
             },
         }
         return (
-            <div style={{ maxWidth: 580, maxHeight: 580, margin: "auto" }}>
+            <div style={{ maxWidth: 580, maxHeight: 580, margin: "auto", }}>
                 <Stepper connector={null} activeStep={stepIndex} orientation="vertical">
                     <Step>
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">perm_identity</i>}>
                             Choose email and password.
                         </StepLabel>
-                        <StepContent style={{borderLeft: "1px solid rgba(15,46,83,0.2)"}}>
+                        <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
                             <div>
                                 <TextInputField
                                     type="email"
@@ -254,7 +287,7 @@ export default class CreateAccount extends Component {
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">fingerprint</i>}>
                             Authenticate with Ledger device.
                         </StepLabel>
-                        <StepContent style={{borderLeft: "none"}}>
+                        <StepContent style={{ borderLeft: "none", }}>
                             <div className="p-b"></div>
                             {this.renderStepActions(1)}
                         </StepContent>
@@ -263,13 +296,13 @@ export default class CreateAccount extends Component {
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">account_box</i>}>
                             Your Account
                         </StepLabel>
-                        <StepContent style={{ borderLeft: "none" }}>
+                        <StepContent style={{ borderLeft: "none", }}>
                             {this.renderStepActions(2)}
                         </StepContent>
                     </Step>
                 </Stepper>
                 {finished && (
-                    <p style={{ margin: "20px 0", textAlign: "center" }}>
+                    <p style={{ margin: "20px 0", textAlign: "center", }}>
                         Your account has been setup. (simulation)
                     </p>
                 )}
