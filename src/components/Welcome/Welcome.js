@@ -211,36 +211,40 @@ class Welcome extends Component {
         })
 
         // Input entered is a valid Stellar Federation address
-        federationLookup(textInputValue).then((federationEndpointObj) => {
-            if (federationEndpointObj.ok) {
-                axios
-                    .get(
-                        `${
-                            federationEndpointObj.endpoint
-                        }?q=${textInputValue}&type=name`
-                    )
-                    .then((response) => {
-                        this.logInViaPublicKey(response.data.account_id)
+        federationLookup(textInputValue)
+            .then((federationEndpointObj) => {
+                if (federationEndpointObj.ok) {
+                    axios
+                        .get(
+                            `${
+                                federationEndpointObj.endpoint
+                            }?q=${textInputValue}&type=name`
+                        )
+                        .then((response) => {
+                            this.logInViaPublicKey(response.data.account_id)
+                        })
+                        .catch((error) => {
+                            this.props.setModalLoaded()
+                            if (error.response.data.detail) {
+                                this.textInputFieldFederationAddress.setState({
+                                    error: error.response.data.detail,
+                                })
+                            } else {
+                                this.textInputFieldFederationAddress.setState({
+                                    error: error.response.data.message,
+                                })
+                            }
+                        })
+                } else {
+                    this.props.setModalLoaded()
+                    this.textInputFieldFederationAddress.setState({
+                        error: federationEndpointObj.error,
                     })
-                    .catch((error) => {
-                        this.props.setModalLoaded()
-                        if (error.response.data.detail) {
-                            this.textInputFieldFederationAddress.setState({
-                                error: error.response.data.detail,
-                            })
-                        } else {
-                            this.textInputFieldFederationAddress.setState({
-                                error: error.response.data.message,
-                            })
-                        }
-                    })
-            } else {
-                this.props.setModalLoaded()
-                this.textInputFieldFederationAddress.setState({
-                    error: federationEndpointObj.error,
-                })
-            }
-        })
+                }
+            })
+            .catch((error) => {
+                console.log(error) // eslint-disable-line no-console
+            })
 
         // Input entered is a valid Stellar PublicKey
         if (pubKeyValid(textInputValue).valid) {

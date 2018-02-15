@@ -83,6 +83,9 @@ export const federationLookup = (federationAddress) => {
                 return {error: error.message}
             })
     }
+
+    // in case of failure - return rejected promise with error description
+    return new Promise((_res, rej) => rej(new Error("Federation address domain not found...")))
 }
 
 
