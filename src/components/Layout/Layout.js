@@ -7,7 +7,7 @@ import {
 } from "react-router-dom"
 import { connect } from "react-redux"
 import Header from "./Header"
-import Content from "../Content"
+import Content from "./Content"
 import Footer from "./Footer"
 import Welcome from "../Welcome/Welcome"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
