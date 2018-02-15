@@ -14,20 +14,10 @@ export default function (state=initState, action) {
     case 'SET_ACCOUNT_PATH':
       state = {...state, accountPath: action.payload}
       break;
-    case 'PUBKEY_VALID':
+    case 'SET_PUBKEY':
       state = {
         ...state,
-        pubKey: action.payload.pubKey,
-        message: action.payload.message,
-        valid: true,
-      }
-      break;
-    case 'PUBKEY_INVALID':
-      state = {
-        ...state,
-        pubKey: action.payload.pubKey,
-        message: action.payload.message,
-        valid: false,
+        pubKey: action.payload
       }
       break;
     case 'ACCOUNT_EXISTS_ON_LEDGER':

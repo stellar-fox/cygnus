@@ -1,18 +1,12 @@
 // The following functions wrap dispatch requests to the store.
 
-export const setPublicKeyValid = (state) => {
-  return {
-    type: 'PUBKEY_VALID',
-    payload: state,
-  }
+export const setPublicKey = (state) => {
+    return {
+        type: "SET_PUBKEY",
+        payload: state,
+    }
 }
 
-export const setPublicKeyInvalid = (state) => {
-  return {
-    type: 'PUBKEY_INVALID',
-    payload: state,
-  }
-}
 
 export const accountExistsOnLedger = (state) => {
   return {

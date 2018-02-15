@@ -2,7 +2,6 @@ import React, {Component} from "react"
 import "./Welcome.css"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
-import TextField from "material-ui/TextField"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import Footer from "./Footer"
@@ -13,8 +12,6 @@ import CreateAccountStepper from "./CreateAccount/CreateAccount"
 import {config} from "../config"
 import axios from "axios"
 import {
-    setPublicKeyValid,
-    setPublicKeyInvalid,
     accountExistsOnLedger,
     accountMissingOnLedger,
     setModalLoading,
@@ -25,10 +22,10 @@ import {
     logIn,
     selectView,
     setHorizonEndPoint,
-    setInvalidInputMessage,
     setAccountRegistered,
     setAccountPath,
     setLedgerSoftwareVersion,
+    setPublicKey,
     
 } from "../actions/index"
 import Panel from "./Panel"
@@ -55,34 +52,24 @@ const styles = {
 }
 
 class Welcome extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      textFieldEmail: '',
-      ledgerSupported: false,
-      explorerInputValue: '',
-      explorerInputIsValid: true,
-      explorerInputMessage: '',
-      explorerInputMessageToDisplay: '',
-      modalShown: false,
-      modalButtonText: 'CANCEL',
+    
+    // ...
+    constructor(props) {
+        super(props)
+        this.state = {
+            modalShown: false,
+            modalButtonText: 'CANCEL',
+        }
     }
-  }
 
 
-  // ...
-  componentDidMount(){
-    this.props.setInvalidInputMessage({
-      textFieldEmail: null
-    })
-    this.props.setInvalidInputMessage({
-      textFieldPassword: null
-    })
-    /*
-    * Horizon end point is set to testnet by default.
-    */
-    this.props.setHorizonEndPoint(config.horizon)
-  }
+    // ...
+    componentDidMount(){
+        /*
+        * Horizon end point is set to testnet by default.
+        */
+        this.props.setHorizonEndPoint(config.horizon)
+    }
 
 
     // ...
@@ -93,196 +80,79 @@ class Welcome extends Component {
     }
 
 
-  // ...
-  logInViaPublicKey(pubKey, isReadOnly=true) {
-    try {
-      // 1. validate public key
-      window.StellarSdk.Keypair.fromPublicKey(pubKey)
-      this.props.setPublicKeyValid({
-        pubKey: pubKey,
-        message: null,
-      })
+    // ...
+    logInViaPublicKey(pubKey, isReadOnly=true) {
+        try {
+            this.props.setPublicKey(pubKey)
+            // 1. show loading modal
+            this.props.setModalLoading()
 
-      // 2. show loading modal
-      this.props.setModalLoading()
-
-      // 3. load account info
-      let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
-      this.props.updateLoadingMessage({
-        message: 'Searching for Account ...',
-      })
-      server.loadAccount(pubKey)
-        .catch(window.StellarSdk.NotFoundError, function (error) {
-          throw new Error('The destination account does not exist!');
-        })
-        .then((account) => {
-          this.props.accountExistsOnLedger({account})
-          this.props.selectView('Balances')
-          this.props.logInToHorizon({isReadOnly})
-          this.props.setModalLoaded()
-          this.props.updateLoadingMessage({
-            message: null,
-          })
-        }, (e) => {
-          this.props.accountMissingOnLedger()
-          this.props.selectView('Balances')
-          this.props.logInToHorizon({isReadOnly})
-          this.props.setModalLoaded()
-          this.props.updateLoadingMessage({
-            message: null,
-          })
-        })
-
-      // check if user created account with Stellar Fox
-      axios.get(`${config.api}/find/publickey/${pubKey}`)
-        .then((response) => {
-          if (parseInt(response.data.data.count, 10) === 0) {
-            this.props.setAccountRegistered(false)
-          } else {
-            this.props.setAccountRegistered(true)
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        });
-
-    } catch (e) {
-      this.props.setPublicKeyInvalid({
-        pubKey: pubKey,
-        message: (e.message),
-      })
-    }
-  }
-
-
-  // ...
-  federationAddressChanged(event, value) {
-    let pubKeyCheck = pubKeyValid(value)
-    let fedAddrIsValid = federationAddressValid(value)
-
-    this.setState({
-      explorerInputValue: value,
-    })
-
-    switch (true) {
-      // Valid Stellar PublicKey
-      case pubKeyCheck.valid:
-        this.setState({
-          explorerInputIsValid: true,
-          explorerInputMessage: null,
-        })
-        break;
-      // Valid Federation Address
-      case fedAddrIsValid:
-        this.setState({
-          explorerInputIsValid: true,
-          explorerInputMessage: null,
-        })
-        break;
-      // // Invalid Stellar Public Key
-      case !pubKeyCheck.valid:
-        this.setState({
-          explorerInputIsValid: false,
-          explorerInputMessage: pubKeyCheck.message
-        })
-        break;
-      // 0 Length Input
-      case value.length === 0:
-        this.setState({
-          explorerInputIsValid: true,
-          explorerInputMessage: null,
-        })
-        break;
-      default:
-        break;
-    }
-
-    // Looks like user is entering Federation Address format.
-    if (value.match(/\*/) && !fedAddrIsValid) {
-      this.setState({
-        explorerInputIsValid: false,
-        explorerInputMessage: 'Invalid Federation Address'
-      })
-    }
-
-    if (!value.match(/^G/) && !value.match(/\*/)) {
-      this.setState({
-        explorerInputIsValid: false,
-        explorerInputMessage: 'Invalid Input'
-      })
-    }
-  }
-
-
-  // ...
-  handleOnClickCheck() {
-    this.setState({
-      explorerInputMessageToDisplay: this.state.explorerInputMessage,
-    })
-    // Input entered is a valid Federation Address
-    if (federationAddressValid(this.state.explorerInputValue)) {
-      this.props.setModalLoading()
-      this.props.updateLoadingMessage({message: "Looking up federation endpoint ..."})
-      this.setState({
-        explorerInputMessageToDisplay: null,
-      })
-      federationLookup(this.state.explorerInputValue)
-      .then((federationEndpointObj) => {
-        if (federationEndpointObj.ok) {
-          axios.get(`${federationEndpointObj.endpoint}?q=${this.state.explorerInputValue}&type=name`)
-            .then((response) => {
-              this.logInViaPublicKey(response.data.account_id)
+            // 2. load account info
+            let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+            this.props.updateLoadingMessage({
+                message: "Searching for Account ...",
             })
-            .catch((error) => {
-              this.props.setModalLoaded()
-              if (error.response.data.detail) {
-                this.setState({
-                  explorerInputMessageToDisplay: error.response.data.detail,
+            server.loadAccount(pubKey).catch(window.StellarSdk.NotFoundError, () => {
+                throw new Error("The destination account does not exist!")
+            }).then((account) => {
+                this.props.accountExistsOnLedger({account})
+                this.props.selectView("Balances")
+                this.props.logInToHorizon({isReadOnly})
+                this.props.setModalLoaded()
+                this.props.updateLoadingMessage({
+                    message: null,
                 })
-              } else {
-                this.setState({
-                  explorerInputMessageToDisplay: error.response.data.message,
+            }).catch(() => {
+                this.props.accountMissingOnLedger()
+                this.props.selectView("Balances")
+                this.props.logInToHorizon({ isReadOnly })
+                this.props.setModalLoaded()
+                this.props.updateLoadingMessage({
+                    message: null,
                 })
-              }
-            });
-        } else {
-          this.props.setModalLoaded()
-          this.setState({
-            explorerInputMessageToDisplay: federationEndpointObj.error,
-          })
+            })
+
+            // 3. check if user created account with Stellar Fox
+            axios.get(`${config.api}/find/publickey/${pubKey}`).then((response) => {
+                if (parseInt(response.data.data.count, 10) === 0) {
+                    this.props.setAccountRegistered(false)
+                } else {
+                    this.props.setAccountRegistered(true)
+                }
+            }).catch((error) => {
+                console.log(error) // eslint-disable-line no-console
+            })
+
+        } catch (error) {
+            console.log(error) // eslint-disable-line no-console
         }
-      })
     }
-    // Input entered is a valid Stellar PublicKey
-    if (pubKeyValid(this.state.explorerInputValue).valid) {
-      this.logInViaPublicKey(this.state.explorerInputValue)
+
+
+    // ...
+    handleSignup() {
+        this.setState({
+            modalButtonText: "CANCEL",
+            modalShown: true,
+        })
     }
-  }
 
 
-  // ...
-  handleSignup() {
-    this.setState({
-      modalButtonText: 'CANCEL',
-      modalShown: true,
-    })
-  }
+    // ...
+    handleModalClose() {
+        this.setState({
+            modalShown: false,
+        })
+    }
 
 
-  // ...
-  handleModalClose() {
-    this.setState({
-      modalShown: false,
-    })
-  }
+    // ...
+    setModalButtonText(text) {
+        this.setState({
+            modalButtonText: text
+        })
+    }
 
-
-  // ...
-  setModalButtonText(text) {
-    this.setState({
-      modalButtonText: text
-    })
-  }
 
     // ...
     authenticateUser() {
@@ -316,7 +186,48 @@ class Welcome extends Component {
         }
     }
 
-    
+
+    // ...
+    enterExplorer() {
+        const textInputValue = this.textInputFieldFederationAddress.state.value
+        this.props.setModalLoading()
+        this.props.updateLoadingMessage({ message: "Looking up federation endpoint ..." })
+
+        // Input entered is a valid Stellar Federation address
+        federationLookup(textInputValue)
+            .then((federationEndpointObj) => {
+                if (federationEndpointObj.ok) {
+                    axios.get(`${federationEndpointObj.endpoint}?q=${textInputValue}&type=name`)
+                        .then((response) => {
+                            this.logInViaPublicKey(response.data.account_id)
+                        })
+                        .catch((error) => {
+                            this.props.setModalLoaded()
+                            if (error.response.data.detail) {
+                                this.textInputFieldFederationAddress.setState({
+                                    error: error.response.data.detail
+                                })
+                            } else {
+                                this.textInputFieldFederationAddress.setState({
+                                    error: error.response.data.message
+                                })
+                            }
+                        })
+                } else {
+                    this.props.setModalLoaded()
+                    this.textInputFieldFederationAddress.setState({
+                        error: federationEndpointObj.error
+                    })
+                }
+            })
+        
+        // Input entered is a valid Stellar PublicKey
+        if (pubKeyValid(textInputValue).valid) {
+            this.logInViaPublicKey(textInputValue)
+        }
+    }
+
+
     // ...
     emailValidator(email) {
         return !emailValid(email) ? "invalid email" : null
@@ -328,6 +239,46 @@ class Welcome extends Component {
         return !passwordValid(password) ? "invalid password" : null
     }
 
+
+    // ...
+    compoundLoginValidator() {
+        const emailValidity = this.emailValidator(this.textInputFieldEmail.state.value)
+        const passwordValidity = this.passwordValidator(this.textInputFieldPassword.state.value)
+        if (emailValidity === null && passwordValidity === null) {
+            return this.authenticateUser.call(this)
+        }
+    }
+
+
+    // ...
+    federationValidator() {
+        const address = this.textInputFieldFederationAddress.state.value
+        // Looks like something totally invalid for this field.
+        if (!address.match(/\*/) && !address.match(/^G/)) {
+            return "invalid input"
+        }
+        // Looks like user is entering Federation Address format.
+        if (address.match(/\*/) && !federationAddressValid(address)) {
+            return "invalid federation address"
+        }
+        // This must be an attempt at a Stellar public key format.
+        if (address.match(/^G/) && !address.match(/\*/)) {
+            let publicKeyValidityObj = pubKeyValid(address)
+            if (!publicKeyValidityObj.valid) {
+                return publicKeyValidityObj.message
+            }
+        }
+        return null
+    }
+
+
+    // ...
+    compoundFederationValidator() {
+        const addressValidity = this.federationValidator(this.textInputFieldFederationAddress.state.value)
+        if (addressValidity === null) {
+            return this.enterExplorer.call(this)
+        }
+    }
 
 
   // ...
@@ -471,7 +422,7 @@ class Welcome extends Component {
                                 floatingLabelText="Email"
                                 styles={styles}
                                 validator={this.emailValidator.bind(this)}
-                                action={this.authenticateUser.bind(this)}
+                                action={this.compoundLoginValidator.bind(this)}
                                 ref={(self) => { this.textInputFieldEmail = self }}
                             />
                           </div>
@@ -481,7 +432,7 @@ class Welcome extends Component {
                                 floatingLabelText="Password"
                                 styles={styles}
                                 validator={this.passwordValidator.bind(this)}
-                                action={this.authenticateUser.bind(this)}
+                                action={this.compoundLoginValidator.bind(this)}
                                 ref={(self) => { this.textInputFieldPassword = self }}
                             />
                           </div>
@@ -489,7 +440,7 @@ class Welcome extends Component {
                         <div className="flex-row-space-between">
                           <div>
                             <RaisedButton
-                                onClick={this.authenticateUser.bind(this)}
+                                onClick={this.compoundLoginValidator.bind(this)}
                                 backgroundColor="rgb(244,176,4)"
                                 label="Login"
                             />
@@ -524,26 +475,18 @@ class Welcome extends Component {
                       </div>
                       <div className="mui-text-input">
                         <div>
-                          <TextField
-                            onChange={this.federationAddressChanged.bind(this)}
-                            floatingLabelText="Payment Address"
-                            errorText={this.state.explorerInputMessageToDisplay}
-                            errorStyle={styles.errorStyle}
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={styles.underlineStyle}
-                            floatingLabelStyle={styles.floatingLabelStyle}
-                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            inputStyle={styles.inputStyle}
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                this.handleOnClickCheck.call(this)
-                              }
-                            }}
-                          />
+<TextInputField
+    floatingLabelText="Payment Address"
+    styles={styles}
+    validator={this.federationValidator.bind(this)}
+    action={this.compoundFederationValidator.bind(this)}
+    ref={(self) => { this.textInputFieldFederationAddress = self }}
+/>
+                          
                         </div>
                         <div>
                           <RaisedButton
-                            onClick={this.handleOnClickCheck.bind(this)}
+                            onClick={this.compoundFederationValidator.bind(this)}
                             backgroundColor="rgb(244,176,4)"
                             label="Check"
                           />
@@ -575,8 +518,6 @@ function mapStateToProps(state) {
 
 function matchDispatchToProps(dispatch) {
   return bindActionCreators({
-    setPublicKeyValid,
-    setPublicKeyInvalid,
     accountExistsOnLedger,
     accountMissingOnLedger,
     setModalLoading,
@@ -587,10 +528,10 @@ function matchDispatchToProps(dispatch) {
     logIn,
     selectView,
     setHorizonEndPoint,
-    setInvalidInputMessage,
     setAccountRegistered,
     setAccountPath,
     setLedgerSoftwareVersion,
+    setPublicKey,
   }, dispatch)
 }
 

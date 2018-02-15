@@ -57,7 +57,7 @@ export default class TextInputField extends Component {
         return (
             <div>
                 <TextField
-                    type={this.props.type}
+                    type={this.props.type || "text"}
                     onChange={this.handleChange.bind(this)}
                     floatingLabelText={this.props.floatingLabelText}
                     errorText={this.state.error}
