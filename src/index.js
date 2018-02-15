@@ -1,16 +1,16 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { createStore, applyMiddleware } from "redux"
-import reducers from "./reducers"
 import { Provider } from "react-redux"
-import "./index.css"
-import Layout from "./components/Layout"
-// import registerServiceWorker from "./registerServiceWorker"
-import { unregister } from "./registerServiceWorker"
 import { createLogger } from "redux-logger"
 import thunk from "redux-thunk"
+import reducers from "./reducers"
+// import registerServiceWorker from "./registerServiceWorker"
+import { unregister } from "./registerServiceWorker"
 import { loadState, saveState } from "./load-state"
 import throttle from "lodash/throttle"
+import Layout from "./components/Layout/Layout"
+import "./index.css"
 
 const persistedState = loadState()
 const middleware = applyMiddleware(thunk, createLogger())
