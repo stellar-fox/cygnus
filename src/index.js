@@ -10,6 +10,7 @@ import { unregister } from "./registerServiceWorker"
 import { loadState, saveState } from "./load-state"
 import throttle from "lodash/throttle"
 import Layout from "./components/Layout/Layout"
+
 import "./index.css"
 
 const persistedState = loadState()

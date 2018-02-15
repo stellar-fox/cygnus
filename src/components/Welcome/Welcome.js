@@ -1,15 +1,14 @@
 import React, {Component} from "react"
-import "./Welcome.css"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
-import Footer from "./Footer"
-import LoadingModal from "./LoadingModal"
+import Footer from "../Footer"
+import LoadingModal from "../LoadingModal"
 import Dialog from "material-ui/Dialog"
-import { emailValid, passwordValid, pubKeyValid, federationAddressValid, federationLookup } from "../lib/utils"
-import CreateAccountStepper from "./CreateAccount/CreateAccount"
-import {config} from "../config"
+import { emailValid, passwordValid, pubKeyValid, federationAddressValid, federationLookup } from "../../lib/utils"
+import CreateAccountStepper from "../CreateAccount/CreateAccount"
+import {config} from "../../config"
 import axios from "axios"
 import {
     accountExistsOnLedger,
@@ -26,12 +25,14 @@ import {
     setAccountPath,
     setLedgerSoftwareVersion,
     setPublicKey,
-    
-} from "../actions/index"
-import Panel from "./Panel"
 
-import LedgerAuthenticator from "./LedgerAuthenticator"
-import TextInputField from "./TextInputField"
+} from "../../actions/index"
+import Panel from "../Panel"
+
+import LedgerAuthenticator from "../LedgerAuthenticator"
+import TextInputField from "../TextInputField"
+
+import "./Welcome.css"
 
 const styles = {
     errorStyle: {
@@ -52,7 +53,7 @@ const styles = {
 }
 
 class Welcome extends Component {
-    
+
     // ...
     constructor(props) {
         super(props)
@@ -220,7 +221,7 @@ class Welcome extends Component {
                     })
                 }
             })
-        
+
         // Input entered is a valid Stellar PublicKey
         if (pubKeyValid(textInputValue).valid) {
             this.logInViaPublicKey(textInputValue)
@@ -482,7 +483,7 @@ class Welcome extends Component {
     action={this.compoundFederationValidator.bind(this)}
     ref={(self) => { this.textInputFieldFederationAddress = self }}
 />
-                          
+
                         </div>
                         <div>
                           <RaisedButton
