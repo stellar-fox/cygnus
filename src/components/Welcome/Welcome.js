@@ -170,9 +170,7 @@ class Welcome extends Component {
         ) {
             axios
                 .post(
-                    `${config.api}/user/authenticate/${
-                        this.textInputFieldEmail.state.value
-                    }/${this.textInputFieldPassword.state.value}`
+                    `${config.api}/user/authenticate/${this.textInputFieldEmail.state.value}/${this.textInputFieldPassword.state.value}`
                 )
                 .then((response) => {
                     this.textInputFieldEmail.setState({
