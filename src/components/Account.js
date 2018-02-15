@@ -99,8 +99,8 @@ class Account extends Component {
       axios.get(`${config.api}/user/${this.props.auth.userId}`)
         .then((response) => {
           this.setState({
-            firstNameDisplay: (response.data.data.first_name),
-            lastNameDisplay: response.data.data.last_name,
+            firstNameDisplay: (response.data.data.first_name || ""),
+            lastNameDisplay: (response.data.data.last_name || ""),
             emailDisplay: response.data.data.email,
             gravatarPath: (
               'https://www.gravatar.com/avatar/' + MD5(response.data.data.email) +
@@ -114,7 +114,7 @@ class Account extends Component {
       axios.get(`${config.api}/account/${this.props.auth.userId}`)
         .then((response) => {
           this.setState({
-            paymentAddressDisplay: response.data.data.alias,
+            paymentAddressDisplay: (response.data.data.alias || ""),
             accountDiscoverable: response.data.data.visible,
             currency: response.data.data.currency,
             currencyPrecision: response.data.data.precision,
