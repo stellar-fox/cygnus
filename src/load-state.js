@@ -11,7 +11,7 @@ export const loadState = () => {
             return undefined
         }
         return JSON.parse(serializedState)
-    } catch (e) {
+    } catch (_) {
         return undefined
     }
 }
@@ -20,7 +20,7 @@ export const saveState = (state) => {
     try {
         const serializedState = JSON.stringify(state)
         sessionStorage.setItem("SFOX.APP_STATE", serializedState)
-    } catch (e) {
+    } catch (_) {
         console.log("Could not save application state.") // eslint-disable-line no-console
     }
 }
