@@ -37,6 +37,7 @@
             "error",
             "always"
         ],
+        "no-unused-vars": [2, {"args": "all", "argsIgnorePattern": "^_"}],
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
         "comma-dangle": [
