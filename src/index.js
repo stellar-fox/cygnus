@@ -11,7 +11,7 @@ import {
 } from "./registerServiceWorker"
 import throttle from "lodash/throttle"
 import { loadState, saveState } from "./lib/StatePersistence"
-import Layout from "./components/Layout/Layout"
+import Layout from "./components/Layout"
 
 import "./index.css"
 
