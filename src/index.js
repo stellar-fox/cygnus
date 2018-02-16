@@ -9,8 +9,8 @@ import {
     unregister,
     // registerServiceWorker,
 } from "./registerServiceWorker"
-import { loadState, saveState } from "./lib/StatePersistence"
 import throttle from "lodash/throttle"
+import { loadState, saveState } from "./lib/StatePersistence"
 import Layout from "./components/Layout/Layout"
 
 import "./index.css"
