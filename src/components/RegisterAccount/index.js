@@ -1,16 +1,22 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 import {
     Step,
     Stepper,
     StepLabel,
     StepContent,
 } from "material-ui/Stepper"
+import LinearProgress from "material-ui/LinearProgress"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import { emailValid, passwordValid, passwordsMatch } from "../../lib/utils"
 import TextInputField from "../TextInputField"
-
+import axios from "axios"
+import { config } from "../../config"
+import {
+    setAccountRegistered,
+} from "../../actions/index"
 
 class NewAccount extends Component {
     
@@ -22,6 +28,10 @@ class NewAccount extends Component {
             stepIndex: 0,
             email: "",
             password: "",
+            accountCreated: false,
+            progressCompleted: 0,
+            progressText: "",
+            progressError: "",
         }
     }
 
@@ -51,8 +61,83 @@ class NewAccount extends Component {
 
 
     // ...
-    createAccount () {
+    progress (completed) {
+        if (completed > 100) {
+            this.setState({
+                completed: 100,
+            })
+        } else {
+            this.setState({ completed, })
+        }
+    }
+
+
+    // ...
+    async createAccount () {
         console.log("creating an account with path: ", this.props.accountInfo.accountPath) // eslint-disable-line no-console
+        await new Promise((res, _) => {
+            this.setState({
+                completed: 33,
+                progressText: "Creating user ...",
+            })
+            setTimeout(res, 500)
+        })
+
+        const userId = await axios
+            .post(
+                `${config.api}/user/create/${this.state.email}/${this.state.password}`
+            )
+            .then((response) => {
+                return response.data.id
+            })
+            .catch((error) => {
+                this.setState({
+                    progressError: error.message,
+                })
+                console.log(error) // eslint-disable-line no-console
+                return null
+            })
+
+        await new Promise((res, _) => {
+            this.setState({
+                completed: 66,
+                progressText: "Creating account ...",
+            })
+            setTimeout(res, 500)
+        })
+
+        if (userId) {
+            const accountId = await axios
+                .post(
+                    `${config.api}/account/create/${userId}/${this.props.accountInfo.pubKey}`
+                )
+                .then((response) => {
+                    return response.data.account_id
+                })
+                .catch((error) => {
+                    this.setState({
+                        progressError: error.message,
+                    })
+                    console.log(error) // eslint-disable-line no-console
+                    return null
+                })
+
+            if (accountId) {
+                this.setState({
+                    accountCreated: true,
+                    completed: 100,
+                })
+                this.props.setAccountRegistered(true)
+            }
+        }
+
+        await new Promise((res, _) => {
+            this.setState({
+                completed: 100,
+                progressText: "Completed.",
+            })
+            setTimeout(res, 500)
+        })
         this.handleNext.call(this)
     }
 
@@ -101,6 +186,18 @@ class NewAccount extends Component {
                             labelStyle={{ color: "rgb(15,46,83)", }}
                             onClick={this.handlePrev.bind(this)}
                         />
+                        <div className="p-b-small"></div>
+                        <LinearProgress
+                            style={{ background: "rgb(244,176,4)", }}
+                            color="rgba(15,46,83,0.6)"
+                            mode="determinate"
+                            value={this.state.completed}
+                        />
+                        <div className="tiny">
+                            <div className="p-b-small-block">
+                                {this.state.progressText}
+                            </div>
+                        </div>
                     </div>
                 )}
 
@@ -237,10 +334,20 @@ class NewAccount extends Component {
                         </StepContent>
                     </Step>
                 </Stepper>
-                {finished && (
-                    <p style={{ margin: "20px 0", textAlign: "center", }}>
-                        Your account has been setup. (simulation)
-                    </p>
+                {(finished && this.state.accountCreated) && (
+                    <div style={{ fontSize: "1rem", margin: "20px 0", textAlign: "center", }}>
+                        <i className="material-icons">done_all</i>
+                        Your account has been registered.
+                    </div>
+                )}
+                {(finished && !this.state.accountCreated) && (
+                    <div className="outline-error" style={{ color: "#D32F2F", fontSize: "1rem", margin: "20px 0", textAlign: "center", }}>
+                        <i className="material-icons">error</i>
+                        There was a problem registering your account.
+                        <div className="small">
+                            Reason: {this.state.progressError}
+                        </div>
+                    </div>
                 )}
             </div>
         )
@@ -255,5 +362,13 @@ function mapStateToProps (state) {
     }
 }
 
+function matchDispatchToProps (dispatch) {
+    return bindActionCreators(
+        {
+            setAccountRegistered,
+        },
+        dispatch
+    )
+}
 
-export default connect(mapStateToProps)(NewAccount)
+export default connect(mapStateToProps, matchDispatchToProps)(NewAccount)
