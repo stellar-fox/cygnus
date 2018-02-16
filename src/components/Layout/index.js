@@ -13,8 +13,6 @@ import Welcome from "../Welcome"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "../../frontend/themes/stellar"
 
-import "./Layout.css"
-
 class Layout extends Component {
     render () {
         return (
