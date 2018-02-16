@@ -5,17 +5,21 @@ import { Provider } from "react-redux"
 import { createLogger } from "redux-logger"
 import thunk from "redux-thunk"
 import reducers from "./reducers"
-// import registerServiceWorker from "./registerServiceWorker"
-import { unregister } from "./registerServiceWorker"
-import { loadState, saveState } from "./load-state"
+import {
+    unregister,
+    // registerServiceWorker,
+} from "./registerServiceWorker"
+import { loadState, saveState } from "./lib/StatePersistence"
 import throttle from "lodash/throttle"
 import Layout from "./components/Layout/Layout"
 
 import "./index.css"
 
-const persistedState = loadState()
-const middleware = applyMiddleware(thunk, createLogger())
-const store = createStore(reducers, persistedState, middleware)
+const store = createStore(
+    reducers,
+    loadState(),
+    applyMiddleware(thunk, createLogger())
+)
 
 store.subscribe(
     throttle(() => {
