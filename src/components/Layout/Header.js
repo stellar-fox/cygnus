@@ -49,22 +49,23 @@ class Header extends Component {
                                 title={
                                     <span>
                                         <span>Stellar Fox</span>
-                                        <span className="header-badge">
-                                            testnet
-                                        </span>
-                                        {this.props.auth
-                                            .ledgerSoftwareVersion && (
-                                                <span className="p-l">
-                                                    <img
-                                                        src="/img/ledger.svg"
-                                                        width="50px"
-                                                        alt="Ledger"
-                                                    />
-                                                </span>
-                                            )}
                                     </span>
                                 }
                                 subtitle={this.props.nav.view}
+                                network={
+                                    <div className="badge">
+                                        test net
+                                    </div>
+                                }
+                                ledgerUsed={
+                                    this.props.auth.ledgerSoftwareVersion ? (
+                                        <img
+                                            src="/img/ledger_dark.svg"
+                                            width="60px"
+                                            alt="Ledger"
+                                        />
+                                    ) : null
+                                }
                             />
                             <AppBarItems
                                 accountTitle={

@@ -82,6 +82,13 @@ div.flex-start {
     justify-content: flex-start;
 }
 
+div.indicator-set-col {
+    line-height: 15px;
+    padding: 10px 0px;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
 .p-b-small {
     padding-bottom: 5px;
 }

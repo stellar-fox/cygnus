@@ -45,10 +45,9 @@ a.active {
     font-variant: small-caps;
 }
 
-.header-badge {
-    background-color: rgb(15,46,83);
+.badge {
+    background-color: rgba(15,46,83,0.9);
     color: rgb(244,176,4);
-    padding: 0px 5px 0px 5px;
+    padding: 3px 5px 3px 5px;
     border-radius: 3px;
-    margin-left: 5px;
 }
