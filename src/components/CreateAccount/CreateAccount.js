@@ -5,6 +5,7 @@ import {
     StepLabel,
     StepContent,
 } from "material-ui/Stepper"
+import LinearProgress from "material-ui/LinearProgress"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import {emailValid, passwordValid, passwordsMatch} from "../../lib/utils"
@@ -22,6 +23,9 @@ export default class CreateAccount extends Component {
             email: "",
             password: "",
             accountCreated: false,
+            progressCompleted: 0,
+            progressText: "",
+            progressError: "",
         }
     }
 
@@ -53,7 +57,27 @@ export default class CreateAccount extends Component {
 
 
     // ...
+    progress (completed) {
+        if (completed > 100) {
+            this.setState({
+                completed: 100,
+            })
+        } else {
+            this.setState({completed,})
+        }
+    }
+
+
+    // ...
     async createAccount (ledgerData) {
+        
+        await new Promise((res, _) => {
+            this.setState({
+                completed: 33,
+                progressText: "Creating user ...",
+            })
+            setTimeout(res, 500)
+        })
 
         const userId = await axios
             .post(
@@ -63,10 +87,21 @@ export default class CreateAccount extends Component {
                 return response.data.id
             })
             .catch((error) => {
+                this.setState({
+                    progressError: error.message,
+                })
                 console.log(error) // eslint-disable-line no-console
                 return null
             })
-            
+        
+        await new Promise((res, _) => {
+            this.setState({
+                completed: 66,
+                progressText: "Creating account ...",
+            })
+            setTimeout(res, 500)
+        })
+
         if (userId) {
             const accountId = await axios
                 .post(
@@ -75,13 +110,29 @@ export default class CreateAccount extends Component {
                 .then((response) => {
                     return response.data.account_id
                 })
+                .catch((error) => {
+                    this.setState({
+                        progressError: error.message,
+                    })
+                    console.log(error) // eslint-disable-line no-console
+                    return null
+                })
             
             if (accountId) {
                 this.setState({
                     accountCreated: true,
+                    completed: 100,
                 })
             }
         }
+
+        await new Promise((res, _) => {
+            this.setState({
+                completed: 100,
+                progressText: "Completed.",
+            })
+            setTimeout(res, 500)
+        })
         
         this.handleNext.call(this)
         
@@ -144,7 +195,8 @@ export default class CreateAccount extends Component {
                             label="OPT OUT"
                             disableTouchRipple={true}
                             disableFocusRipple={true}
-                            onClick={this.handleOptOut.bind(this)}
+                            // onClick={this.handleOptOut.bind(this)}
+                            onClick={this.createAccount.bind(this)}
                             labelStyle={{ color: "rgb(244,176,4)", }}
                             style={{
                                 marginRight: 12,
@@ -159,6 +211,18 @@ export default class CreateAccount extends Component {
                             labelStyle={{ color: "rgb(15,46,83)", }}
                             onClick={this.handlePrev.bind(this)}
                         />
+                        <div className="p-b-small"></div>
+                        <LinearProgress
+                            style={{background: "rgb(244,176,4)",}}
+                            color="rgba(15,46,83,0.6)"
+                            mode="determinate"
+                            value={this.state.completed}
+                        />
+                        <div className="tiny">
+                            <div className="p-b-small-block">
+                                {this.state.progressText}
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
@@ -301,10 +365,21 @@ export default class CreateAccount extends Component {
                         </StepContent>
                     </Step>
                 </Stepper>
-                {finished && (
-                    <p style={{ margin: "20px 0", textAlign: "center", }}>
-                        Your account has been setup. (simulation)
-                    </p>
+                {(finished && this.state.accountCreated) && (
+                    <div style={{ fontSize: "1rem", margin: "20px 0", textAlign: "center", }}>
+                        <i className="material-icons">done_all</i>
+                        Your account has been setup and you have been
+                        logged in.
+                    </div>
+                )}
+                {(finished && !this.state.accountCreated) && (
+                    <div className="outline-error" style={{ color: "#D32F2F", fontSize: "1rem", margin: "20px 0", textAlign: "center", }}>
+                        <i className="material-icons">error</i>
+                        There was a problem setting up your account.
+                        <div className="small">
+                            Reason: {this.state.progressError}
+                        </div>
+                    </div>
                 )}
             </div>
         )

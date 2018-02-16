@@ -86,8 +86,24 @@ div.flex-start {
     padding-bottom: 5px;
 }
 
+div.p-b-small-block {
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+div.p-b-small-block::after {
+    content: '.';
+    visibility: hidden;
+}
+
 .outline {
     border: 1px solid rgba(244,176,4,0.75);
+    border-radius: 3px;
+    padding: 10px;
+}
+
+.outline-error {
+    border: 1px solid #D32F2F;
     border-radius: 3px;
     padding: 10px;
 }
