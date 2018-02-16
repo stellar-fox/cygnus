@@ -12,7 +12,7 @@ import { emailValid, passwordValid, passwordsMatch } from "../../lib/utils"
 import TextInputField from "../TextInputField"
 
 
-class RegisterAccount extends Component {
+class NewAccount extends Component {
     
     // ...
     constructor (props) {
@@ -256,4 +256,4 @@ function mapStateToProps (state) {
 }
 
 
-export default connect(mapStateToProps)(RegisterAccount)
+export default connect(mapStateToProps)(NewAccount)

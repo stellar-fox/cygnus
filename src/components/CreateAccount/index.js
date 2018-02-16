@@ -14,7 +14,9 @@ import TextInputField from "../TextInputField"
 import axios from "axios"
 import { config } from "../../config"
 
-export default class CreateAccount extends Component {
+export default class NewAccount extends Component {
+
+    // ...
     constructor (props) {
         super(props)
         this.state = {

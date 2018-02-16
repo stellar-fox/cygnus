@@ -18,7 +18,7 @@ import {
     federationAddressValid,
     federationLookup,
 } from "../../lib/utils"
-import CreateAccountStepper from "../CreateAccount/CreateAccount"
+import CreateAccount from "../CreateAccount"
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -327,7 +327,7 @@ class Welcome extends Component {
                     paperClassName="modal-body"
                     titleClassName="modal-title"
                 >
-                    <CreateAccountStepper
+                    <CreateAccount
                         onComplete={this.setModalButtonText.bind(this)}
                     />
                 </Dialog>
