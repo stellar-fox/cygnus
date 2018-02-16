@@ -1,239 +1,263 @@
-import React, {Component} from 'react'
-import './Balances.css'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
-import RaisedButton from 'material-ui/RaisedButton'
-import FlatButton from 'material-ui/FlatButton'
-import Dialog from 'material-ui/Dialog'
-import SnackBar from '../frontend/snackbar/SnackBar'
-import axios from 'axios'
-import {formatAmount} from '../lib/utils'
-import {config} from '../config'
-import RegisterAccount from './RegisterAccount'
+import React, {Component} from "react"
+import "./Balances.css"
+import {connect} from "react-redux"
+import {bindActionCreators} from "redux"
+import {Card, CardActions, CardHeader, CardText} from "material-ui/Card"
+import RaisedButton from "material-ui/RaisedButton"
+import FlatButton from "material-ui/FlatButton"
+import Dialog from "material-ui/Dialog"
+import SnackBar from "../frontend/snackbar/SnackBar"
+import axios from "axios"
+import {formatAmount} from "../lib/utils"
+import {config} from "../config"
+import RegisterAccount from "./RegisterAccount"
 import { signTransaction } from "../lib/ledger"
 import {
-  setExchangeRate,
-  showAlert,
-  hideAlert,
-  setCurrency,
-  setStreamer,
-  setCurrencyPrecision,
-  accountExistsOnLedger,
-  accountMissingOnLedger,
-} from '../actions/index'
+    setExchangeRate,
+    showAlert,
+    hideAlert,
+    setCurrency,
+    setStreamer,
+    setCurrencyPrecision,
+    accountExistsOnLedger,
+    accountMissingOnLedger,
+} from "../actions/index"
 
 class Balances extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      sbPayment: false,
-      sbPaymentAmount: null,
-      sbPaymentAssetCode: null,
-      modalShown: false,
-      modalButtonText: 'CANCEL',
-    }
-  }
-
-  componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
-      axios.get(`${config.api}/account/${this.props.auth.userId}`)
-        .then((response) => {
-          this.props.setCurrency(response.data.data.currency)
-          this.props.setCurrencyPrecision(response.data.data.precision)
-          this.getExchangeRate(response.data.data.currency)
-        })
-        .catch((error) => {
-          console.log(error.message)
-        })
-    } else {
-      this.getExchangeRate(this.props.accountInfo.currency)
-    }
-    this.props.setStreamer(this.paymentsStreamer.call(this))
-  }
-
-  componentWillUnmount() {
-    this.props.accountInfo.streamer.call(this)
-  }
-
-  paymentsStreamer() {
-    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
-    return server.payments()
-      .cursor('now')
-      .stream({
-        onmessage: (message) => {
-          /*
-          * Initial Account Funding
-          */
-          if (message.type === 'create_account' && message.account === this.props.accountInfo.pubKey) {
-            this.updateAccount.call(this)
-            this.setState({
-              sbPayment: true,
-              sbPaymentText: 'Account Funded: ',
-              sbPaymentAmount: formatAmount(
-                message.starting_balance, this.props.accountInfo.precision),
-              sbPaymentAssetCode: 'XLM'
-            })
-          }
-
-          /*
-          * Receiving Payment
-          */
-          if (message.type === 'payment' && message.to === this.props.accountInfo.pubKey) {
-            this.updateAccount.call(this)
-            this.setState({
-              sbPayment: true,
-              sbPaymentText: 'Payment Received: ',
-              sbPaymentAmount: formatAmount(
-                message.amount, this.props.accountInfo.precision),
-              sbPaymentAssetCode: (
-                message.asset_type === 'native' ? 'XLM' : message.asset_code)
-            })
-          }
-
-          /*
-          * Sending Payment
-          */
-          if (message.type === 'payment' && message.from === this.props.accountInfo.pubKey) {
-            this.updateAccount.call(this)
-            this.setState({
-              sbPayment: true,
-              sbPaymentText: 'Payment Sent: ',
-              sbPaymentAmount: formatAmount(
-                message.amount, this.props.accountInfo.precision),
-              sbPaymentAssetCode: (
-                message.asset_type === 'native' ? 'XLM' : message.asset_code)
-            })
-          }
-
+    
+    // ...
+    constructor (props) {
+        super(props)
+        this.state = {
+            sbPayment: false,
+            sbPaymentAmount: null,
+            sbPaymentAssetCode: null,
+            modalShown: false,
+            modalButtonText: "CANCEL",
         }
-      })
-  }
-
-  updateAccount() {
-    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
-    server.loadAccount(this.props.accountInfo.pubKey)
-      .catch(window.StellarSdk.NotFoundError, function (error) {
-        throw new Error('The destination account does not exist!');
-      })
-      .then((account) => {
-        this.props.accountExistsOnLedger({account})
-      }, (e) => {
-        this.props.accountMissingOnLedger()
-      })
-  }
-
-  getNativeBalance(account) {
-    let nativeBalance = 0
-    account.balances.forEach((balance) => {
-      if (balance.asset_type === 'native') {
-        nativeBalance = balance.balance
-      }
-    })
-    return nativeBalance
-  }
-
-  exchangeRateFetched() {
-    if (
-      this.props.accountInfo.rates !== undefined &&
-      this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined
-    ) {
-      return true
     }
-    return false
-  }
 
-  exchangeRateStale() {
-    if (
-      this.props.accountInfo.rates === undefined ||
-      this.props.accountInfo.rates[this.props.accountInfo.currency] === undefined ||
-      this.props.accountInfo.rates[this.props.accountInfo.currency].lastFetch + 300000 < Date.now()
-    ) {
-      return true
+
+    // ...
+    componentDidMount () {
+        if (this.props.auth.isAuthenticated) {
+            axios.get(`${config.api}/account/${this.props.auth.userId}`)
+                .then((response) => {
+                    this.props.setCurrency(response.data.data.currency)
+                    this.props.setCurrencyPrecision(response.data.data.precision)
+                    this.getExchangeRate(response.data.data.currency)
+                })
+                .catch((error) => {
+                    console.log(error.message) // eslint-disable-line no-console
+                })
+        } else {
+            this.getExchangeRate(this.props.accountInfo.currency)
+        }
+        this.props.setStreamer(this.paymentsStreamer.call(this))
     }
-    return false
-  }
 
-  getExchangeRate(currency) {
-    if (this.exchangeRateStale()) {
-      axios.get(`${config.api}/ticker/latest/${currency}`)
-      .then((response) => {
-        this.props.setExchangeRate({[currency]: {
-          rate: response.data.data[`price_${currency}`],
-          lastFetch: Date.now()
-        }})
-      })
-      .catch(function (error) {
-        console.log(error.message)
-      })
+
+    // ...
+    componentWillUnmount () {
+        this.props.accountInfo.streamer.call(this)
     }
-  }
 
-  getOtherBalances(account) {
-    return account.balances.map((balance) => {
-      if (balance.asset_type !== 'native') {
-        return (
-          <p className='other-assets' key={balance.asset_code}>
-            <span className='other-asset-balance'>
-              {
-                Number.parseFloat(balance.balance)
-                  .toFixed(this.props.accountInfo.precision)
-              }
-            </span>
-            <span className='other-asset-code'>
-              {balance.asset_code}
-            </span>
-          </p>
-        )
-      }
-      return undefined
-    })
-  }
+    
+    // ...
+    paymentsStreamer () {
+        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+        return server.payments().cursor("now").stream({
+            onmessage: (message) => {
+                /*
+                * Initial Account Funding
+                */
+                if (message.type === "create_account" && message.account === this.props.accountInfo.pubKey) {
+                    this.updateAccount.call(this)
+                    this.setState({
+                        sbPayment: true,
+                        sbPaymentText: "Account Funded: ",
+                        sbPaymentAmount: formatAmount(
+                            message.starting_balance, this.props.accountInfo.precision),
+                        sbPaymentAssetCode: "XLM",
+                    })
+                }
 
-  handleOpen = () => {
-    this.props.showAlert()
-  }
+                /*
+                * Receiving Payment
+                */
+                if (message.type === "payment" && message.to === this.props.accountInfo.pubKey) {
+                    this.updateAccount.call(this)
+                    this.setState({
+                        sbPayment: true,
+                        sbPaymentText: "Payment Received: ",
+                        sbPaymentAmount: formatAmount(
+                            message.amount, this.props.accountInfo.precision),
+                        sbPaymentAssetCode: (
+                            message.asset_type === "native" ? "XLM" : message.asset_code
+                        ),
+                    })
+                }
 
-  handleClose = () => {
-    this.props.hideAlert()
-  }
-
-  handlePaymentSnackBarClose = () => {
-    this.setState({
-      sbPayment: false
-    })
-  }
-
-  // ...
-  handleModalClose() {
-    this.setState({
-      modalShown: false,
-    })
-  }
-
-  // ...
-  handleSignup() {
-    this.setState({
-      modalButtonText: 'CANCEL',
-      modalShown: true,
-    })
-  }
-
-  // ...
-  setModalButtonText(text) {
-    this.setState({
-      modalButtonText: text
-    })
-  }
+                /*
+                * Sending Payment
+                */
+                if (message.type === "payment" && message.from === this.props.accountInfo.pubKey) {
+                    this.updateAccount.call(this)
+                    this.setState({
+                        sbPayment: true,
+                        sbPaymentText: "Payment Sent: ",
+                        sbPaymentAmount: formatAmount(
+                            message.amount, this.props.accountInfo.precision),
+                        sbPaymentAssetCode: (
+                            message.asset_type === "native" ? "XLM" : message.asset_code
+                        ),
+                    })
+                }
+            },
+        })
+    }
 
 
-  // ...
-  async sendPayment() {
-   
-    console.log('work in progress')
-  }
+    // ...
+    updateAccount () {
+        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+        server.loadAccount(this.props.accountInfo.pubKey)
+            .catch(window.StellarSdk.NotFoundError, (_) => {
+                throw new Error("The destination account does not exist!")
+            })
+            .then((account) => {
+                this.props.accountExistsOnLedger({account,})
+            }, (_) => {
+                this.props.accountMissingOnLedger()
+            })
+    }
 
-  render() {
+
+    // ...
+    getNativeBalance (account) {
+        let nativeBalance = 0
+        account.balances.forEach((balance) => {
+            if (balance.asset_type === "native") {
+                nativeBalance = balance.balance
+            }
+        })
+        return nativeBalance
+    }
+
+
+    // ...
+    exchangeRateFetched () {
+        if (this.props.accountInfo.rates !== undefined &&
+            this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined
+        ) {
+            return true
+        }
+        return false
+    }
+
+
+    // ...
+    exchangeRateStale () {
+        if (this.props.accountInfo.rates === undefined ||
+            this.props.accountInfo.rates[this.props.accountInfo.currency] === undefined ||
+            this.props.accountInfo.rates[this.props.accountInfo.currency].lastFetch + 300000 < Date.now()
+        ) {
+            return true
+        }
+        return false
+    }
+
+
+    // ...
+    getExchangeRate (currency) {
+        if (this.exchangeRateStale()) {
+            axios.get(`${config.api}/ticker/latest/${currency}`)
+                .then((response) => {
+                    this.props.setExchangeRate({[currency]: {
+                        rate: response.data.data[`price_${currency}`],
+                        lastFetch: Date.now(),
+                    },})
+                })
+                .catch(function (error) {
+                    console.log(error.message) // eslint-disable-line no-console
+                })
+        }
+    }
+
+
+    // ...
+    getOtherBalances (account) {
+        return account.balances.map((balance) => {
+            if (balance.asset_type !== "native") {
+                return (
+                    <p className="other-assets" key={balance.asset_code}>
+                        <span className="other-asset-balance">
+                            {Number.parseFloat(balance.balance).toFixed(this.props.accountInfo.precision)}
+                        </span>
+                        <span className="other-asset-code">
+                            {balance.asset_code}
+                        </span>
+                    </p>
+                )
+            }
+            return undefined
+        })
+    }
+
+
+    // ...
+    handleOpen () {
+        this.props.showAlert()
+    }
+
+
+    // ...
+    handleClose () {
+        this.props.hideAlert()
+    }
+
+
+    // ...
+    handlePaymentSnackBarClose () {
+        this.setState({
+            sbPayment: false,
+        })
+    }
+
+
+    // ...
+    handleModalClose () {
+        this.setState({
+            modalShown: false,
+        })
+    }
+
+
+    // ...
+    handleSignup () {
+        this.setState({
+            modalButtonText: "CANCEL",
+            modalShown: true,
+        })
+    }
+
+
+    // ...
+    setModalButtonText (text) {
+        this.setState({
+            modalButtonText: text
+        })
+    }
+
+
+    // ...
+    async sendPayment () {
+        return true
+    }
+
+    
+    // ...
+    render () {
     let otherBalances
     if (this.props.accountInfo.exists) {
       otherBalances = this.getOtherBalances.call(
@@ -467,25 +491,31 @@ class Balances extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    accountInfo: state.accountInfo,
-    auth: state.auth,
-    modal: state.modal,
-  }
+
+// ...
+function mapStateToProps (state) {
+    return {
+        accountInfo: state.accountInfo,
+        auth: state.auth,
+        modal: state.modal,
+    }
 }
 
-function matchDispatchToProps(dispatch) {
-  return bindActionCreators({
-    setExchangeRate,
-    showAlert,
-    hideAlert,
-    setCurrency,
-    setStreamer,
-    setCurrencyPrecision,
-    accountExistsOnLedger,
-    accountMissingOnLedger,
-  }, dispatch)
+
+// ...
+function matchDispatchToProps (dispatch) {
+    return bindActionCreators({
+        setExchangeRate,
+        showAlert,
+        hideAlert,
+        setCurrency,
+        setStreamer,
+        setCurrencyPrecision,
+        accountExistsOnLedger,
+        accountMissingOnLedger,
+    }, dispatch)
 }
 
+
+// ...
 export default connect(mapStateToProps, matchDispatchToProps)(Balances)
