@@ -39,7 +39,7 @@ import {
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
 
-import "./Welcome.css"
+import "./style.css"
 
 const styles = {
     errorStyle: {
