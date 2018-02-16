@@ -15,7 +15,7 @@ import TextInputField from "../TextInputField"
 class RegisterAccount extends Component {
     
     // ...
-    constructor(props) {
+    constructor (props) {
         super(props)
         this.state = {
             finished: false,
@@ -27,8 +27,8 @@ class RegisterAccount extends Component {
 
 
     // ...
-    handleNext() {
-        const { stepIndex } = this.state
+    handleNext () {
+        const { stepIndex, } = this.state
 
         this.setState({
             stepIndex: stepIndex + 1,
@@ -42,27 +42,27 @@ class RegisterAccount extends Component {
 
 
     // ...
-    handlePrev() {
-        const { stepIndex } = this.state
+    handlePrev () {
+        const { stepIndex, } = this.state
         if (stepIndex > 0) {
-            this.setState({ stepIndex: stepIndex - 1 })
+            this.setState({ stepIndex: stepIndex - 1, })
         }
     }
 
 
     // ...
-    createAccount() {
+    createAccount () {
         console.log("creating an account with path: ", this.props.accountInfo.accountPath) // eslint-disable-line no-console
         this.handleNext.call(this)
     }
 
 
     // ...
-    renderStepActions(step) {
-        const { stepIndex } = this.state
+    renderStepActions (step) {
+        const { stepIndex, } = this.state
 
         return (
-            <div style={{ margin: "12px 0" }}>
+            <div style={{ margin: "12px 0", }}>
 
                 {step === 0 && (
                     <RaisedButton
@@ -72,7 +72,7 @@ class RegisterAccount extends Component {
                         backgroundColor="rgb(15,46,83)"
                         labelColor="rgb(244,176,4)"
                         onClick={this.compoundValidate.bind(this)}
-                        style={{ marginRight: 12 }}
+                        style={{ marginRight: 12, }}
                     />
                 )}
                 {step === 1 && (
@@ -91,14 +91,14 @@ class RegisterAccount extends Component {
                             backgroundColor="rgb(15,46,83)"
                             labelColor="rgb(244,176,4)"
                             onClick={this.createAccount.bind(this)}
-                            style={{ marginRight: 12 }}
+                            style={{ marginRight: 12, }}
                         />
                         <FlatButton
                             label="Back"
                             disabled={stepIndex === 0}
                             disableTouchRipple={true}
                             disableFocusRipple={true}
-                            labelStyle={{ color: "rgb(15,46,83)" }}
+                            labelStyle={{ color: "rgb(15,46,83)", }}
                             onClick={this.handlePrev.bind(this)}
                         />
                     </div>
@@ -110,38 +110,38 @@ class RegisterAccount extends Component {
 
 
     // ...
-    emailValidator(email) {
+    emailValidator (email) {
         return !emailValid(email) ? "invalid email" : null
     }
 
 
     // ...
-    passwordValidator(password) {
+    passwordValidator (password) {
         return !passwordValid(password) ? "invalid password" : null
     }
 
 
     // ...
-    compoundValidate() {
+    compoundValidate () {
         let proceed = true
 
         if (!emailValid(this.textInputFieldEmail.state.value)) {
             this.textInputFieldEmail.setState({
-                error: "invalid email"
+                error: "invalid email",
             })
             proceed = false
         }
 
         if (!passwordValid(this.textInputFieldPassword.state.value)) {
             this.textInputFieldPassword.setState({
-                error: "invalid password"
+                error: "invalid password",
             })
             proceed = false
         }
 
         if (!passwordsMatch(this.textInputFieldPassword.state.value, this.textInputFieldPasswordConf.state.value)) {
             this.textInputFieldPasswordConf.setState({
-                error: "password mismatch"
+                error: "password mismatch",
             })
             proceed = false
         }
@@ -157,8 +157,8 @@ class RegisterAccount extends Component {
 
 
     // ...
-    render() {
-        const { finished, stepIndex } = this.state
+    render () {
+        const { finished, stepIndex, } = this.state
         const styles = {
             stepLabel: {
                 fontSize: "1rem",
@@ -180,13 +180,13 @@ class RegisterAccount extends Component {
             },
         }
         return (
-            <div style={{ maxWidth: 580, maxHeight: 580, margin: "auto" }}>
+            <div style={{ maxWidth: 580, maxHeight: 580, margin: "auto", }}>
                 <Stepper connector={null} activeStep={stepIndex} orientation="vertical">
                     <Step>
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">person</i>}>
                             Choose email and password.
                         </StepLabel>
-                        <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)" }}>
+                        <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
                             <div>
                                 <TextInputField
                                     type="email"
@@ -224,7 +224,7 @@ class RegisterAccount extends Component {
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">verified_user</i>}>
                             Verify Data
                         </StepLabel>
-                        <StepContent style={{ borderLeft: "none" }}>
+                        <StepContent style={{ borderLeft: "none", }}>
                             {this.renderStepActions(1)}
                         </StepContent>
                     </Step>
@@ -232,13 +232,13 @@ class RegisterAccount extends Component {
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">account_box</i>}>
                             Your Account
                         </StepLabel>
-                        <StepContent style={{ borderLeft: "none" }}>
+                        <StepContent style={{ borderLeft: "none", }}>
                             {this.renderStepActions(2)}
                         </StepContent>
                     </Step>
                 </Stepper>
                 {finished && (
-                    <p style={{ margin: "20px 0", textAlign: "center" }}>
+                    <p style={{ margin: "20px 0", textAlign: "center", }}>
                         Your account has been setup. (simulation)
                     </p>
                 )}
@@ -249,7 +249,7 @@ class RegisterAccount extends Component {
 
 
 // ...
-function mapStateToProps(state) {
+function mapStateToProps (state) {
     return {
         accountInfo: state.accountInfo,
     }
