@@ -77,9 +77,7 @@ export const federationLookup = (federationAddress) => (
                     endpoint: toml.parse(response.data).FEDERATION_SERVER,
                 })) :
             // in case of failure - return rejected promise with error description
-            new Promise((_res, rej) =>
-                rej(new Error("Federation address domain not found..."))
-            )
+            Promise.reject(new Error("Federation address domain not found..."))
 )(federationAddress.match(domainRegex))
 
 
