@@ -41,6 +41,9 @@ import TextInputField from "../TextInputField"
 
 import "./style.css"
 
+// TODO: convert-to/use-as module
+const StellarSdk = window.StellarSdk
+
 const styles = {
     errorStyle: {
         color: "#912d35",
@@ -92,7 +95,7 @@ class Welcome extends Component {
             this.props.setModalLoading()
 
             // 2. load account info
-            let server = new window.StellarSdk.Server(
+            let server = new StellarSdk.Server(
                 this.props.accountInfo.horizon
             )
             this.props.updateLoadingMessage({
@@ -100,7 +103,7 @@ class Welcome extends Component {
             })
             server
                 .loadAccount(pubKey)
-                .catch(window.StellarSdk.NotFoundError, () => {
+                .catch(StellarSdk.NotFoundError, () => {
                     throw new Error("The destination account does not exist!")
                 })
                 .then((account) => {
@@ -204,7 +207,7 @@ class Welcome extends Component {
     enterExplorer () {
         const textInputValue = this.textInputFieldFederationAddress.state.value
         this.props.setModalLoading()
-        
+
         /**
          * textInputValue is either VALID federation or VALID pubkey
          * check for '*' character - if present then it is federation address
@@ -247,7 +250,7 @@ class Welcome extends Component {
         } else {
             this.logInViaPublicKey(textInputValue)
         }
-        
+
     }
 
     // ...
