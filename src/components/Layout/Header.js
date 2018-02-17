@@ -59,11 +59,7 @@ class Header extends Component {
                                 }
                                 ledgerUsed={
                                     this.props.auth.ledgerSoftwareVersion ? (
-                                        <img
-                                            src="/img/ledger_dark.svg"
-                                            width="60px"
-                                            alt="Ledger"
-                                        />
+                                        <span class="ledger-nano-s"></span>
                                     ) : null
                                 }
                             />
