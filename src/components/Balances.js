@@ -8,10 +8,17 @@ import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 import SnackBar from "../frontend/snackbar/SnackBar"
 import axios from "axios"
-import {formatAmount} from "../lib/utils"
+import { formatAmount } from "../lib/utils"
 import {config} from "../config"
 import RegisterAccount from "./RegisterAccount"
+import TextInputField from "./TextInputField"
 import { signTransaction } from "../lib/ledger"
+import DatePicker from "material-ui/DatePicker"
+import {
+    pubKeyValid,
+    federationAddressValid,
+    federationLookup,
+} from "../lib/utils"
 import {
     setExchangeRate,
     showAlert,
@@ -22,6 +29,29 @@ import {
     accountExistsOnLedger,
     accountMissingOnLedger,
 } from "../actions/index"
+import debounce from "lodash/debounce"
+import numberToText from "number-to-text"
+import "number-to-text/converters/en-us"
+
+const styles = {
+    errorStyle: {
+        color: "#912d35",
+    },
+    underlineStyle: {
+        borderColor: "rgba(15,46,83,0.6)",
+        width: "100%",
+    },
+    floatingLabelStyle: {
+        color: "rgba(15,46,83,0.5)",
+    },
+    floatingLabelFocusStyle: {
+        color: "rgba(15,46,83,0.35)",
+    },
+    inputStyle: {
+        color: "rgba(15,46,83,0.8)",
+    },
+}
+
 
 class Balances extends Component {
     
@@ -34,6 +64,19 @@ class Balances extends Component {
             sbPaymentAssetCode: null,
             modalShown: false,
             modalButtonText: "CANCEL",
+            amountEntered: false,
+            currencySymbol: null,
+            currencyText: null,
+            payee: null,
+            memo: null,
+            payDate: new Date(),
+            memoRequired: false,
+            
+            paymentDestinationValid: false,
+            amountValid: false,
+            memoValid: false,
+            buttonSendDisabled: true,
+
         }
     }
 
@@ -46,6 +89,10 @@ class Balances extends Component {
                     this.props.setCurrency(response.data.data.currency)
                     this.props.setCurrencyPrecision(response.data.data.precision)
                     this.getExchangeRate(response.data.data.currency)
+                    this.setState({
+                        currencySymbol: this.getCurrencySymbol(response.data.data.currency),
+                        currencyText: this.getCurrencyText(response.data.data.currency),
+                    })
                 })
                 .catch((error) => {
                     console.log(error.message) // eslint-disable-line no-console
@@ -54,6 +101,12 @@ class Balances extends Component {
             this.getExchangeRate(this.props.accountInfo.currency)
         }
         this.props.setStreamer(this.paymentsStreamer.call(this))
+
+        // TEMPORARY!!
+        this.setState({
+            currencySymbol: this.getCurrencySymbol(this.props.accountInfo.currency),
+            currencyText: this.getCurrencyText(this.props.accountInfo.currency),
+        })
     }
 
 
@@ -62,6 +115,32 @@ class Balances extends Component {
         this.props.accountInfo.streamer.call(this)
     }
 
+
+    // ...
+    getCurrencySymbol (currency) {
+        return currency
+    }
+
+
+    // ...
+    getCurrencyText (currency) {
+        let text = ""
+        switch (currency) {
+            case "eur":
+                text = "EUROS"
+                break
+            case "thb":
+                text = "THAI BAHT"
+                break
+            case "pln":
+                text = "ZŁOTYCH"
+                break
+            default:
+                text = "DOLLARS"
+                break
+        }
+        return text
+    }
     
     // ...
     paymentsStreamer () {
@@ -117,6 +196,13 @@ class Balances extends Component {
         })
     }
 
+    // ...
+    updateDate (value) {
+        this.setState({
+            // payDate: utcToLocaleDateTime(value),
+            payDate: value,
+        })
+    }
 
     // ...
     updateAccount () {
@@ -245,19 +331,217 @@ class Balances extends Component {
     // ...
     setModalButtonText (text) {
         this.setState({
-            modalButtonText: text
+            modalButtonText: text,
         })
     }
 
 
     // ...
     async sendPayment () {
+        console.log("send payment")
         return true
     }
 
+
+    // ...
+    compoundPaymentValidator () {
+        
+        if (!this.state.payee) {
+            this.setState({
+                buttonSendDisabled: true,
+            })
+            return false
+        }
+
+        if (!this.state.amountEntered) {
+            this.setState({
+                buttonSendDisabled: true,
+            })
+            return false
+        }
+
+        if (!this.state.memoValid && this.state.memoRequired) {
+            this.setState({
+                buttonSendDisabled: true,
+            })
+            return false
+        }
+
+        this.setState({
+            buttonSendDisabled: false,
+        })
+        
+        return true
+    }
+
+
+    // ...
+    memoValidator () {
+        
+        this.setState({
+            memoValid: true,
+        })
+        this.compoundPaymentValidator.call(this)
+        // (this.state.memoRequired && this.textInputFieldMemo.state.value !== "") ? true : false
+        return true
+    }
+
+    // ...
+    amountValidator () {
+
+        // nothing was typed (reset any previous errors)
+        if (this.textInputFieldAmount.state.value === "") {
+            this.setState({
+                amountEntered: false,
+                amountValid: false,
+            })
+            this.textInputFieldAmount.setState({
+                error: null,
+            })
+            this.compoundPaymentValidator.call(this)
+            return null
+        }
+
+        let parsedValidAmount = this.textInputFieldAmount.state.value.match(
+            /^(\d+)([.,](\d{1,2}))?$/
+        )
+        
+        // check if amount typed is valid
+        if (parsedValidAmount) {
+            // decimals present
+            if (parsedValidAmount[3]) {
+                this.setState({
+                    amountEntered: true,
+                    amountText: `${numberToText.convertToText(parsedValidAmount[1])} and ${parsedValidAmount[3]}/100`,
+                })
+            }
+            // whole amount
+            else {
+                this.setState({
+                    amountEntered: true,
+                    amountText: numberToText.convertToText(parsedValidAmount[1]),
+                })
+            }
+            this.textInputFieldAmount.setState({
+                error: null,
+            })
+            this.compoundPaymentValidator.call(this)
+            return null
+        }
+        
+        // invalid amount was typed in
+        else {
+            this.setState({
+                amountEntered: false,
+            })
+            this.textInputFieldAmount.setState({
+                error: "invalid amount entered",
+            })
+            this.compoundPaymentValidator.call(this)
+            return "invalid amount entered"
+        }
+        
+    }
+
+
+    // ...
+    federationValidator () {
+        // reset any previous errors
+        this.textInputFieldFederationAddress.setState({
+            error: null,
+        })
+
+        const address = this.textInputFieldFederationAddress.state.value
+        // Looks like something totally invalid for this field.
+        if (!address.match(/\*/) && !address.match(/^G/)) {
+            return "invalid input"
+        }
+        // Looks like user is entering Federation Address format.
+        if (address.match(/\*/) && !federationAddressValid(address)) {
+            return "invalid federation address"
+        }
+        // This must be an attempt at a Stellar public key format.
+        if (address.match(/^G/) && !address.match(/\*/)) {
+            let publicKeyValidityObj = pubKeyValid(address)
+            if (!publicKeyValidityObj.valid) {
+                return publicKeyValidityObj.message
+            }
+        }
+
+        return null
+    }
+
+
+    // ...
+    compoundFederationValidator () {
+        const addressValidity = this.federationValidator(
+            this.textInputFieldFederationAddress.state.value
+        )
+        if (addressValidity === null) {
+            
+            // valid federation address
+            if (this.textInputFieldFederationAddress.state.value.match(/\*/)) {
+                federationLookup(this.textInputFieldFederationAddress.state.value)
+                    .then((federationEndpointObj) => {
+                        if (federationEndpointObj.ok) {
+                            axios
+                                .get(`${federationEndpointObj.endpoint}?q=${this.textInputFieldFederationAddress.state.value}&type=name`)
+                                .then((response) => {
+                                    this.setState({
+                                        payee: response.data.account_id,
+                                    })
+                                    this.compoundPaymentValidator.call(this)
+                                })
+                                .catch((error) => {
+                                    this.setState({
+                                        payee: null,
+                                    })
+                                    this.compoundPaymentValidator.call(this)
+                                    if (error.response.data.detail) {
+                                        this.textInputFieldFederationAddress.setState({
+                                            error: error.response.data.detail,
+                                        })
+                                    } else {
+                                        this.textInputFieldFederationAddress.setState({
+                                            error: error.response.data.message,
+                                        })
+                                    }
+                                })
+                        } else {
+                            this.setState({
+                                payee: null,
+                            })
+                            this.compoundPaymentValidator.call(this)
+                            this.textInputFieldFederationAddress.setState({
+                                error: federationEndpointObj.error.message,
+                            })
+                        }
+                    })
+                    .catch((error) => {
+                        this.setState({
+                            payee: null,
+                        })
+                        this.compoundPaymentValidator.call(this)
+                        this.textInputFieldFederationAddress.setState({
+                            error: error.message,
+                        })
+                        console.log(error) // eslint-disable-line no-console
+                    })
+            }
+
+            // valid public key
+            else {
+                console.log("it's a public key")
+            }
+            
+            
+        }
+    }
     
     // ...
     render () {
+
+
     let otherBalances
     if (this.props.accountInfo.exists) {
       otherBalances = this.getOtherBalances.call(
@@ -271,7 +555,7 @@ class Balances extends Component {
         labelColor="rgb(244,176,4)"
         label="OK"
         keyboardFocused={true}
-        onClick={this.handleClose}
+        onClick={this.handleClose.bind(this)}
       />,
     ]
 
@@ -425,7 +709,7 @@ class Balances extends Component {
                     backgroundColor="rgb(15,46,83)"
                     labelColor="#d32f2f"
                     label="Send"
-                    onClick={this.sendPayment.bind(this)}
+                    onClick={this.showPaymentModal.bind(this)}
                   />
                 }
               </CardActions>
@@ -485,6 +769,125 @@ class Balances extends Component {
             </CardText>
           </Card>
         )}
+
+            
+                <Card className="payment-card">
+                    <CardText>
+                        <div className="f-e">
+                            
+                            <DatePicker
+                                className="date-picker"
+                                defaultDate={this.state.payDate}
+                                floatingLabelText="Date"
+                            />
+                        </div>
+                        <div className="f-s space-between">
+                            <div className="payment-header f-s">
+                                <div className="p-r leading-label-align nowrap">
+                                    Pay to the order of:
+                                </div>
+                                <div className="p-r">
+                                    <TextInputField
+                                        floatingLabelText="Payment Address"
+                                        styles={styles}
+                                        validator={
+                                            debounce(this.compoundFederationValidator.bind(this), 1000)
+                                        }
+                                        ref={(self) => {
+                                            this.textInputFieldFederationAddress = self
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="payment-header f-s">
+                                <div className="p-r leading-label-align payment-currency">
+                                    {this.state.currencySymbol === "eur" && (
+                                        <span>&#x020AC;</span>
+                                    )}
+                                    {this.state.currencySymbol === "usd" && (
+                                        <span>&#x00024;</span>
+                                    )}
+                                </div>
+                                <div>
+                                    <TextInputField
+                                        validator={
+                                            debounce(this.amountValidator.bind(this), 500)
+                                        }
+                                        ref={(self) => {
+                                            this.textInputFieldAmount = self
+                                        }}
+                                        floatingLabelText="Amount"
+                                        styles={styles}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="f-s space-between verbatim-underlined">
+                            <div>
+                                {this.state.amountEntered && this.state.amountText}
+                            </div>
+                            <div>{this.state.currencyText}</div>
+                        </div>
+                        <div className="p-t"></div>
+                        <div className="f-e">
+                            <div>
+                                <i className="material-icons">lock</i>
+                            </div>
+                            <div className="micro nowrap">
+                                Security Features
+                            </div>
+
+                        </div>
+                        <div className="p-b p-t"></div>
+                        <div className="f-s space-between">
+                            <div>
+                                <span className="payment-header">
+                                    <span className="p-r">For:</span>
+                                    <TextInputField
+                                        floatingLabelText="Memo"
+                                        styles={styles}
+                                        ref={(self) => {
+                                            this.textInputFieldMemo = self
+                                        }}
+                                        validator={
+                                            debounce(this.memoValidator.bind(this), 500)
+                                        }
+                                    />
+                                </span>
+                            </div>
+                        </div>
+                    </CardText>
+                    <CardActions>
+                        <div className="f-e space-between">
+                            <div className='faded p-l nowrap'>
+                                <i className="material-icons md-icon-small">info_outline</i>
+                                Payment recipient requires Memo entry!
+                            </div>
+                            <div>
+                                <span className="p-r">
+                                    <RaisedButton
+                                        onClick={this.sendPayment.bind(this)}
+                                        backgroundColor="rgb(15,46,83)"
+                                        labelColor="rgb(244,176,4)"
+                                        label="SIGN"
+                                        disabledLabelColor="#cfd8dc"
+                                        disabled={this.state.buttonSendDisabled}
+                                    />
+                                </span>
+                                <FlatButton
+                                    label="CANCEL"
+                                    disableTouchRipple={true}
+                                    disableFocusRipple={true}
+                                    labelStyle={{ color: "rgb(15,46,83)", }}
+                                    onClick={this.handleOpen.bind(this)}
+                                />
+                            </div>
+                        </div>
+                        <div className="p-b"></div>
+                    </CardActions>
+                </Card>
+            
 
       </div>
     )
