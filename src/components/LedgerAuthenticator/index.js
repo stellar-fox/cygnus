@@ -1,14 +1,15 @@
 import React, { Component } from "react"
-import "./style.css"
 import Input from "../../frontend/input/Input"
 import Checkbox from "../../frontend/checkbox/Checkbox"
 import RaisedButton from "material-ui/RaisedButton"
-import {awaitConnection, getPublicKey} from "../../lib/ledger"
+import { awaitConnection, getPublicKey } from "../../lib/ledger"
+
+import "./style.css"
+
 
 export default class LedgerAuthenticator extends Component {
-    
     // ...
-    constructor(props) {
+    constructor (props) {
         super(props)
         this.state = {
             derivationPath: "0",
@@ -19,46 +20,45 @@ export default class LedgerAuthenticator extends Component {
         }
     }
 
-
     // ...
-    async initQueryDevice() {
+    async initQueryDevice () {
         this.setState({
-            ledgerStatusMessage: "Waiting for device ..."
+            ledgerStatusMessage: "Waiting for device ...",
         })
         let bip32Path = this.formBip32Path.call(this)
         const softwareVersion = await awaitConnection().catch((error) => {
             this.setState({
-                ledgerStatusMessage: `${error.id}. ${error.message}`
+                ledgerStatusMessage: `${error.id}. ${error.message}`,
             })
         })
         if (softwareVersion) {
             this.setState({
-                ledgerStatusMessage: `Connected. Software Ver. ${softwareVersion}`
+                ledgerStatusMessage: `Connected. Software Ver. ${softwareVersion}`,
             })
             const publicKey = await getPublicKey(bip32Path).catch((error) => {
                 this.setState({
-                    ledgerStatusMessage: `${error.id}. ${error.message}`
+                    ledgerStatusMessage: `${error.id}. ${error.message}`,
                 })
             })
-            this.props.onConnected.call(
-                this, { publicKey, softwareVersion, bip32Path }
-            )
+            this.props.onConnected.call(this, {
+                publicKey,
+                softwareVersion,
+                bip32Path,
+            })
         }
     }
 
-
     // ...
-    formBip32Path() {
+    formBip32Path () {
         if (this.state.derivationPath === "") {
             return `${this.state.derivationPrefix}0'`
         } else {
             return `${this.state.derivationPrefix}${this.state.derivationPath}'`
-        } 
+        }
     }
 
-
     // ...
-    handlePathChange(event) {
+    handlePathChange (event) {
         event.persist()
         if (isNaN(event.target.value)) {
             return false
@@ -69,15 +69,14 @@ export default class LedgerAuthenticator extends Component {
         }
     }
 
-
     // ...
-    handleCheckboxClick(event) {
+    handleCheckboxClick (event) {
         event.persist()
         this.setState({
-            useDefaultAccount: event.target.checked
+            useDefaultAccount: event.target.checked,
         })
         this.setState(() => ({
-            pathEditable: !event.target.checked
+            pathEditable: !event.target.checked,
         }))
         // reset derivation path to 0
         if (event.target.checked) {
@@ -87,15 +86,14 @@ export default class LedgerAuthenticator extends Component {
         }
     }
 
-
     // ...
-    _widgetOn() {
+    _widgetOn () {
         return (
             <div className={this.props.className}>
                 <Checkbox
                     isChecked={this.state.useDefaultAccount}
                     handleChange={this.handleCheckboxClick.bind(this)}
-                    label='Use Default Account'
+                    label="Use Default Account"
                 />
                 {this.state.pathEditable ? (
                     <div>
@@ -107,7 +105,9 @@ export default class LedgerAuthenticator extends Component {
                                 autoComplete="off"
                                 value={this.state.derivationPath}
                                 handleChange={this.handlePathChange.bind(this)}
-                                subLabel={`Account Derivation Path: [${this.state.derivationPrefix}${this.state.derivationPath}']`}
+                                subLabel={`Account Derivation Path: [${
+                                    this.state.derivationPrefix
+                                }${this.state.derivationPath}']`}
                             />
                         </div>
                     </div>
@@ -118,22 +118,15 @@ export default class LedgerAuthenticator extends Component {
                         backgroundColor="rgb(244,176,4)"
                         label="Authenticate"
                     />
-                    <div className="p-b-small"></div>
-                    <div className="tiny">
-                        {this.state.ledgerStatusMessage}
-                    </div>
+                    <div className="p-b-small" />
+                    <div className="tiny">{this.state.ledgerStatusMessage}</div>
                 </div>
             </div>
         )
     }
 
-
     // ...
-    render() {
-        return (
-            <div>
-                {this._widgetOn.call(this)}
-            </div>
-        )
+    render () {
+        return <div>{this._widgetOn.call(this)}</div>
     }
 }
