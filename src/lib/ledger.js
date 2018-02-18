@@ -56,7 +56,13 @@ export const signTransaction = async (bip32Path, publicKey, transaction) => {
         hint = keyPair.signatureHint(),
         decorated = new StellarSdk.xdr.DecoratedSignature({
             hint: hint,
-            signature: signature,
+            signature: signature.signature,
+            /**
+             * signature.signature does not render "XDR Write Error: not a number"
+             * upon submission to Horizon (as opposed to using "signature" only
+             * and as stated in documentation).
+             * TODO: consult with Ledger.
+             */
         })
 
     transaction.signatures.push(decorated)
