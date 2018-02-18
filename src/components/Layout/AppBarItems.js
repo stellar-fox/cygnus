@@ -1,9 +1,7 @@
-import React, {Component} from "react"
+import React, { Component } from "react"
 import "./AppBarItems.css"
 
-
 class AppBarTitle extends Component {
-
     // ...
     render () {
         return (
@@ -20,7 +18,6 @@ class AppBarTitle extends Component {
         )
     }
 }
-
 
 // ...
 export default AppBarTitle

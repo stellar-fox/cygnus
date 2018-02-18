@@ -15,10 +15,11 @@ import {
     selectView,
 } from "../../actions/index"
 
-import AppBarTitle from "../AppBarTitle"
-import AppBarItems from "../AppBarItems"
+import AppBarTitle from "./AppBarTitle"
+import AppBarItems from "./AppBarItems"
 
 import "./Header.css"
+
 
 class Header extends Component {
     handleToggle () {
@@ -26,12 +27,12 @@ class Header extends Component {
             ? this.props.closeDrawer()
             : this.props.openDrawer()
     }
+
     handleMenuClick (view, _obj) {
         this.props.selectView(view)
-        setTimeout(() => {
-            this.props.closeDrawer()
-        }, 300)
+        setTimeout(() => this.props.closeDrawer(), 300)
     }
+
     handleLogOutClick (_state) {
         this.props.logOutOfHorizon()
         this.props.logOut()
@@ -156,26 +157,21 @@ class Header extends Component {
     }
 }
 
-function mapStateToProps (state) {
-    return {
+export default connect(
+    // mapStateToProps
+    (state) => ({
         accountInfo: state.accountInfo,
         auth: state.auth,
         nav: state.nav,
         ui: state.ui,
-    }
-}
+    }),
 
-function matchDispatchToProps (dispatch) {
-    return bindActionCreators(
-        {
-            logOutOfHorizon,
-            logOut,
-            openDrawer,
-            closeDrawer,
-            selectView,
-        },
-        dispatch
-    )
-}
-
-export default connect(mapStateToProps, matchDispatchToProps)(Header)
+    // matchDispatchToProps
+    (dispatch) => bindActionCreators({
+        logOutOfHorizon,
+        logOut,
+        openDrawer,
+        closeDrawer,
+        selectView,
+    }, dispatch)
+)(Header)
