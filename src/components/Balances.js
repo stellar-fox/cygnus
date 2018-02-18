@@ -8,7 +8,7 @@ import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 import SnackBar from "../frontend/snackbar/SnackBar"
 import axios from "axios"
-import { formatAmount } from "../lib/utils"
+import { StellarSdk, formatAmount } from "../lib/utils"
 import {config} from "../config"
 import RegisterAccount from "./RegisterAccount"
 import TextInputField from "./TextInputField"
@@ -57,6 +57,7 @@ class Balances extends Component {
     
     // ...
     constructor (props) {
+        const now = new Date()
         super(props)
         this.state = {
             sbPayment: false,
@@ -68,14 +69,16 @@ class Balances extends Component {
             currencySymbol: null,
             currencyText: null,
             payee: null,
-            memo: null,
-            payDate: new Date(),
+            minDate: now,
+            payDate: now,
             memoRequired: false,
             
             paymentDestinationValid: false,
             amountValid: false,
+            amount: 0,
             memoValid: false,
             buttonSendDisabled: true,
+            paymentCardVisible: false,
 
         }
     }
@@ -101,12 +104,6 @@ class Balances extends Component {
             this.getExchangeRate(this.props.accountInfo.currency)
         }
         this.props.setStreamer(this.paymentsStreamer.call(this))
-
-        // TEMPORARY!!
-        this.setState({
-            currencySymbol: this.getCurrencySymbol(this.props.accountInfo.currency),
-            currencyText: this.getCurrencyText(this.props.accountInfo.currency),
-        })
     }
 
 
@@ -197,10 +194,9 @@ class Balances extends Component {
     }
 
     // ...
-    updateDate (value) {
+    updateDate (_, date) {
         this.setState({
-            // payDate: utcToLocaleDateTime(value),
-            payDate: value,
+            payDate: date,
         })
     }
 
@@ -337,8 +333,83 @@ class Balances extends Component {
 
 
     // ...
+    showPaymentCard () {
+        this.setState({
+            paymentCardVisible: true,
+        })
+    }
+
+
+    // ...
+    hidePaymentCard () {
+        this.setState({
+            paymentCardVisible: false,
+        })
+    }
+
+
+    // ...
+    buildSendTransaction () {
+        StellarSdk.Network.useTestNetwork()
+        var server = new StellarSdk.Server("https://horizon-testnet.stellar.org")
+        var destinationId = this.state.payee
+        // Transaction will hold a built transaction we can resubmit if the result is unknown.
+        var transaction
+
+        // First, check to make sure that the destination account exists.
+        // You could skip this, but if the account does not exist, you will be charged
+        // the transaction fee when the transaction fails.
+        server.loadAccount(destinationId)
+            // If the account is not found, surface a nicer error message for logging.
+            .catch(StellarSdk.NotFoundError, function (_) {
+                throw new Error("The destination account does not exist!")
+            })
+            // If there was no error, load up-to-date information on your account.
+            .then(() => {
+                return server.loadAccount(this.props.accountInfo.pubKey)
+            })
+            // This function is "async" as it waits for signature from the device
+            .then(async (sourceAccount) => {
+                // Start building the transaction.
+                transaction = new StellarSdk.TransactionBuilder(sourceAccount)
+                    .addOperation(StellarSdk.Operation.payment({
+                        destination: destinationId,
+                        // Because Stellar allows transaction in many currencies, you must
+                        // specify the asset type. The special "native" asset represents Lumens.
+                        asset: StellarSdk.Asset.native(),
+                        amount: this.state.amount,
+                    }))
+                    // A memo allows you to add your own metadata to a transaction. It's
+                    // optional and does not affect how Stellar treats the transaction.
+                    .addMemo(StellarSdk.Memo.text(this.textInputFieldMemo.state.value))
+                    .build()
+                // Sign the transaction to prove you are actually the person sending it.
+                // transaction.sign(sourceKeys)
+
+                const signedTransaction = await signTransaction(
+                    this.props.accountInfo.accountPath,
+                    this.props.accountInfo.pubKey,
+                    transaction
+                )
+                
+                // And finally, send it off to Stellar!
+                return server.submitTransaction(signedTransaction)
+            })
+            .then((result) => {
+                console.log('Success! Results:', result)
+                this.setState({
+                    paymentCardVisible: false,
+                })
+                //TODO: reset all state vars
+            })
+            .catch((error) => {
+                console.error('Something went wrong!', error)
+            })
+    }
+
+    // ...
     async sendPayment () {
-        console.log("send payment")
+        this.buildSendTransaction.call(this)
         return true
     }
 
@@ -378,11 +449,18 @@ class Balances extends Component {
     // ...
     memoValidator () {
         
-        this.setState({
-            memoValid: true,
-        })
+        if (this.state.memoRequired && this.textInputFieldMemo.state.value === "") {
+            this.setState({
+                memoValid: false,
+            })
+        } else {
+            this.setState({
+                memoValid: true,
+            })
+        }
+
         this.compoundPaymentValidator.call(this)
-        // (this.state.memoRequired && this.textInputFieldMemo.state.value !== "") ? true : false
+        
         return true
     }
 
@@ -411,6 +489,7 @@ class Balances extends Component {
             // decimals present
             if (parsedValidAmount[3]) {
                 this.setState({
+                    amount: `${parsedValidAmount[1]}.${parsedValidAmount[3]}`,
                     amountEntered: true,
                     amountText: `${numberToText.convertToText(parsedValidAmount[1])} and ${parsedValidAmount[3]}/100`,
                 })
@@ -418,6 +497,7 @@ class Balances extends Component {
             // whole amount
             else {
                 this.setState({
+                    amount: `${parsedValidAmount[1]}`,
                     amountEntered: true,
                     amountText: numberToText.convertToText(parsedValidAmount[1]),
                 })
@@ -709,7 +789,7 @@ class Balances extends Component {
                     backgroundColor="rgb(15,46,83)"
                     labelColor="#d32f2f"
                     label="Send"
-                    onClick={this.showPaymentModal.bind(this)}
+                    onClick={this.showPaymentCard.bind(this)}
                   />
                 }
               </CardActions>
@@ -770,15 +850,30 @@ class Balances extends Component {
           </Card>
         )}
 
-            
+            {this.state.paymentCardVisible && (
                 <Card className="payment-card">
                     <CardText>
-                        <div className="f-e">
-                            
+                        <div className="f-e space-between">
+                            <div>
+                                <div>
+                                    <img
+                                        style={{
+                                            opacity: "0.2",
+                                        }}
+                                        src="/img/sf.svg"
+                                        width="140px"
+                                        alt="Stellar Fox"
+                                    />
+                                </div>
+                                
+                            </div>
                             <DatePicker
                                 className="date-picker"
-                                defaultDate={this.state.payDate}
+                                defaultDate={this.state.minDate}
                                 floatingLabelText="Date"
+                                minDate={this.state.minDate}
+                                underlineShow={true}
+                                onChange={this.updateDate.bind(this)}
                             />
                         </div>
                         <div className="f-s space-between">
@@ -825,7 +920,7 @@ class Balances extends Component {
 
                         <div className="f-s space-between verbatim-underlined">
                             <div>
-                                {this.state.amountEntered && this.state.amountText}
+                                {(this.state.amountEntered && this.state.amountText) ? (this.state.amountEntered && this.state.amountText) : <span className="transparent">NOTHING</span>}
                             </div>
                             <div>{this.state.currencyText}</div>
                         </div>
@@ -835,11 +930,16 @@ class Balances extends Component {
                                 <i className="material-icons">lock</i>
                             </div>
                             <div className="micro nowrap">
-                                Security Features
+                                <span>Security Features</span><br/>
+                                {this.state.payee ? (
+                                    <span className="green">Recipient Verified</span>
+                                ) : (
+                                    <span className="fade-extreme">Recipient Verified</span>
+                                )}
                             </div>
 
                         </div>
-                        <div className="p-b p-t"></div>
+                        <div className="p-b"></div>
                         <div className="f-s space-between">
                             <div>
                                 <span className="payment-header">
@@ -860,10 +960,17 @@ class Balances extends Component {
                     </CardText>
                     <CardActions>
                         <div className="f-e space-between">
-                            <div className='faded p-l nowrap'>
-                                <i className="material-icons md-icon-small">info_outline</i>
-                                Payment recipient requires Memo entry!
-                            </div>
+                            {this.state.memoRequired ? 
+                                (<div className='fade p-l nowrap red'>
+                                    <i className="material-icons md-icon-small">assignment_late</i>
+                                    Payment recipient requires Memo entry!
+                                </div>) : (
+                                    <div className="p-l nowrap fade-extreme">
+                                        <span className="bigger">
+                                            &#x1D54A;&#x1D543; {this.props.accountInfo.account.account.sequence}
+                                        </span>
+                                    </div>
+                                )}
                             <div>
                                 <span className="p-r">
                                     <RaisedButton
@@ -879,15 +986,14 @@ class Balances extends Component {
                                     label="CANCEL"
                                     disableTouchRipple={true}
                                     disableFocusRipple={true}
-                                    labelStyle={{ color: "rgb(15,46,83)", }}
-                                    onClick={this.handleOpen.bind(this)}
+                                    onClick={this.hidePaymentCard.bind(this)}
                                 />
                             </div>
                         </div>
                         <div className="p-b"></div>
                     </CardActions>
                 </Card>
-            
+            )}
 
       </div>
     )

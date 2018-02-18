@@ -170,3 +170,31 @@
   font-size: 11px;
   color: rgba(15,46,83,0.7);
 }
+
+.date-picker {
+  border-bottom: 1px solid rgba(15,46,83,0.4);
+}
+
+.green {
+  color: #1b5e20;
+}
+
+.red {
+  color: #d32f2f;
+}
+
+.fade {
+  opacity: 0.8;
+}
+
+.fade-extreme {
+  opacity: 0.3;
+}
+
+.transparent {
+  opacity: 0;
+}
+
+.bigger {
+  font-size: 1.3rem;
+}
