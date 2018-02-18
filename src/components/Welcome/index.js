@@ -129,11 +129,8 @@ class Welcome extends Component {
             axios
                 .get(`${config.api}/find/publickey/${pubKey}`)
                 .then((response) => {
-                    if (parseInt(response.data.data.count, 10) === 0) {
-                        this.props.setAccountRegistered(false)
-                    } else {
-                        this.props.setAccountRegistered(true)
-                    }
+                    this.props.setAccountPath(`44'/148'/${response.data.data.path}'`)
+                    this.props.setAccountRegistered(true)
                 })
                 .catch((error) => {
                     console.log(error) // eslint-disable-line no-console
@@ -186,7 +183,7 @@ class Welcome extends Component {
                         userId: response.data.user_id,
                         token: response.data.token,
                     })
-                    this.logInViaPublicKey(response.data.pubkey)
+                    this.logInViaPublicKey(response.data.pubkey, false)
                 })
                 .catch((error) => {
                     if (error.response.status === 401) {
@@ -227,6 +224,12 @@ class Welcome extends Component {
                             })
                             .catch((error) => {
                                 this.props.setModalLoaded()
+                                if (error.response.status === 404) {
+                                    this.textInputFieldFederationAddress.setState({
+                                        error: "Account not found.",
+                                    })
+                                    return false
+                                }
                                 if (error.response.data.detail) {
                                     this.textInputFieldFederationAddress.setState({
                                         error: error.response.data.detail,
@@ -237,15 +240,13 @@ class Welcome extends Component {
                                     })
                                 }
                             })
-                    } else {
-                        this.props.setModalLoaded()
-                        this.textInputFieldFederationAddress.setState({
-                            error: federationEndpointObj.error,
-                        })
                     }
                 })
                 .catch((error) => {
-                    console.log(error) // eslint-disable-line no-console
+                    this.props.setModalLoaded()
+                    this.textInputFieldFederationAddress.setState({
+                        error: error.message,
+                    })
                 })
         } else {
             this.logInViaPublicKey(textInputValue)
@@ -253,27 +254,41 @@ class Welcome extends Component {
 
     }
 
+
     // ...
     emailValidator (email) {
-        return !emailValid(email) ? "invalid email" : null
+        return !emailValid(email) && "INVALID EMAIL"
     }
+
 
     // ...
     passwordValidator (password) {
-        return !passwordValid(password) ? "invalid password" : null
+        return !passwordValid(password) && "INVALID PASSWORD"
     }
+
 
     // ...
     compoundLoginValidator () {
-        const emailValidity = this.emailValidator(
+        const emailNotValid = this.emailValidator(
             this.textInputFieldEmail.state.value
         )
-        const passwordValidity = this.passwordValidator(
+        const passwordNotValid = this.passwordValidator(
             this.textInputFieldPassword.state.value
         )
-        if (emailValidity === null && passwordValidity === null) {
-            return this.authenticateUser.call(this)
+        if (emailNotValid) {
+            this.textInputFieldEmail.setState({
+                error: "invalid email",
+            })
+            return false
         }
+        if (passwordNotValid) {
+            this.textInputFieldPassword.setState({
+                error: "invalid password",
+            })
+            return false
+        }
+        return this.authenticateUser.call(this)
+        
     }
 
     // ...
@@ -299,11 +314,17 @@ class Welcome extends Component {
 
     // ...
     compoundFederationValidator () {
+
         const addressValidity = this.federationValidator(
             this.textInputFieldFederationAddress.state.value
         )
+
         if (addressValidity === null) {
             return this.enterExplorer.call(this)
+        } else {
+            this.textInputFieldFederationAddress.setState({
+                error: addressValidity,
+            })
         }
     }
 

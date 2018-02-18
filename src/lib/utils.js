@@ -114,3 +114,13 @@ export const pubKeyValid = (pubKey) => {
     }
     return validity
 }
+
+
+// ...
+export const extractPathIndex = (path) => {
+    const pathIndex = path.match(/\/(\d{1,})'$/)
+    if (pathIndex) {
+        return pathIndex[1]
+    }
+    return null
+}

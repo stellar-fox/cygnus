@@ -10,7 +10,7 @@ import {
 import LinearProgress from "material-ui/LinearProgress"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
-import { emailValid, passwordValid, passwordsMatch } from "../../lib/utils"
+import { emailValid, passwordValid, passwordsMatch, extractPathIndex } from "../../lib/utils"
 import TextInputField from "../TextInputField"
 import axios from "axios"
 import { config } from "../../config"
@@ -109,7 +109,7 @@ class NewAccount extends Component {
         if (userId) {
             const accountId = await axios
                 .post(
-                    `${config.api}/account/create/${userId}/${this.props.accountInfo.pubKey}`
+                    `${config.api}/account/create/${userId}/${this.props.accountInfo.pubKey}?path=${extractPathIndex(this.props.accountInfo.accountPath)}`
                 )
                 .then((response) => {
                     return response.data.account_id
