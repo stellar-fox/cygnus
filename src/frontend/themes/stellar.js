@@ -8,6 +8,15 @@ const stellarTheme = getMuiTheme({
     raisedButton: {
         disabledColor: "rgba(15, 46, 83, 0.5)",
     },
+    datePicker: {
+        selectColor: "rgb(15,46,83)",
+        selectTextColor: "rgb(244,176,4)",
+        headerColor: "rgb(15,46,83)",
+        textColor: "rgb(244,176,4)",
+    },
+    flatButton: {
+        primaryTextColor: "rgb(15,46,83)",
+    },
 
 })
 
