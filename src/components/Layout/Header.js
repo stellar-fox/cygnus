@@ -157,26 +157,21 @@ class Header extends Component {
     }
 }
 
-function mapStateToProps (state) {
-    return {
+export default connect(
+    // mapStateToProps
+    (state) => ({
         accountInfo: state.accountInfo,
         auth: state.auth,
         nav: state.nav,
         ui: state.ui,
-    }
-}
+    }),
 
-function matchDispatchToProps (dispatch) {
-    return bindActionCreators(
-        {
-            logOutOfHorizon,
-            logOut,
-            openDrawer,
-            closeDrawer,
-            selectView,
-        },
-        dispatch
-    )
-}
-
-export default connect(mapStateToProps, matchDispatchToProps)(Header)
+    // matchDispatchToProps
+    (dispatch) => bindActionCreators({
+        logOutOfHorizon,
+        logOut,
+        openDrawer,
+        closeDrawer,
+        selectView,
+    }, dispatch)
+)(Header)
