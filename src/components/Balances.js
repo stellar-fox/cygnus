@@ -65,14 +65,14 @@ class Balances extends Component {
             sbPaymentAssetCode: null,
             modalShown: false,
             modalButtonText: "CANCEL",
-            amountEntered: false,
             currencySymbol: null,
             currencyText: null,
-            payee: null,
             minDate: now,
             payDate: now,
+            // the following are resetable
+            amountEntered: false,
+            payee: null,
             memoRequired: false,
-            
             paymentDestinationValid: false,
             amountValid: false,
             amount: 0,
@@ -102,6 +102,10 @@ class Balances extends Component {
                 })
         } else {
             this.getExchangeRate(this.props.accountInfo.currency)
+            this.setState({
+                currencySymbol: this.getCurrencySymbol(this.props.accountInfo.currency),
+                currencyText: this.getCurrencyText(this.props.accountInfo.currency),
+            })
         }
         this.props.setStreamer(this.paymentsStreamer.call(this))
     }
@@ -398,6 +402,14 @@ class Balances extends Component {
             .then((result) => {
                 console.log('Success! Results:', result)
                 this.setState({
+                    amountEntered: false,
+                    payee: null,
+                    memoRequired: false,
+                    paymentDestinationValid: false,
+                    amountValid: false,
+                    amount: 0,
+                    memoValid: false,
+                    buttonSendDisabled: true,
                     paymentCardVisible: false,
                 })
                 //TODO: reset all state vars
@@ -784,13 +796,13 @@ class Balances extends Component {
                   label="Request"
                   onClick={this.handleOpen.bind(this)}
                 />
-                {this.props.auth.isReadOnly ? null :
-                  <RaisedButton
+                {!this.props.auth.isReadOnly ? 
+                  (<RaisedButton
                     backgroundColor="rgb(15,46,83)"
                     labelColor="#d32f2f"
-                    label="Send"
+                    label="Pay"
                     onClick={this.showPaymentCard.bind(this)}
-                  />
+                  />) : null
                 }
               </CardActions>
               <CardText expandable={true}>
