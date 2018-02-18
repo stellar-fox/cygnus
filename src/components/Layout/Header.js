@@ -15,10 +15,11 @@ import {
     selectView,
 } from "../../actions/index"
 
-import AppBarTitle from "../AppBarTitle"
-import AppBarItems from "../AppBarItems"
+import AppBarTitle from "./AppBarTitle"
+import AppBarItems from "./AppBarItems"
 
 import "./Header.css"
+
 
 class Header extends Component {
     handleToggle () {
@@ -26,12 +27,12 @@ class Header extends Component {
             ? this.props.closeDrawer()
             : this.props.openDrawer()
     }
+
     handleMenuClick (view, _obj) {
         this.props.selectView(view)
-        setTimeout(() => {
-            this.props.closeDrawer()
-        }, 300)
+        setTimeout(() => this.props.closeDrawer(), 300)
     }
+
     handleLogOutClick (_state) {
         this.props.logOutOfHorizon()
         this.props.logOut()
