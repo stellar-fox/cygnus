@@ -3,7 +3,7 @@ import toml from "toml"
 
 
 // TODO: convert-to/use-as module
-const StellarSdk = window.StellarSdk
+export const StellarSdk = window.StellarSdk
 
 
 // ...
