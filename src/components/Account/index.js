@@ -2,27 +2,28 @@ import React, {Component} from 'react'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import Input from '../frontend/input/Input'
-import SnackBar from '../frontend/snackbar/SnackBar'
+import Input from '../../frontend/input/Input'
+import SnackBar from '../../frontend/snackbar/SnackBar'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 import Dialog from 'material-ui/Dialog'
 import Toggle from 'material-ui/Toggle'
-import MD5 from '../lib/md5'
-import {federationIsAliasOnly} from '../lib/utils'
-import {emailValid} from '../lib/utils'
-import {config} from '../config'
+import MD5 from '../../lib/md5'
+import {federationIsAliasOnly} from '../../lib/utils'
+import {emailValid} from '../../lib/utils'
+import {config} from '../../config'
 import axios from 'axios'
-import RegisterAccount from './RegisterAccount'
-import './Account.css'
+import RegisterAccount from '../RegisterAccount'
 import {
   showAlert,
   hideAlert,
   setCurrency,
   setCurrencyPrecision,
   setTab,
-} from '../actions/index'
+} from '../../actions/index'
+
+import './style.css'
 
 const styles = {
   headline: {
