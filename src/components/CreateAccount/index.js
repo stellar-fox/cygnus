@@ -8,7 +8,7 @@ import {
 import LinearProgress from "material-ui/LinearProgress"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
-import {emailValid, passwordValid, passwordsMatch} from "../../lib/utils"
+import {emailValid, passwordValid, passwordsMatch, extractPathIndex} from "../../lib/utils"
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
 import axios from "axios"
@@ -72,7 +72,7 @@ export default class NewAccount extends Component {
 
     // ...
     async createAccount (ledgerData) {
-        
+
         await new Promise((res, _) => {
             this.setState({
                 completed: 33,
@@ -95,7 +95,7 @@ export default class NewAccount extends Component {
                 console.log(error) // eslint-disable-line no-console
                 return null
             })
-        
+
         await new Promise((res, _) => {
             this.setState({
                 completed: 66,
@@ -107,7 +107,7 @@ export default class NewAccount extends Component {
         if (userId) {
             const accountId = await axios
                 .post(
-                    `${config.api}/account/create/${userId}/${ledgerData.publicKey}`
+                    `${config.api}/account/create/${userId}/${ledgerData.publicKey}?path=${extractPathIndex(ledgerData.bip32Path)}`
                 )
                 .then((response) => {
                     return response.data.account_id
@@ -119,7 +119,7 @@ export default class NewAccount extends Component {
                     console.log(error) // eslint-disable-line no-console
                     return null
                 })
-            
+
             if (accountId) {
                 this.setState({
                     accountCreated: true,
@@ -135,9 +135,9 @@ export default class NewAccount extends Component {
             })
             setTimeout(res, 500)
         })
-        
+
         this.handleNext.call(this)
-        
+
     }
 
 
@@ -159,18 +159,18 @@ export default class NewAccount extends Component {
                         style={{ marginRight: 12, }}
                     />
                 )}
-                
+
                 {step === 1 && (
                     <div>
                         <div className="dark">
-                            
+
                             <div className="emphasize-light-success">
                                 {this.state.email}
                             </div>
                             <div className="small">
                                 will be associated with your Ledger device.
                             </div>
-                            
+
                             <div className="p-t small">
                                 While your device is connected,
                                 choose Stellar wallet,
@@ -197,8 +197,7 @@ export default class NewAccount extends Component {
                             label="OPT OUT"
                             disableTouchRipple={true}
                             disableFocusRipple={true}
-                            // onClick={this.handleOptOut.bind(this)}
-                            onClick={this.createAccount.bind(this)}
+                            onClick={this.handleOptOut.bind(this)}
                             labelStyle={{ color: "rgb(244,176,4)", }}
                             style={{
                                 marginRight: 12,
@@ -274,7 +273,7 @@ export default class NewAccount extends Component {
             })
             proceed = false
         }
-        
+
         if (proceed) {
             this.setState({
                 email: this.textInputFieldEmail.state.value,
