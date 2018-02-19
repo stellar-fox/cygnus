@@ -4,23 +4,31 @@
  * is saved in index.js.
 */
 
-export const loadState = () => {
-    try {
-        const serializedState = sessionStorage.getItem("SFOX.APP_STATE")
-        if (serializedState === null) {
-            return undefined
-        }
-        return JSON.parse(serializedState)
-    } catch (_) {
-        return undefined
-    }
-}
+import {
+    handleException,
+    nullToUndefined,
+} from "./utils"
 
-export const saveState = (state) => {
-    try {
-        const serializedState = JSON.stringify(state)
-        sessionStorage.setItem("SFOX.APP_STATE", serializedState)
-    } catch (_) {
-        console.log("Could not save application state.") // eslint-disable-line no-console
-    }
-}
+
+// ...
+const ssAppStateKey = "SFOX.APP_STATE"
+
+
+// ...
+export const loadState = () =>
+    handleException(
+        () => nullToUndefined(
+            JSON.parse(sessionStorage.getItem(ssAppStateKey))
+        ),
+        // eslint-disable-next-line no-console
+        (ex) => nullToUndefined(console.log(ex))
+    )
+
+
+// ...
+export const saveState = (state) =>
+    handleException(
+        () => sessionStorage.setItem(ssAppStateKey, JSON.stringify(state)),
+        // eslint-disable-next-line no-console
+        console.log
+    )
