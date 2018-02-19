@@ -122,7 +122,7 @@ export const extractPathIndex = (path) => handleException(
 // ...
 export const handleException = (fn, handler) => {
     try { return fn() }
-    catch (ex) { return handler ? handler(ex) : undefined }
+    catch (ex) { return typeof handler === "function" ? handler(ex) : ex }
 }
 
 
