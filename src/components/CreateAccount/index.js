@@ -8,7 +8,7 @@ import {
 import LinearProgress from "material-ui/LinearProgress"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
-import {emailValid, passwordValid, passwordsMatch, extractPathIndex} from "../../lib/utils"
+import {emailValid, passwordValid, extractPathIndex} from "../../lib/utils"
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
 import axios from "axios"
@@ -267,7 +267,7 @@ export default class NewAccount extends Component {
             proceed = false
         }
 
-        if (!passwordsMatch(this.textInputFieldPassword.state.value, this.textInputFieldPasswordConf.state.value)) {
+        if (this.textInputFieldPassword.state.value !== this.textInputFieldPasswordConf.state.value) {
             this.textInputFieldPasswordConf.setState({
                 error: "password mismatch",
             })

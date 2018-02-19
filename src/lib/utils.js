@@ -49,10 +49,6 @@ export const passwordValid = (password) => !!/^.{8,}$/.test(password)
 
 
 // ...
-export const passwordsMatch = (pass1, pass2) => pass1 === pass2
-
-
-// ...
 export const federationIsAliasOnly = (federationAddress) =>
     !!/^[a-zA-Z\-0-9.@][^*]+$/.test(federationAddress)
 
