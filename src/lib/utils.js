@@ -116,14 +116,11 @@ export const pubKeyValid = (pubKey) => {
 }
 
 
-// ...
-export const extractPathIndex = (path) => {
-    const pathIndex = path.match(/\/(\d{1,})'$/)
-    if (pathIndex) {
-        return pathIndex[1]
-    }
-    return null
-}
+// extracts Z from "XX'/YYY'/Z'"
+export const extractPathIndex = (path) => handleException(
+    () => path.match(/\/(\d{1,})'$/)[1],
+    (_) => { throw new Error("Path index cannot be found.") }
+)
 
 
 // ...
