@@ -52,6 +52,9 @@ const styles = {
     },
 }
 
+StellarSdk.Network.useTestNetwork()
+const server = new StellarSdk.Server(config.horizon)
+
 
 class Balances extends Component {
     
@@ -73,13 +76,12 @@ class Balances extends Component {
             amountEntered: false,
             payee: null,
             memoRequired: false,
-            paymentDestinationValid: false,
             amountValid: false,
             amount: 0,
             memoValid: false,
             buttonSendDisabled: true,
             paymentCardVisible: false,
-
+            newAccount: false,
         }
     }
 
@@ -353,70 +355,128 @@ class Balances extends Component {
 
 
     // ...
+    queryStellarAccount (pubKey) {
+        return server.loadAccount(pubKey)
+            .catch(StellarSdk.NotFoundError, (_) => {
+                throw new Error("The destination account does not exist!")
+            })
+            .then((account) => {
+                return this.getNativeBalance(account)
+            })
+    }
+
+
+    // ...
     buildSendTransaction () {
-        StellarSdk.Network.useTestNetwork()
-        var server = new StellarSdk.Server("https://horizon-testnet.stellar.org")
+        // StellarSdk.Network.useTestNetwork()
+        // var server = new StellarSdk.Server("https://horizon-testnet.stellar.org")
         var destinationId = this.state.payee
         // Transaction will hold a built transaction we can resubmit if the result is unknown.
         var transaction
 
-        // First, check to make sure that the destination account exists.
-        // You could skip this, but if the account does not exist, you will be charged
-        // the transaction fee when the transaction fails.
-        server.loadAccount(destinationId)
-            // If the account is not found, surface a nicer error message for logging.
-            .catch(StellarSdk.NotFoundError, function (_) {
-                throw new Error("The destination account does not exist!")
-            })
-            // If there was no error, load up-to-date information on your account.
-            .then(() => {
-                return server.loadAccount(this.props.accountInfo.pubKey)
-            })
+        if (this.state.newAccount) {
+            
             // This function is "async" as it waits for signature from the device
-            .then(async (sourceAccount) => {
-                // Start building the transaction.
-                transaction = new StellarSdk.TransactionBuilder(sourceAccount)
-                    .addOperation(StellarSdk.Operation.payment({
-                        destination: destinationId,
-                        // Because Stellar allows transaction in many currencies, you must
-                        // specify the asset type. The special "native" asset represents Lumens.
-                        asset: StellarSdk.Asset.native(),
-                        amount: this.state.amount,
-                    }))
-                    // A memo allows you to add your own metadata to a transaction. It's
-                    // optional and does not affect how Stellar treats the transaction.
-                    .addMemo(StellarSdk.Memo.text(this.textInputFieldMemo.state.value))
-                    .build()
-                // Sign the transaction to prove you are actually the person sending it.
-                // transaction.sign(sourceKeys)
+            server.loadAccount(this.props.accountInfo.pubKey)
+                .then(async (sourceAccount) => {
+                    // Start building the transaction.
+                    transaction = new StellarSdk.TransactionBuilder(sourceAccount)
+                        .addOperation(StellarSdk.Operation.createAccount({
+                            destination: this.state.payee,
+                            startingBalance: this.state.amount,  // in XLM
+                        }))
+                        .build()
 
-                const signedTransaction = await signTransaction(
-                    this.props.accountInfo.accountPath,
-                    this.props.accountInfo.pubKey,
-                    transaction
-                )
-                
-                // And finally, send it off to Stellar!
-                return server.submitTransaction(signedTransaction)
-            })
-            .then((result) => {
-                console.log('Success! Results:', result)
-                this.setState({
-                    amountEntered: false,
-                    payee: null,
-                    memoRequired: false,
-                    paymentDestinationValid: false,
-                    amountValid: false,
-                    amount: 0,
-                    memoValid: false,
-                    buttonSendDisabled: true,
-                    paymentCardVisible: false,
+                    // Sign the transaction to prove you are actually the person sending it.
+                    // transaction.sign(sourceKeys)
+
+                    const signedTransaction = await signTransaction(
+                        this.props.accountInfo.accountPath,
+                        this.props.accountInfo.pubKey,
+                        transaction
+                    )
+
+                    // And finally, send it off to Stellar!
+                    return server.submitTransaction(signedTransaction)
                 })
-                //TODO: reset all state vars
-            })
-            .catch((error) => {
-                console.error('Something went wrong!', error)
-            })
+                .then((result) => {
+                    console.log('Success! Results:', result)
+                    this.setState({
+                        amountEntered: false,
+                        payee: null,
+                        memoRequired: false,
+                        amountValid: false,
+                        amount: 0,
+                        memoValid: false,
+                        buttonSendDisabled: true,
+                        paymentCardVisible: false,
+                        newAccount: false,
+                    })
+                    //TODO: reset all state vars
+                })
+                .catch((error) => {
+                    console.error('Something went wrong!', error)
+                })
+        } else {
+
+            // First, check to make sure that the destination account exists.
+            // You could skip this, but if the account does not exist, you will be charged
+            // the transaction fee when the transaction fails.
+            server.loadAccount(destinationId)
+                // If the account is not found, surface a nicer error message for logging.
+                .catch(StellarSdk.NotFoundError, (_) => {
+                    throw new Error("The destination account does not exist!")
+                })
+                // If there was no error, load up-to-date information on your account.
+                .then(() => {
+                    return server.loadAccount(this.props.accountInfo.pubKey)
+                })
+                // This function is "async" as it waits for signature from the device
+                .then(async (sourceAccount) => {
+                    // Start building the transaction.
+                    transaction = new StellarSdk.TransactionBuilder(sourceAccount)
+                        .addOperation(StellarSdk.Operation.payment({
+                            destination: destinationId,
+                            // Because Stellar allows transaction in many currencies, you must
+                            // specify the asset type. The special "native" asset represents Lumens.
+                            asset: StellarSdk.Asset.native(),
+                            amount: this.state.amount,
+                        }))
+                        // A memo allows you to add your own metadata to a transaction. It's
+                        // optional and does not affect how Stellar treats the transaction.
+                        .addMemo(StellarSdk.Memo.text(this.textInputFieldMemo.state.value))
+                        .build()
+                    // Sign the transaction to prove you are actually the person sending it.
+                    // transaction.sign(sourceKeys)
+
+                    const signedTransaction = await signTransaction(
+                        this.props.accountInfo.accountPath,
+                        this.props.accountInfo.pubKey,
+                        transaction
+                    )
+                    
+                    // And finally, send it off to Stellar!
+                    return server.submitTransaction(signedTransaction)
+                })
+                .then((result) => {
+                    console.log('Success! Results:', result)
+                    this.setState({
+                        amountEntered: false,
+                        payee: null,
+                        memoRequired: false,
+                        amountValid: false,
+                        amount: 0,
+                        memoValid: false,
+                        buttonSendDisabled: true,
+                        paymentCardVisible: false,
+                        newAccount: false,
+                    })
+                    //TODO: reset all state vars
+                })
+                .catch((error) => {
+                    console.error('Something went wrong!', error)
+                })
+        }
     }
 
     // ...
@@ -579,10 +639,25 @@ class Balances extends Component {
                             axios
                                 .get(`${federationEndpointObj.endpoint}?q=${this.textInputFieldFederationAddress.state.value}&type=name`)
                                 .then((response) => {
-                                    this.setState({
-                                        payee: response.data.account_id,
-                                    })
-                                    this.compoundPaymentValidator.call(this)
+                                    this.queryStellarAccount(response.data.account_id)
+                                        .catch((_) => {
+                                            this.setState({
+                                                payee: response.data.account_id,
+                                                newAccount: true,
+                                            })
+                                            this.compoundPaymentValidator.call(this)
+                                            throw new Error("The destination account does not exist!")
+                                        })
+                                        .then((_) => {
+                                            this.setState({
+                                                payee: response.data.account_id,
+                                                newAccount: false,
+                                            })
+                                            this.compoundPaymentValidator.call(this)
+                                        })
+                                        .catch((error) => {
+                                            console.log(error.message)
+                                        })
                                 })
                                 .catch((error) => {
                                     this.setState({
@@ -612,6 +687,7 @@ class Balances extends Component {
                     .catch((error) => {
                         this.setState({
                             payee: null,
+                            newAccount: false,
                         })
                         this.compoundPaymentValidator.call(this)
                         this.textInputFieldFederationAddress.setState({
@@ -623,13 +699,52 @@ class Balances extends Component {
 
             // valid public key
             else {
-                console.log("it's a public key")
+                this.queryStellarAccount(this.textInputFieldFederationAddress.state.value)
+                    .catch((_) => {
+                        this.setState({
+                            payee: this.textInputFieldFederationAddress.state.value,
+                            newAccount: true,
+                        })
+                        this.compoundPaymentValidator.call(this)
+                        throw new Error("The destination account does not exist!")
+                    })
+                    .then((_) => {
+                        this.setState({
+                            payee: this.textInputFieldFederationAddress.state.value,
+                            newAccount : false,
+                        })
+                        this.compoundPaymentValidator.call(this)
+                    })
+                    .catch((error) => {
+                        console.log(error.message) // eslint-disable-line no-console
+                    })
             }
             
-            
+        } else {
+            this.setState({
+                newAccount: false,
+                payee: null,
+            })
         }
     }
     
+
+    // ...
+    recipientIndicatorMessage () {
+        let message = <span className="fade-extreme">XXXXXXXXXXXX</span>
+
+        if (this.state.payee) {
+            message = <span className="green">Recipient Verified</span>
+        }
+
+        if (this.state.newAccount) {
+            message = <span className="red">New Account</span>
+        }
+
+        return message
+    }
+
+
     // ...
     render () {
 
@@ -943,11 +1058,8 @@ class Balances extends Component {
                             </div>
                             <div className="micro nowrap">
                                 <span>Security Features</span><br/>
-                                {this.state.payee ? (
-                                    <span className="green">Recipient Verified</span>
-                                ) : (
-                                    <span className="fade-extreme">Recipient Verified</span>
-                                )}
+                                {this.recipientIndicatorMessage.call(this)}
+                                
                             </div>
 
                         </div>
