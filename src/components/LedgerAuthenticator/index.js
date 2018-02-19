@@ -17,6 +17,7 @@ export default class LedgerAuthenticator extends Component {
             pathEditable: false,
             useDefaultAccount: true,
             ledgerStatusMessage: "",
+            errorCode: null,
         }
     }
 
@@ -29,6 +30,7 @@ export default class LedgerAuthenticator extends Component {
         const softwareVersion = await awaitConnection().catch((error) => {
             this.setState({
                 ledgerStatusMessage: `${error.id}. ${error.message}`,
+                errorCode: error.originalError.metaData.code,
             })
         })
         if (softwareVersion) {
@@ -37,15 +39,30 @@ export default class LedgerAuthenticator extends Component {
             })
             const publicKey = await getPublicKey(bip32Path).catch((error) => {
                 this.setState({
-                    ledgerStatusMessage: `${error.id}. ${error.message}`,
+                    ledgerStatusMessage: this.errorCodeToUserMessage(error.statusCode),
+                    errorCode: error.statusCode,
                 })
             })
             this.props.onConnected.call(this, {
                 publicKey,
                 softwareVersion,
                 bip32Path,
+                errorCode: this.state.errorCode,
             })
         }
+    }
+
+    // ...
+    errorCodeToUserMessage (code) {
+        let message = ""
+        switch (code) {
+            case 26625:
+                message = "Ledger is autolocked."
+                break
+            default:
+                break
+        }
+        return message
     }
 
     // ...

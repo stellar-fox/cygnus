@@ -82,6 +82,10 @@ class Welcome extends Component {
 
     // ...
     logInViaLedger (ledgerParams) {
+        // TODO: fix this with Ledger API
+        if (ledgerParams.errorCode !== null) {
+            return
+        }
         this.props.setAccountPath(ledgerParams.bip32Path)
         this.props.setLedgerSoftwareVersion(ledgerParams.softwareVersion)
         this.logInViaPublicKey(ledgerParams.publicKey, false)
