@@ -124,3 +124,15 @@ export const extractPathIndex = (path) => {
     }
     return null
 }
+
+
+// ...
+export const handleException = (fn, handler) => {
+    try { return fn() }
+    catch (ex) { return handler ? handler(ex) : undefined }
+}
+
+
+// ...
+export const nullToUndefined = (val) =>
+    val === null ? undefined : val
