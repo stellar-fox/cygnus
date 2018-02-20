@@ -1,7 +1,7 @@
 .pretty.p-default input:checked ~ .state label::after {
-	background-color: rgb(244,176,4) !important;
+    background-color: rgb(244,176,4) !important;
 }
 
 .pretty .state label::before {
-	border-color: rgb(244,176,4);
+    border-color: rgb(244,176,4);
 }
