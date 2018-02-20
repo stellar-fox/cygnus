@@ -1,16 +1,19 @@
-import React, {Component} from "react"
-import "./Balances.css"
-import {connect} from "react-redux"
-import {bindActionCreators} from "redux"
-import {Card, CardActions, CardHeader, CardText} from "material-ui/Card"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import {
+    Card,
+    CardActions,
+    CardHeader,
+    CardText,
+} from "material-ui/Card"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 import SnackBar from "../frontend/snackbar/SnackBar"
 import axios from "axios"
-import { StellarSdk, formatAmount, pubKeyAbbr } from "../lib/utils"
-import {config} from "../config"
-import RegisterAccount from "./RegisterAccount"
+import { config } from "../config"
+import RegisterAccount from "./Account/Register"
 import TextInputField from "./TextInputField"
 import { signTransaction } from "../lib/ledger"
 import DatePicker from "material-ui/DatePicker"
@@ -18,6 +21,9 @@ import {
     pubKeyValid,
     federationAddressValid,
     federationLookup,
+    StellarSdk,
+    formatAmount,
+    pubKeyAbbr,
 } from "../lib/utils"
 import {
     setExchangeRate,
@@ -32,6 +38,8 @@ import {
 import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
 import "number-to-text/converters/en-us"
+
+import "./Balances.css"
 
 const styles = {
     errorStyle: {
@@ -57,7 +65,7 @@ const server = new StellarSdk.Server(config.horizon)
 
 
 class Balances extends Component {
-    
+
     // ...
     constructor (props) {
         const now = new Date()
@@ -145,10 +153,10 @@ class Balances extends Component {
         }
         return text
     }
-    
+
     // ...
     paymentsStreamer () {
-        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         return server.payments().cursor("now").stream({
             onmessage: (message) => {
 
@@ -165,7 +173,7 @@ class Balances extends Component {
                         sbPaymentAssetCode: "XLM",
                     })
                 }
-                
+
                 /*
                 * Initial funding of own account.
                 */
@@ -224,9 +232,9 @@ class Balances extends Component {
 
     // ...
     updateAccount () {
-        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server.loadAccount(this.props.accountInfo.pubKey)
-            .catch(window.StellarSdk.NotFoundError, (_) => {
+            .catch(StellarSdk.NotFoundError, (_) => {
                 throw new Error("The destination account does not exist!")
             })
             .then((account) => {
@@ -391,7 +399,7 @@ class Balances extends Component {
         var transaction
 
         if (this.state.newAccount) {
-            
+
             // This function is "async" as it waits for signature from the device
             server.loadAccount(this.props.accountInfo.pubKey)
                 .then(async (sourceAccount) => {
@@ -470,7 +478,7 @@ class Balances extends Component {
                         this.props.accountInfo.pubKey,
                         transaction
                     )
-                    
+
                     // And finally, send it off to Stellar!
                     return server.submitTransaction(signedTransaction)
                 })
@@ -539,14 +547,14 @@ class Balances extends Component {
             buttonSendDisabled: false,
             minimumReserveMessage: "",
         })
-        
+
         return true
     }
 
 
     // ...
     memoValidator () {
-        
+
         if (this.state.memoRequired && this.textInputFieldMemo.state.value === "") {
             this.setState({
                 memoValid: false,
@@ -558,7 +566,7 @@ class Balances extends Component {
         }
 
         this.compoundPaymentValidator.call(this)
-        
+
         return true
     }
 
@@ -581,7 +589,7 @@ class Balances extends Component {
         let parsedValidAmount = this.textInputFieldAmount.state.value.match(
             /^(\d+)([.,](\d{1,2}))?$/
         )
-        
+
         // check if amount typed is valid
         if (parsedValidAmount) {
             // decimals present
@@ -606,7 +614,7 @@ class Balances extends Component {
             this.compoundPaymentValidator.call(this)
             return null
         }
-        
+
         // invalid amount was typed in
         else {
             this.setState({
@@ -618,7 +626,7 @@ class Balances extends Component {
             this.compoundPaymentValidator.call(this)
             return "invalid amount entered"
         }
-        
+
     }
 
 
@@ -656,7 +664,7 @@ class Balances extends Component {
             this.textInputFieldFederationAddress.state.value
         )
         if (addressValidity === null) {
-            
+
             // valid federation address
             if (this.textInputFieldFederationAddress.state.value.match(/\*/)) {
                 federationLookup(this.textInputFieldFederationAddress.state.value)
@@ -745,7 +753,7 @@ class Balances extends Component {
                         console.log(error.message) // eslint-disable-line no-console
                     })
             }
-            
+
         } else {
             this.setState({
                 newAccount: false,
@@ -753,7 +761,7 @@ class Balances extends Component {
             })
         }
     }
-    
+
 
     // ...
     recipientIndicatorMessage () {
@@ -962,7 +970,7 @@ class Balances extends Component {
                   label="Request"
                   onClick={this.handleOpen.bind(this)}
                 />
-                {!this.props.auth.isReadOnly ? 
+                {!this.props.auth.isReadOnly ?
                   (<RaisedButton
                     backgroundColor="rgb(15,46,83)"
                     labelColor="#d32f2f"
@@ -1043,7 +1051,7 @@ class Balances extends Component {
                                         alt="Stellar Fox"
                                     />
                                 </div>
-                                
+
                             </div>
                             <DatePicker
                                 className="date-picker"
@@ -1110,7 +1118,7 @@ class Balances extends Component {
                             <div className="micro nowrap">
                                 <span>Security Features</span><br/>
                                 {this.recipientIndicatorMessage.call(this)}
-                                
+
                             </div>
 
                         </div>

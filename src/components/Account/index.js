@@ -14,7 +14,7 @@ import { federationIsAliasOnly } from "../../lib/utils"
 import { emailValid } from "../../lib/utils"
 import { config } from "../../config"
 import axios from "axios"
-import RegisterAccount from "../RegisterAccount"
+import RegisterAccount from "./Register"
 import {
     showAlert,
     hideAlert,

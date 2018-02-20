@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {Tabs, Tab} from 'material-ui/Tabs'
-import {List, ListItem, makeSelectable} from 'material-ui/List'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Tabs, Tab } from 'material-ui/Tabs'
+import { List, ListItem, makeSelectable } from 'material-ui/List'
 import SnackBar from '../frontend/snackbar/SnackBar'
 import Avatar from 'material-ui/Avatar'
 import IconButton from 'material-ui/IconButton';
@@ -28,7 +28,13 @@ import {
   updateLoadingMessage,
 } from '../actions/index'
 import './Payments.css'
-import {pubKeyAbbr, utcToLocaleDateTime, getAssetCode, formatAmount} from '../lib/utils'
+import {
+    pubKeyAbbr,
+    utcToLocaleDateTime,
+    getAssetCode,
+    formatAmount,
+    StellarSdk,
+} from '../lib/utils'
 
 let SelectableList = makeSelectable(List)
 
@@ -130,7 +136,7 @@ class Payments extends Component {
     })
     this.props.setStreamer(this.paymentsStreamer.call(this))
 
-    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
       .forAccount(this.props.accountInfo.pubKey)
       .order('desc')
@@ -186,7 +192,7 @@ class Payments extends Component {
   }
 
   paymentsStreamer() {
-    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     return server.payments()
       .cursor('now')
       .stream({
@@ -241,9 +247,9 @@ class Payments extends Component {
 
 
   updateAccount() {
-    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.loadAccount(this.props.accountInfo.pubKey)
-      .catch(window.StellarSdk.NotFoundError, function (error) {
+      .catch(StellarSdk.NotFoundError, function (error) {
         throw new Error('The destination account does not exist!');
       })
       .then((account) => {
@@ -274,7 +280,7 @@ class Payments extends Component {
       tabSelected: value,
     })
     if (value === "2" && this.state.txCursorLeft === null && this.state.txCursorRight === null) {
-      let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+      let server = new StellarSdk.Server(this.props.accountInfo.horizon)
       server.transactions()
         .forAccount(this.props.accountInfo.pubKey)
         .order('desc')
@@ -512,7 +518,7 @@ class Payments extends Component {
 
 
   getNextPaymentsPage() {
-    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
       .forAccount(this.props.accountInfo.pubKey)
       .order('desc')
@@ -537,7 +543,7 @@ class Payments extends Component {
 
 
   getPrevPaymentsPage() {
-    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
       .forAccount(this.props.accountInfo.pubKey)
       .order('asc')
@@ -563,7 +569,7 @@ class Payments extends Component {
 
 
   getNextTransactionsPage() {
-    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.transactions()
       .forAccount(this.props.accountInfo.pubKey)
       .order('desc')
@@ -588,7 +594,7 @@ class Payments extends Component {
 
 
   getPrevTransactionsPage() {
-    let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+    let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.transactions()
       .forAccount(this.props.accountInfo.pubKey)
       .order('asc')
@@ -754,7 +760,7 @@ class Payments extends Component {
                         onClick={this.getNextPaymentsPage.bind(this)}
                         disabled={this.state.nextDisabled}>
                           <i className="material-icons">fast_forward</i>
-                      </IconButton>                        
+                      </IconButton>
                     </div>
                   </div>
                   </div>

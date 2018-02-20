@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, { Component } from "react"
 import {
     Step,
     Stepper,
@@ -8,11 +8,16 @@ import {
 import LinearProgress from "material-ui/LinearProgress"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
-import {emailValid, passwordValid, extractPathIndex} from "../../lib/utils"
+import {
+    emailValid,
+    passwordValid,
+    extractPathIndex,
+} from "../../lib/utils"
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
 import axios from "axios"
 import { config } from "../../config"
+
 
 export default class NewAccount extends Component {
 

@@ -17,8 +17,9 @@ import {
     pubKeyValid,
     federationAddressValid,
     federationLookup,
+    StellarSdk,
 } from "../../lib/utils"
-import CreateAccount from "../CreateAccount"
+import CreateAccount from "../Account/Create"
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -41,8 +42,6 @@ import TextInputField from "../TextInputField"
 
 import "./style.css"
 
-// TODO: convert-to/use-as module
-const StellarSdk = window.StellarSdk
 
 const styles = {
     errorStyle: {
@@ -292,7 +291,7 @@ class Welcome extends Component {
             return false
         }
         return this.authenticateUser.call(this)
-        
+
     }
 
     // ...

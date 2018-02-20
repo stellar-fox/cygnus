@@ -1,9 +1,6 @@
 import Transport from "@ledgerhq/hw-transport-u2f"
 import Str from "@ledgerhq/hw-app-str"
-
-
-// TODO: convert-to/use-as module
-const StellarSdk = window.StellarSdk
+import { StellarSdk } from "./utils"
 
 
 /**
