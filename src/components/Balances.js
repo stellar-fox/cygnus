@@ -10,7 +10,7 @@ import {
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
-import SnackBar from "../frontend/snackbar/SnackBar"
+import SnackBar from "../frontend/SnackBar"
 import axios from "axios"
 import { config } from "../config"
 import RegisterAccount from "./Account/Register"
@@ -521,7 +521,7 @@ class Balances extends Component {
 
     // ...
     compoundPaymentValidator () {
-        
+
         if (this.state.newAccount && this.state.amountEntered && parseInt(this.state.amount, 10) < parseInt(config.reserve, 10)) {
             this.setState({
                 buttonSendDisabled: true,
@@ -1153,9 +1153,9 @@ class Balances extends Component {
                     </CardText>
                     <CardActions>
                         <div className="f-e space-between">
-                            
+
                             {this.bottomIndicatorMessage.call(this)}
-                            
+
                             <div>
                                 <span className="p-r">
                                     <RaisedButton

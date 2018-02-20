@@ -6,7 +6,7 @@ import { Tabs, Tab } from "material-ui/Tabs"
 import { List, ListItem, makeSelectable } from "material-ui/List"
 import Avatar from "material-ui/Avatar"
 import IconButton from "material-ui/IconButton"
-import SnackBar from "../../frontend/snackbar/SnackBar"
+import SnackBar from "../../frontend/SnackBar"
 import LoadingModal from "../LoadingModal"
 import {
     Table,
