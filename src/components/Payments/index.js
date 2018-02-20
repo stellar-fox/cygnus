@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Tabs, Tab } from 'material-ui/Tabs'
 import { List, ListItem, makeSelectable } from 'material-ui/List'
-import SnackBar from '../frontend/snackbar/SnackBar'
+import SnackBar from '../../frontend/snackbar/SnackBar'
 import Avatar from 'material-ui/Avatar'
 import IconButton from 'material-ui/IconButton';
-import LoadingModal from './LoadingModal'
+import LoadingModal from '../LoadingModal'
 import {
   Table,
   TableBody,
@@ -26,15 +26,17 @@ import {
   setModalLoading,
   setModalLoaded,
   updateLoadingMessage,
-} from '../actions/index'
-import './Payments.css'
+} from '../../actions/index'
 import {
     pubKeyAbbr,
     utcToLocaleDateTime,
     getAssetCode,
     formatAmount,
     StellarSdk,
-} from '../lib/utils'
+} from '../../lib/utils'
+
+import './index.css'
+
 
 let SelectableList = makeSelectable(List)
 
