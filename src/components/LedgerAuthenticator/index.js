@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import Input from "../../frontend/input/Input"
-import Checkbox from "../../frontend/checkbox/Checkbox"
+import Checkbox from "../../frontend/Checkbox"
 import RaisedButton from "material-ui/RaisedButton"
 import { awaitConnection, getPublicKey } from "../../lib/ledger"
 

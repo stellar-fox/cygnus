@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 
 import "pretty-checkbox/dist/pretty-checkbox.min.css"
-import "./Checkbox.css"
+import "./index.css"
 
 
 export default class Checkbox extends Component {
