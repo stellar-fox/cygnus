@@ -37,6 +37,7 @@ import {
 } from "../actions/index"
 import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
+import {BigNumber} from "bignumber.js"
 import "number-to-text/converters/en-us"
 
 import "./Balances.css"
@@ -62,7 +63,7 @@ const styles = {
 
 StellarSdk.Network.useTestNetwork()
 const server = new StellarSdk.Server(config.horizon)
-
+BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
 
 class Balances extends Component {
 
@@ -407,7 +408,7 @@ class Balances extends Component {
                     transaction = new StellarSdk.TransactionBuilder(sourceAccount)
                         .addOperation(StellarSdk.Operation.createAccount({
                             destination: this.state.payee,
-                            startingBalance: this.state.amount,  // in XLM
+                            startingBalance: this.convertToXLM(this.state.amount),  // in XLM
                         }))
                         .build()
 
@@ -464,7 +465,7 @@ class Balances extends Component {
                             // Because Stellar allows transaction in many currencies, you must
                             // specify the asset type. The special "native" asset represents Lumens.
                             asset: StellarSdk.Asset.native(),
-                            amount: this.state.amount,
+                            amount: this.convertToXLM(this.state.amount),
                         }))
                         // A memo allows you to add your own metadata to a transaction. It's
                         // optional and does not affect how Stellar treats the transaction.
@@ -501,6 +502,14 @@ class Balances extends Component {
                     console.error('Something went wrong!', error)
                 })
         }
+    }
+
+
+    // ...
+    convertToXLM (amount) {
+        const fiatAmount = new BigNumber(amount)
+        const xlmAmount = fiatAmount.dividedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toString()
+        return xlmAmount
     }
 
     // ...
@@ -690,7 +699,7 @@ class Balances extends Component {
                                             this.compoundPaymentValidator.call(this)
                                         })
                                         .catch((error) => {
-                                            console.log(error.message)
+                                            console.log(error.message) // eslint-disable-line no-console
                                         })
                                 })
                                 .catch((error) => {
