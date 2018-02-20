@@ -8,7 +8,7 @@ import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 import SnackBar from "../frontend/snackbar/SnackBar"
 import axios from "axios"
-import { StellarSdk, formatAmount } from "../lib/utils"
+import { StellarSdk, formatAmount, pubKeyAbbr } from "../lib/utils"
 import {config} from "../config"
 import RegisterAccount from "./RegisterAccount"
 import TextInputField from "./TextInputField"
@@ -150,8 +150,23 @@ class Balances extends Component {
         let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
         return server.payments().cursor("now").stream({
             onmessage: (message) => {
+
                 /*
-                * Initial Account Funding
+                * Payment to fund a new account.
+                */
+                if (message.type === "create_account" && message.source_account === this.props.accountInfo.pubKey) {
+                    this.updateAccount.call(this)
+                    this.setState({
+                        sbPayment: true,
+                        sbPaymentText: `Payment sent to new account [${pubKeyAbbr(message.account)}]: `,
+                        sbPaymentAmount: formatAmount(
+                            message.starting_balance, this.props.accountInfo.precision),
+                        sbPaymentAssetCode: "XLM",
+                    })
+                }
+                
+                /*
+                * Initial funding of own account.
                 */
                 if (message.type === "create_account" && message.account === this.props.accountInfo.pubKey) {
                     this.updateAccount.call(this)
@@ -165,7 +180,7 @@ class Balances extends Component {
                 }
 
                 /*
-                * Receiving Payment
+                * Receiving payment.
                 */
                 if (message.type === "payment" && message.to === this.props.accountInfo.pubKey) {
                     this.updateAccount.call(this)
@@ -181,7 +196,7 @@ class Balances extends Component {
                 }
 
                 /*
-                * Sending Payment
+                * Sending payment.
                 */
                 if (message.type === "payment" && message.from === this.props.accountInfo.pubKey) {
                     this.updateAccount.call(this)
