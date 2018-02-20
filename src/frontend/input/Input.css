@@ -1,15 +1,15 @@
-.lcars-input ul{
-    list-style:none;
-    padding:0;
-    margin:0;
+.lcars-input ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
-.lcars-input li{
+.lcars-input li {
     display: block;
     padding: 9px;
     border-radius: 3px;
     border: 1px solid rgba(244,176,4,0.75);
 }
-.lcars-input li > label{
+.lcars-input li > label {
     display: block;
     float: left;
     margin-top: -22px;
@@ -31,29 +31,30 @@
 .lcars-input input[type="url"],
 .lcars-input input[type="password"],
 .lcars-input textarea,
-.lcars-input select
-{
-  -webkit-transition: all 0.30s ease-in-out;
-  -moz-transition: all 0.30s ease-in-out;
-  -ms-transition: all 0.30s ease-in-out;
-  -o-transition: all 0.30s ease-in-out;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  width: 100%;
-  display: block;
-  outline: none;
-  border: 1px solid rgba(244,176,4,0.3);
-  border-radius: 3px;
-  height: 25px;
-  line-height: 25px;
-  font-size: 16px;
-  color: rgba(244,176,4,0.75);
-  margin-top: 3px;
-  padding-left: 5px;
-  margin-bottom: 8px;
-  background-color: rgba(244,176,4,0.15);
+.lcars-input select {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    transition: all 0.30s ease-in-out;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: 100%;
+    display: block;
+    outline: none;
+    border: 1px solid rgba(244,176,4,0.3);
+    border-radius: 3px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 16px;
+    color: rgba(244,176,4,0.75);
+    margin-top: 3px;
+    padding-left: 5px;
+    margin-bottom: 8px;
+    background-color: rgba(244,176,4,0.15);
 }
+
 .lcars-input input[type="text"]:focus,
 .lcars-input input[type="date"]:focus,
 .lcars-input input[type="datetime"]:focus,
@@ -64,12 +65,11 @@
 .lcars-input input[type="url"]:focus,
 .lcars-input input[type="password"]:focus,
 .lcars-input textarea:focus,
-.lcars-input select:focus
-{
-  border-color: rgba(244,176,4,0.5);
+.lcars-input select:focus {
+    border-color: rgba(244,176,4,0.5);
 }
 
-.lcars-input li > span{
+.lcars-input li > span {
     background: rgb(15,46,83);
     display: block;
     padding: 3px;
