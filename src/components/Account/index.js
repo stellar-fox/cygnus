@@ -337,7 +337,7 @@ class Account extends Component {
             })
     }
 
-    handleChange (value) {
+    handleTabChange (_, value) {
         this.props.setTab({ accounts: value, })
     }
 
@@ -424,7 +424,7 @@ class Account extends Component {
                     tabItemContainerStyle={styles.container}
                     inkBarStyle={styles.inkBar}
                     value={this.props.ui.tabs.accounts}
-                    onChange={this.handleChange}
+                    onChange={this.handleTabChange.bind(this, this.value)}
                     className="tabs-container"
                 >
                     {this.props.auth.isAuthenticated ? (

@@ -874,6 +874,7 @@ class Balances extends Component {
             paperClassName="modal-body"
             titleClassName="modal-title"
             repositionOnUpdate={false}
+            autoScrollBodyContent={true}
           >
             <RegisterAccount onComplete={this.setModalButtonText.bind(this)} />
           </Dialog>

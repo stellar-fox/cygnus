@@ -344,7 +344,7 @@ class Welcome extends Component {
         ]
 
         return (
-            <div>
+            <div className="welcome-content">
                 <Dialog
                     title="Opening Your Account"
                     actions={actions}
@@ -353,6 +353,7 @@ class Welcome extends Component {
                     onRequestClose={this.handleModalClose.bind(this)}
                     paperClassName="modal-body"
                     titleClassName="modal-title"
+                    autoScrollBodyContent={true}
                 >
                     <CreateAccount
                         onComplete={this.setModalButtonText.bind(this)}
