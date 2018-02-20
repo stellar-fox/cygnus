@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { NavLink } from "react-router-dom"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
@@ -22,17 +22,21 @@ import "./Header.css"
 
 
 class Header extends Component {
+
+    // ...
     handleToggle () {
         this.props.ui.drawer.isOpened
             ? this.props.closeDrawer()
             : this.props.openDrawer()
     }
 
+    // ...
     handleMenuClick (view, _obj) {
         this.props.selectView(view)
         setTimeout(() => this.props.closeDrawer(), 300)
     }
 
+    // ...
     handleLogOutClick (_state) {
         this.props.logOutOfHorizon()
         this.props.logOut()
@@ -40,9 +44,10 @@ class Header extends Component {
         sessionStorage.clear()
     }
 
+    // ...
     render () {
         return (
-            <div>
+            <Fragment>
                 <AppBar
                     title={
                         <div className="flex-row">
@@ -125,9 +130,8 @@ class Header extends Component {
                         to="/"
                     >
                         <i className="material-icons">account_balance_wallet</i>Balances
-                    </NavLink>
-                    {this.props.accountInfo.exists ? (
-                        <div>
+                    </NavLink>{
+                        this.props.accountInfo.exists ? (
                             <NavLink
                                 className="menu-item"
                                 onClick={this.handleMenuClick.bind(
@@ -140,8 +144,8 @@ class Header extends Component {
                             >
                                 <i className="material-icons">payment</i>Payments
                             </NavLink>
-                        </div>
-                    ) : null}
+                        ) : null
+                    }
                     <NavLink
                         className="menu-item"
                         onClick={this.handleMenuClick.bind(this, "Account")}
@@ -152,7 +156,7 @@ class Header extends Component {
                         <i className="material-icons">account_balance</i>Account
                     </NavLink>
                 </Drawer>
-            </div>
+            </Fragment>
         )
     }
 }
