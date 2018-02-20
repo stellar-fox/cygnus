@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import Input from "../../frontend/input/Input"
+import Input from "../../frontend/Input"
 import Checkbox from "../../frontend/Checkbox"
 import RaisedButton from "material-ui/RaisedButton"
 import { awaitConnection, getPublicKey } from "../../lib/ledger"
