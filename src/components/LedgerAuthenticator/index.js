@@ -36,6 +36,7 @@ export default class LedgerAuthenticator extends Component {
         if (softwareVersion) {
             this.setState({
                 ledgerStatusMessage: `Connected. Software Ver. ${softwareVersion}`,
+                errorCode: null,
             })
             const publicKey = await getPublicKey(bip32Path).catch((error) => {
                 this.setState({
@@ -57,7 +58,10 @@ export default class LedgerAuthenticator extends Component {
         let message = ""
         switch (code) {
             case 26625:
-                message = "Ledger is autolocked."
+                message = "Ledger is autolocked. Please unlock it first."
+                break
+            case "U2F_5":
+                message = "Ledger sign in timeout. Device turned off or disconnected."
                 break
             default:
                 break
