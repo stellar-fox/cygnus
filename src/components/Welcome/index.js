@@ -18,7 +18,7 @@ import {
     federationAddressValid,
     federationLookup,
 } from "../../lib/utils"
-import CreateAccount from "../CreateAccount"
+import CreateAccount from "../Account/Create"
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -292,7 +292,7 @@ class Welcome extends Component {
             return false
         }
         return this.authenticateUser.call(this)
-        
+
     }
 
     // ...
