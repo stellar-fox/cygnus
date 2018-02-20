@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import {
@@ -7,6 +7,7 @@ import {
     CardHeader,
     CardText,
 } from "material-ui/Card"
+import { List, ListItem } from "material-ui/List"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
@@ -17,6 +18,7 @@ import RegisterAccount from "./Account/Register"
 import TextInputField from "./TextInputField"
 import { signTransaction } from "../lib/ledger"
 import DatePicker from "material-ui/DatePicker"
+import LinearProgress from "material-ui/LinearProgress"
 import {
     pubKeyValid,
     federationAddressValid,
@@ -24,6 +26,7 @@ import {
     StellarSdk,
     formatAmount,
     pubKeyAbbr,
+    handleException,
 } from "../lib/utils"
 import {
     setExchangeRate,
@@ -63,7 +66,6 @@ const styles = {
 
 StellarSdk.Network.useTestNetwork()
 const server = new StellarSdk.Server(config.horizon)
-BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
 
 class Balances extends Component {
 
@@ -76,6 +78,8 @@ class Balances extends Component {
             sbPaymentAmount: null,
             sbPaymentAssetCode: null,
             modalShown: false,
+            deviceConfirmModalShown: false,
+            broadcastTxModalShown: false,
             modalButtonText: "CANCEL",
             currencySymbol: null,
             currencyText: null,
@@ -85,8 +89,10 @@ class Balances extends Component {
             amountEntered: false,
             payee: null,
             memoRequired: false,
+            memo: "",
             amountValid: false,
             amount: 0,
+            transactionType: null,
             memoValid: false,
             buttonSendDisabled: true,
             paymentCardVisible: false,
@@ -196,12 +202,9 @@ class Balances extends Component {
                     this.updateAccount.call(this)
                     this.setState({
                         sbPayment: true,
-                        sbPaymentText: "Payment Received: ",
-                        sbPaymentAmount: formatAmount(
-                            message.amount, this.props.accountInfo.precision),
-                        sbPaymentAssetCode: (
-                            message.asset_type === "native" ? "XLM" : message.asset_code
-                        ),
+                        sbPaymentText: "Balance Updated. Payment Received: ",
+                        sbPaymentAmount: this.convertToFiat(message.amount),
+                        sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
                     })
                 }
 
@@ -212,12 +215,9 @@ class Balances extends Component {
                     this.updateAccount.call(this)
                     this.setState({
                         sbPayment: true,
-                        sbPaymentText: "Payment Sent: ",
-                        sbPaymentAmount: formatAmount(
-                            message.amount, this.props.accountInfo.precision),
-                        sbPaymentAssetCode: (
-                            message.asset_type === "native" ? "XLM" : message.asset_code
-                        ),
+                        sbPaymentText: "Balance Updated. Payment Sent: ",
+                        sbPaymentAmount: this.convertToFiat(message.amount),
+                        sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
                     })
                 }
             },
@@ -410,21 +410,36 @@ class Balances extends Component {
                             destination: this.state.payee,
                             startingBalance: this.convertToXLM(this.state.amount),  // in XLM
                         }))
+                        .addMemo(StellarSdk.Memo.text(this.textInputFieldMemo.state.value))
                         .build()
+
+                    this.setState({
+                        transactionType: "Create Account",
+                        deviceConfirmModalShown: true,
+                    })
 
                     // Sign the transaction to prove you are actually the person sending it.
                     // transaction.sign(sourceKeys)
-
                     const signedTransaction = await signTransaction(
                         this.props.accountInfo.accountPath,
                         this.props.accountInfo.pubKey,
                         transaction
                     )
+                    
+                    this.setState({
+                        deviceConfirmModalShown: false,
+                        broadcastTxModalShown: true,
+                    })
 
                     // And finally, send it off to Stellar!
                     return server.submitTransaction(signedTransaction)
                 })
                 .then((result) => {
+                    
+                    this.setState({
+                        transactionType: null,
+                        broadcastTxModalShown: false,
+                    })
                     console.log('Success! Results:', result)
                     this.setState({
                         amountEntered: false,
@@ -440,6 +455,20 @@ class Balances extends Component {
                     //TODO: reset all state vars
                 })
                 .catch((error) => {
+                    this.setState({
+                        transactionType: null,
+                        deviceConfirmModalShown: false,
+                        broadcastTxModalShown: false,
+                        amountEntered: false,
+                        payee: null,
+                        memoRequired: false,
+                        amountValid: false,
+                        amount: 0,
+                        memoValid: false,
+                        buttonSendDisabled: true,
+                        paymentCardVisible: false,
+                        newAccount: false,
+                    })
                     console.error('Something went wrong!', error)
                 })
         } else {
@@ -473,17 +502,27 @@ class Balances extends Component {
                         .build()
                     // Sign the transaction to prove you are actually the person sending it.
                     // transaction.sign(sourceKeys)
-
+                    this.setState({
+                        transactionType: "Payment",
+                        deviceConfirmModalShown: true,
+                    })
                     const signedTransaction = await signTransaction(
                         this.props.accountInfo.accountPath,
                         this.props.accountInfo.pubKey,
                         transaction
                     )
-
+                    this.setState({
+                        deviceConfirmModalShown: false,
+                        broadcastTxModalShown: true,
+                    })
                     // And finally, send it off to Stellar!
                     return server.submitTransaction(signedTransaction)
                 })
                 .then((result) => {
+                    this.setState({
+                        transactionType: null,
+                        broadcastTxModalShown: false,
+                    })
                     console.log('Success! Results:', result)
                     this.setState({
                         amountEntered: false,
@@ -499,6 +538,20 @@ class Balances extends Component {
                     //TODO: reset all state vars
                 })
                 .catch((error) => {
+                    this.setState({
+                        transactionType: null,
+                        deviceConfirmModalShown: false,
+                        broadcastTxModalShown: false,
+                        amountEntered: false,
+                        payee: null,
+                        memoRequired: false,
+                        amountValid: false,
+                        amount: 0,
+                        memoValid: false,
+                        buttonSendDisabled: true,
+                        paymentCardVisible: false,
+                        newAccount: false,
+                    })
                     console.error('Something went wrong!', error)
                 })
         }
@@ -507,10 +560,28 @@ class Balances extends Component {
 
     // ...
     convertToXLM (amount) {
+        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
         const fiatAmount = new BigNumber(amount)
-        const xlmAmount = fiatAmount.dividedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toString()
-        return xlmAmount
+        if (this.props.accountInfo.rates !== undefined) {
+            return fiatAmount.dividedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toString()
+        } else {
+            return "0"
+        }
     }
+
+
+    // ...
+    convertToFiat (amount) {
+        BigNumber.config({ DECIMAL_PLACES: 2, })
+        const nativeAmount = new BigNumber(amount)
+        if (this.props.accountInfo.rates !== undefined) {
+            return nativeAmount.multipliedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toFixed(2)
+        } else {
+            return "0"
+        }
+    }
+
+    
 
     // ...
     async sendPayment () {
@@ -567,10 +638,12 @@ class Balances extends Component {
         if (this.state.memoRequired && this.textInputFieldMemo.state.value === "") {
             this.setState({
                 memoValid: false,
+                memo: "",
             })
         } else {
             this.setState({
                 memoValid: true,
+                memo: this.textInputFieldMemo.state.value,
             })
         }
 
@@ -813,6 +886,51 @@ class Balances extends Component {
         return message
     }
 
+
+    // ...
+    transactionFeedbackMessage () {
+        return (
+            <Fragment>
+                <div>
+                    Please confirm the following info on your device's screen.
+                </div>
+                <List>
+                    <ListItem disabled={true} primaryText="Type" secondaryText={this.state.transactionType} leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>}/>
+                    <ListItem disabled={true} primaryText="Amount" secondaryText={`${this.convertToXLM(this.state.amount)} XLM`} leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
+                    <ListItem disabled={true} primaryText="Destination" secondaryText={handleException(() => pubKeyAbbr(this.state.payee), () => "Not Available")} leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
+                    <ListItem disabled={true} primaryText="Memo" secondaryText={this.state.memo} leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
+                    <ListItem disabled={true} primaryText="Fee" secondaryText="0.000001 XLM" leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
+                    <ListItem disabled={true} primaryText="Network" secondaryText="Test" leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
+                </List>
+                <div>
+                    When you are sure it is correct press "&#10003;"
+                    on the device to sign your transaction and send it off.
+                </div>
+            </Fragment>
+        )
+    }
+
+
+    // ...
+    broadcastTransactionMessage () {
+        return (
+            <Fragment>
+                <div className="green">
+                    Your money transfer is on its way.
+                </div>
+                <div className="faded p-b">
+                    Estimated arrival time: 5 seconds
+                </div>
+                <LinearProgress
+                    style={{ background: "rgb(244,176,4)", }}
+                    color="rgba(15,46,83,0.6)"
+                    mode="indeterminate"
+                />
+            </Fragment>
+        )
+    }
+
+
     // ...
     render () {
 
@@ -878,6 +996,33 @@ class Balances extends Component {
           >
             <RegisterAccount onComplete={this.setModalButtonText.bind(this)} />
           </Dialog>
+
+                    <Dialog
+                        title="Confirm on Ledger"
+                        actions={null}
+                        modal={true}
+                        open={this.state.deviceConfirmModalShown}
+                        paperClassName="modal-body"
+                        titleClassName="modal-title"
+                    >
+                        {this.transactionFeedbackMessage.call(this)}
+                    </Dialog>
+
+                    <Dialog
+                        title={
+                            <div>
+                                <i className="material-icons">assignment_late</i>
+                                <span>Sending payment ...</span>
+                            </div>
+                        }
+                        actions={null}
+                        modal={true}
+                        open={this.state.broadcastTxModalShown}
+                        paperClassName="modal-body"
+                        titleClassName="modal-title"
+                    >
+                        {this.broadcastTransactionMessage.call(this)}
+                    </Dialog>
         </div>
 
         {(!this.props.accountInfo.registered && !this.props.auth.isReadOnly) ? (
