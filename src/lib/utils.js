@@ -11,9 +11,11 @@ const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-
 
 
 // ...
-export const pubKeyAbbr = (pubKey) =>
-    `${pubKey.slice(0, 6)}-${pubKey.slice(50)}`
-
+export const pubKeyAbbr = (pubKey) => handleException(
+    () => `${pubKey.slice(0, 6)}-${pubKey.slice(50)}`,
+    (_) => { throw new Error("Malformed key.") }
+)
+    
 
 // ...
 export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
