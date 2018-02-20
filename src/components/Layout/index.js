@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment, } from "react"
 import {
     BrowserRouter as Router,
     Route,
@@ -13,37 +13,36 @@ import Welcome from "../Welcome"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "../../frontend/themes/stellar"
 
+
+// ..
 class Layout extends Component {
+
+    // ...
     render () {
         return (
             <MuiThemeProvider muiTheme={stellarTheme}>
-                <div>
-                    <Router>
-                        <div>
-                            {this.props.auth.isHorizonLoggedIn ? (
-                                <div>
-                                    <Header />
-                                    <Content />
-                                    <Footer />
-                                </div>
-                            ) : (
-                                <Switch>
-                                    <Route exact path="/" component={Welcome} />
-                                    <Redirect to="/" />
-                                </Switch>
-                            )}
-                        </div>
-                    </Router>
-                </div>
+                <Router>{
+                    this.props.auth.isHorizonLoggedIn ? (
+                        <Fragment>
+                            <Header />
+                            <Content />
+                            <Footer />
+                        </Fragment>
+                    ) : (
+                        <Switch>
+                            <Route exact path="/" component={Welcome} />
+                            <Redirect to="/" />
+                        </Switch>
+                    )
+                }</Router>
             </MuiThemeProvider>
         )
     }
 }
 
-function mapStateToProps (state) {
-    return {
-        auth: state.auth,
-    }
-}
 
-export default connect(mapStateToProps)(Layout)
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({ auth: state.auth, })
+)(Layout)
