@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { Tabs, Tab } from 'material-ui/Tabs'
-import { List, ListItem, makeSelectable } from 'material-ui/List'
-import SnackBar from '../frontend/snackbar/SnackBar'
-import Avatar from 'material-ui/Avatar'
-import IconButton from 'material-ui/IconButton';
-import LoadingModal from './LoadingModal'
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
+import { Tabs, Tab } from "material-ui/Tabs"
+import { List, ListItem, makeSelectable } from "material-ui/List"
+import SnackBar from "../../frontend/snackbar/SnackBar"
+import Avatar from "material-ui/Avatar"
+import IconButton from "material-ui/IconButton";
+import LoadingModal from "../LoadingModal"
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import {
   TableHeaderColumn,
   TableRow,
   TableRowColumn,
-} from 'material-ui/Table';
+} from "material-ui/Table";
 import {
   setAccountPayments,
   setAccountTransactions,
@@ -26,15 +26,17 @@ import {
   setModalLoading,
   setModalLoaded,
   updateLoadingMessage,
-} from '../actions/index'
-import './Payments.css'
+} from "../../actions/index"
 import {
     pubKeyAbbr,
     utcToLocaleDateTime,
     getAssetCode,
     formatAmount,
     StellarSdk,
-} from '../lib/utils'
+} from "../../lib/utils"
+
+import "./index.css"
+
 
 let SelectableList = makeSelectable(List)
 
@@ -77,23 +79,23 @@ const styles = {
     fontWeight: 400,
   },
   tab: {
-    backgroundColor: '#2e5077',
-    borderRadius: '3px',
-    color: 'rgba(244,176,4,0.9)',
+    backgroundColor: "#2e5077",
+    borderRadius: "3px",
+    color: "rgba(244,176,4,0.9)",
   },
   inkBar: {
-    backgroundColor: 'rgba(244,176,4,0.8)',
+    backgroundColor: "rgba(244,176,4,0.8)",
   },
   container: {
-    backgroundColor: '#2e5077',
-    borderRadius: '3px',
+    backgroundColor: "#2e5077",
+    borderRadius: "3px",
   },
   table: {
-    backgroundColor: 'rgb(15,46,83)',
+    backgroundColor: "rgb(15,46,83)",
   },
   tooltip: {
-    backgroundColor: 'rgba(244,176,4,0.8)',
-    fontSize: '0.9rem',
+    backgroundColor: "rgba(244,176,4,0.8)",
+    fontSize: "0.9rem",
   },
 }
 
@@ -109,11 +111,11 @@ class Payments extends Component {
       txCursorRight: null,
       txNextDisabled: false,
       txPrevDisabled: false,
-      tabSelected: '1',
+      tabSelected: "1",
       paymentDetails: {
         txid: null,
         created_at: null,
-        memo: '',
+        memo: "",
         effects: [],
         selectedPaymentId: null,
       },
@@ -139,7 +141,7 @@ class Payments extends Component {
     let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
       .forAccount(this.props.accountInfo.pubKey)
-      .order('desc')
+      .order("desc")
       .limit(5)
       .call()
       .then((paymentsResult) => {
@@ -194,50 +196,50 @@ class Payments extends Component {
   paymentsStreamer() {
     let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     return server.payments()
-      .cursor('now')
+      .cursor("now")
       .stream({
         onmessage: (message) => {
           /*
           * Initial Account Funding
           */
-          if (message.type === 'create_account' && message.account === this.props.accountInfo.pubKey) {
+          if (message.type === "create_account" && message.account === this.props.accountInfo.pubKey) {
             this.updateAccount.call(this)
             this.setState({
               sbPayment: true,
-              sbPaymentText: 'Account Funded: ',
+              sbPaymentText: "Account Funded: ",
               sbPaymentAmount: formatAmount(
                 message.starting_balance, this.props.accountInfo.precision),
-              sbPaymentAssetCode: 'XLM'
+              sbPaymentAssetCode: "XLM"
             })
           }
 
           /*
           * Receiving Payment
           */
-          if (message.type === 'payment' && message.to === this.props.accountInfo.pubKey) {
+          if (message.type === "payment" && message.to === this.props.accountInfo.pubKey) {
             this.updateAccount.call(this)
             this.setState({
               sbPayment: true,
-              sbPaymentText: 'Payment Received: ',
+              sbPaymentText: "Payment Received: ",
               sbPaymentAmount: formatAmount(
                 message.amount, this.props.accountInfo.precision),
               sbPaymentAssetCode: (
-                message.asset_type === 'native' ? 'XLM' : message.asset_code)
+                message.asset_type === "native" ? "XLM" : message.asset_code)
             })
           }
 
           /*
           * Sending Payment
           */
-          if (message.type === 'payment' && message.from === this.props.accountInfo.pubKey) {
+          if (message.type === "payment" && message.from === this.props.accountInfo.pubKey) {
             this.updateAccount.call(this)
             this.setState({
               sbPayment: true,
-              sbPaymentText: 'Payment Sent: ',
+              sbPaymentText: "Payment Sent: ",
               sbPaymentAmount: formatAmount(
                 message.amount, this.props.accountInfo.precision),
               sbPaymentAssetCode: (
-                message.asset_type === 'native' ? 'XLM' : message.asset_code)
+                message.asset_type === "native" ? "XLM" : message.asset_code)
             })
           }
 
@@ -250,14 +252,14 @@ class Payments extends Component {
     let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.loadAccount(this.props.accountInfo.pubKey)
       .catch(StellarSdk.NotFoundError, function (error) {
-        throw new Error('The destination account does not exist!');
+        throw new Error("The destination account does not exist!");
       })
       .then((account) => {
         this.props.accountExistsOnLedger({account})
         server.payments()
           .limit(5)
           .forAccount(this.props.accountInfo.pubKey)
-          .order('desc')
+          .order("desc")
           .call()
           .then((payments) => {
             this.props.setAccountPayments(payments)
@@ -283,7 +285,7 @@ class Payments extends Component {
       let server = new StellarSdk.Server(this.props.accountInfo.horizon)
       server.transactions()
         .forAccount(this.props.accountInfo.pubKey)
-        .order('desc')
+        .order("desc")
         .limit(5)
         .call()
         .then((transactionsResult) => {
@@ -311,10 +313,10 @@ class Payments extends Component {
   }
 
   decodeEffectType = (effect, index) => {
-    let humanizedEffectType = ''
+    let humanizedEffectType = ""
     const icon = `filter_${index+1}`
     switch (effect.type) {
-      case 'account_created':
+      case "account_created":
       humanizedEffectType = (
         <div>
           <div className="flex-row">
@@ -323,7 +325,7 @@ class Payments extends Component {
               <span>New Acccount Created </span>
               <span className="account-direction">
                 {effect.account === this.props.accountInfo.pubKey ?
-                  'Yours' : 'Theirs'}
+                  "Yours" : "Theirs"}
               </span>
             </div>
             <div>
@@ -353,7 +355,7 @@ class Payments extends Component {
         </div>
       )
         break;
-      case 'account_removed':
+      case "account_removed":
         humanizedEffectType = (
           <div>
             <div>
@@ -363,7 +365,7 @@ class Payments extends Component {
                   <span>Acccount Removed </span>
                   <span className="account-direction">
                     {effect.account === this.props.accountInfo.pubKey ?
-                      'Yours' : 'Theirs'}
+                      "Yours" : "Theirs"}
                   </span>
                 </div>
               </div>
@@ -388,7 +390,7 @@ class Payments extends Component {
           </div>
         )
         break;
-      case 'account_credited':
+      case "account_credited":
         humanizedEffectType = (
           <div>
             <div className="flex-row">
@@ -397,7 +399,7 @@ class Payments extends Component {
                 <span>Acccount Credited </span>
                 <span className="account-direction">
                   {effect.account === this.props.accountInfo.pubKey ?
-                    'Yours' : 'Theirs'}
+                    "Yours" : "Theirs"}
                 </span>
               </div>
               <div>
@@ -427,7 +429,7 @@ class Payments extends Component {
           </div>
         )
         break;
-      case 'account_debited':
+      case "account_debited":
         humanizedEffectType = (
           <div>
             <div className="flex-row">
@@ -436,11 +438,11 @@ class Payments extends Component {
                 <span>Acccount Debited </span>
                 <span className="account-direction">
                   {effect.account === this.props.accountInfo.pubKey ?
-                    'Yours' : 'Theirs'}
+                    "Yours" : "Theirs"}
                 </span>
               </div>
               <div>
-                <span className='debit'>
+                <span className="debit">
                   - {
                     Number.parseFloat(effect.amount)
                       .toFixed(this.props.accountInfo.precision)
@@ -466,7 +468,7 @@ class Payments extends Component {
           </div>
         )
         break;
-      case 'signer_created':
+      case "signer_created":
         humanizedEffectType = (
           <div>
             <div className="flex-row">
@@ -475,7 +477,7 @@ class Payments extends Component {
                 <span>Signer Created ✎ </span>
                 <span className="account-direction">
                   {effect.public_key === this.props.accountInfo.pubKey ?
-                    'You' : 'They'}
+                    "You" : "They"}
                 </span>
               </div>
               <div>
@@ -521,7 +523,7 @@ class Payments extends Component {
     let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
       .forAccount(this.props.accountInfo.pubKey)
-      .order('desc')
+      .order("desc")
       .cursor(this.state.cursorRight)
       .limit(5)
       .call()
@@ -546,7 +548,7 @@ class Payments extends Component {
     let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.payments()
       .forAccount(this.props.accountInfo.pubKey)
-      .order('asc')
+      .order("asc")
       .cursor(this.state.cursorLeft)
       .limit(5)
       .call()
@@ -572,7 +574,7 @@ class Payments extends Component {
     let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.transactions()
       .forAccount(this.props.accountInfo.pubKey)
-      .order('desc')
+      .order("desc")
       .cursor(this.state.txCursorRight)
       .limit(5)
       .call()
@@ -597,7 +599,7 @@ class Payments extends Component {
     let server = new StellarSdk.Server(this.props.accountInfo.horizon)
     server.transactions()
       .forAccount(this.props.accountInfo.pubKey)
-      .order('asc')
+      .order("asc")
       .cursor(this.state.txCursorLeft)
       .limit(5)
       .call()
@@ -619,14 +621,14 @@ class Payments extends Component {
   }
 
   determineLeftIcon(payment) {
-    let rendered = ''
+    let rendered = ""
     switch (payment.type) {
-      case 'create_account':
+      case "create_account":
         rendered = ((payment.funder === this.props.accountInfo.pubKey ?
           <i className="material-icons">card_giftcard</i> :
           <i className="material-icons">account_balance</i>))
         break;
-      case 'account_merge':
+      case "account_merge":
         rendered = (<i className="material-icons">merge_type</i>)
         break;
       default:
@@ -640,21 +642,21 @@ class Payments extends Component {
 
 
   determinePrimaryText(payment) {
-    let rendered = ''
+    let rendered = ""
     switch (payment.type) {
-      case 'create_account':
+      case "create_account":
         rendered = ((payment.funder === this.props.accountInfo.pubKey ?
-          '-' : '+') + Number.parseFloat(payment.starting_balance)
-            .toFixed(this.props.accountInfo.precision) + ' XLM')
+          "-" : "+") + Number.parseFloat(payment.starting_balance)
+            .toFixed(this.props.accountInfo.precision) + " XLM")
         break;
-      case 'account_merge':
-        rendered = 'Account Merged'
+      case "account_merge":
+        rendered = "Account Merged"
         break;
       default:
         rendered = ((payment.to === this.props.accountInfo.pubKey ?
-          '+' : '-') + Number.parseFloat(payment.amount)
+          "+" : "-") + Number.parseFloat(payment.amount)
             .toFixed(this.props.accountInfo.precision) +
-          ' ' + getAssetCode(payment))
+          " " + getAssetCode(payment))
         break;
     }
     return rendered
@@ -709,7 +711,7 @@ class Payments extends Component {
                         <div key={payment.id}
                           className={
                             this.state.paymentDetails.selectedPaymentId === payment.id ?
-                              'payment-item-active' : 'payment-item'
+                              "payment-item-active" : "payment-item"
                           }>
                         <ListItem
                           value={index+1}
@@ -729,8 +731,8 @@ class Payments extends Component {
                               size={54}
                               src={
                                 parseInt(payment.id.charAt(payment.id.length-2),10) % 2 ?
-                                '/img/mimi.jpg' : (parseInt(payment.id.charAt(payment.id.length-3),10) % 2 ?
-                                  '/img/igor.jpg' : '/img/gravatar.jpg')
+                                "/img/mimi.jpg" : (parseInt(payment.id.charAt(payment.id.length-3),10) % 2 ?
+                                  "/img/igor.jpg" : "/img/gravatar.jpg")
                               } />
                           }
                         />
@@ -828,7 +830,7 @@ class Payments extends Component {
                               </span>
                               <span className="account-direction">
                                 {tx.source_account === this.props.accountInfo.pubKey ?
-                                  'Yours' : 'Theirs'}
+                                  "Yours" : "Theirs"}
                               </span>
                             </span>
                           </TableRowColumn>
