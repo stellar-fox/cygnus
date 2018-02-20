@@ -344,7 +344,7 @@ class Welcome extends Component {
         ]
 
         return (
-            <div>
+            <div className="welcome-content">
                 <Dialog
                     title="Opening Your Account"
                     actions={actions}
