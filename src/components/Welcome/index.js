@@ -17,6 +17,7 @@ import {
     pubKeyValid,
     federationAddressValid,
     federationLookup,
+    StellarSdk,
 } from "../../lib/utils"
 import CreateAccount from "../Account/Create"
 import {
@@ -41,8 +42,6 @@ import TextInputField from "../TextInputField"
 
 import "./style.css"
 
-// TODO: convert-to/use-as module
-const StellarSdk = window.StellarSdk
 
 const styles = {
     errorStyle: {

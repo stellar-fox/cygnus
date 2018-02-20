@@ -12,11 +12,6 @@ import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 import SnackBar from "../frontend/snackbar/SnackBar"
 import axios from "axios"
-import {
-    StellarSdk,
-    formatAmount,
-    pubKeyAbbr,
-} from "../lib/utils"
 import { config } from "../config"
 import RegisterAccount from "./Account/Register"
 import TextInputField from "./TextInputField"
@@ -26,6 +21,9 @@ import {
     pubKeyValid,
     federationAddressValid,
     federationLookup,
+    StellarSdk,
+    formatAmount,
+    pubKeyAbbr,
 } from "../lib/utils"
 import {
     setExchangeRate,
@@ -157,7 +155,7 @@ class Balances extends Component {
 
     // ...
     paymentsStreamer () {
-        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         return server.payments().cursor("now").stream({
             onmessage: (message) => {
 
@@ -233,9 +231,9 @@ class Balances extends Component {
 
     // ...
     updateAccount () {
-        let server = new window.StellarSdk.Server(this.props.accountInfo.horizon)
+        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server.loadAccount(this.props.accountInfo.pubKey)
-            .catch(window.StellarSdk.NotFoundError, (_) => {
+            .catch(StellarSdk.NotFoundError, (_) => {
                 throw new Error("The destination account does not exist!")
             })
             .then((account) => {
