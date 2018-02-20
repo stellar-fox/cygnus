@@ -1,205 +1,146 @@
 // The following functions wrap dispatch requests to the store.
 
-export const setPublicKey = (state) => {
-    return {
-        type: "SET_PUBKEY",
-        payload: state,
-    }
-}
-
-
-export const accountExistsOnLedger = (state) => {
-  return {
-    type: 'ACCOUNT_EXISTS_ON_LEDGER',
+export const setPublicKey = (state) => ({
+    type: "SET_PUBKEY",
     payload: state,
-  }
-}
+})
 
-export const accountMissingOnLedger = (state) => {
-  return {
-    type: 'ACCOUNT_MISSING_ON_LEDGER',
+export const accountExistsOnLedger = (state) => ({
+    type: "ACCOUNT_EXISTS_ON_LEDGER",
     payload: state,
-  }
-}
+})
 
-export const setModalLoading = (state) => {
-  return {
-    type: 'SET_LOADING',
+export const accountMissingOnLedger = (state) => ({
+    type: "ACCOUNT_MISSING_ON_LEDGER",
     payload: state,
-  }
-}
+})
 
-export const setModalLoaded = (state) => {
-  return {
-    type: 'SET_LOADED',
+export const setModalLoading = (state) => ({
+    type: "SET_LOADING",
     payload: state,
-  }
-}
+})
 
-export const updateLoadingMessage = (state) => {
-  return {
-    type: 'UPDATE_LOADING_MESSAGE',
+export const setModalLoaded = (state) => ({
+    type: "SET_LOADED",
     payload: state,
-  }
-}
+})
 
-export const logOutOfHorizon = (state) => {
-  return {
-    type: 'LOG_OUT_OF_HORIZON',
+export const updateLoadingMessage = (state) => ({
+    type: "UPDATE_LOADING_MESSAGE",
     payload: state,
-  }
-}
+})
 
-export const logInToHorizon = (state) => {
-  return {
-    type: 'LOG_IN_TO_HORIZON',
+export const logOutOfHorizon = (state) => ({
+    type: "LOG_OUT_OF_HORIZON",
     payload: state,
-  }
-}
+})
 
-export const logIn = (state) => {
-  return {
-    type: 'LOG_IN',
+export const logInToHorizon = (state) => ({
+    type: "LOG_IN_TO_HORIZON",
     payload: state,
-  }
-}
+})
 
-export const logOut = (state) => {
-  return {
-    type: 'LOG_OUT',
+export const logIn = (state) => ({
+    type: "LOG_IN",
     payload: state,
-  }
-}
+})
 
-export const selectView = (state) => {
-  return {
-    type: 'SELECT_VIEW',
+export const logOut = (state) => ({
+    type: "LOG_OUT",
     payload: state,
-  }
-}
+})
 
-export const openDrawer = (state) => {
-  return {
-    type: 'OPEN_DRAWER',
+export const selectView = (state) => ({
+    type: "SELECT_VIEW",
     payload: state,
-  }
-}
+})
 
-export const closeDrawer = (state) => {
-  return {
-    type: 'CLOSE_DRAWER',
+export const openDrawer = (state) => ({
+    type: "OPEN_DRAWER",
     payload: state,
-  }
-}
+})
 
-export const enableAuthenticateButton = (state) => {
-  return {
-    type: 'ENABLE_AUTHENTICATE_BUTTON',
+export const closeDrawer = (state) => ({
+    type: "CLOSE_DRAWER",
     payload: state,
-  }
-}
+})
 
-export const disableAuthenticateButton = (state) => {
-  return {
-    type: 'DISABLE_AUTHENTICATE_BUTTON',
+export const enableAuthenticateButton = (state) => ({
+    type: "ENABLE_AUTHENTICATE_BUTTON",
     payload: state,
-  }
-}
+})
 
-export const setExchangeRate = (state) => {
-  return {
-    type: 'SET_EXCHANGE_RATE',
+export const disableAuthenticateButton = (state) => ({
+    type: "DISABLE_AUTHENTICATE_BUTTON",
     payload: state,
-  }
-}
+})
 
-export const showAlert = (state) => {
-  return {
-    type: 'SHOW_ALERT',
+export const setExchangeRate = (state) => ({
+    type: "SET_EXCHANGE_RATE",
     payload: state,
-  }
-}
+})
 
-export const hideAlert = (state) => {
-  return {
-    type: 'HIDE_ALERT',
+export const showAlert = (state) => ({
+    type: "SHOW_ALERT",
     payload: state,
-  }
-}
+})
 
-export const setTab = (state) => {
-  return {
-    type: 'SET_TAB_SELECTED',
+export const hideAlert = (state) => ({
+    type: "HIDE_ALERT",
     payload: state,
-  }
-}
+})
 
-export const setCurrency = (state) => {
-  return {
-    type: 'SET_CURRENCY',
+export const setTab = (state) => ({
+    type: "SET_TAB_SELECTED",
     payload: state,
-  }
-}
+})
 
-export const setAccountPayments = (state) => {
-  return {
-    type: 'SET_ACCOUNT_PAYMENTS',
+export const setCurrency = (state) => ({
+    type: "SET_CURRENCY",
     payload: state,
-  }
-}
+})
 
-export const setAccountTransactions = (state) => {
-  return {
-    type: 'SET_ACCOUNT_TRANSACTIONS',
+export const setAccountPayments = (state) => ({
+    type: "SET_ACCOUNT_PAYMENTS",
     payload: state,
-  }
-}
+})
 
-export const setHorizonEndPoint = (state) => {
-  return {
-    type: 'SET_HORIZON_END_POINT',
+export const setAccountTransactions = (state) => ({
+    type: "SET_ACCOUNT_TRANSACTIONS",
     payload: state,
-  }
-}
+})
 
-export const setCurrencyPrecision = (state) => {
-  return {
-    type: 'SET_CURRENCY_PRECISION',
+export const setHorizonEndPoint = (state) => ({
+    type: "SET_HORIZON_END_POINT",
     payload: state,
-  }
-}
+})
 
-export const setStreamer = (state) => {
-  return {
-    type: 'SET_STREAMER',
+export const setCurrencyPrecision = (state) => ({
+    type: "SET_CURRENCY_PRECISION",
     payload: state,
-  }
-}
+})
 
-export const setInvalidInputMessage = (state) => {
-  return {
-    type: 'SET_INVALID_INPUT_MESSAGE',
+export const setStreamer = (state) => ({
+    type: "SET_STREAMER",
     payload: state,
-  }
-}
+})
 
-export const setAccountRegistered = (state) => {
-  return {
-    type: 'SET_ACCOUNT_REGISTERED',
+export const setInvalidInputMessage = (state) => ({
+    type: "SET_INVALID_INPUT_MESSAGE",
     payload: state,
-  }
-}
+})
 
-export const setAccountPath = (state) => {
-    return {
-        type: "SET_ACCOUNT_PATH",
-        payload: state,
-    }
-}
+export const setAccountRegistered = (state) => ({
+    type: "SET_ACCOUNT_REGISTERED",
+    payload: state,
+})
 
-export const setLedgerSoftwareVersion = (state) => {
-    return {
-        type: "SET_LEDGER_SOFTWARE_VERSION",
-        payload: state,
-    }
-}
+export const setAccountPath = (state) => ({
+    type: "SET_ACCOUNT_PATH",
+    payload: state,
+})
+
+export const setLedgerSoftwareVersion = (state) => ({
+    type: "SET_LEDGER_SOFTWARE_VERSION",
+    payload: state,
+})
