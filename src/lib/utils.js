@@ -15,7 +15,7 @@ export const pubKeyAbbr = (pubKey) => handleException(
     () => `${pubKey.slice(0, 6)}-${pubKey.slice(50)}`,
     (_) => { throw new Error("Malformed key.") }
 )
-    
+
 
 // ...
 export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
@@ -129,5 +129,8 @@ export const handleException = (fn, handler) => {
 
 
 // ...
-export const nullToUndefined = (val) =>
-    val === null ? undefined : val
+export const nullToUndefined = (val) => val === null ? undefined : val
+
+
+// ...
+export const flatten = (arr) => arr.reduce((acc, el) => acc.concat(el), [])
