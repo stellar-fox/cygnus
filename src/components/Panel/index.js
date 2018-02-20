@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import "./style.css"
+import "./index.css"
 
 export default class Panel extends Component {
     render () {

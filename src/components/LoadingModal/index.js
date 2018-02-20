@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import CircularProgress from "material-ui/CircularProgress"
 import { connect } from "react-redux"
 
-import "./style.css"
+import "./index.css"
 
 class LoadingModal extends Component {
     render () {

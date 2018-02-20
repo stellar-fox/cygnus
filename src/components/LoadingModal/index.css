@@ -49,11 +49,11 @@
 }
 
 .loading-modal-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .material-icons.badge {
-  font-size: 3rem !important;
+    font-size: 3rem !important;
 }

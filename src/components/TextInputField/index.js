@@ -1,10 +1,11 @@
 import React, { Component } from "react"
-import "./style.css"
 import TextField from "material-ui/TextField"
+
+import "./index.css"
 
 
 export default class TextInputField extends Component {
-    
+
     // ...
     constructor (props) {
         super(props)
@@ -18,9 +19,7 @@ export default class TextInputField extends Component {
     // ...
     handleChange (event) {
         event.persist()
-        this.setState({
-            value: event.target.value,
-        })
+        this.setState({ value: event.target.value, })
         if (this.props.validator !== undefined) {
             this.props.validator.call(this, this.state.value) && (
                 this.setState({
@@ -38,20 +37,18 @@ export default class TextInputField extends Component {
     handleOnKeyPress (event) {
         if (event.key === "Enter" && this.props.validator !== undefined) {
             let inputError = this.props.validator.call(this, this.state.value)
-            
+
             if (inputError) {
-                this.setState({
-                    error: inputError,
-                })
+                this.setState({ error: inputError, })
             } else {
                 if (this.props.action !== undefined) {
                     this.props.action.call(this)
                 }
-            }            
+            }
         }
     }
 
-    
+
     // ...
     render () {
         return (

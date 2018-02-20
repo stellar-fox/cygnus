@@ -23,7 +23,7 @@ import {
     setTab,
 } from "../../actions/index"
 
-import "./style.css"
+import "./index.css"
 
 const styles = {
     headline: {

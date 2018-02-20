@@ -40,7 +40,7 @@ import {
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
 
-import "./style.css"
+import "./index.css"
 
 
 const styles = {

@@ -4,7 +4,7 @@ import Checkbox from "../../frontend/checkbox/Checkbox"
 import RaisedButton from "material-ui/RaisedButton"
 import { awaitConnection, getPublicKey } from "../../lib/ledger"
 
-import "./style.css"
+import "./index.css"
 
 
 export default class LedgerAuthenticator extends Component {
