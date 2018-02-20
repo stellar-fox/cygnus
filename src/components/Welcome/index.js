@@ -136,10 +136,12 @@ class Welcome extends Component {
                     this.props.setAccountRegistered(true)
                 })
                 .catch((error) => {
-                    console.log(error) // eslint-disable-line no-console
+                    // eslint-disable-next-line no-console
+                    console.log(error)
                 })
         } catch (error) {
-            console.log(error) // eslint-disable-line no-console
+            // eslint-disable-next-line no-console
+            console.log(error)
         }
     }
 
@@ -173,7 +175,11 @@ class Welcome extends Component {
         ) {
             axios
                 .post(
-                    `${config.api}/user/authenticate/${this.textInputFieldEmail.state.value}/${this.textInputFieldPassword.state.value}`
+                    `${config.api}/user/authenticate/${
+                        this.textInputFieldEmail.state.value
+                    }/${
+                        this.textInputFieldPassword.state.value
+                    }`
                 )
                 .then((response) => {
                     this.textInputFieldEmail.setState({
@@ -221,7 +227,11 @@ class Welcome extends Component {
                 .then((federationEndpointObj) => {
                     if (federationEndpointObj.ok) {
                         axios
-                            .get(`${federationEndpointObj.endpoint}?q=${textInputValue}&type=name`)
+                            .get(`${
+                                federationEndpointObj.endpoint
+                            }?q=${
+                                textInputValue
+                            }&type=name`)
                             .then((response) => {
                                 this.logInViaPublicKey(response.data.account_id)
                             })
