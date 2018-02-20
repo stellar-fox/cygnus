@@ -82,6 +82,7 @@ class Balances extends Component {
             buttonSendDisabled: true,
             paymentCardVisible: false,
             newAccount: false,
+            minimumReserveMessage: "",
         }
     }
 
@@ -504,6 +505,14 @@ class Balances extends Component {
     // ...
     compoundPaymentValidator () {
         
+        if (this.state.newAccount && this.state.amountEntered && parseInt(this.state.amount, 10) < parseInt(config.reserve, 10)) {
+            this.setState({
+                buttonSendDisabled: true,
+                minimumReserveMessage: `Minimum reserve of ${config.reserve} required.`
+            })
+            return false
+        }
+
         if (!this.state.payee) {
             this.setState({
                 buttonSendDisabled: true,
@@ -514,6 +523,7 @@ class Balances extends Component {
         if (!this.state.amountEntered) {
             this.setState({
                 buttonSendDisabled: true,
+                minimumReserveMessage: "",
             })
             return false
         }
@@ -527,6 +537,7 @@ class Balances extends Component {
 
         this.setState({
             buttonSendDisabled: false,
+            minimumReserveMessage: "",
         })
         
         return true
@@ -759,6 +770,31 @@ class Balances extends Component {
         return message
     }
 
+
+    // ...
+    bottomIndicatorMessage () {
+        let message = (<div className="p-l nowrap fade-extreme">
+            <span className="bigger">
+                &#x1D54A;&#x1D543; {this.props.accountInfo.account.account.sequence}
+            </span>
+        </div>)
+
+        if (this.state.memoRequired && !this.state.memoValid) {
+            message = (<div className='fade p-l nowrap red'>
+                <i className="material-icons md-icon-small">assignment_late</i>
+                Payment recipient requires Memo entry!
+            </div>)
+        }
+
+        if (this.state.minimumReserveMessage !== "") {
+            message = (<div className='fade p-l nowrap red'>
+                <i className="material-icons md-icon-small">assignment_late</i>
+                {this.state.minimumReserveMessage}
+            </div>)
+        }
+
+        return message
+    }
 
     // ...
     render () {
@@ -1099,17 +1135,9 @@ class Balances extends Component {
                     </CardText>
                     <CardActions>
                         <div className="f-e space-between">
-                            {this.state.memoRequired ? 
-                                (<div className='fade p-l nowrap red'>
-                                    <i className="material-icons md-icon-small">assignment_late</i>
-                                    Payment recipient requires Memo entry!
-                                </div>) : (
-                                    <div className="p-l nowrap fade-extreme">
-                                        <span className="bigger">
-                                            &#x1D54A;&#x1D543; {this.props.accountInfo.account.account.sequence}
-                                        </span>
-                                    </div>
-                                )}
+                            
+                            {this.bottomIndicatorMessage.call(this)}
+                            
                             <div>
                                 <span className="p-r">
                                     <RaisedButton
