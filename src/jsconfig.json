@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "esnext",
-        "module": "es6"
+        "module": "commonjs"
     },
     "checkJs" : true
 }
