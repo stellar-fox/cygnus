@@ -8,7 +8,10 @@ import Account from "../Account"
 
 import "./Content.css"
 
+
 class Content extends Component {
+
+    // ...
     render () {
         return (
             <div
@@ -27,11 +30,11 @@ class Content extends Component {
     }
 }
 
-function mapStateToProps (state) {
-    return {
+
+export default connect(
+    // map state to props
+    (state) => ({
         view: state.selectedView,
         ui: state.ui,
-    }
-}
-
-export default connect(mapStateToProps)(Content)
+    })
+)(Content)
