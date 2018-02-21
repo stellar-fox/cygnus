@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react"
-import { NavLink, withRouter } from "react-router-dom"
 import { bindActionCreators } from "redux"
+import { NavLink, withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 
 import AppBar from "material-ui/AppBar"
@@ -32,11 +32,18 @@ import "./Header.css"
 class BalancesNavLinkCore extends Component {
 
     // ...
+    constructor (props) {
+        super(props)
+        this.selectBalances = this.props.selectView.bind(this, "Balances")
+    }
+
+
+    // ...
     render () {
         return (
             <NavLink
                 className="menu-item"
-                onClick={this.props.selectView.bind(this, "Balances")}
+                onClick={this.selectBalances}
                 exact
                 activeClassName="active"
                 to="/"
@@ -68,11 +75,17 @@ const BalancesNavLink = withRouter(connect(
 class PaymentsNavLinkCore extends Component {
 
     // ...
+    constructor (props) {
+        super(props)
+        this.selectPayments = this.props.selectView.bind(this, "Payments")
+    }
+
+    // ...
     render () {
         return this.props.accountInfo.exists ? (
             <NavLink
                 className="menu-item"
-                onClick={this.props.selectView.bind(this, "Payments")}
+                onClick={this.selectPayments}
                 exact
                 activeClassName="active"
                 to="/payments/"
@@ -106,11 +119,18 @@ const PaymentsNavLink = withRouter(connect(
 class AccountNavLinkCore extends Component {
 
     // ...
+    constructor (props) {
+        super(props)
+        this.selectAccount = this.props.selectView.bind(this, "Account")
+    }
+
+
+    // ...
     render () {
         return (
             <NavLink
                 className="menu-item"
-                onClick={this.props.selectView.bind(this, "Account")}
+                onClick={this.selectAccount}
                 exact
                 activeClassName="active"
                 to="/account/"
@@ -142,21 +162,25 @@ const AccountNavLink = withRouter(connect(
 class WalletDrawerCore extends Component {
 
     // ...
+    static style = {
+        width: 180,
+        height: "calc(100% - 100px)",
+        top: 65,
+        borderTop: "1px solid #052f5f",
+        borderBottom: "1px solid #052f5f",
+        borderLeft: "1px solid #052f5f",
+        borderTopRightRadius: "3px",
+        borderBottomRightRadius: "3px",
+        backgroundColor: "#2e5077",
+    }
+
+
+    // ...
     render () {
         return (
             <Drawer
-                containerStyle={{
-                    width: 180,
-                    height: "calc(100% - 100px)",
-                    top: 65,
-                    borderTop: "1px solid #052f5f",
-                    borderBottom: "1px solid #052f5f",
-                    borderLeft: "1px solid #052f5f",
-                    borderTopRightRadius: "3px",
-                    borderBottomRightRadius: "3px",
-                    backgroundColor: "#2e5077",
-                }}
-                open={this.props.ui.drawer.isOpened}
+                containerStyle={WalletDrawerCore.style}
+                open={this.props.drawerOpened}
             >
                 <BalancesNavLink />
                 <PaymentsNavLink />
@@ -172,7 +196,7 @@ class WalletDrawerCore extends Component {
 const WalletDrawer = withRouter(connect(
     // map state to props.
     (state) => ({
-        ui: state.ui,
+        drawerOpened: state.ui.drawer.isOpened,
     })
 )(WalletDrawerCore))
 
@@ -180,11 +204,18 @@ const WalletDrawer = withRouter(connect(
 
 
 // ...
-class Header extends Component {
+class WalletAppBarCore extends Component {
+
+    // ...
+    constructor (props) {
+        super(props)
+        this.handleToggle = this.handleToggle.bind(this)
+        this.handleLogOutClick = this.handleLogOutClick.bind(this)
+    }
 
     // ...
     handleToggle = () =>
-        this.props.ui.drawer.isOpened
+        this.props.drawerOpened
             ? this.props.closeDrawer()
             : this.props.openDrawer()
 
@@ -199,22 +230,12 @@ class Header extends Component {
 
 
     // ...
-    renderAppBar (key) {
+    render () {
         return (
             <AppBar
-                key={key}
                 title={
                     <div className="flex-row">
-                        <AppBarTitle
-                            title={<span>Stellar Fox</span>}
-                            subtitle={this.props.nav.viewName}
-                            network={<div className="badge">test net</div>}
-                            ledgerUsed={
-                                this.props.auth.ledgerSoftwareVersion ? (
-                                    <span className="ledger-nano-s"></span>
-                                ) : null
-                            }
-                        />
+                        <AppBarTitle />
                         <AppBarItems
                             accountTitle={
                                 this.props.accountInfo.exists === true &&
@@ -245,11 +266,11 @@ class Header extends Component {
                     left: 0,
                     top: 0,
                 }}
-                onLeftIconButtonClick={this.handleToggle.bind(this)}
+                onLeftIconButtonClick={this.handleToggle}
                 iconElementRight={
                     <IconButton
                         iconStyle={{ color: "rgba(15,46,83,0.45)", }}
-                        onClick={this.handleLogOutClick.bind(this, false)}
+                        onClick={this.handleLogOutClick}
                     >
                         <i className="material-icons">power_settings_new</i>
                     </IconButton>
@@ -258,27 +279,15 @@ class Header extends Component {
         )
     }
 
-
-    // ...
-    render () {
-        return (
-            <Fragment>
-                {this.renderAppBar(1)}
-                <WalletDrawer />
-            </Fragment>
-        )
-    }
 }
 
 
 // ...
-export default withRouter(connect(
+const WalletAppBar = withRouter(connect(
     // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
-        auth: state.auth,
-        nav: state.nav,
-        ui: state.ui,
+        drawerOpened: state.ui.drawer.isOpened,
     }),
 
     // map dispatch to props.
@@ -289,4 +298,25 @@ export default withRouter(connect(
         closeDrawer,
         selectView,
     }, dispatch)
-)(Header))
+)(WalletAppBarCore))
+
+
+
+
+// ...
+class Header extends Component {
+
+    // ...
+    render () {
+        return (
+            <Fragment>
+                <WalletAppBar />
+                <WalletDrawer />
+            </Fragment>
+        )
+    }
+}
+
+
+// ...
+export default withRouter(Header)
