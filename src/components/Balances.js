@@ -912,12 +912,70 @@ class Balances extends Component {
                     Please confirm the following info on your device's screen.
                 </div>
                 <List>
-                    <ListItem disabled={true} primaryText="Type" secondaryText={this.state.transactionType} leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>}/>
-                    <ListItem disabled={true} primaryText="Amount" secondaryText={`${this.convertToXLM(this.state.amount)} XLM`} leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
-                    <ListItem disabled={true} primaryText="Destination" secondaryText={handleException(() => pubKeyAbbr(this.state.payee), () => "Not Available")} leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
-                    <ListItem disabled={true} primaryText="Memo" secondaryText={this.state.memo} leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
-                    <ListItem disabled={true} primaryText="Fee" secondaryText="0.000001 XLM" leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
-                    <ListItem disabled={true} primaryText="Network" secondaryText="Test" leftIcon={<i className="green material-icons md-icon-small">assignment_late</i>} />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Type"
+                        secondaryText={this.state.transactionType}
+                        leftIcon={
+                            <i className="green material-icons md-icon-small">
+                                assignment_late
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Amount"
+                        secondaryText={
+                            `${this.convertToXLM(this.state.amount)} XLM`
+                        }
+                        leftIcon={
+                            <i className="green material-icons md-icon-small">
+                                account_balance_wallet
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Destination"
+                        secondaryText={
+                            handleException(() => pubKeyAbbr(this.state.payee), () => "Not Available")
+                        }
+                        leftIcon={
+                            <i className="green material-icons md-icon-small">
+                                local_post_office
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Memo"
+                        secondaryText={this.state.memo}
+                        leftIcon={
+                            <i className="green material-icons md-icon-small">
+                                speaker_notes
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Fee"
+                        secondaryText="0.000001 XLM"
+                        leftIcon={
+                            <i className="green material-icons md-icon-small">
+                                credit_card
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Network"
+                        secondaryText="Test"
+                        leftIcon={
+                            <i className="green material-icons md-icon-small">
+                                network_check
+                            </i>
+                        }
+                    />
                 </List>
                 <div>
                     When you are sure it is correct press "&#10003;"
@@ -1025,7 +1083,13 @@ class Balances extends Component {
           </Dialog>
 
                     <Dialog
-                        title="Confirm on Ledger"
+                        title={
+                            <div>
+                                <i className="material-icons">
+                                    developer_board
+                                </i> Confirm on Ledger
+                            </div>
+                        }
                         actions={null}
                         modal={true}
                         open={this.state.deviceConfirmModalShown}
@@ -1038,7 +1102,7 @@ class Balances extends Component {
                     <Dialog
                         title={
                             <div>
-                                <i className="material-icons">assignment_late</i>
+                                <i className="material-icons">send</i>
                                 <span>Sending payment ...</span>
                             </div>
                         }
