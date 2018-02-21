@@ -80,6 +80,8 @@ class Balances extends Component {
             modalShown: false,
             deviceConfirmModalShown: false,
             broadcastTxModalShown: false,
+            errorModalShown: false,
+            errorModalMessage: "",
             modalButtonText: "CANCEL",
             currencySymbol: null,
             currencyText: null,
@@ -469,7 +471,7 @@ class Balances extends Component {
                         paymentCardVisible: false,
                         newAccount: false,
                     })
-                    console.error('Something went wrong!', error)
+                    this.showErrorModal.call(this, error.message)
                 })
         } else {
 
@@ -552,11 +554,26 @@ class Balances extends Component {
                         paymentCardVisible: false,
                         newAccount: false,
                     })
-                    console.error('Something went wrong!', error)
+                    this.showErrorModal.call(this, error.message)
                 })
         }
     }
 
+    
+    // ...
+    showErrorModal (message) {
+        this.setState({
+            errorModalShown: true,
+            errorModalMessage: message,
+        })
+    }
+
+    closeErrorModal () {
+        this.setState({
+            errorModalShown: false,
+            errorModalMessage: "",
+        })
+    }
 
     // ...
     convertToXLM (amount) {
@@ -593,10 +610,10 @@ class Balances extends Component {
     // ...
     compoundPaymentValidator () {
 
-        if (this.state.newAccount && this.state.amountEntered && parseInt(this.state.amount, 10) < parseInt(config.reserve, 10)) {
+        if (this.state.newAccount && this.state.amountEntered && parseInt(this.convertToXLM(this.state.amount), 10) < parseInt(config.reserve, 10)) {
             this.setState({
                 buttonSendDisabled: true,
-                minimumReserveMessage: `Minimum reserve of ${config.reserve} required.`
+                minimumReserveMessage: `Minimum reserve of ${config.reserve} required.`,
             })
             return false
         }
@@ -952,6 +969,16 @@ class Balances extends Component {
       />,
     ]
 
+        const actionsError = [
+            <RaisedButton
+                backgroundColor="rgb(15,46,83)"
+                labelColor="rgb(244,176,4)"
+                label="OK"
+                keyboardFocused={true}
+                onClick={this.closeErrorModal.bind(this)}
+            />,
+        ]
+
     const registerAccountActions = [
       <FlatButton
         backgroundColor="rgb(244,176,4)"
@@ -1023,6 +1050,19 @@ class Balances extends Component {
                     >
                         {this.broadcastTransactionMessage.call(this)}
                     </Dialog>
+
+                    <Dialog
+                        title="Error"
+                        actions={actionsError}
+                        modal={false}
+                        open={this.state.errorModalShown}
+                        onRequestClose={this.closeErrorModal.bind(this)}
+                        paperClassName="modal-body"
+                        titleClassName="modal-title"
+                    >
+                        {this.state.errorModalMessage}
+                    </Dialog>
+
         </div>
 
         {(!this.props.accountInfo.registered && !this.props.auth.isReadOnly) ? (
