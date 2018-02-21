@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Route, Switch } from "react-router-dom"
+import { Route, Switch, withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 
 import Balances from "../Balances"
@@ -7,6 +7,8 @@ import Payments from "../Payments"
 import Account from "../Account"
 
 import "./Content.css"
+
+
 
 
 class Content extends Component {
@@ -31,10 +33,9 @@ class Content extends Component {
 }
 
 
-export default connect(
-    // map state to props
+export default withRouter(connect(
+    // map state to props.
     (state) => ({
-        view: state.selectedView,
         ui: state.ui,
     })
-)(Content)
+)(Content))

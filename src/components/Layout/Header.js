@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react"
-import { NavLink } from "react-router-dom"
+import { NavLink, withRouter } from "react-router-dom"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
@@ -29,7 +29,7 @@ import "./Header.css"
 
 
 // ...
-class BalanceNavLink extends Component {
+class BalancesNavLinkCore extends Component {
 
     // ...
     render () {
@@ -42,12 +42,16 @@ class BalanceNavLink extends Component {
                 to="/"
             >
                 <i className="material-icons">account_balance_wallet</i>
-                Balance
+                Balances
             </NavLink>
         )
     }
 
 }
+
+
+// ...
+const BalancesNavLink = withRouter(BalancesNavLinkCore)
 
 
 
@@ -75,19 +79,18 @@ class PaymentsNavLinkCore extends Component {
 
 
 // ...
-const PaymentsNavLink = connect(
-    // mapStateToProps
-    (state) => ({ accountInfo: state.accountInfo, }),
-
-    // matchDispatchToProps
-    (dispatch) => bindActionCreators({}, dispatch)
-)(PaymentsNavLinkCore)
+const PaymentsNavLink = withRouter(connect(
+    // map state to props.
+    (state) => ({
+        accountInfo: state.accountInfo,
+    })
+)(PaymentsNavLinkCore))
 
 
 
 
 // ...
-class AccountNavLink extends Component {
+class AccountNavLinkCore extends Component {
 
     // ...
     render () {
@@ -108,20 +111,14 @@ class AccountNavLink extends Component {
 }
 
 
+// ...
+const AccountNavLink = withRouter(AccountNavLinkCore)
+
+
 
 
 // ...
 class WalletDrawerCore extends Component {
-
-    // ...
-    handleMenuClick (view, _obj) {
-        this.props.selectView(view)
-        let th = setTimeout(() => {
-            this.props.closeDrawer()
-            clearTimeout(th)
-        }, 300)
-    }
-
 
     // ...
     render () {
@@ -140,14 +137,14 @@ class WalletDrawerCore extends Component {
                 }}
                 open={this.props.ui.drawer.isOpened}
             >
-                <BalanceNavLink
-                    onClick={this.handleMenuClick.bind(this, "Balances")}
+                <BalancesNavLink
+                    onClick={this.props.selectView.bind(this, "Balances")}
                 />
                 <PaymentsNavLink
-                    onClick={this.handleMenuClick.bind(this, "Payments")}
+                    onClick={this.props.selectView.bind(this, "Payments")}
                 />
                 <AccountNavLink
-                    onClick={this.handleMenuClick.bind(this, "Account")}
+                    onClick={this.props.selectView.bind(this, "Account")}
                 />
             </Drawer>
         )
@@ -157,16 +154,17 @@ class WalletDrawerCore extends Component {
 
 
 // ...
-const WalletDrawer = connect(
-    // mapStateToProps
-    (state) => ({ ui: state.ui, }),
+const WalletDrawer = withRouter(connect(
+    // map state to props.
+    (state) => ({
+        ui: state.ui,
+    }),
 
-    // matchDispatchToProps
+    // match dispatch to props.
     (dispatch) => bindActionCreators({
-        closeDrawer,
         selectView,
     }, dispatch)
-)(WalletDrawerCore)
+)(WalletDrawerCore))
 
 
 
@@ -175,15 +173,14 @@ const WalletDrawer = connect(
 class Header extends Component {
 
     // ...
-    handleToggle () {
+    handleToggle = () =>
         this.props.ui.drawer.isOpened
             ? this.props.closeDrawer()
             : this.props.openDrawer()
-    }
 
 
     // ...
-    handleLogOutClick (_state) {
+    handleLogOutClick () {
         this.props.logOutOfHorizon()
         this.props.logOut()
         this.props.selectView("/")
@@ -265,8 +262,8 @@ class Header extends Component {
 
 
 // ...
-export default connect(
-    // mapStateToProps
+export default withRouter(connect(
+    // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
         auth: state.auth,
@@ -274,7 +271,7 @@ export default connect(
         ui: state.ui,
     }),
 
-    // matchDispatchToProps
+    // match dispatch to props.
     (dispatch) => bindActionCreators({
         logOutOfHorizon,
         logOut,
@@ -282,4 +279,4 @@ export default connect(
         closeDrawer,
         selectView,
     }, dispatch)
-)(Header)
+)(Header))
