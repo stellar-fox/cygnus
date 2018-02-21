@@ -15,11 +15,6 @@ import {
     selectView,
 } from "../../actions/index"
 
-import {
-    pubKeyAbbr,
-    handleException,
-} from "../../lib/utils"
-
 import AppBarTitle from "./AppBarTitle"
 import AppBarItems from "./AppBarItems"
 
@@ -207,6 +202,19 @@ const WalletDrawer = withRouter(connect(
 class WalletAppBarCore extends Component {
 
     // ...
+    static style = {
+        appBar : {
+            position: "fixed",
+            left: 0,
+            top: 0,
+        },
+        icon : {
+            color: "rgba(15,46,83,0.45)",
+        },
+    }
+
+
+    // ...
     constructor (props) {
         super(props)
         this.handleToggle = this.handleToggle.bind(this)
@@ -236,40 +244,15 @@ class WalletAppBarCore extends Component {
                 title={
                     <div className="flex-row">
                         <AppBarTitle />
-                        <AppBarItems
-                            accountTitle={
-                                this.props.accountInfo.exists === true &&
-                                this.props.accountInfo.account.account
-                                    .home_domain ? (
-                                        <div className="account-home-domain">
-                                            {
-                                                this.props.accountInfo.account
-                                                    .account.home_domain
-                                            }
-                                        </div>
-                                    ) : (
-                                        <div>Account Number</div>
-                                    )
-                            }
-                            accountNumber={
-                                handleException(
-                                    () => pubKeyAbbr(this.props.accountInfo.pubKey),
-                                    (_) => "XXXXXX-XXXXXX"
-                                )
-                            }
-                        />
+                        <AppBarItems />
                     </div>
                 }
                 className="navbar"
-                style={{
-                    position: "fixed",
-                    left: 0,
-                    top: 0,
-                }}
+                style={WalletAppBarCore.style.appBar}
                 onLeftIconButtonClick={this.handleToggle}
                 iconElementRight={
                     <IconButton
-                        iconStyle={{ color: "rgba(15,46,83,0.45)", }}
+                        iconStyle={WalletAppBarCore.style.icon}
                         onClick={this.handleLogOutClick}
                     >
                         <i className="material-icons">power_settings_new</i>
@@ -286,7 +269,6 @@ class WalletAppBarCore extends Component {
 const WalletAppBar = withRouter(connect(
     // map state to props.
     (state) => ({
-        accountInfo: state.accountInfo,
         drawerOpened: state.ui.drawer.isOpened,
     }),
 
@@ -315,6 +297,7 @@ class Header extends Component {
             </Fragment>
         )
     }
+
 }
 
 
