@@ -110,9 +110,9 @@
 .payment-card::after {
   content: "";
   /* background: url('/img/sf.svg'); */
-  background: linear-gradient(63deg, #999 23%, transparent 23%) 7px 0, 
-    linear-gradient(63deg, transparent 74%, #999 78%), 
-    linear-gradient(63deg, transparent 34%, #999 38%, #999 58%, transparent 62%), 
+  background: linear-gradient(63deg, #999 23%, transparent 23%) 7px 0,
+    linear-gradient(63deg, transparent 74%, #999 78%),
+    linear-gradient(63deg, transparent 34%, #999 38%, #999 58%, transparent 62%),
     #444;
   background-size: 4px 10px;
 
@@ -197,4 +197,12 @@
 
 .bigger {
   font-size: 1.3rem;
+}
+
+.header-icon > span {
+  font-size: 2rem;
+}
+
+.header-icon > i {
+  font-size: 2rem !important;
 }
