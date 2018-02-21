@@ -36,7 +36,7 @@ class BalancesNavLinkCore extends Component {
         return (
             <NavLink
                 className="menu-item"
-                onClick={this.props.onClick}
+                onClick={this.props.selectView.bind(this, "Balances")}
                 exact
                 activeClassName="active"
                 to="/"
@@ -51,7 +51,15 @@ class BalancesNavLinkCore extends Component {
 
 
 // ...
-const BalancesNavLink = withRouter(BalancesNavLinkCore)
+const BalancesNavLink = withRouter(connect(
+    // map state to props.
+    null,
+
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        selectView,
+    }, dispatch)
+)(BalancesNavLinkCore))
 
 
 
@@ -64,7 +72,7 @@ class PaymentsNavLinkCore extends Component {
         return this.props.accountInfo.exists ? (
             <NavLink
                 className="menu-item"
-                onClick={this.props.onClick}
+                onClick={this.props.selectView.bind(this, "Payments")}
                 exact
                 activeClassName="active"
                 to="/payments/"
@@ -83,7 +91,12 @@ const PaymentsNavLink = withRouter(connect(
     // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
-    })
+    }),
+
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        selectView,
+    }, dispatch)
 )(PaymentsNavLinkCore))
 
 
@@ -97,7 +110,7 @@ class AccountNavLinkCore extends Component {
         return (
             <NavLink
                 className="menu-item"
-                onClick={this.props.onClick}
+                onClick={this.props.selectView.bind(this, "Account")}
                 exact
                 activeClassName="active"
                 to="/account/"
@@ -112,7 +125,15 @@ class AccountNavLinkCore extends Component {
 
 
 // ...
-const AccountNavLink = withRouter(AccountNavLinkCore)
+const AccountNavLink = withRouter(connect(
+    // map state to props.
+    null,
+
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        selectView,
+    }, dispatch)
+)(AccountNavLinkCore))
 
 
 
@@ -137,15 +158,9 @@ class WalletDrawerCore extends Component {
                 }}
                 open={this.props.ui.drawer.isOpened}
             >
-                <BalancesNavLink
-                    onClick={this.props.selectView.bind(this, "Balances")}
-                />
-                <PaymentsNavLink
-                    onClick={this.props.selectView.bind(this, "Payments")}
-                />
-                <AccountNavLink
-                    onClick={this.props.selectView.bind(this, "Account")}
-                />
+                <BalancesNavLink />
+                <PaymentsNavLink />
+                <AccountNavLink />
             </Drawer>
         )
     }
@@ -158,12 +173,7 @@ const WalletDrawer = withRouter(connect(
     // map state to props.
     (state) => ({
         ui: state.ui,
-    }),
-
-    // match dispatch to props.
-    (dispatch) => bindActionCreators({
-        selectView,
-    }, dispatch)
+    })
 )(WalletDrawerCore))
 
 
@@ -271,7 +281,7 @@ export default withRouter(connect(
         ui: state.ui,
     }),
 
-    // match dispatch to props.
+    // map dispatch to props.
     (dispatch) => bindActionCreators({
         logOutOfHorizon,
         logOut,
