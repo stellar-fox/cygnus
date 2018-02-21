@@ -100,6 +100,7 @@ class Balances extends Component {
             paymentCardVisible: false,
             newAccount: false,
             minimumReserveMessage: "",
+            sendingCompleteModalShown: false,
         }
     }
 
@@ -333,6 +334,13 @@ class Balances extends Component {
 
 
     // ...
+    closeSendingCompleteModal () {
+      this.setState({
+        sendingCompleteModalShown: false,
+      })
+    }
+
+    // ...
     handlePaymentSnackBarClose () {
         this.setState({
             sbPayment: false,
@@ -427,7 +435,7 @@ class Balances extends Component {
                         this.props.accountInfo.pubKey,
                         transaction
                     )
-                    
+
                     this.setState({
                         deviceConfirmModalShown: false,
                         broadcastTxModalShown: true,
@@ -437,10 +445,11 @@ class Balances extends Component {
                     return server.submitTransaction(signedTransaction)
                 })
                 .then((result) => {
-                    
+
                     this.setState({
                         transactionType: null,
                         broadcastTxModalShown: false,
+                        sendingCompleteModalShown: true,
                     })
                     console.log('Success! Results:', result)
                     this.setState({
@@ -461,6 +470,7 @@ class Balances extends Component {
                         transactionType: null,
                         deviceConfirmModalShown: false,
                         broadcastTxModalShown: false,
+                        sendingCompleteModalShown: false,
                         amountEntered: false,
                         payee: null,
                         memoRequired: false,
@@ -524,6 +534,7 @@ class Balances extends Component {
                     this.setState({
                         transactionType: null,
                         broadcastTxModalShown: false,
+                        sendingCompleteModalShown: true,
                     })
                     console.log('Success! Results:', result)
                     this.setState({
@@ -544,6 +555,7 @@ class Balances extends Component {
                         transactionType: null,
                         deviceConfirmModalShown: false,
                         broadcastTxModalShown: false,
+                        sendingCompleteModalShown: false,
                         amountEntered: false,
                         payee: null,
                         memoRequired: false,
@@ -559,7 +571,7 @@ class Balances extends Component {
         }
     }
 
-    
+
     // ...
     showErrorModal (message) {
         this.setState({
@@ -568,6 +580,8 @@ class Balances extends Component {
         })
     }
 
+
+    // ...
     closeErrorModal () {
         this.setState({
             errorModalShown: false,
@@ -575,11 +589,12 @@ class Balances extends Component {
         })
     }
 
+
     // ...
     convertToXLM (amount) {
         BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
         const fiatAmount = new BigNumber(amount)
-        if (this.props.accountInfo.rates !== undefined) {
+        if (this.props.accountInfo.rates !== undefined && this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined) {
             return fiatAmount.dividedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toString()
         } else {
             return "0"
@@ -591,14 +606,14 @@ class Balances extends Component {
     convertToFiat (amount) {
         BigNumber.config({ DECIMAL_PLACES: 2, })
         const nativeAmount = new BigNumber(amount)
-        if (this.props.accountInfo.rates !== undefined) {
+        if (this.props.accountInfo.rates !== undefined && this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined) {
             return nativeAmount.multipliedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toFixed(2)
         } else {
             return "0"
         }
     }
 
-    
+
 
     // ...
     async sendPayment () {
@@ -909,7 +924,7 @@ class Balances extends Component {
         return (
             <Fragment>
                 <div>
-                    Please confirm the following info on your device's screen.
+                    Please confirm the following info on your device&apos;s screen.
                 </div>
                 <List>
                     <ListItem
@@ -990,7 +1005,7 @@ class Balances extends Component {
     broadcastTransactionMessage () {
         return (
             <Fragment>
-                <div className="green">
+                <div className="bigger green">
                     Your money transfer is on its way.
                 </div>
                 <div className="faded p-b">
@@ -1001,6 +1016,21 @@ class Balances extends Component {
                     color="rgba(15,46,83,0.6)"
                     mode="indeterminate"
                 />
+            </Fragment>
+        )
+    }
+
+
+    // ...
+    sendingCompleteMessage () {
+        return (
+            <Fragment>
+              <div className="bigger green">
+                  The money has arrived to its destination.
+              </div>
+              <div className="faded p-b">
+                  Thank you for using Stellar Fox.
+              </div>
             </Fragment>
         )
     }
@@ -1034,6 +1064,16 @@ class Balances extends Component {
                 label="OK"
                 keyboardFocused={true}
                 onClick={this.closeErrorModal.bind(this)}
+            />,
+        ]
+
+        const actionsSendingComplete = [
+            <RaisedButton
+                backgroundColor="rgb(15,46,83)"
+                labelColor="rgb(244,176,4)"
+                label="OK"
+                keyboardFocused={true}
+                onClick={this.closeSendingCompleteModal.bind(this)}
             />,
         ]
 
@@ -1101,9 +1141,9 @@ class Balances extends Component {
 
                     <Dialog
                         title={
-                            <div>
+                            <div className="header-icon">
                                 <i className="material-icons">send</i>
-                                <span>Sending payment ...</span>
+                                <span>Sending Payment</span>
                             </div>
                         }
                         actions={null}
@@ -1126,6 +1166,25 @@ class Balances extends Component {
                     >
                         {this.state.errorModalMessage}
                     </Dialog>
+
+                    <Dialog
+                        title={
+                            <div className="header-icon">
+                                <i className="material-icons">send</i>
+                                <span>Transfer complete.</span>
+                            </div>
+                        }
+                        actions={actionsSendingComplete}
+                        modal={true}
+                        open={this.state.sendingCompleteModalShown}
+                        onRequestClose={this.closeSendingCompleteModal.bind(this)}
+                        paperClassName="modal-body"
+                        titleClassName="modal-title"
+                    >
+                        {this.sendingCompleteMessage.call(this)}
+                    </Dialog>
+
+
 
         </div>
 
@@ -1150,7 +1209,7 @@ class Balances extends Component {
                         <li>Address book of your payment contacts</li>
                         <li>Manage powerful account settings</li>
                       </ul>
-                      <p>Would you like to open one today? It's super easy!</p>
+                      <p>Would you like to open one today? It&apos;s super easy!</p>
                     </div>
                   </div>
                   <div></div>
