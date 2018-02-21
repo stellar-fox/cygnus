@@ -16,7 +16,6 @@ import {
 } from "../../actions/index"
 
 import {
-    flatten,
     pubKeyAbbr,
     handleException,
 } from "../../lib/utils"
@@ -30,6 +29,149 @@ import "./Header.css"
 
 
 // ...
+class BalanceNavLink extends Component {
+
+    // ...
+    render () {
+        return (
+            <NavLink
+                className="menu-item"
+                onClick={this.props.onClick}
+                exact
+                activeClassName="active"
+                to="/"
+            >
+                <i className="material-icons">account_balance_wallet</i>
+                Balance
+            </NavLink>
+        )
+    }
+
+}
+
+
+
+
+// ...
+class PaymentsNavLinkCore extends Component {
+
+    // ...
+    render () {
+        return this.props.accountInfo.exists ? (
+            <NavLink
+                className="menu-item"
+                onClick={this.props.onClick}
+                exact
+                activeClassName="active"
+                to="/payments/"
+            >
+                <i className="material-icons">payment</i>
+                Payments
+            </NavLink>
+        ) : null
+    }
+
+}
+
+
+// ...
+const PaymentsNavLink = connect(
+    // mapStateToProps
+    (state) => ({ accountInfo: state.accountInfo, }),
+
+    // matchDispatchToProps
+    (dispatch) => bindActionCreators({}, dispatch)
+)(PaymentsNavLinkCore)
+
+
+
+
+// ...
+class AccountNavLink extends Component {
+
+    // ...
+    render () {
+        return (
+            <NavLink
+                className="menu-item"
+                onClick={this.props.onClick}
+                exact
+                activeClassName="active"
+                to="/account/"
+            >
+                <i className="material-icons">account_balance</i>
+                Account
+            </NavLink>
+        )
+    }
+
+}
+
+
+
+
+// ...
+class WalletDrawerCore extends Component {
+
+    // ...
+    handleMenuClick (view, _obj) {
+        this.props.selectView(view)
+        let th = setTimeout(() => {
+            this.props.closeDrawer()
+            clearTimeout(th)
+        }, 300)
+    }
+
+
+    // ...
+    render () {
+        return (
+            <Drawer
+                containerStyle={{
+                    width: 180,
+                    height: "calc(100% - 100px)",
+                    top: 65,
+                    borderTop: "1px solid #052f5f",
+                    borderBottom: "1px solid #052f5f",
+                    borderLeft: "1px solid #052f5f",
+                    borderTopRightRadius: "3px",
+                    borderBottomRightRadius: "3px",
+                    backgroundColor: "#2e5077",
+                }}
+                open={this.props.ui.drawer.isOpened}
+            >
+                <BalanceNavLink
+                    onClick={this.handleMenuClick.bind(this, "Balances")}
+                />
+                <PaymentsNavLink
+                    onClick={this.handleMenuClick.bind(this, "Payments")}
+                />
+                <AccountNavLink
+                    onClick={this.handleMenuClick.bind(this, "Account")}
+                />
+            </Drawer>
+        )
+    }
+
+}
+
+
+// ...
+const WalletDrawer = connect(
+    // mapStateToProps
+    (state) => ({ ui: state.ui, }),
+
+    // matchDispatchToProps
+    (dispatch) => bindActionCreators({
+        closeDrawer,
+        selectView,
+    }, dispatch)
+)(WalletDrawerCore)
+
+
+
+
+// ...
 class Header extends Component {
 
     // ...
@@ -37,13 +179,6 @@ class Header extends Component {
         this.props.ui.drawer.isOpened
             ? this.props.closeDrawer()
             : this.props.openDrawer()
-    }
-
-
-    // ...
-    handleMenuClick (view, _obj) {
-        this.props.selectView(view)
-        setTimeout(() => this.props.closeDrawer(), 300)
     }
 
 
@@ -118,78 +253,15 @@ class Header extends Component {
 
 
     // ...
-    renderDrawer (key) {
-        const renderNavLink = (key, onClick, toPath, icon, label) => [
-            <NavLink
-                key={key}
-                className="menu-item"
-                onClick={onClick}
-                exact
-                activeClassName="active"
-                to={toPath}
-            >
-                <i className="material-icons">{icon}</i>
-                {label}
-            </NavLink>,
-        ]
-
-        return (
-            <Drawer
-                key={key}
-                containerStyle={{
-                    width: 180,
-                    height: "calc(100% - 100px)",
-                    top: 65,
-                    borderTop: "1px solid #052f5f",
-                    borderBottom: "1px solid #052f5f",
-                    borderLeft: "1px solid #052f5f",
-                    borderTopRightRadius: "3px",
-                    borderBottomRightRadius: "3px",
-                    backgroundColor: "#2e5077",
-                }}
-                open={this.props.ui.drawer.isOpened}
-            >
-                {flatten([
-                    renderNavLink(
-                        1,
-                        this.handleMenuClick.bind(this, "Balances"),
-                        "/",
-                        "account_balance_wallet",
-                        "Balances"
-                    ),
-                    this.props.accountInfo.exists ?
-                        renderNavLink(
-                            2,
-                            this.handleMenuClick.bind(this, "Payments"),
-                            "/payments/",
-                            "payment",
-                            "Payments"
-                        ) : [],
-                    renderNavLink(
-                        3,
-                        this.handleMenuClick.bind(this, "Account"),
-                        "/account/",
-                        "account_balance",
-                        "Account"
-                    ),
-                ])}
-            </Drawer>
-        )
-    }
-
-
-    // ...
     render () {
         return (
-            <Fragment>{[
-                this.renderAppBar(1),
-                this.renderDrawer(2),
-            ]}</Fragment>
+            <Fragment>
+                {this.renderAppBar(1)}
+                <WalletDrawer />
+            </Fragment>
         )
     }
 }
-
-
 
 
 // ...
