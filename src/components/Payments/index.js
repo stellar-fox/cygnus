@@ -302,7 +302,7 @@ class Payments extends Component {
         this.setState({ sbPayment: false, })
 
     // ...
-    handleTabSelect (value) {
+    handleTabSelect (_, value) {
         this.props.setTab({ payments: value, })
         this.setState({
             tabSelected: value,
@@ -346,6 +346,7 @@ class Payments extends Component {
             )
         )
 
+        
     // ...
     decodeEffectType (effect, index) {
         let humanizedEffectType = ""
@@ -786,7 +787,7 @@ class Payments extends Component {
                         tabItemContainerStyle={styles.container}
                         inkBarStyle={styles.inkBar}
                         value={this.props.ui.tabs.payments}
-                        onChange={this.handleTabSelect}
+                        onChange={this.handleTabSelect.bind(this, this.value)}
                     >
                         <Tab style={styles.tab} label="History" value="1">
                             <div className="tab-content">
