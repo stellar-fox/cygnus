@@ -11,17 +11,38 @@ import "./Content.css"
 
 
 
+// ...
 class Content extends Component {
+
+    // ...
+    constructor (props) {
+        super(props)
+        this.state = {
+            style: this.computeStyle(this.props.drawerOpened),
+        }
+    }
+
+
+    // ...
+    computeStyle = (drawerOpened) => ({
+        paddingLeft: drawerOpened ? 200 : 20,
+    })
+
+
+    // ...
+    componentWillReceiveProps (nextProps) {
+        if (this.props.drawerOpened !== nextProps.drawerOpened) {
+            this.setState({
+                style: this.computeStyle(nextProps.drawerOpened),
+            })
+        }
+    }
+
 
     // ...
     render () {
         return (
-            <div
-                style={{
-                    paddingLeft: this.props.ui.drawer.isOpened ? 200 : 20,
-                }}
-                className="content"
-            >
+            <div style={this.state.style} className="content">
                 <Switch>
                     <Route exact path="/" component={Balances} />
                     <Route exact path="/payments" component={Payments} />
@@ -33,9 +54,10 @@ class Content extends Component {
 }
 
 
+// ...
 export default withRouter(connect(
     // map state to props.
     (state) => ({
-        ui: state.ui,
+        drawerOpened: state.ui.drawer.isOpened,
     })
 )(Content))
