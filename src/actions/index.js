@@ -50,10 +50,13 @@ export const logOut = (state) => ({
     payload: state,
 })
 
-export const selectView = (state) => ({
+
+// ...
+export const selectView = (viewName) => ({
     type: "SELECT_VIEW",
-    payload: state,
+    payload: viewName,
 })
+
 
 export const openDrawer = (state) => ({
     type: "OPEN_DRAWER",

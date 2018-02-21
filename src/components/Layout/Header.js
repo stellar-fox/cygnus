@@ -207,7 +207,7 @@ class Header extends Component {
                     <div className="flex-row">
                         <AppBarTitle
                             title={<span>Stellar Fox</span>}
-                            subtitle={this.props.nav.view}
+                            subtitle={this.props.nav.viewName}
                             network={<div className="badge">test net</div>}
                             ledgerUsed={
                                 this.props.auth.ledgerSoftwareVersion ? (
