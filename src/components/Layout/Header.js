@@ -266,7 +266,7 @@ class WalletAppBarCore extends Component {
 
 
 // ...
-const WalletAppBar = withRouter(connect(
+const WalletAppBar = connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
@@ -280,13 +280,13 @@ const WalletAppBar = withRouter(connect(
         closeDrawer,
         selectView,
     }, dispatch)
-)(WalletAppBarCore))
+)(WalletAppBarCore)
 
 
 
 
 // ...
-class Header extends Component {
+export default class Header extends Component {
 
     // ...
     render () {
@@ -299,7 +299,3 @@ class Header extends Component {
     }
 
 }
-
-
-// ...
-export default withRouter(Header)
