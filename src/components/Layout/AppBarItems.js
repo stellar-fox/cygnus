@@ -49,6 +49,6 @@ export default connect(
     (state) => ({
         pubKey: state.accountInfo.pubKey,
         accountExists : state.accountInfo.exists,
-        homeDomain : state.accountInfo.account.account.home_domain,
+        homeDomain: (state.accountInfo.account) && (state.accountInfo.account.account.home_domain),
     })
 )(AppBarItems)
