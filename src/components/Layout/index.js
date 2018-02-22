@@ -6,7 +6,7 @@ import {
     Switch,
 } from "react-router-dom"
 import { connect } from "react-redux"
-import Header from "./Header"
+import { WalletAppBar, WalletDrawer } from "./Header"
 import Content from "./Content"
 import Footer from "./Footer"
 import Welcome from "../Welcome"
@@ -22,9 +22,10 @@ class Layout extends Component {
         return (
             <MuiThemeProvider muiTheme={stellarTheme}>
                 <Router>{
-                    this.props.auth.isHorizonLoggedIn ? (
+                    this.props.loggedIn ? (
                         <Fragment>
-                            <Header />
+                            <WalletAppBar />
+                            <WalletDrawer />
                             <Content />
                             <Footer />
                         </Fragment>
@@ -44,5 +45,7 @@ class Layout extends Component {
 // ...
 export default connect(
     // map state to props.
-    (state) => ({ auth: state.auth, })
+    (state) => ({
+        loggedIn: state.auth.isHorizonLoggedIn,
+    })
 )(Layout)
