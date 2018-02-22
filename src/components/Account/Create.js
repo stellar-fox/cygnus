@@ -1,4 +1,6 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
 import {
     Step,
     Stepper,
@@ -17,9 +19,18 @@ import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
 import axios from "axios"
 import { config } from "../../config"
+import {
+    accountExistsOnLedger,
+    accountMissingOnLedger,
+    logInToHorizon,
+    selectView,
+    setAccountRegistered,
+    setAccountPath,
+    setLedgerSoftwareVersion,
+    setPublicKey,
+} from "../../actions/index"
 
-
-export default class NewAccount extends Component {
+class NewAccount extends Component {
 
     // ...
     constructor (props) {
@@ -43,11 +54,11 @@ export default class NewAccount extends Component {
 
         this.setState({
             stepIndex: stepIndex + 1,
-            finished: stepIndex >= 1,
+            finished: stepIndex >= 2,
         })
 
-        if(stepIndex >= 1) {
-            this.props.onComplete("DONE")
+        if (stepIndex >= 2) {
+            this.props.onComplete("LOGIN")
         }
     }
 
@@ -143,6 +154,11 @@ export default class NewAccount extends Component {
 
         this.handleNext.call(this)
 
+        // LOGIN UPON ACCOUNT CREATION
+        this.props.setPublicKey(ledgerData.publicKey)
+        this.props.setLedgerSoftwareVersion(ledgerData.softwareVersion)
+        this.props.setAccountPath(ledgerData.bip32Path)
+
     }
 
 
@@ -160,12 +176,34 @@ export default class NewAccount extends Component {
                         disableFocusRipple={true}
                         backgroundColor="rgb(15,46,83)"
                         labelColor="rgb(244,176,4)"
-                        onClick={this.compoundValidate.bind(this)}
+                        onClick={this.handleNext.bind(this)}
                         style={{ marginRight: 12, }}
                     />
                 )}
 
                 {step === 1 && (
+                    <Fragment>
+                        <RaisedButton
+                            label="Next"
+                            disableTouchRipple={true}
+                            disableFocusRipple={true}
+                            backgroundColor="rgb(15,46,83)"
+                            labelColor="rgb(244,176,4)"
+                            onClick={this.compoundValidate.bind(this)}
+                            style={{ marginRight: 12, }}
+                        />
+                        <FlatButton
+                            label="Back"
+                            disabled={stepIndex === 0}
+                            disableTouchRipple={true}
+                            disableFocusRipple={true}
+                            labelStyle={{ color: "rgb(15,46,83)", }}
+                            onClick={this.handlePrev.bind(this)}
+                        />
+                    </Fragment>
+                )}
+
+                {step === 2 && (
                     <div>
                         <div className="dark">
 
@@ -317,6 +355,22 @@ export default class NewAccount extends Component {
                 <Stepper connector={null} activeStep={stepIndex} orientation="vertical">
                     <Step>
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">perm_identity</i>}>
+                            About your account
+                        </StepLabel>
+                        <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
+                            <div>
+                                Welcome to Stellar Fox, a first of its kind
+                                easy to use, secure and super fast money
+                                transfer platform. Your account will let you
+                                send money to anyone in the World, with
+                                fractional fees regardless of the amount and
+                                at unpresedented transfer speed.
+                            </div>
+                            {this.renderStepActions(0)}
+                        </StepContent>
+                    </Step>
+                    <Step>
+                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">perm_identity</i>}>
                             Choose email and password.
                         </StepLabel>
                         <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
@@ -350,7 +404,7 @@ export default class NewAccount extends Component {
                                     ref={(self) => { this.textInputFieldPasswordConf = self }}
                                 />
                             </div>
-                            {this.renderStepActions(0)}
+                            {this.renderStepActions(1)}
                         </StepContent>
                     </Step>
                     <Step>
@@ -359,23 +413,22 @@ export default class NewAccount extends Component {
                         </StepLabel>
                         <StepContent style={{ borderLeft: "none", }}>
                             <div className="p-b"></div>
-                            {this.renderStepActions(1)}
+                            {this.renderStepActions(2)}
                         </StepContent>
                     </Step>
                     <Step>
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">account_box</i>}>
-                            Your Account
+                            Your new account.
                         </StepLabel>
                         <StepContent style={{ borderLeft: "none", }}>
-                            {this.renderStepActions(2)}
+                            {this.renderStepActions(3)}
                         </StepContent>
                     </Step>
                 </Stepper>
                 {(finished && this.state.accountCreated) && (
                     <div style={{ fontSize: "1rem", margin: "20px 0", textAlign: "center", }}>
                         <i className="material-icons">done_all</i>
-                        Your account has been setup and you have been
-                        logged in.
+                        Your account has been setup. Go ahead, check it out!
                     </div>
                 )}
                 {(finished && !this.state.accountCreated) && (
@@ -391,3 +444,21 @@ export default class NewAccount extends Component {
         )
     }
 }
+
+function matchDispatchToProps (dispatch) {
+    return bindActionCreators(
+        {
+            accountExistsOnLedger,
+            accountMissingOnLedger,
+            logInToHorizon,
+            selectView,
+            setAccountRegistered,
+            setAccountPath,
+            setLedgerSoftwareVersion,
+            setPublicKey,
+        },
+        dispatch
+    )
+}
+
+export default connect(null, matchDispatchToProps)(NewAccount)

@@ -158,6 +158,11 @@ class Welcome extends Component {
         this.setState({
             modalShown: false,
         })
+
+        // VERY, VERY WRONG PLACE FOR THIS - BUT FOR NOW ... QUICK HACK
+        if (this.props.accountInfo.pubKey) {
+            this.logInViaPublicKey(this.props.accountInfo.pubKey, false)
+        }
     }
 
     // ...
@@ -378,11 +383,8 @@ class Welcome extends Component {
                             Welcome to the money revolution.
                         </div>
                         <div className="subtitle">
-                            Open your own{" "}
-                            <em>
-                                <b>lifetime bank</b>
-                            </em>{" "}
-                            today and reserve your payment address.
+                            Open your own <b>lifetime bank</b> today and
+                            reserve personalized payment address.
                         </div>
                     </div>
                     <div className="flex-row-centered">
@@ -425,11 +427,11 @@ class Welcome extends Component {
                                     <i className="material-icons">
                                         perm_contact_calendar
                                     </i>
-                                    Send to address book contacts.
+                                    Pay to address book contacts.
                                 </div>
                                 <div className="col-item">
                                     <i className="material-icons">email</i>
-                                    Email payment addresses.
+                                    Use email as payment address.
                                 </div>
                             </div>
                             <div className="column">
