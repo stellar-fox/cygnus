@@ -85,10 +85,19 @@ export default function (state = initState, action) {
             }
             break
 
+        // FIXME: merge streamers
         case "SET_STREAMER":
             state = {
                 ...state,
                 streamer: action.payload,
+            }
+            break
+
+        // ...
+        case "SET_OPTIONS_STREAMER":
+            state = {
+                ...state,
+                optionsStreamer: action.payload,
             }
             break
 

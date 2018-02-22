@@ -34,6 +34,7 @@ import {
     hideAlert,
     setCurrency,
     setStreamer,
+    setOptionsStreamer,
     setCurrencyPrecision,
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -128,20 +129,22 @@ class Balances extends Component {
                 currencyText: this.getCurrencyText(this.props.accountInfo.currency),
             })
         }
+
+        // FIXME: merge streamers
         this.props.setStreamer(this.paymentsStreamer.call(this))
+        this.props.setOptionsStreamer(this.optionsStreamer.call(this))
     }
 
 
     // ...
     componentWillUnmount () {
         this.props.accountInfo.streamer.call(this)
+        this.props.accountInfo.optionsStreamer.call(this)
     }
 
 
-    // ...
-    getCurrencySymbol (currency) {
-        return currency
-    }
+    // :-D
+    getCurrencySymbol = (currency) => currency
 
 
     // ...
@@ -163,6 +166,36 @@ class Balances extends Component {
         }
         return text
     }
+
+
+    // ...
+    optionsStreamer () {
+        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
+        return server.operations().cursor("now").stream({
+            onmessage: (message) => {
+                /*
+                * Set options. (test)
+                */
+                if (
+                    message.type === "set_options"  &&
+                    message.source_account === this.props.accountInfo.pubKey  &&
+                    this.props.accountInfo.account.account.home_domain !== message.home_domain
+
+                ) {
+                    this.updateAccount.call(this)
+                    this.setState({
+                        sbPayment: true,
+                        sbPaymentText: "Home domain changed: ",
+                        sbPaymentAmount:
+                            message.home_domain ?
+                                message.home_domain : "DOMAIN REMOVED",
+                        sbPaymentAssetCode: "",
+                    })
+                }
+            },
+        })
+    }
+
 
     // ...
     paymentsStreamer () {
@@ -227,12 +260,14 @@ class Balances extends Component {
         })
     }
 
+
     // ...
     updateDate (_, date) {
         this.setState({
             payDate: date,
         })
     }
+
 
     // ...
     updateAccount () {
@@ -242,6 +277,7 @@ class Balances extends Component {
                 throw new Error("The destination account does not exist!")
             })
             .then((account) => {
+                window.XXX = account
                 this.props.accountExistsOnLedger({account,})
             }, (_) => {
                 this.props.accountMissingOnLedger()
@@ -335,9 +371,9 @@ class Balances extends Component {
 
     // ...
     closeSendingCompleteModal () {
-      this.setState({
-        sendingCompleteModalShown: false,
-      })
+        this.setState({
+            sendingCompleteModalShown: false,
+        })
     }
 
     // ...
@@ -1025,12 +1061,12 @@ class Balances extends Component {
     sendingCompleteMessage () {
         return (
             <Fragment>
-              <div className="bigger green">
-                  The money has arrived to its destination.
-              </div>
-              <div className="faded p-b">
-                  Thank you for using Stellar Fox.
-              </div>
+                <div className="bigger green">
+                    The money has arrived to its destination.
+                </div>
+                <div className="faded p-b">
+                    Thank you for using Stellar Fox.
+                </div>
             </Fragment>
         )
     }
@@ -1512,6 +1548,7 @@ function matchDispatchToProps (dispatch) {
         hideAlert,
         setCurrency,
         setStreamer,
+        setOptionsStreamer,
         setCurrencyPrecision,
         accountExistsOnLedger,
         accountMissingOnLedger,

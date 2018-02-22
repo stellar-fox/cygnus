@@ -123,10 +123,20 @@ export const setCurrencyPrecision = (state) => ({
     payload: state,
 })
 
-export const setStreamer = (state) => ({
+
+// FIXME (merge streamers)
+export const setStreamer = (streamer) => ({
     type: "SET_STREAMER",
-    payload: state,
+    payload: streamer,
 })
+
+
+// FIXME ...
+export const setOptionsStreamer = (optionsStreamer) => ({
+    type: "SET_OPTIONS_STREAMER",
+    payload: optionsStreamer,
+})
+
 
 export const setInvalidInputMessage = (state) => ({
     type: "SET_INVALID_INPUT_MESSAGE",
