@@ -18,6 +18,7 @@ import {
     federationAddressValid,
     federationLookup,
     StellarSdk,
+    extractPathIndex,
 } from "../../lib/utils"
 import CreateAccount from "../Account/Create"
 import {
@@ -87,7 +88,7 @@ class Welcome extends Component {
         }
         this.props.setAccountPath(ledgerParams.bip32Path)
         this.props.setLedgerSoftwareVersion(ledgerParams.softwareVersion)
-        this.logInViaPublicKey(ledgerParams.publicKey, false)
+        this.ledgerAuthenticateUser(ledgerParams)
     }
 
     // ...
@@ -171,6 +172,37 @@ class Welcome extends Component {
             modalButtonText: text,
         })
     }
+
+
+    // ...
+    ledgerAuthenticateUser (ledgerParams) {
+        
+        this.logInViaPublicKey(ledgerParams.publicKey, false)
+
+        axios
+            .post(
+                `${config.api}/user/ledgerauth/${
+                    ledgerParams.publicKey
+                }/${
+                    extractPathIndex(ledgerParams.bip32Path)
+                }`
+            )
+            .then((response) => {
+                this.props.logIn({
+                    userId: response.data.user_id,
+                    token: response.data.token,
+                })
+            })
+            .catch((error) => {
+                if (error.response.status === 401) {
+                    // theoretically this should not happen
+                    console.log("Ledger user not found.") // eslint-disable-line no-console
+                } else {
+                    console.log(error.response.statusText) // eslint-disable-line no-console
+                }
+            })
+    }
+
 
     // ...
     authenticateUser () {
