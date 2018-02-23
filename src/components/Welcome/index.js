@@ -152,6 +152,11 @@ class Welcome extends Component {
         // VERY, VERY WRONG PLACE FOR THIS - BUT FOR NOW ... QUICK HACK
         if (this.props.accountInfo.pubKey) {
             this.logInViaPublicKey(this.props.accountInfo.pubKey, false)
+            this.ledgerAuthenticateUser({
+                publicKey: this.props.accountInfo.pubKey,
+                bip32Path: this.props.accountInfo.accountPath,
+                softwareVersion: this.props.auth.setLedgerSoftwareVersion,
+            })
         }
     }
 

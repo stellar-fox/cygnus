@@ -27,6 +27,7 @@ import {
     formatAmount,
     pubKeyAbbr,
     handleException,
+    extractPathIndex,
 } from "../lib/utils"
 import {
     setExchangeRate,
@@ -38,6 +39,8 @@ import {
     setCurrencyPrecision,
     accountExistsOnLedger,
     accountMissingOnLedger,
+    setAccountRegistered,
+    logIn,
 } from "../actions/index"
 import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
@@ -183,7 +186,10 @@ class Balances extends Component {
         thb: "Thai Baht",
         pln: "Polish Złoty",
     })
+
     
+    // ...
+
 
     // ...
     optionsStreamer () {
@@ -294,7 +300,6 @@ class Balances extends Component {
                 throw new Error("The destination account does not exist!")
             })
             .then((account) => {
-                window.XXX = account
                 this.props.accountExistsOnLedger({account,})
             }, (_) => {
                 this.props.accountMissingOnLedger()
@@ -403,9 +408,32 @@ class Balances extends Component {
 
     // ...
     handleModalClose () {
-        this.setState({
-            modalShown: false,
-        })
+        axios
+            .post(
+                `${config.api}/user/ledgerauth/${
+                    this.props.accountInfo.pubKey
+                }/${
+                    extractPathIndex(this.props.accountInfo.accountPath)
+                }`
+            )
+            .then((response) => {
+                this.props.setAccountRegistered(true)
+                this.props.logIn({
+                    userId: response.data.user_id,
+                    token: response.data.token,
+                })
+                this.setState({
+                    modalShown: false,
+                })
+            })
+            .catch((error) => {
+                if (error.response.status === 401) {
+                    // theoretically this should not happen
+                    console.log("Ledger user not found.") // eslint-disable-line no-console
+                } else {
+                    console.log(error.response.statusText) // eslint-disable-line no-console
+                }
+            })
     }
 
 
@@ -1242,7 +1270,7 @@ class Balances extends Component {
         </div>
 
         {(!this.props.accountInfo.registered && !this.props.auth.isReadOnly) ? (
-          <div className="p-t">
+          
             <Card className="welcome-card">
               <CardText>
                 <div className="flex-row">
@@ -1268,6 +1296,10 @@ class Balances extends Component {
                       </ul>
                       <p>Would you like to open one today? It&apos;s super easy!</p>
                     </div>
+                    <div className='fade-extreme small-icon'>
+                        <i className="material-icons">blur_on</i>
+                        Registering with our service is free. Forever. We only charge fractional fees when you choose to use our remittance service.
+                    </div>
                   </div>
                 </div>
               </CardText>
@@ -1276,42 +1308,36 @@ class Balances extends Component {
                   onClick={this.handleSignup.bind(this)}
                   backgroundColor="rgb(15,46,83)"
                   labelColor="rgb(244,176,4)"
-                  label="Open Account"
+                  label="Register"
                 />
               </CardActions>
-              <CardText>
-                <div className='fade small-icon'>
-                  <i className="material-icons">blur_on</i>
-                  Registering with our service is free. Forever. We only charge fractional fees when you choose to use our remittance service.
-              </div>
-              </CardText>
             </Card>
-          </div>
+          
         ) : null}
 
         {this.props.accountInfo.exists ? (
           <div>
             <Card className='account'>
-              <CardHeader
-                title={
-                  <span>
-                    <span>Current Balance </span>
-                    <i className="material-icons">hearing</i>
-                  </span>
-                }
-                subtitle={
-                    <span>
-                        <span>
-                            {this.getCurrencyLongText(this.props.accountInfo.currency)}
-                        </span>
-                        <span className="fade currency-iso p-l-small">
-                            ({this.props.accountInfo.currency.toUpperCase()})
-                        </span>
-                    </span>
-                }
-                actAsExpander={true}
-                showExpandableButton={true}
-              />
+                            <CardHeader
+                                title={
+                                    <span>
+                                        <span>Current Balance </span>
+                                        <i className="material-icons">hearing</i>
+                                    </span>
+                                }
+                                subtitle={
+                                    <span>
+                                        <span>
+                                            {this.getCurrencyLongText(this.props.accountInfo.currency)}
+                                        </span>
+                                        <span className="fade currency-iso p-l-small">
+                                            ({this.props.accountInfo.currency.toUpperCase()})
+                                        </span>
+                                    </span>
+                                }
+                                actAsExpander={true}
+                                showExpandableButton={true}
+                            />
 
 
                             <CardText>
@@ -1322,19 +1348,15 @@ class Balances extends Component {
                                                 {this.getCurrencyGlyph(this.props.accountInfo.currency)}
                                             </span>
                                             <span className="p-l-small">
-                                                {this.exchangeRateFetched() ?
-                                                    (Number.parseFloat(this.getNativeBalance.call(
-                                                        this, this.props.accountInfo.account.account
-                                                    )) * Number.parseFloat(
-                                                            this.props.accountInfo.rates[this.props.accountInfo.currency].rate)
-                                                    ).toFixed(2) : "0.00"
+                                                {this.exchangeRateFetched() &&
+                                                    this.convertToFiat(
+                                                        this.getNativeBalance(
+                                                            this.props.accountInfo.account.account))
                                                 }
                                             </span>
                                         </div>
                                         <div className="fade-extreme micro">
-                                            {Number.parseFloat(this.getNativeBalance.call(
-                                                this, this.props.accountInfo.account.account
-                                            )).toFixed(this.props.accountInfo.precision)} XLM
+                                            {this.getNativeBalance(this.props.accountInfo.account.account)} XLM
                                         </div>
                                     </div>
                                     <div></div>
@@ -1400,19 +1422,23 @@ class Balances extends Component {
               actAsExpander={false}
               showExpandableButton={false}
             />
-            <CardText>
-              <div className='flex-row'>
-                <div>
-                  <div className='balance'>
-                    <span className="fade currency-glyph">
-                        {this.getCurrencyGlyph(this.props.accountInfo.currency)}
-                    </span> 0.00
-                  </div>
-                  
-                </div>
-                <div></div>
-              </div>
-            </CardText>
+
+                        <CardText>
+                            <div className='flex-row'>
+                                <div>
+                                    <div className='balance'>
+                                        <span className="fade currency-glyph">
+                                            {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                        </span> 0.00
+                                    </div>
+                                    <div className="fade-extreme micro">
+                                        0.0000000 XLM
+                                    </div>
+                                </div>
+                                <div></div>
+                            </div>
+                        </CardText>
+
             <CardActions>
               <RaisedButton
                 onClick={this.handleOpen.bind(this)}
@@ -1585,6 +1611,8 @@ function matchDispatchToProps (dispatch) {
         setCurrencyPrecision,
         accountExistsOnLedger,
         accountMissingOnLedger,
+        setAccountRegistered,
+        logIn,
     }, dispatch)
 }
 
