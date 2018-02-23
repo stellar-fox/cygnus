@@ -18,6 +18,7 @@ import {
     federationAddressValid,
     federationLookup,
     StellarSdk,
+    extractPathIndex,
 } from "../../lib/utils"
 import CreateAccount from "../Account/Create"
 import {
@@ -87,7 +88,7 @@ class Welcome extends Component {
         }
         this.props.setAccountPath(ledgerParams.bip32Path)
         this.props.setLedgerSoftwareVersion(ledgerParams.softwareVersion)
-        this.logInViaPublicKey(ledgerParams.publicKey, false)
+        this.ledgerAuthenticateUser(ledgerParams)
     }
 
     // ...
@@ -128,17 +129,6 @@ class Welcome extends Component {
                     })
                 })
 
-            // 3. check if user created account with Stellar Fox
-            axios
-                .get(`${config.api}/find/publickey/${pubKey}`)
-                .then((response) => {
-                    this.props.setAccountPath(`44'/148'/${response.data.data.path}'`)
-                    this.props.setAccountRegistered(true)
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line no-console
-                    console.log(error)
-                })
         } catch (error) {
             // eslint-disable-next-line no-console
             console.log(error)
@@ -172,6 +162,38 @@ class Welcome extends Component {
         })
     }
 
+
+    // ...
+    ledgerAuthenticateUser (ledgerParams) {
+        
+        this.logInViaPublicKey(ledgerParams.publicKey, false)
+
+        axios
+            .post(
+                `${config.api}/user/ledgerauth/${
+                    ledgerParams.publicKey
+                }/${
+                    extractPathIndex(ledgerParams.bip32Path)
+                }`
+            )
+            .then((response) => {
+                this.props.setAccountRegistered(true)
+                this.props.logIn({
+                    userId: response.data.user_id,
+                    token: response.data.token,
+                })
+            })
+            .catch((error) => {
+                if (error.response.status === 401) {
+                    // theoretically this should not happen
+                    console.log("Ledger user not found.") // eslint-disable-line no-console
+                } else {
+                    console.log(error.response.statusText) // eslint-disable-line no-console
+                }
+            })
+    }
+
+
     // ...
     authenticateUser () {
         if (
@@ -193,6 +215,7 @@ class Welcome extends Component {
                     this.textInputFieldPassword.setState({
                         error: null,
                     })
+                    this.props.setAccountRegistered(true)
                     this.props.logIn({
                         userId: response.data.user_id,
                         token: response.data.token,
