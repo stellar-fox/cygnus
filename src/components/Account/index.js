@@ -307,7 +307,6 @@ class Account extends Component {
 
     handleProfileUpdate (_event) {
         // eslint-disable-next-line no-console
-        console.log("Update Pressed")
         axios
             .post(
                 `${config.api}/user/update/${this.props.auth.userId}?token=${
