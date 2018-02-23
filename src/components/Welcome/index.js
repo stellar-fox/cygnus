@@ -129,17 +129,6 @@ class Welcome extends Component {
                     })
                 })
 
-            // 3. check if user created account with Stellar Fox
-            axios
-                .get(`${config.api}/find/publickey/${pubKey}`)
-                .then((response) => {
-                    this.props.setAccountPath(`44'/148'/${response.data.data.path}'`)
-                    this.props.setAccountRegistered(true)
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line no-console
-                    console.log(error)
-                })
         } catch (error) {
             // eslint-disable-next-line no-console
             console.log(error)
@@ -188,6 +177,7 @@ class Welcome extends Component {
                 }`
             )
             .then((response) => {
+                this.props.setAccountRegistered(true)
                 this.props.logIn({
                     userId: response.data.user_id,
                     token: response.data.token,
@@ -225,6 +215,7 @@ class Welcome extends Component {
                     this.textInputFieldPassword.setState({
                         error: null,
                     })
+                    this.props.setAccountRegistered(true)
                     this.props.logIn({
                         userId: response.data.user_id,
                         token: response.data.token,
