@@ -162,6 +162,7 @@ class Balances extends Component {
         pln: "zł",
     })
 
+    
     // ...
     getCurrencyText = (currency) => (
         (c) => c[Object.keys(c).filter((key) => key === currency)]
@@ -186,9 +187,6 @@ class Balances extends Component {
         thb: "Thai Baht",
         pln: "Polish Złoty",
     })
-
-    
-    // ...
 
 
     // ...
@@ -525,14 +523,13 @@ class Balances extends Component {
                     // And finally, send it off to Stellar!
                     return server.submitTransaction(signedTransaction)
                 })
-                .then((result) => {
-
+                .then((_result) => {
+                    // TODO: display xdr hash on receipt.
                     this.setState({
                         transactionType: null,
                         broadcastTxModalShown: false,
                         sendingCompleteModalShown: true,
                     })
-                    console.log('Success! Results:', result)
                     this.setState({
                         amountEntered: false,
                         payee: null,
@@ -544,7 +541,6 @@ class Balances extends Component {
                         paymentCardVisible: false,
                         newAccount: false,
                     })
-                    //TODO: reset all state vars
                 })
                 .catch((error) => {
                     this.setState({
@@ -611,13 +607,13 @@ class Balances extends Component {
                     // And finally, send it off to Stellar!
                     return server.submitTransaction(signedTransaction)
                 })
-                .then((result) => {
+                .then((_result) => {
+                    //TODO: display xdr hash on receipt
                     this.setState({
                         transactionType: null,
                         broadcastTxModalShown: false,
                         sendingCompleteModalShown: true,
                     })
-                    console.log('Success! Results:', result)
                     this.setState({
                         amountEntered: false,
                         payee: null,
@@ -629,7 +625,6 @@ class Balances extends Component {
                         paymentCardVisible: false,
                         newAccount: false,
                     })
-                    //TODO: reset all state vars
                 })
                 .catch((error) => {
                     this.setState({
