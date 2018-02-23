@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import {
     Route,
     Switch,
-    withRouter,
 } from "react-router-dom"
 import { connect } from "react-redux"
 
@@ -49,8 +48,8 @@ class Content extends Component {
             <div style={this.state.style} className="content">
                 <Switch>
                     <Route exact path="/" component={Balances} />
-                    <Route exact path="/payments" component={Payments} />
-                    <Route exact path="/account" component={Account} />
+                    <Route exact path="/payments/" component={Payments} />
+                    <Route exact path="/account/" component={Account} />
                 </Switch>
             </div>
         )
@@ -59,9 +58,10 @@ class Content extends Component {
 
 
 // ...
-export default withRouter(connect(
+export default connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
+        path : state.router.location.pathname,
     })
-)(Content))
+)(Content)

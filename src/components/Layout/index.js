@@ -3,8 +3,7 @@ import { connect } from "react-redux"
 import {
     Route,
     Redirect,
-    Switch,
-    withRouter,
+    Switch
 } from "react-router-dom"
 
 import {
@@ -19,8 +18,6 @@ import {
     ConditionalRender,
     RenderGroup
 } from "../../lib/utils"
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
-import stellarTheme from "../../frontend/themes/stellar"
 
 
 
@@ -31,20 +28,18 @@ class Layout extends Component {
     // ...
     render () {
         return (
-            <MuiThemeProvider muiTheme={stellarTheme}>
-                <ConditionalRender>
-                    <RenderGroup render={this.props.loggedIn}>
-                        <WalletAppBar />
-                        <WalletDrawer />
-                        <Content />
-                        <Footer />
-                    </RenderGroup>
-                    <Switch render={!this.props.loggedIn}>
-                        <Route exact path="/" component={Welcome} />
-                        <Redirect to="/" />
-                    </Switch>
-                </ConditionalRender>
-            </MuiThemeProvider>
+            <ConditionalRender>
+                <RenderGroup render={this.props.loggedIn}>
+                    <WalletAppBar />
+                    <WalletDrawer />
+                    <Content />
+                    <Footer />
+                </RenderGroup>
+                <Switch render={!this.props.loggedIn}>
+                    <Route exact path="/" component={Welcome} />
+                    <Redirect to="/" />
+                </Switch>
+            </ConditionalRender>
         )
     }
 
@@ -52,9 +47,9 @@ class Layout extends Component {
 
 
 // ...
-export default withRouter(connect(
+export default connect(
     // map state to props.
     (state) => ({
         loggedIn: state.auth.isHorizonLoggedIn,
     })
-)(Layout))
+)(Layout)

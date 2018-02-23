@@ -1,38 +1,50 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { Route } from "react-router-dom"
+import createHistory from "history/createBrowserHistory"
+
 import {
     applyMiddleware,
     createStore,
     combineReducers,
 } from "redux"
 import { Provider } from "react-redux"
+
 import {
     ConnectedRouter as Router,
     routerReducer,
     routerMiddleware,
     // push,
 } from "react-router-redux"
+
 import {
     composeWithDevTools,
     // devToolsEnhancer,
 } from "redux-devtools-extension"
 // import { createLogger } from "redux-logger"
 // import thunk from "redux-thunk"
-import createHistory from "history/createBrowserHistory"
+
+
 import reducers from "./reducers"
 import {
     unregister,
     // registerServiceWorker,
 } from "./registerServiceWorker"
+
 import throttle from "lodash/throttle"
 import {
     loadState,
     saveState,
 } from "./lib/StatePersistence"
 
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
+import stellarTheme from "./frontend/themes/stellar"
+
 import Layout from "./components/Layout"
 
 import "./index.css"
+
+
 
 
 // // store with simple logger
@@ -78,16 +90,28 @@ store.subscribe(
 )
 
 
-// ...
+
+
+// application's root
 ReactDOM.render(
+
+    // ...
     <Provider store={store}>
-        <Router history={history}>
-            <Layout />
-        </Router>
+        <MuiThemeProvider muiTheme={stellarTheme}>
+            <Router history={history}>
+                <Route component={Layout} />
+            </Router>
+        </MuiThemeProvider>
     </Provider>,
+
+    // ...
     document.getElementById("app")
+
 )
 
 
+
+
+// ...
 // registerServiceWorker()
 unregister()
