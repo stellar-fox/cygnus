@@ -1,10 +1,10 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import {
-    BrowserRouter as Router,
     Route,
     Redirect,
     Switch,
+    withRouter,
 } from "react-router-dom"
 
 import {
@@ -32,20 +32,18 @@ class Layout extends Component {
     render () {
         return (
             <MuiThemeProvider muiTheme={stellarTheme}>
-                <Router>
-                    <ConditionalRender>
-                        <RenderGroup render={this.props.loggedIn}>
-                            <WalletAppBar />
-                            <WalletDrawer />
-                            <Content />
-                            <Footer />
-                        </RenderGroup>
-                        <Switch render={!this.props.loggedIn}>
-                            <Route exact path="/" component={Welcome} />
-                            <Redirect to="/" />
-                        </Switch>
-                    </ConditionalRender>
-                </Router>
+                <ConditionalRender>
+                    <RenderGroup render={this.props.loggedIn}>
+                        <WalletAppBar />
+                        <WalletDrawer />
+                        <Content />
+                        <Footer />
+                    </RenderGroup>
+                    <Switch render={!this.props.loggedIn}>
+                        <Route exact path="/" component={Welcome} />
+                        <Redirect to="/" />
+                    </Switch>
+                </ConditionalRender>
             </MuiThemeProvider>
         )
     }
@@ -54,9 +52,9 @@ class Layout extends Component {
 
 
 // ...
-export default connect(
+export default withRouter(connect(
     // map state to props.
     (state) => ({
         loggedIn: state.auth.isHorizonLoggedIn,
     })
-)(Layout)
+)(Layout))

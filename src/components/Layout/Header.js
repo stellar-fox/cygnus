@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
-import { NavLink, withRouter } from "react-router-dom"
+import {
+    NavLink,
+    withRouter,
+} from "react-router-dom"
 import { connect } from "react-redux"
 
 import AppBar from "material-ui/AppBar"
