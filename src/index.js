@@ -1,44 +1,76 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import {
+    applyMiddleware,
     createStore,
-//    applyMiddleware
+    combineReducers,
 } from "redux"
 import { Provider } from "react-redux"
-import { devToolsEnhancer } from "redux-devtools-extension"
+import {
+    ConnectedRouter as Router,
+    routerReducer,
+    routerMiddleware,
+    // push,
+} from "react-router-redux"
+import {
+    composeWithDevTools,
+    // devToolsEnhancer,
+} from "redux-devtools-extension"
 // import { createLogger } from "redux-logger"
 // import thunk from "redux-thunk"
-import reducer from "./reducers"
+import createHistory from "history/createBrowserHistory"
+import reducers from "./reducers"
 import {
     unregister,
     // registerServiceWorker,
 } from "./registerServiceWorker"
 import throttle from "lodash/throttle"
-import { loadState, saveState } from "./lib/StatePersistence"
+import {
+    loadState,
+    saveState,
+} from "./lib/StatePersistence"
+
 import Layout from "./components/Layout"
 
 import "./index.css"
 
 
-
-
-// ...
-const store = createStore(
-    reducer,
-    loadState(),
-    devToolsEnhancer()
-)
-
-
-// ...
+// // store with simple logger
 // const store = createStore(
-//     reducer,
+//     reducers,
 //     loadState(),
 //     applyMiddleware(thunk, createLogger())
 // )
 
 
-// ...
+// // store with redux-devtools-extension
+// const store = createStore(
+//     reducers,
+//     loadState(),
+//     devToolsEnhancer()
+// )
+
+
+// browser history
+const history = createHistory()
+
+
+// store with router-redux integration and redux-devtools-extension
+const store = createStore(
+    combineReducers({
+        ...reducers,
+        router: routerReducer,
+    }),
+    loadState(),
+    composeWithDevTools(
+        applyMiddleware(
+            ...routerMiddleware(history)
+        )
+    )
+)
+
+
+// save state in session storage in min. 1 sec. intervals
 store.subscribe(
     throttle(() => {
         saveState(store.getState())
@@ -49,7 +81,9 @@ store.subscribe(
 // ...
 ReactDOM.render(
     <Provider store={store}>
-        <Layout />
+        <Router history={history}>
+            <Layout />
+        </Router>
     </Provider>,
     document.getElementById("app")
 )

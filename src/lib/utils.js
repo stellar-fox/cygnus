@@ -134,3 +134,15 @@ export const nullToUndefined = (val) => val === null ? undefined : val
 
 // ...
 export const flatten = (arr) => arr.reduce((acc, el) => acc.concat(el), [])
+
+
+// declarative conditional rendering in JSX
+export const ConditionalRender = (props) => (
+    (cn) => Array.isArray(cn) ?
+        cn.filter((c) => c.props.render) :
+        cn.props.render ? cn : null
+)(props.children)
+
+
+// React.Fragment can only receive 'key' and 'children' as props, so...
+export const RenderGroup = (props) => props.children

@@ -1,6 +1,9 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { bindActionCreators } from "redux"
-import { NavLink, withRouter } from "react-router-dom"
+import {
+    NavLink,
+    withRouter,
+} from "react-router-dom"
 import { connect } from "react-redux"
 
 import AppBar from "material-ui/AppBar"
@@ -188,7 +191,7 @@ class WalletDrawerCore extends Component {
 
 
 // ...
-const WalletDrawer = withRouter(connect(
+export const WalletDrawer = withRouter(connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
@@ -266,7 +269,7 @@ class WalletAppBarCore extends Component {
 
 
 // ...
-const WalletAppBar = withRouter(connect(
+export const WalletAppBar = connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
@@ -280,26 +283,4 @@ const WalletAppBar = withRouter(connect(
         closeDrawer,
         selectView,
     }, dispatch)
-)(WalletAppBarCore))
-
-
-
-
-// ...
-class Header extends Component {
-
-    // ...
-    render () {
-        return (
-            <Fragment>
-                <WalletAppBar />
-                <WalletDrawer />
-            </Fragment>
-        )
-    }
-
-}
-
-
-// ...
-export default withRouter(Header)
+)(WalletAppBarCore)
