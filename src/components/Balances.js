@@ -148,25 +148,42 @@ class Balances extends Component {
 
 
     // ...
-    getCurrencyText (currency) {
-        let text = ""
-        switch (currency) {
-            case "eur":
-                text = "EUROS"
-                break
-            case "thb":
-                text = "THAI BAHT"
-                break
-            case "pln":
-                text = "ZŁOTYCH"
-                break
-            default:
-                text = "DOLLARS"
-                break
-        }
-        return text
-    }
+    getCurrencyGlyph = (currency) => (
+        (c) => c[Object.keys(c).filter((key) => key === currency)]
+    )({
+        eur: "€",
+        usd: "$",
+        aud: "$",
+        nzd: "$",
+        thb: "฿",
+        pln: "zł",
+    })
 
+    // ...
+    getCurrencyText = (currency) => (
+        (c) => c[Object.keys(c).filter((key) => key === currency)]
+    )({
+        eur: "EUROS",
+        usd: "DOLLARS",
+        aud: "AUSTRALIAN DOLLARS",
+        nzd: "NEW ZEALAND DOLLARS",
+        thb: "THAI BAHT บาท",
+        pln: "ZŁOTYCH",
+    })
+
+
+    // ...
+    getCurrencyLongText = (currency) => (
+        (c) => c[Object.keys(c).filter((key) => key === currency)]
+    )({
+        eur: "European Union Euro",
+        usd: "United States Dollar",
+        aud: "Australian Dollar",
+        nzd: "New Zealand Dollar",
+        thb: "Thai Baht",
+        pln: "Polish Złoty",
+    })
+    
 
     // ...
     optionsStreamer () {
@@ -1236,19 +1253,22 @@ class Balances extends Component {
                     <div>
                       <p>
                         It looks like this account is not yet registered with our service.
-                        Registered accounts allow you to transact easily with anyone and
-                        have a lot of cool features! Here are some of them:
+                        Registered accounts put you in compliance with local and
+                        international money transmitting laws. You will also be able
+                        to transact easily with anyone and take advantage of
+                        some awesome features that we offer!
                       </p>
+                        <p> Here are some of them:</p>
                       <ul>
-                        <li>Pay to contact</li>
-                        <li>Customize and manage your payment address</li>
-                        <li>Address book of your payment contacts</li>
-                        <li>Manage powerful account settings</li>
+                        <li>One click, pay to contact.</li>
+                        <li>Create multiple escrow accounts.</li>
+                        <li>Customize your payment address.</li>
+                        <li>Create and manage contact book of your payees.</li>
+                        <li>Gain access to powerful account settings.</li>
                       </ul>
                       <p>Would you like to open one today? It&apos;s super easy!</p>
                     </div>
                   </div>
-                  <div></div>
                 </div>
               </CardText>
               <CardActions>
@@ -1258,17 +1278,10 @@ class Balances extends Component {
                   labelColor="rgb(244,176,4)"
                   label="Open Account"
                 />
-                <FlatButton
-                  label="MAYBE LATER"
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  labelStyle={{ color: "rgb(15,46,83)" }}
-                  onClick={this.handleOpen.bind(this)}
-                />
               </CardActions>
               <CardText>
-                <div className='faded'>
-                  <i className="material-icons md-icon-small">info_outline</i>
+                <div className='fade small-icon'>
+                  <i className="material-icons">blur_on</i>
                   Registering with our service is free. Forever. We only charge fractional fees when you choose to use our remittance service.
               </div>
               </CardText>
@@ -1286,31 +1299,49 @@ class Balances extends Component {
                     <i className="material-icons">hearing</i>
                   </span>
                 }
-                subtitle="Stellar Lumens"
+                subtitle={
+                    <span>
+                        <span>
+                            {this.getCurrencyLongText(this.props.accountInfo.currency)}
+                        </span>
+                        <span className="fade currency-iso p-l-small">
+                            ({this.props.accountInfo.currency.toUpperCase()})
+                        </span>
+                    </span>
+                }
                 actAsExpander={true}
                 showExpandableButton={true}
               />
-              <CardText>
-                <div className='flex-row'>
-                  <div>
-                    <div className='balance'>
-                      {this.exchangeRateFetched() ?
-                        (Number.parseFloat(this.getNativeBalance.call(
-                          this, this.props.accountInfo.account.account
-                        )) * Number.parseFloat(
-                          this.props.accountInfo.rates[this.props.accountInfo.currency].rate)
-                        ).toFixed(2) : '0.00'
-                      } {this.props.accountInfo.currency.toUpperCase()}
-                    </div>
-                    <div>
-                      {Number.parseFloat(this.getNativeBalance.call(
-                        this, this.props.accountInfo.account.account
-                      )).toFixed(this.props.accountInfo.precision)} XLM
-                    </div>
-                  </div>
-                  <div></div>
-                </div>
-              </CardText>
+
+
+                            <CardText>
+                                <div className="flex-row">
+                                    <div>
+                                        <div className="balance">
+                                            <span className="fade currency-glyph">
+                                                {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                            </span>
+                                            <span className="p-l-small">
+                                                {this.exchangeRateFetched() ?
+                                                    (Number.parseFloat(this.getNativeBalance.call(
+                                                        this, this.props.accountInfo.account.account
+                                                    )) * Number.parseFloat(
+                                                            this.props.accountInfo.rates[this.props.accountInfo.currency].rate)
+                                                    ).toFixed(2) : "0.00"
+                                                }
+                                            </span>
+                                        </div>
+                                        <div className="fade-extreme micro">
+                                            {Number.parseFloat(this.getNativeBalance.call(
+                                                this, this.props.accountInfo.account.account
+                                            )).toFixed(this.props.accountInfo.precision)} XLM
+                                        </div>
+                                    </div>
+                                    <div></div>
+                                </div>
+                            </CardText>
+
+
               <CardActions>
                 <RaisedButton
                   backgroundColor="rgb(15,46,83)"
@@ -1356,7 +1387,16 @@ class Balances extends Component {
                   <i className="material-icons">hearing</i>
                 </span>
               }
-              subtitle="Stellar Lumens"
+              subtitle={
+                  <span>
+                    <span>
+                        {this.getCurrencyLongText(this.props.accountInfo.currency)}
+                    </span>
+                    <span className="fade currency-iso p-l-small">
+                        ({this.props.accountInfo.currency.toUpperCase()})
+                    </span>
+                  </span>
+              }
               actAsExpander={false}
               showExpandableButton={false}
             />
@@ -1364,11 +1404,11 @@ class Balances extends Component {
               <div className='flex-row'>
                 <div>
                   <div className='balance'>
-                    0 {this.props.accountInfo.currency.toUpperCase()}
+                    <span className="fade currency-glyph">
+                        {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                    </span> 0.00
                   </div>
-                  <div>
-                    0 XLM
-                </div>
+                  
                 </div>
                 <div></div>
               </div>
@@ -1380,13 +1420,6 @@ class Balances extends Component {
                 labelColor="rgb(244,176,4)"
                 label="Deposit" />
             </CardActions>
-            <CardText>
-              <div className='faded'>
-                <i className="material-icons md-icon-small">info_outline</i>
-                Your account is currently inactive. Please deposit required
-                minimum reserve of 1 XLM in order to activate it.
-              </div>
-            </CardText>
           </Card>
         )}
 

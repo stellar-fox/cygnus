@@ -206,3 +206,15 @@
 .header-icon > i {
   font-size: 2rem !important;
 }
+
+.small-icon > i {
+  font-size: 1rem !important;
+}
+
+.currency-glyph {
+  font-size: 1.5rem;
+}
+
+.currency-iso {
+  font-size: 0.75rem;
+}

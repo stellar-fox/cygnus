@@ -127,6 +127,10 @@ div.p-b-small-block::after {
     padding-left: 1rem;
 }
 
+.p-l-small {
+    padding-left: 5px;
+}
+
 .p-r {
     padding-right: 1rem;
 }
