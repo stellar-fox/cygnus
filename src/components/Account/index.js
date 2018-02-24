@@ -19,6 +19,7 @@ import {
     showAlert,
     hideAlert,
     setCurrency,
+    setExchangeRate,
     setCurrencyPrecision,
     setTab,
 } from "../../actions/index"
@@ -144,6 +145,8 @@ class Account extends Component {
                 )
                 .then((_response) => {
                     this.props.setCurrency(event.target.value)
+                    this.getExchangeRate(event.target.value)
+
                     this.setState({
                         currency: event.target.parentElement.innerText,
                     })
@@ -165,6 +168,38 @@ class Account extends Component {
             })
         }
     }
+
+
+    // ...
+    exchangeRateStale () {
+        if (this.props.accountInfo.rates === undefined ||
+            this.props.accountInfo.rates[this.props.accountInfo.currency] === undefined ||
+            this.props.accountInfo.rates[this.props.accountInfo.currency].lastFetch + 300000 < Date.now()
+        ) {
+            return true
+        }
+        return false
+    }
+
+
+    // ...
+    getExchangeRate (currency) {
+        if (this.exchangeRateStale()) {
+            axios.get(`${config.api}/ticker/latest/${currency}`)
+                .then((response) => {
+                    this.props.setExchangeRate({
+                        [currency]: {
+                            rate: response.data.data[`price_${currency}`],
+                            lastFetch: Date.now(),
+                        },
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error.message) // eslint-disable-line no-console
+                })
+        }
+    }
+
 
     handleCurrencyChangeSnackBarClose () {
         this.setState({ sbCurrency: false, })
@@ -302,10 +337,15 @@ class Account extends Component {
     }
 
     handlePaymentAddressChange (event) {
-        this.setState({ paymentAddressDisplay: event.target.value, })
+        this.setState({
+            paymentAddressDisplay: event.target.value,
+        })
     }
 
     handleProfileUpdate (_event) {
+        const alias = this.state.paymentAddressDisplay.match(/\*/) ?
+            (this.state.paymentAddressDisplay) :
+            (`${this.state.paymentAddressDisplay}*stellarfox.net`)
         // eslint-disable-next-line no-console
         axios
             .post(
@@ -323,7 +363,7 @@ class Account extends Component {
             .post(
                 `${config.api}/account/update/${this.props.auth.userId}?token=${
                     this.props.auth.token
-                }&alias=${this.state.paymentAddressDisplay}`
+                }&alias=${alias}`
             )
             .then((_response) => {
                 this.setState({
@@ -906,6 +946,7 @@ function matchDispatchToProps (dispatch) {
             showAlert,
             hideAlert,
             setCurrency,
+            setExchangeRate,
             setCurrencyPrecision,
             setTab,
         },
