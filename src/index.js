@@ -76,18 +76,14 @@ const store = createStore(
     loadState(),
     composeWithDevTools(
         applyMiddleware(
-            ...routerMiddleware(history)
+            routerMiddleware(history)
         )
     )
 )
 
 
 // save state in session storage in min. 1 sec. intervals
-store.subscribe(
-    throttle(() => {
-        saveState(store.getState())
-    }, 1000)
-)
+store.subscribe(throttle(() => saveState(store.getState()), 1000))
 
 
 
