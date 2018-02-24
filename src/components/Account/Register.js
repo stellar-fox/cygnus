@@ -14,6 +14,7 @@ import { emailValid, passwordValid, extractPathIndex } from "../../lib/utils"
 import TextInputField from "../TextInputField"
 import axios from "axios"
 import { config } from "../../config"
+import md5 from "../../lib/md5"
 import {
     setAccountRegistered,
 } from "../../actions/index"
@@ -109,7 +110,11 @@ class NewAccount extends Component {
         if (userId) {
             const accountId = await axios
                 .post(
-                    `${config.api}/account/create/${userId}/${this.props.accountInfo.pubKey}?path=${extractPathIndex(this.props.accountInfo.accountPath)}`
+                    `${config.api}/account/create/${
+                        userId
+                    }/${this.props.accountInfo.pubKey}?path=${
+                        extractPathIndex(this.props.accountInfo.accountPath)
+                    }&md5=${md5(this.state.email)}`
                 )
                 .then((response) => {
                     return response.data.account_id

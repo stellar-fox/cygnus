@@ -15,6 +15,7 @@ import {
     passwordValid,
     extractPathIndex,
 } from "../../lib/utils"
+import md5 from "../../lib/md5"
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
 import axios from "axios"
@@ -123,7 +124,11 @@ class NewAccount extends Component {
         if (userId) {
             const accountId = await axios
                 .post(
-                    `${config.api}/account/create/${userId}/${ledgerData.publicKey}?path=${extractPathIndex(ledgerData.bip32Path)}`
+                    `${config.api}/account/create/${
+                        userId
+                    }/${ledgerData.publicKey}?path=${
+                        extractPathIndex(ledgerData.bip32Path)
+                    }&md5=${md5(this.state.email)}`
                 )
                 .then((response) => {
                     return response.data.account_id
