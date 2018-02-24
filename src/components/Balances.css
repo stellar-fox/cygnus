@@ -149,6 +149,13 @@
   align-content: flex-end;
 }
 
+.f-c {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+}
+
 .space-between {
   justify-content: space-between;
 }

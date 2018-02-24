@@ -351,20 +351,21 @@ class NewAccount extends Component {
             },
         }
         return (
-            <div style={{ maxWidth: 580, maxHeight: 580, margin: "auto", }}>
+            <div style={{ maxWidth: 480, maxHeight: 480, margin: "auto", }}>
                 <Stepper connector={null} activeStep={stepIndex} orientation="vertical">
                     <Step>
                         <StepLabel style={styles.stepLabel} icon={<i className="material-icons">perm_identity</i>}>
                             About your account
                         </StepLabel>
                         <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
-                            <div>
+                            <div className="navy">
                                 Welcome to Stellar Fox, a first of its kind
                                 easy to use, secure and super fast money
                                 transfer platform. Your account will let you
-                                send money to anyone in the World, with
-                                fractional fees regardless of the amount and
-                                at unpresedented transfer speed.
+                                send money to anyone in the World, just as if
+                                it was an email, with fixed fractional fees
+                                regardless of the amount and at unpresedented
+                                transfer speed.
                             </div>
                             {this.renderStepActions(0)}
                         </StepContent>

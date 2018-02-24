@@ -404,7 +404,7 @@ class Welcome extends Component {
                 </Dialog>
 
                 <LoadingModal />
-
+                <div className="f-c alert-message">we never ask you for your secret key. please read this short guide first in order to keep your finances secure.</div>
                 <div className="faded-image cash">
                     <div className="hero">
                         <div className="title">
