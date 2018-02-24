@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
@@ -34,6 +34,12 @@ import {
     formatAmount,
     StellarSdk,
 } from "../../lib/utils"
+
+import BigNumber from "bignumber.js"
+
+import {
+    gravatarLink,
+} from "../../lib/deneb"
 
 import "./index.css"
 
@@ -153,21 +159,53 @@ class Payments extends Component {
             .limit(5)
             .call()
             .then((paymentsResult) => {
-                this.props.setAccountPayments(paymentsResult)
-                this.updateCursors(paymentsResult.records)
-                paymentsResult.records[0].effects().then((effects) => {
-                    paymentsResult.records[0].transaction().then((tx) => {
-                        this.setState({
-                            paymentDetails: {
-                                txid: paymentsResult.records[0].id,
-                                created_at:
-                                    paymentsResult.records[0].created_at,
-                                effects: effects._embedded.records,
-                                memo: tx.memo,
-                                selectedPaymentId: paymentsResult.records[0].id,
-                            },
+                const gravatarLinkPromises = paymentsResult.records.map((r) => {
+                    let link = ""
+                    switch (r.type) {
+                        case "create_account":
+                            if (r.funder === this.props.accountInfo.pubKey) {
+                                link = gravatarLink(r.account)
+                            } else {
+                                link = gravatarLink(r.funder)
+                            }
+                            break
+                    
+                        // payment
+                        default:
+                            if(r.to === this.props.accountInfo.pubKey) {
+                                link = gravatarLink(r.from)
+                            } else {
+                                link = gravatarLink(r.to)
+                            }
+                            break
+                    }
+                    return link
+                })
+
+                Promise.all(gravatarLinkPromises).then((links) => {
+                    links.forEach((link, index) => {
+                        paymentsResult.records[index].gravatar = link.link
+                        paymentsResult.records[index].firstName = link.firstName
+                        paymentsResult.records[index].lastName = link.lastName
+                        paymentsResult.records[index].email = link.email
+                        paymentsResult.records[index].alias = link.alias
+                    })
+                    this.props.setAccountPayments(paymentsResult)
+                    this.updateCursors(paymentsResult.records)
+                    paymentsResult.records[0].effects().then((effects) => {
+                        paymentsResult.records[0].transaction().then((tx) => {
+                            this.setState({
+                                paymentDetails: {
+                                    txid: paymentsResult.records[0].id,
+                                    created_at:
+                                        paymentsResult.records[0].created_at,
+                                    effects: effects._embedded.records,
+                                    memo: tx.memo,
+                                    selectedPaymentId: paymentsResult.records[0].id,
+                                },
+                            })
+                            this.props.setModalLoaded()
                         })
-                        this.props.setModalLoaded()
                     })
                 })
             })
@@ -367,15 +405,7 @@ class Payments extends Component {
                                 </span>
                             </div>
                             <div>
-                                <span className="credit">
-                                    +{" "}
-                                    {Number.parseFloat(
-                                        effect.starting_balance
-                                    ).toFixed(
-                                        this.props.accountInfo.precision
-                                    )}{" "}
-                                    <span className="smaller">XLM</span>
-                                </span>
+                                <span className="credit"> + {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.starting_balance)}</span>
                             </div>
                         </div>
                         <div className="payment-details-body">
@@ -452,15 +482,11 @@ class Payments extends Component {
                                 </span>
                             </div>
                             <div>
-                                <span className="credit">
-                                    +{" "}
-                                    {Number.parseFloat(effect.amount).toFixed(
-                                        this.props.accountInfo.precision
-                                    )}{" "}
-                                    <span className="smaller">
-                                        {getAssetCode(effect)}
-                                    </span>
-                                </span>
+                                {getAssetCode(effect) === "XLM" ? (
+                                    <span className="credit"> + {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.amount)}</span>
+                                ) : (
+                                    <span className="credit"> + {effect.amount} <span className="smaller">{getAssetCode(effect)}</span></span>
+                                )}
                             </div>
                         </div>
                         <div className="payment-details-body">
@@ -498,15 +524,11 @@ class Payments extends Component {
                                 </span>
                             </div>
                             <div>
-                                <span className="debit">
-                                    -{" "}
-                                    {Number.parseFloat(effect.amount).toFixed(
-                                        this.props.accountInfo.precision
-                                    )}{" "}
-                                    <span className="smaller">
-                                        {getAssetCode(effect)}
-                                    </span>
-                                </span>
+                                {getAssetCode(effect) === "XLM" ? (
+                                    <span className="debit"> - {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.amount)}</span>
+                                ) : (
+                                    <span className="debit"> - {effect.amount} <span className="smaller">{getAssetCode(effect)}</span></span>
+                                )}
                             </div>
                         </div>
                         <div className="payment-details-body">
@@ -593,15 +615,47 @@ class Payments extends Component {
             .limit(5)
             .call()
             .then((paymentsResult) => {
-                if (paymentsResult.records.length > 0) {
-                    this.setState({
-                        prevDisabled: false,
+                const gravatarLinkPromises = paymentsResult.records.map((r) => {
+                    let link = ""
+                    switch (r.type) {
+                        case "create_account":
+                            if (r.funder === this.props.accountInfo.pubKey) {
+                                link = gravatarLink(r.account)
+                            } else {
+                                link = gravatarLink(r.funder)
+                            }
+                            break
+
+                        // payment
+                        default:
+                            if (r.to === this.props.accountInfo.pubKey) {
+                                link = gravatarLink(r.from)
+                            } else {
+                                link = gravatarLink(r.to)
+                            }
+                            break
+                    }
+                    return link
+                })
+
+                Promise.all(gravatarLinkPromises).then((links) => {
+                    links.forEach((link, index) => {
+                        paymentsResult.records[index].gravatar = link.link
+                        paymentsResult.records[index].firstName = link.firstName
+                        paymentsResult.records[index].lastName = link.lastName
+                        paymentsResult.records[index].email = link.email
+                        paymentsResult.records[index].alias = link.alias
                     })
-                    this.props.setAccountPayments(paymentsResult)
-                    this.updateCursors(paymentsResult.records)
-                } else {
-                    this.noMorePaymentsNotice.call(this, { nextDisabled: true, })
-                }
+                    if (paymentsResult.records.length > 0) {
+                        this.setState({
+                            prevDisabled: false,
+                        })
+                        this.props.setAccountPayments(paymentsResult)
+                        this.updateCursors(paymentsResult.records)
+                    } else {
+                        this.noMorePaymentsNotice.call(this, { nextDisabled: true, })
+                    }
+                })
             })
             .catch(function (err) {
                 // eslint-disable-next-line no-console
@@ -620,16 +674,50 @@ class Payments extends Component {
             .limit(5)
             .call()
             .then((paymentsResult) => {
-                if (paymentsResult.records.length > 0) {
-                    this.setState({
-                        nextDisabled: false,
+
+                const gravatarLinkPromises = paymentsResult.records.map((r) => {
+                    let link = ""
+                    switch (r.type) {
+                        case "create_account":
+                            if (r.funder === this.props.accountInfo.pubKey) {
+                                link = gravatarLink(r.account)
+                            } else {
+                                link = gravatarLink(r.funder)
+                            }
+                            break
+
+                        // payment
+                        default:
+                            if (r.to === this.props.accountInfo.pubKey) {
+                                link = gravatarLink(r.from)
+                            } else {
+                                link = gravatarLink(r.to)
+                            }
+                            break
+                    }
+                    return link
+                })
+
+                Promise.all(gravatarLinkPromises).then((links) => {
+                    
+                    links.forEach((link, index) => {
+                        paymentsResult.records[index].gravatar = link.link
+                        paymentsResult.records[index].firstName = link.firstName
+                        paymentsResult.records[index].lastName = link.lastName
+                        paymentsResult.records[index].email = link.email
+                        paymentsResult.records[index].alias = link.alias
                     })
-                    paymentsResult.records.reverse()
-                    this.props.setAccountPayments(paymentsResult)
-                    this.updateCursors(paymentsResult.records)
-                } else {
-                    this.noMorePaymentsNotice.call(this, { prevDisabled: true, })
-                }
+                    if (paymentsResult.records.length > 0) {
+                        this.setState({
+                            nextDisabled: false,
+                        })
+                        paymentsResult.records.reverse()
+                        this.props.setAccountPayments(paymentsResult)
+                        this.updateCursors(paymentsResult.records)
+                    } else {
+                        this.noMorePaymentsNotice.call(this, { prevDisabled: true, })
+                    }
+                })
             })
             .catch(function (err) {
                 // eslint-disable-next-line no-console
@@ -703,20 +791,20 @@ class Payments extends Component {
             case "create_account":
                 rendered =
                     payment.funder === this.props.accountInfo.pubKey ? (
-                        <i className="material-icons">card_giftcard</i>
+                        <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>card_giftcard</i>
                     ) : (
-                        <i className="material-icons">account_balance</i>
+                        <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>account_balance</i>
                     )
                 break
             case "account_merge":
-                rendered = <i className="material-icons">merge_type</i>
+                rendered = <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>merge_type</i>
                 break
             default:
                 rendered =
                     payment.to === this.props.accountInfo.pubKey ? (
-                        <i className="material-icons">account_balance_wallet</i>
+                        <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>account_balance_wallet</i>
                     ) : (
-                        <i className="material-icons">payment</i>
+                        <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>payment</i>
                     )
                 break
         }
@@ -731,27 +819,71 @@ class Payments extends Component {
                 rendered =
                     (payment.funder === this.props.accountInfo.pubKey
                         ? "-"
-                        : "+") +
-                    Number.parseFloat(payment.starting_balance).toFixed(
-                        this.props.accountInfo.precision
-                    ) +
-                    " XLM"
+                        : "+") + " " +
+                    (
+                        this.getCurrencyGlyph(this.props.accountInfo.currency)
+                    ) + " " +
+                    this.convertToFiat(payment.starting_balance)
                 break
             case "account_merge":
                 rendered = "Account Merged"
                 break
             default:
-                rendered =
-                    (payment.to === this.props.accountInfo.pubKey ? "+" : "-") +
-                    Number.parseFloat(payment.amount).toFixed(
-                        this.props.accountInfo.precision
-                    ) +
-                    " " +
-                    getAssetCode(payment)
+                if (getAssetCode(payment) === "XLM") {
+                    rendered = 
+                        (payment.to === this.props.accountInfo.pubKey ? "+" : "-") + " " +
+                        (
+                            this.getCurrencyGlyph(this.props.accountInfo.currency)
+                        ) + " " +
+                        this.convertToFiat(payment.amount)
+                        
+                } else {
+                    rendered =
+                        (payment.to === this.props.accountInfo.pubKey ? "+" : "-") +
+                        (payment.amount) +
+                        " " +
+                        getAssetCode(payment)
+                }
                 break
         }
         return rendered
     }
+
+    // ...
+    convertToXLM (amount) {
+        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+        const fiatAmount = new BigNumber(amount)
+        if (this.props.accountInfo.rates !== undefined && this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined) {
+            return fiatAmount.dividedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toString()
+        } else {
+            return "0"
+        }
+    }
+
+
+    // ...
+    convertToFiat (amount) {
+        BigNumber.config({ DECIMAL_PLACES: 2, })
+        const nativeAmount = new BigNumber(amount)
+        if (this.props.accountInfo.rates !== undefined && this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined) {
+            return nativeAmount.multipliedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toFixed(2)
+        } else {
+            return "0"
+        }
+    }
+
+
+    // ...
+    getCurrencyGlyph = (currency) => (
+        (c) => c[Object.keys(c).filter((key) => key === currency)]
+    )({
+        eur: "€",
+        usd: "$",
+        aud: "$",
+        nzd: "$",
+        thb: "฿",
+        pln: "zł",
+    })
 
     // ...
     render () {
@@ -841,49 +973,32 @@ class Payments extends Component {
                                                                         )}
                                                                         hoverColor="rgba(244,176,4,0.95)"
                                                                         secondaryText={
-                                                                            <span className="payment-date">
-                                                                                {utcToLocaleDateTime(
-                                                                                    payment.created_at
-                                                                                )}
-                                                                            </span>
+                                                                            <Fragment>
+                                                                                <div className="tiny fade-strong">
+                                                                                    {utcToLocaleDateTime(
+                                                                                        payment.created_at
+                                                                                    )}
+                                                                                </div>
+                                                                                {this.props.isAuthenticated ? (
+                                                                                    <div className="small fade">
+                                                                                        {payment.firstName} {payment.lastName} <span className="p-l-small micro">[{payment.alias}]</span>
+                                                                                    </div>) : null}
+                                                                            </Fragment>
                                                                         }
                                                                         primaryText={this.determinePrimaryText.call(
                                                                             this,
                                                                             payment
                                                                         )}
                                                                         rightAvatar={
-                                                                            <Avatar
-                                                                                className="square-avatar"
-                                                                                backgroundColor="rgba(244,176,4,1)"
-                                                                                size={
-                                                                                    54
-                                                                                }
-                                                                                src={
-                                                                                    parseInt(
-                                                                                        payment.id.charAt(
-                                                                                            payment
-                                                                                                .id
-                                                                                                .length -
-                                                                                                2
-                                                                                        ),
-                                                                                        10
-                                                                                    ) %
-                                                                                    2
-                                                                                        ? "/img/mimi.jpg"
-                                                                                        : parseInt(
-                                                                                            payment.id.charAt(
-                                                                                                payment
-                                                                                                    .id
-                                                                                                    .length -
-                                                                                                      3
-                                                                                            ),
-                                                                                            10
-                                                                                        ) %
-                                                                                          2
-                                                                                            ? "/img/igor.jpg"
-                                                                                            : "/img/gravatar.jpg"
-                                                                                }
-                                                                            />
+                                                                            this.props.isAuthenticated ? (
+                                                                                <Avatar
+                                                                                    className="square-avatar"
+                                                                                    backgroundColor="rgba(244,176,4,1)"
+                                                                                    size={
+                                                                                        70
+                                                                                    }
+                                                                                    src={payment.gravatar}
+                                                                                />) : null
                                                                         }
                                                                     />
                                                                 </div>
@@ -1130,6 +1245,7 @@ function mapStateToProps (state) {
         accountInfo: state.accountInfo,
         loadingModal: state.loadingModal,
         ui: state.ui,
+        isAuthenticated: state.auth.isAuthenticated,
     }
 }
 
