@@ -194,6 +194,10 @@
   opacity: 0.8;
 }
 
+.fade-strong {
+  opacity: 0.6;
+}
+
 .fade-extreme {
   opacity: 0.3;
 }
