@@ -197,6 +197,12 @@
   color: #d32f2f;
 }
 
+.bg-green {
+  background: rgba(34,139,34,0.55);
+  padding: 3px 5px 3px 5px;
+  border-radius: 3px; 
+}
+
 .fade {
   opacity: 0.8;
 }

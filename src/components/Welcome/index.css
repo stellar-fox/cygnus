@@ -107,6 +107,10 @@
     padding-top: 1rem;
 }
 
+.m-t-small {
+    padding-top: 3px;
+}
+
 .p-t-medium {
     padding-top: 2rem;
 }
