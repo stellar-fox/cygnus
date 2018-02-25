@@ -467,8 +467,13 @@ class Payments extends Component {
                                         : "Theirs"}
                                 </span>
                             </div>
-                            <div>
-                                <span className="credit"> + {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.starting_balance)}</span>
+                            <div className="f-e-col">
+                                <div>
+                                    <span className="credit"> &#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.starting_balance)}</span>
+                                </div>
+                                <div className="fade-extreme">
+                                    <span className="micro-font">{effect.starting_balance}</span> <span className="pico-font small-caps">XLM</span>
+                                </div>
                             </div>
                         </div>
                         <div className="payment-details-body">
@@ -545,11 +550,18 @@ class Payments extends Component {
                                 </span>
                             </div>
                             <div>
-                                {getAssetCode(effect) === "XLM" ? (
-                                    <span className="credit"> + {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.amount)}</span>
-                                ) : (
-                                    <span className="credit"> + {effect.amount} <span className="smaller">{getAssetCode(effect)}</span></span>
-                                )}
+                                <div className="f-e-col">
+                                    <div>
+                                        {getAssetCode(effect) === "XLM" ? (
+                                            <span className="credit"> &#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.amount)}</span>
+                                        ) : (
+                                            <span className="credit"> &#x0002B; {effect.amount} <span className="smaller">{getAssetCode(effect)}</span></span>
+                                        )}
+                                    </div>
+                                    <div className="fade-extreme">
+                                        <span className="micro-font">{effect.amount}</span> <span className="pico-font small-caps">XLM</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="payment-details-body">
@@ -587,11 +599,18 @@ class Payments extends Component {
                                 </span>
                             </div>
                             <div>
-                                {getAssetCode(effect) === "XLM" ? (
-                                    <span className="debit"> - {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.amount)}</span>
-                                ) : (
-                                    <span className="debit"> - {effect.amount} <span className="smaller">{getAssetCode(effect)}</span></span>
-                                )}
+                                <div className="f-e-col">
+                                    <div>
+                                        {getAssetCode(effect) === "XLM" ? (
+                                            <span className="debit"> &#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.amount)}</span>
+                                        ) : (
+                                            <span className="debit"> &#x02212; {effect.amount} <span className="smaller">{getAssetCode(effect)}</span></span>
+                                        )}
+                                    </div>
+                                    <div className="fade-extreme">
+                                        <span className="micro-font">{effect.amount}</span> <span className="pico-font small-caps">XLM</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="payment-details-body">
@@ -893,19 +912,14 @@ class Payments extends Component {
                 break
             default:
                 if (getAssetCode(payment) === "XLM") {
-                    rendered = 
-                        (payment.to === this.props.accountInfo.pubKey ? "+" : "-") + " " +
-                        (
-                            this.getCurrencyGlyph(this.props.accountInfo.currency)
-                        ) + " " +
-                        this.convertToFiat(payment.amount)
-                        
+                    rendered = (payment.to === this.props.accountInfo.pubKey ?
+                        (<span>&#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.amount)}</span>) :
+                        (<span>&#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.amount)}</span>))
                 } else {
                     rendered =
-                        (payment.to === this.props.accountInfo.pubKey ? "+" : "-") +
-                        (payment.amount) +
-                        " " +
-                        getAssetCode(payment)
+                        (payment.to === this.props.accountInfo.pubKey ?
+                            (<span>&#x0002B; {payment.amount} {getAssetCode(payment)}</span>) :
+                            (<span>&#x02212; {payment.amount} {getAssetCode(payment)}</span>))
                 }
                 break
         }
