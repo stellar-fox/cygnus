@@ -24,7 +24,6 @@ import {
     federationAddressValid,
     federationLookup,
     StellarSdk,
-    formatAmount,
     pubKeyAbbr,
     handleException,
     extractPathIndex,
