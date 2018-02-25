@@ -13,8 +13,8 @@ class LoadingModal extends Component {
                         <div className="loading-modal-background" />
                         <div className="loading-modal">
                             <div className="loading-modal-header">
-                                <div>...</div>
-                                <div>...</div>
+                                <div>&nbsp;</div>
+                                <div>&nbsp;</div>
                             </div>
                             <div className="loading-modal-content">
                                 <CircularProgress
