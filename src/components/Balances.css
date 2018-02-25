@@ -136,6 +136,13 @@
   border-bottom: 1px solid rgba(15,46,83,0.5);
 }
 
+.f-e-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
 .f-e {
   display: flex;
   flex-direction: row;

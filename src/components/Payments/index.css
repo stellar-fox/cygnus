@@ -160,21 +160,31 @@ div.payment-item-active {
 }
 
 .credit {
-    background: #228B22;
-    color: rgba(244,176,4,1);
+    background: rgba(34,139,34,0.55);
+    color: rgba(244,176,4,0.85);
     font-size: 1.1rem;
-    font-weight: bolder;
     padding: 3px 5px 3px 5px;
     border-radius: 3px;
 }
 
 .debit {
-    background: #B22222;
-    color: rgba(244,176,4,1);
+    background: rgba(178,34,34,0.8);
+    color: rgba(244,176,4,0.8);
     font-size: 1.1rem;
-    font-weight: bolder;
     padding: 3px 5px 3px 5px;
     border-radius: 3px;
+}
+
+.micro-font {
+    font-size: 11px;
+}
+
+.pico-font {
+    font-size: 9px;
+}
+
+.small-caps {
+    font-variant: small-caps;
 }
 
 .account-direction {
