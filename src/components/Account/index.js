@@ -119,7 +119,7 @@ class Account extends Component {
                 .get(`${config.api}/account/${this.props.auth.userId}`)
                 .then((response) => {
                     this.setState({
-                        paymentAddressDisplay: response.data.data.alias || "",
+                        paymentAddressDisplay: (response.data.data.alias && response.data.data.domain) ? `${response.data.data.alias}*${response.data.data.domain}` : "",
                         accountDiscoverable: response.data.data.visible,
                         currency: response.data.data.currency,
                         currencyPrecision: response.data.data.precision,
@@ -373,6 +373,14 @@ class Account extends Component {
             .catch((error) => {
                 // eslint-disable-next-line no-console
                 console.log(error)
+                
+                if (error.response.status === 409) {
+                    this.setState({
+                        sbAccountDiscoverable: true,
+                        accountDiscoverableMessage: error.response.data.error,
+                    })
+                }
+                
             })
     }
 
