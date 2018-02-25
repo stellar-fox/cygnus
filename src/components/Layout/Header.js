@@ -56,15 +56,17 @@ class BalancesNavLinkCore extends Component {
 
 
 // ...
-const BalancesNavLink = withRouter(connect(
+const BalancesNavLink = connect(
     // map state to props.
-    null,
+    (state) => ({
+        path : state.router.location.pathname,
+    }),
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         selectView,
     }, dispatch)
-)(BalancesNavLinkCore))
+)(BalancesNavLinkCore)
 
 
 
@@ -77,6 +79,7 @@ class PaymentsNavLinkCore extends Component {
         super(props)
         this.selectPayments = this.props.selectView.bind(this, "Payments")
     }
+
 
     // ...
     render () {
@@ -98,17 +101,18 @@ class PaymentsNavLinkCore extends Component {
 
 
 // ...
-const PaymentsNavLink = withRouter(connect(
+const PaymentsNavLink = connect(
     // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
+        path : state.router.location.pathname,
     }),
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         selectView,
     }, dispatch)
-)(PaymentsNavLinkCore))
+)(PaymentsNavLinkCore)
 
 
 
@@ -143,15 +147,17 @@ class AccountNavLinkCore extends Component {
 
 
 // ...
-const AccountNavLink = withRouter(connect(
+const AccountNavLink = connect(
     // map state to props.
-    null,
+    (state) => ({
+        path : state.router.location.pathname,
+    }),
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         selectView,
     }, dispatch)
-)(AccountNavLinkCore))
+)(AccountNavLinkCore)
 
 
 
