@@ -93,6 +93,19 @@ class Welcome extends Component {
 
     // ...
     logInViaPublicKey (pubKey, isReadOnly = true) {
+
+        if (this.props.auth.isAuthenticated) {
+            axios
+                .get(`${config.api}/account/${this.props.auth.userId}`)
+                .then((response) => {
+                    this.props.setAccountPath(`44'/148'/${response.data.data.path}'`)
+                })
+                .catch((error) => {
+                    // eslint-disable-next-line no-console
+                    console.log(error.message)
+                })
+        }
+
         try {
             this.props.setPublicKey(pubKey)
             // 1. show loading modal
