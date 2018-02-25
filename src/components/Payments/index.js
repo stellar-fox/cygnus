@@ -189,6 +189,7 @@ class Payments extends Component {
                         paymentsResult.records[index].lastName = link.lastName
                         paymentsResult.records[index].email = link.email
                         paymentsResult.records[index].alias = link.alias
+                        paymentsResult.records[index].domain = link.domain
                     })
                     this.props.setAccountPayments(paymentsResult)
                     this.updateCursors(paymentsResult.records)
@@ -373,6 +374,7 @@ class Payments extends Component {
                                     paymentsResult.records[index].lastName = link.lastName
                                     paymentsResult.records[index].email = link.email
                                     paymentsResult.records[index].alias = link.alias
+                                    paymentsResult.records[index].domain = link.domain
                                 })
                                 this.props.setAccountPayments(paymentsResult)
                                 this.updateCursors(paymentsResult.records)
@@ -727,6 +729,7 @@ class Payments extends Component {
                         paymentsResult.records[index].lastName = link.lastName
                         paymentsResult.records[index].email = link.email
                         paymentsResult.records[index].alias = link.alias
+                        paymentsResult.records[index].domain = link.domain
                     })
                     if (paymentsResult.records.length > 0) {
                         this.setState({
@@ -788,6 +791,7 @@ class Payments extends Component {
                         paymentsResult.records[index].lastName = link.lastName
                         paymentsResult.records[index].email = link.email
                         paymentsResult.records[index].alias = link.alias
+                        paymentsResult.records[index].domain = link.domain
                     })
                     if (paymentsResult.records.length > 0) {
                         this.setState({
@@ -899,13 +903,9 @@ class Payments extends Component {
         switch (payment.type) {
             case "create_account":
                 rendered =
-                    (payment.funder === this.props.accountInfo.pubKey
-                        ? "-"
-                        : "+") + " " +
-                    (
-                        this.getCurrencyGlyph(this.props.accountInfo.currency)
-                    ) + " " +
-                    this.convertToFiat(payment.starting_balance)
+                    (payment.funder === this.props.accountInfo.pubKey ?
+                        (<span>&#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.starting_balance)}</span>) :
+                        (<span>&#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.starting_balance)}</span>))
                 break
             case "account_merge":
                 rendered = "Account Merged"
@@ -1056,9 +1056,12 @@ class Payments extends Component {
                                                                                         payment.created_at
                                                                                     )}
                                                                                 </div>
-                                                                                {this.props.isAuthenticated ? (
-                                                                                    <div className="small fade">
-                                                                                        {payment.firstName} {payment.lastName} <span className="p-l-small micro">[{payment.alias}]</span>
+                                                                                {this.props.isAuthenticated ? 
+                                                                                    (<div className="small fade">
+                                                                                        {payment.firstName ? payment.firstName : "Unknown"} {payment.lastName ? payment.lastName : "Payee"} 
+                                                                                        {(payment.alias && payment.domain) ?
+                                                                                            (<span className="p-l-small micro">[{payment.alias}*{payment.domain}]</span>) :
+                                                                                            (<span className="p-l-small micro">&#x0205F;</span>)}
                                                                                     </div>) : null}
                                                                             </Fragment>
                                                                         }

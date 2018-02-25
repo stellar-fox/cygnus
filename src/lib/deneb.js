@@ -13,12 +13,14 @@ export const gravatarLink = async (pubkey) => {
             lastName: response.data.last_name,
             email: response.data.email,
             alias: response.data.alias,
+            domain: response.data.domain,
         }))
         .catch((_error) => ({
             link: "https://www.gravatar.com/avatar?d=mm&s=100",
-            firstName: "Unknown",
-            lastName: "",
+            firstName: null,
+            lastName: null,
             email: null,
-            alias: "payment address unknown",
+            alias: null,
+            domain: null,
         }))
 }
