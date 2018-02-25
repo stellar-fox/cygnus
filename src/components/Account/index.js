@@ -613,6 +613,13 @@ class Account extends Component {
                             </div>
                             <div className="p-t p-b" />
                             <div className="account-title p-t">
+                                Extended Account Number:
+                            </div>
+                            <div className="account-subtitle m-t-small">
+                                <span className="bg-green">{this.props.accountInfo.pubKey}</span>
+                            </div>
+                            <div className="p-t p-b" />
+                            <div className="account-title p-t">
                                 Display Currency:
                             </div>
                             <div className="account-subtitle">
@@ -684,17 +691,18 @@ class Account extends Component {
                             </div>
                             <div className="p-t p-b" />
                             <div className="account-title p-t">
-                                Set Currency Precision:
+                                Set Wallet Style:
                             </div>
                             <div className="account-subtitle">
-                                Set decimal precision point for fractional
+                                Choose how you would like to use this platform.
+                                Set decimal precision point and main
                                 currency representation.
                             </div>
                             <div className="flex-start">
                                 <SnackBar
                                     open={this.state.sbCurrencyPrecision}
                                     message={
-                                        "Currency set to " +
+                                        "Wallet style set to " +
                                         this.state.currencyPrecision
                                     }
                                     onRequestClose={
@@ -714,14 +722,14 @@ class Account extends Component {
                                     <RadioButton
                                         className="p-b-small"
                                         value={2}
-                                        label="Fiat Style"
+                                        label="Fiat Currency"
                                         labelStyle={styles.radioButton.label}
                                         iconStyle={styles.radioButton.icon}
                                     />
                                     <RadioButton
                                         className="p-b-small"
                                         value={7}
-                                        label="Crypto Style"
+                                        label="Crypto Currency"
                                         labelStyle={styles.radioButton.label}
                                         iconStyle={styles.radioButton.icon}
                                     />
