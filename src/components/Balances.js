@@ -232,9 +232,8 @@ class Balances extends Component {
                     this.setState({
                         sbPayment: true,
                         sbPaymentText: `Payment sent to new account [${pubKeyAbbr(message.account)}]: `,
-                        sbPaymentAmount: formatAmount(
-                            message.starting_balance, this.props.accountInfo.precision),
-                        sbPaymentAssetCode: "XLM",
+                        sbPaymentAmount: this.convertToFiat(message.starting_balance),
+                        sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
                     })
                 }
 
@@ -246,9 +245,8 @@ class Balances extends Component {
                     this.setState({
                         sbPayment: true,
                         sbPaymentText: "Account Funded: ",
-                        sbPaymentAmount: formatAmount(
-                            message.starting_balance, this.props.accountInfo.precision),
-                        sbPaymentAssetCode: "XLM",
+                        sbPaymentAmount: this.convertToFiat(message.starting_balance),
+                        sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
                     })
                 }
 

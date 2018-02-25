@@ -244,8 +244,26 @@ class Payments extends Component {
             .cursor("now")
             .stream({
                 onmessage: (message) => {
+
                     /*
-                     * Initial Account Funding
+                    * Payment to fund a new account.
+                    */
+                    if (
+                        message.type === "create_account" &&
+                        message.source_account === this.props.accountInfo.pubKey
+                    ) {
+                        this.updateAccount.call(this)
+                        this.setState({
+                            sbPayment: true,
+                            sbPaymentText: `Payment sent to new account [${pubKeyAbbr(message.account)}]: `,
+                            sbPaymentAmount: this.convertToFiat(message.starting_balance),
+                            sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
+                        })
+                    }
+
+
+                    /*
+                     * Initial funding of own account.
                      */
                     if (
                         message.type === "create_account" &&
@@ -255,16 +273,13 @@ class Payments extends Component {
                         this.setState({
                             sbPayment: true,
                             sbPaymentText: "Account Funded: ",
-                            sbPaymentAmount: formatAmount(
-                                message.starting_balance,
-                                this.props.accountInfo.precision
-                            ),
-                            sbPaymentAssetCode: "XLM",
+                            sbPaymentAmount: this.convertToFiat(message.starting_balance),
+                            sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
                         })
                     }
 
                     /*
-                     * Receiving Payment
+                     * Receiving payment.
                      */
                     if (
                         message.type === "payment" &&
@@ -286,7 +301,7 @@ class Payments extends Component {
                     }
 
                     /*
-                     * Sending Payment
+                     * Sending payment.
                      */
                     if (
                         message.type === "payment" &&
@@ -327,8 +342,56 @@ class Payments extends Component {
                         .forAccount(this.props.accountInfo.pubKey)
                         .order("desc")
                         .call()
-                        .then((payments) => {
-                            this.props.setAccountPayments(payments)
+                        .then((paymentsResult) => {
+                            const gravatarLinkPromises = paymentsResult.records.map((r) => {
+                                let link = ""
+                                switch (r.type) {
+                                    case "create_account":
+                                        if (r.funder === this.props.accountInfo.pubKey) {
+                                            link = gravatarLink(r.account)
+                                        } else {
+                                            link = gravatarLink(r.funder)
+                                        }
+                                        break
+
+                                    // payment
+                                    default:
+                                        if (r.to === this.props.accountInfo.pubKey) {
+                                            link = gravatarLink(r.from)
+                                        } else {
+                                            link = gravatarLink(r.to)
+                                        }
+                                        break
+                                }
+                                return link
+                            })
+
+                            Promise.all(gravatarLinkPromises).then((links) => {
+                                links.forEach((link, index) => {
+                                    paymentsResult.records[index].gravatar = link.link
+                                    paymentsResult.records[index].firstName = link.firstName
+                                    paymentsResult.records[index].lastName = link.lastName
+                                    paymentsResult.records[index].email = link.email
+                                    paymentsResult.records[index].alias = link.alias
+                                })
+                                this.props.setAccountPayments(paymentsResult)
+                                this.updateCursors(paymentsResult.records)
+                                paymentsResult.records[0].effects().then((effects) => {
+                                    paymentsResult.records[0].transaction().then((tx) => {
+                                        this.setState({
+                                            paymentDetails: {
+                                                txid: paymentsResult.records[0].id,
+                                                created_at:
+                                                    paymentsResult.records[0].created_at,
+                                                effects: effects._embedded.records,
+                                                memo: tx.memo,
+                                                selectedPaymentId: paymentsResult.records[0].id,
+                                            },
+                                        })
+                                        this.props.setModalLoaded()
+                                    })
+                                })
+                            })
                         })
                 },
                 (_e) => this.props.accountMissingOnLedger()
