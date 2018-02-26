@@ -6,7 +6,6 @@ import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 
-import LoadingModal from "../LoadingModal"
 import Footer from "../Layout/Footer"
 import Panel from "../Panel"
 
@@ -183,7 +182,7 @@ class Welcome extends Component {
 
     // ...
     ledgerAuthenticateUser (ledgerParams) {
-        
+
         this.logInViaPublicKey(ledgerParams.publicKey, false)
 
         axios
@@ -416,7 +415,6 @@ class Welcome extends Component {
                     />
                 </Dialog>
 
-                <LoadingModal />
                 <div className="f-c alert-message">we never ask you for your secret key. please read this short guide first in order to keep your finances secure.</div>
                 <div className="faded-image cash">
                     <div className="hero">
