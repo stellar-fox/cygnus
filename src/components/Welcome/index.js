@@ -415,7 +415,15 @@ class Welcome extends Component {
                     />
                 </Dialog>
 
-                <div className="f-c alert-message">we never ask you for your secret key. please read this short guide first in order to keep your finances secure.</div>
+                <div className="f-c alert-message">
+                    we will&nbsp;<u> never</u>&nbsp;ask you for your secret key.
+                    please read this&nbsp;<a target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://github.com/stellar-fox/cygnus/wiki/Security-Guide">
+                    short guide</a>&nbsp;to
+                    keep your finances secure.
+                </div>
+
                 <div className="faded-image cash">
                     <div className="hero">
                         <div className="title">
