@@ -429,6 +429,14 @@ class Balances extends Component {
 
 
     // ...
+    handleRegistrationModalClose () {
+        this.setState({
+            modalShown: false,
+        })
+    }
+
+
+    // ...
     handleSignup () {
         this.setState({
             modalButtonText: "CANCEL",
@@ -1165,7 +1173,7 @@ class Balances extends Component {
         labelStyle={{ color: "rgb(15,46,83)" }}
         label={this.state.modalButtonText}
         keyboardFocused={false}
-        onClick={this.handleModalClose.bind(this)}
+        onClick={this.handleRegistrationModalClose.bind(this)}
       />,
     ]
 
@@ -1195,7 +1203,7 @@ class Balances extends Component {
             actions={registerAccountActions}
             modal={true}
             open={this.state.modalShown}
-            onRequestClose={this.handleModalClose.bind(this)}
+            onRequestClose={this.handleRegistrationModalClose.bind(this)}
             paperClassName="modal-body"
             titleClassName="modal-title"
             repositionOnUpdate={false}

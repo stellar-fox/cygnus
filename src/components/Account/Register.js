@@ -18,6 +18,7 @@ import md5 from "../../lib/md5"
 import {
     setAccountRegistered,
 } from "../../actions/index"
+import { awaitConnection } from "../../lib/ledger"
 
 class NewAccount extends Component {
 
@@ -75,7 +76,21 @@ class NewAccount extends Component {
 
     // ...
     async createAccount () {
-        console.log("creating an account with path: ", this.props.accountInfo.accountPath) // eslint-disable-line no-console
+        this.setState({
+            completed: 1,
+            progressText: "Querying device ...",
+        })
+
+        const softwareVersion = await awaitConnection()
+        
+        if (typeof softwareVersion !== "string") {
+            this.setState({
+                completed: 0,
+                progressText: softwareVersion.message,
+            })
+            return false
+        }
+        
         await new Promise((res, _) => {
             this.setState({
                 completed: 33,
@@ -167,8 +182,8 @@ class NewAccount extends Component {
                 )}
                 {step === 1 && (
                     <div>
-                        <div className="emphasize-light-success">
-                            {this.state.email}
+                        <div className="p-b-small">
+                            <span className="credit">{this.state.email}</span>
                         </div>
                         <div className="small">
                             will be associated with account {this.props.accountInfo.accountPath} on your Ledger device.

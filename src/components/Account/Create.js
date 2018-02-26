@@ -215,8 +215,8 @@ class NewAccount extends Component {
                 {step === 2 && (
                     <Fragment>
                         <div className="dark">
-                            <div className="emphasize-light-success">
-                                {this.state.email}
+                            <div className="p-b-small">
+                                <span className="credit">{this.state.email}</span>
                             </div>
                             <div className="small">
                                 will be associated with your Ledger device.
