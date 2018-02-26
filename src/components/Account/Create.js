@@ -90,6 +90,10 @@ class NewAccount extends Component {
     // ...
     async createAccount (ledgerData) {
 
+        if (ledgerData.errorCode) {
+            return false
+        }
+
         await new Promise((res, _) => {
             this.setState({
                 completed: 33,
@@ -209,9 +213,8 @@ class NewAccount extends Component {
                 )}
 
                 {step === 2 && (
-                    <div>
+                    <Fragment>
                         <div className="dark">
-
                             <div className="emphasize-light-success">
                                 {this.state.email}
                             </div>
@@ -233,31 +236,16 @@ class NewAccount extends Component {
                             />
                         </div>
                         <div className="p-t"></div>
-                        <p className="tiny">
-                            If you do
-                            not currently own a Ledger device you can
-                            still open an account with us by clicking the
-                            'OPT OUT' button. Please make sure you
-                            understand the security implications before
-                            proceeding.
-                        </p>
-                        <FlatButton
-                            label="OPT OUT"
-                            disableTouchRipple={true}
-                            disableFocusRipple={true}
-                            onClick={this.handleOptOut.bind(this)}
-                            labelStyle={{ color: "rgb(244,176,4)", }}
-                            style={{
-                                marginRight: 12,
-                                backgroundColor: "rgba(84,110,122,0.3)",
-                            }}
-                        />
                         <FlatButton
                             label="Back"
                             disabled={stepIndex === 0}
                             disableTouchRipple={true}
                             disableFocusRipple={true}
-                            labelStyle={{ color: "rgb(15,46,83)", }}
+                            labelStyle={{ color: "rgb(244,176,4)", }}
+                            style={{
+                                marginRight: 12,
+                                backgroundColor: "rgba(84,110,122,0.3)",
+                            }}
                             onClick={this.handlePrev.bind(this)}
                         />
                         <div className="p-b-small"></div>
@@ -272,16 +260,10 @@ class NewAccount extends Component {
                                 {this.state.progressText}
                             </div>
                         </div>
-                    </div>
+                    </Fragment>
                 )}
             </div>
         )
-    }
-
-
-    // ...
-    handleOptOut () {
-        console.log("out out") // eslint-disable-line no-console
     }
 
 
