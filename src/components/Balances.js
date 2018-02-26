@@ -118,7 +118,7 @@ class Balances extends Component {
                     this.props.setCurrencyPrecision(response.data.data.precision)
                     this.getExchangeRate(response.data.data.currency)
                     this.setState({
-                        currencySymbol: this.getCurrencySymbol(response.data.data.currency),
+                        currencySymbol: response.data.data.currency,
                         currencyText: this.getCurrencyText(response.data.data.currency),
                     })
                 })
@@ -128,7 +128,7 @@ class Balances extends Component {
         } else {
             this.getExchangeRate(this.props.accountInfo.currency)
             this.setState({
-                currencySymbol: this.getCurrencySymbol(this.props.accountInfo.currency),
+                currencySymbol: this.props.accountInfo.currency,
                 currencyText: this.getCurrencyText(this.props.accountInfo.currency),
             })
         }
@@ -146,22 +146,17 @@ class Balances extends Component {
     }
 
 
-    // :-D
-    getCurrencySymbol = (currency) => currency
-
-
     // ...
     getCurrencyGlyph = (currency) => (
         (c) => c[Object.keys(c).filter((key) => key === currency)]
     )({
-        eur: "€",
-        usd: "$",
-        aud: "$",
-        nzd: "$",
-        thb: "฿",
-        pln: "zł",
+        eur: (<span>&#x20ac;</span>),
+        usd: (<span>&#x24;</span>),
+        aud: (<span>&#x24;</span>),
+        nzd: (<span>&#x24;</span>),
+        thb: (<span>&#xe3f;</span>),
+        pln: (<span>&#x7a;&#x142;</span>),
     })
-
     
     // ...
     getCurrencyText = (currency) => (
@@ -1495,12 +1490,7 @@ class Balances extends Component {
                             </div>
                             <div className="payment-header f-s">
                                 <div className="p-r leading-label-align payment-currency">
-                                    {this.state.currencySymbol === "eur" && (
-                                        <span>&#x020AC;</span>
-                                    )}
-                                    {this.state.currencySymbol === "usd" && (
-                                        <span>&#x00024;</span>
-                                    )}
+                                    {this.getCurrencyGlyph(this.state.currencySymbol)}
                                 </div>
                                 <div>
                                     <TextInputField
