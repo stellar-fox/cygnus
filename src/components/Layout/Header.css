@@ -1,5 +1,6 @@
 .navbar {
     background-color: #F4B004 !important; /* amber rgb(244,176,4) */
+    z-index: 10001;
 }
 
 .navbar h1 {

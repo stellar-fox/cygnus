@@ -216,6 +216,7 @@ class WalletAppBarCore extends Component {
             position: "fixed",
             left: 0,
             top: 0,
+            zIndex: 10001,
         },
         icon : {
             color: "rgba(15,46,83,0.45)",

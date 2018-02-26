@@ -7,7 +7,6 @@ import { List, ListItem, makeSelectable } from "material-ui/List"
 import Avatar from "material-ui/Avatar"
 import IconButton from "material-ui/IconButton"
 import SnackBar from "../../frontend/SnackBar"
-import LoadingModal from "../LoadingModal"
 import {
     Table,
     TableBody,
@@ -138,10 +137,12 @@ class Payments extends Component {
         }
     }
 
+
     // ...
     componentWillUnmount () {
         this.props.accountInfo.streamer.call(this)
     }
+
 
     // ...
     componentDidMount () {
@@ -169,7 +170,7 @@ class Payments extends Component {
                                 link = gravatarLink(r.funder)
                             }
                             break
-                    
+
                         // payment
                         default:
                             if(r.to === this.props.accountInfo.pubKey) {
@@ -216,6 +217,7 @@ class Payments extends Component {
             })
     }
 
+
     // ...
     noMorePaymentsNotice = (state) =>
         this.setState(
@@ -223,19 +225,23 @@ class Payments extends Component {
             (_prevState) => this.setState(state)
         )
 
+
     // ...
     noMoreTransactionsNotice = (state) =>
         this.setState({ sbNoMoreTransactions: true, },
             (_prevState) => this.setState(state)
         )
 
+
     // ...
     handleNoMorePaymentsSnackBarClose = () =>
         this.setState({ sbNoMorePayments: false, })
 
+
     // ...
     handleNoMoreTransactionsSnackBarClose = () =>
         this.setState({ sbNoMoreTransactions: false, })
+
 
     // ...
     paymentsStreamer () {
@@ -326,6 +332,7 @@ class Payments extends Component {
             })
     }
 
+
     // ...
     updateAccount () {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
@@ -400,9 +407,11 @@ class Payments extends Component {
             )
     }
 
+
     // ...
     handlePaymentSnackBarClose = () =>
         this.setState({ sbPayment: false, })
+
 
     // ...
     handleTabSelect (_, value) {
@@ -433,6 +442,7 @@ class Payments extends Component {
         }
     }
 
+
     // ...
     handlePaymentClick = (payment, paymentId) =>
         payment.effects().then((effects) =>
@@ -449,7 +459,7 @@ class Payments extends Component {
             )
         )
 
-        
+
     // ...
     decodeEffectType (effect, index) {
         let humanizedEffectType = ""
@@ -674,6 +684,7 @@ class Payments extends Component {
         return humanizedEffectType
     }
 
+
     // ...
     updateCursors = (records) =>
         this.setState({
@@ -681,12 +692,14 @@ class Payments extends Component {
             cursorRight: records[records.length - 1].paging_token,
         })
 
+
     // ...
     updateTransactionsCursors = (records) =>
         this.setState({
             txCursorLeft: records[0].paging_token,
             txCursorRight: records[records.length - 1].paging_token,
         })
+
 
     // ...
     getNextPaymentsPage () {
@@ -748,6 +761,7 @@ class Payments extends Component {
             })
     }
 
+
     // ...
     getPrevPaymentsPage () {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
@@ -784,7 +798,7 @@ class Payments extends Component {
                 })
 
                 Promise.all(gravatarLinkPromises).then((links) => {
-                    
+
                     links.forEach((link, index) => {
                         paymentsResult.records[index].gravatar = link.link
                         paymentsResult.records[index].firstName = link.firstName
@@ -810,6 +824,7 @@ class Payments extends Component {
                 console.log(err)
             })
     }
+
 
     // ...
     getNextTransactionsPage () {
@@ -839,6 +854,7 @@ class Payments extends Component {
                 console.log(err)
             })
     }
+
 
     // ...
     getPrevTransactionsPage () {
@@ -870,6 +886,7 @@ class Payments extends Component {
             })
     }
 
+
     // ...
     determineLeftIcon (payment) {
         let rendered = ""
@@ -896,6 +913,7 @@ class Payments extends Component {
         }
         return rendered
     }
+
 
     // ...
     determinePrimaryText (payment) {
@@ -925,6 +943,7 @@ class Payments extends Component {
         }
         return rendered
     }
+
 
     // ...
     convertToXLM (amount) {
@@ -962,362 +981,360 @@ class Payments extends Component {
         pln: "zł",
     })
 
+
     // ...
     render () {
         return (
             <div>
-                <LoadingModal />
+                <SnackBar
+                    open={this.state.sbPayment}
+                    message={`${this.state.sbPaymentText} ${
+                        this.state.sbPaymentAmount
+                    } ${this.state.sbPaymentAssetCode}`}
+                    onRequestClose={
+                        this.handlePaymentSnackBarClose.bind(this)
+                    }
+                />
+                <SnackBar
+                    open={this.state.sbNoMorePayments}
+                    message="No more payments found."
+                    onRequestClose={
+                        this.handleNoMorePaymentsSnackBarClose.bind(this)
+                    }
+                />
+                <SnackBar
+                    open={this.state.sbNoMoreTransactions}
+                    message="No more transactions found."
+                    onRequestClose={
+                        this.handleNoMoreTransactionsSnackBarClose.bind(this)
+                    }
+                />
+                <Tabs
+                    tabItemContainerStyle={styles.container}
+                    inkBarStyle={styles.inkBar}
+                    value={this.props.ui.tabs.payments}
+                    onChange={this.handleTabSelect.bind(this, this.value)}
+                >
+                    <Tab style={styles.tab} label="History" value="1">
+                        <div className="tab-content">
+                            <div className="account-title">
+                                Payment History
+                            </div>
+                            <div className="account-subtitle">
+                                Newest payments shown as first.
+                            </div>
 
-                <div>
-                    <SnackBar
-                        open={this.state.sbPayment}
-                        message={`${this.state.sbPaymentText} ${
-                            this.state.sbPaymentAmount
-                        } ${this.state.sbPaymentAssetCode}`}
-                        onRequestClose={
-                            this.handlePaymentSnackBarClose.bind(this)
-                        }
-                    />
-                    <SnackBar
-                        open={this.state.sbNoMorePayments}
-                        message="No more payments found."
-                        onRequestClose={
-                            this.handleNoMorePaymentsSnackBarClose.bind(this)
-                        }
-                    />
-                    <SnackBar
-                        open={this.state.sbNoMoreTransactions}
-                        message="No more transactions found."
-                        onRequestClose={
-                            this.handleNoMoreTransactionsSnackBarClose.bind(this)
-                        }
-                    />
-                    <Tabs
-                        tabItemContainerStyle={styles.container}
-                        inkBarStyle={styles.inkBar}
-                        value={this.props.ui.tabs.payments}
-                        onChange={this.handleTabSelect.bind(this, this.value)}
-                    >
-                        <Tab style={styles.tab} label="History" value="1">
-                            <div className="tab-content">
-                                <div className="account-title">
-                                    Payment History
-                                </div>
-                                <div className="account-subtitle">
-                                    Newest payments shown as first.
-                                </div>
-
-                                <div className="flex-row-space-between">
-                                    <div className="flex-row-column">
-                                        <div>
-                                            {this.props.accountInfo.payments ? (
-                                                <div>
-                                                    <SelectableList
-                                                        defaultValue={1}
-                                                    >
-                                                        {this.props.accountInfo.payments.records.map(
-                                                            (
-                                                                payment,
-                                                                index
-                                                            ) => (
-                                                                <div
-                                                                    key={
-                                                                        payment.id
-                                                                    }
-                                                                    className={
-                                                                        this
-                                                                            .state
-                                                                            .paymentDetails
-                                                                            .selectedPaymentId ===
-                                                                        payment.id
-                                                                            ? "payment-item-active"
-                                                                            : "payment-item"
-                                                                    }
-                                                                >
-                                                                    <ListItem
-                                                                        value={
-                                                                            index +
-                                                                            1
-                                                                        }
-                                                                        onClick={this.handlePaymentClick.bind(
-                                                                            this,
-                                                                            payment,
-                                                                            payment.id
-                                                                        )}
-                                                                        leftIcon={this.determineLeftIcon.call(
-                                                                            this,
-                                                                            payment
-                                                                        )}
-                                                                        hoverColor="rgba(244,176,4,0.95)"
-                                                                        secondaryText={
-                                                                            <Fragment>
-                                                                                <div className="tiny fade-strong">
-                                                                                    {utcToLocaleDateTime(
-                                                                                        payment.created_at
-                                                                                    )}
-                                                                                </div>
-                                                                                {this.props.isAuthenticated ? 
-                                                                                    (<div className="small fade">
-                                                                                        {payment.firstName ? payment.firstName : "Unknown"} {payment.lastName ? payment.lastName : "Payee"} 
-                                                                                        {(payment.alias && payment.domain) ?
-                                                                                            (<span className="p-l-small micro">[{payment.alias}*{payment.domain}]</span>) :
-                                                                                            (<span className="p-l-small micro">&#x0205F;</span>)}
-                                                                                    </div>) : null}
-                                                                            </Fragment>
-                                                                        }
-                                                                        primaryText={this.determinePrimaryText.call(
-                                                                            this,
-                                                                            payment
-                                                                        )}
-                                                                        rightAvatar={
-                                                                            this.props.isAuthenticated ? (
-                                                                                <Avatar
-                                                                                    className="square-avatar"
-                                                                                    backgroundColor="rgba(244,176,4,1)"
-                                                                                    size={
-                                                                                        70
-                                                                                    }
-                                                                                    src={payment.gravatar}
-                                                                                />) : null
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                            )
-                                                        )}
-                                                    </SelectableList>
-                                                </div>
-                                            ) : null}
+                            <div className="flex-row-space-between">
+                                <div className="flex-row-column">
+                                    <div>
+                                        {this.props.accountInfo.payments ? (
                                             <div>
-                                                <div className="flex-row-space-between p-t">
-                                                    <IconButton
-                                                        className="paging-icon"
-                                                        tooltip="Previous Payments"
-                                                        tooltipStyles={
-                                                            styles.tooltip
-                                                        }
-                                                        tooltipPosition="top-right"
-                                                        onClick={
-                                                            this.getPrevPaymentsPage.bind(this)
-                                                        }
-                                                        disabled={
-                                                            this.state
-                                                                .prevDisabled
-                                                        }
-                                                    >
-                                                        <i className="material-icons">
-                                                            fast_rewind
-                                                        </i>
-                                                    </IconButton>
-
-                                                    <IconButton
-                                                        className="paging-icon"
-                                                        tooltip="Next Payments"
-                                                        tooltipStyles={
-                                                            styles.tooltip
-                                                        }
-                                                        tooltipPosition="top-left"
-                                                        onClick={
-                                                            this.getNextPaymentsPage.bind(this)
-                                                        }
-                                                        disabled={
-                                                            this.state
-                                                                .nextDisabled
-                                                        }
-                                                    >
-                                                        <i className="material-icons">
-                                                            fast_forward
-                                                        </i>
-                                                    </IconButton>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex-row-column">
-                                        <div>
-                                            <div className="transaction-details-header">
-                                                <div className="flex-row">
-                                                    <div>
-                                                        Payment ID:{" "}
-                                                        {
-                                                            this.state
-                                                                .paymentDetails
-                                                                .txid
-                                                        }
-                                                    </div>
-                                                    <div>
-                                                        {utcToLocaleDateTime(
-                                                            this.state
-                                                                .paymentDetails
-                                                                .created_at
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="transaction-details-body">
-                                                {this.state.paymentDetails.effects.map(
-                                                    (effect, index) => {
-                                                        return (
+                                                <SelectableList
+                                                    defaultValue={1}
+                                                >
+                                                    {this.props.accountInfo.payments.records.map(
+                                                        (
+                                                            payment,
+                                                            index
+                                                        ) => (
                                                             <div
-                                                                key={index}
-                                                                className="payment-details-item"
+                                                                key={
+                                                                    payment.id
+                                                                }
+                                                                className={
+                                                                    this
+                                                                        .state
+                                                                        .paymentDetails
+                                                                        .selectedPaymentId ===
+                                                                    payment.id
+                                                                        ? "payment-item-active"
+                                                                        : "payment-item"
+                                                                }
                                                             >
-                                                                <span className="effect-title">
-                                                                    {this.decodeEffectType(
-                                                                        effect,
-                                                                        index
+                                                                <ListItem
+                                                                    value={
+                                                                        index +
+                                                                        1
+                                                                    }
+                                                                    onClick={this.handlePaymentClick.bind(
+                                                                        this,
+                                                                        payment,
+                                                                        payment.id
                                                                     )}
-                                                                </span>
+                                                                    leftIcon={this.determineLeftIcon.call(
+                                                                        this,
+                                                                        payment
+                                                                    )}
+                                                                    hoverColor="rgba(244,176,4,0.95)"
+                                                                    secondaryText={
+                                                                        <Fragment>
+                                                                            <div className="tiny fade-strong">
+                                                                                {utcToLocaleDateTime(
+                                                                                    payment.created_at
+                                                                                )}
+                                                                            </div>
+                                                                            {this.props.isAuthenticated ?
+                                                                                (<div className="small fade">
+                                                                                    {payment.firstName ? payment.firstName : "Unknown"} {payment.lastName ? payment.lastName : "Payee"}
+                                                                                    {(payment.alias && payment.domain) ?
+                                                                                        (<span className="p-l-small micro">[{payment.alias}*{payment.domain}]</span>) :
+                                                                                        (<span className="p-l-small micro">&#x0205F;</span>)}
+                                                                                </div>) : null}
+                                                                        </Fragment>
+                                                                    }
+                                                                    primaryText={this.determinePrimaryText.call(
+                                                                        this,
+                                                                        payment
+                                                                    )}
+                                                                    rightAvatar={
+                                                                        this.props.isAuthenticated ? (
+                                                                            <Avatar
+                                                                                className="square-avatar"
+                                                                                backgroundColor="rgba(244,176,4,1)"
+                                                                                size={
+                                                                                    70
+                                                                                }
+                                                                                src={payment.gravatar}
+                                                                            />) : null
+                                                                    }
+                                                                />
                                                             </div>
                                                         )
+                                                    )}
+                                                </SelectableList>
+                                            </div>
+                                        ) : null}
+                                        <div>
+                                            <div className="flex-row-space-between p-t">
+                                                <IconButton
+                                                    className="paging-icon"
+                                                    tooltip="Previous Payments"
+                                                    tooltipStyles={
+                                                        styles.tooltip
                                                     }
-                                                )}
+                                                    tooltipPosition="top-right"
+                                                    onClick={
+                                                        this.getPrevPaymentsPage.bind(this)
+                                                    }
+                                                    disabled={
+                                                        this.state
+                                                            .prevDisabled
+                                                    }
+                                                >
+                                                    <i className="material-icons">
+                                                        fast_rewind
+                                                    </i>
+                                                </IconButton>
+
+                                                <IconButton
+                                                    className="paging-icon"
+                                                    tooltip="Next Payments"
+                                                    tooltipStyles={
+                                                        styles.tooltip
+                                                    }
+                                                    tooltipPosition="top-left"
+                                                    onClick={
+                                                        this.getNextPaymentsPage.bind(this)
+                                                    }
+                                                    disabled={
+                                                        this.state
+                                                            .nextDisabled
+                                                    }
+                                                >
+                                                    <i className="material-icons">
+                                                        fast_forward
+                                                    </i>
+                                                </IconButton>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </Tab>
-                        <Tab style={styles.tab} label="Transactions" value="2">
-                            <div className="tab-content">
-                                <div className="flex-row">
+                                <div className="flex-row-column">
                                     <div>
-                                        <div className="account-title">
-                                            Account Transactions
-                                        </div>
-                                        <div className="account-subtitle">
-                                            Newest transactions shown as first.
-                                        </div>
-                                        <div className="p-t" />
-                                        {this.props.accountInfo.transactions ? (
-                                            <Table style={styles.table}>
-                                                <TableHeader
-                                                    className="tx-table-header"
-                                                    displaySelectAll={false}
-                                                    adjustForCheckbox={false}
-                                                >
-                                                    <TableRow
-                                                        className="tx-table-row"
-                                                        style={styles.tableRow}
-                                                    >
-                                                        <TableHeaderColumn className="tx-table-header-column">
-                                                            Transaction Time
-                                                        </TableHeaderColumn>
-                                                        <TableHeaderColumn className="tx-table-header-column">
-                                                            Account
-                                                        </TableHeaderColumn>
-                                                        <TableHeaderColumn className="tx-table-header-column">
-                                                            Memo
-                                                        </TableHeaderColumn>
-                                                        <TableHeaderColumn className="tx-table-header-column">
-                                                            Fee Paid
-                                                        </TableHeaderColumn>
-                                                        <TableHeaderColumn className="tx-table-header-column">
-                                                            Signature Count
-                                                        </TableHeaderColumn>
-                                                    </TableRow>
-                                                </TableHeader>
-                                                <TableBody
-                                                    displayRowCheckbox={false}
-                                                >
-                                                    {this.props.accountInfo.transactions.records.map(
-                                                        (tx, index) => (
-                                                            <TableRow
-                                                                selectable={
-                                                                    false
-                                                                }
-                                                                key={index}
-                                                                className="tx-table-row"
-                                                            >
-                                                                <TableRowColumn className="tx-table-row-column">
-                                                                    {utcToLocaleDateTime(
-                                                                        tx.created_at
-                                                                    )}
-                                                                </TableRowColumn>
-                                                                <TableRowColumn className="tx-table-row-column">
-                                                                    <span>
-                                                                        <span>
-                                                                            {pubKeyAbbr(
-                                                                                tx.source_account
-                                                                            )}
-                                                                        </span>
-                                                                        <span className="account-direction">
-                                                                            {tx.source_account ===
-                                                                            this
-                                                                                .props
-                                                                                .accountInfo
-                                                                                .pubKey
-                                                                                ? "Yours"
-                                                                                : "Theirs"}
-                                                                        </span>
-                                                                    </span>
-                                                                </TableRowColumn>
-                                                                <TableRowColumn className="tx-table-row-column">
-                                                                    {tx.memo}
-                                                                </TableRowColumn>
-                                                                <TableRowColumn className="tx-table-row-column">
-                                                                    {
-                                                                        tx.fee_paid
-                                                                    }
-                                                                </TableRowColumn>
-                                                                <TableRowColumn className="tx-table-row-column">
-                                                                    {
-                                                                        tx
-                                                                            .signatures
-                                                                            .length
-                                                                    }
-                                                                </TableRowColumn>
-                                                            </TableRow>
-                                                        )
+                                        <div className="transaction-details-header">
+                                            <div className="flex-row">
+                                                <div>
+                                                    Payment ID:{" "}
+                                                    {
+                                                        this.state
+                                                            .paymentDetails
+                                                            .txid
+                                                    }
+                                                </div>
+                                                <div>
+                                                    {utcToLocaleDateTime(
+                                                        this.state
+                                                            .paymentDetails
+                                                            .created_at
                                                     )}
-                                                </TableBody>
-                                            </Table>
-                                        ) : null}
-                                        <div className="p-b" />
-                                        <div className="flex-row-space-between p-t">
-                                            <IconButton
-                                                className="paging-icon"
-                                                tooltip="Previous Transactions"
-                                                tooltipStyles={styles.tooltip}
-                                                tooltipPosition="top-right"
-                                                onClick={this.getPrevTransactionsPage.bind(
-                                                    this
-                                                )}
-                                                disabled={
-                                                    this.state.txPrevDisabled
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="transaction-details-body">
+                                            {this.state.paymentDetails.effects.map(
+                                                (effect, index) => {
+                                                    return (
+                                                        <div
+                                                            key={index}
+                                                            className="payment-details-item"
+                                                        >
+                                                            <span className="effect-title">
+                                                                {this.decodeEffectType(
+                                                                    effect,
+                                                                    index
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                    )
                                                 }
-                                            >
-                                                <i className="material-icons">
-                                                    fast_rewind
-                                                </i>
-                                            </IconButton>
-
-                                            <IconButton
-                                                className="paging-icon"
-                                                tooltip="Next Transactions"
-                                                tooltipStyles={styles.tooltip}
-                                                tooltipPosition="top-left"
-                                                onClick={this.getNextTransactionsPage.bind(
-                                                    this
-                                                )}
-                                                disabled={
-                                                    this.state.txNextDisabled
-                                                }
-                                            >
-                                                <i className="material-icons">
-                                                    fast_forward
-                                                </i>
-                                            </IconButton>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </Tab>
-                    </Tabs>
-                </div>
+                        </div>
+                    </Tab>
+                    <Tab style={styles.tab} label="Transactions" value="2">
+                        <div className="tab-content">
+                            <div className="flex-row">
+                                <div>
+                                    <div className="account-title">
+                                        Account Transactions
+                                    </div>
+                                    <div className="account-subtitle">
+                                        Newest transactions shown as first.
+                                    </div>
+                                    <div className="p-t" />
+                                    {this.props.accountInfo.transactions ? (
+                                        <Table style={styles.table}>
+                                            <TableHeader
+                                                className="tx-table-header"
+                                                displaySelectAll={false}
+                                                adjustForCheckbox={false}
+                                            >
+                                                <TableRow
+                                                    className="tx-table-row"
+                                                    style={styles.tableRow}
+                                                >
+                                                    <TableHeaderColumn className="tx-table-header-column">
+                                                        Transaction Time
+                                                    </TableHeaderColumn>
+                                                    <TableHeaderColumn className="tx-table-header-column">
+                                                        Account
+                                                    </TableHeaderColumn>
+                                                    <TableHeaderColumn className="tx-table-header-column">
+                                                        Memo
+                                                    </TableHeaderColumn>
+                                                    <TableHeaderColumn className="tx-table-header-column">
+                                                        Fee Paid
+                                                    </TableHeaderColumn>
+                                                    <TableHeaderColumn className="tx-table-header-column">
+                                                        Signature Count
+                                                    </TableHeaderColumn>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody
+                                                displayRowCheckbox={false}
+                                            >
+                                                {this.props.accountInfo.transactions.records.map(
+                                                    (tx, index) => (
+                                                        <TableRow
+                                                            selectable={
+                                                                false
+                                                            }
+                                                            key={index}
+                                                            className="tx-table-row"
+                                                        >
+                                                            <TableRowColumn className="tx-table-row-column">
+                                                                {utcToLocaleDateTime(
+                                                                    tx.created_at
+                                                                )}
+                                                            </TableRowColumn>
+                                                            <TableRowColumn className="tx-table-row-column">
+                                                                <span>
+                                                                    <span>
+                                                                        {pubKeyAbbr(
+                                                                            tx.source_account
+                                                                        )}
+                                                                    </span>
+                                                                    <span className="account-direction">
+                                                                        {tx.source_account ===
+                                                                        this
+                                                                            .props
+                                                                            .accountInfo
+                                                                            .pubKey
+                                                                            ? "Yours"
+                                                                            : "Theirs"}
+                                                                    </span>
+                                                                </span>
+                                                            </TableRowColumn>
+                                                            <TableRowColumn className="tx-table-row-column">
+                                                                {tx.memo}
+                                                            </TableRowColumn>
+                                                            <TableRowColumn className="tx-table-row-column">
+                                                                {
+                                                                    tx.fee_paid
+                                                                }
+                                                            </TableRowColumn>
+                                                            <TableRowColumn className="tx-table-row-column">
+                                                                {
+                                                                    tx
+                                                                        .signatures
+                                                                        .length
+                                                                }
+                                                            </TableRowColumn>
+                                                        </TableRow>
+                                                    )
+                                                )}
+                                            </TableBody>
+                                        </Table>
+                                    ) : null}
+                                    <div className="p-b" />
+                                    <div className="flex-row-space-between p-t">
+                                        <IconButton
+                                            className="paging-icon"
+                                            tooltip="Previous Transactions"
+                                            tooltipStyles={styles.tooltip}
+                                            tooltipPosition="top-right"
+                                            onClick={this.getPrevTransactionsPage.bind(
+                                                this
+                                            )}
+                                            disabled={
+                                                this.state.txPrevDisabled
+                                            }
+                                        >
+                                            <i className="material-icons">
+                                                fast_rewind
+                                            </i>
+                                        </IconButton>
+
+                                        <IconButton
+                                            className="paging-icon"
+                                            tooltip="Next Transactions"
+                                            tooltipStyles={styles.tooltip}
+                                            tooltipPosition="top-left"
+                                            onClick={this.getNextTransactionsPage.bind(
+                                                this
+                                            )}
+                                            disabled={
+                                                this.state.txNextDisabled
+                                            }
+                                        >
+                                            <i className="material-icons">
+                                                fast_forward
+                                            </i>
+                                        </IconButton>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Tab>
+                </Tabs>
             </div>
         )
     }
 }
+
 
 // ...
 function mapStateToProps (state) {
@@ -1328,6 +1345,7 @@ function mapStateToProps (state) {
         isAuthenticated: state.auth.isAuthenticated,
     }
 }
+
 
 // ...
 function matchDispatchToProps (dispatch) {
@@ -1347,4 +1365,5 @@ function matchDispatchToProps (dispatch) {
     )
 }
 
+// ...
 export default connect(mapStateToProps, matchDispatchToProps)(Payments)
