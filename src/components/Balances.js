@@ -110,6 +110,7 @@ class Balances extends Component {
 
     // ...
     componentDidMount () {
+        window.BigNumber = BigNumber
         if (this.props.auth.isAuthenticated) {
             axios.get(`${config.api}/account/${this.props.auth.userId}`)
                 .then((response) => {
@@ -717,6 +718,13 @@ class Balances extends Component {
             this.setState({
                 buttonSendDisabled: true,
                 minimumReserveMessage: "",
+            })
+            return false
+        }
+
+        if (!(BigNumber(this.state.amount) > BigNumber("0"))) {
+            this.setState({
+                buttonSendDisabled: true,
             })
             return false
         }
