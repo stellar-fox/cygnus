@@ -27,13 +27,10 @@ export default class LedgerAuthenticator extends Component {
             ledgerStatusMessage: "Waiting for device ...",
         })
         let bip32Path = this.formBip32Path.call(this)
-        const softwareVersion = await awaitConnection().catch((error) => {
-            this.setState({
-                ledgerStatusMessage: `${error.id}. ${error.message}`,
-                errorCode: error.originalError.metaData.code,
-            })
-        })
-        if (softwareVersion) {
+        const softwareVersion = await awaitConnection()
+
+        // connection successful (softwareVersion is a string)
+        if (typeof softwareVersion === "string") {
             this.setState({
                 ledgerStatusMessage: `Connected. Software Ver. ${softwareVersion}`,
                 errorCode: null,
@@ -48,7 +45,22 @@ export default class LedgerAuthenticator extends Component {
                 publicKey,
                 softwareVersion,
                 bip32Path,
-                errorCode: this.state.errorCode,
+                errorCode: null,
+                errorMessage: null,
+            })
+        }
+        // error wih connection attempt
+        else {
+            this.setState({
+                ledgerStatusMessage: softwareVersion.message,
+                errorCode: softwareVersion.originalError.metaData.code,
+            })
+            this.props.onConnected.call(this, {
+                publicKey: null,
+                softwareVersion: null,
+                bip32Path: null,
+                errorCode: softwareVersion.originalError.metaData.code,
+                errorMessage: softwareVersion.message,
             })
         }
     }
