@@ -16,7 +16,7 @@ import axios from "axios"
 import { config } from "../config"
 import RegisterAccount from "./Account/Register"
 import TextInputField from "./TextInputField"
-import { signTransaction } from "../lib/ledger"
+import { signTransaction, awaitConnection } from "../lib/ledger"
 import DatePicker from "material-ui/DatePicker"
 import LinearProgress from "material-ui/LinearProgress"
 import {
@@ -475,10 +475,9 @@ class Balances extends Component {
 
     // ...
     buildSendTransaction () {
-        // StellarSdk.Network.useTestNetwork()
-        // var server = new StellarSdk.Server("https://horizon-testnet.stellar.org")
         var destinationId = this.state.payee
-        // Transaction will hold a built transaction we can resubmit if the result is unknown.
+        // Transaction will hold a built transaction we can resubmit if the
+        // result is unknown.
         var transaction
 
         if (this.state.newAccount) {
@@ -686,8 +685,15 @@ class Balances extends Component {
 
     // ...
     async sendPayment () {
-        this.buildSendTransaction.call(this)
-        return true
+        // check if device is connected first (if not deviceCheck is an error object)
+        const deviceCheck = await awaitConnection()
+        if (typeof deviceCheck === "string") {
+            this.buildSendTransaction.call(this)
+            return true
+        } else {
+            this.showErrorModal.call(this, deviceCheck.message)
+            return false
+        }
     }
 
 
