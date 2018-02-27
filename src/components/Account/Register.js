@@ -82,7 +82,7 @@ class NewAccount extends Component {
         })
 
         const softwareVersion = await awaitConnection()
-        
+
         if (typeof softwareVersion !== "string") {
             this.setState({
                 completed: 0,
@@ -90,7 +90,7 @@ class NewAccount extends Component {
             })
             return false
         }
-        
+
         await new Promise((res, _) => {
             this.setState({
                 completed: 33,

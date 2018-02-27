@@ -1,6 +1,10 @@
 import React, { Component } from "react"
 import Snackbar from "material-ui/Snackbar"
 
+
+
+
+// ...
 const styles = {
     body: {
         backgroundColor: "rgb(244,176,4)",
@@ -10,6 +14,10 @@ const styles = {
     },
 }
 
+
+
+
+// ...
 export default class SnackBar extends Component {
     render () {
         return (

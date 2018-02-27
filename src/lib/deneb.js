@@ -3,6 +3,7 @@ import { config } from "../config"
 
 
 
+
 // TODO: rename this and its instances as it was originally just fetching
 // the gravatar link but ended up (as always) fethching everything :-)
 export const gravatarLink = async (pubkey) => {

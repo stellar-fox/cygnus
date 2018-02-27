@@ -3,12 +3,14 @@
     padding: 0;
     margin: 0;
 }
+
 .lcars-input li {
     display: block;
     padding: 9px;
     border-radius: 3px;
     border: 1px solid rgba(244,176,4,0.75);
 }
+
 .lcars-input li > label {
     display: block;
     float: left;

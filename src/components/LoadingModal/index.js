@@ -4,6 +4,10 @@ import { connect } from "react-redux"
 
 import "./index.css"
 
+
+
+
+// ...
 class LoadingModal extends Component {
     render () {
         return (
@@ -40,7 +44,10 @@ class LoadingModal extends Component {
     }
 }
 
-export default connect((state) => ({
-    loadingModal: state.loadingModal,
-    ui: state.ui,
-}))(LoadingModal)
+export default connect(
+    // map state to props.
+    (state) => ({
+        loadingModal: state.loadingModal,
+        ui: state.ui,
+    })
+)(LoadingModal)
