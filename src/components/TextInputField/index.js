@@ -18,52 +18,50 @@ export default class TextInputField extends Component {
 
     // ...
     handleChange (event) {
-        event.persist()
         this.setState({ value: event.target.value, })
-        if (this.props.validator !== undefined) {
-            this.props.validator.call(this, this.state.value) && (
-                this.setState({
-                    error: null,
-                })
-            )
-        }
-        if (this.props.onChange !== undefined) {
-            this.props.onChange.call(this, event.target.value)
-        }
     }
 
 
     // ...
     handleOnKeyPress (event) {
-        if (event.key === "Enter" && this.props.validator !== undefined) {
-            let inputError = this.props.validator.call(this, this.state.value)
-
-            if (inputError) {
-                this.setState({ error: inputError, })
-            } else {
-                if (this.props.action !== undefined) {
-                    this.props.action.call(this)
-                }
-            }
+        if (event.key === "Enter" && this.props.onEnterPress !== undefined) {
+            this.props.onEnterPress.call(this)
         }
     }
 
 
     // ...
     render () {
+        const styles = {
+            errorStyle: {
+                color: "#E64A19",
+            },
+            underlineStyle: {
+                borderColor: "#FFC107",
+            },
+            floatingLabelStyle: {
+                color: "rgba(212,228,188,0.4)",
+            },
+            floatingLabelFocusStyle: {
+                color: "rgba(212,228,188,0.2)",
+            },
+            inputStyle: {
+                color: "rgb(244,176,4)",
+            },
+        }
         return (
             <TextField
                 type={this.props.type || "text"}
                 onChange={this.handleChange.bind(this)}
+                onKeyPress={this.handleOnKeyPress.bind(this)}
                 floatingLabelText={this.props.floatingLabelText}
                 errorText={this.state.error}
-                errorStyle={this.props.styles.errorStyle}
-                underlineStyle={this.props.styles.underlineStyle}
-                underlineFocusStyle={this.props.styles.underlineStyle}
-                floatingLabelStyle={this.props.styles.floatingLabelStyle}
-                floatingLabelFocusStyle={this.props.styles.floatingLabelFocusStyle}
-                inputStyle={this.props.styles.inputStyle}
-                onKeyPress={this.handleOnKeyPress.bind(this)}
+                errorStyle={styles.errorStyle}
+                underlineStyle={styles.underlineStyle}
+                underlineFocusStyle={styles.underlineStyle}
+                floatingLabelStyle={styles.floatingLabelStyle}
+                floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                inputStyle={styles.inputStyle}
             />
         )
     }

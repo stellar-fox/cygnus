@@ -5,6 +5,8 @@ import SelectViewReducer from "./select-view-reducer"
 import UiStateReducer from "./ui-state-reducer"
 import ModalReducer from "./modal-reducer"
 
+import Auth from "./auth"
+
 
 // ...
 export default {
@@ -14,4 +16,5 @@ export default {
     nav: SelectViewReducer,
     ui: UiStateReducer,
     modal: ModalReducer,
+    rAuth: Auth,
 }

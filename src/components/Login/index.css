@@ -1,0 +1,9 @@
+.frame {
+    border: 1px solid rgba(244,176,4, 0.45);
+    border-radius: 3px;
+    padding: 15px;
+}
+
+.m-t {
+    margin-top: 1rem;
+}

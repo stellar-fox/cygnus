@@ -8,11 +8,10 @@ import Dialog from "material-ui/Dialog"
 
 import Footer from "../Layout/Footer"
 import Panel from "../Panel"
+import Login from "../Login"
 
 import { config } from "../../config"
 import {
-    emailValid,
-    passwordValid,
     pubKeyValid,
     federationAddressValid,
     federationLookup,
@@ -72,7 +71,19 @@ class Welcome extends Component {
     }
 
     // ...
+    componentWillReceiveProps (nextProps) {
+        if (this.props.rAuth !== nextProps.rAuth) {
+            console.log("jajo")
+        }
+    }
+
+
+
+    // ...
     componentDidMount () {
+        
+        
+
         /*
          * Horizon end point is set to testnet by default.
          */
@@ -314,40 +325,39 @@ class Welcome extends Component {
 
 
     // ...
-    emailValidator (email) {
-        return !emailValid(email) && "INVALID EMAIL"
-    }
+    // emailValidator (email) {
+    //     return !emailValid(email) && "INVALID EMAIL"
+    // }
+
+
+    // // ...
+    // passwordValidator (password) {
+    //     return !passwordValid(password) && "INVALID PASSWORD"
+    // }
 
 
     // ...
-    passwordValidator (password) {
-        return !passwordValid(password) && "INVALID PASSWORD"
-    }
-
-
-    // ...
-    compoundLoginValidator () {
-        const emailNotValid = this.emailValidator(
-            this.textInputFieldEmail.state.value
-        )
-        const passwordNotValid = this.passwordValidator(
-            this.textInputFieldPassword.state.value
-        )
-        if (emailNotValid) {
-            this.textInputFieldEmail.setState({
-                error: "invalid email",
-            })
-            return false
-        }
-        if (passwordNotValid) {
-            this.textInputFieldPassword.setState({
-                error: "invalid password",
-            })
-            return false
-        }
-        return this.authenticateUser.call(this)
-
-    }
+    // compoundLoginValidator () {
+    //     const emailNotValid = this.emailValidator(
+    //         this.textInputFieldEmail.state.value
+    //     )
+    //     const passwordNotValid = this.passwordValidator(
+    //         this.textInputFieldPassword.state.value
+    //     )
+    //     if (emailNotValid) {
+    //         this.textInputFieldEmail.setState({
+    //             error: "invalid email",
+    //         })
+    //         return false
+    //     }
+    //     if (passwordNotValid) {
+    //         this.textInputFieldPassword.setState({
+    //             error: "invalid password",
+    //         })
+    //         return false
+    //     }
+    //     return this.authenticateUser.call(this)
+    // }
 
     // ...
     federationValidator () {
@@ -574,53 +584,7 @@ class Welcome extends Component {
                                                     account you can log in here
                                                     to your banking terminal.
                                                 </div>
-                                                <div>
-                                                    <div className="mui-text-input">
-                                                        <div>
-                                                            <TextInputField
-                                                                type="email"
-                                                                floatingLabelText="Email"
-                                                                styles={styles}
-                                                                validator={this.emailValidator.bind(
-                                                                    this
-                                                                )}
-                                                                action={this.compoundLoginValidator.bind(
-                                                                    this
-                                                                )}
-                                                                ref={(self) => {
-                                                                    this.textInputFieldEmail = self
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <TextInputField
-                                                                type="password"
-                                                                floatingLabelText="Password"
-                                                                styles={styles}
-                                                                validator={this.passwordValidator.bind(
-                                                                    this
-                                                                )}
-                                                                action={this.compoundLoginValidator.bind(
-                                                                    this
-                                                                )}
-                                                                ref={(self) => {
-                                                                    this.textInputFieldPassword = self
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex-row-space-between">
-                                                        <div>
-                                                            <RaisedButton
-                                                                onClick={this.compoundLoginValidator.bind(
-                                                                    this
-                                                                )}
-                                                                backgroundColor="rgb(244,176,4)"
-                                                                label="Login"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <div className="f-c"><Login /></div>
                                             </div>
                                         }
                                     />
@@ -709,6 +673,7 @@ function mapStateToProps (state) {
         auth: state.auth,
         nav: state.nav,
         ui: state.ui,
+        // rAuth: state.rAuth,
     }
 }
 
