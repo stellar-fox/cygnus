@@ -30,15 +30,15 @@ class Layout extends Component {
     render () {
         return (
             <ConditionalRender>
-                <RenderGroup render={this.props.loggedIn}>
+                <RenderGroup display={this.props.loggedIn}>
                     <WalletAppBar />
                     <LoadingModal />
                     <WalletDrawer />
                     <Content />
                     <Footer />
                 </RenderGroup>
-                <LoadingModal render={!this.props.loggedIn} />
-                <Switch render={!this.props.loggedIn}>
+                <LoadingModal display={!this.props.loggedIn} />
+                <Switch display={!this.props.loggedIn}>
                     <Route exact path="/" component={Welcome} />
                     <Redirect to="/" />
                 </Switch>

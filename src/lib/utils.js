@@ -139,8 +139,8 @@ export const flatten = (arr) => arr.reduce((acc, el) => acc.concat(el), [])
 // declarative conditional rendering in JSX
 export const ConditionalRender = (props) => (
     (cn) => Array.isArray(cn) ?
-        cn.filter((c) => c.props.render) :
-        cn.props.render ? cn : null
+        cn.filter((c) => c.props.display) :
+        cn.props.display ? cn : null
 )(props.children)
 
 
