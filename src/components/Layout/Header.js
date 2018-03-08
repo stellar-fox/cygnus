@@ -44,7 +44,7 @@ class BalancesNavLinkCore extends Component {
                 onClick={this.selectBalances}
                 exact
                 activeClassName="active"
-                to="/"
+                to="/bank/"
             >
                 <i className="material-icons">account_balance_wallet</i>
                 Balances
@@ -89,7 +89,7 @@ class PaymentsNavLinkCore extends Component {
                 onClick={this.selectPayments}
                 exact
                 activeClassName="active"
-                to="/payments/"
+                to="/bank/payments/"
             >
                 <i className="material-icons">payment</i>
                 Payments
@@ -135,7 +135,7 @@ class AccountNavLinkCore extends Component {
                 onClick={this.selectAccount}
                 exact
                 activeClassName="active"
-                to="/account/"
+                to="/bank/account/"
             >
                 <i className="material-icons">account_balance</i>
                 Account

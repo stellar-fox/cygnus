@@ -47,9 +47,9 @@ class Content extends Component {
         return (
             <div style={this.state.style} className="content">
                 <Switch>
-                    <Route exact path="/" component={Balances} />
-                    <Route exact path="/payments/" component={Payments} />
-                    <Route exact path="/account/" component={Account} />
+                    <Route exact path="/bank/" component={Balances} />
+                    <Route exact path="/bank/payments/" component={Payments} />
+                    <Route exact path="/bank/account/" component={Account} />
                 </Switch>
             </div>
         )
