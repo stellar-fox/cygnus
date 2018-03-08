@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import {
     Route,
     Redirect,
-    Switch
+    Switch,
 } from "react-router-dom"
 
 import LoadingModal from "../LoadingModal"
