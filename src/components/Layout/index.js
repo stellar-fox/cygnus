@@ -1,52 +1,17 @@
-import React, { Component } from "react"
+import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import {
     Route,
     Redirect,
     Switch
 } from "react-router-dom"
+import { ConditionalRender } from "../../lib/utils"
 
-import {
-    WalletAppBar,
-    WalletDrawer,
-} from "./Header"
-import Content from "./Content"
-import Footer from "./Footer"
-import Welcome from "../Welcome"
 import LoadingModal from "../LoadingModal"
-
-import {
-    ConditionalRender,
-    RenderGroup
-} from "../../lib/utils"
+import Welcome from "../Welcome"
+import Bank from "./Bank"
 
 
-
-
-// ..
-class Layout extends Component {
-
-    // ...
-    render () {
-        return (
-            <ConditionalRender>
-                <RenderGroup display={this.props.loggedIn}>
-                    <WalletAppBar />
-                    <LoadingModal />
-                    <WalletDrawer />
-                    <Content />
-                    <Footer />
-                </RenderGroup>
-                <LoadingModal display={!this.props.loggedIn} />
-                <Switch display={!this.props.loggedIn}>
-                    <Route exact path="/" component={Welcome} />
-                    <Redirect to="/" />
-                </Switch>
-            </ConditionalRender>
-        )
-    }
-
-}
 
 
 // ...
@@ -55,4 +20,36 @@ export default connect(
     (state) => ({
         loggedIn: state.auth.isHorizonLoggedIn,
     })
-)(Layout)
+)(
+    // Layout component
+    (props) =>
+        <Fragment>
+            <LoadingModal />
+            <Switch>
+                <Route exact path="/">
+                    <ConditionalRender>
+                        <Route
+                            display={!props.loggedIn}
+                            component={Welcome}
+                        />
+                        <Redirect
+                            display={props.loggedIn}
+                            to="/bank/"
+                        />
+                    </ConditionalRender>
+                </Route>
+                <Route path="/bank/">
+                    <ConditionalRender>
+                        <Route
+                            display={props.loggedIn}
+                            component={Bank}
+                        />
+                        <Redirect
+                            display={!props.loggedIn}
+                            to="/"
+                        />
+                    </ConditionalRender>
+                </Route>
+            </Switch>
+        </Fragment>
+)
