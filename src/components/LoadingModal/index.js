@@ -48,6 +48,5 @@ export default connect(
     // map state to props.
     (state) => ({
         loadingModal: state.loadingModal,
-        ui: state.ui,
     })
 )(LoadingModal)
