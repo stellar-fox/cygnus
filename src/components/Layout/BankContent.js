@@ -10,13 +10,13 @@ import Balances from "../Balances"
 import Payments from "../Payments"
 import Account from "../Account"
 
-import "./Content.css"
+import "./BankContent.css"
 
 
 
 
 // ...
-class Content extends Component {
+class BankContent extends Component {
 
     // ...
     balancesPath = `${this.props.basePath}balances/`
@@ -51,7 +51,7 @@ class Content extends Component {
 
     // ...
     render = () =>
-        <div style={this.state.style} className="content">
+        <div style={this.state.style} className="bank-content">
             <Switch>
                 <Route path={this.balancesPath} component={this.iBalances} />
                 <Route path={this.paymentsPath} component={this.iPayments} />
@@ -68,4 +68,4 @@ export default connect(
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
     })
-)(Content)
+)(BankContent)

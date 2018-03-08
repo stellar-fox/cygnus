@@ -10,7 +10,7 @@ import {
     Route,
     Switch,
 } from "react-router-dom"
-import Content from "./Content"
+import BankContent from "./BankContent"
 import Footer from "./Footer"
 
 
@@ -22,7 +22,7 @@ export default class Bank extends Component {
     // ...
     balancesPath = `${this.props.basePath}balances/`
     iBankDrawer = inject(BankDrawer, { basePath: this.props.basePath, })
-    iContent = inject(Content, { basePath: this.props.basePath, })
+    iBankContent = inject(BankContent, { basePath: this.props.basePath, })
 
 
     // ...
@@ -36,7 +36,7 @@ export default class Bank extends Component {
             </Switch>
             <BankAppBar />
             <Route component={this.iBankDrawer} />
-            <Route component={this.iContent} />
+            <Route component={this.iBankContent} />
             <Footer />
         </Fragment>
 
