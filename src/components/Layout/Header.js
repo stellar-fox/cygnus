@@ -163,7 +163,7 @@ const AccountNavLink = connect(
 
 
 // ...
-class WalletDrawerCore extends Component {
+class BankDrawerCore extends Component {
 
     // ...
     static style = {
@@ -183,7 +183,7 @@ class WalletDrawerCore extends Component {
     render () {
         return (
             <Drawer
-                containerStyle={WalletDrawerCore.style}
+                containerStyle={BankDrawerCore.style}
                 open={this.props.drawerOpened}
             >
                 <BalancesNavLink />
@@ -197,18 +197,18 @@ class WalletDrawerCore extends Component {
 
 
 // ...
-export const WalletDrawer = withRouter(connect(
+export const BankDrawer = withRouter(connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
     })
-)(WalletDrawerCore))
+)(BankDrawerCore))
 
 
 
 
 // ...
-class WalletAppBarCore extends Component {
+class BankAppBarCore extends Component {
 
     // ...
     static style = {
@@ -258,11 +258,11 @@ class WalletAppBarCore extends Component {
                     </div>
                 }
                 className="navbar"
-                style={WalletAppBarCore.style.appBar}
+                style={BankAppBarCore.style.appBar}
                 onLeftIconButtonClick={this.handleToggle}
                 iconElementRight={
                     <IconButton
-                        iconStyle={WalletAppBarCore.style.icon}
+                        iconStyle={BankAppBarCore.style.icon}
                         onClick={this.handleLogOutClick}
                     >
                         <i className="material-icons">power_settings_new</i>
@@ -276,7 +276,7 @@ class WalletAppBarCore extends Component {
 
 
 // ...
-export const WalletAppBar = connect(
+export const BankAppBar = connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
@@ -290,4 +290,4 @@ export const WalletAppBar = connect(
         closeDrawer,
         selectView,
     }, dispatch)
-)(WalletAppBarCore)
+)(BankAppBarCore)

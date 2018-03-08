@@ -1,7 +1,7 @@
 import React, { Fragment } from "react"
 import {
-    WalletAppBar,
-    WalletDrawer,
+    BankAppBar,
+    BankDrawer,
 } from "./Header"
 import Content from "./Content"
 import Footer from "./Footer"
@@ -12,8 +12,8 @@ import Footer from "./Footer"
 // Bank component
 export default () =>
     <Fragment>
-        <WalletAppBar />
-        <WalletDrawer />
+        <BankAppBar />
+        <BankDrawer />
         <Content />
         <Footer />
     </Fragment>
