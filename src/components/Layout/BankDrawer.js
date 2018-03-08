@@ -17,14 +17,14 @@ import "./BankDrawer.css"
 class BalancesNavLinkCore extends Component {
 
     // ...
-    selectBalances = this.props.selectView.bind(this, "Balances")
+    action = this.props.selectView.bind(this, "Balances")
 
 
     // ...
     render = () =>
         <NavLink
             className="menu-item"
-            onClick={this.selectBalances}
+            onClick={this.action}
             exact
             activeClassName="active"
             to={this.props.basePath}
@@ -54,7 +54,7 @@ const BalancesNavLink = connect(
 class PaymentsNavLinkCore extends Component {
 
     // ...
-    selectPayments = this.props.selectView.bind(this, "Payments")
+    action = this.props.selectView.bind(this, "Payments")
 
 
     // ...
@@ -62,7 +62,7 @@ class PaymentsNavLinkCore extends Component {
         this.props.accountInfo.exists ?
             <NavLink
                 className="menu-item"
-                onClick={this.selectPayments}
+                onClick={this.action}
                 exact
                 activeClassName="active"
                 to={this.props.basePath}
@@ -96,14 +96,14 @@ const PaymentsNavLink = connect(
 class AccountNavLinkCore extends Component {
 
     // ...
-    selectAccount = this.props.selectView.bind(this, "Account")
+    action = this.props.selectView.bind(this, "Account")
 
 
     // ...
     render = () =>
         <NavLink
             className="menu-item"
-            onClick={this.selectAccount}
+            onClick={this.action}
             exact
             activeClassName="active"
             to={this.props.basePath}
@@ -147,12 +147,17 @@ class BankDrawer extends Component {
 
 
     // ...
-    balancesPath = `${this.props.basePath}balances/`
-    iBalancesNavLink = inject(BalancesNavLink, { basePath: this.balancesPath, })
-    paymentsPath = `${this.props.basePath}payments/`
-    iPaymentsNavLink = inject(PaymentsNavLink, { basePath: this.paymentsPath, })
-    accountPath = `${this.props.basePath}account/`
-    iAccountNavLink = inject(AccountNavLink, { basePath: this.accountPath, })
+    path = {
+        balances: `${this.props.basePath}balances/`,
+        payments: `${this.props.basePath}payments/`,
+        account: `${this.props.basePath}account/`,
+    }
+
+
+    // ...
+    iBalancesNavLink = inject(BalancesNavLink, { basePath: this.path.balances, })
+    iPaymentsNavLink = inject(PaymentsNavLink, { basePath: this.path.payments, })
+    iAccountNavLink = inject(AccountNavLink, { basePath: this.path.account, })
 
 
     // ...

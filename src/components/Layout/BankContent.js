@@ -19,12 +19,17 @@ import "./BankContent.css"
 class BankContent extends Component {
 
     // ...
-    balancesPath = `${this.props.basePath}balances/`
-    iBalances = inject(Balances, { basePath: this.balancesPath, })
-    paymentsPath = `${this.props.basePath}payments/`
-    iPayments = inject(Payments, { basePath: this.paymentsPath, })
-    accountPath = `${this.props.basePath}account/`
-    iAccount = inject(Account, { basePath: this.accountPath, })
+    path = {
+        balances: `${this.props.basePath}balances/`,
+        payments: `${this.props.basePath}payments/`,
+        account: `${this.props.basePath}account/`,
+    }
+
+
+    // ...
+    iBalances = inject(Balances, { basePath: this.path.balances, })
+    iPayments = inject(Payments, { basePath: this.path.payments, })
+    iAccount = inject(Account, { basePath: this.path.account, })
 
 
     // ...
@@ -53,9 +58,9 @@ class BankContent extends Component {
     render = () =>
         <div style={this.state.style} className="bank-content">
             <Switch>
-                <Route path={this.balancesPath} component={this.iBalances} />
-                <Route path={this.paymentsPath} component={this.iPayments} />
-                <Route path={this.accountPath} component={this.iAccount} />
+                <Route path={this.path.balances} component={this.iBalances} />
+                <Route path={this.path.payments} component={this.iPayments} />
+                <Route path={this.path.account} component={this.iAccount} />
             </Switch>
         </div>
 
