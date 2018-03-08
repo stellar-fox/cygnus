@@ -1,15 +1,13 @@
 import React, { Component, Fragment } from "react"
-import { inject } from "../../lib/utils"
-
-import {
-    BankAppBar,
-    BankDrawer,
-} from "./Header"
 import {
     Redirect,
     Route,
     Switch,
 } from "react-router-dom"
+import { inject } from "../../lib/utils"
+
+import BankAppBar from "./BankAppBar"
+import { BankDrawer } from "./Header"
 import BankContent from "./BankContent"
 import Footer from "./Footer"
 
