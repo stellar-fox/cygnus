@@ -7,7 +7,7 @@ import {
 import { inject } from "../../lib/utils"
 
 import BankAppBar from "./BankAppBar"
-import { BankDrawer } from "./Header"
+import BankDrawer from "./BankDrawer"
 import BankContent from "./BankContent"
 import Footer from "./Footer"
 
