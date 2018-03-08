@@ -1,3 +1,4 @@
+import React from "react"
 import axios from "axios"
 import toml from "toml"
 
@@ -146,3 +147,7 @@ export const ConditionalRender = (props) => (
 
 // React.Fragment can only receive 'key' and 'children' as props, so...
 export const RenderGroup = (props) => props.children
+
+
+// inject props "p" into component "C"
+export const inject = (C, p) => (props) => <C {...{ ...props, ...p, }} />
