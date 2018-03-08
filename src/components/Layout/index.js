@@ -5,7 +5,6 @@ import {
     Redirect,
     Switch
 } from "react-router-dom"
-import { ConditionalRender } from "../../lib/utils"
 
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
@@ -27,28 +26,18 @@ export default connect(
             <LoadingModal />
             <Switch>
                 <Route exact path="/">
-                    <ConditionalRender>
-                        <Route
-                            display={!props.loggedIn}
-                            component={Welcome}
-                        />
-                        <Redirect
-                            display={props.loggedIn}
-                            to="/bank/"
-                        />
-                    </ConditionalRender>
+                    {
+                        !props.loggedIn ?
+                            <Route component={Welcome} /> :
+                            <Redirect to="/bank/" />
+                    }
                 </Route>
                 <Route path="/bank/">
-                    <ConditionalRender>
-                        <Route
-                            display={props.loggedIn}
-                            component={Bank}
-                        />
-                        <Redirect
-                            display={!props.loggedIn}
-                            to="/"
-                        />
-                    </ConditionalRender>
+                    {
+                        props.loggedIn ?
+                            <Route component={Bank} /> :
+                            <Redirect to="/" />
+                    }
                 </Route>
             </Switch>
         </Fragment>
