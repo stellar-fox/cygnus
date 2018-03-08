@@ -4,6 +4,7 @@ import {
     Switch,
 } from "react-router-dom"
 import { connect } from "react-redux"
+import { inject } from "../../lib/utils"
 
 import Balances from "../Balances"
 import Payments from "../Payments"
@@ -18,12 +19,12 @@ import "./Content.css"
 class Content extends Component {
 
     // ...
-    constructor (props) {
-        super(props)
-        this.state = {
-            style: this.computeStyle(this.props.drawerOpened),
-        }
-    }
+    balancesPath = `${this.props.basePath}balances/`
+    iBalances = inject(Balances, { basePath: this.balancesPath, })
+    paymentsPath = `${this.props.basePath}payments/`
+    iPayments = inject(Payments, { basePath: this.paymentsPath, })
+    accountPath = `${this.props.basePath}account/`
+    iAccount = inject(Account, { basePath: this.accountPath, })
 
 
     // ...
@@ -33,7 +34,13 @@ class Content extends Component {
 
 
     // ...
-    componentWillReceiveProps (nextProps) {
+    state = {
+        style: this.computeStyle(this.props.drawerOpened),
+    }
+
+
+    // ...
+    componentWillReceiveProps = (nextProps) => {
         if (this.props.drawerOpened !== nextProps.drawerOpened) {
             this.setState({
                 style: this.computeStyle(nextProps.drawerOpened),
@@ -43,17 +50,15 @@ class Content extends Component {
 
 
     // ...
-    render () {
-        return (
-            <div style={this.state.style} className="content">
-                <Switch>
-                    <Route exact path="/bank/" component={Balances} />
-                    <Route exact path="/bank/payments/" component={Payments} />
-                    <Route exact path="/bank/account/" component={Account} />
-                </Switch>
-            </div>
-        )
-    }
+    render = () =>
+        <div style={this.state.style} className="content">
+            <Switch>
+                <Route path={this.balancesPath} component={this.iBalances} />
+                <Route path={this.paymentsPath} component={this.iPayments} />
+                <Route path={this.accountPath} component={this.iAccount} />
+            </Switch>
+        </div>
+
 }
 
 
@@ -62,6 +67,5 @@ export default connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
-        path : state.router.location.pathname,
     })
 )(Content)
