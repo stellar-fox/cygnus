@@ -19,15 +19,15 @@ import Bank from "./Bank"
 class Layout extends Component {
 
     // ...
-    path = {
+    routes = {
         welcome: this.props.basePath,
         bank: `${this.props.basePath}bank/`,
     }
 
 
     // ...
-    iWelcome = inject(Welcome, { basePath: this.path.welcome, })
-    iBank = inject(Bank, { basePath: this.path.bank, })
+    iWelcome = inject(Welcome, { basePath: this.routes.welcome, })
+    iBank = inject(Bank, { basePath: this.routes.bank, })
 
 
     // ...
@@ -35,21 +35,21 @@ class Layout extends Component {
         <Fragment>
             <LoadingModal />
             <Switch>
-                <Route exact path={this.path.welcome}>
+                <Route exact path={this.routes.welcome}>
                     {
                         !this.props.loggedIn ?
                             <Route component={this.iWelcome} /> :
-                            <Redirect to={this.path.bank} />
+                            <Redirect to={this.routes.bank} />
                     }
                 </Route>
-                <Route path={this.path.bank}>
+                <Route path={this.routes.bank}>
                     {
                         this.props.loggedIn ?
                             <Route component={this.iBank} /> :
-                            <Redirect to={this.path.welcome} />
+                            <Redirect to={this.routes.welcome} />
                     }
                 </Route>
-                <Redirect to={this.path.welcome} />
+                <Redirect to={this.routes.welcome} />
             </Switch>
         </Fragment>
 

@@ -18,8 +18,16 @@ import Footer from "./Footer"
 export default class Bank extends Component {
 
     // ...
-    iBankDrawer = inject(BankDrawer, { basePath: this.props.basePath, })
-    iBankContent = inject(BankContent, { basePath: this.props.basePath, })
+    routes = {
+        balances: `${this.props.basePath}balances/`,
+        payments: `${this.props.basePath}payments/`,
+        account: `${this.props.basePath}account/`,
+    }
+
+
+    // ...
+    iBankDrawer = inject(BankDrawer, { basePath: this.props.basePath, routes: this.routes, })
+    iBankContent = inject(BankContent, { basePath: this.props.basePath, routes: this.routes, })
 
 
     // ...
@@ -28,7 +36,7 @@ export default class Bank extends Component {
             <Switch>
                 <Redirect exact
                     from={this.props.basePath}
-                    to={`${this.props.basePath}balances/`}
+                    to={this.routes.balances}
                 />
             </Switch>
             <BankAppBar />

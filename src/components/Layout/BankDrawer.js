@@ -147,17 +147,9 @@ class BankDrawer extends Component {
 
 
     // ...
-    path = {
-        balances: `${this.props.basePath}balances/`,
-        payments: `${this.props.basePath}payments/`,
-        account: `${this.props.basePath}account/`,
-    }
-
-
-    // ...
-    iBalancesNavLink = inject(BalancesNavLink, { basePath: this.path.balances, })
-    iPaymentsNavLink = inject(PaymentsNavLink, { basePath: this.path.payments, })
-    iAccountNavLink = inject(AccountNavLink, { basePath: this.path.account, })
+    iBalancesNavLink = inject(BalancesNavLink, { basePath: this.props.routes.balances, })
+    iPaymentsNavLink = inject(PaymentsNavLink, { basePath: this.props.routes.payments, })
+    iAccountNavLink = inject(AccountNavLink, { basePath: this.props.routes.account, })
 
 
     // ...
