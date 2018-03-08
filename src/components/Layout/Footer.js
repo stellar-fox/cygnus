@@ -1,25 +1,17 @@
-import React, { Component } from "react"
+import React from "react"
 
 import "./Footer.css"
 
 
 
 
-// ...
-export default class Footer extends Component {
-
-    // ...
-    render () {
-        return (
-            <div className="footer">
-                <div className="flex-row-space-between">
-                    <div>
-                        © <span>Stellar Fox</span> 2017-2018.
-                    </div>
-                    <div>ver. 0.1.20</div>
-                </div>
+// Footer component
+export default () =>
+    <div className="footer">
+        <div className="flex-row-space-between">
+            <div>
+                © <span>Stellar Fox</span> 2017-2018.
             </div>
-        )
-    }
-
-}
+            <div>ver. 0.1.20</div>
+        </div>
+    </div>
