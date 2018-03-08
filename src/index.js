@@ -24,6 +24,7 @@ import {
 // import { createLogger } from "redux-logger"
 // import thunk from "redux-thunk"
 
+import { inject } from "./lib/utils"
 
 import reducers from "./reducers"
 import {
@@ -95,7 +96,7 @@ ReactDOM.render(
     <Provider store={store}>
         <MuiThemeProvider muiTheme={stellarTheme}>
             <Router history={history}>
-                <Route component={Layout} />
+                <Route component={inject(Layout, { basePath: "/", })} />
             </Router>
         </MuiThemeProvider>
     </Provider>,
