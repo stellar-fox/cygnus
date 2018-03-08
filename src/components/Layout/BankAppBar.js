@@ -13,8 +13,8 @@ import {
     selectView,
 } from "../../actions/index"
 
-import AppBarTitle from "./AppBarTitle"
-import AppBarItems from "./AppBarItems"
+import BankAppBarTitle from "./BankAppBarTitle"
+import BankAppBarItems from "./BankAppBarItems"
 
 
 
@@ -57,8 +57,8 @@ class BankAppBar extends Component {
         <AppBar
             title={
                 <div className="flex-row">
-                    <AppBarTitle />
-                    <AppBarItems />
+                    <BankAppBarTitle />
+                    <BankAppBarItems />
                 </div>
             }
             className="navbar"
