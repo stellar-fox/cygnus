@@ -39,6 +39,7 @@ export default connect(
                             <Redirect to="/" />
                     }
                 </Route>
+                <Redirect to="/" />
             </Switch>
         </Fragment>
 )
