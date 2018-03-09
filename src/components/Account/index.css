@@ -25,3 +25,10 @@
     padding: 10px;
     width: 100%;
 }
+
+.revers {
+    padding-left: 25px;
+    padding-bottom: 35px;
+    background: rgb(15,46,83);
+    border-radius: 3px;
+}

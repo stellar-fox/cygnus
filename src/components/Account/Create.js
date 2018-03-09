@@ -95,14 +95,6 @@ class NewAccount extends Component {
             return false
         }
 
-        await new Promise((res, _) => {
-            this.setState({
-                completed: 33,
-                progressText: "Creating user ...",
-            })
-            setTimeout(res, 500)
-        })
-
         const userId = await axios
             .post(
                 `${config.api}/user/create/${this.state.email}/${this.state.password}`
@@ -117,14 +109,6 @@ class NewAccount extends Component {
                 console.log(error) // eslint-disable-line no-console
                 return null
             })
-
-        await new Promise((res, _) => {
-            this.setState({
-                completed: 66,
-                progressText: "Creating account ...",
-            })
-            setTimeout(res, 500)
-        })
 
         if (userId) {
             const accountId = await axios
@@ -154,16 +138,6 @@ class NewAccount extends Component {
             }
         }
 
-        await new Promise((res, _) => {
-            this.setState({
-                completed: 100,
-                progressText: "Completed.",
-            })
-            setTimeout(res, 500)
-        })
-
-        this.handleNext.call(this)
-
         await axios
             .post(
                 `${config.api}/user/authenticate/${
@@ -173,6 +147,9 @@ class NewAccount extends Component {
                 }`
             )
             .then((response) => {
+                this.props.setPublicKey(ledgerData.publicKey)
+                this.props.setLedgerSoftwareVersion(ledgerData.softwareVersion)
+                this.props.setAccountPath(ledgerData.bip32Path)
                 this.props.setAccountRegistered(true)
                 this.props.logIn({
                     userId: response.data.user_id,
@@ -184,10 +161,7 @@ class NewAccount extends Component {
                 console.log(error.response.statusText) // eslint-disable-line no-console
             })
 
-        // LOGIN UPON ACCOUNT CREATION
-        this.props.setPublicKey(ledgerData.publicKey)
-        this.props.setLedgerSoftwareVersion(ledgerData.softwareVersion)
-        this.props.setAccountPath(ledgerData.bip32Path)
+        this.handleNext.call(this)
 
     }
 
@@ -383,35 +357,37 @@ class NewAccount extends Component {
                             Choose email and password.
                         </StepLabel>
                         <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
-                            <div>
-                                <TextInputField
-                                    type="email"
-                                    floatingLabelText="Email"
-                                    styles={styles}
-                                    validator={this.emailValidator.bind(this)}
-                                    action={this.compoundValidate.bind(this)}
-                                    ref={(self) => { this.textInputFieldEmail = self }}
-                                />
-                            </div>
-                            <div>
-                                <TextInputField
-                                    type="password"
-                                    floatingLabelText="Password"
-                                    styles={styles}
-                                    validator={this.passwordValidator.bind(this)}
-                                    action={this.compoundValidate.bind(this)}
-                                    ref={(self) => { this.textInputFieldPassword = self }}
-                                />
-                            </div>
-                            <div>
-                                <TextInputField
-                                    type="password"
-                                    floatingLabelText="Password Confirmation"
-                                    styles={styles}
-                                    validator={this.passwordValidator.bind(this)}
-                                    action={this.compoundValidate.bind(this)}
-                                    ref={(self) => { this.textInputFieldPasswordConf = self }}
-                                />
+                            <div className="revers">
+                                <div>
+                                    <TextInputField
+                                        type="email"
+                                        floatingLabelText="Email"
+                                        styles={styles}
+                                        validator={this.emailValidator.bind(this)}
+                                        action={this.compoundValidate.bind(this)}
+                                        ref={(self) => { this.textInputFieldEmail = self }}
+                                    />
+                                </div>
+                                <div>
+                                    <TextInputField
+                                        type="password"
+                                        floatingLabelText="Password"
+                                        styles={styles}
+                                        validator={this.passwordValidator.bind(this)}
+                                        action={this.compoundValidate.bind(this)}
+                                        ref={(self) => { this.textInputFieldPassword = self }}
+                                    />
+                                </div>
+                                <div>
+                                    <TextInputField
+                                        type="password"
+                                        floatingLabelText="Password Confirmation"
+                                        styles={styles}
+                                        validator={this.passwordValidator.bind(this)}
+                                        action={this.compoundValidate.bind(this)}
+                                        ref={(self) => { this.textInputFieldPasswordConf = self }}
+                                    />
+                                </div>
                             </div>
                             {this.renderStepActions(1)}
                         </StepContent>
@@ -425,14 +401,7 @@ class NewAccount extends Component {
                             {this.renderStepActions(2)}
                         </StepContent>
                     </Step>
-                    <Step>
-                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">account_box</i>}>
-                            Your new account.
-                        </StepLabel>
-                        <StepContent style={{ borderLeft: "none", }}>
-                            {this.renderStepActions(3)}
-                        </StepContent>
-                    </Step>
+
                 </Stepper>
                 {(finished && this.state.accountCreated) && (
                     <div style={{ fontSize: "1rem", margin: "20px 0", textAlign: "center", }}>

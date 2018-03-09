@@ -4,7 +4,8 @@ import { bindActionCreators } from "redux"
 import {
     logIn,
     setAccountRegistered,
-    setPublicKey
+    setPublicKey,
+    logInToHorizon,
 } from "../../actions/index"
 
 
@@ -14,7 +15,7 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ logIn, setAccountRegistered, setPublicKey, }, dispatch)
+    return bindActionCreators({ logIn, setAccountRegistered, setPublicKey, logInToHorizon, }, dispatch)
 }
 
 

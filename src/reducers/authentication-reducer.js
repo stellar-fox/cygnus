@@ -24,7 +24,6 @@ export default function (state = initState, action) {
             state = {
                 ...state,
                 isHorizonLoggedIn: true,
-                isReadOnly: action.payload.isReadOnly,
             }
             break
 

@@ -157,7 +157,7 @@ class Balances extends Component {
         thb: (<span>&#xe3f;</span>),
         pln: (<span>&#x7a;&#x142;</span>),
     })
-    
+
     // ...
     getCurrencyText = (currency) => (
         (c) => c[Object.keys(c).filter((key) => key === currency)]
@@ -1278,8 +1278,8 @@ class Balances extends Component {
 
         </div>
 
-        {(!this.props.accountInfo.registered && !this.props.auth.isReadOnly) ? (
-          
+        {(!this.props.auth.registered && !this.props.auth.isAuthenticated) ? (
+
             <Card className="welcome-card">
               <CardText>
                 <div className="flex-row">
@@ -1321,7 +1321,7 @@ class Balances extends Component {
                 />
               </CardActions>
             </Card>
-          
+
         ) : null}
 
         {this.props.accountInfo.exists ? (

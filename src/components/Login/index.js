@@ -62,8 +62,10 @@ export default class Login extends Component {
         this.props.logIn({
             pubkey: auth.pubkey,
             userId: auth.user_id,
+            token: auth.token,
         })
         this.props.setPublicKey(auth.pubkey)
+
     }
 
 

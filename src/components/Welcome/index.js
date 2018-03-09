@@ -74,11 +74,9 @@ class Welcome extends Component {
 
     // ...
     componentWillReceiveProps (nextProps) {
-
-        if (this.props.accountInfo.pubKey === undefined && nextProps.accountInfo.pubKey !== undefined) {
-            this.logInViaPublicKey(nextProps.accountInfo.pubKey, false)
+        if (!this.props.accountInfo.pubKey && nextProps.accountInfo.pubKey) {
+            this.logInViaPublicKey(nextProps.accountInfo.pubKey)
         }
-
     }
 
 
@@ -106,7 +104,7 @@ class Welcome extends Component {
     }
 
     // ...
-    logInViaPublicKey (pubKey, isReadOnly = true) {
+    logInViaPublicKey (pubKey) {
 
 
 
@@ -142,7 +140,7 @@ class Welcome extends Component {
                 .then((account) => {
                     this.props.accountExistsOnLedger({ account, })
                     this.props.selectView("Balances")
-                    this.props.logInToHorizon({ isReadOnly, })
+                    this.props.logInToHorizon()
                     this.props.setModalLoaded()
                     this.props.updateLoadingMessage({
                         message: null,
@@ -151,7 +149,7 @@ class Welcome extends Component {
                 .catch(() => {
                     this.props.accountMissingOnLedger()
                     this.props.selectView("Balances")
-                    this.props.logInToHorizon({ isReadOnly, })
+                    this.props.logInToHorizon()
                     this.props.setModalLoaded()
                     this.props.updateLoadingMessage({
                         message: null,

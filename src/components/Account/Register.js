@@ -325,35 +325,37 @@ class NewAccount extends Component {
                             Choose email and password.
                         </StepLabel>
                         <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
-                            <div>
-                                <TextInputField
-                                    type="email"
-                                    floatingLabelText="Email"
-                                    styles={styles}
-                                    validator={this.emailValidator.bind(this)}
-                                    action={this.compoundValidate.bind(this)}
-                                    ref={(self) => { this.textInputFieldEmail = self }}
-                                />
-                            </div>
-                            <div>
-                                <TextInputField
-                                    type="password"
-                                    floatingLabelText="Password"
-                                    styles={styles}
-                                    validator={this.passwordValidator.bind(this)}
-                                    action={this.compoundValidate.bind(this)}
-                                    ref={(self) => { this.textInputFieldPassword = self }}
-                                />
-                            </div>
-                            <div>
-                                <TextInputField
-                                    type="password"
-                                    floatingLabelText="Password Confirmation"
-                                    styles={styles}
-                                    validator={this.passwordValidator.bind(this)}
-                                    action={this.compoundValidate.bind(this)}
-                                    ref={(self) => { this.textInputFieldPasswordConf = self }}
-                                />
+                            <div className="revers">
+                                <div>
+                                    <TextInputField
+                                        type="email"
+                                        floatingLabelText="Email"
+                                        styles={styles}
+                                        validator={this.emailValidator.bind(this)}
+                                        action={this.compoundValidate.bind(this)}
+                                        ref={(self) => { this.textInputFieldEmail = self }}
+                                    />
+                                </div>
+                                <div>
+                                    <TextInputField
+                                        type="password"
+                                        floatingLabelText="Password"
+                                        styles={styles}
+                                        validator={this.passwordValidator.bind(this)}
+                                        action={this.compoundValidate.bind(this)}
+                                        ref={(self) => { this.textInputFieldPassword = self }}
+                                    />
+                                </div>
+                                <div>
+                                    <TextInputField
+                                        type="password"
+                                        floatingLabelText="Password Confirmation"
+                                        styles={styles}
+                                        validator={this.passwordValidator.bind(this)}
+                                        action={this.compoundValidate.bind(this)}
+                                        ref={(self) => { this.textInputFieldPasswordConf = self }}
+                                    />
+                                </div>
                             </div>
                             {this.renderStepActions(0)}
                         </StepContent>
