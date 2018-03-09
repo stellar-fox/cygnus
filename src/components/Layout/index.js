@@ -1,50 +1,57 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import {
-    Route,
     Redirect,
-    Switch
+    Route,
+    Switch,
 } from "react-router-dom"
 
-import {
-    WalletAppBar,
-    WalletDrawer,
-} from "./Header"
-import Content from "./Content"
-import Footer from "./Footer"
-import Welcome from "../Welcome"
+import { inject } from "../../lib/utils"
+
 import LoadingModal from "../LoadingModal"
-
-import {
-    ConditionalRender,
-    RenderGroup
-} from "../../lib/utils"
+import Welcome from "../Welcome"
+import Bank from "./Bank"
 
 
 
 
-// ..
+// ...
 class Layout extends Component {
 
     // ...
-    render () {
-        return (
-            <ConditionalRender>
-                <RenderGroup render={this.props.loggedIn}>
-                    <WalletAppBar />
-                    <LoadingModal />
-                    <WalletDrawer />
-                    <Content />
-                    <Footer />
-                </RenderGroup>
-                <LoadingModal render={!this.props.loggedIn} />
-                <Switch render={!this.props.loggedIn}>
-                    <Route exact path="/" component={Welcome} />
-                    <Redirect to="/" />
-                </Switch>
-            </ConditionalRender>
-        )
+    routes = {
+        welcome: this.props.basePath,
+        bank: `${this.props.basePath}bank/`,
     }
+
+
+    // ...
+    iWelcome = inject(Welcome, { basePath: this.routes.welcome, })
+    iBank = inject(Bank, { basePath: this.routes.bank, })
+
+
+    // ...
+    render = () =>
+        <Fragment>
+            <LoadingModal />
+            <Switch>
+                <Route exact path={this.routes.welcome}>
+                    {
+                        !this.props.loggedIn ?
+                            <Route component={this.iWelcome} /> :
+                            <Redirect to={this.routes.bank} />
+                    }
+                </Route>
+                <Route path={this.routes.bank}>
+                    {
+                        this.props.loggedIn ?
+                            <Route component={this.iBank} /> :
+                            <Redirect to={this.routes.welcome} />
+                    }
+                </Route>
+                <Redirect to={this.routes.welcome} />
+            </Switch>
+        </Fragment>
 
 }
 

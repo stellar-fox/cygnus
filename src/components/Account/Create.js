@@ -25,6 +25,7 @@ import {
     accountMissingOnLedger,
     logInToHorizon,
     selectView,
+    logIn,
     setAccountRegistered,
     setAccountPath,
     setLedgerSoftwareVersion,
@@ -162,6 +163,26 @@ class NewAccount extends Component {
         })
 
         this.handleNext.call(this)
+
+        await axios
+            .post(
+                `${config.api}/user/authenticate/${
+                    this.state.email
+                }/${
+                    this.state.password
+                }`
+            )
+            .then((response) => {
+                this.props.setAccountRegistered(true)
+                this.props.logIn({
+                    userId: response.data.user_id,
+                    token: response.data.token,
+                })
+                return response
+            })
+            .catch((error) => {
+                console.log(error.response.statusText) // eslint-disable-line no-console
+            })
 
         // LOGIN UPON ACCOUNT CREATION
         this.props.setPublicKey(ledgerData.publicKey)
@@ -440,6 +461,7 @@ function matchDispatchToProps (dispatch) {
             accountMissingOnLedger,
             logInToHorizon,
             selectView,
+            logIn,
             setAccountRegistered,
             setAccountPath,
             setLedgerSoftwareVersion,
