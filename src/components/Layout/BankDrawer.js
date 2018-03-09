@@ -1,9 +1,8 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { NavLink, Route } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import { push } from "react-router-redux"
-import { inject } from "../../lib/utils"
 
 import Drawer from "material-ui/Drawer"
 
@@ -34,6 +33,7 @@ class BalancesNavLinkCore extends Component {
             onClick={this.action}
             exact
             activeClassName="active"
+            isActive={() => this.props.path === this.props.basePath}
             to={this.props.basePath}
         >
             <i className="material-icons">account_balance_wallet</i>
@@ -80,6 +80,7 @@ class PaymentsNavLinkCore extends Component {
                 className="menu-item"
                 onClick={this.action}
                 exact
+                isActive={() => this.props.path === this.props.basePath}
                 activeClassName="active"
                 to={this.props.basePath}
             >
@@ -128,6 +129,7 @@ class AccountNavLinkCore extends Component {
             className="menu-item"
             onClick={this.action}
             exact
+            isActive={() => this.props.path === this.props.basePath}
             activeClassName="active"
             to={this.props.basePath}
         >
@@ -173,20 +175,14 @@ class BankDrawer extends Component {
 
 
     // ...
-    iBalancesNavLink = inject(BalancesNavLink, { basePath: this.props.routes.balances, })
-    iPaymentsNavLink = inject(PaymentsNavLink, { basePath: this.props.routes.payments, })
-    iAccountNavLink = inject(AccountNavLink, { basePath: this.props.routes.account, })
-
-
-    // ...
     render = () =>
         <Drawer
             containerStyle={BankDrawer.style}
             open={this.props.drawerOpened}
         >
-            <Route component={this.iBalancesNavLink} />
-            <Route component={this.iPaymentsNavLink} />
-            <Route component={this.iAccountNavLink} />
+            <BalancesNavLink basePath={this.props.routes.balances} />
+            <PaymentsNavLink basePath={this.props.routes.payments}/>
+            <AccountNavLink basePath={this.props.routes.account} />
         </Drawer>
 
 }
