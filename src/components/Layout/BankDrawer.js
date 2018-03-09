@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { NavLink, Route } from "react-router-dom"
+import { push } from "react-router-redux"
 import { inject } from "../../lib/utils"
 
 import Drawer from "material-ui/Drawer"
@@ -18,9 +19,9 @@ class BalancesNavLinkCore extends Component {
 
     // ...
     action = (e) => {
-        if (this.props.path === this.props.basePath) {
-            e.preventDefault()
-        } else {
+        e.preventDefault()
+        if (this.props.path !== this.props.basePath) {
+            this.props.push(this.props.basePath)
             this.props.selectView.call(this, "Balances")
         }
     }
@@ -52,6 +53,7 @@ const BalancesNavLink = connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         selectView,
+        push,
     }, dispatch)
 )(BalancesNavLinkCore)
 
@@ -63,9 +65,9 @@ class PaymentsNavLinkCore extends Component {
 
     // ...
     action = (e) => {
-        if (this.props.path === this.props.basePath) {
-            e.preventDefault()
-        } else {
+        e.preventDefault()
+        if (this.props.path !== this.props.basePath) {
+            this.props.push(this.props.basePath)
             this.props.selectView.call(this, "Payments")
         }
     }
@@ -100,6 +102,7 @@ const PaymentsNavLink = connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         selectView,
+        push,
     }, dispatch)
 )(PaymentsNavLinkCore)
 
@@ -111,9 +114,9 @@ class AccountNavLinkCore extends Component {
 
     // ...
     action = (e) => {
-        if (this.props.path === this.props.basePath) {
-            e.preventDefault()
-        } else {
+        e.preventDefault()
+        if (this.props.path !== this.props.basePath) {
+            this.props.push(this.props.basePath)
             this.props.selectView.call(this, "Account")
         }
     }
@@ -145,6 +148,7 @@ const AccountNavLink = connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         selectView,
+        push,
     }, dispatch)
 )(AccountNavLinkCore)
 
