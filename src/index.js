@@ -14,7 +14,6 @@ import {
     ConnectedRouter as Router,
     routerReducer,
     routerMiddleware,
-    // push,
 } from "react-router-redux"
 
 import {
