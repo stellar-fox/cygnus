@@ -47,7 +47,7 @@ class BankAppBar extends Component {
     handleLogOutClick = () => {
         this.props.logOutOfHorizon()
         this.props.logOut()
-        this.props.selectView("/")
+        this.props.selectView("Welcome")
         sessionStorage.clear()
     }
 
