@@ -88,23 +88,21 @@ const store = createStore(
 store.subscribe(throttle(() => saveState(store.getState()), 1000))
 
 
-
-
 // application's root
-ReactDOM.render(
-
-    // ...
+const StellarFox = () =>
     <Provider store={store}>
         <MuiThemeProvider muiTheme={stellarTheme}>
             <Router history={history}>
                 <Route component={inject(Layout, { basePath: "/", })} />
             </Router>
         </MuiThemeProvider>
-    </Provider>,
+    </Provider>
 
-    // ...
+
+// render application's root into the DOM
+ReactDOM.render(
+    <StellarFox />,
     document.getElementById("app")
-
 )
 
 
