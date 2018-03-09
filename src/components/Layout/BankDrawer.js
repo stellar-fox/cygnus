@@ -6,8 +6,6 @@ import { push } from "react-router-redux"
 
 import Drawer from "material-ui/Drawer"
 
-import { selectView } from "../../actions/index"
-
 import "./BankDrawer.css"
 
 
@@ -21,7 +19,6 @@ class BalancesNavLinkCore extends Component {
         e.preventDefault()
         if (this.props.path !== this.props.basePath) {
             this.props.push(this.props.basePath)
-            this.props.selectView.call(this, "Balances")
         }
     }
 
@@ -52,7 +49,6 @@ const BalancesNavLink = connect(
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        selectView,
         push,
     }, dispatch)
 )(BalancesNavLinkCore)
@@ -68,7 +64,6 @@ class PaymentsNavLinkCore extends Component {
         e.preventDefault()
         if (this.props.path !== this.props.basePath) {
             this.props.push(this.props.basePath)
-            this.props.selectView.call(this, "Payments")
         }
     }
 
@@ -102,7 +97,6 @@ const PaymentsNavLink = connect(
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        selectView,
         push,
     }, dispatch)
 )(PaymentsNavLinkCore)
@@ -118,7 +112,6 @@ class AccountNavLinkCore extends Component {
         e.preventDefault()
         if (this.props.path !== this.props.basePath) {
             this.props.push(this.props.basePath)
-            this.props.selectView.call(this, "Account")
         }
     }
 
@@ -149,7 +142,6 @@ const AccountNavLink = connect(
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        selectView,
         push,
     }, dispatch)
 )(AccountNavLinkCore)
