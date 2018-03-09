@@ -17,7 +17,13 @@ import "./BankDrawer.css"
 class BalancesNavLinkCore extends Component {
 
     // ...
-    action = this.props.selectView.bind(this, "Balances")
+    action = (e) => {
+        if (this.props.path === this.props.basePath) {
+            e.preventDefault()
+        } else {
+            this.props.selectView.call(this, "Balances")
+        }
+    }
 
 
     // ...
@@ -39,7 +45,9 @@ class BalancesNavLinkCore extends Component {
 // ...
 const BalancesNavLink = connect(
     // map state to props.
-    null,
+    (state) => ({
+        path: state.router.location.pathname,
+    }),
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
@@ -54,7 +62,13 @@ const BalancesNavLink = connect(
 class PaymentsNavLinkCore extends Component {
 
     // ...
-    action = this.props.selectView.bind(this, "Payments")
+    action = (e) => {
+        if (this.props.path === this.props.basePath) {
+            e.preventDefault()
+        } else {
+            this.props.selectView.call(this, "Payments")
+        }
+    }
 
 
     // ...
@@ -96,7 +110,13 @@ const PaymentsNavLink = connect(
 class AccountNavLinkCore extends Component {
 
     // ...
-    action = this.props.selectView.bind(this, "Account")
+    action = (e) => {
+        if (this.props.path === this.props.basePath) {
+            e.preventDefault()
+        } else {
+            this.props.selectView.call(this, "Account")
+        }
+    }
 
 
     // ...
@@ -118,7 +138,9 @@ class AccountNavLinkCore extends Component {
 // ...
 const AccountNavLink = connect(
     // map state to props.
-    null,
+    (state) => ({
+        path: state.router.location.pathname,
+    }),
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
