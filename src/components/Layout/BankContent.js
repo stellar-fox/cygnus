@@ -37,10 +37,10 @@ class BankContent extends Component {
 
 
     // ...
-    componentWillReceiveProps = (nextProps) => {
-        if (this.props.drawerOpened !== nextProps.drawerOpened) {
+    componentWillReceiveProps = ({ drawerOpened, }) => {
+        if (this.props.drawerOpened !== drawerOpened) {
             this.setState({
-                style: this.computeStyle(nextProps.drawerOpened),
+                style: this.computeStyle(drawerOpened),
             })
         }
     }
