@@ -17,6 +17,7 @@ import { config } from "../../config"
 import md5 from "../../lib/md5"
 import {
     setAccountRegistered,
+    logIn,
 } from "../../actions/index"
 import { awaitConnection } from "../../lib/ledger"
 
@@ -158,6 +159,26 @@ class NewAccount extends Component {
             })
             setTimeout(res, 500)
         })
+
+        await axios
+            .post(
+                `${config.api}/user/authenticate/${
+                    this.state.email
+                }/${
+                    this.state.password
+                }`
+            )
+            .then((response) => {
+                this.props.setAccountRegistered(true)
+                this.props.logIn({
+                    userId: response.data.user_id,
+                    token: response.data.token,
+                })
+            })
+            .catch((error) => {
+                console.log(error.response.statusText) // eslint-disable-line no-console
+            })
+
         this.handleNext.call(this)
     }
 
@@ -386,6 +407,7 @@ function matchDispatchToProps (dispatch) {
     return bindActionCreators(
         {
             setAccountRegistered,
+            logIn,
         },
         dispatch
     )
