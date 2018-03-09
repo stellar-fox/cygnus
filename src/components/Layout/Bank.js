@@ -45,7 +45,6 @@ class Bank extends Component {
 
 
     // ...
-    iBankDrawer = inject(BankDrawer, { basePath: this.props.basePath, routes: this.routes, })
     iBankContent = inject(BankContent, { basePath: this.props.basePath, routes: this.routes, })
 
 
@@ -59,7 +58,7 @@ class Bank extends Component {
                 />
             </Switch>
             <BankAppBar />
-            <Route component={this.iBankDrawer} />
+            <BankDrawer routes={this.routes} />
             <Route component={this.iBankContent} />
             <Footer />
         </Fragment>
