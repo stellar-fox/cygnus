@@ -1,13 +1,19 @@
 import React, { Component } from "react"
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
 import Input from "../../frontend/Input"
 import Checkbox from "../../frontend/Checkbox"
 import RaisedButton from "material-ui/RaisedButton"
 import { awaitConnection, getPublicKey } from "../../lib/ledger"
-
+import {
+    logIn,
+    setAccountRegistered,
+    setPublicKey
+} from "../../actions/index"
 import "./index.css"
 
 
-export default class LedgerAuthenticator extends Component {
+class LedgerAuthenticator extends Component {
     // ...
     constructor (props) {
         super(props)
@@ -41,6 +47,7 @@ export default class LedgerAuthenticator extends Component {
                     errorCode: error.statusCode,
                 })
             })
+            this.props.setPublicKey(publicKey)
             this.props.onConnected.call(this, {
                 publicKey,
                 softwareVersion,
@@ -163,3 +170,16 @@ export default class LedgerAuthenticator extends Component {
         return <div>{this._widgetOn.call(this)}</div>
     }
 }
+
+
+const mapStateToProps = state => ({
+    auth: state.auth,
+})
+
+
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({ logIn, setAccountRegistered, setPublicKey, }, dispatch)
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(LedgerAuthenticator)

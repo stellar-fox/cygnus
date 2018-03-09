@@ -53,7 +53,6 @@ export default class Login extends Component {
 
         // NOT AUTHENTICATED
         if (!auth.authenticated) {
-            this.props.clearToken()
             this.email.setState({ error: "Invalid Credentials.", })
             this.password.setState({ error: "Invalid Credentials.", })
             return
@@ -61,7 +60,7 @@ export default class Login extends Component {
         // ALL GOOD
         this.props.setAccountRegistered(true)
         this.props.logIn({
-            // pubkey: auth.pubkey,
+            pubkey: auth.pubkey,
             userId: auth.user_id,
         })
         this.props.setPublicKey(auth.pubkey)

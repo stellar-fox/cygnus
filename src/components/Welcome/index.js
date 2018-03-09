@@ -76,7 +76,7 @@ class Welcome extends Component {
     componentWillReceiveProps (nextProps) {
 
         if (this.props.accountInfo.pubKey === undefined && nextProps.accountInfo.pubKey !== undefined) {
-            this.logInViaPublicKey(nextProps.accountInfo.pubkey, false)
+            this.logInViaPublicKey(nextProps.accountInfo.pubKey, false)
         }
 
     }
@@ -123,7 +123,6 @@ class Welcome extends Component {
         }
 
         try {
-            console.log("kurwacoiaefhoaefhpwoeaf", pubKey)
             this.props.setPublicKey(pubKey)
             // 1. show loading modal
             this.props.setModalLoading()
