@@ -8,7 +8,7 @@ import Dialog from "material-ui/Dialog"
 
 import Footer from "../Layout/Footer"
 import Panel from "../Panel"
-import Login from "../Login"
+import Login from "../../containers/Login"
 
 import { config } from "../../config"
 import {
@@ -35,6 +35,8 @@ import {
     setLedgerSoftwareVersion,
     setPublicKey,
 } from "../../actions/index"
+
+import { setToken, clearToken } from "../../actions/auth"
 
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
@@ -72,17 +74,19 @@ class Welcome extends Component {
 
     // ...
     componentWillReceiveProps (nextProps) {
-        if (this.props.rAuth !== nextProps.rAuth) {
-            console.log("jajo")
+
+        if (this.props.accountInfo.pubKey === undefined && nextProps.accountInfo.pubKey !== undefined) {
+            this.logInViaPublicKey(nextProps.accountInfo.pubkey, false)
         }
+
     }
 
 
 
     // ...
     componentDidMount () {
-        
-        
+
+
 
         /*
          * Horizon end point is set to testnet by default.
@@ -104,6 +108,8 @@ class Welcome extends Component {
     // ...
     logInViaPublicKey (pubKey, isReadOnly = true) {
 
+
+
         if (this.props.auth.isAuthenticated) {
             axios
                 .get(`${config.api}/account/${this.props.auth.userId}`)
@@ -117,6 +123,7 @@ class Welcome extends Component {
         }
 
         try {
+            console.log("kurwacoiaefhoaefhpwoeaf", pubKey)
             this.props.setPublicKey(pubKey)
             // 1. show loading modal
             this.props.setModalLoading()
@@ -194,7 +201,9 @@ class Welcome extends Component {
     // ...
     ledgerAuthenticateUser (ledgerParams) {
 
-        this.logInViaPublicKey(ledgerParams.publicKey, false)
+
+
+        // this.logInViaPublicKey(ledgerParams.publicKey, false)
 
         axios
             .post(
@@ -209,6 +218,7 @@ class Welcome extends Component {
                 this.props.logIn({
                     userId: response.data.user_id,
                     token: response.data.token,
+                    pubkey: response.data.pubKey,
                 })
             })
             .catch((error) => {
@@ -221,49 +231,6 @@ class Welcome extends Component {
             })
     }
 
-
-    // ...
-    authenticateUser () {
-        if (
-            this.textInputFieldEmail.state.value !== "" &&
-            this.textInputFieldPassword.state.value !== ""
-        ) {
-            axios
-                .post(
-                    `${config.api}/user/authenticate/${
-                        this.textInputFieldEmail.state.value
-                    }/${
-                        this.textInputFieldPassword.state.value
-                    }`
-                )
-                .then((response) => {
-                    this.textInputFieldEmail.setState({
-                        error: null,
-                    })
-                    this.textInputFieldPassword.setState({
-                        error: null,
-                    })
-                    this.props.setAccountRegistered(true)
-                    this.props.logIn({
-                        userId: response.data.user_id,
-                        token: response.data.token,
-                    })
-                    this.logInViaPublicKey(response.data.pubkey, false)
-                })
-                .catch((error) => {
-                    if (error.response.status === 401) {
-                        this.textInputFieldEmail.setState({
-                            error: "possibly incorrect email",
-                        })
-                        this.textInputFieldPassword.setState({
-                            error: "possibly incorrect password",
-                        })
-                    } else {
-                        console.log(error.response.statusText) // eslint-disable-line no-console
-                    }
-                })
-        }
-    }
 
     // ...
     enterExplorer () {
@@ -323,41 +290,6 @@ class Welcome extends Component {
 
     }
 
-
-    // ...
-    // emailValidator (email) {
-    //     return !emailValid(email) && "INVALID EMAIL"
-    // }
-
-
-    // // ...
-    // passwordValidator (password) {
-    //     return !passwordValid(password) && "INVALID PASSWORD"
-    // }
-
-
-    // ...
-    // compoundLoginValidator () {
-    //     const emailNotValid = this.emailValidator(
-    //         this.textInputFieldEmail.state.value
-    //     )
-    //     const passwordNotValid = this.passwordValidator(
-    //         this.textInputFieldPassword.state.value
-    //     )
-    //     if (emailNotValid) {
-    //         this.textInputFieldEmail.setState({
-    //             error: "invalid email",
-    //         })
-    //         return false
-    //     }
-    //     if (passwordNotValid) {
-    //         this.textInputFieldPassword.setState({
-    //             error: "invalid password",
-    //         })
-    //         return false
-    //     }
-    //     return this.authenticateUser.call(this)
-    // }
 
     // ...
     federationValidator () {
@@ -673,30 +605,28 @@ function mapStateToProps (state) {
         auth: state.auth,
         nav: state.nav,
         ui: state.ui,
-        // rAuth: state.rAuth,
     }
 }
 
-function matchDispatchToProps (dispatch) {
-    return bindActionCreators(
-        {
-            accountExistsOnLedger,
-            accountMissingOnLedger,
-            setModalLoading,
-            setModalLoaded,
-            updateLoadingMessage,
-            logInToHorizon,
-            logOutOfHorizon,
-            logIn,
-            selectView,
-            setHorizonEndPoint,
-            setAccountRegistered,
-            setAccountPath,
-            setLedgerSoftwareVersion,
-            setPublicKey,
-        },
-        dispatch
-    )
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators({
+        accountExistsOnLedger,
+        accountMissingOnLedger,
+        setModalLoading,
+        setModalLoaded,
+        updateLoadingMessage,
+        logInToHorizon,
+        logOutOfHorizon,
+        logIn,
+        selectView,
+        setHorizonEndPoint,
+        setAccountRegistered,
+        setAccountPath,
+        setLedgerSoftwareVersion,
+        setPublicKey,
+        setToken,
+        clearToken,
+    }, dispatch)
 }
 
-export default connect(mapStateToProps, matchDispatchToProps)(Welcome)
+export default connect(mapStateToProps, mapDispatchToProps)(Welcome)

@@ -22,7 +22,7 @@ import {
     // devToolsEnhancer,
 } from "redux-devtools-extension"
 // import { createLogger } from "redux-logger"
-// import thunk from "redux-thunk"
+import thunk from "redux-thunk"
 
 
 import reducers from "./reducers"
@@ -75,7 +75,7 @@ const store = createStore(
     }),
     loadState(),
     composeWithDevTools(
-        applyMiddleware(
+        applyMiddleware(thunk,
             routerMiddleware(history)
         )
     )

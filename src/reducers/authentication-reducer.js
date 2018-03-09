@@ -12,6 +12,7 @@ export default function (state = initState, action) {
                 isAuthenticated: true,
                 userId: action.payload.userId,
                 token: action.payload.token,
+                pubkey: action.payload.pubkey,
             }
             break
 

@@ -1,20 +1,18 @@
 import React, { Component } from "react"
-import { bindActionCreators } from "redux"
-import { connect } from "react-redux"
 import TextInputField from "../TextInputField"
 import RaisedButton from "material-ui/RaisedButton"
 import LinearProgress from "material-ui/LinearProgress"
-import { setToken, clearToken } from "../../actions/auth"
 import {emailIsValid, passwordIsValid} from "./helper"
 import { authenticate } from "./api"
 import "./index.css"
 
-class Login extends Component {
+
+export default class Login extends Component {
     constructor (props) {
         super(props)
         this.state = {
             buttonDisabled: false,
-            displayProgressStyle: "none",
+            progressBarOpacity: "0",
             error: "",
         }
     }
@@ -25,43 +23,48 @@ class Login extends Component {
         if (!emailIsValid(this.email.state.value)) {
             this.email.setState({ error: "Invalid email format.", })
             return
+        } else {
+            this.email.setState({ error: "", })
         }
 
         // INVALID PASSWORD LENGTH
         if (!passwordIsValid(this.password.state.value)) {
             this.password.setState({ error: "Invalid password length.", })
             return
+        } else {
+            this.password.setState({ error: "", })
         }
-    
+
         // PROCEED WITH REQUEST
         this.setState(_ => ({
             buttonDisabled: true,
-            displayProgressStyle: "",
+            progressBarOpacity: "1",
         }))
-        
+
         const auth = await authenticate(
             this.email.state.value,
             this.password.state.value
         )
-        
+
         this.setState(_ => ({
             buttonDisabled: false,
-            displayProgressStyle: "none",
+            progressBarOpacity: "0",
         }))
 
         // NOT AUTHENTICATED
         if (!auth.authenticated) {
             this.props.clearToken()
-            this.email.setState({ error: auth.error, })
-            this.password.setState({ error: auth.error, })
+            this.email.setState({ error: "Invalid Credentials.", })
+            this.password.setState({ error: "Invalid Credentials.", })
             return
         }
-
         // ALL GOOD
-        this.email.setState({ error: "", })
-        this.password.setState({ error: "", })
-        this.props.setToken(auth.token)
-        
+        this.props.setAccountRegistered(true)
+        this.props.logIn({
+            // pubkey: auth.pubkey,
+            userId: auth.user_id,
+        })
+        this.props.setPublicKey(auth.pubkey)
     }
 
 
@@ -91,21 +94,8 @@ class Login extends Component {
                 marginTop: "6px",
                 background: "rgb(15,46,83)",
                 height: "1px",
-                display: this.state.displayProgressStyle,
+                opacity: this.state.progressBarOpacity,
             }} color="rgba(244,176,4,0.7)" />
         </div>)
     }
 }
-
-function mapStateToProps (_state) {
-    return {}
-}
-
-function matchDispatchToProps (dispatch) {
-    return bindActionCreators ({
-        setToken,
-        clearToken,
-    }, dispatch)
-}
-
-export default connect(mapStateToProps, matchDispatchToProps)(Login)
