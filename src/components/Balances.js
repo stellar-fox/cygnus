@@ -157,7 +157,7 @@ class Balances extends Component {
         thb: (<span>&#xe3f;</span>),
         pln: (<span>&#x7a;&#x142;</span>),
     })
-    
+
     // ...
     getCurrencyText = (currency) => (
         (c) => c[Object.keys(c).filter((key) => key === currency)]
@@ -1279,7 +1279,7 @@ class Balances extends Component {
         </div>
 
         {(!this.props.accountInfo.registered && !this.props.auth.isReadOnly) ? (
-          
+
             <Card className="welcome-card">
               <CardText>
                 <div className="flex-row">
@@ -1321,7 +1321,7 @@ class Balances extends Component {
                 />
               </CardActions>
             </Card>
-          
+
         ) : null}
 
         {this.props.accountInfo.exists ? (
@@ -1377,7 +1377,7 @@ class Balances extends Component {
                 <RaisedButton
                   backgroundColor="rgb(15,46,83)"
                   labelColor="#228B22"
-                  label="Deposit"
+                  label="Fund"
                   onClick={this.handleOpen.bind(this)}
                 />
                 <RaisedButton
@@ -1452,8 +1452,14 @@ class Balances extends Component {
               <RaisedButton
                 onClick={this.handleOpen.bind(this)}
                 backgroundColor="rgb(15,46,83)"
-                labelColor="rgb(244,176,4)"
-                label="Deposit" />
+                labelColor="#228B22"
+                label="Fund" />
+              <RaisedButton
+                  backgroundColor="rgb(15,46,83)"
+                  labelColor="rgb(244,176,4)"
+                  label="Request"
+                  onClick={this.handleOpen.bind(this)}
+              />
             </CardActions>
           </Card>
         )}
