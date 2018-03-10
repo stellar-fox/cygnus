@@ -3,7 +3,6 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import axios from "axios"
 import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 
 import Footer from "../Layout/Footer"
@@ -389,9 +388,9 @@ class Welcome extends Component {
     // ...
     render () {
         const actions = [
-            <FlatButton
-                backgroundColor="rgb(244,176,4)"
-                labelStyle={{ color: "rgb(15,46,83)", }}
+            <RaisedButton
+                backgroundColor="rgb(15,46,83)"
+                labelStyle={{ color: "rgb(244,176,4)", }}
                 label={this.state.modalButtonText}
                 keyboardFocused={false}
                 onClick={this.handleModalClose.bind(this)}
