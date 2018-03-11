@@ -900,6 +900,7 @@ class Balances extends Component {
                                 .catch((error) => {
                                     this.setState({
                                         payee: null,
+                                        newAccount: false,
                                     })
                                     this.compoundPaymentValidator.call(this)
                                     if (error.response.data.detail) {
