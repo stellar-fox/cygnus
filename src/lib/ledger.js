@@ -18,7 +18,7 @@ export const awaitConnection = async () => {
         return result.version
     } catch (error) {
         return error
-    }    
+    }
 }
 
 
@@ -46,7 +46,7 @@ export const getPublicKey = async (bip32Path) => {
  */
 export const signTransaction = async (bip32Path, publicKey, transaction) => {
     const
-        transport = await Transport.create(3500, 30000),
+        transport = await Transport.create(3500, 60000),
         str = new Str(transport),
         signature = await str.signTransaction(
             bip32Path,
