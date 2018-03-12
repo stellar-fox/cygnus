@@ -197,11 +197,6 @@ class Welcome extends Component {
 
     // ...
     ledgerAuthenticateUser (ledgerParams) {
-
-
-
-        // this.logInViaPublicKey(ledgerParams.publicKey, false)
-
         axios
             .post(
                 `${config.api}/user/ledgerauth/${
@@ -219,8 +214,12 @@ class Welcome extends Component {
                 })
             })
             .catch((error) => {
+                // This will happen when back-end is offline.
+                if (!error.response) {
+                    console.log(error.message) // eslint-disable-line no-console
+                    return
+                }
                 if (error.response.status === 401) {
-                    // theoretically this should not happen
                     console.log("Ledger user not found.") // eslint-disable-line no-console
                 } else {
                     console.log(error.response.statusText) // eslint-disable-line no-console
