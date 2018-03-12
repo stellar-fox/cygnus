@@ -1,30 +1,25 @@
-import React, { Component } from "react"
+import React from "react"
 
 import "./index.css"
 
 
 
 
-// ...
-export default class Input extends Component {
-    render () {
-        return (
-            <div className="lcars-input">
-                <ul>
-                    <li>
-                        <label htmlFor="name">{this.props.label}</label>
-                        <input
-                            value={this.props.value}
-                            type={this.props.inputType}
-                            maxLength={this.props.maxLength}
-                            autoComplete={this.props.autoComplete}
-                            onKeyPress={this.props.keyPress}
-                            onChange={this.props.handleChange}
-                        />
-                        <span>{this.props.subLabel}</span>
-                    </li>
-                </ul>
-            </div>
-        )
-    }
-}
+// <Input> component
+export default (props) =>
+    <div className="lcars-input">
+        <ul>
+            <li>
+                <label htmlFor="name">{props.label}</label>
+                <input
+                    value={props.value}
+                    type={props.inputType}
+                    maxLength={props.maxLength}
+                    autoComplete={props.autoComplete}
+                    onKeyPress={props.keyPress}
+                    onChange={props.handleChange}
+                />
+                <span>{props.subLabel}</span>
+            </li>
+        </ul>
+    </div>
