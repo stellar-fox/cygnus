@@ -46,7 +46,7 @@ export const getPublicKey = async (bip32Path) => {
  */
 export const signTransaction = async (bip32Path, publicKey, transaction) => {
     const
-        transport = await Transport.create(3500, 60000),
+        transport = await Transport.create(),
         str = new Str(transport),
         signature = await str.signTransaction(
             bip32Path,
