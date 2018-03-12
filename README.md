@@ -1,6 +1,6 @@
 <p align="center">
     <br />
-    <a title="Learn more about Stellar Fox" href="https://stellarfox.net/">
+    <a title="Learn more about Stellar Fox" href="https://stellarfox.net/" target="_blank">
         <img src="https://raw.githubusercontent.com/stellar-fox/cygnus/master/public/favicon.ico" alt="Stellar Fox Logo" />
         <br />
         <b>stellarfox.net</b>
@@ -16,24 +16,19 @@ Moving Value at the Speed of Light
 
 ## Intro
 
-<iframe
-    style="max-width: 100%;"
-    allowfullscreen=""
-    src="https://www.youtube.com/embed/ScPSsJDN4fk">
-</iframe>
-
-<iframe
-    style="max-width: 100%;"
-    allowfullscreen=""
-    src="https://www.youtube.com/embed/oB9H0QKAtRI">
-</iframe>
-
-<iframe
-    style="max-width: 100%;"
-    allowfullscreen=""
-    src="https://www.youtube.com/embed/K7x7HIlsAPU">
-</iframe>
-
+[
+    ![Opening Your Own Bank](https://i.ytimg.com/vi/ScPSsJDN4fk/maxresdefault.jpg)
+](https://youtu.be/ScPSsJDN4fk "Opening Your Own Bank")
+<br />
+<br />
+[
+    ![Convenient Account Pairing](https://i.ytimg.com/vi/oB9H0QKAtRI/maxresdefault.jpg)
+](https://youtu.be/oB9H0QKAtRI "Convenient Account Pairing")
+<br />
+<br />
+[
+    ![Transferring Money at the Speed of Light](https://i.ytimg.com/vi/K7x7HIlsAPU/maxresdefault.jpg)
+](https://youtu.be/K7x7HIlsAPU "Transferring Money at the Speed of Light")
 
 ## Support
 
