@@ -15,6 +15,8 @@
 # Stellar Fox
 Moving Value at the Speed of Light
 
+<br />
+
 
 ## Introductory videos
 
@@ -34,6 +36,8 @@ Moving Value at the Speed of Light
 [
     ![Transferring Money at the Speed of Light](https://i.ytimg.com/vi/K7x7HIlsAPU/mqdefault.jpg)
 ](https://youtu.be/K7x7HIlsAPU "Transferring Money at the Speed of Light")
+
+<br />
 
 
 ## Support
