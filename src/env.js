@@ -24,3 +24,7 @@ export const appBasePath = "/"
 
 // ...
 export const appRootDomId = "app"
+
+
+// ...
+export const snackBarAutoHideDuration = 3500
