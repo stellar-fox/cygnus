@@ -12,3 +12,15 @@ export const appCopyDates = "2017-2018"
 
 // ...
 export const ssAppStateKey = `StellarFox.${appVersion}`
+
+
+// ...
+export const ssSaveThrottlingTime = 1000
+
+
+// ...
+export const appBasePath = "/"
+
+
+// ...
+export const appRootDomId = "app"
