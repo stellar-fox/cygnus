@@ -9,9 +9,9 @@ import {
     nullToUndefined,
 } from "./utils"
 
+import { ssAppStateKey } from "../env.js"
 
-// ...
-const ssAppStateKey = "SFOX.APP_STATE"
+
 
 
 // ...

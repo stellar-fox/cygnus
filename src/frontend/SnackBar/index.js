@@ -1,4 +1,5 @@
-import React, { Component } from "react"
+import React from "react"
+import { snackBarAutoHideDuration } from "../../env.js"
 import Snackbar from "material-ui/Snackbar"
 
 
@@ -15,20 +16,13 @@ const styles = {
 }
 
 
-
-
-// ...
-export default class SnackBar extends Component {
-    render () {
-        return (
-            <Snackbar
-                bodyStyle={styles.body}
-                contentStyle={styles.content}
-                open={this.props.open}
-                message={this.props.message}
-                autoHideDuration={3500}
-                onRequestClose={this.props.onRequestClose}
-            />
-        )
-    }
-}
+// <SnackBar> component
+export default (props) =>
+    <Snackbar
+        bodyStyle={styles.body}
+        contentStyle={styles.content}
+        open={props.open}
+        message={props.message}
+        autoHideDuration={snackBarAutoHideDuration}
+        onRequestClose={props.onRequestClose}
+    />

@@ -31,6 +31,11 @@ import {
     // registerServiceWorker,
 } from "./registerServiceWorker"
 
+import {
+    appBasePath,
+    appRootDomId,
+    ssSaveThrottlingTime,
+} from "./env"
 import throttle from "lodash/throttle"
 import {
     loadState,
@@ -84,7 +89,12 @@ const store = createStore(
 
 
 // save state in session storage in min. 1 sec. intervals
-store.subscribe(throttle(() => saveState(store.getState()), 1000))
+store.subscribe(
+    throttle(
+        () => saveState(store.getState()),
+        ssSaveThrottlingTime
+    )
+)
 
 
 // application's root
@@ -92,7 +102,7 @@ const StellarFox = () =>
     <Provider store={store}>
         <MuiThemeProvider muiTheme={stellarTheme}>
             <Router history={history}>
-                <Route component={inject(Layout, { basePath: "/", })} />
+                <Route component={inject(Layout, { basePath: appBasePath, })} />
             </Router>
         </MuiThemeProvider>
     </Provider>
@@ -101,7 +111,7 @@ const StellarFox = () =>
 // render application's root into the DOM
 ReactDOM.render(
     <StellarFox />,
-    document.getElementById("app")
+    document.getElementById(appRootDomId)
 )
 
 

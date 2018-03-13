@@ -139,3 +139,26 @@
     background: rgba(178,34,34,0.8);
     color: rgba(244,176,4,1);
 }
+
+.welcome-panel-left {
+    display: flex;
+    width: 48%;
+    margin: 0px 5px 0px 5px;
+    padding-top: 1rem;
+    padding-left: 1rem;
+}
+
+.welcome-panel-center {
+    display: flex;
+    width: 48%;
+    margin: 0px 5px 0px 5px;
+    padding-top: 1rem;
+}
+
+.welcome-panel-right {
+    display: flex;
+    width: 48%;
+    margin: 0px 5px 0px 5px;
+    padding-top: 1rem;
+    padding-right: 1rem;
+}

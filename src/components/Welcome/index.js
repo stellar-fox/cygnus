@@ -3,7 +3,6 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import axios from "axios"
 import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 
 import Footer from "../Layout/Footer"
@@ -18,6 +17,7 @@ import {
     StellarSdk,
     extractPathIndex,
 } from "../../lib/utils"
+import { appName } from "../../env.js"
 import CreateAccount from "../Account/Create"
 import {
     accountExistsOnLedger,
@@ -332,9 +332,9 @@ class Welcome extends Component {
     // ...
     render () {
         const actions = [
-            <FlatButton
-                backgroundColor="rgb(244,176,4)"
-                labelStyle={{ color: "rgb(15,46,83)", }}
+            <RaisedButton
+                backgroundColor="rgb(15,46,83)"
+                labelStyle={{ color: "rgb(244,176,4)", }}
                 label={this.state.modalButtonText}
                 keyboardFocused={false}
                 onClick={this.handleModalClose.bind(this)}
@@ -450,147 +450,152 @@ class Welcome extends Component {
                 </div>
                 <div>
                     <div className="flex-row-space-between">
-                        <div className="flex-row-column-50">
-                            <div className="p-l p-t">
+                        {/* <div className="flex-row-column-50"> */}
+                        {/* <div className="p-l p-t"> */}
+                        {/* <div> */}
+                        <Panel
+                            className="welcome-panel-left"
+                            title="Transact"
+                            content={
                                 <div>
-                                    <Panel
-                                        title="Transact"
-                                        content={
-                                            <div>
-                                                <img
-                                                    src="/img/ledger.svg"
-                                                    width="120px"
-                                                    alt="Ledger"
-                                                />
-                                                <div className="title">
-                                                    For full account
-                                                    functionality, authenticate
-                                                    with your Ledger device.
-                                                </div>
-                                                <div className="title-small p-t p-b">
-                                                    Connect your Ledger Nano S
-                                                    device. Make sure Stellar
-                                                    application is selected and
-                                                    browser support enabled. For
-                                                    more information visit{" "}
-                                                    <a
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        href="https://support.ledgerwallet.com/hc/en-us/articles/115003797194"
-                                                    >
-                                                        Ledger Support
-                                                    </a>
-                                                </div>
-                                                <LedgerAuthenticator
-                                                    onConnected={this.logInViaLedger.bind(
-                                                        this
-                                                    )}
-                                                />
-                                            </div>
-                                        }
+                                    <img
+                                        src="/img/ledger.svg"
+                                        width="120px"
+                                        alt="Ledger"
+                                    />
+                                    <div className="title">
+                                        For full account
+                                        functionality, authenticate
+                                        with your Ledger device.
+                                    </div>
+                                    <div className="title-small p-t p-b">
+                                        Connect your Ledger Nano S
+                                        device. Make sure Stellar
+                                        application is selected and
+                                        browser support enabled. For
+                                        more information visit{" "}
+                                        <a
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            href="https://support.ledgerwallet.com/hc/en-us/articles/115003797194"
+                                        >
+                                            Ledger Support
+                                        </a>
+                                    </div>
+                                    <LedgerAuthenticator
+                                        onConnected={this.logInViaLedger.bind(
+                                            this
+                                        )}
                                     />
                                 </div>
-                            </div>
-                        </div>
+                            }
+                        />
+                        {/* </div> */}
+                        {/* </div> */}
+                        {/* </div> */}
 
-                        <div className="flex-row-column">
-                            <div className="p-t">
+                        {/* <div className="flex-row-column"> */}
+                        {/* <div className="p-t"> */}
+                        {/* <div> */}
+                        <Panel
+                            className="welcome-panel-center"
+                            title="Customize"
+                            content={
                                 <div>
-                                    <Panel
-                                        title="Customize"
-                                        content={
-                                            <div>
-                                                <img
-                                                    style={{
-                                                        marginBottom: "4px",
-                                                    }}
-                                                    src="/img/sf.svg"
-                                                    width="140px"
-                                                    alt="Stellar Fox"
-                                                />
-                                                <div className="title">
-                                                    Manage your account with
-                                                    ease.
-                                                </div>
-                                                <div className="title-small p-t p-b">
-                                                    Once you have opened your
-                                                    account you can log in here
-                                                    to your banking terminal.
-                                                </div>
-                                                <div className="f-c"><Login /></div>
-                                            </div>
-                                        }
+                                    <img
+                                        style={{
+                                            marginBottom: "4px",
+                                        }}
+                                        src="/img/sf.svg"
+                                        width="140px"
+                                        alt={appName}
                                     />
+                                    <div className="title">
+                                        Manage your account with
+                                        ease.
+                                    </div>
+                                    <div className="title-small p-t p-b">
+                                        Once you have opened your
+                                        account you can log in here
+                                        to your banking terminal.
+                                    </div>
+                                    <div className="f-c">
+                                        <Login/>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            }
+                        />
+                        {/* </div> */}
+                        {/* </div> */}
+                        {/* </div> */}
 
-                        <div className="flex-row-column">
-                            <div className="p-r p-t">
+                        {/* <div className="flex-row-column"> */}
+                        {/* <div className="p-r p-t"> */}
+                        {/* <div> */}
+                        <Panel
+                            className="welcome-panel-right"
+                            title="Explore"
+                            content={
                                 <div>
-                                    <Panel
-                                        title="Explore"
-                                        content={
-                                            <div>
-                                                <img
-                                                    src="/img/stellar.svg"
-                                                    width="120px"
-                                                    alt="Stellar"
-                                                />
-                                                <div className="title">
-                                                    To access global ledger
-                                                    explorer enter your{" "}
-                                                    <em>Payment Address</em> or{" "}
-                                                    <em>Account Number</em>.
-                                                </div>
-                                                <div className="title-small p-t p-b">
-                                                    Your account operations are
-                                                    publicly accessible on the
-                                                    global ledger. Anyone who
-                                                    knows your account number or
-                                                    payment address can view
-                                                    your public transactions.
-                                                </div>
-                                                <div className="title-small p-t p-b">
-                                                    <strong>
-                                                        Please note that this
-                                                        application will{" "}
-                                                        <u>never</u> ask you to
-                                                        enter your Secret key.
-                                                    </strong>
-                                                </div>
-                                                <div className="mui-text-input">
-                                                    <div>
-                                                        <TextInputField
-                                                            floatingLabelText="Payment Address"
-                                                            styles={styles}
-                                                            validator={this.federationValidator.bind(
-                                                                this
-                                                            )}
-                                                            action={this.compoundFederationValidator.bind(
-                                                                this
-                                                            )}
-                                                            ref={(self) => {
-                                                                this.textInputFieldFederationAddress = self
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <RaisedButton
-                                                            onClick={this.compoundFederationValidator.bind(
-                                                                this
-                                                            )}
-                                                            backgroundColor="rgb(244,176,4)"
-                                                            label="Check"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }
+                                    <img
+                                        src="/img/stellar.svg"
+                                        width="120px"
+                                        alt="Stellar"
                                     />
+                                    <div className="title">
+                                        To access global ledger
+                                        explorer enter your{" "}
+                                        <em>Payment Address</em> or{" "}
+                                        <em>Account Number</em>.
+                                    </div>
+                                    <div className="title-small p-t p-b">
+                                        Your account operations are
+                                        publicly accessible on the
+                                        global ledger. Anyone who
+                                        knows your account number or
+                                        payment address can view
+                                        your public transactions.
+                                    </div>
+                                    <div className="title-small p-t p-b">
+                                        <strong>
+                                            Please note that this
+                                            application will{" "}
+                                            <u>never</u> ask you to
+                                            enter your Secret key.
+                                        </strong>
+                                    </div>
+                                    <div className="mui-text-input">
+                                        <div>
+                                            <TextInputField
+                                                floatingLabelText="Payment Address"
+                                                styles={styles}
+                                                validator={this.federationValidator.bind(
+                                                    this
+                                                )}
+                                                action={this.compoundFederationValidator.bind(
+                                                    this
+                                                )}
+                                                ref={(self) => {
+                                                    this.textInputFieldFederationAddress = self
+                                                }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <RaisedButton
+                                                onClick={this.compoundFederationValidator.bind(
+                                                    this
+                                                )}
+                                                backgroundColor="rgb(244,176,4)"
+                                                label="Check"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            }
+                        />
+                        {/* </div> */}
+                        {/* </div> */}
+                        {/* </div> */}
                     </div>
                 </div>
                 <Footer />

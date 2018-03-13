@@ -12,6 +12,7 @@ import SnackBar from "../../frontend/SnackBar"
 import MD5 from "../../lib/md5"
 import { federationIsAliasOnly } from "../../lib/utils"
 import { emailValid } from "../../lib/utils"
+import { appName } from "../../env.js"
 import { config } from "../../config"
 import axios from "axios"
 import RegisterAccount from "./Register"
@@ -373,14 +374,14 @@ class Account extends Component {
             .catch((error) => {
                 // eslint-disable-next-line no-console
                 console.log(error)
-                
+
                 if (error.response.status === 409) {
                     this.setState({
                         sbAccountDiscoverable: true,
                         accountDiscoverableMessage: error.response.data.error,
                     })
                 }
-                
+
             })
     }
 
@@ -740,7 +741,7 @@ class Account extends Component {
                                     <div>
                                         <div className="p-t p-b" />
                                         <div className="account-title p-t">
-                                        Register this account with Stellar Fox:
+                                        Register this account with {appName}:
                                         </div>
                                         <div className="account-subtitle">
                                         Get access to unique services and

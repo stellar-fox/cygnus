@@ -28,6 +28,7 @@ import {
     handleException,
     extractPathIndex,
 } from "../lib/utils"
+import { appName } from "../env.js"
 import {
     setExchangeRate,
     showAlert,
@@ -43,7 +44,7 @@ import {
 } from "../actions/index"
 import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
-import {BigNumber} from "bignumber.js"
+import { BigNumber } from "bignumber.js"
 import "number-to-text/converters/en-us"
 
 import "./Balances.css"
@@ -670,8 +671,13 @@ class Balances extends Component {
     convertToXLM (amount) {
         BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
         const fiatAmount = new BigNumber(amount)
-        if (this.props.accountInfo.rates !== undefined && this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined) {
-            return fiatAmount.dividedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toString()
+        if (
+            this.props.accountInfo.rates &&
+            this.props.accountInfo.rates[this.props.accountInfo.currency]
+        ) {
+            return fiatAmount.dividedBy(
+                this.props.accountInfo.rates[this.props.accountInfo.currency].rate
+            ).toString()
         } else {
             return "0"
         }
@@ -682,8 +688,13 @@ class Balances extends Component {
     convertToFiat (amount) {
         BigNumber.config({ DECIMAL_PLACES: 2, })
         const nativeAmount = new BigNumber(amount)
-        if (this.props.accountInfo.rates !== undefined && this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined) {
-            return nativeAmount.multipliedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toFixed(2)
+        if (
+            this.props.accountInfo.rates &&
+            this.props.accountInfo.rates[this.props.accountInfo.currency]
+        ) {
+            return nativeAmount.multipliedBy(
+                this.props.accountInfo.rates[this.props.accountInfo.currency].rate
+            ).toFixed(2)
         } else {
             return "0"
         }
@@ -708,7 +719,11 @@ class Balances extends Component {
     // ...
     compoundPaymentValidator () {
 
-        if (this.state.newAccount && this.state.amountEntered && parseInt(this.convertToXLM(this.state.amount), 10) < parseInt(config.reserve, 10)) {
+        if (
+            this.state.newAccount &&
+            this.state.amountEntered &&
+            parseInt(this.convertToXLM(this.state.amount), 10) < parseInt(config.reserve, 10)
+        ) {
             this.setState({
                 buttonSendDisabled: true,
                 minimumReserveMessage: `Minimum reserve of ${config.reserve} required.`,
@@ -900,6 +915,7 @@ class Balances extends Component {
                                 .catch((error) => {
                                     this.setState({
                                         payee: null,
+                                        newAccount: false,
                                     })
                                     this.compoundPaymentValidator.call(this)
                                     if (error.response.data.detail) {
@@ -1119,7 +1135,7 @@ class Balances extends Component {
                     The money has arrived to its destination.
                 </div>
                 <div className="faded p-b">
-                    Thank you for using Stellar Fox.
+                    Thank you for using {appName}.
                 </div>
             </Fragment>
         )
@@ -1128,24 +1144,22 @@ class Balances extends Component {
 
     // ...
     render () {
+        let otherBalances = null
+        if (this.props.accountInfo.exists) {
+            otherBalances = this.getOtherBalances.call(
+                this, this.props.accountInfo.account.account
+            )
+        }
 
-
-    let otherBalances
-    if (this.props.accountInfo.exists) {
-      otherBalances = this.getOtherBalances.call(
-        this, this.props.accountInfo.account.account
-      )
-    }
-
-    const actions = [
-      <RaisedButton
-        backgroundColor="rgb(15,46,83)"
-        labelColor="rgb(244,176,4)"
-        label="OK"
-        keyboardFocused={true}
-        onClick={this.handleClose.bind(this)}
-      />,
-    ]
+        const actions = [
+            <RaisedButton
+                backgroundColor="rgb(15,46,83)"
+                labelColor="rgb(244,176,4)"
+                label="OK"
+                keyboardFocused={true}
+                onClick={this.handleClose.bind(this)}
+            />,
+        ]
 
         const actionsError = [
             <RaisedButton
@@ -1167,50 +1181,52 @@ class Balances extends Component {
             />,
         ]
 
-    const registerAccountActions = [
-      <FlatButton
-        backgroundColor="rgb(244,176,4)"
-        labelStyle={{ color: "rgb(15,46,83)" }}
-        label={this.state.modalButtonText}
-        keyboardFocused={false}
-        onClick={this.handleRegistrationModalClose.bind(this)}
-      />,
-    ]
+        const registerAccountActions = [
+            <RaisedButton
+                backgroundColor="rgb(15,46,83)"
+                labelStyle={{ color: "rgb(244,176,4)", }}
+                label={this.state.modalButtonText}
+                keyboardFocused={false}
+                onClick={this.handleRegistrationModalClose.bind(this)}
+            />,
+        ]
 
-    return (
-      <div>
-        <div>
-          <SnackBar
-            open={this.state.sbPayment}
-            message={`${this.state.sbPaymentText} ${this.state.sbPaymentAmount} ${this.state.sbPaymentAssetCode}`}
-            onRequestClose={this.handlePaymentSnackBarClose.bind(this)}
-          />
-          <Dialog
-            title="Not Yet Implemented"
-            actions={actions}
-            modal={false}
-            open={this.props.modal.isShowing}
-            onRequestClose={this.handleClose}
-            paperClassName="modal-body"
-            titleClassName="modal-title"
-          >
-            Pardon the mess. We are working hard to bring you this feature very
-            soon. Please check back in a while as the feature implementation
-            is being continuously deployed.
-          </Dialog>
-          <Dialog
-            title="Registering Your Account"
-            actions={registerAccountActions}
-            modal={true}
-            open={this.state.modalShown}
-            onRequestClose={this.handleRegistrationModalClose.bind(this)}
-            paperClassName="modal-body"
-            titleClassName="modal-title"
-            repositionOnUpdate={false}
-            autoScrollBodyContent={true}
-          >
-            <RegisterAccount onComplete={this.setModalButtonText.bind(this)} />
-          </Dialog>
+        return (
+            <div>
+                <div>
+                    <SnackBar
+                        open={this.state.sbPayment}
+                        message={`${this.state.sbPaymentText} ${this.state.sbPaymentAmount} ${this.state.sbPaymentAssetCode}`}
+                        onRequestClose={this.handlePaymentSnackBarClose.bind(this)}
+                    />
+
+                    <Dialog
+                        title="Not Yet Implemented"
+                        actions={actions}
+                        modal={false}
+                        open={this.props.modal.isShowing}
+                        onRequestClose={this.handleClose}
+                        paperClassName="modal-body"
+                        titleClassName="modal-title"
+                    >
+                        Pardon the mess. We are working hard to bring you this feature very
+                        soon. Please check back in a while as the feature implementation
+                        is being continuously deployed.
+                    </Dialog>
+
+                    <Dialog
+                        title="Registering Your Account"
+                        actions={registerAccountActions}
+                        modal={true}
+                        open={this.state.modalShown}
+                        onRequestClose={this.handleRegistrationModalClose.bind(this)}
+                        paperClassName="modal-body"
+                        titleClassName="modal-title"
+                        repositionOnUpdate={false}
+                        autoScrollBodyContent={true}
+                    >
+                        <RegisterAccount onComplete={this.setModalButtonText.bind(this)} />
+                    </Dialog>
 
                     <Dialog
                         title={
@@ -1273,60 +1289,57 @@ class Balances extends Component {
                     >
                         {this.sendingCompleteMessage.call(this)}
                     </Dialog>
-
-
-
-        </div>
-
-        {(!this.props.auth.registered && !this.props.auth.isAuthenticated) ? (
-
-            <Card className="welcome-card">
-              <CardText>
-                <div className="flex-row">
-                  <div>
-                    <div className="balance">
-                      Hi there!
-                    </div>
-                    <div>
-                      <p>
-                        It looks like this account is not yet registered with our service.
-                        Registered accounts put you in compliance with local and
-                        international money transmitting laws. You will also be able
-                        to transact easily with anyone and take advantage of
-                        some awesome features that we offer!
-                      </p>
-                        <p> Here are some of them:</p>
-                      <ul>
-                        <li>One click, pay to contact.</li>
-                        <li>Create multiple escrow accounts.</li>
-                        <li>Customize your payment address.</li>
-                        <li>Create and manage contact book of your payees.</li>
-                        <li>Gain access to powerful account settings.</li>
-                      </ul>
-                      <p>Would you like to open one today? It&apos;s super easy!</p>
-                    </div>
-                    <div className='fade-extreme small-icon'>
-                        <i className="material-icons">blur_on</i>
-                        Registering with our service is free. Forever. We only charge fractional fees when you choose to use our remittance service.
-                    </div>
-                  </div>
                 </div>
-              </CardText>
-              <CardActions>
-                <RaisedButton
-                  onClick={this.handleSignup.bind(this)}
-                  backgroundColor="rgb(15,46,83)"
-                  labelColor="rgb(244,176,4)"
-                  label="Register"
-                />
-              </CardActions>
-            </Card>
 
-        ) : null}
+                {(!this.props.accountInfo.registered && !this.props.auth.isReadOnly) ? (
 
-        {this.props.accountInfo.exists ? (
-          <div>
-            <Card className='account'>
+                    <Card className="welcome-card">
+                        <CardText>
+                            <div className="flex-row">
+                                <div>
+                                    <div className="balance">Hi there!</div>
+                                    <div>
+                                        <p>
+                                            It looks like this account is not yet registered with our service.
+                                            Registered accounts put you in compliance with local and
+                                            international money transmitting laws. You will also be able
+                                            to transact easily with anyone and take advantage of
+                                            some awesome features that we offer!
+                                        </p>
+                                        <p> Here are some of them:</p>
+                                        <ul>
+                                            <li>One click, pay to contact.</li>
+                                            <li>Create multiple escrow accounts.</li>
+                                            <li>Customize your payment address.</li>
+                                            <li>Create and manage contact book of your payees.</li>
+                                            <li>Gain access to powerful account settings.</li>
+                                        </ul>
+                                        <p>Would you like to open one today? It&apos;s super easy!</p>
+                                    </div>
+                                    <div className="fade-extreme small-icon">
+                                        <i className="material-icons">blur_on</i>
+                                        Registering with our service is free. Forever.
+                                        We only charge fractional fees when you choose
+                                        to use our remittance service.
+                                    </div>
+                                </div>
+                            </div>
+                        </CardText>
+                        <CardActions>
+                            <RaisedButton
+                                onClick={this.handleSignup.bind(this)}
+                                backgroundColor="rgb(15,46,83)"
+                                labelColor="rgb(244,176,4)"
+                                label="Register"
+                            />
+                        </CardActions>
+                    </Card>
+
+                ) : null}
+
+                {this.props.accountInfo.exists ? (
+                    <div>
+                        <Card className="account">
                             <CardHeader
                                 title={
                                     <span>
@@ -1373,64 +1386,65 @@ class Balances extends Component {
                             </CardText>
 
 
-              <CardActions>
-                <RaisedButton
-                  backgroundColor="rgb(15,46,83)"
-                  labelColor="#228B22"
-                  label="Deposit"
-                  onClick={this.handleOpen.bind(this)}
-                />
-                <RaisedButton
-                  backgroundColor="rgb(15,46,83)"
-                  labelColor="rgb(244,176,4)"
-                  label="Request"
-                  onClick={this.handleOpen.bind(this)}
-                />
-                {!this.props.auth.isReadOnly ?
-                  (<RaisedButton
-                    backgroundColor="rgb(15,46,83)"
-                    labelColor="#d32f2f"
-                    label="Pay"
-                    onClick={this.showPaymentCard.bind(this)}
-                  />) : null
-                }
-              </CardActions>
-              <CardText expandable={true}>
-                <div>
-                  <div>Other Assets</div>
-                  <div>
-                    {otherBalances[0] !== undefined ?
-                      otherBalances : <div className='faded'>
-                        You currently do not own any other assets.
-                      </div>
-                    }
-                  </div>
-                </div>
-              </CardText>
-            </Card>
-          </div>
-        ) : (
-          <Card className='account'>
-            <CardHeader
-              title={
-                <span>
-                  <span>Current Balance </span>
-                  <i className="material-icons">hearing</i>
-                </span>
-              }
-              subtitle={
-                  <span>
-                    <span>
-                        {this.getCurrencyLongText(this.props.accountInfo.currency)}
-                    </span>
-                    <span className="fade currency-iso p-l-small">
-                        ({this.props.accountInfo.currency.toUpperCase()})
-                    </span>
-                  </span>
-              }
-              actAsExpander={false}
-              showExpandableButton={false}
-            />
+                            <CardActions>
+                                <RaisedButton
+                                    backgroundColor="rgb(15,46,83)"
+                                    labelColor="#228B22"
+                                    label="Fund"
+                                    onClick={this.handleOpen.bind(this)}
+                                />
+                                <RaisedButton
+                                    backgroundColor="rgb(15,46,83)"
+                                    labelColor="rgb(244,176,4)"
+                                    label="Request"
+                                    onClick={this.handleOpen.bind(this)}
+                                />
+                                {!this.props.auth.isReadOnly ?
+                                    <RaisedButton
+                                        backgroundColor="rgb(15,46,83)"
+                                        labelColor="#d32f2f"
+                                        label="Pay"
+                                        onClick={this.showPaymentCard.bind(this)}
+                                    /> : null
+                                }
+                            </CardActions>
+                            <CardText expandable={true}>
+                                <div>
+                                    <div>Other Assets</div>
+                                    <div>
+                                        {otherBalances  &&  otherBalances[0] ?
+                                            otherBalances :
+                                            <div className='faded'>
+                                                You currently do not own any other assets.
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </CardText>
+                        </Card>
+                    </div>
+                ) : (
+                    <Card className='account'>
+                        <CardHeader
+                            title={
+                                <span>
+                                    <span>Current Balance&nbsp;</span>
+                                    <i className="material-icons">hearing</i>
+                                </span>
+                            }
+                            subtitle={
+                                <span>
+                                    <span>
+                                        {this.getCurrencyLongText(this.props.accountInfo.currency)}
+                                    </span>
+                                    <span className="fade currency-iso p-l-small">
+                                        ({this.props.accountInfo.currency.toUpperCase()})
+                                    </span>
+                                </span>
+                            }
+                            actAsExpander={false}
+                            showExpandableButton={false}
+                        />
 
                         <CardText>
                             <div className='flex-row'>
@@ -1448,148 +1462,155 @@ class Balances extends Component {
                             </div>
                         </CardText>
 
-            <CardActions>
-              <RaisedButton
-                onClick={this.handleOpen.bind(this)}
-                backgroundColor="rgb(15,46,83)"
-                labelColor="rgb(244,176,4)"
-                label="Deposit" />
-            </CardActions>
-          </Card>
-        )}
-
-            {this.state.paymentCardVisible && (
-                <Card className="payment-card">
-                    <CardText>
-                        <div className="f-e space-between">
-                            <div>
-                                <div>
-                                    <img
-                                        style={{
-                                            opacity: "0.2",
-                                        }}
-                                        src="/img/sf.svg"
-                                        width="140px"
-                                        alt="Stellar Fox"
-                                    />
-                                </div>
-
-                            </div>
-                            <DatePicker
-                                className="date-picker"
-                                defaultDate={this.state.minDate}
-                                floatingLabelText="Date"
-                                minDate={this.state.minDate}
-                                underlineShow={true}
-                                onChange={this.updateDate.bind(this)}
+                        <CardActions>
+                            <RaisedButton
+                                onClick={this.handleOpen.bind(this)}
+                                backgroundColor="rgb(15,46,83)"
+                                labelColor="#228B22"
+                                label="Fund" />
+                            <RaisedButton
+                                backgroundColor="rgb(15,46,83)"
+                                labelColor="rgb(244,176,4)"
+                                label="Request"
+                                onClick={this.handleOpen.bind(this)}
                             />
-                        </div>
-                        <div className="f-s space-between">
-                            <div className="payment-header f-s">
-                                <div className="p-r leading-label-align nowrap">
-                                    Pay to the order of:
-                                </div>
-                                <div className="p-r">
-                                    <TextInputField
-                                        floatingLabelText="Payment Address"
-                                        styles={styles}
-                                        validator={
-                                            debounce(this.compoundFederationValidator.bind(this), 1000)
-                                        }
-                                        ref={(self) => {
-                                            this.textInputFieldFederationAddress = self
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                            <div className="payment-header f-s">
-                                <div className="p-r leading-label-align payment-currency">
-                                    {this.getCurrencyGlyph(this.state.currencySymbol)}
-                                </div>
+                        </CardActions>
+                    </Card>
+                )}
+
+                {this.state.paymentCardVisible && (
+                    <Card className="payment-card">
+                        <CardText>
+                            <div className="f-e space-between">
                                 <div>
-                                    <TextInputField
-                                        validator={
-                                            debounce(this.amountValidator.bind(this), 500)
-                                        }
-                                        ref={(self) => {
-                                            this.textInputFieldAmount = self
-                                        }}
-                                        floatingLabelText="Amount"
-                                        styles={styles}
-                                    />
+                                    <div>
+                                        <img
+                                            style={{
+                                                opacity: "0.2",
+                                            }}
+                                            src="/img/sf.svg"
+                                            width="140px"
+                                            alt={appName}
+                                        />
+                                    </div>
+
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="f-s space-between verbatim-underlined">
-                            <div>
-                                {(this.state.amountEntered && this.state.amountText) ? (this.state.amountEntered && this.state.amountText) : <span className="transparent">NOTHING</span>}
-                            </div>
-                            <div>{this.state.currencyText}</div>
-                        </div>
-                        <div className="p-t"></div>
-                        <div className="f-e">
-                            <div>
-                                <i className="material-icons">lock</i>
-                            </div>
-                            <div className="micro nowrap">
-                                <span>Security Features</span><br/>
-                                {this.recipientIndicatorMessage.call(this)}
-
-                            </div>
-
-                        </div>
-                        <div className="p-b"></div>
-                        <div className="f-s space-between">
-                            <div>
-                                <span className="payment-header">
-                                    <span className="p-r">For:</span>
-                                    <TextInputField
-                                        floatingLabelText="Memo"
-                                        styles={styles}
-                                        ref={(self) => {
-                                            this.textInputFieldMemo = self
-                                        }}
-                                        validator={
-                                            debounce(this.memoValidator.bind(this), 500)
-                                        }
-                                    />
-                                </span>
-                            </div>
-                        </div>
-                    </CardText>
-                    <CardActions>
-                        <div className="f-e space-between">
-
-                            {this.bottomIndicatorMessage.call(this)}
-
-                            <div>
-                                <span className="p-r">
-                                    <RaisedButton
-                                        onClick={this.sendPayment.bind(this)}
-                                        backgroundColor="rgb(15,46,83)"
-                                        labelColor="rgb(244,176,4)"
-                                        label="SIGN"
-                                        disabledLabelColor="#cfd8dc"
-                                        disabled={this.state.buttonSendDisabled}
-                                    />
-                                </span>
-                                <FlatButton
-                                    label="CANCEL"
-                                    disableTouchRipple={true}
-                                    disableFocusRipple={true}
-                                    onClick={this.hidePaymentCard.bind(this)}
+                                <DatePicker
+                                    className="date-picker"
+                                    defaultDate={this.state.minDate}
+                                    floatingLabelText="Date"
+                                    minDate={this.state.minDate}
+                                    underlineShow={true}
+                                    onChange={this.updateDate.bind(this)}
                                 />
                             </div>
-                        </div>
-                        <div className="p-b"></div>
-                    </CardActions>
-                </Card>
-            )}
+                            <div className="f-s space-between">
+                                <div className="payment-header f-s">
+                                    <div className="p-r leading-label-align nowrap">
+                                        Pay to the order of:
+                                    </div>
+                                    <div className="p-r">
+                                        <TextInputField
+                                            floatingLabelText="Payment Address"
+                                            styles={styles}
+                                            validator={
+                                                debounce(this.compoundFederationValidator.bind(this), 1000)
+                                            }
+                                            ref={(self) => {
+                                                this.textInputFieldFederationAddress = self
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="payment-header f-s">
+                                    <div className="p-r leading-label-align payment-currency">
+                                        {this.getCurrencyGlyph(this.state.currencySymbol)}
+                                    </div>
+                                    <div>
+                                        <TextInputField
+                                            validator={
+                                                debounce(this.amountValidator.bind(this), 500)
+                                            }
+                                            ref={(self) => {
+                                                this.textInputFieldAmount = self
+                                            }}
+                                            floatingLabelText="Amount"
+                                            styles={styles}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
 
-      </div>
-    )
-  }
+                            <div className="f-s space-between verbatim-underlined">
+                                <div>
+                                    {(this.state.amountEntered && this.state.amountText) ?
+                                        (this.state.amountEntered && this.state.amountText) :
+                                        <span className="transparent">NOTHING</span>}
+                                </div>
+                                <div>{this.state.currencyText}</div>
+                            </div>
+                            <div className="p-t"></div>
+                            <div className="f-e">
+                                <div>
+                                    <i className="material-icons">lock</i>
+                                </div>
+                                <div className="micro nowrap">
+                                    <span>Security Features</span><br/>
+                                    {this.recipientIndicatorMessage.call(this)}
+
+                                </div>
+
+                            </div>
+                            <div className="p-b"></div>
+                            <div className="f-s space-between">
+                                <div>
+                                    <span className="payment-header">
+                                        <span className="p-r">For:</span>
+                                        <TextInputField
+                                            floatingLabelText="Memo"
+                                            styles={styles}
+                                            ref={(self) => {
+                                                this.textInputFieldMemo = self
+                                            }}
+                                            validator={
+                                                debounce(this.memoValidator.bind(this), 500)
+                                            }
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+                        </CardText>
+                        <CardActions>
+                            <div className="f-e space-between">
+
+                                {this.bottomIndicatorMessage.call(this)}
+
+                                <div>
+                                    <span className="p-r">
+                                        <RaisedButton
+                                            onClick={this.sendPayment.bind(this)}
+                                            backgroundColor="rgb(15,46,83)"
+                                            labelColor="rgb(244,176,4)"
+                                            label="SIGN"
+                                            disabledLabelColor="#cfd8dc"
+                                            disabled={this.state.buttonSendDisabled}
+                                        />
+                                    </span>
+                                    <FlatButton
+                                        label="CANCEL"
+                                        disableTouchRipple={true}
+                                        disableFocusRipple={true}
+                                        onClick={this.hidePaymentCard.bind(this)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="p-b"></div>
+                        </CardActions>
+                    </Card>
+                )}
+            </div>
+        )
+    }
 }
 
 

@@ -10,3 +10,7 @@ div.footer {
     right: 0;
     z-index: 10;
 }
+
+span.stellar-style {
+    font-weight: bold;
+}

@@ -1,4 +1,9 @@
 import React from "react"
+import {
+    appVersion,
+    appName,
+    appCopyDates,
+} from "../../env.js"
 
 import "./Footer.css"
 
@@ -10,8 +15,10 @@ export default () =>
     <div className="footer">
         <div className="flex-row-space-between">
             <div>
-                © <span>Stellar Fox</span> 2017-2018.
+                &copy;
+                &nbsp;<span className="stellar-style">{appName}</span>&nbsp;
+                {appCopyDates}.
             </div>
-            <div>ver. 0.1.20</div>
+            <div>ver. {appVersion}</div>
         </div>
     </div>
