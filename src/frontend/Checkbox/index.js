@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React from "react"
 
 import "pretty-checkbox/dist/pretty-checkbox.min.css"
 import "./index.css"
@@ -6,24 +6,19 @@ import "./index.css"
 
 
 
-// ...
-export default class Checkbox extends Component {
-
-    // ...
-    state = { checked: false, }
-
-
-    // ...
-    render = () =>
-        <div className="pretty p-default p-curve">
-            <input
-                checked={this.props.isChecked}
-                type="checkbox"
-                onChange={this.props.handleChange}
-            />
-            <div className="state">
-                <label>{this.props.label}</label>
-            </div>
+// <Checkbox> component
+export default ({
+    isChecked,
+    handleChange,
+    label,
+}) =>
+    <div className="pretty p-default p-curve">
+        <input
+            checked={isChecked}
+            type="checkbox"
+            onChange={handleChange}
+        />
+        <div className="state">
+            <label>{label}</label>
         </div>
-
-}
+    </div>
