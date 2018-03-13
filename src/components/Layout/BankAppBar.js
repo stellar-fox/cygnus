@@ -20,21 +20,23 @@ import BankAppBarItems from "./BankAppBarItems"
 
 
 // ...
+const style = {
+    appBar : {
+        position: "fixed",
+        left: 0,
+        top: 0,
+        zIndex: 10001,
+    },
+    icon : {
+        color: "rgba(15,46,83,0.45)",
+    },
+}
+
+
+
+
+// ...
 class BankAppBar extends Component {
-
-    // ...
-    static style = {
-        appBar : {
-            position: "fixed",
-            left: 0,
-            top: 0,
-            zIndex: 10001,
-        },
-        icon : {
-            color: "rgba(15,46,83,0.45)",
-        },
-    }
-
 
     // ...
     handleToggle = () =>
@@ -62,11 +64,11 @@ class BankAppBar extends Component {
                 </div>
             }
             className="navbar"
-            style={BankAppBar.style.appBar}
+            style={style.appBar}
             onLeftIconButtonClick={this.handleToggle}
             iconElementRight={
                 <IconButton
-                    iconStyle={BankAppBar.style.icon}
+                    iconStyle={style.icon}
                     onClick={this.handleLogOutClick}
                 >
                     <i className="material-icons">power_settings_new</i>
