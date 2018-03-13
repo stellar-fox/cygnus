@@ -507,9 +507,6 @@ class Welcome extends Component {
                 </div>
                 <div>
                     <div className="flex-row-space-between">
-                        {/* <div className="flex-row-column-50"> */}
-                        {/* <div className="p-l p-t"> */}
-                        {/* <div> */}
                         <Panel
                             className="welcome-panel-left"
                             title="Transact"
@@ -547,13 +544,7 @@ class Welcome extends Component {
                                 </div>
                             }
                         />
-                        {/* </div> */}
-                        {/* </div> */}
-                        {/* </div> */}
 
-                        {/* <div className="flex-row-column"> */}
-                        {/* <div className="p-t"> */}
-                        {/* <div> */}
                         <Panel
                             className="welcome-panel-center"
                             title="Customize"
@@ -568,8 +559,7 @@ class Welcome extends Component {
                                         alt={appName}
                                     />
                                     <div className="title">
-                                        Manage your account with
-                                        ease.
+                                        Manage your account with ease.
                                     </div>
                                     <div className="title-small p-t p-b">
                                         Once you have opened your
@@ -626,13 +616,7 @@ class Welcome extends Component {
                                 </div>
                             }
                         />
-                        {/* </div> */}
-                        {/* </div> */}
-                        {/* </div> */}
 
-                        {/* <div className="flex-row-column"> */}
-                        {/* <div className="p-r p-t"> */}
-                        {/* <div> */}
                         <Panel
                             className="welcome-panel-right"
                             title="Explore"
@@ -694,9 +678,6 @@ class Welcome extends Component {
                                 </div>
                             }
                         />
-                        {/* </div> */}
-                        {/* </div> */}
-                        {/* </div> */}
                     </div>
                 </div>
                 <Footer />
