@@ -24,15 +24,16 @@ export default class LedgerAuthenticator extends Component {
 
 
     // ...
-    initQueryDevice = () =>
-        (async function _initQueryDevice () {
-            this.setState({ ledgerStatusMessage: "Waiting for device ...", })
-            let bip32Path = this.formBip32Path.call(this)
+    initQueryDevice = () => {
+        let that = this
+        return (async function _initQueryDevice () {
+            that.setState({ ledgerStatusMessage: "Waiting for device ...", })
+            let bip32Path = that.formBip32Path.call(that)
             const softwareVersion = await awaitConnection()
 
             // connection successful (softwareVersion is a string)
             if (typeof softwareVersion === "string") {
-                this.setState({
+                that.setState({
                     ledgerStatusMessage:
                         `Connected. Software ver. ${softwareVersion}`,
                     errorCode: null,
@@ -40,15 +41,15 @@ export default class LedgerAuthenticator extends Component {
                 const publicKey =
                     await getPublicKey(bip32Path)
                         .catch((error) => {
-                            this.setState({
+                            that.setState({
                                 ledgerStatusMessage:
-                                    this.errorCodeToUserMessage(
+                                    that.errorCodeToUserMessage(
                                         error.statusCode
                                     ),
                                 errorCode: error.statusCode,
                             })
                         })
-                this.props.onConnected.call(this, {
+                that.props.onConnected.call(that, {
                     publicKey,
                     softwareVersion,
                     bip32Path,
@@ -59,11 +60,11 @@ export default class LedgerAuthenticator extends Component {
 
             // error wih connection attempt
             else {
-                this.setState({
+                that.setState({
                     ledgerStatusMessage: softwareVersion.message,
                     errorCode: softwareVersion.originalError.metaData.code,
                 })
-                this.props.onConnected.call(this, {
+                that.props.onConnected.call(that, {
                     publicKey: null,
                     softwareVersion: null,
                     bip32Path: null,
@@ -72,6 +73,7 @@ export default class LedgerAuthenticator extends Component {
                 })
             }
         }())
+    }
 
 
     // ...
