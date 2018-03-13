@@ -1,5 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
+import { appName } from "../../env.js"
 
 import "./BankAppBarTitle.css"
 
@@ -21,7 +22,7 @@ export default connect(
     }) =>
         <div className="flex-start">
             <div className="app-bar-title">
-                <div className="bar-title"><span>Stellar Fox</span></div>
+                <div className="bar-title">{appName}</div>
                 <div className="bar-subtitle">{viewName}</div>
             </div>
             <div className="indicator-set-col">

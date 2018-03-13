@@ -28,6 +28,7 @@ import {
     handleException,
     extractPathIndex,
 } from "../lib/utils"
+import { appName } from "../env.js"
 import {
     setExchangeRate,
     showAlert,
@@ -43,7 +44,7 @@ import {
 } from "../actions/index"
 import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
-import {BigNumber} from "bignumber.js"
+import { BigNumber } from "bignumber.js"
 import "number-to-text/converters/en-us"
 
 import "./Balances.css"
@@ -1120,7 +1121,7 @@ class Balances extends Component {
                     The money has arrived to its destination.
                 </div>
                 <div className="faded p-b">
-                    Thank you for using Stellar Fox.
+                    Thank you for using {appName}.
                 </div>
             </Fragment>
         )
@@ -1477,7 +1478,7 @@ class Balances extends Component {
                                         }}
                                         src="/img/sf.svg"
                                         width="140px"
-                                        alt="Stellar Fox"
+                                        alt={appName}
                                     />
                                 </div>
 

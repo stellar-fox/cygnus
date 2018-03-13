@@ -18,6 +18,7 @@ import {
     StellarSdk,
     extractPathIndex,
 } from "../../lib/utils"
+import { appName } from "../../env.js"
 import CreateAccount from "../Account/Create"
 import {
     accountExistsOnLedger,
@@ -564,7 +565,7 @@ class Welcome extends Component {
                                         }}
                                         src="/img/sf.svg"
                                         width="140px"
-                                        alt="Stellar Fox"
+                                        alt={appName}
                                     />
                                     <div className="title">
                                         Manage your account with
