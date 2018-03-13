@@ -11,6 +11,7 @@ import { inject } from "../../lib/utils"
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import Bank from "./Bank"
+import { ActionConstants } from "../../actions"
 
 
 
@@ -60,6 +61,6 @@ class Layout extends Component {
 export default connect(
     // map state to props.
     (state) => ({
-        loggedIn: state.auth.isHorizonLoggedIn,
+        loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN ? true : false,
     })
 )(Layout)

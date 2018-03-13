@@ -56,15 +56,6 @@ export default function (state = initState, action) {
             }
             break
 
-        case "LOG_OUT_OF_HORIZON":
-            state = {
-                ...state,
-                tabs: {},
-                messages: {},
-                drawer: { isOpened: true, },
-            }
-            break
-
         case "LOG_OUT":
             state = {
                 ...state,

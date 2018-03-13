@@ -5,9 +5,6 @@ const initState = {
 
 export default function (state = initState, action) {
     switch (action.type) {
-        case "LOG_OUT_OF_HORIZON":
-            state = initState
-            break
 
         case "LOG_OUT":
             state = initState

@@ -30,15 +30,6 @@ export const updateLoadingMessage = (state) => ({
     payload: state,
 })
 
-export const logOutOfHorizon = (state) => ({
-    type: "LOG_OUT_OF_HORIZON",
-    payload: state,
-})
-
-export const logInToHorizon = (state) => ({
-    type: "LOG_IN_TO_HORIZON",
-    payload: state,
-})
 
 export const logIn = (state) => ({
     type: "LOG_IN",
@@ -49,14 +40,6 @@ export const logOut = (state) => ({
     type: "LOG_OUT",
     payload: state,
 })
-
-
-// ...
-export const selectView = (viewName) => ({
-    type: "SELECT_VIEW",
-    payload: viewName,
-})
-
 
 export const openDrawer = (state) => ({
     type: "OPEN_DRAWER",
@@ -156,4 +139,33 @@ export const setAccountPath = (state) => ({
 export const setLedgerSoftwareVersion = (state) => ({
     type: "SET_LEDGER_SOFTWARE_VERSION",
     payload: state,
+})
+
+
+
+export const ActionConstants = {
+    LOGGING_IN: "LOGGING_IN",
+    LOGGING_OUT: "LOGGING_OUT",
+    LOGGED_IN: "LOGGED_IN",
+    LOGGED_OUT: "LOGGED_OUT",
+
+    VIEW_WELCOME: "Welcome",
+    VIEW_BALANCES: "Balances",
+    VIEW_PAYMENTS: "Payments",
+    VIEW_ACCOUNT: "Account",
+}
+
+export const login = (loginState) => ({
+    type: "CHANGE_LOGIN_STATE",
+    payload: loginState, // Boolean
+})
+
+export const setHardwareWalletParams = (params) => ({
+    type: "SET_HW_PARAMS",
+    payload: params, // Object
+})
+
+export const selectView = (viewName) => ({
+    type: "SELECT_VIEW",
+    payload: viewName, // String
 })

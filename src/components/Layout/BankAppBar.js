@@ -6,11 +6,12 @@ import AppBar from "material-ui/AppBar"
 import IconButton from "material-ui/IconButton"
 
 import {
-    logOutOfHorizon,
     logOut,
     openDrawer,
     closeDrawer,
     selectView,
+    login,
+    ActionConstants,
 } from "../../actions/index"
 
 import BankAppBarTitle from "./BankAppBarTitle"
@@ -45,9 +46,9 @@ class BankAppBar extends Component {
 
     // ...
     handleLogOutClick = () => {
-        this.props.logOutOfHorizon()
+        this.props.login(ActionConstants.LOGGED_OUT)
         this.props.logOut()
-        this.props.selectView("/")
+        this.props.selectView(ActionConstants.VIEW_ROOT)
         sessionStorage.clear()
     }
 
@@ -86,10 +87,10 @@ export default connect(
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        logOutOfHorizon,
         logOut,
         openDrawer,
         closeDrawer,
         selectView,
+        login,
     }, dispatch)
 )(BankAppBar)

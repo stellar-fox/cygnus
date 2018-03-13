@@ -25,8 +25,6 @@ import {
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
-    logInToHorizon,
-    logOutOfHorizon,
     logIn,
     selectView,
     setHorizonEndPoint,
@@ -34,7 +32,12 @@ import {
     setAccountPath,
     setLedgerSoftwareVersion,
     setPublicKey,
+
+    // login,
+    setHardwareWalletParams,
+    ActionConstants
 } from "../../actions/index"
+
 
 import { setToken, clearToken } from "../../actions/auth"
 
@@ -85,7 +88,6 @@ class Welcome extends Component {
     componentDidMount () {
 
 
-
         /*
          * Horizon end point is set to testnet by default.
          */
@@ -98,6 +100,9 @@ class Welcome extends Component {
         if (ledgerParams.errorCode !== null) {
             return
         }
+
+        // this.props.setHardwareWalletParams(ledgerParams)
+
         this.props.setAccountPath(ledgerParams.bip32Path)
         this.props.setLedgerSoftwareVersion(ledgerParams.softwareVersion)
         this.ledgerAuthenticateUser(ledgerParams)
@@ -139,8 +144,8 @@ class Welcome extends Component {
                 })
                 .then((account) => {
                     this.props.accountExistsOnLedger({ account, })
-                    this.props.selectView("Balances")
-                    this.props.logInToHorizon()
+                    this.props.selectView(ActionConstants.VIEW_BALANCES)
+                    // this.props.login(true)
                     this.props.setModalLoaded()
                     this.props.updateLoadingMessage({
                         message: null,
@@ -148,8 +153,8 @@ class Welcome extends Component {
                 })
                 .catch(() => {
                     this.props.accountMissingOnLedger()
-                    this.props.selectView("Balances")
-                    this.props.logInToHorizon()
+                    this.props.selectView(ActionConstants.VIEW_BALANCES)
+                    // this.props.login(true)
                     this.props.setModalLoaded()
                     this.props.updateLoadingMessage({
                         message: null,
@@ -601,6 +606,7 @@ function mapStateToProps (state) {
         auth: state.auth,
         nav: state.nav,
         ui: state.ui,
+        appAuth: state.appAuth,
     }
 }
 
@@ -611,8 +617,6 @@ const mapDispatchToProps = dispatch => {
         setModalLoading,
         setModalLoaded,
         updateLoadingMessage,
-        logInToHorizon,
-        logOutOfHorizon,
         logIn,
         selectView,
         setHorizonEndPoint,
@@ -622,6 +626,9 @@ const mapDispatchToProps = dispatch => {
         setPublicKey,
         setToken,
         clearToken,
+
+        // login,
+        setHardwareWalletParams,
     }, dispatch)
 }
 

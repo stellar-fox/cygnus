@@ -1,3 +1,5 @@
+import { appReducer } from "./mono-reducer"
+
 import AuthenticationReducer from "./authentication-reducer"
 import AccountInfoReducer from "./account-info-reducer"
 import LoadingModalReducer from "./loading-modal-reducer"
@@ -13,4 +15,5 @@ export default {
     nav: SelectViewReducer,
     ui: UiStateReducer,
     modal: ModalReducer,
+    appAuth: appReducer,
 }

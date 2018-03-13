@@ -23,8 +23,6 @@ import { config } from "../../config"
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
-    logInToHorizon,
-    selectView,
     logIn,
     setAccountRegistered,
     setAccountPath,
@@ -428,8 +426,6 @@ function matchDispatchToProps (dispatch) {
         {
             accountExistsOnLedger,
             accountMissingOnLedger,
-            logInToHorizon,
-            selectView,
             logIn,
             setAccountRegistered,
             setAccountPath,
