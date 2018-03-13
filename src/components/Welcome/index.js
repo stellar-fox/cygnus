@@ -420,11 +420,17 @@ class Welcome extends Component {
                 </Dialog>
 
                 <div className="f-c alert-message">
-                    we will&nbsp;<u> never</u>&nbsp;ask you for your secret key.
-                    please read this&nbsp;<a target="_blank"
+                    we will
+                    &nbsp;<u>never</u>&nbsp;
+                    ask you for your secret key.
+                    &nbsp;
+                    please read this
+                    &nbsp;<a target="_blank"
                         rel="noopener noreferrer"
                         href={securityGuideLink}>
-                    short guide</a>&nbsp;to keep your finances secure.
+                        <strong>short guide</strong>
+                    </a>&nbsp;
+                    to keep your finances secure.
                 </div>
 
                 <div className="faded-image cash">
