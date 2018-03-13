@@ -11,12 +11,12 @@ import { List, ListItem } from "material-ui/List"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
-import SnackBar from "../frontend/SnackBar"
+import SnackBar from "../../frontend/SnackBar"
 import axios from "axios"
-import { config } from "../config"
-import RegisterAccount from "./Account/Register"
-import TextInputField from "./TextInputField"
-import { signTransaction, awaitConnection } from "../lib/ledger"
+import { config } from "../../config"
+import RegisterAccount from "../Account/Register"
+import TextInputField from "../TextInputField"
+import { signTransaction, awaitConnection } from "../../lib/ledger"
 import DatePicker from "material-ui/DatePicker"
 import LinearProgress from "material-ui/LinearProgress"
 import {
@@ -27,8 +27,8 @@ import {
     pubKeyAbbr,
     handleException,
     extractPathIndex,
-} from "../lib/utils"
-import { appName } from "../env.js"
+} from "../../lib/utils"
+import { appName } from "../../env.js"
 import {
     setExchangeRate,
     showAlert,
@@ -41,13 +41,13 @@ import {
     accountMissingOnLedger,
     setAccountRegistered,
     logIn,
-} from "../actions/index"
+} from "../../actions/index"
 import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
 import { BigNumber } from "bignumber.js"
 import "number-to-text/converters/en-us"
 
-import "./Balances.css"
+import "./index.css"
 
 const styles = {
     errorStyle: {
@@ -223,7 +223,10 @@ class Balances extends Component {
                 /*
                 * Payment to fund a new account.
                 */
-                if (message.type === "create_account" && message.source_account === this.props.accountInfo.pubKey) {
+                if (
+                    message.type === "create_account" &&
+                    message.source_account === this.props.accountInfo.pubKey
+                ) {
                     this.updateAccount.call(this)
                     this.setState({
                         sbPayment: true,
@@ -236,7 +239,10 @@ class Balances extends Component {
                 /*
                 * Initial funding of own account.
                 */
-                if (message.type === "create_account" && message.account === this.props.accountInfo.pubKey) {
+                if (
+                    message.type === "create_account" &&
+                    message.account === this.props.accountInfo.pubKey
+                ) {
                     this.updateAccount.call(this)
                     this.setState({
                         sbPayment: true,
@@ -249,7 +255,10 @@ class Balances extends Component {
                 /*
                 * Receiving payment.
                 */
-                if (message.type === "payment" && message.to === this.props.accountInfo.pubKey) {
+                if (
+                    message.type === "payment" &&
+                    message.to === this.props.accountInfo.pubKey
+                ) {
                     this.updateAccount.call(this)
                     this.setState({
                         sbPayment: true,
@@ -262,7 +271,10 @@ class Balances extends Component {
                 /*
                 * Sending payment.
                 */
-                if (message.type === "payment" && message.from === this.props.accountInfo.pubKey) {
+                if (
+                    message.type === "payment" &&
+                    message.from === this.props.accountInfo.pubKey
+                ) {
                     this.updateAccount.call(this)
                     this.setState({
                         sbPayment: true,
