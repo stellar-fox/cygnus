@@ -585,7 +585,6 @@ function mapStateToProps (state) {
         accountInfo: state.accountInfo,
         loadingModal: state.loadingModal,
         auth: state.auth,
-        nav: state.nav,
         ui: state.ui,
         appAuth: state.appAuth,
     }

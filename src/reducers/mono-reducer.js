@@ -16,7 +16,7 @@ function createReducer (initState = {}, handlers) {
 }
 
 
-export const appReducer = createReducer({}, {
+export const authReducer = createReducer({}, {
     [ActionTypes.CHANGE_LOGIN_STATE] (state, action) {
         state = {...state, loginState: action.payload,}
         return state
@@ -25,6 +25,10 @@ export const appReducer = createReducer({}, {
         state = { ...state, hw: action.payload, }
         return state
     },
+})
+
+
+export const navReducer = createReducer({}, {
     [ActionTypes.SELECT_VIEW] (state, action) {
         state = { ...state, view: action.payload, }
         return state

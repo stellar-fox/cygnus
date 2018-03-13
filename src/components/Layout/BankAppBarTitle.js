@@ -12,7 +12,7 @@ export default connect(
     // map state to props.
     (state) => ({
         ledgerVer: state.auth.ledgerSoftwareVersion,
-        viewName: state.nav.viewName,
+        viewName: state.appNav.view,
     })
 )(
     // BankAppBarTitle component
