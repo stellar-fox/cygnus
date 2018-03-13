@@ -30,16 +30,12 @@ import {
     setModalLoaded,
     updateLoadingMessage,
     logIn,
-    selectView,
     setHorizonEndPoint,
     setAccountRegistered,
     setAccountPath,
     setLedgerSoftwareVersion,
     setPublicKey,
-
-    // login,
     setHardwareWalletParams,
-    ActionConstants
 } from "../../actions/index"
 
 
@@ -80,9 +76,9 @@ class Welcome extends Component {
     }
 
     // ...
-    componentWillReceiveProps (nextProps) {
-        if (!this.props.accountInfo.pubKey && nextProps.accountInfo.pubKey) {
-            this.logInViaPublicKey(nextProps.accountInfo.pubKey)
+    componentWillReceiveProps ({ accountInfo, }) {
+        if (!this.props.accountInfo.pubKey && accountInfo.pubKey) {
+            this.logInViaPublicKey(accountInfo.pubKey)
         }
     }
 
@@ -148,8 +144,6 @@ class Welcome extends Component {
                 })
                 .then((account) => {
                     this.props.accountExistsOnLedger({ account, })
-                    this.props.selectView(ActionConstants.VIEW_BALANCES)
-                    // this.props.login(true)
                     this.props.setModalLoaded()
                     this.props.updateLoadingMessage({
                         message: null,
@@ -157,8 +151,6 @@ class Welcome extends Component {
                 })
                 .catch(() => {
                     this.props.accountMissingOnLedger()
-                    this.props.selectView(ActionConstants.VIEW_BALANCES)
-                    // this.props.login(true)
                     this.props.setModalLoaded()
                     this.props.updateLoadingMessage({
                         message: null,
@@ -507,12 +499,12 @@ class Welcome extends Component {
                                     <div className="title">
                                         Manage your account with ease.
                                     </div>
-                                    <div className="title-small p-t p-b">
+                                    <div className="title-small p-t">
                                         Once you have opened your
                                         account you can log in here
                                         to your banking terminal.
                                     </div>
-                                    <div className="f-c">
+                                    <div className="f-b">
                                         <Login/>
                                     </div>
                                 </div>
@@ -607,7 +599,6 @@ const mapDispatchToProps = dispatch => {
         setModalLoaded,
         updateLoadingMessage,
         logIn,
-        selectView,
         setHorizonEndPoint,
         setAccountRegistered,
         setAccountPath,
@@ -615,8 +606,6 @@ const mapDispatchToProps = dispatch => {
         setPublicKey,
         setToken,
         clearToken,
-
-        // login,
         setHardwareWalletParams,
     }, dispatch)
 }

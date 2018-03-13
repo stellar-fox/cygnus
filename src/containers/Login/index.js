@@ -5,7 +5,7 @@ import {
     logIn,
     setAccountRegistered,
     setPublicKey,
-    login,
+    setLoginState,
     selectView,
 } from "../../actions/index"
 
@@ -16,7 +16,7 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ logIn, setAccountRegistered, setPublicKey, login, selectView,}, dispatch)
+    return bindActionCreators({ logIn, setAccountRegistered, setPublicKey, setLoginState, selectView,}, dispatch)
 }
 
 

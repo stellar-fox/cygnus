@@ -155,7 +155,7 @@ export const ActionConstants = {
     VIEW_ACCOUNT: "Account",
 }
 
-export const login = (loginState) => ({
+export const setLoginState = (loginState) => ({
     type: "CHANGE_LOGIN_STATE",
     payload: loginState, // Boolean
 })

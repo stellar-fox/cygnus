@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 import {
     Redirect,
     Route,
@@ -11,13 +12,25 @@ import { inject } from "../../lib/utils"
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import Bank from "./Bank"
-import { ActionConstants } from "../../actions"
-
-
+import {
+    ActionConstants,
+    selectView,
+} from "../../actions"
 
 
 // ...
 class Layout extends Component {
+
+    componentWillReceiveProps ({loggedIn,}) {
+        if (!this.props.loggedIn && loggedIn) {
+            this.tmp_onLoggedIn()
+        }
+    }
+
+    // ... TMP
+    tmp_onLoggedIn () {
+        this.props.selectView(ActionConstants.VIEW_BALANCES)
+    }
 
     // ...
     routes = {
@@ -62,5 +75,9 @@ export default connect(
     // map state to props.
     (state) => ({
         loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN ? true : false,
-    })
+    }),
+    // map dispatch to props.
+    (dispatch) => {
+        return bindActionCreators({ selectView, }, dispatch)
+    }
 )(Layout)

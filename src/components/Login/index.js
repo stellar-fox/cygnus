@@ -20,9 +20,6 @@ export default class Login extends Component {
 
 
     async loginValidator () {
-
-
-
         // INVALID EMAIL FORMAT
         if (!emailIsValid(this.email.state.value)) {
             this.email.setState({ error: "Invalid email format.", })
@@ -62,22 +59,7 @@ export default class Login extends Component {
             return
         }
         // ALL GOOD
-
-
-        // this.props.setAccountRegistered(true)
-        // this.props.logIn({
-        //     pubkey: auth.pubkey,
-        //     userId: auth.user_id,
-        //     token: auth.token,
-        // })
-        // this.props.setPublicKey(auth.pubkey)
-
-
-        this.props.selectView(ActionConstants.VIEW_BALANCES)
-        this.props.login(ActionConstants.LOGGED_IN)
-
-
-
+        this.props.setLoginState(ActionConstants.LOGGED_IN)
     }
 
 

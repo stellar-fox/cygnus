@@ -1,6 +1,7 @@
 const ActionTypes = {
     CHANGE_LOGIN_STATE: "CHANGE_LOGIN_STATE",
     SET_HW_PARAMS: "SET_HW_PARAMS",
+    SELECT_VIEW: "SELECT_VIEW",
 }
 
 
@@ -15,12 +16,6 @@ function createReducer (initState = {}, handlers) {
 }
 
 
-// LOGGING_IN
-// LOGGING_OUT
-// TRUE
-// FALSE
-
-
 export const appReducer = createReducer({}, {
     [ActionTypes.CHANGE_LOGIN_STATE] (state, action) {
         state = {...state, loginState: action.payload,}
@@ -28,6 +23,10 @@ export const appReducer = createReducer({}, {
     },
     [ActionTypes.SET_HW_PARAMS] (state, action) {
         state = { ...state, hw: action.payload, }
+        return state
+    },
+    [ActionTypes.SELECT_VIEW] (state, action) {
+        state = { ...state, view: action.payload, }
         return state
     },
 })
