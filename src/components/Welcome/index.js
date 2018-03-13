@@ -18,7 +18,11 @@ import {
     StellarSdk,
     extractPathIndex,
 } from "../../lib/utils"
-import { appName } from "../../env.js"
+import {
+    appName,
+    securityGuideLink,
+    ledgerSupportLink
+} from "../../env.js"
 import CreateAccount from "../Account/Create"
 import {
     accountExistsOnLedger,
@@ -419,9 +423,8 @@ class Welcome extends Component {
                     we will&nbsp;<u> never</u>&nbsp;ask you for your secret key.
                     please read this&nbsp;<a target="_blank"
                         rel="noopener noreferrer"
-                        href="https://github.com/stellar-fox/cygnus/wiki/Security-Guide">
-                    short guide</a>&nbsp;to
-                    keep your finances secure.
+                        href={securityGuideLink}>
+                    short guide</a>&nbsp;to keep your finances secure.
                 </div>
 
                 <div className="faded-image cash">
@@ -531,7 +534,7 @@ class Welcome extends Component {
                                         <a
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            href="https://support.ledgerwallet.com/hc/en-us/articles/115003797194"
+                                            href={ledgerSupportLink}
                                         >
                                             Ledger Support
                                         </a>
