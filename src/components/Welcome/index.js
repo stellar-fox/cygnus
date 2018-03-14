@@ -20,7 +20,7 @@ import {
 } from "../../lib/utils"
 import {
     appName,
-    securityGuideLink,
+    TopBarSecurityMessage,
     ledgerSupportLink
 } from "../../env.js"
 import CreateAccount from "../Account/Create"
@@ -419,19 +419,7 @@ class Welcome extends Component {
                     />
                 </Dialog>
 
-                <div className="f-c alert-message">
-                    we will
-                    &nbsp;<u>never</u>&nbsp;
-                    ask you for your secret key.
-                    &nbsp;
-                    please read this
-                    &nbsp;<a target="_blank"
-                        rel="noopener noreferrer"
-                        href={securityGuideLink}>
-                        <strong>short guide</strong>
-                    </a>&nbsp;
-                    to keep your finances secure.
-                </div>
+                <TopBarSecurityMessage />
 
                 <div className="faded-image cash">
                     <div className="hero">

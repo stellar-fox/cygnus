@@ -162,3 +162,12 @@ strong {
     white-space: nowrap;
     overflow: hidden;
 }
+
+.alert-message {
+    padding: 4px;
+    font-size: 1.3rem;
+    font-variant: small-caps;
+    background: rgba(178,34,34,0.8);
+    color: rgba(244,176,4,1);
+    text-align: center;
+}
