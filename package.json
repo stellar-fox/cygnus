@@ -1,40 +1,41 @@
 {
-  "name": "cygnus",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@ledgerhq/hw-app-str": "^4.0.0",
-    "@ledgerhq/hw-transport-u2f": "^4.0.0",
-    "axios": "^0.17.1",
-    "bignumber.js": "^6.0.0",
-    "history": "^4.7.2",
-    "lodash": "^4.17.4",
-    "material-ui": "^0.20.0",
-    "number-to-text": "^0.3.2",
-    "pretty-checkbox": "^3.0.3",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-redux": "^5.0.6",
-    "react-router-dom": "^4.2.2",
-    "react-router-redux": "^5.0.0-alpha.9",
-    "react-scripts": "1.0.17",
-    "redux": "^3.7.2",
-    "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0",
-    "stellar-base": "^0.7.6",
-    "stellar-sdk": "^0.8.0",
-    "toml": "^2.3.3"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  },
-  "devDependencies": {
-    "babel-eslint": "^8.2.2",
-    "eslint": "^4.18.0",
-    "eslint-plugin-react": "^7.6.1",
-    "redux-devtools-extension": "^2.13.2"
-  }
+    "name": "cygnus",
+    "version": "0.1.26",
+    "private": true,
+    "dependencies": {
+        "@ledgerhq/hw-app-str": "^4.0.0",
+        "@ledgerhq/hw-transport-u2f": "^4.0.0",
+        "axios": "^0.17.1",
+        "bignumber.js": "^6.0.0",
+        "history": "^4.7.2",
+        "lodash": "^4.17.4",
+        "material-ui": "^0.20.0",
+        "number-to-text": "^0.3.2",
+        "pretty-checkbox": "^3.0.3",
+        "prop-types": "^15.6.1",
+        "react": "^16.2.0",
+        "react-dom": "^16.2.0",
+        "react-redux": "^5.0.6",
+        "react-router-dom": "^4.2.2",
+        "react-router-redux": "^5.0.0-alpha.9",
+        "react-scripts": "1.0.17",
+        "redux": "^3.7.2",
+        "redux-devtools-extension": "^2.13.2",
+        "redux-thunk": "^2.2.0",
+        "stellar-base": "^0.7.6",
+        "stellar-sdk": "^0.8.0",
+        "toml": "^2.3.3"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test --env=jsdom",
+        "eject": "react-scripts eject"
+    },
+    "devDependencies": {
+        "babel-eslint": "^8.2.2",
+        "eslint": "^4.18.0",
+        "eslint-plugin-react": "^7.6.1",
+        "eslint-config-react-app": "^2.1.0"
+    }
 }
