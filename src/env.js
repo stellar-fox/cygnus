@@ -1,4 +1,5 @@
 import React from "react"
+import { version } from "../package.json"
 
 
 // ...
@@ -6,7 +7,7 @@ export const appName = "Stellar Fox"
 
 
 // ...
-export const appVersion = "0.1.26"
+export const appVersion = version
 
 
 // ...
@@ -52,3 +53,8 @@ export const TopBarSecurityMessage = () =>
             <strong>short guide</strong>
         </a> to keep your finances secure.</span>
     </div>
+
+
+// ...
+export const NotImplementedBadge = () =>
+    <span className="red-badge">NOT IMPLEMENTED YET</span>

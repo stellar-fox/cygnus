@@ -12,7 +12,10 @@ import SnackBar from "../../frontend/SnackBar"
 import MD5 from "../../lib/md5"
 import { federationIsAliasOnly } from "../../lib/utils"
 import { emailValid } from "../../lib/utils"
-import { appName } from "../../env.js"
+import {
+    appName,
+    NotImplementedBadge,
+} from "../../env.js"
 import { config } from "../../config"
 import axios from "axios"
 import RegisterAccount from "./Register"
@@ -690,7 +693,7 @@ class Account extends Component {
                                     />
                                 </RadioButtonGroup>
                             </div>
-                            <div className="p-t p-b" />
+                            {/* <div className="p-t p-b" />
                             <div className="account-title p-t">
                                 Set Wallet Style:
                             </div>
@@ -735,7 +738,7 @@ class Account extends Component {
                                         iconStyle={styles.radioButton.icon}
                                     />
                                 </RadioButtonGroup>
-                            </div>
+                            </div> */}
                             {!this.props.accountInfo.registered &&
                             !this.props.auth.isReadOnly ? (
                                     <div>
@@ -849,6 +852,7 @@ class Account extends Component {
                                             Confirm your account transations
                                             with second authentication factor.
                                         </div>
+                                        <NotImplementedBadge />
                                     </div>
                                     <div>
                                         <div>
@@ -900,6 +904,7 @@ class Account extends Component {
                                             or more signatures on every
                                             transaction.
                                         </div>
+                                        <NotImplementedBadge />
                                     </div>
                                     <div>
                                         <div>

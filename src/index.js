@@ -18,9 +18,7 @@ import {
 
 import {
     composeWithDevTools,
-    // devToolsEnhancer,
 } from "redux-devtools-extension"
-// import { createLogger } from "redux-logger"
 import thunk from "redux-thunk"
 
 import { inject } from "./lib/utils"
@@ -50,22 +48,6 @@ import Layout from "./components/Layout"
 import "./index.css"
 
 
-
-
-// // store with simple logger
-// const store = createStore(
-//     reducers,
-//     loadState(),
-//     applyMiddleware(thunk, createLogger())
-// )
-
-
-// // store with redux-devtools-extension
-// const store = createStore(
-//     reducers,
-//     loadState(),
-//     devToolsEnhancer()
-// )
 
 
 // browser history
