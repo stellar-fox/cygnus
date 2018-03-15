@@ -1,7 +1,11 @@
+import { ActionConstants } from "../actions"
+
+
 const ActionTypes = {
     CHANGE_LOGIN_STATE: "CHANGE_LOGIN_STATE",
     SET_HW_PARAMS: "SET_HW_PARAMS",
     SELECT_VIEW: "SELECT_VIEW",
+    SET_PUBKEY: "SET_PUBKEY",
 }
 
 
@@ -16,13 +20,14 @@ function createReducer (initState = {}, handlers) {
 }
 
 
-export const authReducer = createReducer({}, {
-    [ActionTypes.CHANGE_LOGIN_STATE] (state, action) {
-        state = {...state, loginState: action.payload,}
-        return state
-    },
-    [ActionTypes.SET_HW_PARAMS] (state, action) {
-        state = { ...state, hw: action.payload, }
+export const authReducer = createReducer({
+    state: ActionConstants.LOGGED_OUT,
+    publicKey: null,
+    userId: null,
+    token: null,
+}, {
+    [ActionTypes.CHANGE_LOGIN_STATE] (state = {}, action) {
+        state = Object.assign(...state, action.payload)
         return state
     },
 })

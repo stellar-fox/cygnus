@@ -147,7 +147,7 @@ export const ActionConstants = {
     LOGGING_IN: "LOGGING_IN",
     LOGGING_OUT: "LOGGING_OUT",
     LOGGED_IN: "LOGGED_IN",
-    LOGGED_OUT: "LOGGED_OUT",
+    LOGGED_OUT: "LOGGED_OUT",  // NOT_LOGGED_IN
 
     VIEW_WELCOME: "Welcome",
     VIEW_BALANCES: "Balances",
@@ -157,12 +157,7 @@ export const ActionConstants = {
 
 export const setLoginState = (loginState) => ({
     type: "CHANGE_LOGIN_STATE",
-    payload: loginState, // Boolean
-})
-
-export const setHardwareWalletParams = (params) => ({
-    type: "SET_HW_PARAMS",
-    payload: params, // Object
+    payload: loginState,  // Object
 })
 
 export const selectView = (viewName) => ({

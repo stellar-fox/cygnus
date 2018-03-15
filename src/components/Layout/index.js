@@ -74,7 +74,8 @@ class Layout extends Component {
 export default connect(
     // map state to props.
     (state) => ({
-        loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN ? true : false,
+        loggedIn: state.appAuth.state === ActionConstants.LOGGED_IN ?
+            true : false,
     }),
     // map dispatch to props.
     (dispatch) => {

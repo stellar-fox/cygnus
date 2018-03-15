@@ -59,7 +59,36 @@ export default class Login extends Component {
             return
         }
         // ALL GOOD
-        this.props.setLoginState(ActionConstants.LOGGED_IN)
+        this.props.setLoginState({
+            state: ActionConstants.LOGGED_IN,
+            publicKey: auth.pubkey,
+            userId: auth.user_id,
+        })
+
+
+        // this.props.setPublicKey(auth.pubkey)
+
+        // user_id, pubkey, token, derywacja_pat
+        // ...
+        // ...
+        // this.props.setLoginState({
+        //     state: Konstant.LOGGED_IN,
+        //     public_key: ...,
+        //     user_id: ...,
+        //     derywacja: ...
+        // })
+
+        ///....
+        // this.props.setLoginState({
+        //     state: Konstant.NOT_LOGGED_IN,
+        //     public_key: null,
+        //     user_id: null,
+        //     derywacja: null
+        // })
+
+
+        // ...
+
     }
 
 

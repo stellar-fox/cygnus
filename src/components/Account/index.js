@@ -617,7 +617,7 @@ class Account extends Component {
                                 Extended Account Number:
                             </div>
                             <div className="account-subtitle m-t-small">
-                                <span className="bg-green">{this.props.accountInfo.pubKey}</span>
+                                <span className="bg-green">{this.props.appAuth.publicKey}</span>
                             </div>
                             <div className="p-t p-b" />
                             <div className="account-title p-t">
@@ -954,6 +954,7 @@ function mapStateToProps (state) {
         ui: state.ui,
         accountInfo: state.accountInfo,
         auth: state.auth,
+        appAuth: state.appAuth,
     }
 }
 

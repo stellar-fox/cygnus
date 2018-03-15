@@ -35,7 +35,6 @@ import {
     setAccountPath,
     setLedgerSoftwareVersion,
     setPublicKey,
-    setHardwareWalletParams,
 } from "../../actions/index"
 
 
@@ -100,8 +99,6 @@ class Welcome extends Component {
         if (ledgerParams.errorCode !== null) {
             return
         }
-
-        // this.props.setHardwareWalletParams(ledgerParams)
 
         this.props.setAccountPath(ledgerParams.bip32Path)
         this.props.setLedgerSoftwareVersion(ledgerParams.softwareVersion)
@@ -605,7 +602,6 @@ const mapDispatchToProps = dispatch => {
         setPublicKey,
         setToken,
         clearToken,
-        setHardwareWalletParams,
     }, dispatch)
 }
 
