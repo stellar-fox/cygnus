@@ -150,30 +150,32 @@ const AccountNavLink = connect(
 
 
 // ...
+const style = {
+    width: 180,
+    height: "calc(100% - 100px)",
+    top: 65,
+    borderTop: "1px solid #052f5f",
+    borderBottom: "1px solid #052f5f",
+    borderLeft: "1px solid #052f5f",
+    borderTopRightRadius: "3px",
+    borderBottomRightRadius: "3px",
+    backgroundColor: "#2e5077",
+}
+
+
+
+
+// ...
 class BankDrawer extends Component {
-
-    // ...
-    static style = {
-        width: 180,
-        height: "calc(100% - 100px)",
-        top: 65,
-        borderTop: "1px solid #052f5f",
-        borderBottom: "1px solid #052f5f",
-        borderLeft: "1px solid #052f5f",
-        borderTopRightRadius: "3px",
-        borderBottomRightRadius: "3px",
-        backgroundColor: "#2e5077",
-    }
-
 
     // ...
     render = () =>
         <Drawer
-            containerStyle={BankDrawer.style}
+            containerStyle={style}
             open={this.props.drawerOpened}
         >
             <BalancesNavLink basePath={this.props.routes.balances} />
-            <PaymentsNavLink basePath={this.props.routes.payments}/>
+            <PaymentsNavLink basePath={this.props.routes.payments} />
             <AccountNavLink basePath={this.props.routes.account} />
         </Drawer>
 

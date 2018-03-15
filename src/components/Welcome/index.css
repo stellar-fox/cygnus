@@ -132,14 +132,6 @@
     font-size: 1.2rem;
 }
 
-.alert-message {
-    padding: 5px;
-    font-size: 1.4rem;
-    font-variant: small-caps;
-    background: rgba(178,34,34,0.8);
-    color: rgba(244,176,4,1);
-}
-
 .welcome-panel-left {
     display: flex;
     width: 48%;
