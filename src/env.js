@@ -1,4 +1,5 @@
 import React from "react"
+import { version } from "../package.json"
 
 
 // ...
@@ -6,7 +7,7 @@ export const appName = "Stellar Fox"
 
 
 // ...
-export const appVersion = "0.1.26"
+export const appVersion = version
 
 
 // ...
