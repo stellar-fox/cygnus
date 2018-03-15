@@ -1,6 +1,6 @@
 {
     "name": "cygnus",
-    "version": "0.1.26",
+    "version": "0.1.27",
     "private": true,
     "dependencies": {
         "@ledgerhq/hw-app-str": "^4.0.0",

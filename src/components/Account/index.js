@@ -12,7 +12,10 @@ import SnackBar from "../../frontend/SnackBar"
 import MD5 from "../../lib/md5"
 import { federationIsAliasOnly } from "../../lib/utils"
 import { emailValid } from "../../lib/utils"
-import { appName } from "../../env.js"
+import {
+    appName,
+    NotImplementedBadge,
+} from "../../env.js"
 import { config } from "../../config"
 import axios from "axios"
 import RegisterAccount from "./Register"
@@ -842,6 +845,7 @@ class Account extends Component {
                                 <div className="flex-row outline">
                                     <div>
                                         <div className="account-title">
+                                            <NotImplementedBadge />
                                             Enable two-factor authentication.
                                             (2FA)
                                         </div>
@@ -892,6 +896,7 @@ class Account extends Component {
                                 <div className="flex-row outline">
                                     <div>
                                         <div className="account-title">
+                                            <NotImplementedBadge />
                                             Add co-signers to your account.
                                             (Multisignature Verification)
                                         </div>

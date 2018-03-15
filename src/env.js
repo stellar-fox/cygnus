@@ -53,3 +53,8 @@ export const TopBarSecurityMessage = () =>
             <strong>short guide</strong>
         </a> to keep your finances secure.</span>
     </div>
+
+
+// ...
+export const NotImplementedBadge = () =>
+    <span className="red-badge">NOT IMPLEMENTED YET</span>
