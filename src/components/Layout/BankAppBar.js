@@ -10,7 +10,7 @@ import {
     openDrawer,
     closeDrawer,
     selectView,
-    setLoginState,
+    changeLoginState,
     ActionConstants,
 } from "../../actions/index"
 
@@ -48,7 +48,12 @@ class BankAppBar extends Component {
 
     // ...
     handleLogOutClick = () => {
-        this.props.setLoginState(ActionConstants.LOGGED_OUT)
+        this.props.changeLoginState({
+            loginState: ActionConstants.LOGGED_OUT,
+            publicKey: null,
+            userId: null,
+            token: null,
+        })
         this.props.logOut()
         this.props.selectView(ActionConstants.VIEW_WELCOME)
         sessionStorage.clear()
@@ -93,6 +98,6 @@ export default connect(
         openDrawer,
         closeDrawer,
         selectView,
-        setLoginState,
+        changeLoginState,
     }, dispatch)
 )(BankAppBar)

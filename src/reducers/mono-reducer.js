@@ -21,7 +21,7 @@ function createReducer (initState = {}, handlers) {
 
 
 export const authReducer = createReducer({
-    state: ActionConstants.LOGGED_OUT,
+    loginState: ActionConstants.LOGGED_OUT,
     publicKey: null,
     userId: null,
     token: null,

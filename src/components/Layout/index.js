@@ -9,6 +9,7 @@ import {
 
 import { inject } from "../../lib/utils"
 
+import LoginManager from "../../containers/LoginManager"
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import Bank from "./Bank"
@@ -21,16 +22,6 @@ import {
 // ...
 class Layout extends Component {
 
-    componentWillReceiveProps ({loggedIn,}) {
-        if (!this.props.loggedIn && loggedIn) {
-            this.tmp_onLoggedIn()
-        }
-    }
-
-    // ... TMP
-    tmp_onLoggedIn () {
-        this.props.selectView(ActionConstants.VIEW_BALANCES)
-    }
 
     // ...
     routes = {
@@ -47,6 +38,7 @@ class Layout extends Component {
     // ...
     render = () =>
         <Fragment>
+            <LoginManager />
             <LoadingModal />
             <Switch>
                 <Route exact path={this.routes.welcome}>
@@ -74,7 +66,7 @@ class Layout extends Component {
 export default connect(
     // map state to props.
     (state) => ({
-        loggedIn: state.appAuth.state === ActionConstants.LOGGED_IN ?
+        loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN ?
             true : false,
     }),
     // map dispatch to props.

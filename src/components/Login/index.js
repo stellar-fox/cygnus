@@ -3,8 +3,7 @@ import TextInputField from "../TextInputField"
 import RaisedButton from "material-ui/RaisedButton"
 import LinearProgress from "material-ui/LinearProgress"
 import {emailIsValid, passwordIsValid} from "./helper"
-import { authenticate } from "./api"
-import { ActionConstants } from "../../actions/index"
+import { ActionConstants } from "../../actions"
 import "./index.css"
 
 
@@ -42,52 +41,27 @@ export default class Login extends Component {
             progressBarOpacity: "1",
         }))
 
-        const auth = await authenticate(
+        window.lm.attemptLogin(
             this.email.state.value,
             this.password.state.value
-        )
-
-        this.setState(_ => ({
-            buttonDisabled: false,
-            progressBarOpacity: "0",
-        }))
-
-        // NOT AUTHENTICATED
-        if (!auth.authenticated) {
-            this.email.setState({ error: "Invalid Credentials.", })
-            this.password.setState({ error: "Invalid Credentials.", })
-            return
-        }
-        // ALL GOOD
-        this.props.setLoginState({
-            state: ActionConstants.LOGGED_IN,
-            publicKey: auth.pubkey,
-            userId: auth.user_id,
+        ).catch((error) => {
+            console.log(error)
+        }).then((auth) => {
+            if (!auth.authenticated) {
+                this.setState(_ => ({
+                    buttonDisabled: false,
+                    progressBarOpacity: "0",
+                }))
+                this.email.setState({ error: "Invalid Credentials.", })
+                this.password.setState({ error: "Invalid Credentials.", })
+                this.props.changeLoginState({
+                    loginState: ActionConstants.LOGGED_OUT,
+                    publicKey: null,
+                    userId: null,
+                    token: null,
+                })
+            }
         })
-
-
-        // this.props.setPublicKey(auth.pubkey)
-
-        // user_id, pubkey, token, derywacja_pat
-        // ...
-        // ...
-        // this.props.setLoginState({
-        //     state: Konstant.LOGGED_IN,
-        //     public_key: ...,
-        //     user_id: ...,
-        //     derywacja: ...
-        // })
-
-        ///....
-        // this.props.setLoginState({
-        //     state: Konstant.NOT_LOGGED_IN,
-        //     public_key: null,
-        //     user_id: null,
-        //     derywacja: null
-        // })
-
-
-        // ...
 
     }
 

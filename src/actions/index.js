@@ -153,9 +153,11 @@ export const ActionConstants = {
     VIEW_BALANCES: "Balances",
     VIEW_PAYMENTS: "Payments",
     VIEW_ACCOUNT: "Account",
+
+    // LOGIN_ATTEMPT: "LOGIN_ATTEMPT",
 }
 
-export const setLoginState = (loginState) => ({
+export const changeLoginState = (loginState) => ({
     type: "CHANGE_LOGIN_STATE",
     payload: loginState,  // Object
 })
@@ -164,3 +166,8 @@ export const selectView = (viewName) => ({
     type: "SELECT_VIEW",
     payload: viewName, // String
 })
+
+// export const emitAuthAttempt = (authAttempt) => ({
+//     type: "EMIT_AUTH_ATTEMPT",
+//     payload: authAttempt,
+// })

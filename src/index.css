@@ -181,7 +181,12 @@ span.red-badge {
     color: rgba(244,176,4,1);
     padding: 2px 6px;
     border-radius: 3px;
-    box-shadow: 2px 2px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    background-clip: padding-box;
     margin-top: 10px;
     font-weight: bold;
 }

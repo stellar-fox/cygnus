@@ -2,11 +2,7 @@ import Login from "../../components/Login"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import {
-    logIn,
-    setAccountRegistered,
-    setPublicKey,
-    setLoginState,
-    selectView,
+    changeLoginState,
 } from "../../actions/index"
 
 
@@ -16,7 +12,7 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ logIn, setAccountRegistered, setPublicKey, setLoginState, selectView,}, dispatch)
+    return bindActionCreators({ changeLoginState, }, dispatch)
 }
 
 
