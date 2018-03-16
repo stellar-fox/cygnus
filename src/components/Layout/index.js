@@ -7,6 +7,7 @@ import {
 } from "react-router-dom"
 
 import { inject } from "../../lib/utils"
+import PropTypes from "prop-types"
 
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
@@ -19,9 +20,15 @@ import Bank from "./Bank"
 class Layout extends Component {
 
     // ...
+    static contextTypes = {
+        routes: PropTypes.object,
+    }
+
+
+    // ...
     routes = {
-        welcome: this.props.basePath,
-        bank: `${this.props.basePath}bank/`,
+        welcome: this.context.routes.basePath,
+        bank: `${this.context.routes.basePath}bank/`,
     }
 
 

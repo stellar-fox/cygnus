@@ -20,8 +20,6 @@ import {
 } from "redux-devtools-extension"
 import thunk from "redux-thunk"
 
-import { inject } from "./lib/utils"
-
 import reducers from "./reducers"
 import {
     unregister,
@@ -29,7 +27,6 @@ import {
 } from "./registerServiceWorker"
 
 import {
-    appBasePath,
     appRootDomId,
     ssSaveThrottlingTime,
 } from "./env"
@@ -84,7 +81,7 @@ const StellarFox = () =>
     <Provider store={store}>
         <MuiThemeProvider muiTheme={stellarTheme}>
             <StellarRouter history={history}>
-                <Route component={inject(Layout, { basePath: appBasePath, })} />
+                <Route component={Layout} />
             </StellarRouter>
         </MuiThemeProvider>
     </Provider>
