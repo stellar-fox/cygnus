@@ -222,13 +222,10 @@ class Welcome extends Component {
             this.textInputFieldPassword.state.value !== ""
         ) {
             axios
-                .post(
-                    `${config.api}/user/authenticate/${
-                        this.textInputFieldEmail.state.value
-                    }/${
-                        this.textInputFieldPassword.state.value
-                    }`
-                )
+                .post(`${config.api}/user/authenticate/`, {
+                    email: this.textInputFieldEmail.state.value,
+                    password: this.textInputFieldPassword.state.value,
+                })
                 .then((response) => {
                     this.textInputFieldEmail.setState({
                         error: null,

@@ -102,7 +102,10 @@ class NewAccount extends Component {
 
         const userId = await axios
             .post(
-                `${config.api}/user/create/${this.state.email}/${this.state.password}`
+                `${config.api}/user/create/`, {
+                    email: this.state.email,
+                    password: this.state.password,
+                }
             )
             .then((response) => {
                 return response.data.id
@@ -161,13 +164,10 @@ class NewAccount extends Component {
         })
 
         await axios
-            .post(
-                `${config.api}/user/authenticate/${
-                    this.state.email
-                }/${
-                    this.state.password
-                }`
-            )
+            .post(`${config.api}/user/authenticate/`, {
+                email: this.state.email,
+                password: this.state.password,
+            })
             .then((response) => {
                 this.props.setAccountRegistered(true)
                 this.props.logIn({
