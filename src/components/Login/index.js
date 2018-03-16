@@ -2,23 +2,38 @@ import React, { Component } from "react"
 import TextInputField from "../TextInputField"
 import RaisedButton from "material-ui/RaisedButton"
 import LinearProgress from "material-ui/LinearProgress"
-import {emailIsValid, passwordIsValid} from "./helper"
+import {
+    emailIsValid,
+    passwordIsValid,
+} from "./helper"
 import { ActionConstants } from "../../actions"
+import PropTypes from "prop-types"
+
 import "./index.css"
 
 
+
+
+// ...
 export default class Login extends Component {
-    constructor (props) {
-        super(props)
-        this.state = {
-            buttonDisabled: false,
-            progressBarOpacity: "0",
-            error: "",
-        }
+
+    // ...
+    static contextTypes = {
+        loginManager : PropTypes.object,
     }
 
 
+    // ...
+    state = {
+        buttonDisabled: false,
+        progressBarOpacity: "0",
+        error: "",
+    }
+
+
+    // ...
     async loginValidator () {
+
         // INVALID EMAIL FORMAT
         if (!emailIsValid(this.email.state.value)) {
             this.email.setState({ error: "Invalid email format.", })
@@ -41,12 +56,12 @@ export default class Login extends Component {
             progressBarOpacity: "1",
         }))
 
-        window.lm.attemptLogin(
+        this.context.loginManager.attemptLogin(
             this.email.state.value,
             this.password.state.value
         ).catch((error) => {
             // eslint-disable-next-line no-console
-            console.log("Unknown Error:",error)
+            console.log("Unknown Error: ", error)
         }).then((auth) => {
             if (!auth.authenticated) {
                 this.setState(_ => ({
@@ -68,8 +83,9 @@ export default class Login extends Component {
     }
 
 
-    render () {
-        return (<div className="f-e-col">
+    // ...
+    render = () =>
+        <div className="f-e-col">
             <TextInputField
                 type="email"
                 floatingLabelText="Email"
@@ -96,6 +112,6 @@ export default class Login extends Component {
                 height: "1px",
                 opacity: this.state.progressBarOpacity,
             }} color="rgba(244,176,4,0.7)" />
-        </div>)
-    }
+        </div>
+
 }

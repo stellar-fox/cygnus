@@ -1,12 +1,22 @@
 import { Component, } from "react"
 import { ActionConstants } from "../../actions"
 import { authenticate } from "./api"
+import PropTypes from "prop-types"
 
+
+
+
+// ...
 export default class LoginManager extends Component {
+
+    // ...
+    static childContextTypes = {
+        loginManager : PropTypes.object,
+    }
 
 
     // ...
-    componentDidMount = () => window.lm = this
+    getChildContext = () => ({ loginManager : this, })
 
 
     // ...
@@ -46,8 +56,6 @@ export default class LoginManager extends Component {
 
 
     // ...
-    render () {
-        return null
-    }
-}
+    render = () => this.props.children
 
+}

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import {
@@ -37,8 +37,7 @@ class Layout extends Component {
 
     // ...
     render = () =>
-        <Fragment>
-            <LoginManager />
+        <LoginManager>
             <LoadingModal />
             <Switch>
                 <Route exact path={this.routes.welcome}>
@@ -57,8 +56,7 @@ class Layout extends Component {
                 </Route>
                 <Redirect to={this.routes.welcome} />
             </Switch>
-        </Fragment>
-
+        </LoginManager>
 }
 
 
