@@ -51,6 +51,7 @@ class BankAppBar extends Component {
         this.props.changeLoginState({
             loginState: ActionConstants.LOGGED_OUT,
             publicKey: null,
+            bip32Path: null,
             userId: null,
             token: null,
         })

@@ -35,6 +35,7 @@ import {
     setAccountPath,
     setLedgerSoftwareVersion,
     setPublicKey,
+    changeLoginState,
 } from "../../actions/index"
 
 
@@ -42,6 +43,8 @@ import { setToken, clearToken } from "../../actions/auth"
 
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
+
+import { ActionConstants } from "../../actions"
 
 import "./index.css"
 
@@ -99,6 +102,14 @@ class Welcome extends Component {
         if (ledgerParams.errorCode !== null) {
             return
         }
+
+        this.props.changeLoginState({
+            loginState: ActionConstants.LOGGED_IN,
+            publicKey: ledgerParams.publicKey,
+            bip32Path: ledgerParams.bip32Path,
+            userId: null,
+            token: null,
+        })
 
         this.props.setAccountPath(ledgerParams.bip32Path)
         this.props.setLedgerSoftwareVersion(ledgerParams.softwareVersion)
@@ -596,6 +607,7 @@ const mapDispatchToProps = dispatch => {
         setPublicKey,
         setToken,
         clearToken,
+        changeLoginState,
     }, dispatch)
 }
 

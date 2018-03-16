@@ -15,6 +15,7 @@ export default class LoginManager extends Component {
         return async function _attemptLogin () {
             that.props.changeLoginState({
                 loginState: ActionConstants.LOGGING_IN,
+                bip32Path: null,
                 publicKey: null,
                 userId: null,
                 token: null,
@@ -25,6 +26,7 @@ export default class LoginManager extends Component {
             if (!auth.authenticated) {
                 that.props.changeLoginState({
                     loginState: ActionConstants.LOGGING_IN,
+                    bip32Path: null,
                     publicKey: null,
                     userId: null,
                     token: null,
@@ -32,6 +34,7 @@ export default class LoginManager extends Component {
             } else {
                 that.props.changeLoginState({
                     loginState: ActionConstants.LOGGED_IN,
+                    bip32Path: auth.path,
                     publicKey: auth.pubkey,
                     userId: auth.user_id,
                     token: auth.token,

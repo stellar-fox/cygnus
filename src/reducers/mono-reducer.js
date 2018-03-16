@@ -23,6 +23,7 @@ function createReducer (initState = {}, handlers) {
 export const authReducer = createReducer({
     loginState: ActionConstants.LOGGED_OUT,
     publicKey: null,
+    bip32Path: null,
     userId: null,
     token: null,
 }, {
