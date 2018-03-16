@@ -45,15 +45,16 @@ export default class Login extends Component {
             this.email.state.value,
             this.password.state.value
         ).catch((error) => {
-            console.log(error)
+            // eslint-disable-next-line no-console
+            console.log("Unknown Error:",error)
         }).then((auth) => {
             if (!auth.authenticated) {
                 this.setState(_ => ({
                     buttonDisabled: false,
                     progressBarOpacity: "0",
                 }))
-                this.email.setState({ error: "Invalid Credentials.", })
-                this.password.setState({ error: "Invalid Credentials.", })
+                this.email.setState({ error: auth.error, })
+                this.password.setState({ error: auth.error, })
                 this.props.changeLoginState({
                     loginState: ActionConstants.LOGGED_OUT,
                     publicKey: null,
