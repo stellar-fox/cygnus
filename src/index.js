@@ -11,7 +11,6 @@ import {
 import { Provider } from "react-redux"
 
 import {
-    ConnectedRouter as Router,
     routerReducer,
     routerMiddleware,
 } from "react-router-redux"
@@ -43,6 +42,7 @@ import {
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "./frontend/themes/stellar"
 
+import StellarRouter from  "./components/StellarRouter"
 import Layout from "./components/Layout"
 
 import "./index.css"
@@ -83,9 +83,9 @@ store.subscribe(
 const StellarFox = () =>
     <Provider store={store}>
         <MuiThemeProvider muiTheme={stellarTheme}>
-            <Router history={history}>
+            <StellarRouter history={history}>
                 <Route component={inject(Layout, { basePath: appBasePath, })} />
-            </Router>
+            </StellarRouter>
         </MuiThemeProvider>
     </Provider>
 
