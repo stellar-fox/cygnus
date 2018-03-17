@@ -3,11 +3,11 @@ import Axios from "axios"
 
 
 // ...
-export const authenticate = async (username, password) => (
+export const authenticate = async (email, password) => (
     async () => {
         try {
             return (await Axios.post(
-                `${config.api}/user/authenticate/${username}/${password}`
+                `${config.api}/user/authenticate/`, {email, password,}
             )).data
         } catch (error) {
             return error.response !== undefined ?
@@ -15,7 +15,7 @@ export const authenticate = async (username, password) => (
                 {authenticated: false, error: error.message,}
         }
     }
-)(username, password)
+)(email, password)
 
 
 
