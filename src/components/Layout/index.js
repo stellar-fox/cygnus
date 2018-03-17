@@ -21,20 +21,26 @@ class Layout extends Component {
 
     // ...
     static contextTypes = {
-        routes: PropTypes.object,
+        stellarRouter: PropTypes.object.isRequired,
     }
 
 
     // ...
-    routes = {
-        welcome: this.context.routes.basePath,
-        bank: `${this.context.routes.basePath}bank/`,
-    }
+    _name = "Layout"
 
 
     // ...
-    iWelcome = inject(Welcome, { basePath: this.routes.welcome, })
-    iBank = inject(Bank, { basePath: this.routes.bank, })
+    componentWillMount = () => {
+        // ...
+        this._sr = this.context.stellarRouter
+        Object.assign(this._sr.routes, {
+            Welcome: this._sr.basePath,
+            Bank: `${this._sr.basePath}bank/`,
+        })
+
+        // ...
+        this.iWelcome = inject(Welcome, { basePath: this._sr.routes.Welcome, })
+    }
 
 
     // ...
@@ -42,21 +48,21 @@ class Layout extends Component {
         <Fragment>
             <LoadingModal />
             <Switch>
-                <Route exact path={this.routes.welcome}>
+                <Route exact path={this._sr.routes.Welcome}>
                     {
                         !this.props.loggedIn ?
                             <Route component={this.iWelcome} /> :
-                            <Redirect to={this.routes.bank} />
+                            <Redirect to={this._sr.routes.Bank} />
                     }
                 </Route>
-                <Route path={this.routes.bank}>
+                <Route path={this._sr.routes.Bank}>
                     {
                         this.props.loggedIn ?
-                            <Route component={this.iBank} /> :
-                            <Redirect to={this.routes.welcome} />
+                            <Route component={Bank} /> :
+                            <Redirect to={this._sr.routes.Welcome} />
                     }
                 </Route>
-                <Redirect to={this.routes.welcome} />
+                <Redirect to={this._sr.routes.Welcome} />
             </Switch>
         </Fragment>
 

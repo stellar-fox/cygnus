@@ -174,9 +174,9 @@ class BankDrawer extends Component {
             containerStyle={style}
             open={this.props.drawerOpened}
         >
-            <BalancesNavLink basePath={this.props.routes.balances} />
-            <PaymentsNavLink basePath={this.props.routes.payments} />
-            <AccountNavLink basePath={this.props.routes.account} />
+            <BalancesNavLink basePath={this.props.routes.Balances} />
+            <PaymentsNavLink basePath={this.props.routes.Payments} />
+            <AccountNavLink basePath={this.props.routes.Account} />
         </Drawer>
 
 }

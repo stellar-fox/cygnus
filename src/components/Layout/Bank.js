@@ -8,6 +8,7 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { selectView } from "../../actions/index"
 import { inject } from "../../lib/utils"
+import PropTypes from "prop-types"
 
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"
@@ -21,18 +22,38 @@ import Footer from "./Footer"
 class Bank extends Component {
 
     // ...
-    routes = {
-        balances: `${this.props.basePath}balances/`,
-        payments: `${this.props.basePath}payments/`,
-        account: `${this.props.basePath}account/`,
+    static contextTypes = {
+        stellarRouter: PropTypes.object.isRequired,
     }
 
 
     // ...
-    routeToViewMap = {
-        [this.routes.balances]: "Balances",
-        [this.routes.payments]: "Payments",
-        [this.routes.account]: "Account",
+    _name = "Bank"
+
+
+    // ...
+    componentWillMount = () => {
+        // ...
+        this._sr = this.context.stellarRouter
+        this._basePath = this._sr.routes[this._name]
+        Object.assign(this._sr.routes, {
+            Balances: `${this._basePath}balances/`,
+            Payments: `${this._basePath}payments/`,
+            Account: `${this._basePath}account/`,
+        })
+
+        // ...
+        this.routeToViewMap = {
+            [this._sr.routes.Balances]: "Balances",
+            [this._sr.routes.Payments]: "Payments",
+            [this._sr.routes.Account]: "Account",
+        }
+
+        // ...
+        this.iBankContent = inject(BankContent, {
+            basePath: this._basePath,
+            routes: this._sr.routes,
+        })
     }
 
 
@@ -45,20 +66,16 @@ class Bank extends Component {
 
 
     // ...
-    iBankContent = inject(BankContent, { basePath: this.props.basePath, routes: this.routes, })
-
-
-    // ...
     render = () =>
         <Fragment>
             <Switch>
                 <Redirect exact
-                    from={this.props.basePath}
-                    to={this.routes.balances}
+                    from={this._basePath}
+                    to={this._sr.routes.Balances}
                 />
             </Switch>
             <BankAppBar />
-            <BankDrawer routes={this.routes} />
+            <BankDrawer routes={this._sr.routes} />
             <Route component={this.iBankContent} />
             <Footer />
         </Fragment>

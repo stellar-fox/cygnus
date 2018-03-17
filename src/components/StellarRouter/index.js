@@ -7,19 +7,21 @@ import { appBasePath } from "../../env"
 
 
 
+
 // ...
 export default class StellarRouter extends Component {
 
     // ...
     static childContextTypes = {
-        routes: PropTypes.object,
+        stellarRouter: PropTypes.object,
     }
 
 
     // ...
     getChildContext = () => ({
-        routes: {
+        stellarRouter: {
             basePath: appBasePath,
+            routes: {},
         },
     })
 
