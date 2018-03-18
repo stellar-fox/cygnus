@@ -1,35 +1,31 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import createHistory from "history/createBrowserHistory"
-
 import {
     applyMiddleware,
     createStore,
     combineReducers,
 } from "redux"
+import thunk from "redux-thunk"
 import { Provider } from "react-redux"
-
+import createHistory from "history/createBrowserHistory"
 import {
     routerReducer,
     routerMiddleware,
 } from "react-router-redux"
-
 import {
     composeWithDevTools,
 } from "redux-devtools-extension"
-import thunk from "redux-thunk"
+import throttle from "lodash/throttle"
 
-import reducers from "./reducers"
 import {
     unregister,
     // registerServiceWorker,
 } from "./registerServiceWorker"
-
+import reducers from "./reducers"
 import {
     appRootDomId,
     ssSaveThrottlingTime,
 } from "./env"
-import throttle from "lodash/throttle"
 import {
     loadState,
     saveState,
