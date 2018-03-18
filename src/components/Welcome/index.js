@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+
+import Heading from "./heading"
+
 import axios from "axios"
 import RaisedButton from "material-ui/RaisedButton"
 import Dialog from "material-ui/Dialog"
@@ -19,7 +22,6 @@ import {
 } from "../../lib/utils"
 import {
     appName,
-    TopBarSecurityMessage,
     ledgerSupportLink
 } from "../../env.js"
 import CreateAccount from "../Account/Create"
@@ -45,6 +47,7 @@ import LedgerAuthenticator from "../LedgerAuthenticator"
 import TextInputField from "../TextInputField"
 
 import { ActionConstants } from "../../actions"
+import PropTypes from "prop-types"
 
 import "./index.css"
 
@@ -68,6 +71,12 @@ const styles = {
 }
 
 class Welcome extends Component {
+
+    // ...
+    static contextTypes = {
+        loginManager: PropTypes.object,
+    }
+    
     // ...
     constructor (props) {
         super(props)
@@ -78,17 +87,16 @@ class Welcome extends Component {
     }
 
     // ...
-    componentWillReceiveProps ({ accountInfo, }) {
-        if (!this.props.accountInfo.pubKey && accountInfo.pubKey) {
-            this.logInViaPublicKey(accountInfo.pubKey)
-        }
-    }
+    // componentWillReceiveProps ({ appAuth, }) {
+    //     if (!this.props.appAuth.publicKey && appAuth.publicKey) {
+    //         this.logInViaPublicKey(appAuth.publicKey)
+    //     }
+    // }
 
 
 
     // ...
     componentDidMount () {
-
 
         /*
          * Horizon end point is set to testnet by default.
@@ -119,13 +127,12 @@ class Welcome extends Component {
     // ...
     logInViaPublicKey (pubKey) {
 
-
-
-        if (this.props.auth.isAuthenticated) {
+        if (this.context.loginManager.isAuthenticated()) {
+            this.props.setAccountPath(`44'/148'/${this.props.appAuth.bip32Path}'`)
             axios
-                .get(`${config.api}/account/${this.props.auth.userId}`)
+                .get(`${config.api}/account/${this.props.appAuth.userId}`)
                 .then((response) => {
-                    this.props.setAccountPath(`44'/148'/${response.data.data.path}'`)
+                    this.props.setAccountPath(`44'/148'/${response.data.data.bip32Path}'`)
                 })
                 .catch((error) => {
                     // eslint-disable-next-line no-console
@@ -347,6 +354,7 @@ class Welcome extends Component {
 
         return (
             <div className="welcome-content">
+                <Heading />
                 <Dialog
                     title="Opening Your Account"
                     actions={actions}
@@ -362,7 +370,7 @@ class Welcome extends Component {
                     />
                 </Dialog>
 
-                <TopBarSecurityMessage />
+                
 
                 <div className="faded-image cash">
                     <div className="hero">

@@ -31,7 +31,7 @@ export default class LoginManager extends Component {
                 token: null,
             })
             const auth = await authenticate(email, password)
-
+            
             // NOT AUTHENTICATED
             if (!auth.authenticated) {
                 that.props.changeLoginState({
@@ -44,7 +44,7 @@ export default class LoginManager extends Component {
             } else {
                 that.props.changeLoginState({
                     loginState: ActionConstants.LOGGED_IN,
-                    bip32Path: auth.path,
+                    bip32Path: auth.bip32Path,
                     publicKey: auth.pubkey,
                     userId: auth.user_id,
                     token: auth.token,
@@ -53,6 +53,12 @@ export default class LoginManager extends Component {
             return auth
         }()
     }
+
+    //...
+    isAuthenticated = () => (
+        this.props.appAuth.loginState === ActionConstants.LOGGED_IN &&
+        this.props.appAuth.token
+    ) ? true : false
 
 
     // ...

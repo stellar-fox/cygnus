@@ -46,7 +46,7 @@ import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
 import { BigNumber } from "bignumber.js"
 import "number-to-text/converters/en-us"
-
+import PropTypes from "prop-types"
 import "./index.css"
 
 const styles = {
@@ -72,6 +72,11 @@ StellarSdk.Network.useTestNetwork()
 const server = new StellarSdk.Server(config.horizon)
 
 class Balances extends Component {
+
+    // ...
+    static contextTypes = {
+        loginManager: PropTypes.object,
+    }
 
     // ...
     constructor (props) {
@@ -111,9 +116,9 @@ class Balances extends Component {
 
     // ...
     componentDidMount () {
-        window.BigNumber = BigNumber
-        if (this.props.auth.isAuthenticated) {
-            axios.get(`${config.api}/account/${this.props.auth.userId}`)
+
+        if (this.context.loginManager.isAuthenticated()) {
+            axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
                 .then((response) => {
                     this.props.setCurrency(response.data.data.currency)
                     this.props.setCurrencyPrecision(response.data.data.precision)
@@ -1303,8 +1308,7 @@ class Balances extends Component {
                     </Dialog>
                 </div>
 
-                {(!this.props.accountInfo.registered && !this.props.auth.isReadOnly) ? (
-
+                {(!this.context.loginManager.isAuthenticated()) ? (
                     <Card className="welcome-card">
                         <CardText>
                             <div className="flex-row">
@@ -1411,7 +1415,7 @@ class Balances extends Component {
                                     label="Request"
                                     onClick={this.handleOpen.bind(this)}
                                 />
-                                {!this.props.auth.isReadOnly ?
+                                {this.context.loginManager.isAuthenticated() ?
                                     <RaisedButton
                                         backgroundColor="rgb(15,46,83)"
                                         labelColor="#d32f2f"
@@ -1632,6 +1636,7 @@ function mapStateToProps (state) {
         accountInfo: state.accountInfo,
         auth: state.auth,
         modal: state.modal,
+        appAuth: state.appAuth,
     }
 }
 
