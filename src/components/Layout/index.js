@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react"
-import { connect } from "react-redux"
 import PropTypes from "prop-types"
+import { connect } from "react-redux"
 import {
     Redirect,
     Route,
@@ -25,16 +25,11 @@ class Layout extends Component {
 
 
     // ...
-    _name = "Layout"
-
-
-    // ...
     componentWillMount = () => {
-        // ...
         this._sr = this.context.stellarRouter
         Object.assign(this._sr.routes, {
-            Welcome: this._sr.basePath,
-            Bank: `${this._sr.basePath}bank/`,
+            Welcome: this.props.basePath,
+            Bank: `${this.props.basePath}bank/`,
         })
     }
 
@@ -54,7 +49,7 @@ class Layout extends Component {
                 <Route path={this._sr.routes.Bank}>
                     {
                         this.props.loggedIn ?
-                            <Bank /> :
+                            <Bank basePath={this._sr.routes.Bank} /> :
                             <Redirect to={this._sr.routes.Welcome} />
                     }
                 </Route>

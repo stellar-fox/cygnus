@@ -1,10 +1,11 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import {
     Route,
-    Switch,
 } from "react-router-dom"
 import { connect } from "react-redux"
 import { inject } from "../../lib/utils"
+import { ConnectedSwitch as Switch } from "../StellarRouter"
 
 import Balances from "../Balances"
 import Payments from "../Payments"
@@ -19,9 +20,20 @@ import "./BankContent.css"
 class BankContent extends Component {
 
     // ...
-    iBalances = inject(Balances, { basePath: this.props.routes.Balances, })
-    iPayments = inject(Payments, { basePath: this.props.routes.Payments, })
-    iAccount = inject(Account, { basePath: this.props.routes.Account, })
+    static contextTypes = {
+        stellarRouter: PropTypes.object.isRequired,
+    }
+
+
+    // ...
+    componentWillMount = () => {
+        this._sr = this.context.stellarRouter
+
+        // ...
+        this.iBalances = inject(Balances, { basePath: this._sr.routes.Balances, })
+        this.iPayments = inject(Payments, { basePath: this._sr.routes.Payments, })
+        this.iAccount = inject(Account, { basePath: this._sr.routes.Account, })
+    }
 
 
     // ...
@@ -50,9 +62,9 @@ class BankContent extends Component {
     render = () =>
         <div style={this.state.style} className="bank-content">
             <Switch>
-                <Route path={this.props.routes.Balances} component={this.iBalances} />
-                <Route path={this.props.routes.Payments} component={this.iPayments} />
-                <Route path={this.props.routes.Account} component={this.iAccount} />
+                <Route path={this._sr.routes.Balances} component={this.iBalances} />
+                <Route path={this._sr.routes.Payments} component={this.iPayments} />
+                <Route path={this._sr.routes.Account} component={this.iAccount} />
             </Switch>
         </div>
 

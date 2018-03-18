@@ -1,10 +1,9 @@
 import React, { Component, Fragment } from "react"
+import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import PropTypes from "prop-types"
 import { Redirect } from "react-router-dom"
 import { selectView } from "../../actions/index"
-import { inject } from "../../lib/utils"
 import { ConnectedSwitch as Switch } from "../StellarRouter"
 
 import BankAppBar from "./BankAppBar"
@@ -25,18 +24,12 @@ class Bank extends Component {
 
 
     // ...
-    _name = "Bank"
-
-
-    // ...
     componentWillMount = () => {
-        // ...
         this._sr = this.context.stellarRouter
-        this._basePath = this._sr.routes[this._name]
         Object.assign(this._sr.routes, {
-            Balances: `${this._basePath}balances/`,
-            Payments: `${this._basePath}payments/`,
-            Account: `${this._basePath}account/`,
+            Balances: `${this.props.basePath}balances/`,
+            Payments: `${this.props.basePath}payments/`,
+            Account: `${this.props.basePath}account/`,
         })
 
         // ...
@@ -45,12 +38,6 @@ class Bank extends Component {
             [this._sr.routes.Payments]: "Payments",
             [this._sr.routes.Account]: "Account",
         }
-
-        // ...
-        this.iBankContent = inject(BankContent, {
-            basePath: this._basePath,
-            routes: this._sr.routes,
-        })
     }
 
 
@@ -67,13 +54,13 @@ class Bank extends Component {
         <Fragment>
             <Switch>
                 <Redirect exact
-                    from={this._basePath}
+                    from={this.props.basePath}
                     to={this._sr.routes.Balances}
                 />
             </Switch>
             <BankAppBar />
-            <BankDrawer routes={this._sr.routes} />
-            <this.iBankContent />
+            <BankDrawer />
+            <BankContent basePath={this.props.basePath} />
             <Footer />
         </Fragment>
 

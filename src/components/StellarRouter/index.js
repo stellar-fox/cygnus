@@ -1,10 +1,10 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import {
     ConnectedRouter as Router
 } from "react-router-redux"
 import { Switch } from "react-router-dom"
-import PropTypes from "prop-types"
 import { appBasePath } from "../../env"
 
 
