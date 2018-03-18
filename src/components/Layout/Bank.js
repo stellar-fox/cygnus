@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react"
 import {
     Redirect,
-    Route,
     Switch,
 } from "react-router-dom"
 import { bindActionCreators } from "redux"
@@ -76,7 +75,7 @@ class Bank extends Component {
             </Switch>
             <BankAppBar />
             <BankDrawer routes={this._sr.routes} />
-            <Route component={this.iBankContent} />
+            <this.iBankContent />
             <Footer />
         </Fragment>
 

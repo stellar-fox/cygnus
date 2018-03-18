@@ -6,7 +6,6 @@ import {
     Switch,
 } from "react-router-dom"
 
-import { inject } from "../../lib/utils"
 import PropTypes from "prop-types"
 
 import LoadingModal from "../LoadingModal"
@@ -37,9 +36,6 @@ class Layout extends Component {
             Welcome: this._sr.basePath,
             Bank: `${this._sr.basePath}bank/`,
         })
-
-        // ...
-        this.iWelcome = inject(Welcome, { basePath: this._sr.routes.Welcome, })
     }
 
 
@@ -51,14 +47,14 @@ class Layout extends Component {
                 <Route exact path={this._sr.routes.Welcome}>
                     {
                         !this.props.loggedIn ?
-                            <Route component={this.iWelcome} /> :
+                            <Welcome basePath={this._sr.routes.Welcome} /> :
                             <Redirect to={this._sr.routes.Bank} />
                     }
                 </Route>
                 <Route path={this._sr.routes.Bank}>
                     {
                         this.props.loggedIn ?
-                            <Route component={Bank} /> :
+                            <Bank /> :
                             <Redirect to={this._sr.routes.Welcome} />
                     }
                 </Route>
