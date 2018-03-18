@@ -23,7 +23,7 @@ import {
     appName,
     ledgerSupportLink
 } from "../../env.js"
-// import CreateAccount from "../Account/Create"
+
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -346,9 +346,7 @@ class Welcome extends Component {
             <div className="welcome-content">
                 <HeadingContainer />
                 
-                {/* <CreateAccount
-                    onComplete={this.setModalButtonText.bind(this)}
-                /> */}
+                
                 
 
                 

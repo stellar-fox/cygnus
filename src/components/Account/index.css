@@ -32,3 +32,15 @@
     background: rgb(15,46,83);
     border-radius: 3px;
 }
+
+.text-large {
+    font-size: 1.5rem;
+}
+
+.text-normal {
+    font-size: 1rem;
+}
+
+.text-primary {
+    color: rgb(15,46,83);
+}

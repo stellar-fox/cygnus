@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react"
 import RaisedButton from "material-ui/RaisedButton"
 import { TopBarSecurityMessage } from "../../env.js"
 import Modal from "../Modal"
+import CreateAccount from "../Account/Create"
 import "./Heading.css"
 
 
@@ -36,7 +37,12 @@ export default class Heading extends Component {
                     keyboardFocused={false}
                     onClick={this.hideSignupModal}
                 />
-            }/>
+            }>
+            <CreateAccount
+                onComplete={() => "FOO"}
+            />
+        </Modal>
+        
         <TopBarSecurityMessage />
         <div className="faded-image cash">
             <div className="hero">
