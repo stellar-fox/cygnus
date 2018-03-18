@@ -6,6 +6,7 @@ const ActionTypes = {
     SET_HW_PARAMS: "SET_HW_PARAMS",
     SELECT_VIEW: "SELECT_VIEW",
     SET_PUBKEY: "SET_PUBKEY",
+    CHANGE_MODAL_STATE: "CHANGE_MODAL_STATE",
 }
 
 
@@ -37,6 +38,14 @@ export const authReducer = createReducer({
 export const navReducer = createReducer({}, {
     [ActionTypes.SELECT_VIEW] (state, action) {
         state = { ...state, view: action.payload, }
+        return state
+    },
+})
+
+
+export const uiReducer = createReducer({}, {
+    [ActionTypes.CHANGE_MODAL_STATE] (state, action) {
+        state = { ...state, modals: Object.assign(action.payload), }
         return state
     },
 })

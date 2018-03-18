@@ -147,14 +147,12 @@ export const ActionConstants = {
     LOGGING_IN: "LOGGING_IN",
     LOGGING_OUT: "LOGGING_OUT",
     LOGGED_IN: "LOGGED_IN",
-    LOGGED_OUT: "LOGGED_OUT",  // NOT_LOGGED_IN
+    LOGGED_OUT: "LOGGED_OUT",
 
     VIEW_WELCOME: "Welcome",
     VIEW_BALANCES: "Balances",
     VIEW_PAYMENTS: "Payments",
     VIEW_ACCOUNT: "Account",
-
-    // LOGIN_ATTEMPT: "LOGIN_ATTEMPT",
 }
 
 export const changeLoginState = (loginState) => ({
@@ -167,7 +165,7 @@ export const selectView = (viewName) => ({
     payload: viewName, // String
 })
 
-// export const emitAuthAttempt = (authAttempt) => ({
-//     type: "EMIT_AUTH_ATTEMPT",
-//     payload: authAttempt,
-// })
+export const changeModalState = (modalState) => ({
+    type: "CHANGE_MODAL_STATE",
+    payload: modalState, // Object
+})

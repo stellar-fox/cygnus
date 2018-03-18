@@ -1,4 +1,4 @@
-import { authReducer, navReducer, } from "./mono-reducer"
+import { authReducer, navReducer, uiReducer, } from "./mono-reducer"
 
 import AuthenticationReducer from "./authentication-reducer"
 import AccountInfoReducer from "./account-info-reducer"
@@ -16,4 +16,5 @@ export default {
 
     appAuth: authReducer,
     appNav: navReducer,
+    appUi: uiReducer,
 }
