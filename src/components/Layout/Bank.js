@@ -1,13 +1,11 @@
 import React, { Component, Fragment } from "react"
-import {
-    Redirect,
-    Switch,
-} from "react-router-dom"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import PropTypes from "prop-types"
+import { Redirect } from "react-router-dom"
 import { selectView } from "../../actions/index"
 import { inject } from "../../lib/utils"
-import PropTypes from "prop-types"
+import { ConnectedSwitch as Switch } from "../StellarRouter"
 
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"

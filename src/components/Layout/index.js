@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
+import PropTypes from "prop-types"
 import {
     Redirect,
     Route,
-    Switch,
 } from "react-router-dom"
 
-import PropTypes from "prop-types"
+import { ConnectedSwitch as Switch } from "../StellarRouter"
 
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"

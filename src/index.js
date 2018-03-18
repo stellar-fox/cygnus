@@ -1,6 +1,5 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { Route } from "react-router-dom"
 import createHistory from "history/createBrowserHistory"
 
 import {
@@ -39,7 +38,7 @@ import {
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "./frontend/themes/stellar"
 
-import StellarRouter from  "./components/StellarRouter"
+import { StellarRouter as Router } from  "./components/StellarRouter"
 import Layout from "./components/Layout"
 
 import "./index.css"
@@ -80,9 +79,9 @@ store.subscribe(
 const StellarFox = () =>
     <Provider store={store}>
         <MuiThemeProvider muiTheme={stellarTheme}>
-            <StellarRouter history={history}>
-                <Route component={Layout} />
-            </StellarRouter>
+            <Router history={history}>
+                <Layout />
+            </Router>
         </MuiThemeProvider>
     </Provider>
 
