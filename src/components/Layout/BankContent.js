@@ -21,18 +21,18 @@ class BankContent extends Component {
 
     // ...
     static contextTypes = {
-        stellarRouter: PropTypes.object.isRequired,
+        staticRoutes: PropTypes.object.isRequired,
     }
 
 
     // ...
     componentWillMount = () => {
-        this._sr = this.context.stellarRouter
+        this._sr = this.context.staticRoutes
 
         // ...
-        this.iBalances = inject(Balances, { basePath: this._sr.routes.Balances, })
-        this.iPayments = inject(Payments, { basePath: this._sr.routes.Payments, })
-        this.iAccount = inject(Account, { basePath: this._sr.routes.Account, })
+        this.iBalances = inject(Balances, { basePath: this._sr.Balances, })
+        this.iPayments = inject(Payments, { basePath: this._sr.Payments, })
+        this.iAccount = inject(Account, { basePath: this._sr.Account, })
     }
 
 
@@ -62,9 +62,9 @@ class BankContent extends Component {
     render = () =>
         <div style={this.state.style} className="bank-content">
             <Switch>
-                <Route path={this._sr.routes.Balances} component={this.iBalances} />
-                <Route path={this._sr.routes.Payments} component={this.iPayments} />
-                <Route path={this._sr.routes.Account} component={this.iAccount} />
+                <Route path={this._sr.Balances} component={this.iBalances} />
+                <Route path={this._sr.Payments} component={this.iPayments} />
+                <Route path={this._sr.Account} component={this.iAccount} />
             </Switch>
         </div>
 

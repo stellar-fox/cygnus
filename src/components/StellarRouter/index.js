@@ -5,7 +5,6 @@ import {
     ConnectedRouter as Router
 } from "react-router-redux"
 import { Switch } from "react-router-dom"
-import { appBasePath } from "../../env"
 
 
 
@@ -25,16 +24,13 @@ export class StellarRouter extends Component {
 
     // ...
     static childContextTypes = {
-        stellarRouter: PropTypes.object,
+        staticRoutes: PropTypes.object,
     }
 
 
     // ...
     getChildContext = () => ({
-        stellarRouter: {
-            basePath: appBasePath,
-            routes: {},
-        },
+        staticRoutes: {},
     })
 
 

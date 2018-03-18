@@ -20,14 +20,14 @@ class Layout extends Component {
 
     // ...
     static contextTypes = {
-        stellarRouter: PropTypes.object.isRequired,
+        staticRoutes: PropTypes.object.isRequired,
     }
 
 
     // ...
     componentWillMount = () => {
-        this._sr = this.context.stellarRouter
-        Object.assign(this._sr.routes, {
+        this._sr = this.context.staticRoutes
+        Object.assign(this._sr, {
             Welcome: this.props.basePath,
             Bank: `${this.props.basePath}bank/`,
         })
@@ -39,21 +39,21 @@ class Layout extends Component {
         <Fragment>
             <LoadingModal />
             <Switch>
-                <Route exact path={this._sr.routes.Welcome}>
+                <Route exact path={this._sr.Welcome}>
                     {
                         !this.props.loggedIn ?
-                            <Welcome basePath={this._sr.routes.Welcome} /> :
-                            <Redirect to={this._sr.routes.Bank} />
+                            <Welcome basePath={this._sr.Welcome} /> :
+                            <Redirect to={this._sr.Bank} />
                     }
                 </Route>
-                <Route path={this._sr.routes.Bank}>
+                <Route path={this._sr.Bank}>
                     {
                         this.props.loggedIn ?
-                            <Bank basePath={this._sr.routes.Bank} /> :
-                            <Redirect to={this._sr.routes.Welcome} />
+                            <Bank basePath={this._sr.Bank} /> :
+                            <Redirect to={this._sr.Welcome} />
                     }
                 </Route>
-                <Redirect to={this._sr.routes.Welcome} />
+                <Redirect to={this._sr.Welcome} />
             </Switch>
         </Fragment>
 

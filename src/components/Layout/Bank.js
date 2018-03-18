@@ -19,14 +19,14 @@ class Bank extends Component {
 
     // ...
     static contextTypes = {
-        stellarRouter: PropTypes.object.isRequired,
+        staticRoutes: PropTypes.object.isRequired,
     }
 
 
     // ...
     componentWillMount = () => {
-        this._sr = this.context.stellarRouter
-        Object.assign(this._sr.routes, {
+        this._sr = this.context.staticRoutes
+        Object.assign(this._sr, {
             Balances: `${this.props.basePath}balances/`,
             Payments: `${this.props.basePath}payments/`,
             Account: `${this.props.basePath}account/`,
@@ -34,9 +34,9 @@ class Bank extends Component {
 
         // ...
         this.routeToViewMap = {
-            [this._sr.routes.Balances]: "Balances",
-            [this._sr.routes.Payments]: "Payments",
-            [this._sr.routes.Account]: "Account",
+            [this._sr.Balances]: "Balances",
+            [this._sr.Payments]: "Payments",
+            [this._sr.Account]: "Account",
         }
     }
 
@@ -55,7 +55,7 @@ class Bank extends Component {
             <Switch>
                 <Redirect exact
                     from={this.props.basePath}
-                    to={this._sr.routes.Balances}
+                    to={this._sr.Balances}
                 />
             </Switch>
             <BankAppBar />

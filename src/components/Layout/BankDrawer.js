@@ -171,13 +171,13 @@ class BankDrawer extends Component {
 
     // ...
     static contextTypes = {
-        stellarRouter: PropTypes.object.isRequired,
+        staticRoutes: PropTypes.object.isRequired,
     }
 
 
     // ...
     componentWillMount = () => {
-        this._sr = this.context.stellarRouter
+        this._sr = this.context.staticRoutes
     }
 
 
@@ -187,9 +187,9 @@ class BankDrawer extends Component {
             containerStyle={style}
             open={this.props.drawerOpened}
         >
-            <BalancesNavLink basePath={this._sr.routes.Balances} />
-            <PaymentsNavLink basePath={this._sr.routes.Payments} />
-            <AccountNavLink basePath={this._sr.routes.Account} />
+            <BalancesNavLink basePath={this._sr.Balances} />
+            <PaymentsNavLink basePath={this._sr.Payments} />
+            <AccountNavLink basePath={this._sr.Account} />
         </Drawer>
 
 }
