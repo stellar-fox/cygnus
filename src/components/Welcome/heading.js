@@ -1,22 +1,32 @@
 import React, { Component, Fragment } from "react"
-
 import RaisedButton from "material-ui/RaisedButton"
 import { TopBarSecurityMessage } from "../../env.js"
-
 import Modal from "../Modal"
-
 import "./Heading.css"
 
 
-
 export default class Heading extends Component {
-    
+    componentWillMount = () => this.hideSignupModal()
+
+    showSignupModal = () => this.props.changeModalState({
+        modals: {
+            signup: {
+                showing: true,
+            },
+        },
+    })
+
+    hideSignupModal = () => this.props.changeModalState({
+        modals: {
+            signup: {
+                showing: false,
+            },
+        },
+    })
+
     render = () => <Fragment>
         <Modal
-            // open={this.props.appUi.modals.signup.showing}
-            open={false}
-            show={false}
-            
+            open={this.props.appUi.modals.signup.showing}
             title="Opening Your Bank"
             actions={
                 <RaisedButton
@@ -24,7 +34,7 @@ export default class Heading extends Component {
                     labelStyle={{ color: "rgb(244,176,4)", }}
                     label="Cancel"
                     keyboardFocused={false}
-                    onClick={this.hideModal}
+                    onClick={this.hideSignupModal}
                 />
             }/>
         <TopBarSecurityMessage />
@@ -41,7 +51,7 @@ export default class Heading extends Component {
 
             <div className="flex-row-centered">
                 <RaisedButton
-                    onClick={this.showModal}
+                    onClick={this.showSignupModal}
                     backgroundColor="rgb(244,176,4)"
                     label="Get Started"
                 />

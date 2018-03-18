@@ -6,7 +6,6 @@ import HeadingContainer from "./HeadingContainer"
 
 import axios from "axios"
 import RaisedButton from "material-ui/RaisedButton"
-import Dialog from "material-ui/Dialog"
 
 import Footer from "../Layout/Footer"
 import Panel from "../Panel"
@@ -24,7 +23,7 @@ import {
     appName,
     ledgerSupportLink
 } from "../../env.js"
-import CreateAccount from "../Account/Create"
+// import CreateAccount from "../Account/Create"
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -342,33 +341,15 @@ class Welcome extends Component {
 
     // ...
     render () {
-        const actions = [
-            <RaisedButton
-                backgroundColor="rgb(15,46,83)"
-                labelStyle={{ color: "rgb(244,176,4)", }}
-                label={this.state.modalButtonText}
-                keyboardFocused={false}
-                onClick={this.handleModalClose.bind(this)}
-            />,
-        ]
-
+        
         return (
             <div className="welcome-content">
                 <HeadingContainer />
-                <Dialog
-                    title="Opening Your Account"
-                    actions={actions}
-                    modal={true}
-                    open={this.state.modalShown}
-                    onRequestClose={this.handleModalClose.bind(this)}
-                    paperClassName="modal-body"
-                    titleClassName="modal-title"
-                    autoScrollBodyContent={true}
-                >
-                    <CreateAccount
-                        onComplete={this.setModalButtonText.bind(this)}
-                    />
-                </Dialog>
+                
+                {/* <CreateAccount
+                    onComplete={this.setModalButtonText.bind(this)}
+                /> */}
+                
 
                 
 

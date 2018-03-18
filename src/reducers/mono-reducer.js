@@ -43,9 +43,11 @@ export const navReducer = createReducer({}, {
 })
 
 
-export const uiReducer = createReducer({}, {
+export const uiReducer = createReducer({
+    modals: {},
+}, {
     [ActionTypes.CHANGE_MODAL_STATE] (state, action) {
-        state = { ...state, modals: Object.assign(action.payload), }
+        state = Object.assign(...state, action.payload)
         return state
     },
 })
