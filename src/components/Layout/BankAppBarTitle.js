@@ -7,15 +7,13 @@ import "./BankAppBarTitle.css"
 
 
 
-// ...
+// <BankAppBarTitle> component
 export default connect(
-    // map state to props.
     (state) => ({
         ledgerVer: state.auth.ledgerSoftwareVersion,
         viewName: state.nav.viewName,
     })
 )(
-    // BankAppBarTitle component
     ({
         ledgerVer,
         viewName,

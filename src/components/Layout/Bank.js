@@ -20,64 +20,7 @@ import Footer from "./Footer"
 
 
 
-// Bank component
-class Bank extends Component {
-
-    // ...
-    static propTypes = {
-        match: PropTypes.object.isRequired,
-        currentPath: PropTypes.string.isRequired,
-        selectView: PropTypes.func.isRequired,
-    }
-
-
-    // relative resolve
-    rr = resolvePath(this.props.match.path)
-
-
-    // local paths
-    p = {
-        Balances: this.rr("balances/"),
-        Payments: this.rr("payments/"),
-        Account: this.rr("account/"),
-    }
-
-
-    // route mapping
-    routeToViewMap = {
-        [this.p.Balances]: "Balances",
-        [this.p.Payments]: "Payments",
-        [this.p.Account]: "Account",
-    }
-
-
-    // ...
-    componentWillReceiveProps = ({ currentPath, }) => {
-        if (currentPath !== this.props.currentPath) {
-            this.props.selectView(this.routeToViewMap[currentPath])
-        }
-    }
-
-
-    // ...
-    render = () =>
-        <Fragment>
-            <Switch>
-                <Redirect exact
-                    from={this.rr(".")}
-                    to={this.p.Balances}
-                />
-            </Switch>
-            <BankAppBar />
-            <BankDrawer paths={this.p} />
-            <BankContent paths={this.p} />
-            <Footer />
-        </Fragment>
-
-}
-
-
-// ...
+// <Bank> component
 export default withRouter(connect(
     // map state to props.
     (state) => ({
@@ -88,4 +31,59 @@ export default withRouter(connect(
     (dispatch) => bindActionCreators({
         selectView,
     }, dispatch)
-)(Bank))
+)(
+    class Bank extends Component {
+
+        // ...
+        static propTypes = {
+            match: PropTypes.object.isRequired,
+            currentPath: PropTypes.string.isRequired,
+            selectView: PropTypes.func.isRequired,
+        }
+
+
+        // relative resolve
+        rr = resolvePath(this.props.match.path)
+
+
+        // local paths
+        p = {
+            Balances: this.rr("balances/"),
+            Payments: this.rr("payments/"),
+            Account: this.rr("account/"),
+        }
+
+
+        // route mapping
+        routeToViewMap = {
+            [this.p.Balances]: "Balances",
+            [this.p.Payments]: "Payments",
+            [this.p.Account]: "Account",
+        }
+
+
+        // ...
+        componentWillReceiveProps = ({ currentPath, }) => {
+            if (currentPath !== this.props.currentPath) {
+                this.props.selectView(this.routeToViewMap[currentPath])
+            }
+        }
+
+
+        // ...
+        render = () =>
+            <Fragment>
+                <Switch>
+                    <Redirect exact
+                        from={this.rr(".")}
+                        to={this.p.Balances}
+                    />
+                </Switch>
+                <BankAppBar />
+                <BankDrawer paths={this.p} />
+                <BankContent paths={this.p} />
+                <Footer />
+            </Fragment>
+
+    }
+))

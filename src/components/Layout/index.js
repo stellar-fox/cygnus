@@ -19,57 +19,54 @@ import Bank from "./Bank"
 
 
 
-// ...
-class Layout extends Component {
-
-    // ...
-    static propTypes = {
-        loggedIn: PropTypes.bool.isRequired,
-        match: PropTypes.object.isRequired,
-    }
-
-
-    // relative resolve
-    rr = resolvePath(this.props.match.path)
-
-
-    // local paths
-    p = {
-        Welcome: this.rr("."),
-        Bank: this.rr("bank/"),
-    }
-
-
-    // ...
-    render = () =>
-        <Fragment>
-            <LoadingModal />
-            <Switch>
-                <Route exact path={this.p.Welcome}>
-                    {
-                        !this.props.loggedIn ?
-                            <Welcome /> :
-                            <Redirect to={this.p.Bank} />
-                    }
-                </Route>
-                <Route path={this.p.Bank}>
-                    {
-                        this.props.loggedIn ?
-                            <Bank /> :
-                            <Redirect to={this.p.Welcome} />
-                    }
-                </Route>
-                <Redirect to={this.p.Welcome} />
-            </Switch>
-        </Fragment>
-
-}
-
-
-// ...
+// <Layout> component
 export default withRouter(connect(
-    // map state to props.
     (state) => ({
         loggedIn: state.auth.isHorizonLoggedIn,
     })
-)(Layout))
+)(
+    class Layout extends Component {
+
+        // ...
+        static propTypes = {
+            loggedIn: PropTypes.bool.isRequired,
+            match: PropTypes.object.isRequired,
+        }
+
+
+        // relative resolve
+        rr = resolvePath(this.props.match.path)
+
+
+        // local paths
+        p = {
+            Welcome: this.rr("."),
+            Bank: this.rr("bank/"),
+        }
+
+
+        // ...
+        render = () =>
+            <Fragment>
+                <LoadingModal />
+                <Switch>
+                    <Route exact path={this.p.Welcome}>
+                        {
+                            !this.props.loggedIn ?
+                                <Welcome /> :
+                                <Redirect to={this.p.Bank} />
+                        }
+                    </Route>
+                    <Route path={this.p.Bank}>
+                        {
+                            this.props.loggedIn ?
+                                <Bank /> :
+                                <Redirect to={this.p.Welcome} />
+                        }
+                    </Route>
+                    <Redirect to={this.p.Welcome} />
+                </Switch>
+            </Fragment>
+
+    }
+))
