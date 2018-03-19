@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { NavLink } from "react-router-dom"
 import { push } from "react-router-redux"
+import { bankDrawerWidth } from "../../env"
 
 import Drawer from "material-ui/Drawer"
 
@@ -152,7 +153,7 @@ const AccountNavLink = connect(
 
 // ...
 const style = {
-    width: 180,
+    width: bankDrawerWidth,
     height: "calc(100% - 100px)",
     top: 65,
     borderTop: "1px solid #052f5f",

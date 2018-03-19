@@ -5,6 +5,10 @@ import {
 } from "react-router-dom"
 import { connect } from "react-redux"
 import { inject } from "../../lib/utils"
+import {
+    bankDrawerWidth,
+    contentPaneSeparation,
+} from "../../env"
 import { ConnectedSwitch as Switch } from "../StellarRouter"
 
 import Balances from "../Balances"
@@ -38,7 +42,10 @@ class BankContent extends Component {
 
     // ...
     computeStyle = (drawerOpened) => ({
-        paddingLeft: drawerOpened ? 200 : 20,
+        paddingLeft:
+            drawerOpened ?
+                bankDrawerWidth + contentPaneSeparation :
+                contentPaneSeparation,
     })
 
 
