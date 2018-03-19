@@ -157,5 +157,5 @@ export const inject = (C, p) => (props) => <C {...{ ...props, ...p, }} />
 export const Provide = ({ children, ...rest }) =>
     React.Children.map(
         children,
-        (child) => React.cloneElement(child, rest)
+        (child) => child ? React.cloneElement(child, rest) : child
     )
