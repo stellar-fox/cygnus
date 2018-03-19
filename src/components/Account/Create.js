@@ -61,7 +61,13 @@ class NewAccount extends Component {
         })
 
         if (stepIndex >= 2) {
-            this.props.onComplete("LOGIN")
+            this.props.onComplete({
+                loginState: ActionConstants.LOGGED_IN,
+                publicKey: this.props.appAuth.publicKey,
+                bip32Path: this.props.appAuth.bip32Path,
+                userId: this.props.appAuth.userId,
+                token: this.props.appAuth.token,
+            })
         }
     }
 
@@ -146,8 +152,7 @@ class NewAccount extends Component {
                 password: this.state.password,
             })
             .then((response) => {
-                this.props.changeLoginState({
-                    // loginState: ActionConstants.LOGGED_IN,    
+                this.props.changeLoginState({   
                     publicKey: response.data.pubkey,
                     bip32Path: response.data.bip32Path,
                     userId: response.data.user_id,
@@ -426,6 +431,10 @@ class NewAccount extends Component {
     }
 }
 
+const matchStateToProps = (state) => ({
+    appAuth: state.appAuth,
+})
+
 function matchDispatchToProps (dispatch) {
     return bindActionCreators(
         {
@@ -442,4 +451,4 @@ function matchDispatchToProps (dispatch) {
     )
 }
 
-export default connect(null, matchDispatchToProps)(NewAccount)
+export default connect(matchStateToProps, matchDispatchToProps)(NewAccount)

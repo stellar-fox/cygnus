@@ -8,6 +8,7 @@ import "./Heading.css"
 
 export default class Heading extends Component {
     
+    // ...
     showSignupModal = () => this.props.changeModalState({
         modals: {
             signup: {
@@ -16,6 +17,8 @@ export default class Heading extends Component {
         },
     })
 
+
+    // ...
     hideSignupModal = () => this.props.changeModalState({
         modals: {
             signup: {
@@ -24,10 +27,20 @@ export default class Heading extends Component {
         },
     })
 
+
+    // ...
+    login = (loginObj) => {
+        this.hideSignupModal()
+        this.props.changeLoginState(loginObj)
+    }
+
+
+    // ...
     render = () => <Fragment>
         <Modal
             open={
-                this.props.appUi.modals.signup ?
+                typeof this.props.appUi.modals !== "undefined" &&
+                typeof this.props.appUi.modals.signup !== "undefined" ?
                     this.props.appUi.modals.signup.showing : false
             }
             title="Opening Your Bank"
@@ -41,7 +54,7 @@ export default class Heading extends Component {
                 />
             }>
             <CreateAccount
-                onComplete={() => "FOO"}
+                onComplete={this.login}
             />
         </Modal>
         

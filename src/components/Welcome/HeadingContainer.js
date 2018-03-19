@@ -2,6 +2,7 @@ import Heading from "./Heading"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import {
+    changeLoginState,
     changeModalState,
 } from "../../actions/index"
 
@@ -12,7 +13,10 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ changeModalState, }, dispatch)
+    return bindActionCreators({
+        changeLoginState,
+        changeModalState,
+    }, dispatch)
 }
 
 
