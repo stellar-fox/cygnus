@@ -1,8 +1,7 @@
 import React, { Component } from "react"
-import {
-    Route,
-} from "react-router-dom"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
+import { Route } from "react-router-dom"
 import {
     bankDrawerWidth,
     contentPaneSeparation,
@@ -20,6 +19,13 @@ import "./BankContent.css"
 
 // ...
 class BankContent extends Component {
+
+    // ...
+    static propTypes = {
+        drawerOpened: PropTypes.bool.isRequired,
+        paths: PropTypes.object.isRequired,
+    }
+
 
     // ...
     computeStyle = (drawerOpened) => ({

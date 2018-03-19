@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { NavLink } from "react-router-dom"
@@ -168,6 +169,13 @@ const style = {
 
 // ...
 class BankDrawer extends Component {
+
+    // ...
+    static propTypes = {
+        drawerOpened: PropTypes.bool.isRequired,
+        paths: PropTypes.object.isRequired,
+    }
+
 
     // ...
     render = () =>

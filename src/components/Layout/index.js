@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import {
     Redirect,
@@ -20,6 +21,13 @@ import Bank from "./Bank"
 
 // ...
 class Layout extends Component {
+
+    // ...
+    static propTypes = {
+        loggedIn: PropTypes.bool.isRequired,
+        match: PropTypes.object.isRequired,
+    }
+
 
     // relative resolve
     rr = resolvePath(this.props.match.path)

@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react"
+import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import {
@@ -22,6 +23,14 @@ import Footer from "./Footer"
 // Bank component
 class Bank extends Component {
 
+    // ...
+    static propTypes = {
+        match: PropTypes.object.isRequired,
+        currentPath: PropTypes.string.isRequired,
+        selectView: PropTypes.func.isRequired,
+    }
+
+
     // relative resolve
     rr = resolvePath(this.props.match.path)
 
@@ -43,9 +52,9 @@ class Bank extends Component {
 
 
     // ...
-    componentWillReceiveProps = ({ path, }) => {
-        if (path !== this.props.path) {
-            this.props.selectView(this.routeToViewMap[path])
+    componentWillReceiveProps = ({ currentPath, }) => {
+        if (currentPath !== this.props.currentPath) {
+            this.props.selectView(this.routeToViewMap[currentPath])
         }
     }
 
@@ -72,7 +81,7 @@ class Bank extends Component {
 export default withRouter(connect(
     // map state to props.
     (state) => ({
-        path: state.router.location.pathname,
+        currentPath: state.router.location.pathname,
     }),
 
     // map dispatch to props.
