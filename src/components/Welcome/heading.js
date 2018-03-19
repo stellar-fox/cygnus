@@ -7,8 +7,7 @@ import "./Heading.css"
 
 
 export default class Heading extends Component {
-    componentWillMount = () => this.hideSignupModal()
-
+    
     showSignupModal = () => this.props.changeModalState({
         modals: {
             signup: {
@@ -27,7 +26,10 @@ export default class Heading extends Component {
 
     render = () => <Fragment>
         <Modal
-            open={this.props.appUi.modals.signup.showing}
+            open={
+                this.props.appUi.modals.signup ?
+                    this.props.appUi.modals.signup.showing : false
+            }
             title="Opening Your Bank"
             actions={
                 <RaisedButton

@@ -29,6 +29,8 @@ import {
     setAccountPath,
     setLedgerSoftwareVersion,
     setPublicKey,
+    changeLoginState,
+    ActionConstants,
 } from "../../actions/index"
 
 class NewAccount extends Component {
@@ -144,18 +146,17 @@ class NewAccount extends Component {
                 password: this.state.password,
             })
             .then((response) => {
-                this.props.setPublicKey(ledgerData.publicKey)
-                this.props.setLedgerSoftwareVersion(ledgerData.softwareVersion)
-                this.props.setAccountPath(ledgerData.bip32Path)
-                this.props.setAccountRegistered(true)
-                this.props.logIn({
+                this.props.changeLoginState({
+                    // loginState: ActionConstants.LOGGED_IN,    
+                    publicKey: response.data.pubkey,
+                    bip32Path: response.data.bip32Path,
                     userId: response.data.user_id,
                     token: response.data.token,
                 })
                 return response
             })
             .catch((error) => {
-                console.log(error.response.statusText) // eslint-disable-line no-console
+                console.log(error) // eslint-disable-line no-console
             })
 
         this.handleNext.call(this)
@@ -435,6 +436,7 @@ function matchDispatchToProps (dispatch) {
             setAccountPath,
             setLedgerSoftwareVersion,
             setPublicKey,
+            changeLoginState,
         },
         dispatch
     )
