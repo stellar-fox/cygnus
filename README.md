@@ -12,7 +12,7 @@
 <br />
 
 
-# Stellar Fox
+# Stellar Fox (frontend)
 Moving Value at the Speed of Light
 
 <br />
