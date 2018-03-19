@@ -9,6 +9,7 @@ import thunk from "redux-thunk"
 import { Provider } from "react-redux"
 import createHistory from "history/createBrowserHistory"
 import {
+    ConnectedRouter as Router,
     routerReducer,
     routerMiddleware,
 } from "react-router-redux"
@@ -34,7 +35,6 @@ import {
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "./frontend/themes/stellar"
 
-import { StellarRouter as Router } from  "./components/StellarRouter"
 import { appBasePath } from "./env"
 import Layout from "./components/Layout"
 
@@ -44,7 +44,9 @@ import "./index.css"
 
 
 // browser history
-const history = createHistory()
+const history = createHistory({
+    basename: appBasePath,
+})
 
 
 // store with router-redux integration and redux-devtools-extension
@@ -77,7 +79,7 @@ const StellarFox = () =>
     <Provider store={store}>
         <MuiThemeProvider muiTheme={stellarTheme}>
             <Router history={history}>
-                <Layout basePath={appBasePath} />
+                <Layout />
             </Router>
         </MuiThemeProvider>
     </Provider>

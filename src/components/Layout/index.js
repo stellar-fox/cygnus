@@ -1,12 +1,15 @@
 import React, { Component, Fragment } from "react"
-import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import {
     Redirect,
     Route,
+    withRouter,
 } from "react-router-dom"
 
-import { ConnectedSwitch as Switch } from "../StellarRouter"
+import {
+    ConnectedSwitch as Switch,
+    resolvePath,
+} from "../StellarRouter"
 
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
@@ -18,19 +21,14 @@ import Bank from "./Bank"
 // ...
 class Layout extends Component {
 
-    // ...
-    static contextTypes = {
-        staticRoutes: PropTypes.object.isRequired,
-    }
+    // relative resolve
+    rr = resolvePath(this.props.match.path)
 
 
-    // ...
-    componentWillMount = () => {
-        this._sr = this.context.staticRoutes
-        Object.assign(this._sr, {
-            Welcome: this.props.basePath,
-            Bank: `${this.props.basePath}bank/`,
-        })
+    // local paths
+    p = {
+        Welcome: this.rr("."),
+        Bank: this.rr("bank/"),
     }
 
 
@@ -39,21 +37,21 @@ class Layout extends Component {
         <Fragment>
             <LoadingModal />
             <Switch>
-                <Route exact path={this._sr.Welcome}>
+                <Route exact path={this.p.Welcome}>
                     {
                         !this.props.loggedIn ?
-                            <Welcome basePath={this._sr.Welcome} /> :
-                            <Redirect to={this._sr.Bank} />
+                            <Welcome /> :
+                            <Redirect to={this.p.Bank} />
                     }
                 </Route>
-                <Route path={this._sr.Bank}>
+                <Route path={this.p.Bank}>
                     {
                         this.props.loggedIn ?
-                            <Bank basePath={this._sr.Bank} /> :
-                            <Redirect to={this._sr.Welcome} />
+                            <Bank /> :
+                            <Redirect to={this.p.Welcome} />
                     }
                 </Route>
-                <Redirect to={this._sr.Welcome} />
+                <Redirect to={this.p.Welcome} />
             </Switch>
         </Fragment>
 
@@ -61,9 +59,9 @@ class Layout extends Component {
 
 
 // ...
-export default connect(
+export default withRouter(connect(
     // map state to props.
     (state) => ({
         loggedIn: state.auth.isHorizonLoggedIn,
     })
-)(Layout)
+)(Layout))

@@ -1,10 +1,15 @@
 import React, { Component, Fragment } from "react"
-import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { Redirect } from "react-router-dom"
+import {
+    Redirect,
+    withRouter,
+} from "react-router-dom"
 import { selectView } from "../../actions/index"
-import { ConnectedSwitch as Switch } from "../StellarRouter"
+import {
+    ConnectedSwitch as Switch,
+    resolvePath,
+} from "../StellarRouter"
 
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"
@@ -17,27 +22,23 @@ import Footer from "./Footer"
 // Bank component
 class Bank extends Component {
 
-    // ...
-    static contextTypes = {
-        staticRoutes: PropTypes.object.isRequired,
+    // relative resolve
+    rr = resolvePath(this.props.match.path)
+
+
+    // local paths
+    p = {
+        Balances: this.rr("balances/"),
+        Payments: this.rr("payments/"),
+        Account: this.rr("account/"),
     }
 
 
-    // ...
-    componentWillMount = () => {
-        this._sr = this.context.staticRoutes
-        Object.assign(this._sr, {
-            Balances: `${this.props.basePath}balances/`,
-            Payments: `${this.props.basePath}payments/`,
-            Account: `${this.props.basePath}account/`,
-        })
-
-        // ...
-        this.routeToViewMap = {
-            [this._sr.Balances]: "Balances",
-            [this._sr.Payments]: "Payments",
-            [this._sr.Account]: "Account",
-        }
+    // route mapping
+    routeToViewMap = {
+        [this.p.Balances]: "Balances",
+        [this.p.Payments]: "Payments",
+        [this.p.Account]: "Account",
     }
 
 
@@ -54,13 +55,13 @@ class Bank extends Component {
         <Fragment>
             <Switch>
                 <Redirect exact
-                    from={this.props.basePath}
-                    to={this._sr.Balances}
+                    from={this.rr(".")}
+                    to={this.p.Balances}
                 />
             </Switch>
             <BankAppBar />
-            <BankDrawer />
-            <BankContent basePath={this.props.basePath} />
+            <BankDrawer paths={this.p} />
+            <BankContent paths={this.p} />
             <Footer />
         </Fragment>
 
@@ -68,7 +69,7 @@ class Bank extends Component {
 
 
 // ...
-export default connect(
+export default withRouter(connect(
     // map state to props.
     (state) => ({
         path: state.router.location.pathname,
@@ -78,4 +79,4 @@ export default connect(
     (dispatch) => bindActionCreators({
         selectView,
     }, dispatch)
-)(Bank)
+)(Bank))

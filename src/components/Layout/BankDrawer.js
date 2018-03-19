@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { NavLink } from "react-router-dom"
@@ -171,26 +170,14 @@ const style = {
 class BankDrawer extends Component {
 
     // ...
-    static contextTypes = {
-        staticRoutes: PropTypes.object.isRequired,
-    }
-
-
-    // ...
-    componentWillMount = () => {
-        this._sr = this.context.staticRoutes
-    }
-
-
-    // ...
     render = () =>
         <Drawer
             containerStyle={style}
             open={this.props.drawerOpened}
         >
-            <BalancesNavLink basePath={this._sr.Balances} />
-            <PaymentsNavLink basePath={this._sr.Payments} />
-            <AccountNavLink basePath={this._sr.Account} />
+            <BalancesNavLink basePath={this.props.paths.Balances} />
+            <PaymentsNavLink basePath={this.props.paths.Payments} />
+            <AccountNavLink basePath={this.props.paths.Account} />
         </Drawer>
 
 }

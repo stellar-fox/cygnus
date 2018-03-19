@@ -1,10 +1,8 @@
 import React, { Component } from "react"
-import PropTypes from "prop-types"
 import {
     Route,
 } from "react-router-dom"
 import { connect } from "react-redux"
-import { inject } from "../../lib/utils"
 import {
     bankDrawerWidth,
     contentPaneSeparation,
@@ -22,23 +20,6 @@ import "./BankContent.css"
 
 // ...
 class BankContent extends Component {
-
-    // ...
-    static contextTypes = {
-        staticRoutes: PropTypes.object.isRequired,
-    }
-
-
-    // ...
-    componentWillMount = () => {
-        this._sr = this.context.staticRoutes
-
-        // ...
-        this.iBalances = inject(Balances, { basePath: this._sr.Balances, })
-        this.iPayments = inject(Payments, { basePath: this._sr.Payments, })
-        this.iAccount = inject(Account, { basePath: this._sr.Account, })
-    }
-
 
     // ...
     computeStyle = (drawerOpened) => ({
@@ -69,9 +50,9 @@ class BankContent extends Component {
     render = () =>
         <div style={this.state.style} className="bank-content">
             <Switch>
-                <Route path={this._sr.Balances} component={this.iBalances} />
-                <Route path={this._sr.Payments} component={this.iPayments} />
-                <Route path={this._sr.Account} component={this.iAccount} />
+                <Route path={this.props.paths.Balances} component={Balances} />
+                <Route path={this.props.paths.Payments} component={Payments} />
+                <Route path={this.props.paths.Account} component={Account} />
             </Switch>
         </div>
 
