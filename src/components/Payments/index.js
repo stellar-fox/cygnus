@@ -155,7 +155,7 @@ class Payments extends Component {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server
             .payments()
-            .forAccount(this.props.accountInfo.pubKey)
+            .forAccount(this.props.appAuth.publicKey)
             .order("desc")
             .limit(5)
             .call()
@@ -164,7 +164,7 @@ class Payments extends Component {
                     let link = ""
                     switch (r.type) {
                         case "create_account":
-                            if (r.funder === this.props.accountInfo.pubKey) {
+                            if (r.funder === this.props.appAuth.publicKey) {
                                 link = gravatarLink(r.account)
                             } else {
                                 link = gravatarLink(r.funder)
@@ -173,7 +173,7 @@ class Payments extends Component {
 
                         // payment
                         default:
-                            if(r.to === this.props.accountInfo.pubKey) {
+                            if(r.to === this.props.appAuth.publicKey) {
                                 link = gravatarLink(r.from)
                             } else {
                                 link = gravatarLink(r.to)
@@ -257,7 +257,7 @@ class Payments extends Component {
                     */
                     if (
                         message.type === "create_account" &&
-                        message.source_account === this.props.accountInfo.pubKey
+                        message.source_account === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
                         this.setState({
@@ -274,7 +274,7 @@ class Payments extends Component {
                      */
                     if (
                         message.type === "create_account" &&
-                        message.account === this.props.accountInfo.pubKey
+                        message.account === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
                         this.setState({
@@ -290,7 +290,7 @@ class Payments extends Component {
                      */
                     if (
                         message.type === "payment" &&
-                        message.to === this.props.accountInfo.pubKey
+                        message.to === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
                         this.setState({
@@ -312,7 +312,7 @@ class Payments extends Component {
                      */
                     if (
                         message.type === "payment" &&
-                        message.from === this.props.accountInfo.pubKey
+                        message.from === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
                         this.setState({
@@ -337,7 +337,7 @@ class Payments extends Component {
     updateAccount () {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server
-            .loadAccount(this.props.accountInfo.pubKey)
+            .loadAccount(this.props.appAuth.publicKey)
             .catch(StellarSdk.NotFoundError, function (_err) {
                 throw new Error("The destination account does not exist!")
             })
@@ -347,7 +347,7 @@ class Payments extends Component {
                     server
                         .payments()
                         .limit(5)
-                        .forAccount(this.props.accountInfo.pubKey)
+                        .forAccount(this.props.appAuth.publicKey)
                         .order("desc")
                         .call()
                         .then((paymentsResult) => {
@@ -355,7 +355,7 @@ class Payments extends Component {
                                 let link = ""
                                 switch (r.type) {
                                     case "create_account":
-                                        if (r.funder === this.props.accountInfo.pubKey) {
+                                        if (r.funder === this.props.appAuth.publicKey) {
                                             link = gravatarLink(r.account)
                                         } else {
                                             link = gravatarLink(r.funder)
@@ -364,7 +364,7 @@ class Payments extends Component {
 
                                     // payment
                                     default:
-                                        if (r.to === this.props.accountInfo.pubKey) {
+                                        if (r.to === this.props.appAuth.publicKey) {
                                             link = gravatarLink(r.from)
                                         } else {
                                             link = gravatarLink(r.to)
@@ -427,7 +427,7 @@ class Payments extends Component {
             let server = new StellarSdk.Server(this.props.accountInfo.horizon)
             server
                 .transactions()
-                .forAccount(this.props.accountInfo.pubKey)
+                .forAccount(this.props.appAuth.publicKey)
                 .order("desc")
                 .limit(5)
                 .call()
@@ -474,7 +474,7 @@ class Payments extends Component {
                                 <span>New Acccount Created </span>
                                 <span className="account-direction">
                                     {effect.account ===
-                                    this.props.accountInfo.pubKey
+                                    this.props.appAuth.publicKey
                                         ? "Yours"
                                         : "Theirs"}
                                 </span>
@@ -518,7 +518,7 @@ class Payments extends Component {
                                     <span>Acccount Removed </span>
                                     <span className="account-direction">
                                         {effect.account ===
-                                        this.props.accountInfo.pubKey
+                                        this.props.appAuth.publicKey
                                             ? "Yours"
                                             : "Theirs"}
                                     </span>
@@ -556,7 +556,7 @@ class Payments extends Component {
                                 <span>Acccount Credited </span>
                                 <span className="account-direction">
                                     {effect.account ===
-                                    this.props.accountInfo.pubKey
+                                    this.props.appAuth.publicKey
                                         ? "Yours"
                                         : "Theirs"}
                                 </span>
@@ -605,7 +605,7 @@ class Payments extends Component {
                                 <span>Acccount Debited </span>
                                 <span className="account-direction">
                                     {effect.account ===
-                                    this.props.accountInfo.pubKey
+                                    this.props.appAuth.publicKey
                                         ? "Yours"
                                         : "Theirs"}
                                 </span>
@@ -654,7 +654,7 @@ class Payments extends Component {
                                 <span>Signer Created ✎ </span>
                                 <span className="account-direction">
                                     {effect.public_key ===
-                                    this.props.accountInfo.pubKey
+                                    this.props.appAuth.publicKey
                                         ? "You"
                                         : "They"}
                                 </span>
@@ -706,7 +706,7 @@ class Payments extends Component {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server
             .payments()
-            .forAccount(this.props.accountInfo.pubKey)
+            .forAccount(this.props.appAuth.publicKey)
             .order("desc")
             .cursor(this.state.cursorRight)
             .limit(5)
@@ -716,7 +716,7 @@ class Payments extends Component {
                     let link = ""
                     switch (r.type) {
                         case "create_account":
-                            if (r.funder === this.props.accountInfo.pubKey) {
+                            if (r.funder === this.props.appAuth.publicKey) {
                                 link = gravatarLink(r.account)
                             } else {
                                 link = gravatarLink(r.funder)
@@ -725,7 +725,7 @@ class Payments extends Component {
 
                         // payment
                         default:
-                            if (r.to === this.props.accountInfo.pubKey) {
+                            if (r.to === this.props.appAuth.publicKey) {
                                 link = gravatarLink(r.from)
                             } else {
                                 link = gravatarLink(r.to)
@@ -767,7 +767,7 @@ class Payments extends Component {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server
             .payments()
-            .forAccount(this.props.accountInfo.pubKey)
+            .forAccount(this.props.appAuth.publicKey)
             .order("asc")
             .cursor(this.state.cursorLeft)
             .limit(5)
@@ -778,7 +778,7 @@ class Payments extends Component {
                     let link = ""
                     switch (r.type) {
                         case "create_account":
-                            if (r.funder === this.props.accountInfo.pubKey) {
+                            if (r.funder === this.props.appAuth.publicKey) {
                                 link = gravatarLink(r.account)
                             } else {
                                 link = gravatarLink(r.funder)
@@ -787,7 +787,7 @@ class Payments extends Component {
 
                         // payment
                         default:
-                            if (r.to === this.props.accountInfo.pubKey) {
+                            if (r.to === this.props.appAuth.publicKey) {
                                 link = gravatarLink(r.from)
                             } else {
                                 link = gravatarLink(r.to)
@@ -831,7 +831,7 @@ class Payments extends Component {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server
             .transactions()
-            .forAccount(this.props.accountInfo.pubKey)
+            .forAccount(this.props.appAuth.publicKey)
             .order("desc")
             .cursor(this.state.txCursorRight)
             .limit(5)
@@ -861,7 +861,7 @@ class Payments extends Component {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server
             .transactions()
-            .forAccount(this.props.accountInfo.pubKey)
+            .forAccount(this.props.appAuth.publicKey)
             .order("asc")
             .cursor(this.state.txCursorLeft)
             .limit(5)
@@ -893,7 +893,7 @@ class Payments extends Component {
         switch (payment.type) {
             case "create_account":
                 rendered =
-                    payment.funder === this.props.accountInfo.pubKey ? (
+                    payment.funder === this.props.appAuth.publicKey ? (
                         <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>card_giftcard</i>
                     ) : (
                         <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>account_balance</i>
@@ -904,7 +904,7 @@ class Payments extends Component {
                 break
             default:
                 rendered =
-                    payment.to === this.props.accountInfo.pubKey ? (
+                    payment.to === this.props.appAuth.publicKey ? (
                         <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>account_balance_wallet</i>
                     ) : (
                         <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>payment</i>
@@ -921,7 +921,7 @@ class Payments extends Component {
         switch (payment.type) {
             case "create_account":
                 rendered =
-                    (payment.funder === this.props.accountInfo.pubKey ?
+                    (payment.funder === this.props.appAuth.publicKey ?
                         (<span>&#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.starting_balance)}</span>) :
                         (<span>&#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.starting_balance)}</span>))
                 break
@@ -930,12 +930,12 @@ class Payments extends Component {
                 break
             default:
                 if (getAssetCode(payment) === "XLM") {
-                    rendered = (payment.to === this.props.accountInfo.pubKey ?
+                    rendered = (payment.to === this.props.appAuth.publicKey ?
                         (<span>&#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.amount)}</span>) :
                         (<span>&#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.amount)}</span>))
                 } else {
                     rendered =
-                        (payment.to === this.props.accountInfo.pubKey ?
+                        (payment.to === this.props.appAuth.publicKey ?
                             (<span>&#x0002B; {payment.amount} {getAssetCode(payment)}</span>) :
                             (<span>&#x02212; {payment.amount} {getAssetCode(payment)}</span>))
                 }
@@ -1343,6 +1343,7 @@ function mapStateToProps (state) {
         loadingModal: state.loadingModal,
         ui: state.ui,
         isAuthenticated: state.auth.isAuthenticated,
+        appAuth: state.appAuth,
     }
 }
 
