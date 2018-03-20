@@ -16,12 +16,13 @@ import LoginManager from "../../containers/LoginManager"
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import Bank from "./Bank"
+import { ActionConstants } from "../../actions"
 
 
 // <Layout> component
 export default withRouter(connect(
     (state) => ({
-        loggedIn: state.auth.isHorizonLoggedIn,
+        loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN,
     })
 )(
     class Layout extends Component {
