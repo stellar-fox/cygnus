@@ -178,22 +178,6 @@ class Welcome extends Component {
         })
     }
 
-    // ...
-    handleModalClose () {
-        this.setState({
-            modalShown: false,
-        })
-
-        // VERY, VERY WRONG PLACE FOR THIS - BUT FOR NOW ... QUICK HACK
-        if (this.props.accountInfo.pubKey) {
-            this.logInViaPublicKey(this.props.accountInfo.pubKey, false)
-            this.ledgerAuthenticateUser({
-                publicKey: this.props.accountInfo.pubKey,
-                bip32Path: this.props.accountInfo.accountPath,
-                softwareVersion: this.props.auth.setLedgerSoftwareVersion,
-            })
-        }
-    }
 
     // ...
     setModalButtonText (text) {
@@ -215,6 +199,13 @@ class Welcome extends Component {
             )
             .then((response) => {
                 this.props.setAccountRegistered(true)
+                this.props.changeLoginState({
+                    loginState: ActionConstants.LOGGED_IN,
+                    bip32Path: extractPathIndex(ledgerParams.bip32Path),
+                    publicKey: ledgerParams.publicKey,
+                    userId: response.data.user_id,
+                    token: response.data.token,
+                })
                 this.props.logIn({
                     userId: response.data.user_id,
                     token: response.data.token,
@@ -260,6 +251,13 @@ class Welcome extends Component {
                                 textInputValue
                             }&type=name`)
                             .then((response) => {
+                                this.props.changeLoginState({
+                                    loginState: ActionConstants.LOGGED_IN,
+                                    bip32Path: null,
+                                    publicKey: response.data.account_id,
+                                    userId: null,
+                                    token: null,
+                                })
                                 this.logInViaPublicKey(response.data.account_id)
                             })
                             .catch((error) => {
@@ -289,6 +287,13 @@ class Welcome extends Component {
                     })
                 })
         } else {
+            this.props.changeLoginState({
+                loginState: ActionConstants.LOGGED_IN,
+                bip32Path: null,
+                publicKey: textInputValue,
+                userId: null,
+                token: null,
+            })
             this.logInViaPublicKey(textInputValue)
         }
 
