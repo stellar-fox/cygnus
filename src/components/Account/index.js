@@ -700,7 +700,7 @@ class Account extends Component {
                                 </RadioButtonGroup>
                             </div>
 
-                            {!this.props.accountInfo.registered ? (
+                            {!this.props.accountInfo.registered && !this.context.loginManager.isExploreOnly() ? (
                                 <div>
                                     <div className="p-t p-b" />
                                     <div className="account-title p-t">

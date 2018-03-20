@@ -110,6 +110,11 @@ const styles = {
 class Payments extends Component {
 
     // ...
+    static contextTypes = {
+        loginManager: PropTypes.object,
+    }
+
+    // ...
     constructor (props) {
         super(props)
         this.state = {
@@ -894,20 +899,20 @@ class Payments extends Component {
             case "create_account":
                 rendered =
                     payment.funder === this.props.appAuth.publicKey ? (
-                        <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>card_giftcard</i>
+                        <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>card_giftcard</i>
                     ) : (
-                        <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>account_balance</i>
+                        <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>account_balance</i>
                     )
                 break
             case "account_merge":
-                rendered = <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>merge_type</i>
+                rendered = <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>merge_type</i>
                 break
             default:
                 rendered =
                     payment.to === this.props.appAuth.publicKey ? (
-                        <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>account_balance_wallet</i>
+                        <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>account_balance_wallet</i>
                     ) : (
-                        <i className={this.props.isAuthenticated ? ("material-icons badge") : ("material-icons")}>payment</i>
+                        <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>payment</i>
                     )
                 break
         }
@@ -1073,7 +1078,8 @@ class Payments extends Component {
                                                                                     payment.created_at
                                                                                 )}
                                                                             </div>
-                                                                            {this.props.isAuthenticated ?
+
+                                                                            {this.context.loginManager.isAuthenticated() ?
                                                                                 (<div className="small fade">
                                                                                     {payment.firstName ? payment.firstName : "Unknown"} {payment.lastName ? payment.lastName : "Payee"}
                                                                                     {(payment.alias && payment.domain) ?
@@ -1087,7 +1093,7 @@ class Payments extends Component {
                                                                         payment
                                                                     )}
                                                                     rightAvatar={
-                                                                        this.props.isAuthenticated ? (
+                                                                        this.context.loginManager.isAuthenticated() ? (
                                                                             <Avatar
                                                                                 className="square-avatar"
                                                                                 backgroundColor="rgba(244,176,4,1)"

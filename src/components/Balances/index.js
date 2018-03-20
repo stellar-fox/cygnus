@@ -1341,7 +1341,7 @@ class Balances extends Component {
                     </Dialog>
                 </div>
 
-                {!this.props.accountInfo.registered ? (
+                {!this.props.accountInfo.registered && !this.context.loginManager.isExploreOnly() ? (
                     <Card className="welcome-card">
                         <CardText>
                             <div className="flex-row">
