@@ -118,6 +118,9 @@ class Balances extends Component {
     componentDidMount () {
 
         if (this.context.loginManager.isAuthenticated()) {
+
+            this.queryHorizon()
+
             axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
                 .then((response) => {
                     this.props.setCurrency(response.data.data.currency)
@@ -149,6 +152,22 @@ class Balances extends Component {
     componentWillUnmount () {
         this.props.accountInfo.streamer.call(this)
         this.props.accountInfo.optionsStreamer.call(this)
+    }
+
+
+    // ...
+    queryHorizon () {
+        let server = new StellarSdk.Server(
+            this.props.accountInfo.horizon
+        )
+        server
+            .loadAccount(this.props.appAuth.publicKey)
+            .then((account) => {
+                this.props.accountExistsOnLedger({ account, })
+            })
+            .catch(StellarSdk.NotFoundError, () => {
+                this.props.accountMissingOnLedger()
+            })
     }
 
 

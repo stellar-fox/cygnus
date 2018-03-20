@@ -75,7 +75,7 @@ class Welcome extends Component {
     static contextTypes = {
         loginManager: PropTypes.object,
     }
-    
+
     // ...
     constructor (props) {
         super(props)
@@ -84,13 +84,6 @@ class Welcome extends Component {
             modalButtonText: "CANCEL",
         }
     }
-
-    // ...
-    // componentWillReceiveProps ({ appAuth, }) {
-    //     if (!this.props.appAuth.publicKey && appAuth.publicKey) {
-    //         this.logInViaPublicKey(appAuth.publicKey)
-    //     }
-    // }
 
 
 
@@ -341,17 +334,17 @@ class Welcome extends Component {
 
     // ...
     render () {
-        
+
         return (
             <div className="welcome-content">
                 <HeadingContainer />
-                
-                
-                
 
-                
 
-                
+
+
+
+
+
                 <div>
                     <div className="flex-row-space-between">
                         <Panel
