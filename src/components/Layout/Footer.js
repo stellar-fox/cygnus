@@ -10,7 +10,7 @@ import "./Footer.css"
 
 
 
-// Footer component
+// <Footer> component
 export default () =>
     <div className="footer">
         <div className="flex-row-space-between">

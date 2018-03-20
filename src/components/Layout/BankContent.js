@@ -1,10 +1,12 @@
 import React, { Component } from "react"
-import {
-    Route,
-    Switch,
-} from "react-router-dom"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import { inject } from "../../lib/utils"
+import { Route } from "react-router-dom"
+import {
+    bankDrawerWidth,
+    contentPaneSeparation,
+} from "../../env"
+import { ConnectedSwitch as Switch } from "../StellarRouter"
 
 import Balances from "../Balances"
 import Payments from "../Payments"
@@ -15,54 +17,63 @@ import "./BankContent.css"
 
 
 
-// ...
-class BankContent extends Component {
-
-    // ...
-    iBalances = inject(Balances, { basePath: this.props.routes.balances, })
-    iPayments = inject(Payments, { basePath: this.props.routes.payments, })
-    iAccount = inject(Account, { basePath: this.props.routes.account, })
-
-
-    // ...
-    computeStyle = (drawerOpened) => ({
-        paddingLeft: drawerOpened ? 200 : 20,
-    })
-
-
-    // ...
-    state = {
-        style: this.computeStyle(this.props.drawerOpened),
-    }
-
-
-    // ...
-    componentWillReceiveProps = ({ drawerOpened, }) => {
-        if (this.props.drawerOpened !== drawerOpened) {
-            this.setState({
-                style: this.computeStyle(drawerOpened),
-            })
-        }
-    }
-
-
-    // ...
-    render = () =>
-        <div style={this.state.style} className="bank-content">
-            <Switch>
-                <Route path={this.props.routes.balances} component={this.iBalances} />
-                <Route path={this.props.routes.payments} component={this.iPayments} />
-                <Route path={this.props.routes.account} component={this.iAccount} />
-            </Switch>
-        </div>
-
-}
-
-
-// ...
+// <BankContent> component
 export default connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
     })
-)(BankContent)
+)(
+    class BankContent extends Component {
+
+        // ...
+        static propTypes = {
+            drawerOpened: PropTypes.bool.isRequired,
+            paths: PropTypes.object.isRequired,
+        }
+
+
+        // ...
+        computeStyle = (drawerOpened) => ({
+            paddingLeft:
+                drawerOpened ?
+                    bankDrawerWidth + contentPaneSeparation :
+                    contentPaneSeparation,
+        })
+
+
+        // ...
+        state = { style: this.computeStyle(this.props.drawerOpened), }
+
+
+        // ...
+        componentWillReceiveProps = ({ drawerOpened, }) => {
+            if (this.props.drawerOpened !== drawerOpened) {
+                this.setState({
+                    style: this.computeStyle(drawerOpened),
+                })
+            }
+        }
+
+
+        // ...
+        render = () =>
+            <div style={this.state.style} className="bank-content">
+                <Switch>
+                    <Route
+                        path={this.props.paths.Balances}
+                        component={Balances}
+                    />
+                    <Route
+                        path={this.props.paths.Payments}
+                        component={Payments}
+                    />
+                    <Route
+                        path={this.props.paths.Account}
+                        component={Account}
+                    />
+                </Switch>
+            </div>
+
+    }
+)

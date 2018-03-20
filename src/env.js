@@ -35,6 +35,14 @@ export const snackBarAutoHideDuration = 3500
 
 
 // ...
+export const bankDrawerWidth = 180
+
+
+// ...
+export const contentPaneSeparation = 20
+
+
+// ...
 export const securityGuideLink = "https://github.com/stellar-fox/cygnus/wiki/Security-Guide"
 
 

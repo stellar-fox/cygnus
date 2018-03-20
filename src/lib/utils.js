@@ -151,3 +151,11 @@ export const RenderGroup = (props) => props.children
 
 // inject props "p" into component "C"
 export const inject = (C, p) => (props) => <C {...{ ...props, ...p, }} />
+
+
+// provide props into all children components
+export const Provide = ({ children, ...rest }) =>
+    React.Children.map(
+        children,
+        (child) => child ? React.cloneElement(child, rest) : child
+    )

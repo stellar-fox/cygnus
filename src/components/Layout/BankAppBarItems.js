@@ -11,18 +11,16 @@ import "./BankAppBarItems.css"
 
 
 
-// ...
+// <BankAppBarItems> component
 export default connect(
-    // map state to props.
     (state) => ({
-        accountExists : state.accountInfo.exists,
+        accountExists: state.accountInfo.exists,
         homeDomain:
             state.accountInfo.account  &&
             state.accountInfo.account.account.home_domain,
         pubKey: state.appAuth.publicKey, //state.accountInfo.pubKey,
     })
 )(
-    // BankAppBarItems component
     ({
         accountExists,
         homeDomain,

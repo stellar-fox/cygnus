@@ -1,13 +1,16 @@
 import React, { Component, Fragment } from "react"
-import {
-    Redirect,
-    Route,
-    Switch,
-} from "react-router-dom"
+import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import {
+    Redirect,
+    withRouter,
+} from "react-router-dom"
 import { selectView } from "../../actions/index"
-import { inject } from "../../lib/utils"
+import {
+    ConnectedSwitch as Switch,
+    resolvePath,
+} from "../StellarRouter"
 
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"
@@ -17,64 +20,70 @@ import Footer from "./Footer"
 
 
 
-// Bank component
-class Bank extends Component {
-
-    // ...
-    routes = {
-        balances: `${this.props.basePath}balances/`,
-        payments: `${this.props.basePath}payments/`,
-        account: `${this.props.basePath}account/`,
-    }
-
-
-    // ...
-    routeToViewMap = {
-        [this.routes.balances]: "Balances",
-        [this.routes.payments]: "Payments",
-        [this.routes.account]: "Account",
-    }
-
-
-    // ...
-    componentWillReceiveProps = ({ path, }) => {
-        if (path !== this.props.path) {
-            this.props.selectView(this.routeToViewMap[path])
-        }
-    }
-
-
-    // ...
-    iBankContent = inject(BankContent, { basePath: this.props.basePath, routes: this.routes, })
-
-
-    // ...
-    render = () =>
-        <Fragment>
-            <Switch>
-                <Redirect exact
-                    from={this.props.basePath}
-                    to={this.routes.balances}
-                />
-            </Switch>
-            <BankAppBar />
-            <BankDrawer routes={this.routes} />
-            <Route component={this.iBankContent} />
-            <Footer />
-        </Fragment>
-
-}
-
-
-// ...
-export default connect(
+// <Bank> component
+export default withRouter(connect(
     // map state to props.
     (state) => ({
-        path: state.router.location.pathname,
+        currentPath: state.router.location.pathname,
     }),
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         selectView,
     }, dispatch)
-)(Bank)
+)(
+    class Bank extends Component {
+
+        // ...
+        static propTypes = {
+            match: PropTypes.object.isRequired,
+            currentPath: PropTypes.string.isRequired,
+            selectView: PropTypes.func.isRequired,
+        }
+
+
+        // relative resolve
+        rr = resolvePath(this.props.match.path)
+
+
+        // local paths
+        p = {
+            Balances: this.rr("balances/"),
+            Payments: this.rr("payments/"),
+            Account: this.rr("account/"),
+        }
+
+
+        // route mapping
+        routeToViewMap = {
+            [this.p.Balances]: "Balances",
+            [this.p.Payments]: "Payments",
+            [this.p.Account]: "Account",
+        }
+
+
+        // ...
+        componentWillReceiveProps = ({ currentPath, }) => {
+            if (currentPath !== this.props.currentPath) {
+                this.props.selectView(this.routeToViewMap[currentPath])
+            }
+        }
+
+
+        // ...
+        render = () =>
+            <Fragment>
+                <Switch>
+                    <Redirect exact
+                        from={this.rr(".")}
+                        to={this.p.Balances}
+                    />
+                </Switch>
+                <BankAppBar />
+                <BankDrawer paths={this.p} />
+                <BankContent paths={this.p} />
+                <Footer />
+            </Fragment>
+
+    }
+))

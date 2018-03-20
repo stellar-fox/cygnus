@@ -1,40 +1,32 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { Route } from "react-router-dom"
-import createHistory from "history/createBrowserHistory"
-
 import {
     applyMiddleware,
     createStore,
     combineReducers,
 } from "redux"
+import thunk from "redux-thunk"
 import { Provider } from "react-redux"
-
+import createHistory from "history/createBrowserHistory"
 import {
     ConnectedRouter as Router,
     routerReducer,
     routerMiddleware,
 } from "react-router-redux"
-
 import {
     composeWithDevTools,
 } from "redux-devtools-extension"
-import thunk from "redux-thunk"
+import throttle from "lodash/throttle"
 
-import { inject } from "./lib/utils"
-
-import reducers from "./reducers"
 import {
     unregister,
     // registerServiceWorker,
 } from "./registerServiceWorker"
-
+import reducers from "./reducers"
 import {
-    appBasePath,
     appRootDomId,
     ssSaveThrottlingTime,
 } from "./env"
-import throttle from "lodash/throttle"
 import {
     loadState,
     saveState,
@@ -43,6 +35,7 @@ import {
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "./frontend/themes/stellar"
 
+import { appBasePath } from "./env"
 import Layout from "./components/Layout"
 
 import "./index.css"
@@ -51,7 +44,9 @@ import "./index.css"
 
 
 // browser history
-const history = createHistory()
+const history = createHistory({
+    basename: appBasePath,
+})
 
 
 // store with router-redux integration and redux-devtools-extension
@@ -84,7 +79,7 @@ const StellarFox = () =>
     <Provider store={store}>
         <MuiThemeProvider muiTheme={stellarTheme}>
             <Router history={history}>
-                <Route component={inject(Layout, { basePath: appBasePath, })} />
+                <Layout />
             </Router>
         </MuiThemeProvider>
     </Provider>

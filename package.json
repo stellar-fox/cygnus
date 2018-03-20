@@ -1,6 +1,6 @@
 {
     "name": "cygnus",
-    "version": "0.1.28",
+    "version": "0.1.29",
     "private": true,
     "dependencies": {
         "@ledgerhq/hw-app-str": "^4.0.0",
@@ -22,6 +22,7 @@
         "redux": "^3.7.2",
         "redux-devtools-extension": "^2.13.2",
         "redux-thunk": "^2.2.0",
+        "resolve-pathname": "^2.2.0",
         "stellar-base": "^0.7.6",
         "stellar-sdk": "^0.8.0",
         "toml": "^2.3.3"
