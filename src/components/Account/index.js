@@ -27,7 +27,7 @@ import {
     setCurrencyPrecision,
     setTab,
 } from "../../actions/index"
-
+import PropTypes from "prop-types"
 import "./index.css"
 
 const styles = {
@@ -77,6 +77,12 @@ const styles = {
 }
 
 class Account extends Component {
+
+    // ...
+    static contextTypes = {
+        loginManager: PropTypes.object,
+    }
+
     constructor (props) {
         super(props)
         this.state = {
@@ -101,9 +107,9 @@ class Account extends Component {
     }
 
     componentDidMount () {
-        if (this.props.auth.isAuthenticated) {
+        if (this.context.loginManager.isAuthenticated()) {
             axios
-                .get(`${config.api}/user/${this.props.auth.userId}`)
+                .get(`${config.api}/user/${this.props.appAuth.userId}`)
                 .then((response) => {
                     this.setState({
                         firstNameDisplay: response.data.data.first_name || "",
@@ -120,7 +126,7 @@ class Account extends Component {
                     console.log(error.message)
                 })
             axios
-                .get(`${config.api}/account/${this.props.auth.userId}`)
+                .get(`${config.api}/account/${this.props.appAuth.userId}`)
                 .then((response) => {
                     this.setState({
                         paymentAddressDisplay: (response.data.data.alias && response.data.data.domain) ? `${response.data.data.alias}*${response.data.data.domain}` : "",
@@ -137,13 +143,13 @@ class Account extends Component {
     }
 
     handleCurrencyChange (event) {
-        if (this.props.auth.isAuthenticated) {
+        if (this.context.loginManager.isAuthenticated()) {
             event.persist()
             axios
                 .post(
                     `${config.api}/account/update/${
-                        this.props.auth.userId
-                    }?token=${this.props.auth.token}&currency=${
+                        this.props.appAuth.userId
+                    }?token=${this.props.appAuth.token}&currency=${
                         event.target.value
                     }`
                 )
@@ -210,13 +216,13 @@ class Account extends Component {
     }
 
     handleCurrencyPrecisionChange (event) {
-        if (this.props.auth.isAuthenticated) {
+        if (this.context.loginManager.isAuthenticated()) {
             event.persist()
             axios
                 .post(
                     `${config.api}/account/update/${
-                        this.props.auth.userId
-                    }?token=${this.props.auth.token}&precision=${
+                        this.props.appAuth.userId
+                    }?token=${this.props.appAuth.token}&precision=${
                         event.target.value
                     }`
                 )
@@ -271,8 +277,8 @@ class Account extends Component {
             axios
                 .post(
                     `${config.api}/account/update/${
-                        this.props.auth.userId
-                    }?token=${this.props.auth.token}&visible=true`
+                        this.props.appAuth.userId
+                    }?token=${this.props.appAuth.token}&visible=true`
                 )
                 .then((_response) => {
                     this.setState({
@@ -290,8 +296,8 @@ class Account extends Component {
             axios
                 .post(
                     `${config.api}/account/update/${
-                        this.props.auth.userId
-                    }?token=${this.props.auth.token}&visible=false`
+                        this.props.appAuth.userId
+                    }?token=${this.props.appAuth.token}&visible=false`
                 )
                 .then((_response) => {
                     this.setState({
@@ -353,8 +359,8 @@ class Account extends Component {
         // eslint-disable-next-line no-console
         axios
             .post(
-                `${config.api}/user/update/${this.props.auth.userId}?token=${
-                    this.props.auth.token
+                `${config.api}/user/update/${this.props.appAuth.userId}?token=${
+                    this.props.appAuth.token
                 }&first_name=${this.state.firstNameDisplay}&last_name=${
                     this.state.lastNameDisplay
                 }`
@@ -365,8 +371,8 @@ class Account extends Component {
             })
         axios
             .post(
-                `${config.api}/account/update/${this.props.auth.userId}?token=${
-                    this.props.auth.token
+                `${config.api}/account/update/${this.props.appAuth.userId}?token=${
+                    this.props.appAuth.token
                 }&alias=${alias}`
             )
             .then((_response) => {
@@ -478,7 +484,7 @@ class Account extends Component {
                     onChange={this.handleTabChange.bind(this, this.value)}
                     className="tabs-container"
                 >
-                    {this.props.auth.isAuthenticated ? (
+                    {this.context.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Profile" value="1">
                             <div className="tab-content">
                                 <SnackBar
@@ -761,7 +767,7 @@ class Account extends Component {
                                         />
                                     </div>
                                 ) : null}
-                            {this.props.auth.isAuthenticated ? (
+                            {this.context.loginManager.isAuthenticated() ? (
                                 <div>
                                     <div className="p-t p-b" />
                                     <div className="flex-row outline">
@@ -828,7 +834,7 @@ class Account extends Component {
                             ) : null}
                         </div>
                     </Tab>
-                    {this.props.auth.isAuthenticated ? (
+                    {this.context.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Security" value="3">
                             <div>
                                 <h2 style={styles.headline}>
