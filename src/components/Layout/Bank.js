@@ -11,6 +11,7 @@ import {
     ConnectedSwitch as Switch,
     resolvePath,
 } from "../StellarRouter"
+import { Provide } from "../../lib/utils"
 
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"
@@ -47,7 +48,7 @@ export default withRouter(connect(
 
 
         // local paths
-        p = {
+        paths = {
             Balances: this.rr("balances/"),
             Payments: this.rr("payments/"),
             Account: this.rr("account/"),
@@ -56,9 +57,9 @@ export default withRouter(connect(
 
         // route mapping
         routeToViewMap = {
-            [this.p.Balances]: "Balances",
-            [this.p.Payments]: "Payments",
-            [this.p.Account]: "Account",
+            [this.paths.Balances]: "Balances",
+            [this.paths.Payments]: "Payments",
+            [this.paths.Account]: "Account",
         }
 
 
@@ -76,12 +77,14 @@ export default withRouter(connect(
                 <Switch>
                     <Redirect exact
                         from={this.rr(".")}
-                        to={this.p.Balances}
+                        to={this.paths.Balances}
                     />
                 </Switch>
                 <BankAppBar />
-                <BankDrawer paths={this.p} />
-                <BankContent paths={this.p} />
+                <Provide paths={this.paths}>
+                    <BankDrawer />
+                    <BankContent />
+                </Provide>
                 <Footer />
             </Fragment>
 
