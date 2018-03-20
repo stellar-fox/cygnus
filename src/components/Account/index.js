@@ -699,74 +699,28 @@ class Account extends Component {
                                     />
                                 </RadioButtonGroup>
                             </div>
-                            {/* <div className="p-t p-b" />
-                            <div className="account-title p-t">
-                                Set Wallet Style:
-                            </div>
-                            <div className="account-subtitle">
-                                Choose how you would like to use this platform.
-                                Set decimal precision point and main
-                                currency representation.
-                            </div>
-                            <div className="flex-start">
-                                <SnackBar
-                                    open={this.state.sbCurrencyPrecision}
-                                    message={
-                                        "Wallet style set to " +
-                                        this.state.currencyPrecision
-                                    }
-                                    onRequestClose={
-                                        this.handleCurrencyPrecisionChangeSnackBarClose.bind(this)
-                                    }
-                                />
-                                <RadioButtonGroup
-                                    onChange={
-                                        this.handleCurrencyPrecisionChange.bind(this)
-                                    }
-                                    className="account-radio-group"
-                                    name="currencyPrecision"
-                                    defaultSelected={
-                                        this.props.accountInfo.precision
-                                    }
-                                >
-                                    <RadioButton
-                                        className="p-b-small"
-                                        value={2}
-                                        label="Fiat Currency"
-                                        labelStyle={styles.radioButton.label}
-                                        iconStyle={styles.radioButton.icon}
-                                    />
-                                    <RadioButton
-                                        className="p-b-small"
-                                        value={7}
-                                        label="Crypto Currency"
-                                        labelStyle={styles.radioButton.label}
-                                        iconStyle={styles.radioButton.icon}
-                                    />
-                                </RadioButtonGroup>
-                            </div> */}
-                            {!this.props.accountInfo.registered &&
-                            !this.props.auth.isReadOnly ? (
-                                    <div>
-                                        <div className="p-t p-b" />
-                                        <div className="account-title p-t">
-                                        Register this account with {appName}:
-                                        </div>
-                                        <div className="account-subtitle">
-                                        Get access to unique services and
-                                        remittance service.
-                                        </div>
-                                        <div className="p-b" />
-                                        <RaisedButton
-                                            label="Register"
-                                            disableTouchRipple={true}
-                                            disableFocusRipple={true}
-                                            backgroundColor="rgb(244,176,4)"
-                                            labelColor="rgb(15,46,83)"
-                                            onClick={this.handleSignup.bind(this)}
-                                        />
+
+                            {!this.props.accountInfo.registered ? (
+                                <div>
+                                    <div className="p-t p-b" />
+                                    <div className="account-title p-t">
+                                    Register this account with {appName}:
                                     </div>
-                                ) : null}
+                                    <div className="account-subtitle">
+                                    Get access to unique services and
+                                    remittance service.
+                                    </div>
+                                    <div className="p-b" />
+                                    <RaisedButton
+                                        label="Register"
+                                        disableTouchRipple={true}
+                                        disableFocusRipple={true}
+                                        backgroundColor="rgb(244,176,4)"
+                                        labelColor="rgb(15,46,83)"
+                                        onClick={this.handleSignup.bind(this)}
+                                    />
+                                </div>
+                            ) : null}
                             {this.context.loginManager.isAuthenticated() ? (
                                 <div>
                                     <div className="p-t p-b" />

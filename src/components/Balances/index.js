@@ -119,7 +119,7 @@ class Balances extends Component {
 
         if (this.context.loginManager.isAuthenticated()) {
 
-            this.queryHorizon()
+            this._tmpQueryHorizon()
 
             axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
                 .then((response) => {
@@ -135,6 +135,9 @@ class Balances extends Component {
                     console.log(error.message) // eslint-disable-line no-console
                 })
         } else {
+
+            this._tmpAccountExists()
+
             this.getExchangeRate(this.props.accountInfo.currency)
             this.setState({
                 currencySymbol: this.props.accountInfo.currency,
@@ -154,9 +157,22 @@ class Balances extends Component {
         this.props.accountInfo.optionsStreamer.call(this)
     }
 
+    _tmpAccountExists () {
+        axios.post(
+            `${config.api}/user/ledgerauth/${
+                this.props.appAuth.publicKey
+            }/${
+                this.props.appAuth.bip32Path
+            }`
+        ).then((_response) => {
+            this.props.setAccountRegistered(true)
+        }).catch((_error) => {
+            // do nothing as this is only a check
+        })
+    }
 
     // ...
-    queryHorizon () {
+    _tmpQueryHorizon () {
         let server = new StellarSdk.Server(
             this.props.accountInfo.horizon
         )
@@ -1327,7 +1343,7 @@ class Balances extends Component {
                     </Dialog>
                 </div>
 
-                {(!this.context.loginManager.isAuthenticated()) ? (
+                {!this.props.accountInfo.registered ? (
                     <Card className="welcome-card">
                         <CardText>
                             <div className="flex-row">
