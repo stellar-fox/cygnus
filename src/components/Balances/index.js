@@ -26,7 +26,6 @@ import {
     StellarSdk,
     pubKeyAbbr,
     handleException,
-    extractPathIndex,
 } from "../../lib/utils"
 import { appName } from "../../env.js"
 import {
@@ -117,9 +116,10 @@ class Balances extends Component {
     // ...
     componentDidMount () {
 
-        if (this.context.loginManager.isAuthenticated()) {
+        this._tmpQueryHorizon()
+        this._tmpAccountExists()
 
-            this._tmpQueryHorizon()
+        if (this.context.loginManager.isAuthenticated()) {
 
             axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
                 .then((response) => {
@@ -135,8 +135,6 @@ class Balances extends Component {
                     console.log(error.message) // eslint-disable-line no-console
                 })
         } else {
-
-            this._tmpAccountExists()
 
             this.getExchangeRate(this.props.accountInfo.currency)
             this.setState({
@@ -457,7 +455,7 @@ class Balances extends Component {
                 `${config.api}/user/ledgerauth/${
                     this.props.accountInfo.pubKey
                 }/${
-                    extractPathIndex(this.props.accountInfo.accountPath)
+                    this.props.accountInfo.accountPath
                 }`
             )
             .then((response) => {

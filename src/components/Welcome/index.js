@@ -106,7 +106,7 @@ class Welcome extends Component {
         this.props.changeLoginState({
             loginState: ActionConstants.LOGGED_IN,
             publicKey: ledgerParams.publicKey,
-            bip32Path: ledgerParams.bip32Path,
+            bip32Path: extractPathIndex(ledgerParams.bip32Path),
             userId: null,
             token: null,
         })
