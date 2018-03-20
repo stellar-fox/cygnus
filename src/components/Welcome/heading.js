@@ -12,6 +12,14 @@ import "./heading.css"
 // ...
 export default class Heading extends Component {
 
+    constructor (props) {
+        super(props)
+        this.state = {
+            loginButtonDisabled: true,
+            loginObj: null,
+        }
+    }
+
     // ...
     showSignupModal = () => this.props.changeModalState({
         modals: {
@@ -33,9 +41,17 @@ export default class Heading extends Component {
 
 
     // ...
-    login = (loginObj) => {
+    enableLogin = (loginObj) => this.setState({
+        loginButtonDisabled: false,
+        loginObj,
+    })
+
+
+
+    // ...
+    login = () => {
         this.hideSignupModal()
-        this.props.changeLoginState(loginObj)
+        this.props.changeLoginState(this.state.loginObj)
     }
 
 
@@ -48,17 +64,27 @@ export default class Heading extends Component {
                     this.props.appUi.modals.signup.showing : false
             }
             title="Opening Your Bank"
-            actions={
+            actions={[
+                <RaisedButton
+                    backgroundColor="rgb(15,46,83)"
+                    labelStyle={{ color: "rgb(244,176,4)", }}
+                    label="Login"
+                    keyboardFocused={false}
+                    onClick={this.login}
+                    disabled={this.state.loginButtonDisabled}
+                />,
+                <span className="p-l"></span>,
                 <RaisedButton
                     backgroundColor="rgb(15,46,83)"
                     labelStyle={{ color: "rgb(244,176,4)", }}
                     label="Cancel"
                     keyboardFocused={false}
                     onClick={this.hideSignupModal}
-                />
-            }>
+                />,
+            ]}
+        >
             <CreateAccount
-                onComplete={this.login}
+                onComplete={this.enableLogin}
             />
         </Modal>
 
