@@ -11,8 +11,9 @@ import createHistory from "history/createBrowserHistory"
 import {
     ConnectedRouter as Router,
     routerReducer,
-    routerMiddleware,
+    // routerMiddleware,
 } from "react-router-redux"
+import { routerMiddleware } from "./components/StellarRouter"
 import {
     composeWithDevTools,
 } from "redux-devtools-extension"

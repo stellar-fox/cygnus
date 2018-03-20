@@ -39,7 +39,7 @@ export default withRouter(connect(
 
 
         // local paths
-        p = {
+        paths = {
             Welcome: this.rr("."),
             Bank: this.rr("bank/"),
         }
@@ -50,21 +50,21 @@ export default withRouter(connect(
             <LoginManager>
                 <LoadingModal />
                 <Switch>
-                    <Route exact path={this.p.Welcome}>
+                    <Route exact path={this.paths.Welcome}>
                         {
                             !this.props.loggedIn ?
                                 <Welcome /> :
-                                <Redirect to={this.p.Bank} />
+                                <Redirect to={this.paths.Bank} />
                         }
                     </Route>
-                    <Route path={this.p.Bank}>
+                    <Route path={this.paths.Bank}>
                         {
                             this.props.loggedIn ?
                                 <Bank /> :
-                                <Redirect to={this.p.Welcome} />
+                                <Redirect to={this.paths.Welcome} />
                         }
                     </Route>
-                    <Redirect to={this.p.Welcome} />
+                    <Redirect to={this.paths.Welcome} />
                 </Switch>
             </LoginManager>
 

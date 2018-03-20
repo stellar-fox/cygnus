@@ -132,7 +132,7 @@ export default connect(
                 containerStyle={bankDrawerStyle}
                 open={this.props.drawerOpened}
             >
-                <Provide paths={this.props.paths} >
+                <Provide paths={this.props.paths}>
                     <BalancesNavLink />
                     {
                         this.props.accountInfo.exists ?
