@@ -1,4 +1,4 @@
-import Heading from "./Heading"
+import Heading from "./heading"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import {

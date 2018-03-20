@@ -3,11 +3,15 @@ import RaisedButton from "material-ui/RaisedButton"
 import { TopBarSecurityMessage } from "../../env.js"
 import Modal from "../Modal"
 import CreateAccount from "../Account/Create"
-import "./Heading.css"
+
+import "./heading.css"
 
 
+
+
+// ...
 export default class Heading extends Component {
-    
+
     // ...
     showSignupModal = () => this.props.changeModalState({
         modals: {
@@ -57,7 +61,7 @@ export default class Heading extends Component {
                 onComplete={this.login}
             />
         </Modal>
-        
+
         <TopBarSecurityMessage />
         <div className="faded-image cash">
             <div className="hero">
