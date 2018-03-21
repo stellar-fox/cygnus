@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import {
@@ -12,7 +12,6 @@ import {
     resolvePath,
 } from "../StellarRouter"
 
-import LoginManager from "../../containers/LoginManager"
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import Bank from "./Bank"
@@ -49,7 +48,7 @@ export default withRouter(connect(
 
         // ...
         render = () =>
-            <LoginManager>
+            <Fragment>
                 <LoadingModal />
                 <Switch>
                     <Route exact path={this.paths.Welcome}>
@@ -68,7 +67,7 @@ export default withRouter(connect(
                     </Route>
                     <Redirect to={this.paths.Welcome} />
                 </Switch>
-            </LoginManager>
+            </Fragment>
 
     }
 ))

@@ -37,6 +37,7 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "./frontend/themes/stellar"
 
 import { appBasePath } from "./env"
+import LoginManager from "./containers/LoginManager"
 import Layout from "./components/Layout"
 
 import "./index.css"
@@ -80,7 +81,9 @@ const StellarFox = () =>
     <Provider store={store}>
         <MuiThemeProvider muiTheme={stellarTheme}>
             <Router history={history}>
-                <Layout />
+                <LoginManager>
+                    <Layout />
+                </LoginManager>
             </Router>
         </MuiThemeProvider>
     </Provider>
