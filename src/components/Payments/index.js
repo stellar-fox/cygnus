@@ -270,6 +270,7 @@ class Payments extends Component {
     // ...
     paymentsStreamer = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
+
         return server
             .payments()
             .cursor("now")
@@ -367,6 +368,7 @@ class Payments extends Component {
     // ...
     updateAccount = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
+
         server
             .loadAccount(this.props.appAuth.publicKey)
             .catch(StellarSdk.NotFoundError, function (_err) {
@@ -632,7 +634,8 @@ class Payments extends Component {
                                             <span className="credit">
                                                 {" "}&#x0002B;{" "}
                                                 {this.getCurrencyGlyph(
-                                                    this.props.accountInfo.currency
+                                                    this.props
+                                                        .accountInfo.currency
                                                 )}{" "}
                                                 {this.convertToFiat(
                                                     effect.amount
@@ -701,7 +704,8 @@ class Payments extends Component {
                                             <span className="debit">
                                                 {" "}&#x02212;{" "}
                                                 {this.getCurrencyGlyph(
-                                                    this.props.accountInfo.currency
+                                                    this.props
+                                                        .accountInfo.currency
                                                 )}{" "}
                                                 {this.convertToFiat(
                                                     effect.amount
@@ -820,28 +824,32 @@ class Payments extends Component {
             .limit(5)
             .call()
             .then((paymentsResult) => {
-                const gravatarLinkPromises = paymentsResult.records.map((r) => {
-                    let link = ""
-                    switch (r.type) {
-                        case "create_account":
-                            if (r.funder === this.props.appAuth.publicKey) {
-                                link = gravatarLink(r.account)
-                            } else {
-                                link = gravatarLink(r.funder)
-                            }
-                            break
+                const gravatarLinkPromises =
+                    paymentsResult.records.map((r) => {
+                        let link = ""
+                        switch (r.type) {
+                            case "create_account":
+                                if (
+                                    r.funder ===
+                                        this.props.appAuth.publicKey
+                                ) {
+                                    link = gravatarLink(r.account)
+                                } else {
+                                    link = gravatarLink(r.funder)
+                                }
+                                break
 
-                        // payment
-                        default:
-                            if (r.to === this.props.appAuth.publicKey) {
-                                link = gravatarLink(r.from)
-                            } else {
-                                link = gravatarLink(r.to)
-                            }
-                            break
-                    }
-                    return link
-                })
+                            // payment
+                            default:
+                                if (r.to === this.props.appAuth.publicKey) {
+                                    link = gravatarLink(r.from)
+                                } else {
+                                    link = gravatarLink(r.to)
+                                }
+                                break
+                        }
+                        return link
+                    })
 
                 Promise.all(gravatarLinkPromises).then((links) => {
                     links.forEach((link, index) => {
@@ -859,7 +867,9 @@ class Payments extends Component {
                         this.props.setAccountPayments(paymentsResult)
                         this.updateCursors(paymentsResult.records)
                     } else {
-                        this.noMorePaymentsNotice.call(this, { nextDisabled: true, })
+                        this.noMorePaymentsNotice.call(
+                            this, { nextDisabled: true, }
+                        )
                     }
                 })
             })
@@ -883,28 +893,32 @@ class Payments extends Component {
             .call()
             .then((paymentsResult) => {
 
-                const gravatarLinkPromises = paymentsResult.records.map((r) => {
-                    let link = ""
-                    switch (r.type) {
-                        case "create_account":
-                            if (r.funder === this.props.appAuth.publicKey) {
-                                link = gravatarLink(r.account)
-                            } else {
-                                link = gravatarLink(r.funder)
-                            }
-                            break
+                const gravatarLinkPromises =
+                    paymentsResult.records.map((r) => {
+                        let link = ""
+                        switch (r.type) {
+                            case "create_account":
+                                if (
+                                    r.funder ===
+                                        this.props.appAuth.publicKey
+                                ) {
+                                    link = gravatarLink(r.account)
+                                } else {
+                                    link = gravatarLink(r.funder)
+                                }
+                                break
 
-                        // payment
-                        default:
-                            if (r.to === this.props.appAuth.publicKey) {
-                                link = gravatarLink(r.from)
-                            } else {
-                                link = gravatarLink(r.to)
-                            }
-                            break
-                    }
-                    return link
-                })
+                            // payment
+                            default:
+                                if (r.to === this.props.appAuth.publicKey) {
+                                    link = gravatarLink(r.from)
+                                } else {
+                                    link = gravatarLink(r.to)
+                                }
+                                break
+                        }
+                        return link
+                    })
 
                 Promise.all(gravatarLinkPromises).then((links) => {
 
@@ -1007,19 +1021,17 @@ class Payments extends Component {
         switch (payment.type) {
             case "create_account":
                 rendered =
-                    payment.funder === this.props.appAuth.publicKey ? (
+                    payment.funder === this.props.appAuth.publicKey ?
                         <i className={
                             this.context.loginManager.isAuthenticated() ?
                                 ("material-icons badge") :
                                 ("material-icons")
-                        }>card_giftcard</i>
-                    ) : (
+                        }>card_giftcard</i> :
                         <i className={
                             this.context.loginManager.isAuthenticated() ?
                                 ("material-icons badge") :
                                 ("material-icons")
                         }>account_balance</i>
-                    )
                 break
 
             case "account_merge":
@@ -1033,19 +1045,17 @@ class Payments extends Component {
 
             default:
                 rendered =
-                    payment.to === this.props.appAuth.publicKey ? (
+                    payment.to === this.props.appAuth.publicKey ?
                         <i className={
                             this.context.loginManager.isAuthenticated() ?
                                 ("material-icons badge") :
                                 ("material-icons")
-                        }>account_balance_wallet</i>
-                    ) : (
+                        }>account_balance_wallet</i> :
                         <i className={
                             this.context.loginManager.isAuthenticated() ?
                                 ("material-icons badge") :
                                 ("material-icons")
                         }>payment</i>
-                    )
                 break
         }
 
@@ -1064,14 +1074,18 @@ class Payments extends Component {
                         <span>
                             &#x02212;
                             {" "}
-                            {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                            {this.getCurrencyGlyph(
+                                this.props.accountInfo.currency
+                            )}
                             {" "}
                             {this.convertToFiat(payment.starting_balance)}
                         </span> :
                         <span>
                             &#x0002B;
                             {" "}
-                            {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                            {this.getCurrencyGlyph(
+                                this.props.accountInfo.currency
+                            )}
                             {" "}
                             {this.convertToFiat(payment.starting_balance)}
                         </span>
@@ -1088,14 +1102,18 @@ class Payments extends Component {
                             <span>
                                 &#x0002B;
                                 {" "}
-                                {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                {this.getCurrencyGlyph(
+                                    this.props.accountInfo.currency
+                                )}
                                 {" "}
                                 {this.convertToFiat(payment.amount)}
                             </span> :
                             <span>
                                 &#x02212;
                                 {" "}
-                                {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                {this.getCurrencyGlyph(
+                                    this.props.accountInfo.currency
+                                )}
                                 {" "}
                                 {this.convertToFiat(payment.amount)}
                             </span>
