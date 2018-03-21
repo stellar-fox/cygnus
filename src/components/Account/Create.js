@@ -18,7 +18,7 @@ import {
 import { appName } from "../../env.js"
 import md5 from "../../lib/md5"
 import LedgerAuthenticator from "../LedgerAuthenticator"
-import TextInputField from "../TextInputField"
+import InputField from "../../frontend/InputField"
 import axios from "axios"
 import { config } from "../../config"
 import {
@@ -368,30 +368,30 @@ class NewAccount extends Component {
                         <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
                             <div className="revers">
                                 <div>
-                                    <TextInputField
+                                    <InputField
+                                        name="signup-email"
                                         type="email"
-                                        floatingLabelText="Email"
-                                        styles={styles}
+                                        placeholder="Email"
                                         validator={this.emailValidator.bind(this)}
                                         action={this.compoundValidate.bind(this)}
                                         ref={(self) => { this.textInputFieldEmail = self }}
                                     />
                                 </div>
                                 <div>
-                                    <TextInputField
+                                    <InputField
+                                        name="signup-password"
                                         type="password"
-                                        floatingLabelText="Password"
-                                        styles={styles}
+                                        placeholder="Password"
                                         validator={this.passwordValidator.bind(this)}
                                         action={this.compoundValidate.bind(this)}
                                         ref={(self) => { this.textInputFieldPassword = self }}
                                     />
                                 </div>
                                 <div>
-                                    <TextInputField
+                                    <InputField
+                                        name="signup-password-confirmation"
                                         type="password"
-                                        floatingLabelText="Password Confirmation"
-                                        styles={styles}
+                                        placeholder="Password Confirmation"
                                         validator={this.passwordValidator.bind(this)}
                                         action={this.compoundValidate.bind(this)}
                                         ref={(self) => { this.textInputFieldPasswordConf = self }}

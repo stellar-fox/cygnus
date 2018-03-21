@@ -43,7 +43,7 @@ import {
 import { setToken, clearToken } from "../../actions/auth"
 
 import LedgerAuthenticator from "../LedgerAuthenticator"
-import TextInputField from "../TextInputField"
+import InputField from "../../frontend/InputField"
 
 import { ActionConstants } from "../../actions"
 import PropTypes from "prop-types"
@@ -449,8 +449,10 @@ class Welcome extends Component {
                                 </div>
                                 <div className="mui-text-input">
                                     <div>
-                                        <TextInputField
-                                            floatingLabelText="Payment Address"
+                                        <InputField
+                                            name="payment-address-input"
+                                            type="text"
+                                            placeholder="Payment Address"
                                             styles={styles}
                                             validator={this.federationValidator.bind(
                                                 this

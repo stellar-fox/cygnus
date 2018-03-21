@@ -15,7 +15,7 @@ import SnackBar from "../../frontend/SnackBar"
 import axios from "axios"
 import { config } from "../../config"
 import RegisterAccount from "../Account/Register"
-import TextInputField from "../TextInputField"
+import InputField from "../../frontend/InputField"
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import DatePicker from "material-ui/DatePicker"
 import LinearProgress from "material-ui/LinearProgress"
@@ -1592,8 +1592,10 @@ class Balances extends Component {
                                         Pay to the order of:
                                     </div>
                                     <div className="p-r">
-                                        <TextInputField
-                                            floatingLabelText="Payment Address"
+                                        <InputField
+                                            name="paycheck-payment-address"
+                                            type="text"
+                                            placeholder="Payment Address"
                                             underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
                                             underlineFocusStyle={{ borderColor: "rgba(15, 46, 83, 0.8)", }}
                                             inputStyle={{ color: "rgba(15, 46, 83, 0.8)",}}
@@ -1611,14 +1613,16 @@ class Balances extends Component {
                                         {this.getCurrencyGlyph(this.props.accountInfo.currency)}
                                     </div>
                                     <div>
-                                        <TextInputField
+                                        <InputField
+                                            name="paycheck-payment-amount"
+                                            type="text"
                                             validator={
                                                 debounce(this.amountValidator.bind(this), 500)
                                             }
                                             ref={(self) => {
                                                 this.textInputFieldAmount = self
                                             }}
-                                            floatingLabelText="Amount"
+                                            placeholder="Amount"
                                             underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
                                             underlineFocusStyle={{ borderColor: "rgba(15, 46, 83, 0.8)", }}
                                             inputStyle={{ color: "rgba(15, 46, 83, 0.8)", }}
@@ -1652,8 +1656,10 @@ class Balances extends Component {
                                 <div>
                                     <span className="payment-header">
                                         <span className="p-r">For:</span>
-                                        <TextInputField
-                                            floatingLabelText="Memo"
+                                        <InputField
+                                            name="paycheck-memo"
+                                            type="text"
+                                            placeholder="Memo"
                                             underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
                                             underlineFocusStyle={{ borderColor: "rgba(15, 46, 83, 0.8)", }}
                                             inputStyle={{ color: "rgba(15, 46, 83, 0.8)", }}

@@ -11,7 +11,7 @@ import LinearProgress from "material-ui/LinearProgress"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import { emailValid, passwordValid, extractPathIndex } from "../../lib/utils"
-import TextInputField from "../TextInputField"
+import InputField from "../../frontend/InputField"
 import axios from "axios"
 import { config } from "../../config"
 import md5 from "../../lib/md5"
@@ -337,9 +337,10 @@ class NewAccount extends Component {
                         <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
                             <div className="revers">
                                 <div>
-                                    <TextInputField
+                                    <InputField
+                                        name="register-email"
                                         type="email"
-                                        floatingLabelText="Email"
+                                        placeholder="Email"
                                         styles={styles}
                                         validator={this.emailValidator.bind(this)}
                                         action={this.compoundValidate.bind(this)}
@@ -347,9 +348,10 @@ class NewAccount extends Component {
                                     />
                                 </div>
                                 <div>
-                                    <TextInputField
+                                    <InputField
+                                        name="register-password"
                                         type="password"
-                                        floatingLabelText="Password"
+                                        placeholder="Password"
                                         styles={styles}
                                         validator={this.passwordValidator.bind(this)}
                                         action={this.compoundValidate.bind(this)}
@@ -357,9 +359,10 @@ class NewAccount extends Component {
                                     />
                                 </div>
                                 <div>
-                                    <TextInputField
+                                    <InputField
+                                        name="register-password-confirmation"
                                         type="password"
-                                        floatingLabelText="Password Confirmation"
+                                        placeholder="Password Confirmation"
                                         styles={styles}
                                         validator={this.passwordValidator.bind(this)}
                                         action={this.compoundValidate.bind(this)}
