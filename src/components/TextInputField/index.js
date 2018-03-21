@@ -59,7 +59,7 @@ export default class TextInputField extends Component {
             floatingLabelText={this.props.floatingLabelText}
             errorText={this.state.error}
             errorStyle={styles.errorStyle}
-            underlineStyle={styles.underlineStyle}
+            underlineStyle={this.props.underlineStyle || styles.underlineStyle}
             underlineFocusStyle={styles.underlineStyle}
             floatingLabelStyle={styles.floatingLabelStyle}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

@@ -40,6 +40,9 @@ import {
     accountMissingOnLedger,
     setAccountRegistered,
     logIn,
+    setModalLoading,
+    setModalLoaded,
+    updateLoadingMessage,
 } from "../../actions/index"
 import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
@@ -48,24 +51,24 @@ import "number-to-text/converters/en-us"
 import PropTypes from "prop-types"
 import "./index.css"
 
-const styles = {
-    errorStyle: {
-        color: "#912d35",
-    },
-    underlineStyle: {
-        borderColor: "rgba(15,46,83,0.6)",
-        width: "100%",
-    },
-    floatingLabelStyle: {
-        color: "rgba(15,46,83,0.5)",
-    },
-    floatingLabelFocusStyle: {
-        color: "rgba(15,46,83,0.35)",
-    },
-    inputStyle: {
-        color: "rgba(15,46,83,0.8)",
-    },
-}
+// const styles = {
+//     errorStyle: {
+//         color: "#912d35",
+//     },
+//     underlineStyle: {
+//         borderColor: "rgba(15,46,83,0.6)",
+//         width: "100%",
+//     },
+//     floatingLabelStyle: {
+//         color: "rgba(15,46,83,0.5)",
+//     },
+//     floatingLabelFocusStyle: {
+//         color: "rgba(15,46,83,0.35)",
+//     },
+//     inputStyle: {
+//         color: "rgba(15,46,83,0.8)",
+//     },
+// }
 
 StellarSdk.Network.useTestNetwork()
 const server = new StellarSdk.Server(config.horizon)
@@ -116,36 +119,46 @@ class Balances extends Component {
     // ...
     componentDidMount () {
 
-        this._tmpQueryHorizon()
-        this._tmpAccountExists()
+        if (!this.props.accountInfo.account) {
 
-        if (this.context.loginManager.isAuthenticated()) {
-
-            axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
-                .then((response) => {
-                    this.props.setCurrency(response.data.data.currency)
-                    this.props.setCurrencyPrecision(response.data.data.precision)
-                    this.getExchangeRate(response.data.data.currency)
-                    this.setState({
-                        currencySymbol: response.data.data.currency,
-                        currencyText: this.getCurrencyText(response.data.data.currency),
-                    })
-                })
-                .catch((error) => {
-                    console.log(error.message) // eslint-disable-line no-console
-                })
-        } else {
-
-            this.getExchangeRate(this.props.accountInfo.currency)
-            this.setState({
-                currencySymbol: this.props.accountInfo.currency,
-                currencyText: this.getCurrencyText(this.props.accountInfo.currency),
+            this.props.setModalLoading()
+            this.props.updateLoadingMessage({
+                message: "Searching for account ...",
             })
+
+            this._tmpQueryHorizon()
+            this._tmpAccountExists()
+
+            if (this.context.loginManager.isAuthenticated()) {
+
+                axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
+                    .then((response) => {
+                        this.props.setCurrency(response.data.data.currency)
+                        this.props.setCurrencyPrecision(response.data.data.precision)
+                        this.getExchangeRate(response.data.data.currency)
+                        this.setState({
+                            currencySymbol: response.data.data.currency,
+                            currencyText: this.getCurrencyText(response.data.data.currency),
+                        })
+                    })
+                    .catch((error) => {
+                        console.log(error.message) // eslint-disable-line no-console
+                    })
+            } else {
+
+                this.getExchangeRate(this.props.accountInfo.currency)
+                this.setState({
+                    currencySymbol: this.props.accountInfo.currency,
+                    currencyText: this.getCurrencyText(this.props.accountInfo.currency),
+                })
+            }
         }
 
         // FIXME: merge streamers
         this.props.setStreamer(this.paymentsStreamer.call(this))
         this.props.setOptionsStreamer(this.optionsStreamer.call(this))
+
+
     }
 
 
@@ -181,6 +194,12 @@ class Balances extends Component {
             })
             .catch(StellarSdk.NotFoundError, () => {
                 this.props.accountMissingOnLedger()
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    this.props.setModalLoaded()
+                }, 500)
+
             })
     }
 
@@ -1561,7 +1580,7 @@ class Balances extends Component {
                                     <div className="p-r">
                                         <TextInputField
                                             floatingLabelText="Payment Address"
-                                            styles={styles}
+                                            underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
                                             validator={
                                                 debounce(this.compoundFederationValidator.bind(this), 1000)
                                             }
@@ -1584,7 +1603,7 @@ class Balances extends Component {
                                                 this.textInputFieldAmount = self
                                             }}
                                             floatingLabelText="Amount"
-                                            styles={styles}
+                                            underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
                                         />
                                     </div>
                                 </div>
@@ -1617,7 +1636,7 @@ class Balances extends Component {
                                         <span className="p-r">For:</span>
                                         <TextInputField
                                             floatingLabelText="Memo"
-                                            styles={styles}
+                                            underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
                                             ref={(self) => {
                                                 this.textInputFieldMemo = self
                                             }}
@@ -1688,6 +1707,9 @@ function matchDispatchToProps (dispatch) {
         accountMissingOnLedger,
         setAccountRegistered,
         logIn,
+        setModalLoading,
+        setModalLoaded,
+        updateLoadingMessage,
     }, dispatch)
 }
 
