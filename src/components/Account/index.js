@@ -3,7 +3,6 @@ import { Tabs, Tab } from "material-ui/Tabs"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
 import Dialog from "material-ui/Dialog"
 import Toggle from "material-ui/Toggle"
@@ -103,6 +102,7 @@ class Account extends Component {
             currencyPrecision: "",
             modalShown: false,
             modalButtonText: "CANCEL",
+            loginButtonDisabled: true,
         }
     }
 
@@ -424,6 +424,21 @@ class Account extends Component {
         this.setState({ modalButtonText: text, })
     }
 
+
+    // ...
+    doWhateverYourFunctionCurrentlyIs = () => {
+        this.setState({
+            modalShown: false,
+        })
+    }
+
+    changeButtonText = () => {
+        this.setState({
+            modalButtonText: "DONE",
+        })
+    }
+
+
     render () {
         const actions = [
             <RaisedButton
@@ -432,16 +447,6 @@ class Account extends Component {
                 label="OK"
                 keyboardFocused={true}
                 onClick={this.handleClose}
-            />,
-        ]
-
-        const registerAccountActions = [
-            <FlatButton
-                backgroundColor="rgb(244,176,4)"
-                labelStyle={{ color: "rgb(15,46,83)", }}
-                label={this.state.modalButtonText}
-                keyboardFocused={false}
-                onClick={this.handleModalClose.bind(this)}
             />,
         ]
 
@@ -463,7 +468,15 @@ class Account extends Component {
                     </Dialog>
                     <Dialog
                         title="Registering Your Account"
-                        actions={registerAccountActions}
+                        actions={[
+                            <RaisedButton
+                                backgroundColor="rgb(15,46,83)"
+                                labelStyle={{ color: "rgb(244,176,4)", }}
+                                label={this.state.modalButtonText}
+                                keyboardFocused={false}
+                                onClick={this.doWhateverYourFunctionCurrentlyIs}
+                            />,
+                        ]}
                         modal={true}
                         open={this.state.modalShown}
                         onRequestClose={this.handleModalClose.bind(this)}
@@ -471,9 +484,7 @@ class Account extends Component {
                         titleClassName="modal-title"
                         repositionOnUpdate={false}
                     >
-                        <RegisterAccount
-                            onComplete={this.setModalButtonText.bind(this)}
-                        />
+                        <RegisterAccount onComplete={this.changeButtonText} />
                     </Dialog>
                 </div>
 

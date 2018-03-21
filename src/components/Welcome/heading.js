@@ -5,6 +5,7 @@ import Modal from "../Modal"
 import CreateAccount from "../Account/Create"
 
 import "./heading.css"
+import { ActionConstants } from "../../actions/index.js"
 
 
 
@@ -56,6 +57,19 @@ export default class Heading extends Component {
 
 
     // ...
+    cancelLogin = () => {
+        this.props.changeLoginState({
+            loginState: ActionConstants.LOGGED_OUT,
+            publicKey: null,
+            bip32Path: null,
+            userId: null,
+            token: null,
+        })
+        this.hideSignupModal()
+    }
+
+
+    // ...
     render = () => <Fragment>
         <Modal
             open={
@@ -79,7 +93,7 @@ export default class Heading extends Component {
                     labelStyle={{ color: "rgb(244,176,4)", }}
                     label="Cancel"
                     keyboardFocused={false}
-                    onClick={this.hideSignupModal}
+                    onClick={this.cancelLogin}
                 />,
             ]}
         >

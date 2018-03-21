@@ -17,7 +17,8 @@ import { config } from "../../config"
 import md5 from "../../lib/md5"
 import {
     setAccountRegistered,
-    logIn,
+    changeLoginState,
+    ActionConstants,
 } from "../../actions/index"
 import { awaitConnection } from "../../lib/ledger"
 
@@ -49,7 +50,13 @@ class NewAccount extends Component {
         })
 
         if (stepIndex >= 1) {
-            this.props.onComplete("DONE")
+            this.props.onComplete({
+                loginState: ActionConstants.LOGGED_IN,
+                publicKey: this.props.appAuth.publicKey,
+                bip32Path: this.props.appAuth.bip32Path,
+                userId: this.props.appAuth.userId,
+                token: this.props.appAuth.token,
+            })
         }
     }
 
@@ -170,7 +177,10 @@ class NewAccount extends Component {
             })
             .then((response) => {
                 this.props.setAccountRegistered(true)
-                this.props.logIn({
+                this.props.changeLoginState({
+                    loginState: ActionConstants.LOGGED_IN,
+                    publicKey: response.data.pubkey,
+                    bip32Path: response.data.bip32Path,
                     userId: response.data.user_id,
                     token: response.data.token,
                 })
@@ -402,6 +412,7 @@ class NewAccount extends Component {
 function mapStateToProps (state) {
     return {
         accountInfo: state.accountInfo,
+        appAuth: state.appAuth,
     }
 }
 
@@ -409,7 +420,7 @@ function matchDispatchToProps (dispatch) {
     return bindActionCreators(
         {
             setAccountRegistered,
-            logIn,
+            changeLoginState,
         },
         dispatch
     )

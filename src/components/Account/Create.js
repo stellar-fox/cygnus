@@ -152,7 +152,8 @@ class NewAccount extends Component {
                 password: this.state.password,
             })
             .then((response) => {
-                this.props.changeLoginState({   
+                this.props.setAccountRegistered(true)
+                this.props.changeLoginState({
                     publicKey: response.data.pubkey,
                     bip32Path: response.data.bip32Path,
                     userId: response.data.user_id,

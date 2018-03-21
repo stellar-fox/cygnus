@@ -43,6 +43,7 @@ import {
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
+    changeLoginState,
 } from "../../actions/index"
 import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
@@ -112,6 +113,7 @@ class Balances extends Component {
             newAccount: false,
             minimumReserveMessage: "",
             sendingCompleteModalShown: false,
+            loginButtonDisabled: true,
         }
     }
 
@@ -1210,6 +1212,19 @@ class Balances extends Component {
         )
     }
 
+    // ...
+    doWhateverYourFunctionCurrentlyIs = () => {
+        this.setState({
+            modalShown: false,
+        })
+    }
+
+    changeButtonText = () => {
+        this.setState({
+            modalButtonText: "DONE",
+        })
+    }
+
 
     // ...
     render () {
@@ -1250,15 +1265,6 @@ class Balances extends Component {
             />,
         ]
 
-        const registerAccountActions = [
-            <RaisedButton
-                backgroundColor="rgb(15,46,83)"
-                labelStyle={{ color: "rgb(244,176,4)", }}
-                label={this.state.modalButtonText}
-                keyboardFocused={false}
-                onClick={this.handleRegistrationModalClose.bind(this)}
-            />,
-        ]
 
         return (
             <div>
@@ -1285,7 +1291,15 @@ class Balances extends Component {
 
                     <Dialog
                         title="Registering Your Account"
-                        actions={registerAccountActions}
+                        actions={[
+                            <RaisedButton
+                                backgroundColor="rgb(15,46,83)"
+                                labelStyle={{ color: "rgb(244,176,4)", }}
+                                label={this.state.modalButtonText}
+                                keyboardFocused={false}
+                                onClick={this.doWhateverYourFunctionCurrentlyIs}
+                            />,
+                        ]}
                         modal={true}
                         open={this.state.modalShown}
                         onRequestClose={this.handleRegistrationModalClose.bind(this)}
@@ -1294,7 +1308,7 @@ class Balances extends Component {
                         repositionOnUpdate={false}
                         autoScrollBodyContent={true}
                     >
-                        <RegisterAccount onComplete={this.setModalButtonText.bind(this)} />
+                        <RegisterAccount onComplete={this.changeButtonText} />
                     </Dialog>
 
                     <Dialog
@@ -1716,6 +1730,7 @@ function matchDispatchToProps (dispatch) {
         setModalLoading,
         setModalLoaded,
         updateLoadingMessage,
+        changeLoginState,
     }, dispatch)
 }
 
