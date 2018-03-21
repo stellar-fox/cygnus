@@ -76,3 +76,9 @@ export const TopBarSecurityMessage = () =>
 // ...
 export const NotImplementedBadge = () =>
     <span className="red-badge">NOT IMPLEMENTED YET</span>
+
+
+// ...
+export const emoji = {
+    pencil: "✎",
+}
