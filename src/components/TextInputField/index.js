@@ -6,7 +6,7 @@ import "./index.css"
 
 
 
-// Default styles for TextInputField compoenent.
+// Default styles for TextInputField component.
 const styles = {
     errorStyle: {
         color: "#E64A19",
