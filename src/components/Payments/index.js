@@ -1,20 +1,20 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import { Tabs, Tab } from "material-ui/Tabs"
-import { List, ListItem, makeSelectable } from "material-ui/List"
-import Avatar from "material-ui/Avatar"
-import IconButton from "material-ui/IconButton"
-import SnackBar from "../../frontend/SnackBar"
+import { connect } from "react-redux"
+import BigNumber from "bignumber.js"
+
 import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from "material-ui/Table"
+    pubKeyAbbr,
+    utcToLocaleDateTime,
+    getAssetCode,
+    formatAmount,
+    StellarSdk,
+} from "../../lib/utils"
+import { emoji } from "../../env"
+import {
+    gravatarLink,
+} from "../../lib/deneb"
 import {
     setAccountPayments,
     setAccountTransactions,
@@ -26,59 +26,74 @@ import {
     setModalLoaded,
     updateLoadingMessage,
 } from "../../actions/index"
-import {
-    pubKeyAbbr,
-    utcToLocaleDateTime,
-    getAssetCode,
-    formatAmount,
-    StellarSdk,
-} from "../../lib/utils"
-
-import BigNumber from "bignumber.js"
 
 import {
-    gravatarLink,
-} from "../../lib/deneb"
+    Tabs,
+    Tab,
+} from "material-ui/Tabs"
+import {
+    List,
+    ListItem,
+    makeSelectable,
+} from "material-ui/List"
+import Avatar from "material-ui/Avatar"
+import IconButton from "material-ui/IconButton"
+import SnackBar from "../../frontend/SnackBar"
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+} from "material-ui/Table"
 
 import "./index.css"
 
 
-let SelectableList = makeSelectable(List)
 
-function wrapState (ComposedComponent) {
-    return class SelectableList extends Component {
+
+// ...
+const wrapState = (ComposedComponent) =>
+    class SelectableList extends Component {
+
+        // ...
         static propTypes = {
             children: PropTypes.node.isRequired,
             defaultValue: PropTypes.number.isRequired,
         }
 
         // ...
-        componentWillMount () {
-            this.setState({ selectedIndex: this.props.defaultValue, })
-        }
+        componentWillMount = () =>
+            this.setState({
+                selectedIndex: this.props.defaultValue,
+            })
 
         // ...
-        handleRequestChange = (_event, index) => {
-            this.setState({ selectedIndex: index, })
-        }
+        handleRequestChange = (_event, index) =>
+            this.setState({
+                selectedIndex: index,
+            })
 
         // ...
-        render () {
-            return (
-                <ComposedComponent
-                    value={this.state.selectedIndex}
-                    onChange={this.handleRequestChange}
-                >
-                    {this.props.children}
-                </ComposedComponent>
-            )
-        }
+        render = () =>
+            <ComposedComponent
+                value={this.state.selectedIndex}
+                onChange={this.handleRequestChange}
+            >
+                {this.props.children}
+            </ComposedComponent>
+
     }
-}
-
-SelectableList = wrapState(SelectableList)
 
 
+// ...
+const SelectableList = wrapState(makeSelectable(List))
+
+
+
+
+// ...
 const styles = {
     headline: {
         fontSize: 24,
@@ -107,6 +122,9 @@ const styles = {
 }
 
 
+
+
+// <Payments> component
 class Payments extends Component {
 
     // ...
@@ -114,43 +132,40 @@ class Payments extends Component {
         loginManager: PropTypes.object,
     }
 
+
     // ...
-    constructor (props) {
-        super(props)
-        this.state = {
-            cursorLeft: null,
-            cursorRight: null,
-            prevDisabled: false,
-            nextDisabled: false,
-            txCursorLeft: null,
-            txCursorRight: null,
-            txNextDisabled: false,
-            txPrevDisabled: false,
-            tabSelected: "1",
-            paymentDetails: {
-                txid: null,
-                created_at: null,
-                memo: "",
-                effects: [],
-                selectedPaymentId: null,
-            },
-            sbPayment: false,
-            sbPaymentAmount: null,
-            sbPaymentAssetCode: null,
-            sbNoMorePayments: false,
-            sbNoMoreTransactions: false,
-        }
+    state = {
+        cursorLeft: null,
+        cursorRight: null,
+        prevDisabled: false,
+        nextDisabled: false,
+        txCursorLeft: null,
+        txCursorRight: null,
+        txNextDisabled: false,
+        txPrevDisabled: false,
+        tabSelected: "1",
+        paymentDetails: {
+            txid: null,
+            created_at: null,
+            memo: "",
+            effects: [],
+            selectedPaymentId: null,
+        },
+        sbPayment: false,
+        sbPaymentAmount: null,
+        sbPaymentAssetCode: null,
+        sbNoMorePayments: false,
+        sbNoMoreTransactions: false,
     }
 
 
     // ...
-    componentWillUnmount () {
+    componentWillUnmount = () =>
         this.props.accountInfo.streamer.call(this)
-    }
 
 
     // ...
-    componentDidMount () {
+    componentDidMount = () => {
         this.props.setModalLoading()
         this.props.updateLoadingMessage({
             message: "Loading payments data ...",
@@ -165,28 +180,31 @@ class Payments extends Component {
             .limit(5)
             .call()
             .then((paymentsResult) => {
-                const gravatarLinkPromises = paymentsResult.records.map((r) => {
-                    let link = ""
-                    switch (r.type) {
-                        case "create_account":
-                            if (r.funder === this.props.appAuth.publicKey) {
-                                link = gravatarLink(r.account)
-                            } else {
-                                link = gravatarLink(r.funder)
-                            }
-                            break
+                const gravatarLinkPromises =
+                    paymentsResult.records.map((r) => {
+                        let link = ""
+                        switch (r.type) {
+                            case "create_account":
+                                if (
+                                    r.funder === this.props.appAuth.publicKey
+                                ) {
+                                    link = gravatarLink(r.account)
+                                } else {
+                                    link = gravatarLink(r.funder)
+                                }
+                                break
 
-                        // payment
-                        default:
-                            if(r.to === this.props.appAuth.publicKey) {
-                                link = gravatarLink(r.from)
-                            } else {
-                                link = gravatarLink(r.to)
-                            }
-                            break
-                    }
-                    return link
-                })
+                            // payment
+                            default:
+                                if(r.to === this.props.appAuth.publicKey) {
+                                    link = gravatarLink(r.from)
+                                } else {
+                                    link = gravatarLink(r.to)
+                                }
+                                break
+                        }
+                        return link
+                    })
 
                 Promise.all(gravatarLinkPromises).then((links) => {
                     links.forEach((link, index) => {
@@ -208,7 +226,8 @@ class Payments extends Component {
                                         paymentsResult.records[0].created_at,
                                     effects: effects._embedded.records,
                                     memo: tx.memo,
-                                    selectedPaymentId: paymentsResult.records[0].id,
+                                    selectedPaymentId:
+                                        paymentsResult.records[0].id,
                                 },
                             })
                             this.props.setModalLoaded()
@@ -249,7 +268,7 @@ class Payments extends Component {
 
 
     // ...
-    paymentsStreamer () {
+    paymentsStreamer = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         return server
             .payments()
@@ -267,9 +286,14 @@ class Payments extends Component {
                         this.updateAccount.call(this)
                         this.setState({
                             sbPayment: true,
-                            sbPaymentText: `Payment sent to new account [${pubKeyAbbr(message.account)}]: `,
-                            sbPaymentAmount: this.convertToFiat(message.starting_balance),
-                            sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
+                            sbPaymentText:
+                                `Payment sent to new account [${
+                                    pubKeyAbbr(message.account)
+                                }]: `,
+                            sbPaymentAmount:
+                                this.convertToFiat(message.starting_balance),
+                            sbPaymentAssetCode:
+                                this.props.accountInfo.currency.toUpperCase(),
                         })
                     }
 
@@ -285,8 +309,10 @@ class Payments extends Component {
                         this.setState({
                             sbPayment: true,
                             sbPaymentText: "Account Funded: ",
-                            sbPaymentAmount: this.convertToFiat(message.starting_balance),
-                            sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
+                            sbPaymentAmount:
+                                this.convertToFiat(message.starting_balance),
+                            sbPaymentAssetCode:
+                                this.props.accountInfo.currency.toUpperCase(),
                         })
                     }
 
@@ -339,7 +365,7 @@ class Payments extends Component {
 
 
     // ...
-    updateAccount () {
+    updateAccount = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server
             .loadAccount(this.props.appAuth.publicKey)
@@ -356,28 +382,37 @@ class Payments extends Component {
                         .order("desc")
                         .call()
                         .then((paymentsResult) => {
-                            const gravatarLinkPromises = paymentsResult.records.map((r) => {
-                                let link = ""
-                                switch (r.type) {
-                                    case "create_account":
-                                        if (r.funder === this.props.appAuth.publicKey) {
-                                            link = gravatarLink(r.account)
-                                        } else {
-                                            link = gravatarLink(r.funder)
-                                        }
-                                        break
+                            const gravatarLinkPromises =
+                                paymentsResult.records.map((r) => {
+                                    let link = ""
+                                    switch (r.type) {
+                                        case "create_account":
+                                            if (
+                                                r.funder ===
+                                                    this.props
+                                                        .appAuth.publicKey
+                                            ) {
+                                                link = gravatarLink(r.account)
+                                            } else {
+                                                link = gravatarLink(r.funder)
+                                            }
+                                            break
 
-                                    // payment
-                                    default:
-                                        if (r.to === this.props.appAuth.publicKey) {
-                                            link = gravatarLink(r.from)
-                                        } else {
-                                            link = gravatarLink(r.to)
-                                        }
-                                        break
-                                }
-                                return link
-                            })
+                                        // payment
+                                        default:
+                                            if (
+                                                r.to ===
+                                                    this.props
+                                                        .appAuth.publicKey
+                                            ) {
+                                                link = gravatarLink(r.from)
+                                            } else {
+                                                link = gravatarLink(r.to)
+                                            }
+                                            break
+                                    }
+                                    return link
+                                })
 
                             Promise.all(gravatarLinkPromises).then((links) => {
                                 links.forEach((link, index) => {
@@ -394,12 +429,18 @@ class Payments extends Component {
                                     paymentsResult.records[0].transaction().then((tx) => {
                                         this.setState({
                                             paymentDetails: {
-                                                txid: paymentsResult.records[0].id,
+                                                txid:
+                                                    paymentsResult
+                                                        .records[0].id,
                                                 created_at:
-                                                    paymentsResult.records[0].created_at,
-                                                effects: effects._embedded.records,
+                                                    paymentsResult
+                                                        .records[0].created_at,
+                                                effects: effects
+                                                    ._embedded.records,
                                                 memo: tx.memo,
-                                                selectedPaymentId: paymentsResult.records[0].id,
+                                                selectedPaymentId:
+                                                    paymentsResult
+                                                        .records[0].id,
                                             },
                                         })
                                         this.props.setModalLoaded()
@@ -419,7 +460,7 @@ class Payments extends Component {
 
 
     // ...
-    handleTabSelect (_, value) {
+    handleTabSelect = (_, value) => {
         this.props.setTab({ payments: value, })
         this.setState({
             tabSelected: value,
@@ -466,9 +507,10 @@ class Payments extends Component {
 
 
     // ...
-    decodeEffectType (effect, index) {
+    decodeEffectType = (effect, index) => {
         let humanizedEffectType = ""
         const icon = `filter_${index + 1}`
+
         switch (effect.type) {
             case "account_created":
                 humanizedEffectType = (
@@ -486,10 +528,23 @@ class Payments extends Component {
                             </div>
                             <div className="f-e-col">
                                 <div>
-                                    <span className="credit"> &#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.starting_balance)}</span>
+                                    <span className="credit">
+                                        {" "}&#x0002B;{" "}
+                                        {this.getCurrencyGlyph(
+                                            this.props.accountInfo.currency
+                                        )}{" "}
+                                        {this.convertToFiat(
+                                            effect.starting_balance
+                                        )}
+                                    </span>
                                 </div>
                                 <div className="fade-extreme">
-                                    <span className="micro-font">{effect.starting_balance}</span> <span className="pico-font small-caps">XLM</span>
+                                    <span className="micro-font">
+                                        {effect.starting_balance}
+                                    </span>{" "}
+                                    <span className="pico-font small-caps">
+                                        XLM
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -500,7 +555,8 @@ class Payments extends Component {
                                 </span>
                                 <div className="payment-details-fieldset">
                                     <div className="payment-details-memo">
-                                        <span className="smaller">Memo:</span>{" "}
+                                        <span className="smaller">Memo:</span>
+                                        {" "}
                                         {this.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
@@ -522,10 +578,12 @@ class Payments extends Component {
                                     <i className="material-icons">{icon}</i>
                                     <span>Acccount Removed </span>
                                     <span className="account-direction">
-                                        {effect.account ===
-                                        this.props.appAuth.publicKey
-                                            ? "Yours"
-                                            : "Theirs"}
+                                        {
+                                            effect.account ===
+                                                this.props.appAuth.publicKey ?
+                                                "Yours" :
+                                                "Theirs"
+                                        }
                                     </span>
                                 </div>
                             </div>
@@ -538,7 +596,8 @@ class Payments extends Component {
                                 <div className="payment-details-fieldset">
                                     <div className="payment-details-memo">
                                         <span className="smaller">
-                                            Account Closed:{" "}
+                                            Account Closed:
+                                            {" "}
                                             {pubKeyAbbr(effect.account)}
                                         </span>
                                     </div>
@@ -570,13 +629,32 @@ class Payments extends Component {
                                 <div className="f-e-col">
                                     <div>
                                         {getAssetCode(effect) === "XLM" ? (
-                                            <span className="credit"> &#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.amount)}</span>
+                                            <span className="credit">
+                                                {" "}&#x0002B;{" "}
+                                                {this.getCurrencyGlyph(
+                                                    this.props.accountInfo.currency
+                                                )}{" "}
+                                                {this.convertToFiat(
+                                                    effect.amount
+                                                )}
+                                            </span>
                                         ) : (
-                                            <span className="credit"> &#x0002B; {effect.amount} <span className="smaller">{getAssetCode(effect)}</span></span>
+                                            <span className="credit">
+                                                {" "}&#x0002B;{" "}
+                                                {effect.amount}{" "}
+                                                <span className="smaller">
+                                                    {getAssetCode(effect)}
+                                                </span>
+                                            </span>
                                         )}
                                     </div>
                                     <div className="fade-extreme">
-                                        <span className="micro-font">{effect.amount}</span> <span className="pico-font small-caps">XLM</span>
+                                        <span className="micro-font">
+                                            {effect.amount}
+                                        </span>{" "}
+                                        <span className="pico-font small-caps">
+                                            XLM
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -588,7 +666,8 @@ class Payments extends Component {
                                 </span>
                                 <div className="payment-details-fieldset">
                                     <div className="payment-details-memo">
-                                        <span className="smaller">Memo:</span>{" "}
+                                        <span className="smaller">Memo:</span>
+                                        {" "}
                                         {this.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
@@ -619,13 +698,33 @@ class Payments extends Component {
                                 <div className="f-e-col">
                                     <div>
                                         {getAssetCode(effect) === "XLM" ? (
-                                            <span className="debit"> &#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(effect.amount)}</span>
+                                            <span className="debit">
+                                                {" "}&#x02212;{" "}
+                                                {this.getCurrencyGlyph(
+                                                    this.props.accountInfo.currency
+                                                )}{" "}
+                                                {this.convertToFiat(
+                                                    effect.amount
+                                                )}
+                                            </span>
                                         ) : (
-                                            <span className="debit"> &#x02212; {effect.amount} <span className="smaller">{getAssetCode(effect)}</span></span>
+                                            <span className="debit">
+                                                {" "}&#x02212;{" "}
+                                                {effect.amount}{" "}
+                                                <span className="smaller">
+                                                    {getAssetCode(effect)}
+                                                </span>
+                                            </span>
                                         )}
                                     </div>
                                     <div className="fade-extreme">
-                                        <span className="micro-font">{effect.amount}</span> <span className="pico-font small-caps">XLM</span>
+                                        <span className="micro-font">
+                                            {effect.amount}
+                                        </span>
+                                        {" "}
+                                        <span className="pico-font small-caps">
+                                            XLM
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -637,7 +736,8 @@ class Payments extends Component {
                                 </span>
                                 <div className="payment-details-fieldset">
                                     <div className="payment-details-memo">
-                                        <span className="smaller">Memo:</span>{" "}
+                                        <span className="smaller">Memo:</span>
+                                        {" "}
                                         {this.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
@@ -656,7 +756,8 @@ class Payments extends Component {
                         <div className="flex-row">
                             <div>
                                 <i className="material-icons">{icon}</i>
-                                <span>Signer Created ✎ </span>
+                                <span>Signer Created {emoji.pencil}</span>
+                                {" "}
                                 <span className="account-direction">
                                     {effect.public_key ===
                                     this.props.appAuth.publicKey
@@ -686,6 +787,7 @@ class Payments extends Component {
                 humanizedEffectType = effect.type
                 break
         }
+
         return humanizedEffectType
     }
 
@@ -707,8 +809,9 @@ class Payments extends Component {
 
 
     // ...
-    getNextPaymentsPage () {
+    getNextPaymentsPage = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
+
         server
             .payments()
             .forAccount(this.props.appAuth.publicKey)
@@ -768,8 +871,9 @@ class Payments extends Component {
 
 
     // ...
-    getPrevPaymentsPage () {
+    getPrevPaymentsPage = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
+
         server
             .payments()
             .forAccount(this.props.appAuth.publicKey)
@@ -820,7 +924,9 @@ class Payments extends Component {
                         this.props.setAccountPayments(paymentsResult)
                         this.updateCursors(paymentsResult.records)
                     } else {
-                        this.noMorePaymentsNotice.call(this, { prevDisabled: true, })
+                        this.noMorePaymentsNotice.call(
+                            this, { prevDisabled: true, }
+                        )
                     }
                 })
             })
@@ -832,8 +938,9 @@ class Payments extends Component {
 
 
     // ...
-    getNextTransactionsPage () {
+    getNextTransactionsPage = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
+
         server
             .transactions()
             .forAccount(this.props.appAuth.publicKey)
@@ -862,8 +969,9 @@ class Payments extends Component {
 
 
     // ...
-    getPrevTransactionsPage () {
+    getPrevTransactionsPage = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
+
         server
             .transactions()
             .forAccount(this.props.appAuth.publicKey)
@@ -893,84 +1001,166 @@ class Payments extends Component {
 
 
     // ...
-    determineLeftIcon (payment) {
+    determineLeftIcon = (payment) => {
         let rendered = ""
+
         switch (payment.type) {
             case "create_account":
                 rendered =
                     payment.funder === this.props.appAuth.publicKey ? (
-                        <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>card_giftcard</i>
+                        <i className={
+                            this.context.loginManager.isAuthenticated() ?
+                                ("material-icons badge") :
+                                ("material-icons")
+                        }>card_giftcard</i>
                     ) : (
-                        <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>account_balance</i>
+                        <i className={
+                            this.context.loginManager.isAuthenticated() ?
+                                ("material-icons badge") :
+                                ("material-icons")
+                        }>account_balance</i>
                     )
                 break
+
             case "account_merge":
-                rendered = <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>merge_type</i>
+                rendered =
+                    <i className={
+                        this.context.loginManager.isAuthenticated() ?
+                            ("material-icons badge") :
+                            ("material-icons")
+                    }>merge_type</i>
                 break
+
             default:
                 rendered =
                     payment.to === this.props.appAuth.publicKey ? (
-                        <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>account_balance_wallet</i>
+                        <i className={
+                            this.context.loginManager.isAuthenticated() ?
+                                ("material-icons badge") :
+                                ("material-icons")
+                        }>account_balance_wallet</i>
                     ) : (
-                        <i className={this.context.loginManager.isAuthenticated() ? ("material-icons badge") : ("material-icons")}>payment</i>
+                        <i className={
+                            this.context.loginManager.isAuthenticated() ?
+                                ("material-icons badge") :
+                                ("material-icons")
+                        }>payment</i>
                     )
                 break
         }
+
         return rendered
     }
 
 
     // ...
-    determinePrimaryText (payment) {
+    determinePrimaryText = (payment) => {
         let rendered = ""
+
         switch (payment.type) {
             case "create_account":
                 rendered =
-                    (payment.funder === this.props.appAuth.publicKey ?
-                        (<span>&#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.starting_balance)}</span>) :
-                        (<span>&#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.starting_balance)}</span>))
+                    payment.funder === this.props.appAuth.publicKey ?
+                        <span>
+                            &#x02212;
+                            {" "}
+                            {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                            {" "}
+                            {this.convertToFiat(payment.starting_balance)}
+                        </span> :
+                        <span>
+                            &#x0002B;
+                            {" "}
+                            {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                            {" "}
+                            {this.convertToFiat(payment.starting_balance)}
+                        </span>
                 break
+
             case "account_merge":
                 rendered = "Account Merged"
                 break
+
             default:
                 if (getAssetCode(payment) === "XLM") {
-                    rendered = (payment.to === this.props.appAuth.publicKey ?
-                        (<span>&#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.amount)}</span>) :
-                        (<span>&#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.amount)}</span>))
+                    rendered =
+                        payment.to === this.props.appAuth.publicKey ?
+                            <span>
+                                &#x0002B;
+                                {" "}
+                                {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                {" "}
+                                {this.convertToFiat(payment.amount)}
+                            </span> :
+                            <span>
+                                &#x02212;
+                                {" "}
+                                {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                {" "}
+                                {this.convertToFiat(payment.amount)}
+                            </span>
                 } else {
                     rendered =
-                        (payment.to === this.props.appAuth.publicKey ?
-                            (<span>&#x0002B; {payment.amount} {getAssetCode(payment)}</span>) :
-                            (<span>&#x02212; {payment.amount} {getAssetCode(payment)}</span>))
+                        payment.to === this.props.appAuth.publicKey ?
+                            <span>
+                                &#x0002B;
+                                {" "}
+                                {payment.amount}
+                                {" "}
+                                {getAssetCode(payment)}
+                            </span> :
+                            <span>
+                                &#x02212;
+                                {" "}
+                                {payment.amount}
+                                {" "}
+                                {getAssetCode(payment)}
+                            </span>
                 }
                 break
         }
+
         return rendered
     }
 
 
     // ...
-    convertToXLM (amount) {
+    convertToXLM = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
         const fiatAmount = new BigNumber(amount)
-        if (this.props.accountInfo.rates !== undefined && this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined) {
-            return fiatAmount.dividedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toString()
-        } else {
-            return "0"
+
+        if (
+            this.props.accountInfo.rates  &&
+            this.props.accountInfo.rates[this.props.accountInfo.currency]
+        ) {
+            return fiatAmount.dividedBy(
+                this.props.accountInfo.rates[
+                    this.props.accountInfo.currency
+                ].rate
+            ).toString()
         }
+
+        return "0"
     }
 
 
     // ...
-    convertToFiat (amount) {
+    convertToFiat = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 2, })
         const nativeAmount = new BigNumber(amount)
-        if (this.props.accountInfo.rates !== undefined && this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined) {
-            return nativeAmount.multipliedBy(this.props.accountInfo.rates[this.props.accountInfo.currency].rate).toFixed(2)
-        } else {
-            return "0"
+
+        if (
+            this.props.accountInfo.rates  &&
+            this.props.accountInfo.rates[this.props.accountInfo.currency]
+        ) {
+            return nativeAmount.multipliedBy(
+                this.props.accountInfo.rates[
+                    this.props.accountInfo.currency
+                ].rate
+            ).toFixed(2)
         }
+
+        return "0"
     }
 
 
@@ -988,389 +1178,377 @@ class Payments extends Component {
 
 
     // ...
-    render () {
-        return (
-            <div>
-                <SnackBar
-                    open={this.state.sbPayment}
-                    message={`${this.state.sbPaymentText} ${
-                        this.state.sbPaymentAmount
-                    } ${this.state.sbPaymentAssetCode}`}
-                    onRequestClose={
-                        this.handlePaymentSnackBarClose.bind(this)
-                    }
-                />
-                <SnackBar
-                    open={this.state.sbNoMorePayments}
-                    message="No more payments found."
-                    onRequestClose={
-                        this.handleNoMorePaymentsSnackBarClose.bind(this)
-                    }
-                />
-                <SnackBar
-                    open={this.state.sbNoMoreTransactions}
-                    message="No more transactions found."
-                    onRequestClose={
-                        this.handleNoMoreTransactionsSnackBarClose.bind(this)
-                    }
-                />
-                <Tabs
-                    tabItemContainerStyle={styles.container}
-                    inkBarStyle={styles.inkBar}
-                    value={this.props.ui.tabs.payments}
-                    onChange={this.handleTabSelect.bind(this, this.value)}
-                >
-                    <Tab style={styles.tab} label="History" value="1">
-                        <div className="tab-content">
-                            <div className="account-title">
-                                Payment History
-                            </div>
-                            <div className="account-subtitle">
-                                Newest payments shown as first.
-                            </div>
-
-                            <div className="flex-row-space-between">
-                                <div className="flex-row-column">
-                                    <div>
-                                        {this.props.accountInfo.payments ? (
-                                            <div>
-                                                <SelectableList
-                                                    defaultValue={1}
-                                                >
-                                                    {this.props.accountInfo.payments.records.map(
-                                                        (
-                                                            payment,
-                                                            index
-                                                        ) => (
-                                                            <div
-                                                                key={
-                                                                    payment.id
-                                                                }
-                                                                className={
-                                                                    this
-                                                                        .state
-                                                                        .paymentDetails
-                                                                        .selectedPaymentId ===
-                                                                    payment.id
-                                                                        ? "payment-item-active"
-                                                                        : "payment-item"
-                                                                }
-                                                            >
-                                                                <ListItem
-                                                                    value={
-                                                                        index +
-                                                                        1
-                                                                    }
-                                                                    onClick={this.handlePaymentClick.bind(
-                                                                        this,
-                                                                        payment,
-                                                                        payment.id
-                                                                    )}
-                                                                    leftIcon={this.determineLeftIcon.call(
-                                                                        this,
-                                                                        payment
-                                                                    )}
-                                                                    hoverColor="rgba(244,176,4,0.95)"
-                                                                    secondaryText={
-                                                                        <Fragment>
-                                                                            <div className="tiny fade-strong">
-                                                                                {utcToLocaleDateTime(
-                                                                                    payment.created_at
-                                                                                )}
-                                                                            </div>
-
-                                                                            {this.context.loginManager.isAuthenticated() ?
-                                                                                (<div className="small fade">
-                                                                                    {payment.firstName ? payment.firstName : "Unknown"} {payment.lastName ? payment.lastName : "Payee"}
-                                                                                    {(payment.alias && payment.domain) ?
-                                                                                        (<span className="p-l-small micro">[{payment.alias}*{payment.domain}]</span>) :
-                                                                                        (<span className="p-l-small micro">&#x0205F;</span>)}
-                                                                                </div>) : null}
-                                                                        </Fragment>
-                                                                    }
-                                                                    primaryText={this.determinePrimaryText.call(
-                                                                        this,
-                                                                        payment
-                                                                    )}
-                                                                    rightAvatar={
-                                                                        this.context.loginManager.isAuthenticated() ? (
-                                                                            <Avatar
-                                                                                className="square-avatar"
-                                                                                backgroundColor="rgba(244,176,4,1)"
-                                                                                size={
-                                                                                    70
-                                                                                }
-                                                                                src={payment.gravatar}
-                                                                            />) : null
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </SelectableList>
-                                            </div>
-                                        ) : null}
+    render = () =>
+        <div>
+            <SnackBar
+                open={this.state.sbPayment}
+                message={`${this.state.sbPaymentText} ${
+                    this.state.sbPaymentAmount
+                } ${this.state.sbPaymentAssetCode}`}
+                onRequestClose={
+                    this.handlePaymentSnackBarClose.bind(this)
+                }
+            />
+            <SnackBar
+                open={this.state.sbNoMorePayments}
+                message="No more payments found."
+                onRequestClose={
+                    this.handleNoMorePaymentsSnackBarClose.bind(this)
+                }
+            />
+            <SnackBar
+                open={this.state.sbNoMoreTransactions}
+                message="No more transactions found."
+                onRequestClose={
+                    this.handleNoMoreTransactionsSnackBarClose.bind(this)
+                }
+            />
+            <Tabs
+                tabItemContainerStyle={styles.container}
+                inkBarStyle={styles.inkBar}
+                value={this.props.ui.tabs.payments}
+                onChange={this.handleTabSelect.bind(this, this.value)}
+            >
+                <Tab style={styles.tab} label="History" value="1">
+                    <div className="tab-content">
+                        <div className="account-title">
+                            Payment History
+                        </div>
+                        <div className="account-subtitle">
+                            Newest payments shown as first.
+                        </div>
+                        <div className="flex-row-space-between">
+                            <div className="flex-row-column">
+                                <div>
+                                    {this.props.accountInfo.payments ? (
                                         <div>
-                                            <div className="flex-row-space-between p-t">
-                                                <IconButton
-                                                    className="paging-icon"
-                                                    tooltip="Previous Payments"
-                                                    tooltipStyles={
-                                                        styles.tooltip
-                                                    }
-                                                    tooltipPosition="top-right"
-                                                    onClick={
-                                                        this.getPrevPaymentsPage.bind(this)
-                                                    }
-                                                    disabled={
-                                                        this.state
-                                                            .prevDisabled
-                                                    }
-                                                >
-                                                    <i className="material-icons">
-                                                        fast_rewind
-                                                    </i>
-                                                </IconButton>
-
-                                                <IconButton
-                                                    className="paging-icon"
-                                                    tooltip="Next Payments"
-                                                    tooltipStyles={
-                                                        styles.tooltip
-                                                    }
-                                                    tooltipPosition="top-left"
-                                                    onClick={
-                                                        this.getNextPaymentsPage.bind(this)
-                                                    }
-                                                    disabled={
-                                                        this.state
-                                                            .nextDisabled
-                                                    }
-                                                >
-                                                    <i className="material-icons">
-                                                        fast_forward
-                                                    </i>
-                                                </IconButton>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex-row-column">
-                                    <div>
-                                        <div className="transaction-details-header">
-                                            <div className="flex-row">
-                                                <div>
-                                                    Payment ID:{" "}
-                                                    {
-                                                        this.state
-                                                            .paymentDetails
-                                                            .txid
-                                                    }
-                                                </div>
-                                                <div>
-                                                    {utcToLocaleDateTime(
-                                                        this.state
-                                                            .paymentDetails
-                                                            .created_at
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="transaction-details-body">
-                                            {this.state.paymentDetails.effects.map(
-                                                (effect, index) => {
-                                                    return (
+                                            <SelectableList
+                                                defaultValue={1}
+                                            >
+                                                {this.props.accountInfo.payments.records.map(
+                                                    (
+                                                        payment,
+                                                        index
+                                                    ) => (
                                                         <div
-                                                            key={index}
-                                                            className="payment-details-item"
+                                                            key={
+                                                                payment.id
+                                                            }
+                                                            className={
+                                                                this
+                                                                    .state
+                                                                    .paymentDetails
+                                                                    .selectedPaymentId ===
+                                                                payment.id
+                                                                    ? "payment-item-active"
+                                                                    : "payment-item"
+                                                            }
                                                         >
-                                                            <span className="effect-title">
-                                                                {this.decodeEffectType(
-                                                                    effect,
-                                                                    index
+                                                            <ListItem
+                                                                value={
+                                                                    index +
+                                                                    1
+                                                                }
+                                                                onClick={this.handlePaymentClick.bind(
+                                                                    this,
+                                                                    payment,
+                                                                    payment.id
                                                                 )}
-                                                            </span>
+                                                                leftIcon={this.determineLeftIcon.call(
+                                                                    this,
+                                                                    payment
+                                                                )}
+                                                                hoverColor="rgba(244,176,4,0.95)"
+                                                                secondaryText={
+                                                                    <Fragment>
+                                                                        <div className="tiny fade-strong">
+                                                                            {utcToLocaleDateTime(
+                                                                                payment.created_at
+                                                                            )}
+                                                                        </div>
+                                                                        {this.context.loginManager.isAuthenticated() ?
+                                                                            (<div className="small fade">
+                                                                                {payment.firstName ? payment.firstName : "Unknown"} {payment.lastName ? payment.lastName : "Payee"}
+                                                                                {(payment.alias && payment.domain) ?
+                                                                                    (<span className="p-l-small micro">[{payment.alias}*{payment.domain}]</span>) :
+                                                                                    (<span className="p-l-small micro">&#x0205F;</span>)}
+                                                                            </div>) : null}
+                                                                    </Fragment>
+                                                                }
+                                                                primaryText={this.determinePrimaryText.call(
+                                                                    this,
+                                                                    payment
+                                                                )}
+                                                                rightAvatar={
+                                                                    this.context.loginManager.isAuthenticated() ? (
+                                                                        <Avatar
+                                                                            className="square-avatar"
+                                                                            backgroundColor="rgba(244,176,4,1)"
+                                                                            size={
+                                                                                70
+                                                                            }
+                                                                            src={payment.gravatar}
+                                                                        />) : null
+                                                                }
+                                                            />
                                                         </div>
                                                     )
+                                                )}
+                                            </SelectableList>
+                                        </div>
+                                    ) : null}
+                                    <div>
+                                        <div className="flex-row-space-between p-t">
+                                            <IconButton
+                                                className="paging-icon"
+                                                tooltip="Previous Payments"
+                                                tooltipStyles={
+                                                    styles.tooltip
                                                 }
-                                            )}
+                                                tooltipPosition="top-right"
+                                                onClick={
+                                                    this.getPrevPaymentsPage.bind(this)
+                                                }
+                                                disabled={
+                                                    this.state
+                                                        .prevDisabled
+                                                }
+                                            >
+                                                <i className="material-icons">
+                                                    fast_rewind
+                                                </i>
+                                            </IconButton>
+
+                                            <IconButton
+                                                className="paging-icon"
+                                                tooltip="Next Payments"
+                                                tooltipStyles={
+                                                    styles.tooltip
+                                                }
+                                                tooltipPosition="top-left"
+                                                onClick={
+                                                    this.getNextPaymentsPage.bind(this)
+                                                }
+                                                disabled={
+                                                    this.state
+                                                        .nextDisabled
+                                                }
+                                            >
+                                                <i className="material-icons">
+                                                    fast_forward
+                                                </i>
+                                            </IconButton>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </Tab>
-                    <Tab style={styles.tab} label="Transactions" value="2">
-                        <div className="tab-content">
-                            <div className="flex-row">
+                            <div className="flex-row-column">
                                 <div>
-                                    <div className="account-title">
-                                        Account Transactions
-                                    </div>
-                                    <div className="account-subtitle">
-                                        Newest transactions shown as first.
-                                    </div>
-                                    <div className="p-t" />
-                                    {this.props.accountInfo.transactions ? (
-                                        <Table style={styles.table}>
-                                            <TableHeader
-                                                className="tx-table-header"
-                                                displaySelectAll={false}
-                                                adjustForCheckbox={false}
-                                            >
-                                                <TableRow
-                                                    className="tx-table-row"
-                                                    style={styles.tableRow}
-                                                >
-                                                    <TableHeaderColumn className="tx-table-header-column">
-                                                        Transaction Time
-                                                    </TableHeaderColumn>
-                                                    <TableHeaderColumn className="tx-table-header-column">
-                                                        Account
-                                                    </TableHeaderColumn>
-                                                    <TableHeaderColumn className="tx-table-header-column">
-                                                        Memo
-                                                    </TableHeaderColumn>
-                                                    <TableHeaderColumn className="tx-table-header-column">
-                                                        Fee Paid
-                                                    </TableHeaderColumn>
-                                                    <TableHeaderColumn className="tx-table-header-column">
-                                                        Signature Count
-                                                    </TableHeaderColumn>
-                                                </TableRow>
-                                            </TableHeader>
-                                            <TableBody
-                                                displayRowCheckbox={false}
-                                            >
-                                                {this.props.accountInfo.transactions.records.map(
-                                                    (tx, index) => (
-                                                        <TableRow
-                                                            selectable={
-                                                                false
-                                                            }
-                                                            key={index}
-                                                            className="tx-table-row"
-                                                        >
-                                                            <TableRowColumn className="tx-table-row-column">
-                                                                {utcToLocaleDateTime(
-                                                                    tx.created_at
-                                                                )}
-                                                            </TableRowColumn>
-                                                            <TableRowColumn className="tx-table-row-column">
-                                                                <span>
-                                                                    <span>
-                                                                        {pubKeyAbbr(
-                                                                            tx.source_account
-                                                                        )}
-                                                                    </span>
-                                                                    <span className="account-direction">
-                                                                        {tx.source_account ===
-                                                                        this
-                                                                            .props
-                                                                            .accountInfo
-                                                                            .pubKey
-                                                                            ? "Yours"
-                                                                            : "Theirs"}
-                                                                    </span>
-                                                                </span>
-                                                            </TableRowColumn>
-                                                            <TableRowColumn className="tx-table-row-column">
-                                                                {tx.memo}
-                                                            </TableRowColumn>
-                                                            <TableRowColumn className="tx-table-row-column">
-                                                                {
-                                                                    tx.fee_paid
-                                                                }
-                                                            </TableRowColumn>
-                                                            <TableRowColumn className="tx-table-row-column">
-                                                                {
-                                                                    tx
-                                                                        .signatures
-                                                                        .length
-                                                                }
-                                                            </TableRowColumn>
-                                                        </TableRow>
-                                                    )
+                                    <div className="transaction-details-header">
+                                        <div className="flex-row">
+                                            <div>
+                                                Payment ID:{" "}
+                                                {
+                                                    this.state
+                                                        .paymentDetails
+                                                        .txid
+                                                }
+                                            </div>
+                                            <div>
+                                                {utcToLocaleDateTime(
+                                                    this.state
+                                                        .paymentDetails
+                                                        .created_at
                                                 )}
-                                            </TableBody>
-                                        </Table>
-                                    ) : null}
-                                    <div className="p-b" />
-                                    <div className="flex-row-space-between p-t">
-                                        <IconButton
-                                            className="paging-icon"
-                                            tooltip="Previous Transactions"
-                                            tooltipStyles={styles.tooltip}
-                                            tooltipPosition="top-right"
-                                            onClick={this.getPrevTransactionsPage.bind(
-                                                this
-                                            )}
-                                            disabled={
-                                                this.state.txPrevDisabled
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="transaction-details-body">
+                                        {this.state.paymentDetails.effects.map(
+                                            (effect, index) => {
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className="payment-details-item"
+                                                    >
+                                                        <span className="effect-title">
+                                                            {this.decodeEffectType(
+                                                                effect,
+                                                                index
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                )
                                             }
-                                        >
-                                            <i className="material-icons">
-                                                fast_rewind
-                                            </i>
-                                        </IconButton>
-
-                                        <IconButton
-                                            className="paging-icon"
-                                            tooltip="Next Transactions"
-                                            tooltipStyles={styles.tooltip}
-                                            tooltipPosition="top-left"
-                                            onClick={this.getNextTransactionsPage.bind(
-                                                this
-                                            )}
-                                            disabled={
-                                                this.state.txNextDisabled
-                                            }
-                                        >
-                                            <i className="material-icons">
-                                                fast_forward
-                                            </i>
-                                        </IconButton>
+                                        )}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </Tab>
-                </Tabs>
-            </div>
-        )
-    }
+                    </div>
+                </Tab>
+                <Tab style={styles.tab} label="Transactions" value="2">
+                    <div className="tab-content">
+                        <div className="flex-row">
+                            <div>
+                                <div className="account-title">
+                                    Account Transactions
+                                </div>
+                                <div className="account-subtitle">
+                                    Newest transactions shown as first.
+                                </div>
+                                <div className="p-t" />
+                                {this.props.accountInfo.transactions ? (
+                                    <Table style={styles.table}>
+                                        <TableHeader
+                                            className="tx-table-header"
+                                            displaySelectAll={false}
+                                            adjustForCheckbox={false}
+                                        >
+                                            <TableRow
+                                                className="tx-table-row"
+                                                style={styles.tableRow}
+                                            >
+                                                <TableHeaderColumn className="tx-table-header-column">
+                                                    Transaction Time
+                                                </TableHeaderColumn>
+                                                <TableHeaderColumn className="tx-table-header-column">
+                                                    Account
+                                                </TableHeaderColumn>
+                                                <TableHeaderColumn className="tx-table-header-column">
+                                                    Memo
+                                                </TableHeaderColumn>
+                                                <TableHeaderColumn className="tx-table-header-column">
+                                                    Fee Paid
+                                                </TableHeaderColumn>
+                                                <TableHeaderColumn className="tx-table-header-column">
+                                                    Signature Count
+                                                </TableHeaderColumn>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody
+                                            displayRowCheckbox={false}
+                                        >
+                                            {this.props.accountInfo.transactions.records.map(
+                                                (tx, index) => (
+                                                    <TableRow
+                                                        selectable={
+                                                            false
+                                                        }
+                                                        key={index}
+                                                        className="tx-table-row"
+                                                    >
+                                                        <TableRowColumn className="tx-table-row-column">
+                                                            {utcToLocaleDateTime(
+                                                                tx.created_at
+                                                            )}
+                                                        </TableRowColumn>
+                                                        <TableRowColumn className="tx-table-row-column">
+                                                            <span>
+                                                                <span>
+                                                                    {pubKeyAbbr(
+                                                                        tx.source_account
+                                                                    )}
+                                                                </span>
+                                                                <span className="account-direction">
+                                                                    {tx.source_account ===
+                                                                    this
+                                                                        .props
+                                                                        .accountInfo
+                                                                        .pubKey
+                                                                        ? "Yours"
+                                                                        : "Theirs"}
+                                                                </span>
+                                                            </span>
+                                                        </TableRowColumn>
+                                                        <TableRowColumn className="tx-table-row-column">
+                                                            {tx.memo}
+                                                        </TableRowColumn>
+                                                        <TableRowColumn className="tx-table-row-column">
+                                                            {
+                                                                tx.fee_paid
+                                                            }
+                                                        </TableRowColumn>
+                                                        <TableRowColumn className="tx-table-row-column">
+                                                            {
+                                                                tx
+                                                                    .signatures
+                                                                    .length
+                                                            }
+                                                        </TableRowColumn>
+                                                    </TableRow>
+                                                )
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                ) : null}
+                                <div className="p-b" />
+                                <div className="flex-row-space-between p-t">
+                                    <IconButton
+                                        className="paging-icon"
+                                        tooltip="Previous Transactions"
+                                        tooltipStyles={styles.tooltip}
+                                        tooltipPosition="top-right"
+                                        onClick={this.getPrevTransactionsPage.bind(
+                                            this
+                                        )}
+                                        disabled={
+                                            this.state.txPrevDisabled
+                                        }
+                                    >
+                                        <i className="material-icons">
+                                            fast_rewind
+                                        </i>
+                                    </IconButton>
+
+                                    <IconButton
+                                        className="paging-icon"
+                                        tooltip="Next Transactions"
+                                        tooltipStyles={styles.tooltip}
+                                        tooltipPosition="top-left"
+                                        onClick={this.getNextTransactionsPage.bind(
+                                            this
+                                        )}
+                                        disabled={
+                                            this.state.txNextDisabled
+                                        }
+                                    >
+                                        <i className="material-icons">
+                                            fast_forward
+                                        </i>
+                                    </IconButton>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Tab>
+            </Tabs>
+        </div>
+
 }
 
 
 // ...
-function mapStateToProps (state) {
-    return {
+export default connect(
+    // map state to props.
+    (state) => ({
         accountInfo: state.accountInfo,
         loadingModal: state.loadingModal,
         ui: state.ui,
         isAuthenticated: state.auth.isAuthenticated,
         appAuth: state.appAuth,
-    }
-}
+    }),
 
-
-// ...
-function matchDispatchToProps (dispatch) {
-    return bindActionCreators(
-        {
-            setAccountPayments,
-            setAccountTransactions,
-            setStreamer,
-            accountExistsOnLedger,
-            accountMissingOnLedger,
-            setTab,
-            setModalLoading,
-            setModalLoaded,
-            updateLoadingMessage,
-        },
-        dispatch
-    )
-}
-
-// ...
-export default connect(mapStateToProps, matchDispatchToProps)(Payments)
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        setAccountPayments,
+        setAccountTransactions,
+        setStreamer,
+        accountExistsOnLedger,
+        accountMissingOnLedger,
+        setTab,
+        setModalLoading,
+        setModalLoaded,
+        updateLoadingMessage,
+    }, dispatch)
+)(Payments)
