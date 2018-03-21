@@ -30,7 +30,6 @@ export const updateLoadingMessage = (state) => ({
     payload: state,
 })
 
-
 export const logIn = (state) => ({
     type: "LOG_IN",
     payload: state,
@@ -140,6 +139,7 @@ export const setLedgerSoftwareVersion = (state) => ({
     type: "SET_LEDGER_SOFTWARE_VERSION",
     payload: state,
 })
+
 
 
 

@@ -22,7 +22,7 @@ const navLinkConnect = connect(
 
 
 
-// ...
+// <BalancesNavLink> component
 const BalancesNavLink = navLinkConnect(
     ({ currentPath, paths, push, }) =>
         <NavLink
@@ -46,7 +46,7 @@ const BalancesNavLink = navLinkConnect(
 
 
 
-// ...
+// <PaymentsNavLink> component
 const PaymentsNavLink = navLinkConnect(
     ({ currentPath, paths, push, }) =>
         <NavLink
@@ -70,7 +70,7 @@ const PaymentsNavLink = navLinkConnect(
 
 
 
-// ...
+// <AccountNavLink> component
 const AccountNavLink = navLinkConnect(
     ({ currentPath, paths, push, }) =>
         <NavLink

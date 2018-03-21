@@ -10,9 +10,13 @@ import {
     setAccountRegistered,
     setPublicKey
 } from "../../actions/index"
+
 import "./index.css"
 
 
+
+
+// <LedgerAuthenticator> component
 class LedgerAuthenticator extends Component {
 
     // ...
@@ -170,14 +174,17 @@ class LedgerAuthenticator extends Component {
 }
 
 
-const mapStateToProps = state => ({
-    auth: state.auth,
-})
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({
+        auth: state.auth,
+    }),
 
-
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ logIn, setAccountRegistered, setPublicKey, }, dispatch)
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(LedgerAuthenticator)
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        logIn,
+        setAccountRegistered,
+        setPublicKey,
+    }, dispatch)
+)(LedgerAuthenticator)

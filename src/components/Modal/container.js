@@ -1,19 +1,22 @@
-import Modal from "./Modal"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
+import Modal from "./Modal"
 import {
     changeModalState,
 } from "../../actions/index"
 
 
-const mapStateToProps = state => ({
-    appUi: state.appUi,
-})
 
 
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ changeModalState, }, dispatch)
-}
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({
+        appUi: state.appUi,
+    }),
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Modal)
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        changeModalState,
+    }, dispatch)
+)(Modal)

@@ -1,16 +1,24 @@
-import React, { Component } from "react"
+import React from "react"
 import Dialog from "material-ui/Dialog"
+
 import "./index.css"
 
-export default class Modal extends Component {
-    render = () => <Dialog
+
+
+
+// <Modal> component
+export default ({
+    title, actions, open, hideModal, children,
+}) =>
+    <Dialog
         paperClassName="paper-modal"
         titleClassName="title-modal"
-        title={this.props.title}
-        actions={this.props.actions}
+        title={title}
+        actions={actions}
         modal={true}
-        open={this.props.open}
-        onRequestClose={this.hideModal}
+        open={open}
+        onRequestClose={hideModal}
         autoScrollBodyContent={true}
-    >{this.props.children}</Dialog>
-}
+    >
+        {children}
+    </Dialog>

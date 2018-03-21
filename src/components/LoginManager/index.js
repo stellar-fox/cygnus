@@ -1,12 +1,12 @@
-import { Component, } from "react"
+import { Component } from "react"
+import PropTypes from "prop-types"
 import { ActionConstants } from "../../actions"
 import { authenticate } from "./api"
-import PropTypes from "prop-types"
 
 
 
 
-// ...
+// <LoginManager> component
 export default class LoginManager extends Component {
 
     // ...
@@ -22,6 +22,7 @@ export default class LoginManager extends Component {
     // ...
     attemptLogin = (email, password) => {
         const that = this
+
         return async function _attemptLogin () {
             that.props.changeLoginState({
                 loginState: ActionConstants.LOGGING_IN,
@@ -54,18 +55,17 @@ export default class LoginManager extends Component {
         }()
     }
 
+
     // ...
-    isAuthenticated = () => (
+    isAuthenticated = () =>
         this.props.appAuth.loginState === ActionConstants.LOGGED_IN &&
-        this.props.appAuth.token
-    ) ? true : false
+            this.props.appAuth.token
 
 
     // ...
-    isExploreOnly = () => (
+    isExploreOnly = () =>
         this.props.appAuth.loginState === ActionConstants.LOGGED_IN &&
-        this.props.appAuth.publicKey && !this.props.appAuth.bip32Path
-    ) ? true : false
+            this.props.appAuth.publicKey && !this.props.appAuth.bip32Path
 
 
     // ...

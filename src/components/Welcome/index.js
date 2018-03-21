@@ -51,6 +51,9 @@ import PropTypes from "prop-types"
 import "./index.css"
 
 
+
+
+// ...
 const styles = {
     errorStyle: {
         color: "#912d35",
@@ -69,6 +72,10 @@ const styles = {
     },
 }
 
+
+
+
+// <Welcome> component
 class Welcome extends Component {
 
     // ...
@@ -76,28 +83,23 @@ class Welcome extends Component {
         loginManager: PropTypes.object,
     }
 
+
     // ...
-    constructor (props) {
-        super(props)
-        this.state = {
-            modalShown: false,
-            modalButtonText: "CANCEL",
-        }
+    state = {
+        modalShown: false,
+        modalButtonText: "CANCEL",
     }
 
 
-
     // ...
-    componentDidMount () {
-
-        /*
-         * Horizon end point is set to testnet by default.
-         */
+    componentDidMount = () => {
+        // Horizon end point is set to testnet by default.
         this.props.setHorizonEndPoint(config.horizon)
     }
 
+
     // ...
-    logInViaLedger (ledgerParams) {
+    logInViaLedger = (ledgerParams) => {
         // TODO: fix this with Ledger API
         if (ledgerParams.errorCode !== null) {
             return
@@ -116,9 +118,9 @@ class Welcome extends Component {
         this.ledgerAuthenticateUser(ledgerParams)
     }
 
-    // ...
-    logInViaPublicKey (pubKey) {
 
+    // ...
+    logInViaPublicKey = (pubKey) => {
         if (this.context.loginManager.isAuthenticated()) {
             this.props.setAccountPath(`44'/148'/${this.props.appAuth.bip32Path}'`)
             axios
@@ -163,32 +165,30 @@ class Welcome extends Component {
                         message: null,
                     })
                 })
-
         } catch (error) {
             // eslint-disable-next-line no-console
             console.log(error)
         }
     }
 
+
     // ...
-    handleSignup () {
+    handleSignup = () =>
         this.setState({
             modalButtonText: "CANCEL",
             modalShown: true,
         })
-    }
 
 
     // ...
-    setModalButtonText (text) {
+    setModalButtonText = (text) =>
         this.setState({
             modalButtonText: text,
         })
-    }
 
 
     // ...
-    ledgerAuthenticateUser (ledgerParams) {
+    ledgerAuthenticateUser = (ledgerParams) => {
         axios
             .post(
                 `${config.api}/user/ledgerauth/${
@@ -215,21 +215,25 @@ class Welcome extends Component {
             .catch((error) => {
                 // This will happen when back-end is offline.
                 if (!error.response) {
-                    console.log(error.message) // eslint-disable-line no-console
+                    // eslint-disable-next-line no-console
+                    console.log(error.message)
                     return
                 }
                 if (error.response.status === 401) {
-                    console.log("Ledger user not found.") // eslint-disable-line no-console
+                    // eslint-disable-next-line no-console
+                    console.log("Ledger user not found.")
                 } else {
-                    console.log(error.response.statusText) // eslint-disable-line no-console
+                    // eslint-disable-next-line no-console
+                    console.log(error.response.statusText)
                 }
             })
     }
 
 
     // ...
-    enterExplorer () {
+    enterExplorer = () => {
         const textInputValue = this.textInputFieldFederationAddress.state.value
+
         this.props.setModalLoading()
 
         /**
@@ -301,8 +305,9 @@ class Welcome extends Component {
 
 
     // ...
-    federationValidator () {
+    federationValidator = () => {
         const address = this.textInputFieldFederationAddress.state.value
+
         // Looks like something totally invalid for this field.
         if (!address.match(/\*/) && !address.match(/^G/)) {
             return "invalid input"
@@ -321,9 +326,9 @@ class Welcome extends Component {
         return null
     }
 
-    // ...
-    compoundFederationValidator () {
 
+    // ...
+    compoundFederationValidator = () => {
         const addressValidity = this.federationValidator(
             this.textInputFieldFederationAddress.state.value
         )
@@ -337,168 +342,161 @@ class Welcome extends Component {
         }
     }
 
+
     // ...
-    render () {
-
-        return (
-            <div className="welcome-content">
-                <HeadingContainer />
-
-
-
-
-
-
-
-                <div>
-                    <div className="flex-row-space-between">
-                        <Panel
-                            className="welcome-panel-left"
-                            title="Transact"
-                            content={
-                                <div>
-                                    <img
-                                        src="/img/ledger.svg"
-                                        width="120px"
-                                        alt="Ledger"
-                                    />
-                                    <div className="title">
-                                        For full account
-                                        functionality, authenticate
-                                        with your Ledger device.
-                                    </div>
-                                    <div className="title-small p-t p-b">
-                                        Connect your Ledger Nano S
-                                        device. Make sure Stellar
-                                        application is selected and
-                                        browser support enabled. For
-                                        more information visit{" "}
-                                        <a
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            href={ledgerSupportLink}
-                                        >
-                                            Ledger Support
-                                        </a>
-                                    </div>
-                                    <LedgerAuthenticator
-                                        onConnected={this.logInViaLedger.bind(
-                                            this
-                                        )}
-                                    />
+    render = () =>
+        <div className="welcome-content">
+            <HeadingContainer />
+            <div>
+                <div className="flex-row-space-between">
+                    <Panel
+                        className="welcome-panel-left"
+                        title="Transact"
+                        content={
+                            <div>
+                                <img
+                                    src="/img/ledger.svg"
+                                    width="120px"
+                                    alt="Ledger"
+                                />
+                                <div className="title">
+                                    For full account
+                                    functionality, authenticate
+                                    with your Ledger device.
                                 </div>
-                            }
-                        />
-
-                        <Panel
-                            className="welcome-panel-center"
-                            title="Customize"
-                            content={
-                                <div>
-                                    <img
-                                        style={{
-                                            marginBottom: "4px",
-                                        }}
-                                        src="/img/sf.svg"
-                                        width="140px"
-                                        alt={appName}
-                                    />
-                                    <div className="title">
-                                        Manage your account with ease.
-                                    </div>
-                                    <div className="title-small p-t">
-                                        Once you have opened your
-                                        account you can log in here
-                                        to your banking terminal.
-                                    </div>
-                                    <div className="f-b">
-                                        <Login/>
-                                    </div>
+                                <div className="title-small p-t p-b">
+                                    Connect your Ledger Nano S
+                                    device. Make sure Stellar
+                                    application is selected and
+                                    browser support enabled. For
+                                    more information visit{" "}
+                                    <a
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href={ledgerSupportLink}
+                                    >
+                                        Ledger Support
+                                    </a>
                                 </div>
-                            }
-                        />
+                                <LedgerAuthenticator
+                                    onConnected={this.logInViaLedger.bind(
+                                        this
+                                    )}
+                                />
+                            </div>
+                        }
+                    />
 
-                        <Panel
-                            className="welcome-panel-right"
-                            title="Explore"
-                            content={
-                                <div>
-                                    <img
-                                        src="/img/stellar.svg"
-                                        width="120px"
-                                        alt="Stellar"
-                                    />
-                                    <div className="title">
-                                        To access global ledger
-                                        explorer enter your{" "}
-                                        <em>Payment Address</em> or{" "}
-                                        <em>Account Number</em>.
+                    <Panel
+                        className="welcome-panel-center"
+                        title="Customize"
+                        content={
+                            <div>
+                                <img
+                                    style={{
+                                        marginBottom: "4px",
+                                    }}
+                                    src="/img/sf.svg"
+                                    width="140px"
+                                    alt={appName}
+                                />
+                                <div className="title">
+                                    Manage your account with ease.
+                                </div>
+                                <div className="title-small p-t">
+                                    Once you have opened your
+                                    account you can log in here
+                                    to your banking terminal.
+                                </div>
+                                <div className="f-b">
+                                    <Login/>
+                                </div>
+                            </div>
+                        }
+                    />
+
+                    <Panel
+                        className="welcome-panel-right"
+                        title="Explore"
+                        content={
+                            <div>
+                                <img
+                                    src="/img/stellar.svg"
+                                    width="120px"
+                                    alt="Stellar"
+                                />
+                                <div className="title">
+                                    To access global ledger
+                                    explorer enter your{" "}
+                                    <em>Payment Address</em> or{" "}
+                                    <em>Account Number</em>.
+                                </div>
+                                <div className="title-small p-t p-b">
+                                    Your account operations are
+                                    publicly accessible on the
+                                    global ledger. Anyone who
+                                    knows your account number or
+                                    payment address can view
+                                    your public transactions.
+                                </div>
+                                <div className="title-small p-t p-b">
+                                    <strong>
+                                        Please note that this
+                                        application will{" "}
+                                        <u>never</u> ask you to
+                                        enter your Secret key.
+                                    </strong>
+                                </div>
+                                <div className="mui-text-input">
+                                    <div>
+                                        <TextInputField
+                                            floatingLabelText="Payment Address"
+                                            styles={styles}
+                                            validator={this.federationValidator.bind(
+                                                this
+                                            )}
+                                            action={this.compoundFederationValidator.bind(
+                                                this
+                                            )}
+                                            ref={(self) => {
+                                                this.textInputFieldFederationAddress = self
+                                            }}
+                                        />
                                     </div>
-                                    <div className="title-small p-t p-b">
-                                        Your account operations are
-                                        publicly accessible on the
-                                        global ledger. Anyone who
-                                        knows your account number or
-                                        payment address can view
-                                        your public transactions.
-                                    </div>
-                                    <div className="title-small p-t p-b">
-                                        <strong>
-                                            Please note that this
-                                            application will{" "}
-                                            <u>never</u> ask you to
-                                            enter your Secret key.
-                                        </strong>
-                                    </div>
-                                    <div className="mui-text-input">
-                                        <div>
-                                            <TextInputField
-                                                floatingLabelText="Payment Address"
-                                                styles={styles}
-                                                validator={this.federationValidator.bind(
-                                                    this
-                                                )}
-                                                action={this.compoundFederationValidator.bind(
-                                                    this
-                                                )}
-                                                ref={(self) => {
-                                                    this.textInputFieldFederationAddress = self
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <RaisedButton
-                                                onClick={this.compoundFederationValidator.bind(
-                                                    this
-                                                )}
-                                                backgroundColor="rgb(244,176,4)"
-                                                label="Check"
-                                            />
-                                        </div>
+                                    <div>
+                                        <RaisedButton
+                                            onClick={this.compoundFederationValidator.bind(
+                                                this
+                                            )}
+                                            backgroundColor="rgb(244,176,4)"
+                                            label="Check"
+                                        />
                                     </div>
                                 </div>
-                            }
-                        />
-                    </div>
+                            </div>
+                        }
+                    />
                 </div>
-                <Footer />
             </div>
-        )
-    }
+            <Footer />
+        </div>
+
 }
 
-function mapStateToProps (state) {
-    return {
+
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({
         accountInfo: state.accountInfo,
         loadingModal: state.loadingModal,
         auth: state.auth,
         ui: state.ui,
         appAuth: state.appAuth,
-    }
-}
+    }),
 
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators({
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
         accountExistsOnLedger,
         accountMissingOnLedger,
         setModalLoading,
@@ -514,6 +512,4 @@ const mapDispatchToProps = dispatch => {
         clearToken,
         changeLoginState,
     }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Welcome)
+)(Welcome)

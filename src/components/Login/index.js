@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import TextInputField from "../TextInputField"
 import RaisedButton from "material-ui/RaisedButton"
 import LinearProgress from "material-ui/LinearProgress"
@@ -7,14 +8,13 @@ import {
     passwordIsValid,
 } from "./helper"
 import { ActionConstants } from "../../actions"
-import PropTypes from "prop-types"
 
 import "./index.css"
 
 
 
 
-// ...
+// <Login> component
 export default class Login extends Component {
 
     // ...

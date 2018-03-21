@@ -19,6 +19,8 @@ import Bank from "./Bank"
 import { ActionConstants } from "../../actions"
 
 
+
+
 // <Layout> component
 export default withRouter(connect(
     (state) => ({

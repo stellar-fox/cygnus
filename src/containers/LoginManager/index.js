@@ -1,6 +1,6 @@
-import LoginManager from "../../components/LoginManager"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
+import LoginManager from "../../components/LoginManager"
 import {
     selectView,
     changeLoginState,
@@ -19,11 +19,9 @@ export default connect(
     }),
 
     // map dispatch to props.
-    (dispatch) => {
-        return bindActionCreators({
-            selectView,
-            changeLoginState,
-            setPublicKey,
-        }, dispatch)
-    }
+    (dispatch) => bindActionCreators({
+        selectView,
+        changeLoginState,
+        setPublicKey,
+    }, dispatch)
 )(LoginManager)

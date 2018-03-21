@@ -16,6 +16,3 @@ export const authenticate = async (email, password) => (
         }
     }
 )(email, password)
-
-
-

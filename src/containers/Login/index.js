@@ -1,19 +1,22 @@
-import Login from "../../components/Login"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
+import Login from "../../components/Login"
 import {
     changeLoginState,
 } from "../../actions/index"
 
 
-const mapStateToProps = state => ({
-    auth: state.auth,
-})
 
 
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ changeLoginState, }, dispatch)
-}
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({
+        auth: state.auth,
+    }),
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        changeLoginState,
+    }, dispatch)
+)(Login)

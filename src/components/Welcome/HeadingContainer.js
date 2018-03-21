@@ -1,23 +1,24 @@
-import Heading from "./heading"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
+import Heading from "./heading"
 import {
     changeLoginState,
     changeModalState,
 } from "../../actions/index"
 
 
-const mapStateToProps = state => ({
-    appUi: state.appUi,
-})
 
 
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators({
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({
+        appUi: state.appUi,
+    }),
+
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
         changeLoginState,
         changeModalState,
     }, dispatch)
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Heading)
+)(Heading)
