@@ -180,28 +180,31 @@ class Payments extends Component {
             .limit(5)
             .call()
             .then((paymentsResult) => {
-                const gravatarLinkPromises = paymentsResult.records.map((r) => {
-                    let link = ""
-                    switch (r.type) {
-                        case "create_account":
-                            if (r.funder === this.props.appAuth.publicKey) {
-                                link = gravatarLink(r.account)
-                            } else {
-                                link = gravatarLink(r.funder)
-                            }
-                            break
+                const gravatarLinkPromises =
+                    paymentsResult.records.map((r) => {
+                        let link = ""
+                        switch (r.type) {
+                            case "create_account":
+                                if (
+                                    r.funder === this.props.appAuth.publicKey
+                                ) {
+                                    link = gravatarLink(r.account)
+                                } else {
+                                    link = gravatarLink(r.funder)
+                                }
+                                break
 
-                        // payment
-                        default:
-                            if(r.to === this.props.appAuth.publicKey) {
-                                link = gravatarLink(r.from)
-                            } else {
-                                link = gravatarLink(r.to)
-                            }
-                            break
-                    }
-                    return link
-                })
+                            // payment
+                            default:
+                                if(r.to === this.props.appAuth.publicKey) {
+                                    link = gravatarLink(r.from)
+                                } else {
+                                    link = gravatarLink(r.to)
+                                }
+                                break
+                        }
+                        return link
+                    })
 
                 Promise.all(gravatarLinkPromises).then((links) => {
                     links.forEach((link, index) => {
@@ -223,7 +226,8 @@ class Payments extends Component {
                                         paymentsResult.records[0].created_at,
                                     effects: effects._embedded.records,
                                     memo: tx.memo,
-                                    selectedPaymentId: paymentsResult.records[0].id,
+                                    selectedPaymentId:
+                                        paymentsResult.records[0].id,
                                 },
                             })
                             this.props.setModalLoaded()
@@ -378,28 +382,37 @@ class Payments extends Component {
                         .order("desc")
                         .call()
                         .then((paymentsResult) => {
-                            const gravatarLinkPromises = paymentsResult.records.map((r) => {
-                                let link = ""
-                                switch (r.type) {
-                                    case "create_account":
-                                        if (r.funder === this.props.appAuth.publicKey) {
-                                            link = gravatarLink(r.account)
-                                        } else {
-                                            link = gravatarLink(r.funder)
-                                        }
-                                        break
+                            const gravatarLinkPromises =
+                                paymentsResult.records.map((r) => {
+                                    let link = ""
+                                    switch (r.type) {
+                                        case "create_account":
+                                            if (
+                                                r.funder ===
+                                                    this.props
+                                                        .appAuth.publicKey
+                                            ) {
+                                                link = gravatarLink(r.account)
+                                            } else {
+                                                link = gravatarLink(r.funder)
+                                            }
+                                            break
 
-                                    // payment
-                                    default:
-                                        if (r.to === this.props.appAuth.publicKey) {
-                                            link = gravatarLink(r.from)
-                                        } else {
-                                            link = gravatarLink(r.to)
-                                        }
-                                        break
-                                }
-                                return link
-                            })
+                                        // payment
+                                        default:
+                                            if (
+                                                r.to ===
+                                                    this.props
+                                                        .appAuth.publicKey
+                                            ) {
+                                                link = gravatarLink(r.from)
+                                            } else {
+                                                link = gravatarLink(r.to)
+                                            }
+                                            break
+                                    }
+                                    return link
+                                })
 
                             Promise.all(gravatarLinkPromises).then((links) => {
                                 links.forEach((link, index) => {
@@ -416,12 +429,18 @@ class Payments extends Component {
                                     paymentsResult.records[0].transaction().then((tx) => {
                                         this.setState({
                                             paymentDetails: {
-                                                txid: paymentsResult.records[0].id,
+                                                txid:
+                                                    paymentsResult
+                                                        .records[0].id,
                                                 created_at:
-                                                    paymentsResult.records[0].created_at,
-                                                effects: effects._embedded.records,
+                                                    paymentsResult
+                                                        .records[0].created_at,
+                                                effects: effects
+                                                    ._embedded.records,
                                                 memo: tx.memo,
-                                                selectedPaymentId: paymentsResult.records[0].id,
+                                                selectedPaymentId:
+                                                    paymentsResult
+                                                        .records[0].id,
                                             },
                                         })
                                         this.props.setModalLoaded()
@@ -989,37 +1008,43 @@ class Payments extends Component {
             case "create_account":
                 rendered =
                     payment.funder === this.props.appAuth.publicKey ? (
-                        <i className={this.context.loginManager.isAuthenticated() ?
-                            ("material-icons badge") :
-                            ("material-icons")}
-                        >card_giftcard</i>
+                        <i className={
+                            this.context.loginManager.isAuthenticated() ?
+                                ("material-icons badge") :
+                                ("material-icons")
+                        }>card_giftcard</i>
                     ) : (
-                        <i className={this.context.loginManager.isAuthenticated() ?
-                            ("material-icons badge") :
-                            ("material-icons")}
-                        >account_balance</i>
+                        <i className={
+                            this.context.loginManager.isAuthenticated() ?
+                                ("material-icons badge") :
+                                ("material-icons")
+                        }>account_balance</i>
                     )
                 break
 
             case "account_merge":
-                rendered = <i className={this.context.loginManager.isAuthenticated() ?
-                    ("material-icons badge") :
-                    ("material-icons")}
-                >merge_type</i>
+                rendered =
+                    <i className={
+                        this.context.loginManager.isAuthenticated() ?
+                            ("material-icons badge") :
+                            ("material-icons")
+                    }>merge_type</i>
                 break
 
             default:
                 rendered =
                     payment.to === this.props.appAuth.publicKey ? (
-                        <i className={this.context.loginManager.isAuthenticated() ?
-                            ("material-icons badge") :
-                            ("material-icons")}
-                        >account_balance_wallet</i>
+                        <i className={
+                            this.context.loginManager.isAuthenticated() ?
+                                ("material-icons badge") :
+                                ("material-icons")
+                        }>account_balance_wallet</i>
                     ) : (
-                        <i className={this.context.loginManager.isAuthenticated() ?
-                            ("material-icons badge") :
-                            ("material-icons")}
-                        >payment</i>
+                        <i className={
+                            this.context.loginManager.isAuthenticated() ?
+                                ("material-icons badge") :
+                                ("material-icons")
+                        }>payment</i>
                     )
                 break
         }
@@ -1035,23 +1060,62 @@ class Payments extends Component {
         switch (payment.type) {
             case "create_account":
                 rendered =
-                    (payment.funder === this.props.appAuth.publicKey ?
-                        (<span>&#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.starting_balance)}</span>) :
-                        (<span>&#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.starting_balance)}</span>))
+                    payment.funder === this.props.appAuth.publicKey ?
+                        <span>
+                            &#x02212;
+                            {" "}
+                            {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                            {" "}
+                            {this.convertToFiat(payment.starting_balance)}
+                        </span> :
+                        <span>
+                            &#x0002B;
+                            {" "}
+                            {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                            {" "}
+                            {this.convertToFiat(payment.starting_balance)}
+                        </span>
                 break
+
             case "account_merge":
                 rendered = "Account Merged"
                 break
+
             default:
                 if (getAssetCode(payment) === "XLM") {
-                    rendered = (payment.to === this.props.appAuth.publicKey ?
-                        (<span>&#x0002B; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.amount)}</span>) :
-                        (<span>&#x02212; {this.getCurrencyGlyph(this.props.accountInfo.currency)} {this.convertToFiat(payment.amount)}</span>))
+                    rendered =
+                        payment.to === this.props.appAuth.publicKey ?
+                            <span>
+                                &#x0002B;
+                                {" "}
+                                {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                {" "}
+                                {this.convertToFiat(payment.amount)}
+                            </span> :
+                            <span>
+                                &#x02212;
+                                {" "}
+                                {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                {" "}
+                                {this.convertToFiat(payment.amount)}
+                            </span>
                 } else {
                     rendered =
-                        (payment.to === this.props.appAuth.publicKey ?
-                            (<span>&#x0002B; {payment.amount} {getAssetCode(payment)}</span>) :
-                            (<span>&#x02212; {payment.amount} {getAssetCode(payment)}</span>))
+                        payment.to === this.props.appAuth.publicKey ?
+                            <span>
+                                &#x0002B;
+                                {" "}
+                                {payment.amount}
+                                {" "}
+                                {getAssetCode(payment)}
+                            </span> :
+                            <span>
+                                &#x02212;
+                                {" "}
+                                {payment.amount}
+                                {" "}
+                                {getAssetCode(payment)}
+                            </span>
                 }
                 break
         }
@@ -1070,7 +1134,9 @@ class Payments extends Component {
             this.props.accountInfo.rates[this.props.accountInfo.currency]
         ) {
             return fiatAmount.dividedBy(
-                this.props.accountInfo.rates[this.props.accountInfo.currency].rate
+                this.props.accountInfo.rates[
+                    this.props.accountInfo.currency
+                ].rate
             ).toString()
         }
 
@@ -1088,7 +1154,9 @@ class Payments extends Component {
             this.props.accountInfo.rates[this.props.accountInfo.currency]
         ) {
             return nativeAmount.multipliedBy(
-                this.props.accountInfo.rates[this.props.accountInfo.currency].rate
+                this.props.accountInfo.rates[
+                    this.props.accountInfo.currency
+                ].rate
             ).toFixed(2)
         }
 
@@ -1149,7 +1217,6 @@ class Payments extends Component {
                         <div className="account-subtitle">
                             Newest payments shown as first.
                         </div>
-
                         <div className="flex-row-space-between">
                             <div className="flex-row-column">
                                 <div>
@@ -1199,7 +1266,6 @@ class Payments extends Component {
                                                                                 payment.created_at
                                                                             )}
                                                                         </div>
-
                                                                         {this.context.loginManager.isAuthenticated() ?
                                                                             (<div className="small fade">
                                                                                 {payment.firstName ? payment.firstName : "Unknown"} {payment.lastName ? payment.lastName : "Payee"}
