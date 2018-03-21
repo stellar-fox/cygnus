@@ -35,6 +35,10 @@ export const appRootDomId = "app"
 
 
 // ...
+export const unknownPubKeyAbbr = "XXXXXX-XXXXXX"
+
+
+// ...
 export const snackBarAutoHideDuration = 3500
 
 
@@ -47,11 +51,13 @@ export const contentPaneSeparation = 20
 
 
 // ...
-export const securityGuideLink = "https://github.com/stellar-fox/cygnus/wiki/Security-Guide"
+export const securityGuideLink =
+    "https://github.com/stellar-fox/cygnus/wiki/Security-Guide"
 
 
 // ...
-export const ledgerSupportLink = "https://support.ledgerwallet.com/hc/en-us/articles/115003797194"
+export const ledgerSupportLink =
+    "https://support.ledgerwallet.com/hc/en-us/articles/115003797194"
 
 
 // ...

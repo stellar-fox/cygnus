@@ -5,6 +5,7 @@ import {
     pubKeyAbbr,
     handleException,
 } from "../../lib/utils"
+import { unknownPubKeyAbbr } from "../../env"
 
 import "./BankAppBarItems.css"
 
@@ -41,7 +42,7 @@ export default connect(
                     {
                         handleException(
                             () => pubKeyAbbr(pubKey),
-                            () => "XXXXXX-XXXXXX"
+                            () => unknownPubKeyAbbr
                         )
                     }
                 </div>

@@ -35,14 +35,14 @@ const style = {
 
 
 
-// ...
+// <BankAppBar> component
 class BankAppBar extends Component {
 
     // ...
     handleToggle = () =>
-        this.props.drawerOpened
-            ? this.props.closeDrawer()
-            : this.props.openDrawer()
+        this.props.drawerOpened ?
+            this.props.closeDrawer() :
+            this.props.openDrawer()
 
 
     // ...
