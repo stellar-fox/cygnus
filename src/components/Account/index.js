@@ -1,23 +1,20 @@
 import React, { Component } from "react"
-import { Tabs, Tab } from "material-ui/Tabs"
-import { connect } from "react-redux"
+import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
-import RaisedButton from "material-ui/RaisedButton"
-import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
-import Dialog from "material-ui/Dialog"
-import Toggle from "material-ui/Toggle"
-import Input from "../../frontend/Input"
-import SnackBar from "../../frontend/SnackBar"
+import { connect } from "react-redux"
+
 import MD5 from "../../lib/md5"
-import { federationIsAliasOnly } from "../../lib/utils"
-import { emailValid } from "../../lib/utils"
+import {
+    emailValid,
+    federationIsAliasOnly,
+} from "../../lib/utils"
 import {
     appName,
     NotImplementedBadge,
 } from "../../env.js"
 import { config } from "../../config"
 import axios from "axios"
-import RegisterAccount from "./Register"
+
 import {
     showAlert,
     hideAlert,
@@ -26,9 +23,22 @@ import {
     setCurrencyPrecision,
     setTab,
 } from "../../actions/index"
-import PropTypes from "prop-types"
+
+import { Tabs, Tab } from "material-ui/Tabs"
+import RaisedButton from "material-ui/RaisedButton"
+import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
+import Dialog from "material-ui/Dialog"
+import Toggle from "material-ui/Toggle"
+import Input from "../../frontend/Input"
+import SnackBar from "../../frontend/SnackBar"
+import RegisterAccount from "./Register"
+
 import "./index.css"
 
+
+
+
+// ...
 const styles = {
     headline: {
         fontSize: 24,
@@ -75,6 +85,10 @@ const styles = {
     },
 }
 
+
+
+
+// <Account> component
 class Account extends Component {
 
     // ...
@@ -82,31 +96,32 @@ class Account extends Component {
         loginManager: PropTypes.object,
     }
 
-    constructor (props) {
-        super(props)
-        this.state = {
-            firstNameDisplay: "",
-            lastNameDisplay: "",
-            emailDisplay: "",
-            paymentAddressDisplay: "",
-            gravatarPath: "/img/gravatar.jpg",
-            sbAccountProfileSaved: false,
-            accountDiscoverable: true,
-            accountDiscoverableMessage: "",
-            sbAccountDiscoverable: false,
-            sbCurrency: false,
-            sbCurrencyPrecision: false,
-            sbMultisig: false,
-            sb2FA: false,
-            currency: "",
-            currencyPrecision: "",
-            modalShown: false,
-            modalButtonText: "CANCEL",
-            loginButtonDisabled: true,
-        }
+
+    // ...
+    state = {
+        firstNameDisplay: "",
+        lastNameDisplay: "",
+        emailDisplay: "",
+        paymentAddressDisplay: "",
+        gravatarPath: "/img/gravatar.jpg",
+        sbAccountProfileSaved: false,
+        accountDiscoverable: true,
+        accountDiscoverableMessage: "",
+        sbAccountDiscoverable: false,
+        sbCurrency: false,
+        sbCurrencyPrecision: false,
+        sbMultisig: false,
+        sb2FA: false,
+        currency: "",
+        currencyPrecision: "",
+        modalShown: false,
+        modalButtonText: "CANCEL",
+        loginButtonDisabled: true,
     }
 
-    componentDidMount () {
+
+    // ...
+    componentDidMount = () => {
         if (this.context.loginManager.isAuthenticated()) {
             axios
                 .get(`${config.api}/user/${this.props.appAuth.userId}`)
@@ -129,7 +144,12 @@ class Account extends Component {
                 .get(`${config.api}/account/${this.props.appAuth.userId}`)
                 .then((response) => {
                     this.setState({
-                        paymentAddressDisplay: (response.data.data.alias && response.data.data.domain) ? `${response.data.data.alias}*${response.data.data.domain}` : "",
+                        paymentAddressDisplay: (
+                            response.data.data.alias  &&
+                                response.data.data.domain
+                        ) ?
+                            `${response.data.data.alias}*${response.data.data.domain}` :
+                            "",
                         accountDiscoverable: response.data.data.visible,
                         currency: response.data.data.currency,
                         currencyPrecision: response.data.data.precision,
@@ -142,7 +162,9 @@ class Account extends Component {
         }
     }
 
-    handleCurrencyChange (event) {
+
+    // ...
+    handleCurrencyChange = (event) => {
         if (this.context.loginManager.isAuthenticated()) {
             event.persist()
             axios
@@ -191,7 +213,7 @@ class Account extends Component {
 
 
     // ...
-    getExchangeRate (currency) {
+    getExchangeRate = (currency) => {
         if (this.exchangeRateStale()) {
             axios.get(`${config.api}/ticker/latest/${currency}`)
                 .then((response) => {
@@ -210,11 +232,13 @@ class Account extends Component {
     }
 
 
-    handleCurrencyChangeSnackBarClose () {
+    // ...
+    handleCurrencyChangeSnackBarClose = () =>
         this.setState({ sbCurrency: false, })
-    }
 
-    handleCurrencyPrecisionChange (event) {
+
+    // ...
+    handleCurrencyPrecisionChange = (event) => {
         if (this.context.loginManager.isAuthenticated()) {
             event.persist()
             axios
@@ -230,7 +254,8 @@ class Account extends Component {
                         parseInt(event.target.value, 10)
                     )
                     this.setState({
-                        currencyPrecision: event.target.parentElement.innerText,
+                        currencyPrecision:
+                            event.target.parentElement.innerText,
                     })
                     this.setState((_prevState) => {
                         return { sbCurrencyPrecision: true, }
@@ -251,27 +276,34 @@ class Account extends Component {
         }
     }
 
-    handleCurrencyPrecisionChangeSnackBarClose () {
+
+    // ...
+    handleCurrencyPrecisionChangeSnackBarClose = () =>
         this.setState({ sbCurrencyPrecision: false, })
-    }
 
-    handleAccountDiscoverableSnackBarClose () {
+
+    // ...
+    handleAccountDiscoverableSnackBarClose = () =>
         this.setState({ sbAccountDiscoverable: false, })
-    }
 
-    handleAccountProfileSnackBarClose () {
+
+    // ...
+    handleAccountProfileSnackBarClose = () =>
         this.setState({ sbAccountProfileSaved: false, })
-    }
 
-    handleMultisigSnackBarClose () {
+
+    // ...
+    handleMultisigSnackBarClose = () =>
         this.setState({ sbMultisig: false, })
-    }
 
-    handle2FASnackBarClose () {
+
+    // ...
+    handle2FASnackBarClose = () =>
         this.setState({ sb2FA: false, })
-    }
 
-    handleAccountDiscoverableToggle (_event, isInputChecked) {
+
+    // ...
+    handleAccountDiscoverableToggle = (_event, isInputChecked) => {
         if (isInputChecked === true) {
             axios
                 .post(
@@ -313,27 +345,34 @@ class Account extends Component {
         }
     }
 
-    handleMultisigToggle (_event, isInputChecked) {
+
+    // ...
+    handleMultisigToggle = (_event, isInputChecked) => {
         if (isInputChecked === true) {
             this.setState({ sbMultisig: true, })
         }
     }
 
-    handle2FAToggle (_event, isInputChecked) {
+
+    // ...
+    handle2FAToggle = (_event, isInputChecked) => {
         if (isInputChecked === true) {
             this.setState({ sb2FA: true, })
         }
     }
 
-    handleFirstNameChange (event) {
+    // ...
+    handleFirstNameChange = (event) =>
         this.setState({ firstNameDisplay: event.target.value, })
-    }
 
-    handleLastNameChange (event) {
+
+    // ...
+    handleLastNameChange = (event) =>
         this.setState({ lastNameDisplay: event.target.value, })
-    }
 
-    handleEmailChange (event) {
+
+    // ...
+    handleEmailChange = (event) => {
         if (emailValid(event.target.value)) {
             this.setState({
                 gravatarPath:
@@ -345,17 +384,20 @@ class Account extends Component {
         this.setState({ emailDisplay: event.target.value, })
     }
 
-    handlePaymentAddressChange (event) {
+
+    // ...
+    handlePaymentAddressChange = (event) =>
         this.setState({
             paymentAddressDisplay: event.target.value,
         })
-    }
 
-    handleProfileUpdate (_event) {
+
+    // ...
+    handleProfileUpdate = (_event) => {
         const alias = this.state.paymentAddressDisplay.match(/\*/) ?
             (this.state.paymentAddressDisplay) :
             (`${this.state.paymentAddressDisplay}*stellarfox.net`)
-        // eslint-disable-next-line no-console
+
         axios
             .post(
                 `${config.api}/user/update/${this.props.appAuth.userId}?token=${
@@ -393,52 +435,55 @@ class Account extends Component {
             })
     }
 
-    handleTabChange (_, value) {
+    // ...
+    handleTabChange = (_, value) =>
         this.props.setTab({ accounts: value, })
-    }
 
-    handleOpen () {
+
+    // ...
+    handleOpen = () =>
         this.props.showAlert()
-    }
 
-    handleClose () {
+
+    // ...
+    handleClose = () =>
         this.props.hideAlert()
-    }
+
 
     // ...
-    handleModalClose () {
+    handleModalClose = () =>
         this.setState({ modalShown: false, })
-    }
+
 
     // ...
-    handleSignup () {
+    handleSignup = () =>
         this.setState({
             modalButtonText: "CANCEL",
             modalShown: true,
         })
-    }
+
 
     // ...
-    setModalButtonText (text) {
+    setModalButtonText = (text) =>
         this.setState({ modalButtonText: text, })
-    }
 
 
-    // ...
-    doWhateverYourFunctionCurrentlyIs = () => {
+    // ... :D
+    doWhateverYourFunctionCurrentlyIs = () =>
         this.setState({
             modalShown: false,
         })
-    }
 
-    changeButtonText = () => {
+
+    // ...
+    changeButtonText = () =>
         this.setState({
             modalButtonText: "DONE",
         })
-    }
 
 
-    render () {
+    // ...
+    render = () => {
         const actions = [
             <RaisedButton
                 backgroundColor="rgb(15,46,83)"
@@ -478,7 +523,7 @@ class Account extends Component {
                         ]}
                         modal={true}
                         open={this.state.modalShown}
-                        onRequestClose={this.handleModalClose.bind(this)}
+                        onRequestClose={this.handleModalClose}
                         paperClassName="modal-body"
                         titleClassName="modal-title"
                         repositionOnUpdate={false}
@@ -501,7 +546,7 @@ class Account extends Component {
                                     open={this.state.sbAccountProfileSaved}
                                     message="Account profile saved."
                                     onRequestClose={
-                                        this.handleAccountProfileSnackBarClose.bind(this)
+                                        this.handleAccountProfileSnackBarClose
                                     }
                                 />
                                 <div className="flex-row">
@@ -538,7 +583,7 @@ class Account extends Component {
                                             maxLength="100"
                                             autoComplete="off"
                                             handleChange={
-                                                this.handleFirstNameChange.bind(this)
+                                                this.handleFirstNameChange
                                             }
                                             subLabel={
                                                 "First Name: " +
@@ -554,7 +599,7 @@ class Account extends Component {
                                             maxLength="100"
                                             autoComplete="off"
                                             handleChange={
-                                                this.handleLastNameChange.bind(this)
+                                                this.handleLastNameChange
                                             }
                                             subLabel={
                                                 "Last Name: " +
@@ -570,7 +615,7 @@ class Account extends Component {
                                             maxLength="100"
                                             autoComplete="off"
                                             handleChange={
-                                                this.handleEmailChange.bind(this)
+                                                this.handleEmailChange
                                             }
                                             subLabel={
                                                 "Email: " +
@@ -588,7 +633,7 @@ class Account extends Component {
                                             maxLength="100"
                                             autoComplete="off"
                                             handleChange={
-                                                this.handlePaymentAddressChange.bind(this)
+                                                this.handlePaymentAddressChange
                                             }
                                             subLabel={
                                                 federationIsAliasOnly(
@@ -613,7 +658,7 @@ class Account extends Component {
                                         labelColor="rgb(15,46,83)"
                                         label="Update"
                                         onClick={
-                                            this.handleProfileUpdate.bind(this)
+                                            this.handleProfileUpdate
                                         }
                                     />
                                 </div>
@@ -636,7 +681,9 @@ class Account extends Component {
                                 Extended Account Number:
                             </div>
                             <div className="account-subtitle m-t-small">
-                                <span className="bg-green">{this.props.appAuth.publicKey}</span>
+                                <span className="bg-green">
+                                    {this.props.appAuth.publicKey}
+                                </span>
                             </div>
                             <div className="p-t p-b" />
                             <div className="account-title p-t">
@@ -653,12 +700,12 @@ class Account extends Component {
                                         "Currency set to " + this.state.currency
                                     }
                                     onRequestClose={
-                                        this.handleCurrencyChangeSnackBarClose.bind(this)
+                                        this.handleCurrencyChangeSnackBarClose
                                     }
                                 />
                                 <RadioButtonGroup
                                     onChange={
-                                        this.handleCurrencyChange.bind(this)
+                                        this.handleCurrencyChange
                                     }
                                     className="account-radio-group"
                                     name="currencySelect"
@@ -710,7 +757,10 @@ class Account extends Component {
                                 </RadioButtonGroup>
                             </div>
 
-                            {!this.props.accountInfo.registered && !this.context.loginManager.isExploreOnly() ? (
+                            {(
+                                !this.props.accountInfo.registered &&
+                                !this.context.loginManager.isExploreOnly()
+                            ) ?
                                 <div>
                                     <div className="p-t p-b" />
                                     <div className="account-title p-t">
@@ -727,10 +777,10 @@ class Account extends Component {
                                         disableFocusRipple={true}
                                         backgroundColor="rgb(244,176,4)"
                                         labelColor="rgb(15,46,83)"
-                                        onClick={this.handleSignup.bind(this)}
+                                        onClick={this.handleSignup}
                                     />
-                                </div>
-                            ) : null}
+                                </div> :
+                                null}
                             {this.context.loginManager.isAuthenticated() ? (
                                 <div>
                                     <div className="p-t p-b" />
@@ -758,7 +808,7 @@ class Account extends Component {
                                                             .accountDiscoverableMessage
                                                     }
                                                     onRequestClose={
-                                                        this.handleAccountDiscoverableSnackBarClose.bind(this)
+                                                        this.handleAccountDiscoverableSnackBarClose
                                                     }
                                                 />
                                                 <Toggle
@@ -767,7 +817,7 @@ class Account extends Component {
                                                             .accountDiscoverable
                                                     }
                                                     onToggle={
-                                                        this.handleAccountDiscoverableToggle.bind(this)
+                                                        this.handleAccountDiscoverableToggle
                                                     }
                                                     labelPosition="right"
                                                     thumbStyle={
@@ -832,12 +882,12 @@ class Account extends Component {
                                                     "Two factor authentication is now enabled."
                                                 }
                                                 onRequestClose={
-                                                    this.handle2FASnackBarClose.bind(this)
+                                                    this.handle2FASnackBarClose
                                                 }
                                             />
                                             <Toggle
                                                 onToggle={
-                                                    this.handle2FAToggle.bind(this)
+                                                    this.handle2FAToggle
                                                 }
                                                 labelPosition="right"
                                                 thumbStyle={
@@ -884,16 +934,17 @@ class Account extends Component {
                                                     "Account set to multisig."
                                                 }
                                                 onRequestClose={
-                                                    this.handleMultisigSnackBarClose.bind(this)
+                                                    this.handleMultisigSnackBarClose
                                                 }
                                             />
                                             <Toggle
                                                 onToggle={
-                                                    this.handleMultisigToggle.bind(this)
+                                                    this.handleMultisigToggle
                                                 }
                                                 labelPosition="right"
                                                 thumbStyle={
-                                                    styles.toggleSwitch.thumbOff
+                                                    styles.toggleSwitch
+                                                        .thumbOff
                                                 }
                                                 trackStyle={
                                                     styles.toggleSwitch.trackOff
@@ -923,28 +974,25 @@ class Account extends Component {
     }
 }
 
-function mapStateToProps (state) {
-    return {
+
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({
         modal: state.modal,
         ui: state.ui,
         accountInfo: state.accountInfo,
         auth: state.auth,
         appAuth: state.appAuth,
-    }
-}
+    }),
 
-function matchDispatchToProps (dispatch) {
-    return bindActionCreators(
-        {
-            showAlert,
-            hideAlert,
-            setCurrency,
-            setExchangeRate,
-            setCurrencyPrecision,
-            setTab,
-        },
-        dispatch
-    )
-}
-
-export default connect(mapStateToProps, matchDispatchToProps)(Account)
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        showAlert,
+        hideAlert,
+        setCurrency,
+        setExchangeRate,
+        setCurrencyPrecision,
+        setTab,
+    }, dispatch)
+)(Account)
