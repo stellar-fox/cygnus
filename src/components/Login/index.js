@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import TextInputField from "../TextInputField"
+import InputField from "../../frontend/InputField"
 import RaisedButton from "material-ui/RaisedButton"
 import LinearProgress from "material-ui/LinearProgress"
 import {
@@ -86,15 +86,17 @@ export default class Login extends Component {
     // ...
     render = () =>
         <div className="f-e-col">
-            <TextInputField
+            <InputField
+                name="login-email"
                 type="email"
-                floatingLabelText="Email"
+                placeholder="Email"
                 onEnterPress={this.loginValidator.bind(this)}
                 ref={(self) => { this.email = self }}
             />
-            <TextInputField
+            <InputField
+                name="login-password"
                 type="password"
-                floatingLabelText="Password"
+                placeholder="Password"
                 onEnterPress={this.loginValidator.bind(this)}
                 ref={(self) => { this.password = self }}
             />
