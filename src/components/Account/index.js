@@ -181,15 +181,13 @@ class Account extends Component {
 
 
     // ...
-    exchangeRateStale () {
-        if (this.props.accountInfo.rates === undefined ||
-            this.props.accountInfo.rates[this.props.accountInfo.currency] === undefined ||
-            this.props.accountInfo.rates[this.props.accountInfo.currency].lastFetch + 300000 < Date.now()
-        ) {
-            return true
-        }
-        return false
-    }
+    exchangeRateStale = () => (
+        !this.props.accountInfo.rates  ||
+            !this.props.accountInfo.rates[this.props.accountInfo.currency]  ||
+            this.props.accountInfo.rates[
+                this.props.accountInfo.currency
+            ].lastFetch + 300000 < Date.now()
+    )
 
 
     // ...
