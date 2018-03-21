@@ -39,7 +39,12 @@ export default class TextInputField extends Component {
 
 
     // ...
-    handleChange = (event) => this.setState({ value: event.target.value, })
+    handleChange = (event) => {
+        this.setState({ value: event.target.value, })
+        if (this.props.validator) {
+            this.props.validator.call(this)
+        }
+    }
 
 
     // ...
@@ -58,12 +63,12 @@ export default class TextInputField extends Component {
             onKeyPress={this.handleOnKeyPress}
             floatingLabelText={this.props.floatingLabelText}
             errorText={this.state.error}
-            errorStyle={styles.errorStyle}
+            errorStyle={this.props.errorStyle || styles.errorStyle}
             underlineStyle={this.props.underlineStyle || styles.underlineStyle}
-            underlineFocusStyle={styles.underlineStyle}
-            floatingLabelStyle={styles.floatingLabelStyle}
-            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-            inputStyle={styles.inputStyle}
+            underlineFocusStyle={this.props.underlineFocusStyle || styles.underlineStyle}
+            floatingLabelStyle={this.props.floatingLabelStyle || styles.floatingLabelStyle}
+            floatingLabelFocusStyle={this.props.floatingLabelFocusStyle || styles.floatingLabelFocusStyle}
+            inputStyle={this.props.inputStyle || styles.inputStyle}
         />
 
 }

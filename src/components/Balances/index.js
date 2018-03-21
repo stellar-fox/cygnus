@@ -1581,6 +1581,8 @@ class Balances extends Component {
                                         <TextInputField
                                             floatingLabelText="Payment Address"
                                             underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
+                                            underlineFocusStyle={{ borderColor: "rgba(15, 46, 83, 0.8)", }}
+                                            inputStyle={{ color: "rgba(15, 46, 83, 0.8)",}}
                                             validator={
                                                 debounce(this.compoundFederationValidator.bind(this), 1000)
                                             }
@@ -1592,7 +1594,7 @@ class Balances extends Component {
                                 </div>
                                 <div className="payment-header f-s">
                                     <div className="p-r leading-label-align payment-currency">
-                                        {this.getCurrencyGlyph(this.state.currencySymbol)}
+                                        {this.getCurrencyGlyph(this.props.accountInfo.currency)}
                                     </div>
                                     <div>
                                         <TextInputField
@@ -1604,6 +1606,8 @@ class Balances extends Component {
                                             }}
                                             floatingLabelText="Amount"
                                             underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
+                                            underlineFocusStyle={{ borderColor: "rgba(15, 46, 83, 0.8)", }}
+                                            inputStyle={{ color: "rgba(15, 46, 83, 0.8)", }}
                                         />
                                     </div>
                                 </div>
@@ -1637,6 +1641,8 @@ class Balances extends Component {
                                         <TextInputField
                                             floatingLabelText="Memo"
                                             underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
+                                            underlineFocusStyle={{ borderColor: "rgba(15, 46, 83, 0.8)", }}
+                                            inputStyle={{ color: "rgba(15, 46, 83, 0.8)", }}
                                             ref={(self) => {
                                                 this.textInputFieldMemo = self
                                             }}
