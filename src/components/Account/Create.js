@@ -116,7 +116,8 @@ class NewAccount extends Component {
                 this.setState({
                     progressError: error.message,
                 })
-                console.log(error) // eslint-disable-line no-console
+                // eslint-disable-next-line no-console
+                console.log(error)
                 return null
             })
 
@@ -136,7 +137,8 @@ class NewAccount extends Component {
                     this.setState({
                         progressError: error.message,
                     })
-                    console.log(error) // eslint-disable-line no-console
+                    // eslint-disable-next-line no-console
+                    console.log(error)
                     return null
                 })
 
@@ -164,7 +166,8 @@ class NewAccount extends Component {
                 return response
             })
             .catch((error) => {
-                console.log(error) // eslint-disable-line no-console
+                // eslint-disable-next-line no-console
+                console.log(error)
             })
 
         this.handleNext.call(this)

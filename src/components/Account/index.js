@@ -203,7 +203,8 @@ class Account extends Component {
                     })
                 })
                 .catch(function (error) {
-                    console.log(error.message) // eslint-disable-line no-console
+                    // eslint-disable-next-line no-console
+                    console.log(error.message)
                 })
         }
     }

@@ -144,7 +144,8 @@ class Balances extends Component {
                         })
                     })
                     .catch((error) => {
-                        console.log(error.message) // eslint-disable-line no-console
+                        // eslint-disable-next-line no-console
+                        console.log(error.message)
                     })
             } else {
 
@@ -410,7 +411,8 @@ class Balances extends Component {
                     },})
                 })
                 .catch(function (error) {
-                    console.log(error.message) // eslint-disable-line no-console
+                    // eslint-disable-next-line no-console
+                    console.log(error.message)
                 })
         }
     }
@@ -486,9 +488,11 @@ class Balances extends Component {
             .catch((error) => {
                 if (error.response.status === 401) {
                     // theoretically this should not happen
-                    console.log("Ledger user not found.") // eslint-disable-line no-console
+                    // eslint-disable-next-line no-console
+                    console.log("Ledger user not found.")
                 } else {
-                    console.log(error.response.statusText) // eslint-disable-line no-console
+                    // eslint-disable-next-line no-console
+                    console.log(error.response.statusText)
                 }
             })
     }
@@ -974,7 +978,8 @@ class Balances extends Component {
                                             this.compoundPaymentValidator.call(this)
                                         })
                                         .catch((error) => {
-                                            console.log(error.message) // eslint-disable-line no-console
+                                            // eslint-disable-next-line no-console
+                                            console.log(error.message)
                                         })
                                 })
                                 .catch((error) => {
@@ -1012,7 +1017,8 @@ class Balances extends Component {
                         this.textInputFieldFederationAddress.setState({
                             error: error.message,
                         })
-                        console.log(error) // eslint-disable-line no-console
+                        // eslint-disable-next-line no-console
+                        console.log(error)
                     })
             }
 
@@ -1035,7 +1041,8 @@ class Balances extends Component {
                         this.compoundPaymentValidator.call(this)
                     })
                     .catch((error) => {
-                        console.log(error.message) // eslint-disable-line no-console
+                        // eslint-disable-next-line no-console
+                        console.log(error.message)
                     })
             }
 
