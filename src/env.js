@@ -15,6 +15,10 @@ export const appCopyDates = "2017-2018"
 
 
 // ...
+export const appLandingPageLink = "https://stellarfox.net/"
+
+
+// ...
 export const ssAppStateKey = `StellarFox.${appVersion}`
 
 

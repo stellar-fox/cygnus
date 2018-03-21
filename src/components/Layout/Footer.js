@@ -3,6 +3,7 @@ import {
     appVersion,
     appName,
     appCopyDates,
+    appLandingPageLink,
 } from "../../env.js"
 
 import "./Footer.css"
@@ -16,7 +17,10 @@ export default () =>
         <div className="flex-row-space-between">
             <div>
                 &copy;
-                &nbsp;<span className="stellar-style">{appName}</span>&nbsp;
+                &nbsp;<a target="_blank"
+                    href={appLandingPageLink}>
+                    <span className="stellar-style">{appName}</span>
+                </a>&nbsp;
                 {appCopyDates}.
             </div>
             <div>ver. {appVersion}</div>
