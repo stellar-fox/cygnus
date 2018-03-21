@@ -383,26 +383,20 @@ class Balances extends Component {
 
 
     // ...
-    exchangeRateFetched () {
-        if (this.props.accountInfo.rates !== undefined &&
-            this.props.accountInfo.rates[this.props.accountInfo.currency] !== undefined
-        ) {
-            return true
-        }
-        return false
-    }
+    exchangeRateFetched = () => (
+        this.props.accountInfo.rates  &&
+            this.props.accountInfo.rates[this.props.accountInfo.currency]
+    )
 
 
     // ...
-    exchangeRateStale () {
-        if (this.props.accountInfo.rates === undefined ||
-            this.props.accountInfo.rates[this.props.accountInfo.currency] === undefined ||
-            this.props.accountInfo.rates[this.props.accountInfo.currency].lastFetch + 300000 < Date.now()
-        ) {
-            return true
-        }
-        return false
-    }
+    exchangeRateStale = () => (
+        !this.props.accountInfo.rates  ||
+            !this.props.accountInfo.rates[this.props.accountInfo.currency]  ||
+            this.props.accountInfo.rates[
+                this.props.accountInfo.currency
+            ].lastFetch + 300000 < Date.now()
+    )
 
 
     // ...

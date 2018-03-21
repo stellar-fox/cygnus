@@ -6,7 +6,7 @@ import "./index.css"
 
 
 
-// ...
+// Default styles for TextInputField component.
 const styles = {
     errorStyle: {
         color: "#E64A19",
@@ -63,12 +63,18 @@ export default class TextInputField extends Component {
             onKeyPress={this.handleOnKeyPress}
             floatingLabelText={this.props.floatingLabelText}
             errorText={this.state.error}
-            errorStyle={this.props.errorStyle || styles.errorStyle}
-            underlineStyle={this.props.underlineStyle || styles.underlineStyle}
-            underlineFocusStyle={this.props.underlineFocusStyle || styles.underlineStyle}
-            floatingLabelStyle={this.props.floatingLabelStyle || styles.floatingLabelStyle}
-            floatingLabelFocusStyle={this.props.floatingLabelFocusStyle || styles.floatingLabelFocusStyle}
-            inputStyle={this.props.inputStyle || styles.inputStyle}
+            errorStyle={this.props.errorStyle ||
+                styles.errorStyle}
+            underlineStyle={this.props.underlineStyle ||
+                styles.underlineStyle}
+            underlineFocusStyle={this.props.underlineFocusStyle ||
+                styles.underlineStyle}
+            floatingLabelStyle={this.props.floatingLabelStyle ||
+                styles.floatingLabelStyle}
+            floatingLabelFocusStyle={this.props.floatingLabelFocusStyle ||
+                styles.floatingLabelFocusStyle}
+            inputStyle={this.props.inputStyle ||
+                styles.inputStyle}
         />
 
 }
