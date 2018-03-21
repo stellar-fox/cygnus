@@ -33,26 +33,27 @@ import {
     ActionConstants,
 } from "../../actions/index"
 
+
+
+
+// <NewAccount> component
 class NewAccount extends Component {
 
     // ...
-    constructor (props) {
-        super(props)
-        this.state = {
-            finished: false,
-            stepIndex: 0,
-            email: "",
-            password: "",
-            accountCreated: false,
-            progressCompleted: 0,
-            progressText: "",
-            progressError: "",
-        }
+    state = {
+        finished: false,
+        stepIndex: 0,
+        email: "",
+        password: "",
+        accountCreated: false,
+        progressCompleted: 0,
+        progressText: "",
+        progressError: "",
     }
 
 
     // ...
-    handleNext () {
+    handleNext = () => {
         const { stepIndex, } = this.state
 
         this.setState({
@@ -73,8 +74,9 @@ class NewAccount extends Component {
 
 
     // ...
-    handlePrev () {
+    handlePrev = () => {
         const { stepIndex, } = this.state
+
         if (stepIndex > 0) {
             this.setState({
                 stepIndex: stepIndex - 1,
@@ -84,7 +86,7 @@ class NewAccount extends Component {
 
 
     // ...
-    progress (completed) {
+    progress = (completed) => {
         if (completed > 100) {
             this.setState({
                 completed: 100,
@@ -96,7 +98,7 @@ class NewAccount extends Component {
 
 
     // ...
-    async createAccount (ledgerData) {
+    createAccount = async (ledgerData) => {
 
         if (ledgerData.errorCode) {
             return false
@@ -171,7 +173,7 @@ class NewAccount extends Component {
 
 
     // ...
-    renderStepActions (step) {
+    renderStepActions = (step) => {
         const { stepIndex, } = this.state
 
         return (
@@ -215,7 +217,9 @@ class NewAccount extends Component {
                     <Fragment>
                         <div className="dark">
                             <div className="p-b-small">
-                                <span className="credit">{this.state.email}</span>
+                                <span className="credit">
+                                    {this.state.email}
+                                </span>
                             </div>
                             <div className="small">
                                 will be associated with your Ledger device.
@@ -267,19 +271,17 @@ class NewAccount extends Component {
 
 
     // ...
-    emailValidator (email) {
-        return !emailValid(email) ? "invalid email" : null
-    }
+    emailValidator = (email) =>
+        !emailValid(email) ? "invalid email" : null
 
 
     // ...
-    passwordValidator (password) {
-        return !passwordValid(password) ? "invalid password" : null
-    }
+    passwordValidator = (password) =>
+        !passwordValid(password) ? "invalid password" : null
 
 
     // ...
-    compoundValidate () {
+    compoundValidate = () => {
         let proceed = true
 
         if (!emailValid(this.textInputFieldEmail.state.value)) {
@@ -296,7 +298,10 @@ class NewAccount extends Component {
             proceed = false
         }
 
-        if (this.textInputFieldPassword.state.value !== this.textInputFieldPasswordConf.state.value) {
+        if (
+            this.textInputFieldPassword.state.value !==
+                this.textInputFieldPasswordConf.state.value
+        ) {
             this.textInputFieldPasswordConf.setState({
                 error: "password mismatch",
             })
@@ -314,28 +319,29 @@ class NewAccount extends Component {
 
 
     // ...
-    render () {
-        const { finished, stepIndex, } = this.state
-        const styles = {
-            stepLabel: {
-                fontSize: "1rem",
-            },
-            errorStyle: {
-                color: "#912d35",
-            },
-            underlineStyle: {
-                borderColor: "rgba(15,46,83,0.6)",
-            },
-            floatingLabelStyle: {
-                color: "rgba(15,46,83,0.5)",
-            },
-            floatingLabelFocusStyle: {
-                color: "rgba(15,46,83,0.35)",
-            },
-            inputStyle: {
-                color: "rgba(15,46,83,0.8)",
-            },
-        }
+    render = () => {
+        const { finished, stepIndex, } = this.state,
+            styles = {
+                stepLabel: {
+                    fontSize: "1rem",
+                },
+                errorStyle: {
+                    color: "#912d35",
+                },
+                underlineStyle: {
+                    borderColor: "rgba(15,46,83,0.6)",
+                },
+                floatingLabelStyle: {
+                    color: "rgba(15,46,83,0.5)",
+                },
+                floatingLabelFocusStyle: {
+                    color: "rgba(15,46,83,0.35)",
+                },
+                inputStyle: {
+                    color: "rgba(15,46,83,0.8)",
+                },
+            }
+
         return (
             <div style={{ maxWidth: 480, maxHeight: 480, margin: "auto", }}>
                 <Stepper connector={null} activeStep={stepIndex} orientation="vertical">
@@ -362,10 +368,17 @@ class NewAccount extends Component {
                         </StepContent>
                     </Step>
                     <Step>
-                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">perm_identity</i>}>
+                        <StepLabel
+                            style={styles.stepLabel}
+                            icon={<i className="material-icons">perm_identity</i>}
+                        >
                             Choose email and password.
                         </StepLabel>
-                        <StepContent style={{ borderLeft: "1px solid rgba(15,46,83,0.2)", }}>
+                        <StepContent
+                            style={{
+                                borderLeft: "1px solid rgba(15,46,83,0.2)",
+                            }}
+                        >
                             <div className="revers">
                                 <div>
                                     <InputField
@@ -402,7 +415,10 @@ class NewAccount extends Component {
                         </StepContent>
                     </Step>
                     <Step>
-                        <StepLabel style={styles.stepLabel} icon={<i className="material-icons">fingerprint</i>}>
+                        <StepLabel
+                            style={styles.stepLabel}
+                            icon={<i className="material-icons">fingerprint</i>}
+                        >
                             Authenticate with Ledger device.
                         </StepLabel>
                         <StepContent style={{ borderLeft: "none", }}>
@@ -413,13 +429,25 @@ class NewAccount extends Component {
 
                 </Stepper>
                 {(finished && this.state.accountCreated) && (
-                    <div style={{ fontSize: "1rem", margin: "20px 0", textAlign: "center", }}>
+                    <div style={{
+                        fontSize: "1rem",
+                        margin: "20px 0",
+                        textAlign: "center",
+                    }}>
                         <i className="material-icons">done_all</i>
                         Your account has been setup. Go ahead, check it out!
                     </div>
                 )}
                 {(finished && !this.state.accountCreated) && (
-                    <div className="outline-error" style={{ color: "#D32F2F", fontSize: "1rem", margin: "20px 0", textAlign: "center", }}>
+                    <div
+                        className="outline-error"
+                        style={{
+                            color: "#D32F2F",
+                            fontSize: "1rem",
+                            margin: "20px 0",
+                            textAlign: "center",
+                        }}
+                    >
                         <i className="material-icons">error</i>
                         There was a problem setting up your account.
                         <div className="small">
@@ -430,26 +458,26 @@ class NewAccount extends Component {
             </div>
         )
     }
+
 }
 
-const matchStateToProps = (state) => ({
-    appAuth: state.appAuth,
-})
 
-function matchDispatchToProps (dispatch) {
-    return bindActionCreators(
-        {
-            accountExistsOnLedger,
-            accountMissingOnLedger,
-            logIn,
-            setAccountRegistered,
-            setAccountPath,
-            setLedgerSoftwareVersion,
-            setPublicKey,
-            changeLoginState,
-        },
-        dispatch
-    )
-}
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({
+        appAuth: state.appAuth,
+    }),
 
-export default connect(matchStateToProps, matchDispatchToProps)(NewAccount)
+    // match dispatch to props.
+    (dispatch) => bindActionCreators({
+        accountExistsOnLedger,
+        accountMissingOnLedger,
+        logIn,
+        setAccountRegistered,
+        setAccountPath,
+        setLedgerSoftwareVersion,
+        setPublicKey,
+        changeLoginState,
+    }, dispatch)
+)(NewAccount)
