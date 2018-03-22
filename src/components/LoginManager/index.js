@@ -101,14 +101,14 @@ export const withLoginManager = (WrappedComponent) =>
             static WrappedComponent = WrappedComponent
 
             // ...
-            render = () => {
-                const { wrappedComponentRef, ...restOfTheProps } = this.props
-                return React.createElement(WrappedComponent, {
-                    ...restOfTheProps,
-                    ref: wrappedComponentRef,
-                    loginManager: this.context.loginManager,
-                })
-            }
+            render = () => (
+                ({ wrappedComponentRef, ...restOfTheProps }) =>
+                    React.createElement(WrappedComponent, {
+                        ...restOfTheProps,
+                        ref: wrappedComponentRef,
+                        loginManager: this.context.loginManager,
+                    })
+            )(this.props)
 
         },
         WrappedComponent
