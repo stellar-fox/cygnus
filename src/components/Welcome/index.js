@@ -1,15 +1,7 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-
-import HeadingContainer from "./HeadingContainer"
-
 import axios from "axios"
-import RaisedButton from "material-ui/RaisedButton"
-
-import Footer from "../Layout/Footer"
-import Panel from "../Panel"
-import Login from "../../containers/Login"
 
 import { config } from "../../config"
 import {
@@ -23,7 +15,8 @@ import {
     appName,
     ledgerSupportLink
 } from "../../env.js"
-
+import { withLoginManager } from "../LoginManager"
+import { ActionConstants } from "../../actions"
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -38,15 +31,18 @@ import {
     setPublicKey,
     changeLoginState,
 } from "../../actions/index"
+import {
+    setToken,
+    clearToken,
+} from "../../actions/auth"
 
-
-import { setToken, clearToken } from "../../actions/auth"
-
-import LedgerAuthenticator from "../LedgerAuthenticator"
+import RaisedButton from "material-ui/RaisedButton"
 import InputField from "../../frontend/InputField"
-
-import { ActionConstants } from "../../actions"
-import PropTypes from "prop-types"
+import LedgerAuthenticator from "../LedgerAuthenticator"
+import Login from "../../containers/Login"
+import HeadingContainer from "./HeadingContainer"
+import Footer from "../Layout/Footer"
+import Panel from "../Panel"
 
 import "./index.css"
 
@@ -77,12 +73,6 @@ const styles = {
 
 // <Welcome> component
 class Welcome extends Component {
-
-    // ...
-    static contextTypes = {
-        loginManager: PropTypes.object,
-    }
-
 
     // ...
     state = {
@@ -121,7 +111,7 @@ class Welcome extends Component {
 
     // ...
     logInViaPublicKey = (pubKey) => {
-        if (this.context.loginManager.isAuthenticated()) {
+        if (this.props.loginManager.isAuthenticated()) {
             this.props.setAccountPath(`44'/148'/${this.props.appAuth.bip32Path}'`)
             axios
                 .get(`${config.api}/account/${this.props.appAuth.userId}`)
@@ -479,7 +469,7 @@ class Welcome extends Component {
 
 
 // ...
-export default connect(
+export default withLoginManager(connect(
     // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
@@ -506,4 +496,4 @@ export default connect(
         clearToken,
         changeLoginState,
     }, dispatch)
-)(Welcome)
+)(Welcome))
