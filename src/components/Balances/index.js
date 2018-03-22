@@ -1555,7 +1555,7 @@ class Balances extends Component {
                                     label="Request"
                                     onClick={this.handleOpen}
                                 />
-                                {this.props.loginManager.isAuthenticated() ?
+                                {this.props.loginManager.isPayEnabled() ?
                                     <RaisedButton
                                         backgroundColor="rgb(15,46,83)"
                                         labelColor="#d32f2f"
