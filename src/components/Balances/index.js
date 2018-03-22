@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react"
-import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import axios from "axios"
@@ -36,6 +35,7 @@ import {
     updateLoadingMessage,
     changeLoginState,
 } from "../../actions/index"
+import { withLoginManager } from "../LoginManager"
 
 import {
     Card,
@@ -91,12 +91,6 @@ const server = new StellarSdk.Server(config.horizon)
 class Balances extends Component {
 
     // ...
-    static contextTypes = {
-        loginManager: PropTypes.object,
-    }
-
-
-    // ...
     state = ((now) => ({
         sbPayment: false,
         sbPaymentAmount: null,
@@ -141,7 +135,7 @@ class Balances extends Component {
             this._tmpQueryHorizon()
             this._tmpAccountExists()
 
-            if (this.context.loginManager.isAuthenticated()) {
+            if (this.props.loginManager.isAuthenticated()) {
 
                 axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
                     .then((response) => {
@@ -1447,7 +1441,7 @@ class Balances extends Component {
                     </Dialog>
                 </div>
 
-                {!this.props.accountInfo.registered && !this.context.loginManager.isExploreOnly() ? (
+                {!this.props.accountInfo.registered && !this.props.loginManager.isExploreOnly() ? (
                     <Card className="welcome-card">
                         <CardText>
                             <div className="flex-row">
@@ -1565,7 +1559,7 @@ class Balances extends Component {
                                     label="Request"
                                     onClick={this.handleOpen}
                                 />
-                                {this.context.loginManager.isAuthenticated() ?
+                                {this.props.loginManager.isAuthenticated() ?
                                     <RaisedButton
                                         backgroundColor="rgb(15,46,83)"
                                         labelColor="#d32f2f"
@@ -1824,7 +1818,7 @@ class Balances extends Component {
 
 
 // ...
-export default connect(
+export default withLoginManager(connect(
     // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
@@ -1851,4 +1845,4 @@ export default connect(
         updateLoadingMessage,
         changeLoginState,
     }, dispatch)
-)(Balances)
+)(Balances))
