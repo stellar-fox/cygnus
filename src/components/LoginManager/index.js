@@ -12,61 +12,60 @@ export default class LoginManager extends Component {
 
     // ...
     static childContextTypes = {
-        loginManager : PropTypes.object,
+        loginManager: PropTypes.object,
     }
 
 
     // ...
-    getChildContext = () => ({ loginManager : this, })
+    getChildContext = () => ({ loginManager: this, })
 
 
     // ...
-    attemptLogin = (email, password) => {
-        const that = this
+    attemptLogin = async (email, password) => {
+        this.props.changeLoginState({
+            loginState: ActionConstants.LOGGING_IN,
+            bip32Path: null,
+            publicKey: null,
+            userId: null,
+            token: null,
+        })
+        const auth = await authenticate(email, password)
 
-        return async function _attemptLogin () {
-            that.props.changeLoginState({
+        if (!auth.authenticated) {
+            this.props.changeLoginState({
                 loginState: ActionConstants.LOGGING_IN,
                 bip32Path: null,
                 publicKey: null,
                 userId: null,
                 token: null,
             })
-            const auth = await authenticate(email, password)
+        } else {
+            this.props.changeLoginState({
+                loginState: ActionConstants.LOGGED_IN,
+                bip32Path: auth.bip32Path,
+                publicKey: auth.pubkey,
+                userId: auth.user_id,
+                token: auth.token,
+            })
+        }
 
-            // NOT AUTHENTICATED
-            if (!auth.authenticated) {
-                that.props.changeLoginState({
-                    loginState: ActionConstants.LOGGING_IN,
-                    bip32Path: null,
-                    publicKey: null,
-                    userId: null,
-                    token: null,
-                })
-            } else {
-                that.props.changeLoginState({
-                    loginState: ActionConstants.LOGGED_IN,
-                    bip32Path: auth.bip32Path,
-                    publicKey: auth.pubkey,
-                    userId: auth.user_id,
-                    token: auth.token,
-                })
-            }
-            return auth
-        }()
+        return auth
     }
 
 
     // ...
-    isAuthenticated = () =>
-        this.props.appAuth.loginState === ActionConstants.LOGGED_IN &&
+    isAuthenticated = () => (
+        this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
             this.props.appAuth.token
+    )
 
 
     // ...
-    isExploreOnly = () =>
-        this.props.appAuth.loginState === ActionConstants.LOGGED_IN &&
-            this.props.appAuth.publicKey && !this.props.appAuth.bip32Path
+    isExploreOnly = () => (
+        this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
+            this.props.appAuth.publicKey  &&
+            !this.props.appAuth.bip32Path
+    )
 
 
     // ...
@@ -84,12 +83,12 @@ export const withLoginManager = (WrappedComponent) =>
 
             // ...
             static contextTypes = {
-                loginManager: PropTypes.object,
+                loginManager: PropTypes.object.isRequired,
             }
 
             // ...
             static propTypes = {
-                wrappedComponentRef : PropTypes.func,
+                wrappedComponentRef: PropTypes.func,
             }
 
             // ...
@@ -107,7 +106,7 @@ export const withLoginManager = (WrappedComponent) =>
                 return React.createElement(WrappedComponent, {
                     ...restOfTheProps,
                     ref: wrappedComponentRef,
-                    loginManager : this.context.loginManager,
+                    loginManager: this.context.loginManager,
                 })
             }
 
