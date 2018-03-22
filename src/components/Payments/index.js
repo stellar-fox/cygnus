@@ -26,6 +26,7 @@ import {
     setModalLoaded,
     updateLoadingMessage,
 } from "../../actions/index"
+import { withLoginManager } from "../LoginManager"
 
 import {
     Tabs,
@@ -126,12 +127,6 @@ const styles = {
 
 // <Payments> component
 class Payments extends Component {
-
-    // ...
-    static contextTypes = {
-        loginManager: PropTypes.object,
-    }
-
 
     // ...
     state = {
@@ -1023,12 +1018,12 @@ class Payments extends Component {
                 rendered =
                     payment.funder === this.props.appAuth.publicKey ?
                         <i className={
-                            this.context.loginManager.isAuthenticated() ?
+                            this.props.loginManager.isAuthenticated() ?
                                 ("material-icons badge") :
                                 ("material-icons")
                         }>card_giftcard</i> :
                         <i className={
-                            this.context.loginManager.isAuthenticated() ?
+                            this.props.loginManager.isAuthenticated() ?
                                 ("material-icons badge") :
                                 ("material-icons")
                         }>account_balance</i>
@@ -1037,7 +1032,7 @@ class Payments extends Component {
             case "account_merge":
                 rendered =
                     <i className={
-                        this.context.loginManager.isAuthenticated() ?
+                        this.props.loginManager.isAuthenticated() ?
                             ("material-icons badge") :
                             ("material-icons")
                     }>merge_type</i>
@@ -1047,12 +1042,12 @@ class Payments extends Component {
                 rendered =
                     payment.to === this.props.appAuth.publicKey ?
                         <i className={
-                            this.context.loginManager.isAuthenticated() ?
+                            this.props.loginManager.isAuthenticated() ?
                                 ("material-icons badge") :
                                 ("material-icons")
                         }>account_balance_wallet</i> :
                         <i className={
-                            this.context.loginManager.isAuthenticated() ?
+                            this.props.loginManager.isAuthenticated() ?
                                 ("material-icons badge") :
                                 ("material-icons")
                         }>payment</i>
@@ -1284,7 +1279,7 @@ class Payments extends Component {
                                                                                 payment.created_at
                                                                             )}
                                                                         </div>
-                                                                        {this.context.loginManager.isAuthenticated() ?
+                                                                        {this.props.loginManager.isAuthenticated() ?
                                                                             (<div className="small fade">
                                                                                 {payment.firstName ? payment.firstName : "Unknown"} {payment.lastName ? payment.lastName : "Payee"}
                                                                                 {(payment.alias && payment.domain) ?
@@ -1298,7 +1293,7 @@ class Payments extends Component {
                                                                     payment
                                                                 )}
                                                                 rightAvatar={
-                                                                    this.context.loginManager.isAuthenticated() ? (
+                                                                    this.props.loginManager.isAuthenticated() ? (
                                                                         <Avatar
                                                                             className="square-avatar"
                                                                             backgroundColor="rgba(244,176,4,1)"
@@ -1547,7 +1542,7 @@ class Payments extends Component {
 
 
 // ...
-export default connect(
+export default withLoginManager(connect(
     // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
@@ -1569,4 +1564,4 @@ export default connect(
         setModalLoaded,
         updateLoadingMessage,
     }, dispatch)
-)(Payments)
+)(Payments))
