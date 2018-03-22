@@ -1,24 +1,14 @@
 import React, { Component, Fragment } from "react"
-import { connect } from "react-redux"
+import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
-import {
-    Card,
-    CardActions,
-    CardHeader,
-    CardText,
-} from "material-ui/Card"
-import { List, ListItem } from "material-ui/List"
-import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
-import Dialog from "material-ui/Dialog"
-import SnackBar from "../../frontend/SnackBar"
+import { connect } from "react-redux"
 import axios from "axios"
-import { config } from "../../config"
-import RegisterAccount from "../Account/Register"
-import InputField from "../../frontend/InputField"
+import debounce from "lodash/debounce"
+import numberToText from "number-to-text"
+import { BigNumber } from "bignumber.js"
+import "number-to-text/converters/en-us"
+
 import { signTransaction, awaitConnection } from "../../lib/ledger"
-import DatePicker from "material-ui/DatePicker"
-import LinearProgress from "material-ui/LinearProgress"
 import {
     pubKeyValid,
     federationAddressValid,
@@ -27,6 +17,7 @@ import {
     pubKeyAbbr,
     handleException,
 } from "../../lib/utils"
+import { config } from "../../config"
 import { appName } from "../../env.js"
 import {
     setExchangeRate,
@@ -45,12 +36,28 @@ import {
     updateLoadingMessage,
     changeLoginState,
 } from "../../actions/index"
-import debounce from "lodash/debounce"
-import numberToText from "number-to-text"
-import { BigNumber } from "bignumber.js"
-import "number-to-text/converters/en-us"
-import PropTypes from "prop-types"
+
+import {
+    Card,
+    CardActions,
+    CardHeader,
+    CardText,
+} from "material-ui/Card"
+import { List, ListItem } from "material-ui/List"
+import RaisedButton from "material-ui/RaisedButton"
+import FlatButton from "material-ui/FlatButton"
+import Dialog from "material-ui/Dialog"
+import DatePicker from "material-ui/DatePicker"
+import LinearProgress from "material-ui/LinearProgress"
+import InputField from "../../frontend/InputField"
+import SnackBar from "../../frontend/SnackBar"
+
+import RegisterAccount from "../Account/Register"
+
 import "./index.css"
+
+
+
 
 // const styles = {
 //     errorStyle: {
@@ -71,9 +78,16 @@ import "./index.css"
 //     },
 // }
 
+
+
+
 StellarSdk.Network.useTestNetwork()
 const server = new StellarSdk.Server(config.horizon)
 
+
+
+
+// <Balances> component
 class Balances extends Component {
 
     // ...
@@ -81,46 +95,42 @@ class Balances extends Component {
         loginManager: PropTypes.object,
     }
 
+
     // ...
-    constructor (props) {
-        const now = new Date()
-        super(props)
-        this.state = {
-            sbPayment: false,
-            sbPaymentAmount: null,
-            sbPaymentAssetCode: null,
-            modalShown: false,
-            deviceConfirmModalShown: false,
-            broadcastTxModalShown: false,
-            errorModalShown: false,
-            errorModalMessage: "",
-            modalButtonText: "CANCEL",
-            currencySymbol: null,
-            currencyText: null,
-            minDate: now,
-            payDate: now,
-            // the following are resetable
-            amountEntered: false,
-            payee: null,
-            memoRequired: false,
-            memo: "",
-            amountValid: false,
-            amount: 0,
-            transactionType: null,
-            memoValid: false,
-            buttonSendDisabled: true,
-            paymentCardVisible: false,
-            newAccount: false,
-            minimumReserveMessage: "",
-            sendingCompleteModalShown: false,
-            loginButtonDisabled: true,
-        }
-    }
+    state = ((now) => ({
+        sbPayment: false,
+        sbPaymentAmount: null,
+        sbPaymentAssetCode: null,
+        modalShown: false,
+        deviceConfirmModalShown: false,
+        broadcastTxModalShown: false,
+        errorModalShown: false,
+        errorModalMessage: "",
+        modalButtonText: "CANCEL",
+        currencySymbol: null,
+        currencyText: null,
+        minDate: now,
+        payDate: now,
+        // the following are resetable
+        amountEntered: false,
+        payee: null,
+        memoRequired: false,
+        memo: "",
+        amountValid: false,
+        amount: 0,
+        transactionType: null,
+        memoValid: false,
+        buttonSendDisabled: true,
+        paymentCardVisible: false,
+        newAccount: false,
+        minimumReserveMessage: "",
+        sendingCompleteModalShown: false,
+        loginButtonDisabled: true,
+    }))(new Date())
 
 
     // ...
-    componentDidMount () {
-
+    componentDidMount = () => {
         if (!this.props.accountInfo.account) {
 
             this.props.setModalLoading()
@@ -136,11 +146,16 @@ class Balances extends Component {
                 axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
                     .then((response) => {
                         this.props.setCurrency(response.data.data.currency)
-                        this.props.setCurrencyPrecision(response.data.data.precision)
+                        this.props.setCurrencyPrecision(
+                            response.data.data.precision
+                        )
                         this.getExchangeRate(response.data.data.currency)
                         this.setState({
                             currencySymbol: response.data.data.currency,
-                            currencyText: this.getCurrencyText(response.data.data.currency),
+                            currencyText:
+                                this.getCurrencyText(
+                                    response.data.data.currency
+                                ),
                         })
                     })
                     .catch((error) => {
@@ -152,7 +167,10 @@ class Balances extends Component {
                 this.getExchangeRate(this.props.accountInfo.currency)
                 this.setState({
                     currencySymbol: this.props.accountInfo.currency,
-                    currencyText: this.getCurrencyText(this.props.accountInfo.currency),
+                    currencyText:
+                        this.getCurrencyText(
+                            this.props.accountInfo.currency
+                        ),
                 })
             }
         }
@@ -160,18 +178,18 @@ class Balances extends Component {
         // FIXME: merge streamers
         this.props.setStreamer(this.paymentsStreamer.call(this))
         this.props.setOptionsStreamer(this.optionsStreamer.call(this))
-
-
     }
 
 
     // ...
-    componentWillUnmount () {
+    componentWillUnmount = () => {
         this.props.accountInfo.streamer.call(this)
         this.props.accountInfo.optionsStreamer.call(this)
     }
 
-    _tmpAccountExists () {
+
+    // ...
+    _tmpAccountExists = () => {
         axios.post(
             `${config.api}/user/ledgerauth/${
                 this.props.appAuth.publicKey
@@ -185,11 +203,13 @@ class Balances extends Component {
         })
     }
 
+
     // ...
-    _tmpQueryHorizon () {
+    _tmpQueryHorizon = () => {
         let server = new StellarSdk.Server(
             this.props.accountInfo.horizon
         )
+
         server
             .loadAccount(this.props.appAuth.publicKey)
             .then((account) => {
@@ -219,6 +239,7 @@ class Balances extends Component {
         pln: (<span>&#x7a;&#x142;</span>),
     })
 
+
     // ...
     getCurrencyText = (currency) => (
         (c) => c[Object.keys(c).filter((key) => key === currency)]
@@ -246,17 +267,22 @@ class Balances extends Component {
 
 
     // ...
-    optionsStreamer () {
+    optionsStreamer = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
+
         return server.operations().cursor("now").stream({
             onmessage: (message) => {
+
                 /*
-                * Set options. (test)
+                * Set options. (home_domain - experiment)
                 */
                 if (
                     message.type === "set_options"  &&
-                    message.source_account === this.props.accountInfo.pubKey  &&
-                    this.props.accountInfo.account.account.home_domain !== message.home_domain
+                    message.source_account ===
+                        this.props.accountInfo.pubKey  &&
+                    this.props
+                        .accountInfo.account
+                        .account.home_domain !== message.home_domain
 
                 ) {
                     this.updateAccount.call(this)
@@ -269,13 +295,14 @@ class Balances extends Component {
                         sbPaymentAssetCode: "",
                     })
                 }
+
             },
         })
     }
 
 
     // ...
-    paymentsStreamer () {
+    paymentsStreamer = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         return server.payments().cursor("now").stream({
             onmessage: (message) => {
@@ -290,9 +317,14 @@ class Balances extends Component {
                     this.updateAccount.call(this)
                     this.setState({
                         sbPayment: true,
-                        sbPaymentText: `Payment sent to new account [${pubKeyAbbr(message.account)}]: `,
-                        sbPaymentAmount: this.convertToFiat(message.starting_balance),
-                        sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
+                        sbPaymentText:
+                            `Payment sent to new account [${
+                                pubKeyAbbr(message.account)
+                            }]: `,
+                        sbPaymentAmount:
+                            this.convertToFiat(message.starting_balance),
+                        sbPaymentAssetCode:
+                            this.props.accountInfo.currency.toUpperCase(),
                     })
                 }
 
@@ -307,8 +339,10 @@ class Balances extends Component {
                     this.setState({
                         sbPayment: true,
                         sbPaymentText: "Account Funded: ",
-                        sbPaymentAmount: this.convertToFiat(message.starting_balance),
-                        sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
+                        sbPaymentAmount:
+                            this.convertToFiat(message.starting_balance),
+                        sbPaymentAssetCode:
+                            this.props.accountInfo.currency.toUpperCase(),
                     })
                 }
 
@@ -324,7 +358,8 @@ class Balances extends Component {
                         sbPayment: true,
                         sbPaymentText: "Balance Updated. Payment Received: ",
                         sbPaymentAmount: this.convertToFiat(message.amount),
-                        sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
+                        sbPaymentAssetCode:
+                            this.props.accountInfo.currency.toUpperCase(),
                     })
                 }
 
@@ -340,7 +375,8 @@ class Balances extends Component {
                         sbPayment: true,
                         sbPaymentText: "Balance Updated. Payment Sent: ",
                         sbPaymentAmount: this.convertToFiat(message.amount),
-                        sbPaymentAssetCode: this.props.accountInfo.currency.toUpperCase(),
+                        sbPaymentAssetCode:
+                            this.props.accountInfo.currency.toUpperCase(),
                     })
                 }
             },
@@ -349,16 +385,16 @@ class Balances extends Component {
 
 
     // ...
-    updateDate (_, date) {
+    updateDate = (_, date) =>
         this.setState({
             payDate: date,
         })
-    }
 
 
     // ...
-    updateAccount () {
+    updateAccount = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
+
         server.loadAccount(this.props.accountInfo.pubKey)
             .catch(StellarSdk.NotFoundError, (_) => {
                 throw new Error("The destination account does not exist!")
@@ -372,13 +408,15 @@ class Balances extends Component {
 
 
     // ...
-    getNativeBalance (account) {
+    getNativeBalance = (account) => {
         let nativeBalance = 0
+
         account.balances.forEach((balance) => {
             if (balance.asset_type === "native") {
                 nativeBalance = balance.balance
             }
         })
+
         return nativeBalance
     }
 
@@ -401,7 +439,7 @@ class Balances extends Component {
 
 
     // ...
-    getExchangeRate (currency) {
+    getExchangeRate = (currency) => {
         if (this.exchangeRateStale()) {
             axios.get(`${config.api}/ticker/latest/${currency}`)
                 .then((response) => {
@@ -419,13 +457,18 @@ class Balances extends Component {
 
 
     // ...
-    getOtherBalances (account) {
-        return account.balances.map((balance) => {
+    getOtherBalances = (account) =>
+        account.balances.map((balance) => {
             if (balance.asset_type !== "native") {
                 return (
                     <p className="other-assets" key={balance.asset_code}>
                         <span className="other-asset-balance">
-                            {Number.parseFloat(balance.balance).toFixed(this.props.accountInfo.precision)}
+                            {
+                                Number.parseFloat(balance.balance)
+                                    .toFixed(
+                                        this.props.accountInfo.precision
+                                    )
+                            }
                         </span>
                         <span className="other-asset-code">
                             {balance.asset_code}
@@ -433,40 +476,34 @@ class Balances extends Component {
                     </p>
                 )
             }
-            return undefined
+            return null
         })
-    }
 
 
     // ...
-    handleOpen () {
-        this.props.showAlert()
-    }
+    handleOpen = () => this.props.showAlert()
 
 
     // ...
-    handleClose () {
-        this.props.hideAlert()
-    }
+    handleClose = () => this.props.hideAlert()
 
 
     // ...
-    closeSendingCompleteModal () {
+    closeSendingCompleteModal = () =>
         this.setState({
             sendingCompleteModalShown: false,
         })
-    }
+
 
     // ...
-    handlePaymentSnackBarClose () {
+    handlePaymentSnackBarClose = () =>
         this.setState({
             sbPayment: false,
         })
-    }
 
 
     // ...
-    handleModalClose () {
+    handleModalClose = () =>
         axios
             .post(
                 `${config.api}/user/ledgerauth/${
@@ -495,81 +532,80 @@ class Balances extends Component {
                     console.log(error.response.statusText)
                 }
             })
-    }
 
 
     // ...
-    handleRegistrationModalClose () {
+    handleRegistrationModalClose = () =>
         this.setState({
             modalShown: false,
         })
-    }
 
 
     // ...
-    handleSignup () {
+    handleSignup = () =>
         this.setState({
             modalButtonText: "CANCEL",
             modalShown: true,
         })
-    }
 
 
     // ...
-    setModalButtonText (text) {
+    setModalButtonText = (text) =>
         this.setState({
             modalButtonText: text,
         })
-    }
 
 
     // ...
-    showPaymentCard () {
+    showPaymentCard = () =>
         this.setState({
             paymentCardVisible: true,
         })
-    }
 
 
     // ...
-    hidePaymentCard () {
+    hidePaymentCard = () =>
         this.setState({
             paymentCardVisible: false,
         })
-    }
 
 
     // ...
-    queryStellarAccount (pubKey) {
-        return server.loadAccount(pubKey)
+    queryStellarAccount = (pubKey) =>
+        server.loadAccount(pubKey)
             .catch(StellarSdk.NotFoundError, (_) => {
                 throw new Error("The destination account does not exist!")
             })
             .then((account) => {
                 return this.getNativeBalance(account)
             })
-    }
 
 
     // ...
-    buildSendTransaction () {
-        var destinationId = this.state.payee
-        // Transaction will hold a built transaction we can resubmit if the
-        // result is unknown.
-        var transaction
+    buildSendTransaction = () => {
+        let
+            destinationId = this.state.payee,
+            // Transaction will hold a built transaction we can resubmit
+            // if the result is unknown.
+            transaction = null
 
         if (this.state.newAccount) {
-
-            // This function is "async" as it waits for signature from the device
+            // This function is "async"
+            // as it waits for signature from the device
             server.loadAccount(this.props.accountInfo.pubKey)
                 .then(async (sourceAccount) => {
                     // Start building the transaction.
                     transaction = new StellarSdk.TransactionBuilder(sourceAccount)
                         .addOperation(StellarSdk.Operation.createAccount({
                             destination: this.state.payee,
-                            startingBalance: this.convertToXLM(this.state.amount),  // in XLM
+                            startingBalance:
+                                this.convertToXLM(this.state.amount),  // in XLM
                         }))
-                        .addMemo(StellarSdk.Memo.text(this.textInputFieldMemo.state.value))
+                        .addMemo(
+                            StellarSdk.Memo.text(
+                                this.textInputFieldMemo.state.value
+                            )
+                        )
                         .build()
 
                     this.setState({
@@ -630,6 +666,7 @@ class Balances extends Component {
                     })
                     this.showErrorModal.call(this, error.message)
                 })
+
         } else {
 
             // First, check to make sure that the destination account exists.
@@ -641,9 +678,9 @@ class Balances extends Component {
                     throw new Error("The destination account does not exist!")
                 })
                 // If there was no error, load up-to-date information on your account.
-                .then(() => {
-                    return server.loadAccount(this.props.accountInfo.pubKey)
-                })
+                .then(() =>
+                    server.loadAccount(this.props.accountInfo.pubKey)
+                )
                 // This function is "async" as it waits for signature from the device
                 .then(async (sourceAccount) => {
                     // Start building the transaction.
@@ -719,33 +756,34 @@ class Balances extends Component {
 
 
     // ...
-    showErrorModal (message) {
+    showErrorModal = (message) =>
         this.setState({
             errorModalShown: true,
             errorModalMessage: message,
         })
-    }
 
 
     // ...
-    closeErrorModal () {
+    closeErrorModal = () =>
         this.setState({
             errorModalShown: false,
             errorModalMessage: "",
         })
-    }
 
 
     // ...
-    convertToXLM (amount) {
+    convertToXLM = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
         const fiatAmount = new BigNumber(amount)
+
         if (
             this.props.accountInfo.rates &&
             this.props.accountInfo.rates[this.props.accountInfo.currency]
         ) {
             return fiatAmount.dividedBy(
-                this.props.accountInfo.rates[this.props.accountInfo.currency].rate
+                this.props.accountInfo.rates[
+                    this.props.accountInfo.currency
+                ].rate
             ).toString()
         } else {
             return "0"
@@ -754,9 +792,10 @@ class Balances extends Component {
 
 
     // ...
-    convertToFiat (amount) {
+    convertToFiat = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 2, })
         const nativeAmount = new BigNumber(amount)
+
         if (
             this.props.accountInfo.rates &&
             this.props.accountInfo.rates[this.props.accountInfo.currency]
@@ -772,9 +811,10 @@ class Balances extends Component {
 
 
     // ...
-    async sendPayment () {
+    sendPayment = async () => {
         // check if device is connected first (if not deviceCheck is an error object)
         const deviceCheck = await awaitConnection()
+
         if (typeof deviceCheck === "string") {
             this.buildSendTransaction.call(this)
             return true
@@ -786,16 +826,17 @@ class Balances extends Component {
 
 
     // ...
-    compoundPaymentValidator () {
-
+    compoundPaymentValidator = () => {
         if (
-            this.state.newAccount &&
-            this.state.amountEntered &&
-            parseInt(this.convertToXLM(this.state.amount), 10) < parseInt(config.reserve, 10)
+            this.state.newAccount  &&
+            this.state.amountEntered  &&
+            parseInt(this.convertToXLM(this.state.amount), 10) <
+                parseInt(config.reserve, 10)
         ) {
             this.setState({
                 buttonSendDisabled: true,
-                minimumReserveMessage: `Minimum reserve of ${config.reserve} required.`,
+                minimumReserveMessage:
+                    `Minimum reserve of ${config.reserve} required.`,
             })
             return false
         }
@@ -839,9 +880,11 @@ class Balances extends Component {
 
 
     // ...
-    memoValidator () {
-
-        if (this.state.memoRequired && this.textInputFieldMemo.state.value === "") {
+    memoValidator = () => {
+        if (
+            this.state.memoRequired  &&
+            this.textInputFieldMemo.state.value === ""
+        ) {
             this.setState({
                 memoValid: false,
                 memo: "",
@@ -858,9 +901,9 @@ class Balances extends Component {
         return true
     }
 
-    // ...
-    amountValidator () {
 
+    // ...
+    amountValidator = () => {
         // nothing was typed (reset any previous errors)
         if (this.textInputFieldAmount.state.value === "") {
             this.setState({
@@ -885,7 +928,10 @@ class Balances extends Component {
                 this.setState({
                     amount: `${parsedValidAmount[1]}.${parsedValidAmount[3]}`,
                     amountEntered: true,
-                    amountText: `${numberToText.convertToText(parsedValidAmount[1])} and ${parsedValidAmount[3]}/100`,
+                    amountText:
+                        `${numberToText.convertToText(
+                            parsedValidAmount[1]
+                        )} and ${parsedValidAmount[3]}/100`,
                 })
             }
             // whole amount
@@ -893,7 +939,8 @@ class Balances extends Component {
                 this.setState({
                     amount: `${parsedValidAmount[1]}`,
                     amountEntered: true,
-                    amountText: numberToText.convertToText(parsedValidAmount[1]),
+                    amountText:
+                        numberToText.convertToText(parsedValidAmount[1]),
                 })
             }
             this.textInputFieldAmount.setState({
@@ -919,7 +966,7 @@ class Balances extends Component {
 
 
     // ...
-    federationValidator () {
+    federationValidator = () => {
         // reset any previous errors
         this.textInputFieldFederationAddress.setState({
             error: null,
@@ -947,7 +994,7 @@ class Balances extends Component {
 
 
     // ...
-    compoundFederationValidator () {
+    compoundFederationValidator = () => {
         const addressValidity = this.federationValidator(
             this.textInputFieldFederationAddress.state.value
         )
@@ -959,16 +1006,26 @@ class Balances extends Component {
                     .then((federationEndpointObj) => {
                         if (federationEndpointObj.ok) {
                             axios
-                                .get(`${federationEndpointObj.endpoint}?q=${this.textInputFieldFederationAddress.state.value}&type=name`)
+                                .get(`${
+                                    federationEndpointObj.endpoint
+                                }?q=${
+                                    this.textInputFieldFederationAddress
+                                        .state.value
+                                }&type=name`)
                                 .then((response) => {
-                                    this.queryStellarAccount(response.data.account_id)
+                                    this.queryStellarAccount(
+                                        response.data.account_id
+                                    )
                                         .catch((_) => {
                                             this.setState({
                                                 payee: response.data.account_id,
                                                 newAccount: true,
                                             })
-                                            this.compoundPaymentValidator.call(this)
-                                            throw new Error("The destination account does not exist!")
+                                            this.compoundPaymentValidator
+                                                .call(this)
+                                            throw new Error(
+                                                "The destination account does not exist!"
+                                            )
                                         })
                                         .then((_) => {
                                             this.setState({
@@ -1024,18 +1081,26 @@ class Balances extends Component {
 
             // valid public key
             else {
-                this.queryStellarAccount(this.textInputFieldFederationAddress.state.value)
+                this.queryStellarAccount(
+                    this.textInputFieldFederationAddress.state.value
+                )
                     .catch((_) => {
                         this.setState({
-                            payee: this.textInputFieldFederationAddress.state.value,
+                            payee:
+                                this.textInputFieldFederationAddress
+                                    .state.value,
                             newAccount: true,
                         })
                         this.compoundPaymentValidator.call(this)
-                        throw new Error("The destination account does not exist!")
+                        throw new Error(
+                            "The destination account does not exist!"
+                        )
                     })
                     .then((_) => {
                         this.setState({
-                            payee: this.textInputFieldFederationAddress.state.value,
+                            payee:
+                                this.textInputFieldFederationAddress
+                                    .state.value,
                             newAccount : false,
                         })
                         this.compoundPaymentValidator.call(this)
@@ -1047,16 +1112,18 @@ class Balances extends Component {
             }
 
         } else {
+
             this.setState({
                 newAccount: false,
                 payee: null,
             })
+
         }
     }
 
 
     // ...
-    recipientIndicatorMessage () {
+    recipientIndicatorMessage = () => {
         let message = <span className="fade-extreme">XXXXXXXXXXXX</span>
 
         if (this.state.payee) {
@@ -1072,10 +1139,12 @@ class Balances extends Component {
 
 
     // ...
-    bottomIndicatorMessage () {
+    bottomIndicatorMessage = () => {
         let message = (<div className="p-l nowrap fade-extreme">
             <span className="bigger">
-                &#x1D54A;&#x1D543; {this.props.accountInfo.account.account.sequence}
+                &#x1D54A;&#x1D543;
+                {" "}
+                {this.props.accountInfo.account.account.sequence}
             </span>
         </div>)
 
@@ -1098,182 +1167,185 @@ class Balances extends Component {
 
 
     // ...
-    transactionFeedbackMessage () {
-        return (
-            <Fragment>
-                <div>
-                    Please confirm the following info on your device&apos;s screen.
-                </div>
-                <List>
-                    <ListItem
-                        disabled={true}
-                        primaryText="Type"
-                        secondaryText={this.state.transactionType}
-                        leftIcon={
-                            <i className="green material-icons md-icon-small">
-                                assignment_late
-                            </i>
-                        }
-                    />
-                    <ListItem
-                        disabled={true}
-                        primaryText="Amount"
-                        secondaryText={
-                            `${this.convertToXLM(this.state.amount)} XLM`
-                        }
-                        leftIcon={
-                            <i className="green material-icons md-icon-small">
-                                account_balance_wallet
-                            </i>
-                        }
-                    />
-                    <ListItem
-                        disabled={true}
-                        primaryText="Destination"
-                        secondaryText={
-                            handleException(() => pubKeyAbbr(this.state.payee), () => "Not Available")
-                        }
-                        leftIcon={
-                            <i className="green material-icons md-icon-small">
-                                local_post_office
-                            </i>
-                        }
-                    />
-                    <ListItem
-                        disabled={true}
-                        primaryText="Memo"
-                        secondaryText={this.state.memo}
-                        leftIcon={
-                            <i className="green material-icons md-icon-small">
-                                speaker_notes
-                            </i>
-                        }
-                    />
-                    <ListItem
-                        disabled={true}
-                        primaryText="Fee"
-                        secondaryText="0.000001 XLM"
-                        leftIcon={
-                            <i className="green material-icons md-icon-small">
-                                credit_card
-                            </i>
-                        }
-                    />
-                    <ListItem
-                        disabled={true}
-                        primaryText="Network"
-                        secondaryText="Test"
-                        leftIcon={
-                            <i className="green material-icons md-icon-small">
-                                network_check
-                            </i>
-                        }
-                    />
-                </List>
-                <div>
-                    When you are sure it is correct press "&#10003;"
-                    on the device to sign your transaction and send it off.
-                </div>
-            </Fragment>
-        )
-    }
-
-
-    // ...
-    broadcastTransactionMessage () {
-        return (
-            <Fragment>
-                <div className="bigger green">
-                    Your money transfer is on its way.
-                </div>
-                <div className="faded p-b">
-                    Estimated arrival time: 5 seconds
-                </div>
-                <LinearProgress
-                    style={{ background: "rgb(244,176,4)", }}
-                    color="rgba(15,46,83,0.6)"
-                    mode="indeterminate"
+    transactionFeedbackMessage = () =>
+        <Fragment>
+            <div>
+                Please confirm the following info on your device&apos;s screen.
+            </div>
+            <List>
+                <ListItem
+                    disabled={true}
+                    primaryText="Type"
+                    secondaryText={this.state.transactionType}
+                    leftIcon={
+                        <i className="green material-icons md-icon-small">
+                            assignment_late
+                        </i>
+                    }
                 />
-            </Fragment>
-        )
-    }
+                <ListItem
+                    disabled={true}
+                    primaryText="Amount"
+                    secondaryText={
+                        `${this.convertToXLM(this.state.amount)} XLM`
+                    }
+                    leftIcon={
+                        <i className="green material-icons md-icon-small">
+                            account_balance_wallet
+                        </i>
+                    }
+                />
+                <ListItem
+                    disabled={true}
+                    primaryText="Destination"
+                    secondaryText={
+                        handleException(
+                            () => pubKeyAbbr(this.state.payee),
+                            () => "Not Available"
+                        )
+                    }
+                    leftIcon={
+                        <i className="green material-icons md-icon-small">
+                            local_post_office
+                        </i>
+                    }
+                />
+                <ListItem
+                    disabled={true}
+                    primaryText="Memo"
+                    secondaryText={this.state.memo}
+                    leftIcon={
+                        <i className="green material-icons md-icon-small">
+                            speaker_notes
+                        </i>
+                    }
+                />
+                <ListItem
+                    disabled={true}
+                    primaryText="Fee"
+                    secondaryText="0.000001 XLM"
+                    leftIcon={
+                        <i className="green material-icons md-icon-small">
+                            credit_card
+                        </i>
+                    }
+                />
+                <ListItem
+                    disabled={true}
+                    primaryText="Network"
+                    secondaryText="Test"
+                    leftIcon={
+                        <i className="green material-icons md-icon-small">
+                            network_check
+                        </i>
+                    }
+                />
+            </List>
+            <div>
+                When you are sure it is correct press "&#10003;"
+                on the device to sign your transaction and send it off.
+            </div>
+        </Fragment>
 
 
     // ...
-    sendingCompleteMessage () {
-        return (
-            <Fragment>
-                <div className="bigger green">
-                    The money has arrived to its destination.
-                </div>
-                <div className="faded p-b">
-                    Thank you for using {appName}.
-                </div>
-            </Fragment>
-        )
-    }
+    broadcastTransactionMessage = () =>
+        <Fragment>
+            <div className="bigger green">
+                Your money transfer is on its way.
+            </div>
+            <div className="faded p-b">
+                Estimated arrival time: 5 seconds
+            </div>
+            <LinearProgress
+                style={{ background: "rgb(244,176,4)", }}
+                color="rgba(15,46,83,0.6)"
+                mode="indeterminate"
+            />
+        </Fragment>
+
 
     // ...
-    doWhateverYourFunctionCurrentlyIs = () => {
+    sendingCompleteMessage = () =>
+        <Fragment>
+            <div className="bigger green">
+                The money has arrived to its destination.
+            </div>
+            <div className="faded p-b">
+                Thank you for using {appName}.
+            </div>
+        </Fragment>
+
+
+    // ...
+    doWhateverYourFunctionCurrentlyIs = () =>
         this.setState({
             modalShown: false,
         })
-    }
-
-    changeButtonText = () => {
-        this.setState({
-            modalButtonText: "DONE",
-        })
-    }
 
 
     // ...
-    render () {
-        let otherBalances = null
-        if (this.props.accountInfo.exists) {
-            otherBalances = this.getOtherBalances.call(
-                this, this.props.accountInfo.account.account
-            )
-        }
+    changeButtonText = () =>
+        this.setState({
+            modalButtonText: "DONE",
+        })
 
-        const actions = [
-            <RaisedButton
-                backgroundColor="rgb(15,46,83)"
-                labelColor="rgb(244,176,4)"
-                label="OK"
-                keyboardFocused={true}
-                onClick={this.handleClose.bind(this)}
-            />,
-        ]
 
-        const actionsError = [
-            <RaisedButton
-                backgroundColor="rgb(15,46,83)"
-                labelColor="rgb(244,176,4)"
-                label="OK"
-                keyboardFocused={true}
-                onClick={this.closeErrorModal.bind(this)}
-            />,
-        ]
+    // ...
+    render = () => {
+        let otherBalances =
+            this.props.accountInfo.exists ?
+                this.getOtherBalances.call(
+                    this, this.props.accountInfo.account.account
+                ) :
+                null
 
-        const actionsSendingComplete = [
-            <RaisedButton
-                backgroundColor="rgb(15,46,83)"
-                labelColor="rgb(244,176,4)"
-                label="OK"
-                keyboardFocused={true}
-                onClick={this.closeSendingCompleteModal.bind(this)}
-            />,
-        ]
-
+        const
+            actions = [
+                <RaisedButton
+                    backgroundColor="rgb(15,46,83)"
+                    labelColor="rgb(244,176,4)"
+                    label="OK"
+                    keyboardFocused={true}
+                    onClick={this.handleClose}
+                />,
+            ],
+            actionsError = [
+                <RaisedButton
+                    backgroundColor="rgb(15,46,83)"
+                    labelColor="rgb(244,176,4)"
+                    label="OK"
+                    keyboardFocused={true}
+                    onClick={this.closeErrorModal}
+                />,
+            ],
+            actionsSendingComplete = [
+                <RaisedButton
+                    backgroundColor="rgb(15,46,83)"
+                    labelColor="rgb(244,176,4)"
+                    label="OK"
+                    keyboardFocused={true}
+                    onClick={this.closeSendingCompleteModal}
+                />,
+            ]
 
         return (
             <div>
                 <div>
                     <SnackBar
                         open={this.state.sbPayment}
-                        message={`${this.state.sbPaymentText} ${this.state.sbPaymentAmount} ${this.state.sbPaymentAssetCode}`}
-                        onRequestClose={this.handlePaymentSnackBarClose.bind(this)}
+                        message={
+                            `${
+                                this.state.sbPaymentText
+                            } ${
+                                this.state.sbPaymentAmount
+                            } ${
+                                this.state.sbPaymentAssetCode
+                            }`
+                        }
+                        onRequestClose={
+                            this.handlePaymentSnackBarClose
+                        }
                     />
 
                     <Dialog
@@ -1303,7 +1375,7 @@ class Balances extends Component {
                         ]}
                         modal={true}
                         open={this.state.modalShown}
-                        onRequestClose={this.handleRegistrationModalClose.bind(this)}
+                        onRequestClose={this.handleRegistrationModalClose}
                         paperClassName="modal-body"
                         titleClassName="modal-title"
                         repositionOnUpdate={false}
@@ -1350,7 +1422,7 @@ class Balances extends Component {
                         actions={actionsError}
                         modal={false}
                         open={this.state.errorModalShown}
-                        onRequestClose={this.closeErrorModal.bind(this)}
+                        onRequestClose={this.closeErrorModal}
                         paperClassName="modal-body"
                         titleClassName="modal-title"
                     >
@@ -1367,7 +1439,7 @@ class Balances extends Component {
                         actions={actionsSendingComplete}
                         modal={true}
                         open={this.state.sendingCompleteModalShown}
-                        onRequestClose={this.closeSendingCompleteModal.bind(this)}
+                        onRequestClose={this.closeSendingCompleteModal}
                         paperClassName="modal-body"
                         titleClassName="modal-title"
                     >
@@ -1410,7 +1482,7 @@ class Balances extends Component {
                         </CardText>
                         <CardActions>
                             <RaisedButton
-                                onClick={this.handleSignup.bind(this)}
+                                onClick={this.handleSignup}
                                 backgroundColor="rgb(15,46,83)"
                                 labelColor="rgb(244,176,4)"
                                 label="Register"
@@ -1433,10 +1505,13 @@ class Balances extends Component {
                                 subtitle={
                                     <span>
                                         <span>
-                                            {this.getCurrencyLongText(this.props.accountInfo.currency)}
+                                            {this.getCurrencyLongText(
+                                                this.props.accountInfo.currency
+                                            )}
                                         </span>
                                         <span className="fade currency-iso p-l-small">
-                                            ({this.props.accountInfo.currency.toUpperCase()})
+                                            ({this.props.accountInfo
+                                                .currency.toUpperCase()})
                                         </span>
                                     </span>
                                 }
@@ -1450,18 +1525,26 @@ class Balances extends Component {
                                     <div>
                                         <div className="balance">
                                             <span className="fade currency-glyph">
-                                                {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                                {this.getCurrencyGlyph(
+                                                    this.props.accountInfo.currency
+                                                )}
                                             </span>
                                             <span className="p-l-small">
                                                 {this.exchangeRateFetched() &&
                                                     this.convertToFiat(
                                                         this.getNativeBalance(
-                                                            this.props.accountInfo.account.account))
+                                                            this.props
+                                                                .accountInfo
+                                                                .account.account))
                                                 }
                                             </span>
                                         </div>
                                         <div className="fade-extreme micro">
-                                            {this.getNativeBalance(this.props.accountInfo.account.account)} XLM
+                                            {this.getNativeBalance(
+                                                this.props
+                                                    .accountInfo.account
+                                                    .account
+                                            )} XLM
                                         </div>
                                     </div>
                                     <div></div>
@@ -1474,20 +1557,20 @@ class Balances extends Component {
                                     backgroundColor="rgb(15,46,83)"
                                     labelColor="#228B22"
                                     label="Fund"
-                                    onClick={this.handleOpen.bind(this)}
+                                    onClick={this.handleOpen}
                                 />
                                 <RaisedButton
                                     backgroundColor="rgb(15,46,83)"
                                     labelColor="rgb(244,176,4)"
                                     label="Request"
-                                    onClick={this.handleOpen.bind(this)}
+                                    onClick={this.handleOpen}
                                 />
                                 {this.context.loginManager.isAuthenticated() ?
                                     <RaisedButton
                                         backgroundColor="rgb(15,46,83)"
                                         labelColor="#d32f2f"
                                         label="Pay"
-                                        onClick={this.showPaymentCard.bind(this)}
+                                        onClick={this.showPaymentCard}
                                     /> : null
                                 }
                             </CardActions>
@@ -1518,10 +1601,14 @@ class Balances extends Component {
                             subtitle={
                                 <span>
                                     <span>
-                                        {this.getCurrencyLongText(this.props.accountInfo.currency)}
+                                        {this.getCurrencyLongText(
+                                            this.props.accountInfo.currency
+                                        )}
                                     </span>
                                     <span className="fade currency-iso p-l-small">
-                                        ({this.props.accountInfo.currency.toUpperCase()})
+                                        ({this.props
+                                            .accountInfo
+                                            .currency.toUpperCase()})
                                     </span>
                                 </span>
                             }
@@ -1534,7 +1621,9 @@ class Balances extends Component {
                                 <div>
                                     <div className='balance'>
                                         <span className="fade currency-glyph">
-                                            {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                            {this.getCurrencyGlyph(
+                                                this.props.accountInfo.currency
+                                            )}
                                         </span> 0.00
                                     </div>
                                     <div className="fade-extreme micro">
@@ -1547,7 +1636,7 @@ class Balances extends Component {
 
                         <CardActions>
                             <RaisedButton
-                                onClick={this.handleOpen.bind(this)}
+                                onClick={this.handleOpen}
                                 backgroundColor="rgb(15,46,83)"
                                 labelColor="#228B22"
                                 label="Fund" />
@@ -1555,7 +1644,7 @@ class Balances extends Component {
                                 backgroundColor="rgb(15,46,83)"
                                 labelColor="rgb(244,176,4)"
                                 label="Request"
-                                onClick={this.handleOpen.bind(this)}
+                                onClick={this.handleOpen}
                             />
                         </CardActions>
                     </Card>
@@ -1584,7 +1673,7 @@ class Balances extends Component {
                                     floatingLabelText="Date"
                                     minDate={this.state.minDate}
                                     underlineShow={true}
-                                    onChange={this.updateDate.bind(this)}
+                                    onChange={this.updateDate}
                                 />
                             </div>
                             <div className="f-s space-between">
@@ -1597,11 +1686,20 @@ class Balances extends Component {
                                             name="paycheck-payment-address"
                                             type="text"
                                             placeholder="Payment Address"
-                                            underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
-                                            underlineFocusStyle={{ borderColor: "rgba(15, 46, 83, 0.8)", }}
-                                            inputStyle={{ color: "rgba(15, 46, 83, 0.8)",}}
+                                            underlineStyle={{
+                                                borderColor: "rgba(15, 46, 83, 0.5)",
+                                            }}
+                                            underlineFocusStyle={{
+                                                borderColor: "rgba(15, 46, 83, 0.8)",
+                                            }}
+                                            inputStyle={{
+                                                color: "rgba(15, 46, 83, 0.8)",
+                                            }}
                                             validator={
-                                                debounce(this.compoundFederationValidator.bind(this), 1000)
+                                                debounce(
+                                                    this.compoundFederationValidator,
+                                                    1000
+                                                )
                                             }
                                             ref={(self) => {
                                                 this.textInputFieldFederationAddress = self
@@ -1611,22 +1709,30 @@ class Balances extends Component {
                                 </div>
                                 <div className="payment-header f-s">
                                     <div className="p-r leading-label-align payment-currency">
-                                        {this.getCurrencyGlyph(this.props.accountInfo.currency)}
+                                        {this.getCurrencyGlyph(
+                                            this.props.accountInfo.currency
+                                        )}
                                     </div>
                                     <div>
                                         <InputField
                                             name="paycheck-payment-amount"
                                             type="text"
                                             validator={
-                                                debounce(this.amountValidator.bind(this), 500)
+                                                debounce(this.amountValidator, 500)
                                             }
                                             ref={(self) => {
                                                 this.textInputFieldAmount = self
                                             }}
                                             placeholder="Amount"
-                                            underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
-                                            underlineFocusStyle={{ borderColor: "rgba(15, 46, 83, 0.8)", }}
-                                            inputStyle={{ color: "rgba(15, 46, 83, 0.8)", }}
+                                            underlineStyle={{
+                                                borderColor: "rgba(15, 46, 83, 0.5)",
+                                            }}
+                                            underlineFocusStyle={{
+                                                borderColor: "rgba(15, 46, 83, 0.8)",
+                                            }}
+                                            inputStyle={{
+                                                color: "rgba(15, 46, 83, 0.8)",
+                                            }}
                                         />
                                     </div>
                                 </div>
@@ -1661,14 +1767,20 @@ class Balances extends Component {
                                             name="paycheck-memo"
                                             type="text"
                                             placeholder="Memo"
-                                            underlineStyle={{ borderColor: "rgba(15, 46, 83, 0.5)", }}
-                                            underlineFocusStyle={{ borderColor: "rgba(15, 46, 83, 0.8)", }}
-                                            inputStyle={{ color: "rgba(15, 46, 83, 0.8)", }}
+                                            underlineStyle={{
+                                                borderColor: "rgba(15, 46, 83, 0.5)",
+                                            }}
+                                            underlineFocusStyle={{
+                                                borderColor: "rgba(15, 46, 83, 0.8)",
+                                            }}
+                                            inputStyle={{
+                                                color: "rgba(15, 46, 83, 0.8)",
+                                            }}
                                             ref={(self) => {
                                                 this.textInputFieldMemo = self
                                             }}
                                             validator={
-                                                debounce(this.memoValidator.bind(this), 500)
+                                                debounce(this.memoValidator, 500)
                                             }
                                         />
                                     </span>
@@ -1683,19 +1795,21 @@ class Balances extends Component {
                                 <div>
                                     <span className="p-r">
                                         <RaisedButton
-                                            onClick={this.sendPayment.bind(this)}
+                                            onClick={this.sendPayment}
                                             backgroundColor="rgb(15,46,83)"
                                             labelColor="rgb(244,176,4)"
                                             label="SIGN"
                                             disabledLabelColor="#cfd8dc"
-                                            disabled={this.state.buttonSendDisabled}
+                                            disabled={
+                                                this.state.buttonSendDisabled
+                                            }
                                         />
                                     </span>
                                     <FlatButton
                                         label="CANCEL"
                                         disableTouchRipple={true}
                                         disableFocusRipple={true}
-                                        onClick={this.hidePaymentCard.bind(this)}
+                                        onClick={this.hidePaymentCard}
                                     />
                                 </div>
                             </div>
@@ -1710,19 +1824,17 @@ class Balances extends Component {
 
 
 // ...
-function mapStateToProps (state) {
-    return {
+export default connect(
+    // map state to props.
+    (state) => ({
         accountInfo: state.accountInfo,
         auth: state.auth,
         modal: state.modal,
         appAuth: state.appAuth,
-    }
-}
+    }),
 
-
-// ...
-function matchDispatchToProps (dispatch) {
-    return bindActionCreators({
+    // match dispatch to props.
+    (dispatch) => bindActionCreators({
         setExchangeRate,
         showAlert,
         hideAlert,
@@ -1739,8 +1851,4 @@ function matchDispatchToProps (dispatch) {
         updateLoadingMessage,
         changeLoginState,
     }, dispatch)
-}
-
-
-// ...
-export default connect(mapStateToProps, matchDispatchToProps)(Balances)
+)(Balances)
