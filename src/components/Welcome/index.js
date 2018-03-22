@@ -37,7 +37,7 @@ import {
 } from "../../actions/auth"
 
 import InputField from "../../frontend/InputField"
-import PanelLedger from "./Panel-Ledger"
+import PanelLedger from "./PanelLedger"
 import RaisedButton from "material-ui/RaisedButton"
 import Login from "../Login"
 import HeadingContainer from "./HeadingContainer"

@@ -11,6 +11,7 @@ import { authenticate } from "./api"
 
 
 
+
 // <LoginManager> component
 class LoginManager extends Component {
 
@@ -78,6 +79,20 @@ class LoginManager extends Component {
 }
 
 
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({
+        appAuth: state.appAuth,
+    }),
+
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        changeLoginState,
+    }, dispatch)
+)(LoginManager)
+
+
 
 
 // <withLoginManager(...)> HOC
@@ -117,16 +132,3 @@ export const withLoginManager = (WrappedComponent) =>
         },
         WrappedComponent
     )
-
-// ...
-export default connect(
-    // map state to props.
-    (state) => ({
-        appAuth: state.appAuth,
-    }),
-
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        changeLoginState,
-    }, dispatch)
-)(LoginManager)

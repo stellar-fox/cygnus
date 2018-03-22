@@ -28,7 +28,7 @@ class Login extends Component {
 
 
     // ...
-    async loginValidator () {
+    loginValidator = async () => {
 
         // INVALID EMAIL FORMAT
         if (!emailIsValid(this.email.state.value)) {
@@ -113,6 +113,7 @@ class Login extends Component {
         </div>
 
 }
+
 
 // ...
 export default withLoginManager(connect(

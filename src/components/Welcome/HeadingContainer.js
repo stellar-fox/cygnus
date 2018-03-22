@@ -1,6 +1,6 @@
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import Heading from "./heading"
+import Heading from "./Heading"
 import {
     changeLoginState,
     changeModalState,

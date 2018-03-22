@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from "react"
-import RaisedButton from "material-ui/RaisedButton"
 import { TopBarSecurityMessage } from "../../env.js"
+import { ActionConstants } from "../../actions/index.js"
+
+import RaisedButton from "material-ui/RaisedButton"
 import Modal from "../Modal"
 import CreateAccount from "../Account/Create"
 
-import "./heading.css"
-import { ActionConstants } from "../../actions/index.js"
+import "./Heading.css"
 
 
 
