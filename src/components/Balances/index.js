@@ -136,39 +136,38 @@ class Balances extends Component {
             this._tmpQueryHorizon()
             this._tmpAccountExists()
 
-            if (this.props.loginManager.isAuthenticated()) {
-
-                axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
-                    .then((response) => {
-                        this.props.setCurrency(response.data.data.currency)
-                        this.props.setCurrencyPrecision(
-                            response.data.data.precision
-                        )
-                        this.getExchangeRate(response.data.data.currency)
-                        this.setState({
-                            currencySymbol: response.data.data.currency,
-                            currencyText:
-                                this.getCurrencyText(
-                                    response.data.data.currency
-                                ),
-                        })
-                    })
-                    .catch((error) => {
-                        // eslint-disable-next-line no-console
-                        console.log(error.message)
-                    })
-            } else {
-
-                this.getExchangeRate(this.props.accountInfo.currency)
-                this.setState({
-                    currencySymbol: this.props.accountInfo.currency,
-                    currencyText:
-                        this.getCurrencyText(
-                            this.props.accountInfo.currency
-                        ),
-                })
-            }
         }
+
+        if (this.props.loginManager.isAuthenticated()) {
+            axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
+                .then((response) => {
+                    this.props.setCurrency(response.data.data.currency)
+                    this.props.setCurrencyPrecision(
+                        response.data.data.precision
+                    )
+                    this.getExchangeRate(response.data.data.currency)
+                    this.setState({
+                        currencySymbol: response.data.data.currency,
+                        currencyText:
+                            this.getCurrencyText(
+                                response.data.data.currency
+                            ),
+                    })
+                })
+                .catch((error) => {
+                    // eslint-disable-next-line no-console
+                    console.log(error.message)
+                })
+        }
+
+        this.getExchangeRate(this.props.accountInfo.currency)
+        this.setState({
+            currencySymbol: this.props.accountInfo.currency,
+            currencyText:
+                this.getCurrencyText(
+                    this.props.accountInfo.currency
+                ),
+        })
 
         // FIXME: merge streamers
         this.props.setStreamer(this.paymentsStreamer.call(this))
