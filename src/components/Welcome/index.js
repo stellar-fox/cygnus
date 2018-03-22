@@ -20,6 +20,7 @@ import {
 } from "../../lib/utils"
 import {
     appName,
+    bip32Prefix,
 } from "../../env"
 
 import {
@@ -99,11 +100,11 @@ class Welcome extends Component {
     // ...
     logInViaPublicKey = (pubKey) => {
         if (this.context.loginManager.isAuthenticated()) {
-            this.props.setAccountPath(`44'/148'/${this.props.appAuth.bip32Path}'`)
+            this.props.setAccountPath(`${bip32Prefix}${this.props.appAuth.bip32Path}'`)
             axios
                 .get(`${config.api}/account/${this.props.appAuth.userId}`)
                 .then((response) => {
-                    this.props.setAccountPath(`44'/148'/${response.data.data.bip32Path}'`)
+                    this.props.setAccountPath(`${bip32Prefix}${response.data.data.bip32Path}'`)
                 })
                 .catch((error) => {
                     // eslint-disable-next-line no-console

@@ -26,6 +26,7 @@ import {
     StellarSdk,
     pubKeyAbbr,
     handleException,
+    insertPathIndex,
 } from "../../lib/utils"
 import { appName } from "../../env.js"
 import {
@@ -255,7 +256,7 @@ class Balances extends Component {
                 */
                 if (
                     message.type === "set_options"  &&
-                    message.source_account === this.props.accountInfo.pubKey  &&
+                    message.source_account === this.props.appAuth.publicKey  &&
                     this.props.accountInfo.account.account.home_domain !== message.home_domain
 
                 ) {
@@ -285,7 +286,7 @@ class Balances extends Component {
                 */
                 if (
                     message.type === "create_account" &&
-                    message.source_account === this.props.accountInfo.pubKey
+                    message.source_account === this.props.appAuth.publicKey
                 ) {
                     this.updateAccount.call(this)
                     this.setState({
@@ -301,7 +302,7 @@ class Balances extends Component {
                 */
                 if (
                     message.type === "create_account" &&
-                    message.account === this.props.accountInfo.pubKey
+                    message.account === this.props.appAuth.publicKey
                 ) {
                     this.updateAccount.call(this)
                     this.setState({
@@ -317,7 +318,7 @@ class Balances extends Component {
                 */
                 if (
                     message.type === "payment" &&
-                    message.to === this.props.accountInfo.pubKey
+                    message.to === this.props.appAuth.publicKey
                 ) {
                     this.updateAccount.call(this)
                     this.setState({
@@ -333,7 +334,7 @@ class Balances extends Component {
                 */
                 if (
                     message.type === "payment" &&
-                    message.from === this.props.accountInfo.pubKey
+                    message.from === this.props.appAuth.publicKey
                 ) {
                     this.updateAccount.call(this)
                     this.setState({
@@ -359,7 +360,7 @@ class Balances extends Component {
     // ...
     updateAccount () {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-        server.loadAccount(this.props.accountInfo.pubKey)
+        server.loadAccount(this.props.appAuth.publicKey)
             .catch(StellarSdk.NotFoundError, (_) => {
                 throw new Error("The destination account does not exist!")
             })
@@ -470,9 +471,9 @@ class Balances extends Component {
         axios
             .post(
                 `${config.api}/user/ledgerauth/${
-                    this.props.accountInfo.pubKey
+                    this.props.appAuth.publicKey
                 }/${
-                    this.props.accountInfo.accountPath
+                    this.props.appAuth.bip32Path
                 }`
             )
             .then((response) => {
@@ -561,7 +562,7 @@ class Balances extends Component {
         if (this.state.newAccount) {
 
             // This function is "async" as it waits for signature from the device
-            server.loadAccount(this.props.accountInfo.pubKey)
+            server.loadAccount(this.props.appAuth.publicKey)
                 .then(async (sourceAccount) => {
                     // Start building the transaction.
                     transaction = new StellarSdk.TransactionBuilder(sourceAccount)
@@ -580,8 +581,8 @@ class Balances extends Component {
                     // Sign the transaction to prove you are actually the person sending it.
                     // transaction.sign(sourceKeys)
                     const signedTransaction = await signTransaction(
-                        this.props.accountInfo.accountPath,
-                        this.props.accountInfo.pubKey,
+                        insertPathIndex(this.props.appAuth.bip32Path),
+                        this.props.appAuth.publicKey,
                         transaction
                     )
 
@@ -642,7 +643,7 @@ class Balances extends Component {
                 })
                 // If there was no error, load up-to-date information on your account.
                 .then(() => {
-                    return server.loadAccount(this.props.accountInfo.pubKey)
+                    return server.loadAccount(this.props.appAuth.publicKey)
                 })
                 // This function is "async" as it waits for signature from the device
                 .then(async (sourceAccount) => {
@@ -666,8 +667,8 @@ class Balances extends Component {
                         deviceConfirmModalShown: true,
                     })
                     const signedTransaction = await signTransaction(
-                        this.props.accountInfo.accountPath,
-                        this.props.accountInfo.pubKey,
+                        insertPathIndex(this.props.appAuth.bip32Path),
+                        this.props.appAuth.publicKey,
                         transaction
                     )
                     this.setState({

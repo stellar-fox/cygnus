@@ -1,6 +1,7 @@
 import React from "react"
 import axios from "axios"
 import toml from "toml"
+import { bip32Prefix } from "../env"
 
 
 // TODO: convert-to/use-as module
@@ -120,6 +121,10 @@ export const extractPathIndex = (path) => handleException(
     () => path.match(/\/(\d{1,})'$/)[1],
     (_) => { throw new Error("Path index cannot be found.") }
 )
+
+
+// inserts path index substituting Z in "XX'/YYY'/Z'"
+export const insertPathIndex = (index) => `${bip32Prefix}${index}'`
 
 
 // ...

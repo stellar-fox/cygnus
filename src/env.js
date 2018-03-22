@@ -39,6 +39,10 @@ export const unknownPubKeyAbbr = "XXXXXX-XXXXXX"
 
 
 // ...
+export const bip32Prefix = "44'/148'/"
+
+
+// ...
 export const snackBarAutoHideDuration = 3500
 
 

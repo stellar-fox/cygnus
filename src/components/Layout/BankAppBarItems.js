@@ -19,7 +19,7 @@ export default connect(
         homeDomain:
             state.accountInfo.account  &&
             state.accountInfo.account.account.home_domain,
-        pubKey: state.appAuth.publicKey, //state.accountInfo.pubKey,
+        pubKey: state.appAuth.publicKey,
     })
 )(
     ({

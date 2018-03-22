@@ -7,7 +7,6 @@ import md5 from "../../lib/md5"
 import {
     emailValid,
     passwordValid,
-    extractPathIndex,
 } from "../../lib/utils"
 import { config } from "../../config"
 import { awaitConnection } from "../../lib/ledger"
@@ -147,8 +146,8 @@ class NewAccount extends Component {
                 .post(
                     `${config.api}/account/create/${
                         userId
-                    }/${this.props.accountInfo.pubKey}?path=${
-                        extractPathIndex(this.props.accountInfo.accountPath)
+                    }/${this.props.appAuth.publicKey}?path=${
+                        this.props.appAuth.bip32Path
                     }&md5=${md5(this.state.email)}`
                 )
                 .then((response) => {
@@ -229,7 +228,7 @@ class NewAccount extends Component {
                         <div className="small">
                             will be associated with account
                             {" "}
-                            {this.props.accountInfo.accountPath}
+                            <strong>{this.props.appAuth.bip32Path}</strong>
                             {" "}
                             on your Ledger device.
                         </div>

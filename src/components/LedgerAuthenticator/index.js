@@ -10,7 +10,7 @@ import {
     setAccountRegistered,
     setPublicKey
 } from "../../actions/index"
-
+import { bip32Prefix } from "../../env.js"
 import "./index.css"
 
 
@@ -22,7 +22,6 @@ class LedgerAuthenticator extends Component {
     // ...
     state = {
         derivationPath: "0",
-        derivationPrefix: "44'/148'/",
         pathEditable: false,
         useDefaultAccount: true,
         ledgerStatusMessage: "",
@@ -104,8 +103,8 @@ class LedgerAuthenticator extends Component {
     // ...
     formBip32Path = () =>
         this.state.derivationPath === "" ?
-            `${this.state.derivationPrefix}0'` :
-            `${this.state.derivationPrefix}${this.state.derivationPath}'`
+            `${bip32Prefix}0'` :
+            `${bip32Prefix}${this.state.derivationPath}'`
 
 
     // ...
@@ -152,7 +151,7 @@ class LedgerAuthenticator extends Component {
                             value={this.state.derivationPath}
                             handleChange={this.handlePathChange}
                             subLabel={`Account Derivation Path: [${
-                                this.state.derivationPrefix
+                                bip32Prefix
                             }${this.state.derivationPath}']`}
                         />
                     </div>
