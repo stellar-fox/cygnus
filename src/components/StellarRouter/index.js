@@ -7,16 +7,20 @@ import { CALL_HISTORY_METHOD } from "react-router-redux"
 
 
 // ...
-export const isAbsolute = (path) => path.startsWith("/")
+export const isAbsolute = (path) =>
+    path ? path.startsWith("/") : false
 
 
 // ...
-export const hasTrailingSlash = (path) => path.endsWith("/")
+export const hasTrailingSlash = (path) =>
+    path ? path.endsWith("/") : false
 
 
 // ...
 export const ensureTrailingSlash = (path) =>
-    hasTrailingSlash(path) ? path : path + "/"
+    path ?
+        (hasTrailingSlash(path) ? path : path + "/") :
+        path
 
 
 // ...
