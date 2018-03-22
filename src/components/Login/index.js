@@ -1,13 +1,15 @@
 import React, { Component } from "react"
-import PropTypes from "prop-types"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 import InputField from "../../frontend/InputField"
 import RaisedButton from "material-ui/RaisedButton"
 import LinearProgress from "material-ui/LinearProgress"
+import { withLoginManager } from "../LoginManager"
 import {
     emailIsValid,
     passwordIsValid,
 } from "./helper"
-import { ActionConstants } from "../../actions"
+import { ActionConstants, changeLoginState, } from "../../actions"
 
 import "./index.css"
 
@@ -15,13 +17,7 @@ import "./index.css"
 
 
 // <Login> component
-export default class Login extends Component {
-
-    // ...
-    static contextTypes = {
-        loginManager : PropTypes.object,
-    }
-
+class Login extends Component {
 
     // ...
     state = {
@@ -56,7 +52,7 @@ export default class Login extends Component {
             progressBarOpacity: "1",
         }))
 
-        this.context.loginManager.attemptLogin(
+        this.props.loginManager.attemptLogin(
             this.email.state.value,
             this.password.state.value
         ).catch((error) => {
@@ -117,3 +113,16 @@ export default class Login extends Component {
         </div>
 
 }
+
+// ...
+export default withLoginManager(connect(
+    // map state to props.
+    (state) => ({
+        auth: state.auth,
+    }),
+
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        changeLoginState,
+    }, dispatch)
+)(Login))

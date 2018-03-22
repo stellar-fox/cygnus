@@ -39,7 +39,7 @@ import {
 import InputField from "../../frontend/InputField"
 import PanelLedger from "./Panel-Ledger"
 import RaisedButton from "material-ui/RaisedButton"
-import Login from "../../containers/Login"
+import Login from "../Login"
 import HeadingContainer from "./HeadingContainer"
 import Footer from "../Layout/Footer"
 import Panel from "../Panel"
@@ -90,7 +90,7 @@ class Welcome extends Component {
 
     // ...
     logInViaPublicKey = (pubKey) => {
-        if (this.context.loginManager.isAuthenticated()) {
+        if (this.props.loginManager.isAuthenticated()) {
             this.props.setAccountPath(`${bip32Prefix}${this.props.appAuth.bip32Path}'`)
             axios
                 .get(`${config.api}/account/${this.props.appAuth.userId}`)
