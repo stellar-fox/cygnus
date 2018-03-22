@@ -379,9 +379,7 @@ class Welcome extends Component {
                                     </a>
                                 </div>
                                 <LedgerAuthenticator
-                                    onConnected={this.logInViaLedger.bind(
-                                        this
-                                    )}
+                                    onConnected={this.logInViaLedger}
                                 />
                             </div>
                         }
@@ -454,12 +452,8 @@ class Welcome extends Component {
                                             type="text"
                                             placeholder="Payment Address"
                                             styles={styles}
-                                            validator={this.federationValidator.bind(
-                                                this
-                                            )}
-                                            action={this.compoundFederationValidator.bind(
-                                                this
-                                            )}
+                                            validator={this.federationValidator}
+                                            action={this.compoundFederationValidator}
                                             ref={(self) => {
                                                 this.textInputFieldFederationAddress = self
                                             }}
@@ -467,9 +461,7 @@ class Welcome extends Component {
                                     </div>
                                     <div>
                                         <RaisedButton
-                                            onClick={this.compoundFederationValidator.bind(
-                                                this
-                                            )}
+                                            onClick={this.compoundFederationValidator}
                                             backgroundColor="rgb(244,176,4)"
                                             label="Check"
                                         />
