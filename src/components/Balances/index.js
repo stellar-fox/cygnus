@@ -449,10 +449,10 @@ class Balances extends Component {
 
     // ...
     getOtherBalances = (account) =>
-        account.balances.map((balance) => {
+        account.balances.map((balance, index) => {
             if (balance.asset_type !== "native") {
                 return (
-                    <p className="other-assets" key={balance.asset_code}>
+                    <p className="other-assets" key={`${index}-${balance.asset_code}`}>
                         <span className="other-asset-balance">
                             {
                                 Number.parseFloat(balance.balance)
