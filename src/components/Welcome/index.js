@@ -17,12 +17,10 @@ import {
     federationAddressValid,
     federationLookup,
     StellarSdk,
-    extractPathIndex,
 } from "../../lib/utils"
 import {
     appName,
-    ledgerSupportLink
-} from "../../env.js"
+} from "../../env"
 
 import {
     accountExistsOnLedger,
@@ -42,8 +40,8 @@ import {
 
 import { setToken, clearToken } from "../../actions/auth"
 
-import LedgerAuthenticator from "../LedgerAuthenticator"
 import InputField from "../../frontend/InputField"
+import PanelLedger from "./Panel-Ledger"
 
 import { ActionConstants } from "../../actions"
 import PropTypes from "prop-types"
@@ -95,27 +93,6 @@ class Welcome extends Component {
     componentDidMount = () => {
         // Horizon end point is set to testnet by default.
         this.props.setHorizonEndPoint(config.horizon)
-    }
-
-
-    // ...
-    logInViaLedger = (ledgerParams) => {
-        // TODO: fix this with Ledger API
-        if (ledgerParams.errorCode !== null) {
-            return
-        }
-
-        this.props.changeLoginState({
-            loginState: ActionConstants.LOGGED_IN,
-            publicKey: ledgerParams.publicKey,
-            bip32Path: extractPathIndex(ledgerParams.bip32Path),
-            userId: null,
-            token: null,
-        })
-
-        this.props.setAccountPath(ledgerParams.bip32Path)
-        this.props.setLedgerSoftwareVersion(ledgerParams.softwareVersion)
-        this.ledgerAuthenticateUser(ledgerParams)
     }
 
 
@@ -185,49 +162,6 @@ class Welcome extends Component {
         this.setState({
             modalButtonText: text,
         })
-
-
-    // ...
-    ledgerAuthenticateUser = (ledgerParams) => {
-        axios
-            .post(
-                `${config.api}/user/ledgerauth/${
-                    ledgerParams.publicKey
-                }/${
-                    extractPathIndex(ledgerParams.bip32Path)
-                }`
-            )
-            .then((response) => {
-                this.props.setAccountRegistered(true)
-                this.props.changeLoginState({
-                    loginState: ActionConstants.LOGGED_IN,
-                    bip32Path: extractPathIndex(ledgerParams.bip32Path),
-                    publicKey: ledgerParams.publicKey,
-                    userId: response.data.user_id,
-                    token: response.data.token,
-                })
-                this.props.logIn({
-                    userId: response.data.user_id,
-                    token: response.data.token,
-                    pubkey: response.data.pubKey,
-                })
-            })
-            .catch((error) => {
-                // This will happen when back-end is offline.
-                if (!error.response) {
-                    // eslint-disable-next-line no-console
-                    console.log(error.message)
-                    return
-                }
-                if (error.response.status === 401) {
-                    // eslint-disable-next-line no-console
-                    console.log("Ledger user not found.")
-                } else {
-                    // eslint-disable-next-line no-console
-                    console.log(error.response.statusText)
-                }
-            })
-    }
 
 
     // ...
@@ -349,43 +283,7 @@ class Welcome extends Component {
             <HeadingContainer />
             <div>
                 <div className="flex-row-space-between">
-                    <Panel
-                        className="welcome-panel-left"
-                        title="Transact"
-                        content={
-                            <div>
-                                <img
-                                    src="/img/ledger.svg"
-                                    width="120px"
-                                    alt="Ledger"
-                                />
-                                <div className="title">
-                                    For full account
-                                    functionality, authenticate
-                                    with your Ledger device.
-                                </div>
-                                <div className="title-small p-t p-b">
-                                    Connect your Ledger Nano S
-                                    device. Make sure Stellar
-                                    application is selected and
-                                    browser support enabled. For
-                                    more information visit{" "}
-                                    <a
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        href={ledgerSupportLink}
-                                    >
-                                        Ledger Support
-                                    </a>
-                                </div>
-                                <LedgerAuthenticator
-                                    onConnected={this.logInViaLedger.bind(
-                                        this
-                                    )}
-                                />
-                            </div>
-                        }
-                    />
+                    <PanelLedger />
 
                     <Panel
                         className="welcome-panel-center"
