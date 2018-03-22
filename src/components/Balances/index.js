@@ -422,18 +422,16 @@ class Balances extends Component {
 
 
     // ...
-    exchangeRateStale = () => (
+    exchangeRateStale = (currency) => (
         !this.props.accountInfo.rates  ||
-            !this.props.accountInfo.rates[this.props.accountInfo.currency]  ||
-            this.props.accountInfo.rates[
-                this.props.accountInfo.currency
-            ].lastFetch + 300000 < Date.now()
+            !this.props.accountInfo.rates[currency]  ||
+            this.props.accountInfo.rates[currency].lastFetch + 300000 < Date.now()
     )
 
 
     // ...
     getExchangeRate = (currency) => {
-        if (this.exchangeRateStale()) {
+        if (this.exchangeRateStale(currency)) {
             axios.get(`${config.api}/ticker/latest/${currency}`)
                 .then((response) => {
                     this.props.setExchangeRate({[currency]: {

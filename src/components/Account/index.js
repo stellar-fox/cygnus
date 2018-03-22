@@ -159,8 +159,8 @@ class Account extends Component {
 
     // ...
     handleCurrencyChange = (event) => {
+        event.persist()
         if (this.props.loginManager.isAuthenticated()) {
-            event.persist()
             axios
                 .post(
                     `${config.api}/account/update/${
@@ -186,6 +186,8 @@ class Account extends Component {
                 })
         } else {
             this.props.setCurrency(event.target.value)
+            this.getExchangeRate(event.target.value)
+
             this.setState({
                 currency: event.target.parentElement.innerText,
             })
@@ -197,18 +199,16 @@ class Account extends Component {
 
 
     // ...
-    exchangeRateStale = () => (
+    exchangeRateStale = (currency) => (
         !this.props.accountInfo.rates  ||
-            !this.props.accountInfo.rates[this.props.accountInfo.currency]  ||
-            this.props.accountInfo.rates[
-                this.props.accountInfo.currency
-            ].lastFetch + 300000 < Date.now()
+            !this.props.accountInfo.rates[currency]  ||
+            this.props.accountInfo.rates[currency].lastFetch + 300000 < Date.now()
     )
 
 
     // ...
     getExchangeRate = (currency) => {
-        if (this.exchangeRateStale()) {
+        if (this.exchangeRateStale(currency)) {
             axios.get(`${config.api}/ticker/latest/${currency}`)
                 .then((response) => {
                     this.props.setExchangeRate({
