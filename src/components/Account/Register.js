@@ -228,7 +228,7 @@ class NewAccount extends Component {
                         <div className="small">
                             will be associated with account
                             {" "}
-                            <strong>{this.props.appAuth.bip32Path}</strong>
+                            <b>{this.props.appAuth.bip32Path}</b>
                             {" "}
                             on your Ledger device.
                         </div>
