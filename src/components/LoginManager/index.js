@@ -1,14 +1,18 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 import PropTypes from "prop-types"
 import hoistStatics from "hoist-non-react-statics"
-import { ActionConstants } from "../../actions"
+import {
+    ActionConstants,
+    changeLoginState,
+} from "../../actions"
 import { authenticate } from "./api"
 
 
 
-
 // <LoginManager> component
-export default class LoginManager extends Component {
+class LoginManager extends Component {
 
     // ...
     static childContextTypes = {
@@ -113,3 +117,16 @@ export const withLoginManager = (WrappedComponent) =>
         },
         WrappedComponent
     )
+
+// ...
+export default connect(
+    // map state to props.
+    (state) => ({
+        appAuth: state.appAuth,
+    }),
+
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        changeLoginState,
+    }, dispatch)
+)(LoginManager)
