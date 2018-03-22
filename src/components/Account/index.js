@@ -1,7 +1,7 @@
 import React, { Component } from "react"
-import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import axios from "axios"
 
 import MD5 from "../../lib/md5"
 import {
@@ -13,7 +13,7 @@ import {
     NotImplementedBadge,
 } from "../../env.js"
 import { config } from "../../config"
-import axios from "axios"
+import { withLoginManager } from "../LoginManager"
 
 import {
     showAlert,
@@ -92,12 +92,6 @@ const styles = {
 class Account extends Component {
 
     // ...
-    static contextTypes = {
-        loginManager: PropTypes.object,
-    }
-
-
-    // ...
     state = {
         firstNameDisplay: "",
         lastNameDisplay: "",
@@ -122,7 +116,7 @@ class Account extends Component {
 
     // ...
     componentDidMount = () => {
-        if (this.context.loginManager.isAuthenticated()) {
+        if (this.props.loginManager.isAuthenticated()) {
             axios
                 .get(`${config.api}/user/${this.props.appAuth.userId}`)
                 .then((response) => {
@@ -165,7 +159,7 @@ class Account extends Component {
 
     // ...
     handleCurrencyChange = (event) => {
-        if (this.context.loginManager.isAuthenticated()) {
+        if (this.props.loginManager.isAuthenticated()) {
             event.persist()
             axios
                 .post(
@@ -239,7 +233,7 @@ class Account extends Component {
 
     // ...
     handleCurrencyPrecisionChange = (event) => {
-        if (this.context.loginManager.isAuthenticated()) {
+        if (this.props.loginManager.isAuthenticated()) {
             event.persist()
             axios
                 .post(
@@ -539,7 +533,7 @@ class Account extends Component {
                     onChange={this.handleTabChange.bind(this, this.value)}
                     className="tabs-container"
                 >
-                    {this.context.loginManager.isAuthenticated() ? (
+                    {this.props.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Profile" value="1">
                             <div className="tab-content">
                                 <SnackBar
@@ -759,7 +753,7 @@ class Account extends Component {
 
                             {(
                                 !this.props.accountInfo.registered &&
-                                !this.context.loginManager.isExploreOnly()
+                                !this.props.loginManager.isExploreOnly()
                             ) ?
                                 <div>
                                     <div className="p-t p-b" />
@@ -781,7 +775,7 @@ class Account extends Component {
                                     />
                                 </div> :
                                 null}
-                            {this.context.loginManager.isAuthenticated() ? (
+                            {this.props.loginManager.isAuthenticated() ? (
                                 <div>
                                     <div className="p-t p-b" />
                                     <div className="flex-row outline">
@@ -848,7 +842,7 @@ class Account extends Component {
                             ) : null}
                         </div>
                     </Tab>
-                    {this.context.loginManager.isAuthenticated() ? (
+                    {this.props.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Security" value="3">
                             <div>
                                 <h2 style={styles.headline}>
@@ -976,7 +970,7 @@ class Account extends Component {
 
 
 // ...
-export default connect(
+export default withLoginManager(connect(
     // map state to props.
     (state) => ({
         modal: state.modal,
@@ -995,4 +989,4 @@ export default connect(
         setCurrencyPrecision,
         setTab,
     }, dispatch)
-)(Account)
+)(Account))
