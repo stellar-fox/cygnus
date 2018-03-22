@@ -8,6 +8,7 @@
         "axios": "^0.17.1",
         "bignumber.js": "^6.0.0",
         "history": "^4.7.2",
+        "hoist-non-react-statics": "^2.5.0",
         "lodash": "^4.17.4",
         "material-ui": "^0.20.0",
         "number-to-text": "^0.3.2",

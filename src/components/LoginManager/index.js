@@ -1,5 +1,6 @@
-import { Component } from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
+import hoistStatics from "hoist-non-react-statics"
 import { ActionConstants } from "../../actions"
 import { authenticate } from "./api"
 
@@ -72,3 +73,44 @@ export default class LoginManager extends Component {
     render = () => this.props.children
 
 }
+
+
+
+
+// <withLoginManager(...)> HOC
+export const withLoginManager = (WrappedComponent) =>
+    hoistStatics(
+        class WithLoginManager extends Component {
+
+            // ...
+            static contextTypes = {
+                loginManager: PropTypes.object,
+            }
+
+            // ...
+            static propTypes = {
+                wrappedComponentRef : PropTypes.func,
+            }
+
+            // ...
+            static displayName =
+                `withLoginManager(${
+                    WrappedComponent.displayName || WrappedComponent.name
+                })`
+
+            // ...
+            static WrappedComponent = WrappedComponent
+
+            // ...
+            render = () => {
+                const { wrappedComponentRef, ...restOfTheProps } = this.props
+                return React.createElement(WrappedComponent, {
+                    ...restOfTheProps,
+                    ref: wrappedComponentRef,
+                    loginManager : this.context.loginManager,
+                })
+            }
+
+        },
+        WrappedComponent
+    )
