@@ -16,8 +16,8 @@ import {
 } from "../../env"
 
 import { withLoginManager } from "../LoginManager"
-import { ActionConstants } from "../../actions"
 import {
+    ActionConstants,
     accountExistsOnLedger,
     accountMissingOnLedger,
     setModalLoading,
@@ -40,7 +40,7 @@ import InputField from "../../frontend/InputField"
 import PanelLedger from "./PanelLedger"
 import RaisedButton from "material-ui/RaisedButton"
 import Login from "../Login"
-import HeadingContainer from "./HeadingContainer"
+import Heading from "./Heading"
 import Footer from "../Layout/Footer"
 import Panel from "../Panel"
 
@@ -272,7 +272,7 @@ class Welcome extends Component {
     // ...
     render = () =>
         <div className="welcome-content">
-            <HeadingContainer />
+            <Heading />
             <div>
                 <div className="flex-row-space-between">
                     <PanelLedger />
