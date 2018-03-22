@@ -3,11 +3,12 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
 import { TopBarSecurityMessage } from "../../env"
+
 import {
     ActionConstants,
     changeLoginState,
     changeModalState
-} from "../../actions/index"
+} from "../../actions"
 
 import RaisedButton from "material-ui/RaisedButton"
 import Modal from "../Modal"

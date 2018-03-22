@@ -11,7 +11,7 @@ import {
 import {
     appName,
     NotImplementedBadge,
-} from "../../env.js"
+} from "../../env"
 import { config } from "../../config"
 import { withLoginManager } from "../LoginManager"
 
@@ -22,7 +22,7 @@ import {
     setExchangeRate,
     setCurrencyPrecision,
     setTab,
-} from "../../actions/index"
+} from "../../actions"
 
 import { Tabs, Tab } from "material-ui/Tabs"
 import RaisedButton from "material-ui/RaisedButton"

@@ -4,7 +4,7 @@ import {
     appName,
     appCopyDates,
     appLandingPageLink,
-} from "../../env.js"
+} from "../../env"
 
 import "./Footer.css"
 

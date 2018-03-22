@@ -1,16 +1,23 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import Input from "../../frontend/Input"
-import Checkbox from "../../frontend/Checkbox"
-import RaisedButton from "material-ui/RaisedButton"
-import { awaitConnection, getPublicKey } from "../../lib/ledger"
+
+import { bip32Prefix } from "../../env"
+import {
+    awaitConnection,
+    getPublicKey,
+} from "../../lib/ledger"
+
 import {
     logIn,
     setAccountRegistered,
     setPublicKey
-} from "../../actions/index"
-import { bip32Prefix } from "../../env.js"
+} from "../../actions"
+
+import Input from "../../frontend/Input"
+import Checkbox from "../../frontend/Checkbox"
+import RaisedButton from "material-ui/RaisedButton"
+
 import "./index.css"
 
 

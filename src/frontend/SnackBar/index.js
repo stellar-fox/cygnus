@@ -1,5 +1,5 @@
 import React from "react"
-import { snackBarAutoHideDuration } from "../../env.js"
+import { snackBarAutoHideDuration } from "../../env"
 import Snackbar from "material-ui/Snackbar"
 
 

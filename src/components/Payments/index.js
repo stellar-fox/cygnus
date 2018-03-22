@@ -15,6 +15,8 @@ import { emoji } from "../../env"
 import {
     gravatarLink,
 } from "../../lib/deneb"
+import { withLoginManager } from "../LoginManager"
+
 import {
     setAccountPayments,
     setAccountTransactions,
@@ -25,8 +27,8 @@ import {
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
-} from "../../actions/index"
-import { withLoginManager } from "../LoginManager"
+} from "../../actions"
+
 
 import {
     Tabs,

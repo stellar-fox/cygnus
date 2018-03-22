@@ -18,7 +18,9 @@ import {
     insertPathIndex,
 } from "../../lib/utils"
 import { config } from "../../config"
-import { appName } from "../../env.js"
+import { appName } from "../../env"
+import { withLoginManager } from "../LoginManager"
+
 import {
     setExchangeRate,
     showAlert,
@@ -35,8 +37,7 @@ import {
     setModalLoaded,
     updateLoadingMessage,
     changeLoginState,
-} from "../../actions/index"
-import { withLoginManager } from "../LoginManager"
+} from "../../actions"
 
 import {
     Card,
@@ -52,7 +53,6 @@ import DatePicker from "material-ui/DatePicker"
 import LinearProgress from "material-ui/LinearProgress"
 import InputField from "../../frontend/InputField"
 import SnackBar from "../../frontend/SnackBar"
-
 import RegisterAccount from "../Account/Register"
 
 import "./index.css"

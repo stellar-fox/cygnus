@@ -6,12 +6,13 @@ import {
     Redirect,
     withRouter,
 } from "react-router-dom"
-import { selectView } from "../../actions/index"
 import {
     ConnectedSwitch as Switch,
     resolvePath,
 } from "../StellarRouter"
 import { Provide } from "../../lib/utils"
+
+import { selectView } from "../../actions"
 
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"

@@ -12,6 +12,12 @@ import { config } from "../../config"
 import { awaitConnection } from "../../lib/ledger"
 
 import {
+    setAccountRegistered,
+    changeLoginState,
+    ActionConstants,
+} from "../../actions"
+
+import {
     Step,
     Stepper,
     StepLabel,
@@ -21,11 +27,6 @@ import LinearProgress from "material-ui/LinearProgress"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import InputField from "../../frontend/InputField"
-import {
-    setAccountRegistered,
-    changeLoginState,
-    ActionConstants,
-} from "../../actions/index"
 
 
 

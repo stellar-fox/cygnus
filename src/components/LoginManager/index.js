@@ -3,11 +3,12 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import PropTypes from "prop-types"
 import hoistStatics from "hoist-non-react-statics"
+import { authenticate } from "./api"
+
 import {
     ActionConstants,
     changeLoginState,
 } from "../../actions"
-import { authenticate } from "./api"
 
 
 

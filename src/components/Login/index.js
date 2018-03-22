@@ -1,15 +1,20 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import InputField from "../../frontend/InputField"
-import RaisedButton from "material-ui/RaisedButton"
-import LinearProgress from "material-ui/LinearProgress"
+
 import { withLoginManager } from "../LoginManager"
 import {
     emailIsValid,
     passwordIsValid,
 } from "./helper"
-import { ActionConstants, changeLoginState, } from "../../actions"
+import {
+    ActionConstants,
+    changeLoginState,
+} from "../../actions"
+
+import InputField from "../../frontend/InputField"
+import RaisedButton from "material-ui/RaisedButton"
+import LinearProgress from "material-ui/LinearProgress"
 
 import "./index.css"
 

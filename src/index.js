@@ -25,6 +25,7 @@ import {
 } from "./registerServiceWorker"
 import reducers from "./reducers"
 import {
+    appBasePath,
     appRootDomId,
     ssSaveThrottlingTime,
 } from "./env"
@@ -36,7 +37,6 @@ import {
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "./frontend/themes/stellar"
 
-import { appBasePath } from "./env"
 import LoginManager from "./components/LoginManager"
 import Layout from "./components/Layout"
 

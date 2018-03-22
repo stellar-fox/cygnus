@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { appName } from "../../env.js"
+import { appName } from "../../env"
 
 import "./BankAppBarTitle.css"
 

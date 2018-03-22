@@ -30,7 +30,7 @@ import {
     setLedgerSoftwareVersion,
     setPublicKey,
     changeLoginState,
-} from "../../actions/index"
+} from "../../actions"
 import {
     setToken,
     clearToken,

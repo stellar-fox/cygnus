@@ -9,7 +9,7 @@ import {
     nullToUndefined,
 } from "./utils"
 
-import { ssAppStateKey } from "../env.js"
+import { ssAppStateKey } from "../env"
 
 
 

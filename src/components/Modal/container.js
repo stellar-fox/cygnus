@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux"
 import Modal from "./Modal"
 import {
     changeModalState,
-} from "../../actions/index"
+} from "../../actions"
 
 
 

@@ -1,26 +1,17 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import {
-    Step,
-    Stepper,
-    StepLabel,
-    StepContent,
-} from "material-ui/Stepper"
-import LinearProgress from "material-ui/LinearProgress"
-import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
+import axios from "axios"
+
 import {
     emailValid,
     passwordValid,
     extractPathIndex,
 } from "../../lib/utils"
-import { appName } from "../../env.js"
+import { appName } from "../../env"
 import md5 from "../../lib/md5"
-import LedgerAuthenticator from "../LedgerAuthenticator"
-import InputField from "../../frontend/InputField"
-import axios from "axios"
 import { config } from "../../config"
+
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -31,7 +22,19 @@ import {
     setPublicKey,
     changeLoginState,
     ActionConstants,
-} from "../../actions/index"
+} from "../../actions"
+
+import LedgerAuthenticator from "../LedgerAuthenticator"
+import InputField from "../../frontend/InputField"
+import {
+    Step,
+    Stepper,
+    StepLabel,
+    StepContent,
+} from "material-ui/Stepper"
+import LinearProgress from "material-ui/LinearProgress"
+import RaisedButton from "material-ui/RaisedButton"
+import FlatButton from "material-ui/FlatButton"
 
 
 
