@@ -1,7 +1,13 @@
 {
     "compilerOptions": {
         "target": "esnext",
-        "module": "commonjs"
+        "module": "commonjs",
+        "jsx": "react"
+    },
+    "compilerOptions.jsx": {
+        "target": "esnext",
+        "module": "commonjs",
+        "jsx": "react"
     },
     "checkJs" : true
 }

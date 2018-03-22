@@ -1,7 +1,10 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import TextField from "material-ui/TextField"
+
 import "./index.css"
+
+
 
 
 // Default styles for TextField compoenent.
@@ -60,8 +63,8 @@ export default class InputField extends Component {
 
 
     // ...
-    render () {
-        return <TextField
+    render = () =>
+        <TextField
             name={this.props.name}
 
             type={this.props.type || "text"}
@@ -104,5 +107,5 @@ export default class InputField extends Component {
                 styles.inputStyle
             }
         />
-    }
+
 }

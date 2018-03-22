@@ -1,15 +1,7 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-
-import HeadingContainer from "./HeadingContainer"
-
 import axios from "axios"
-import RaisedButton from "material-ui/RaisedButton"
-
-import Footer from "../Layout/Footer"
-import Panel from "../Panel"
-import Login from "../../containers/Login"
 
 import { config } from "../../config"
 import {
@@ -23,6 +15,8 @@ import {
     bip32Prefix,
 } from "../../env"
 
+import { withLoginManager } from "../LoginManager"
+import { ActionConstants } from "../../actions"
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -37,15 +31,18 @@ import {
     setPublicKey,
     changeLoginState,
 } from "../../actions/index"
-
-
-import { setToken, clearToken } from "../../actions/auth"
+import {
+    setToken,
+    clearToken,
+} from "../../actions/auth"
 
 import InputField from "../../frontend/InputField"
 import PanelLedger from "./Panel-Ledger"
-
-import { ActionConstants } from "../../actions"
-import PropTypes from "prop-types"
+import RaisedButton from "material-ui/RaisedButton"
+import Login from "../../containers/Login"
+import HeadingContainer from "./HeadingContainer"
+import Footer from "../Layout/Footer"
+import Panel from "../Panel"
 
 import "./index.css"
 
@@ -76,12 +73,6 @@ const styles = {
 
 // <Welcome> component
 class Welcome extends Component {
-
-    // ...
-    static contextTypes = {
-        loginManager: PropTypes.object,
-    }
-
 
     // ...
     state = {
@@ -353,12 +344,8 @@ class Welcome extends Component {
                                             type="text"
                                             placeholder="Payment Address"
                                             styles={styles}
-                                            validator={this.federationValidator.bind(
-                                                this
-                                            )}
-                                            action={this.compoundFederationValidator.bind(
-                                                this
-                                            )}
+                                            validator={this.federationValidator}
+                                            action={this.compoundFederationValidator}
                                             ref={(self) => {
                                                 this.textInputFieldFederationAddress = self
                                             }}
@@ -366,9 +353,7 @@ class Welcome extends Component {
                                     </div>
                                     <div>
                                         <RaisedButton
-                                            onClick={this.compoundFederationValidator.bind(
-                                                this
-                                            )}
+                                            onClick={this.compoundFederationValidator}
                                             backgroundColor="rgb(244,176,4)"
                                             label="Check"
                                         />
@@ -386,7 +371,7 @@ class Welcome extends Component {
 
 
 // ...
-export default connect(
+export default withLoginManager(connect(
     // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
@@ -413,4 +398,4 @@ export default connect(
         clearToken,
         changeLoginState,
     }, dispatch)
-)(Welcome)
+)(Welcome))
