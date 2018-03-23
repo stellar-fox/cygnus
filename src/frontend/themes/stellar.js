@@ -12,7 +12,7 @@ export default getMuiTheme({
     },
 
     raisedButton: {
-        disabledColor: "rgba(15, 46, 83, 0.5)",
+        disabledColor: "rgb(244,176,4)",
     },
 
     datePicker: {

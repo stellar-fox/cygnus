@@ -91,8 +91,6 @@ class Heading extends Component {
                 title="Opening Your Bank"
                 actions={[
                     <RaisedButton
-                        backgroundColor="rgb(15,46,83)"
-                        labelStyle={{ color: "rgb(244,176,4)", }}
                         label="Login"
                         keyboardFocused={false}
                         onClick={this.login}

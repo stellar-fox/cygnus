@@ -1789,6 +1789,7 @@ class Balances extends Component {
                                             backgroundColor="rgb(15,46,83)"
                                             labelColor="rgb(244,176,4)"
                                             label="SIGN"
+                                            disabledBackgroundColor="rgba(15,46,83,0.3)"
                                             disabledLabelColor="#cfd8dc"
                                             disabled={
                                                 this.state.buttonSendDisabled
