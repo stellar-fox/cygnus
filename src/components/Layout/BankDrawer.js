@@ -36,7 +36,7 @@ const BalancesNavLink = navLinkConnect(
             exact
             activeClassName="active"
             isActive={() => currentPath === paths.Balances}
-            to={""} // required in NavLink definition but not used here
+            to={paths.Balances}
         >
             <i className="material-icons">account_balance_wallet</i>
             Balances
@@ -60,7 +60,7 @@ const PaymentsNavLink = navLinkConnect(
             exact
             isActive={() => currentPath === paths.Payments}
             activeClassName="active"
-            to={""} // required in NavLink definition but not used here
+            to={paths.Payments}
         >
             <i className="material-icons">payment</i>
             Payments
@@ -84,7 +84,7 @@ const AccountNavLink = navLinkConnect(
             exact
             isActive={() => currentPath === paths.Account}
             activeClassName="active"
-            to={""} // required in NavLink definition but not used here
+            to={paths.Account}
         >
             <i className="material-icons">account_balance</i>
             Account

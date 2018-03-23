@@ -76,7 +76,7 @@ class LoginManager extends Component {
 
     // ...
     isPayEnabled = () => (
-        this.props.appAuth.loginState === ActionConstants.LOGGED_IN &&
+        this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
             this.props.appAuth.publicKey &&
             this.props.appAuth.bip32Path
     )
