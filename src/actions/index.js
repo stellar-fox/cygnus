@@ -95,10 +95,6 @@ export const setAccountTransactions = (state) => ({
     payload: state,
 })
 
-export const setHorizonEndPoint = (state) => ({
-    type: "SET_HORIZON_END_POINT",
-    payload: state,
-})
 
 export const setCurrencyPrecision = (state) => ({
     type: "SET_CURRENCY_PRECISION",
@@ -168,4 +164,9 @@ export const selectView = (viewName) => ({
 export const changeModalState = (modalState) => ({
     type: "CHANGE_MODAL_STATE",
     payload: modalState, // Object
+})
+
+export const setHorizonEndPoint = (uri) => ({
+    type: "SET_HORIZON_END_POINT",
+    payload: uri,
 })

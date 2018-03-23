@@ -1,6 +1,9 @@
+import { config } from "../config"
+
 const initState = {
     currency: "eur",
     precision: 2,
+    horizon: config.horizon,
 }
 
 export default function (state = initState, action) {
