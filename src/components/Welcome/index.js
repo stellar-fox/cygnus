@@ -11,7 +11,6 @@ import {
     StellarSdk,
 } from "../../lib/utils"
 import {
-    appName,
     bip32Prefix,
 } from "../../env"
 
@@ -38,8 +37,8 @@ import {
 
 import InputField from "../../frontend/InputField"
 import PanelLedger from "./PanelLedger"
+import PanelLogin from "./PanelLogin"
 import RaisedButton from "material-ui/RaisedButton"
-import Login from "../Login"
 import Heading from "./Heading"
 import Footer from "../Layout/Footer"
 import Panel from "../Panel"
@@ -277,33 +276,7 @@ class Welcome extends Component {
                 <div className="flex-row-space-between">
                     <PanelLedger />
 
-                    <Panel
-                        className="welcome-panel-center"
-                        title="Customize"
-                        content={
-                            <div>
-                                <img
-                                    style={{
-                                        marginBottom: "4px",
-                                    }}
-                                    src="/img/sf.svg"
-                                    width="140px"
-                                    alt={appName}
-                                />
-                                <div className="title">
-                                    Manage your account with ease.
-                                </div>
-                                <div className="title-small p-t">
-                                    Once you have opened your
-                                    account you can log in here
-                                    to your banking terminal.
-                                </div>
-                                <div className="f-b">
-                                    <Login/>
-                                </div>
-                            </div>
-                        }
-                    />
+                    <PanelLogin />
 
                     <Panel
                         className="welcome-panel-right"

@@ -19,6 +19,7 @@ import LedgerAuthenticator from "../LedgerAuthenticator"
 
 
 
+// <PanelLedger> component
 class PanelLedger extends Component {
 
     // ...
