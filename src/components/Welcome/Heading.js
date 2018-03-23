@@ -11,7 +11,8 @@ import {
 } from "../../actions"
 
 import RaisedButton from "material-ui/RaisedButton"
-import Modal from "../Modal"
+import Button from "../../frontend/Button"
+import Modal from "../../frontend/Modal"
 import CreateAccount from "../Account/Create"
 
 import "./Heading.css"
@@ -90,19 +91,17 @@ class Heading extends Component {
                 }
                 title="Opening Your Bank"
                 actions={[
-                    <RaisedButton
+                    <Button
                         label="Login"
-                        keyboardFocused={false}
                         onClick={this.login}
+                        primary={true}
                         disabled={this.state.loginButtonDisabled}
                     />,
                     <span className="p-l"></span>,
-                    <RaisedButton
-                        backgroundColor="rgb(15,46,83)"
-                        labelStyle={{ color: "rgb(244,176,4)", }}
+                    <Button
                         label="Cancel"
-                        keyboardFocused={false}
                         onClick={this.cancelLogin}
+                        primary={true}
                     />,
                 ]}
             >

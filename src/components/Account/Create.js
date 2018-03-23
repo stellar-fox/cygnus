@@ -33,7 +33,8 @@ import {
     StepContent,
 } from "material-ui/Stepper"
 import LinearProgress from "material-ui/LinearProgress"
-import RaisedButton from "material-ui/RaisedButton"
+// import RaisedButton from "material-ui/RaisedButton"
+import Button from "../../frontend/Button"
 import FlatButton from "material-ui/FlatButton"
 
 
@@ -186,34 +187,25 @@ class NewAccount extends Component {
             <div style={{ margin: "12px 0", }}>
 
                 {step === 0 && (
-                    <RaisedButton
+                    <Button
                         label="Next"
-                        disableTouchRipple={true}
-                        disableFocusRipple={true}
-                        backgroundColor="rgb(15,46,83)"
-                        labelColor="rgb(244,176,4)"
+                        primary={true}
                         onClick={this.handleNext.bind(this)}
-                        style={{ marginRight: 12, }}
                     />
                 )}
 
                 {step === 1 && (
                     <Fragment>
-                        <RaisedButton
+                        <Button
                             label="Next"
-                            disableTouchRipple={true}
-                            disableFocusRipple={true}
-                            backgroundColor="rgb(15,46,83)"
-                            labelColor="rgb(244,176,4)"
+                            primary={true}
                             onClick={this.compoundValidate.bind(this)}
-                            style={{ marginRight: 12, }}
                         />
-                        <FlatButton
+                        <span className="p-l"></span>
+                        <Button
                             label="Back"
                             disabled={stepIndex === 0}
-                            disableTouchRipple={true}
-                            disableFocusRipple={true}
-                            labelStyle={{ color: "rgb(15,46,83)", }}
+                            secondary={true}
                             onClick={this.handlePrev.bind(this)}
                         />
                     </Fragment>
