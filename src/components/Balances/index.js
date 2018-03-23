@@ -60,28 +60,6 @@ import "./index.css"
 
 
 
-// const styles = {
-//     errorStyle: {
-//         color: "#912d35",
-//     },
-//     underlineStyle: {
-//         borderColor: "rgba(15,46,83,0.6)",
-//         width: "100%",
-//     },
-//     floatingLabelStyle: {
-//         color: "rgba(15,46,83,0.5)",
-//     },
-//     floatingLabelFocusStyle: {
-//         color: "rgba(15,46,83,0.35)",
-//     },
-//     inputStyle: {
-//         color: "rgba(15,46,83,0.8)",
-//     },
-// }
-
-
-
-
 StellarSdk.Network.useTestNetwork()
 const server = new StellarSdk.Server(config.horizon)
 
@@ -1555,7 +1533,8 @@ class Balances extends Component {
                                     label="Request"
                                     onClick={this.handleOpen}
                                 />
-                                {this.props.loginManager.isPayEnabled() ?
+                                {this.props.loginManager.isPayEnabled() ||
+                                    this.props.loginManager.isAuthenticated() ?
                                     <RaisedButton
                                         backgroundColor="rgb(15,46,83)"
                                         labelColor="#d32f2f"
