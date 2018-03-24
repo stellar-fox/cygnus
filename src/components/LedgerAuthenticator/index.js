@@ -16,7 +16,7 @@ import {
 
 import Input from "../../frontend/Input"
 import Checkbox from "../../frontend/Checkbox"
-import RaisedButton from "material-ui/RaisedButton"
+import Button from "../../frontend/Button"
 
 import "./index.css"
 
@@ -165,9 +165,10 @@ class LedgerAuthenticator extends Component {
                 </div>
             ) : null}
             <div className="p-t">
-                <RaisedButton
+                <Button
                     onClick={this.initQueryDevice}
-                    backgroundColor="rgb(244,176,4)"
+                    secondary={true}
+                    fullWidth={true}
                     label="Authenticate"
                 />
                 <div className="p-b-small" />

@@ -19,7 +19,7 @@ import {
 
 import Panel from "../Panel"
 import InputField from "../../frontend/InputField"
-import RaisedButton from "material-ui/RaisedButton"
+import Button from "../../frontend/Button"
 
 
 // ...
@@ -51,11 +51,11 @@ class PanelExplorer extends Component {
 
         // Looks like something totally invalid for this field.
         if (!address.match(/\*/) && !address.match(/^G/)) {
-            return "invalid input"
+            return "Invalid input."
         }
         // Looks like user is entering Federation Address format.
         if (address.match(/\*/) && !federationAddressValid(address)) {
-            return "invalid federation address"
+            return "Invalid payment address."
         }
         // This must be an attempt at a Stellar public key format.
         if (address.match(/^G/) && !address.match(/\*/)) {
@@ -187,8 +187,8 @@ class PanelExplorer extends Component {
                             enter your Secret key.
                         </strong>
                     </div>
-                    <div className="mui-text-input">
-                        <div>
+                    <div className="f-b">
+                        <div className="f-e-col">
                             <InputField
                                 name="payment-address-input"
                                 type="text"
@@ -198,12 +198,13 @@ class PanelExplorer extends Component {
                                     this.input = self
                                 }}
                             />
-                        </div>
-                        <div>
-                            <RaisedButton
+                            <div className="p-t"></div>
+                            <Button
                                 onClick={this.compoundFederationValidator}
                                 backgroundColor="rgb(244,176,4)"
                                 label="Check"
+                                secondary={true}
+                                fullWidth={true}
                             />
                         </div>
                     </div>

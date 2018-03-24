@@ -46,6 +46,7 @@ import {
     CardText,
 } from "material-ui/Card"
 import { List, ListItem } from "material-ui/List"
+import Button from "../../frontend/Button"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
@@ -1270,27 +1271,24 @@ class Balances extends Component {
 
         const
             actions = [
-                <RaisedButton
-                    backgroundColor="rgb(15,46,83)"
-                    labelColor="rgb(244,176,4)"
+                <Button
+                    primary={true}
                     label="OK"
                     keyboardFocused={true}
                     onClick={this.handleClose}
                 />,
             ],
             actionsError = [
-                <RaisedButton
-                    backgroundColor="rgb(15,46,83)"
-                    labelColor="rgb(244,176,4)"
+                <Button
+                    primary={true}
                     label="OK"
                     keyboardFocused={true}
                     onClick={this.closeErrorModal}
                 />,
             ],
             actionsSendingComplete = [
-                <RaisedButton
-                    backgroundColor="rgb(15,46,83)"
-                    labelColor="rgb(244,176,4)"
+                <Button
+                    primary={true}
                     label="OK"
                     keyboardFocused={true}
                     onClick={this.closeSendingCompleteModal}
@@ -1333,9 +1331,8 @@ class Balances extends Component {
                     <Dialog
                         title="Registering Your Account"
                         actions={[
-                            <RaisedButton
-                                backgroundColor="rgb(15,46,83)"
-                                labelStyle={{ color: "rgb(244,176,4)", }}
+                            <Button
+                                primary={true}
                                 label={this.state.modalButtonText}
                                 keyboardFocused={false}
                                 onClick={this.doWhateverYourFunctionCurrentlyIs}
@@ -1449,7 +1446,7 @@ class Balances extends Component {
                             </div>
                         </CardText>
                         <CardActions>
-                            <RaisedButton
+                            <Button
                                 onClick={this.handleSignup}
                                 backgroundColor="rgb(15,46,83)"
                                 labelColor="rgb(244,176,4)"
@@ -1521,13 +1518,13 @@ class Balances extends Component {
 
 
                             <CardActions>
-                                <RaisedButton
+                                <Button
                                     backgroundColor="rgb(15,46,83)"
                                     labelColor="#228B22"
                                     label="Fund"
                                     onClick={this.handleOpen}
                                 />
-                                <RaisedButton
+                                <Button
                                     backgroundColor="rgb(15,46,83)"
                                     labelColor="rgb(244,176,4)"
                                     label="Request"
@@ -1535,7 +1532,7 @@ class Balances extends Component {
                                 />
                                 {this.props.loginManager.isPayEnabled() ||
                                     this.props.loginManager.isAuthenticated() ?
-                                    <RaisedButton
+                                    <Button
                                         backgroundColor="rgb(15,46,83)"
                                         labelColor="#d32f2f"
                                         label="Pay"
@@ -1604,12 +1601,12 @@ class Balances extends Component {
                         </CardText>
 
                         <CardActions>
-                            <RaisedButton
+                            <Button
                                 onClick={this.handleOpen}
                                 backgroundColor="rgb(15,46,83)"
                                 labelColor="#228B22"
                                 label="Fund" />
-                            <RaisedButton
+                            <Button
                                 backgroundColor="rgb(15,46,83)"
                                 labelColor="rgb(244,176,4)"
                                 label="Request"

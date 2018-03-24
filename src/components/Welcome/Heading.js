@@ -10,7 +10,6 @@ import {
     changeModalState
 } from "../../actions"
 
-import RaisedButton from "material-ui/RaisedButton"
 import Button from "../../frontend/Button"
 import Modal from "../../frontend/Modal"
 import CreateAccount from "../Account/Create"
@@ -123,10 +122,10 @@ class Heading extends Component {
                 </div>
 
                 <div className="flex-row-centered">
-                    <RaisedButton
+                    <Button
                         onClick={this.showSignupModal}
-                        backgroundColor="rgb(244,176,4)"
                         label="Get Started"
+                        secondary={true}
                     />
                 </div>
                 <div className="container">

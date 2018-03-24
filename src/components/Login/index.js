@@ -13,7 +13,7 @@ import {
 } from "../../actions"
 
 import InputField from "../../frontend/InputField"
-import RaisedButton from "material-ui/RaisedButton"
+import Button from "../../frontend/Button"
 import LinearProgress from "material-ui/LinearProgress"
 
 import "./index.css"
@@ -101,21 +101,27 @@ class Login extends Component {
                 onEnterPress={this.loginValidator.bind(this)}
                 ref={(self) => { this.password = self }}
             />
-            <RaisedButton
-                onClick={this.loginValidator.bind(this)}
-                backgroundColor="rgb(244,176,4)"
-                label="Login"
-                disabled={this.state.buttonDisabled}
-                fullWidth={true}
-                className="m-t"
-            />
+            <div className="p-t"></div>
             <LinearProgress mode="indeterminate" style={{
-                marginTop: "6px",
+                marginBottom: "6px",
                 background: "rgb(15,46,83)",
                 height: "1px",
                 opacity: this.state.progressBarOpacity,
             }} color="rgba(244,176,4,0.7)" />
+            <Button
+                onClick={this.loginValidator.bind(this)}
+                label="Login"
+                disabled={this.state.buttonDisabled}
+                fullWidth={true}
+                secondary={true}
+                className="m-t"
+            />
         </div>
+
+
+
+
+
 
 }
 

@@ -33,9 +33,7 @@ import {
     StepContent,
 } from "material-ui/Stepper"
 import LinearProgress from "material-ui/LinearProgress"
-// import RaisedButton from "material-ui/RaisedButton"
 import Button from "../../frontend/Button"
-import FlatButton from "material-ui/FlatButton"
 
 
 
@@ -181,7 +179,6 @@ class NewAccount extends Component {
 
     // ...
     renderStepActions = (step) => {
-        const { stepIndex, } = this.state
 
         return (
             <div style={{ margin: "12px 0", }}>
@@ -204,8 +201,7 @@ class NewAccount extends Component {
                         <span className="p-l"></span>
                         <Button
                             label="Back"
-                            disabled={stepIndex === 0}
-                            secondary={true}
+                            flat={true}
                             onClick={this.handlePrev.bind(this)}
                         />
                     </Fragment>
@@ -237,16 +233,9 @@ class NewAccount extends Component {
                             />
                         </div>
                         <div className="p-t"></div>
-                        <FlatButton
+                        <Button
                             label="Back"
-                            disabled={stepIndex === 0}
-                            disableTouchRipple={true}
-                            disableFocusRipple={true}
-                            labelStyle={{ color: "rgb(244,176,4)", }}
-                            style={{
-                                marginRight: 12,
-                                backgroundColor: "rgba(84,110,122,0.3)",
-                            }}
+                            flat={true}
                             onClick={this.handlePrev.bind(this)}
                         />
                         <div className="p-b-small"></div>

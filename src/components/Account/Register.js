@@ -24,8 +24,7 @@ import {
     StepContent,
 } from "material-ui/Stepper"
 import LinearProgress from "material-ui/LinearProgress"
-import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
+import Button from "../../frontend/Button"
 import InputField from "../../frontend/InputField"
 
 
@@ -206,17 +205,12 @@ class NewAccount extends Component {
 
     // ...
     renderStepActions = (step) => {
-        const { stepIndex, } = this.state
-
         return (
             <div style={{ margin: "12px 0", }}>
                 {step === 0 && (
-                    <RaisedButton
+                    <Button
                         label="Next"
-                        disableTouchRipple={true}
-                        disableFocusRipple={true}
-                        backgroundColor="rgb(15,46,83)"
-                        labelColor="rgb(244,176,4)"
+                        primary={true}
                         onClick={this.compoundValidate}
                         style={{ marginRight: 12, }}
                     />
@@ -234,21 +228,16 @@ class NewAccount extends Component {
                             on your Ledger device.
                         </div>
                         <div className="p-t"></div>
-                        <RaisedButton
+                        <Button
                             label="Register"
-                            disableTouchRipple={true}
-                            disableFocusRipple={true}
-                            backgroundColor="rgb(15,46,83)"
-                            labelColor="rgb(244,176,4)"
+                            primary={true}
                             onClick={this.createAccount}
                             style={{ marginRight: 12, }}
                         />
-                        <FlatButton
+
+                        <Button
                             label="Back"
-                            disabled={stepIndex === 0}
-                            disableTouchRipple={true}
-                            disableFocusRipple={true}
-                            labelStyle={{ color: "rgb(15,46,83)", }}
+                            flat={true}
                             onClick={this.handlePrev}
                         />
                         <div className="p-b-small"></div>

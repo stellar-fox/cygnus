@@ -25,7 +25,7 @@ import {
 } from "../../actions"
 
 import { Tabs, Tab } from "material-ui/Tabs"
-import RaisedButton from "material-ui/RaisedButton"
+import Button from "../../frontend/Button"
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
 import Dialog from "material-ui/Dialog"
 import Toggle from "material-ui/Toggle"
@@ -479,9 +479,7 @@ class Account extends Component {
     // ...
     render = () => {
         const actions = [
-            <RaisedButton
-                backgroundColor="rgb(15,46,83)"
-                labelColor="rgb(244,176,4)"
+            <Button
                 label="OK"
                 keyboardFocused={true}
                 onClick={this.handleClose}
@@ -507,9 +505,8 @@ class Account extends Component {
                     <Dialog
                         title="Registering Your Account"
                         actions={[
-                            <RaisedButton
-                                backgroundColor="rgb(15,46,83)"
-                                labelStyle={{ color: "rgb(244,176,4)", }}
+                            <Button
+                                primary={true}
                                 label={this.state.modalButtonText}
                                 keyboardFocused={false}
                                 onClick={this.doWhateverYourFunctionCurrentlyIs}
@@ -647,9 +644,8 @@ class Account extends Component {
                                     </div>
                                 </div>
                                 <div className="p-t">
-                                    <RaisedButton
-                                        backgroundColor="rgb(244,176,4)"
-                                        labelColor="rgb(15,46,83)"
+                                    <Button
+                                        secondary={true}
                                         label="Update"
                                         onClick={
                                             this.handleProfileUpdate
@@ -765,12 +761,9 @@ class Account extends Component {
                                     remittance service.
                                     </div>
                                     <div className="p-b" />
-                                    <RaisedButton
+                                    <Button
                                         label="Register"
-                                        disableTouchRipple={true}
-                                        disableFocusRipple={true}
-                                        backgroundColor="rgb(244,176,4)"
-                                        labelColor="rgb(15,46,83)"
+                                        secondary={true}
                                         onClick={this.handleSignup}
                                     />
                                 </div> :
