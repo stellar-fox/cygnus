@@ -319,16 +319,19 @@ class NewAccount extends Component {
                     color: "#912d35",
                 },
                 underlineStyle: {
-                    borderColor: "rgba(15,46,83,0.6)",
+                    borderColor: "rgba(15,46,83,0.9)",
+                },
+                underlineFocusStyle: {
+                    borderColor: "rgba(15,46,83,0.7)",
                 },
                 floatingLabelStyle: {
-                    color: "rgba(15,46,83,0.5)",
+                    color: "rgba(15,46,83,0.7)",
                 },
                 floatingLabelFocusStyle: {
-                    color: "rgba(15,46,83,0.35)",
+                    color: "rgba(15,46,83,0.4)",
                 },
                 inputStyle: {
-                    color: "rgba(15,46,83,0.8)",
+                    color: "rgb(15,46,83)",
                 },
             }
 
@@ -353,13 +356,23 @@ class NewAccount extends Component {
                                 borderLeft: "1px solid rgba(15,46,83,0.2)",
                             }}
                         >
-                            <div className="revers">
+                            <div>
                                 <div>
                                     <InputField
                                         name="register-email"
                                         type="email"
                                         placeholder="Email"
-                                        styles={styles}
+                                        underlineStyle={styles.underlineStyle}
+                                        underlineFocusStyle={
+                                            styles.underlineFocusStyle
+                                        }
+                                        floatingLabelStyle={
+                                            styles.floatingLabelStyle
+                                        }
+                                        floatingLabelFocusStyle={
+                                            styles.floatingLabelFocusStyle
+                                        }
+                                        inputStyle={styles.inputStyle}
                                         validator={this.emailValidator}
                                         action={this.compoundValidate}
                                         ref={(self) => { this.textInputFieldEmail = self }}
@@ -370,7 +383,17 @@ class NewAccount extends Component {
                                         name="register-password"
                                         type="password"
                                         placeholder="Password"
-                                        styles={styles}
+                                        underlineStyle={styles.underlineStyle}
+                                        underlineFocusStyle={
+                                            styles.underlineFocusStyle
+                                        }
+                                        floatingLabelStyle={
+                                            styles.floatingLabelStyle
+                                        }
+                                        floatingLabelFocusStyle={
+                                            styles.floatingLabelFocusStyle
+                                        }
+                                        inputStyle={styles.inputStyle}
                                         validator={this.passwordValidator}
                                         action={this.compoundValidate}
                                         ref={(self) => { this.textInputFieldPassword = self }}
@@ -381,7 +404,17 @@ class NewAccount extends Component {
                                         name="register-password-confirmation"
                                         type="password"
                                         placeholder="Password Confirmation"
-                                        styles={styles}
+                                        underlineStyle={styles.underlineStyle}
+                                        underlineFocusStyle={
+                                            styles.underlineFocusStyle
+                                        }
+                                        floatingLabelStyle={
+                                            styles.floatingLabelStyle
+                                        }
+                                        floatingLabelFocusStyle={
+                                            styles.floatingLabelFocusStyle
+                                        }
+                                        inputStyle={styles.inputStyle}
                                         validator={this.passwordValidator}
                                         action={this.compoundValidate}
                                         ref={(self) => { this.textInputFieldPasswordConf = self }}
