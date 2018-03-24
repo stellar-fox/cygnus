@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
@@ -147,31 +147,36 @@ class LedgerAuthenticator extends Component {
                 handleChange={this.handleCheckboxClick}
                 label="Use Default Account"
             />
-            {this.state.pathEditable ? (
-                <div>
-                    <div className="p-t-medium flex-start">
-                        <Input
-                            label="Account Index"
-                            inputType="text"
-                            maxLength="5"
-                            autoComplete="off"
-                            value={this.state.derivationPath}
-                            handleChange={this.handlePathChange}
-                            subLabel={`Account Derivation Path: [${
-                                bip32Prefix
-                            }${this.state.derivationPath}']`}
-                        />
-                    </div>
+            <div className="f-b">
+                <div className="f-e-col">
+                    {this.state.pathEditable ? (
+                        <Fragment>
+                            <div className="p-t" />
+                            <Input
+                                width="256px"
+                                label="Account Index"
+                                inputType="text"
+                                maxLength="5"
+                                autoComplete="off"
+                                value={this.state.derivationPath}
+                                handleChange={this.handlePathChange}
+                                subLabel={`Account Derivation Path: [${
+                                    bip32Prefix
+                                }${this.state.derivationPath}']`}
+                            />
+                        </Fragment>
+                    ) : <div style={{width: "256px",}}></div>}
+                    <div className="p-t" />
+                    <Button
+                        onClick={this.initQueryDevice}
+                        secondary={true}
+                        fullWidth={true}
+                        label="Authenticate"
+                    />
                 </div>
-            ) : null}
-            <div className="p-t">
-                <Button
-                    onClick={this.initQueryDevice}
-                    secondary={true}
-                    fullWidth={true}
-                    label="Authenticate"
-                />
-                <div className="p-b-small" />
+            </div>
+
+            <div style={{marginTop: "2px",}} className="p-t-small">
                 <div className="tiny">
                     {this.state.ledgerStatusMessage}
                 </div>
