@@ -65,6 +65,8 @@ export default class InputField extends Component {
     // ...
     render = () =>
         <TextField
+            style={this.props.style}
+
             name={this.props.name}
 
             type={this.props.type || "text"}

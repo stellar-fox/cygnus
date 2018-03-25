@@ -14,8 +14,8 @@ const palette = {
 export default getMuiTheme({
 
     tooltip: {
-        color: "rgb(15,46,83)",
-        rippleBackgroundColor: "rgb(244,176,4)",
+        color: palette.primaryColor,
+        rippleBackgroundColor: palette.secondaryColor,
     },
 
     raisedButton: {
@@ -38,11 +38,16 @@ export default getMuiTheme({
         disabledTextColor: palette.disabledPrimaryColor,
     },
 
+    stepper: {
+        textColor: palette.primaryColor,
+        disabledTextColor: palette.disabledPrimaryColor,
+    },
+
     datePicker: {
-        selectColor: "rgb(15,46,83)",
-        selectTextColor: "rgb(244,176,4)",
-        headerColor: "rgb(15,46,83)",
-        textColor: "rgb(244,176,4)",
+        selectColor: palette.primaryColor,
+        selectTextColor: palette.secondaryColor,
+        headerColor: palette.primaryColor,
+        textColor: palette.secondaryColor,
     },
 
 })

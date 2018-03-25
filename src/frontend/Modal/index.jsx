@@ -12,6 +12,7 @@ export default class Modal extends Component {
     render = () => <Dialog
         paperClassName="paper-modal"
         titleClassName="title-modal"
+        bodyClassName="body-modal"
         title={this.props.title}
         actions={this.props.actions}
         modal={true}
