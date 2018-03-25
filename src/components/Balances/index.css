@@ -165,8 +165,22 @@
     justify-content: flex-start;
 }
 
+.f-b-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .space-between {
     justify-content: space-between;
+}
+
+.center {
+    justify-content: center;
+}
+
+.bottom {
+    align-items: flex-end;
 }
 
 .ledger-nano-s {
