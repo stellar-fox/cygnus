@@ -13,10 +13,7 @@ import {
     composeWithDevTools,
 } from "redux-devtools-extension"
 import throttle from "lodash/throttle"
-import {
-    unregister,
-    // registerServiceWorker,
-} from "./registerServiceWorker"
+import { unregister } from "./lib/registerServiceWorker"
 
 import reducers from "./reducers"
 import {
@@ -73,5 +70,4 @@ ReactDOM.render(
 
 
 // ...
-// registerServiceWorker()
 unregister()
