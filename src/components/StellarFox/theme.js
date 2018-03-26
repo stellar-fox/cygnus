@@ -1,5 +1,9 @@
 import getMuiTheme from "material-ui/styles/getMuiTheme"
 
+
+
+
+// ...
 const palette = {
     defaultColor: "rgb(251,192,45)",
     defaultTextColor: "rgba(15,46,83,0.7)",
@@ -8,6 +12,8 @@ const palette = {
     disabledPrimaryColor: "rgb(209,151,4)",
     disabledPrimaryTextColor: "rgb(244,176,4)",
 }
+
+
 
 
 // ...
