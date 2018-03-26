@@ -19,5 +19,6 @@ export default class Modal extends Component {
         open={this.props.open}
         onRequestClose={this.props.hideModal}
         autoScrollBodyContent={true}
+        repositionOnUpdate={false}
     >{this.props.children}</Dialog>
 }

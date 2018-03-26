@@ -7,7 +7,8 @@ import { TopBarSecurityMessage } from "../../env"
 import {
     ActionConstants,
     changeLoginState,
-    changeModalState
+    changeModalState,
+    setAccountRegistered,
 } from "../../actions"
 
 import Button from "../../frontend/Button"
@@ -56,15 +57,20 @@ class Heading extends Component {
             loginButtonDisabled: false,
             loginObj,
         })
-        //TODO: handle loginObj to set redux state
     }
-
 
 
     // ...
     login = () => {
         this.hideSignupModal()
-        this.props.changeLoginState(this.state.loginObj)
+        this.props.setAccountRegistered(true)
+        this.props.changeLoginState({
+            loginState: ActionConstants.LOGGED_IN,
+            publicKey: this.state.loginObj.publicKey,
+            bip32Path: this.state.loginObj.bip32Path,
+            userId: this.state.loginObj.userId,
+            token: this.state.loginObj.token,
+        })
     }
 
 
@@ -101,7 +107,7 @@ class Heading extends Component {
                     <Button
                         label="Cancel"
                         onClick={this.cancelLogin}
-                        primary={true}
+                        flat={true}
                     />,
                 ]}
             >
@@ -206,5 +212,6 @@ export default connect(
     (dispatch) => bindActionCreators({
         changeLoginState,
         changeModalState,
+        setAccountRegistered,
     }, dispatch)
 )(Heading)
