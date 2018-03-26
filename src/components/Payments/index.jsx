@@ -11,7 +11,7 @@ import {
     formatAmount,
     StellarSdk,
 } from "../../lib/utils"
-import { emoji } from "../../env"
+import { emoji } from "../StellarFox/env"
 import {
     gravatarLink,
 } from "../../lib/deneb"
@@ -41,7 +41,7 @@ import {
 } from "material-ui/List"
 import Avatar from "material-ui/Avatar"
 import IconButton from "material-ui/IconButton"
-import SnackBar from "../../frontend/SnackBar"
+import SnackBar from "../../frontend/Snackbar"
 import {
     Table,
     TableBody,

@@ -8,7 +8,7 @@ import {
     passwordValid,
     extractPathIndex,
 } from "../../lib/utils"
-import { appName } from "../../env"
+import { appName } from "../StellarFox/env"
 import md5 from "../../lib/md5"
 import { config } from "../../config"
 

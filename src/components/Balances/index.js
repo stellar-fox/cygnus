@@ -18,7 +18,7 @@ import {
     insertPathIndex,
 } from "../../lib/utils"
 import { config } from "../../config"
-import { appName } from "../../env"
+import { appName } from "../StellarFox/env"
 import { withLoginManager } from "../LoginManager"
 
 import {
@@ -53,7 +53,7 @@ import Dialog from "material-ui/Dialog"
 import DatePicker from "material-ui/DatePicker"
 import LinearProgress from "material-ui/LinearProgress"
 import InputField from "../../frontend/InputField"
-import SnackBar from "../../frontend/SnackBar"
+import SnackBar from "../../frontend/Snackbar"
 import RegisterAccount from "../Account/Register"
 
 import "./index.css"

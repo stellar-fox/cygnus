@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
-import { bip32Prefix } from "../../env"
+import { bip32Prefix } from "../StellarFox/env"
 import {
     awaitConnection,
     getPublicKey,

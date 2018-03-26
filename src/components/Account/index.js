@@ -11,7 +11,7 @@ import {
 import {
     appName,
     NotImplementedBadge,
-} from "../../env"
+} from "../StellarFox/env"
 import { config } from "../../config"
 import { withLoginManager } from "../LoginManager"
 
@@ -30,7 +30,7 @@ import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
 import Dialog from "material-ui/Dialog"
 import Toggle from "material-ui/Toggle"
 import Input from "../../frontend/Input"
-import SnackBar from "../../frontend/SnackBar"
+import SnackBar from "../../frontend/Snackbar"
 import RegisterAccount from "./Register"
 
 import "./index.css"

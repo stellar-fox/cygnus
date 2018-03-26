@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
-import { TopBarSecurityMessage } from "../../env"
+import { TopBarSecurityMessage } from "../StellarFox/env"
 
 import {
     ActionConstants,

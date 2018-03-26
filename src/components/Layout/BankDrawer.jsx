@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { NavLink } from "react-router-dom"
 import { push } from "react-router-redux"
-import { bankDrawerWidth } from "../../env"
+import { bankDrawerWidth } from "../StellarFox/env"
 import { Provide } from "../../lib/utils"
 
 import Drawer from "material-ui/Drawer"

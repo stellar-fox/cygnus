@@ -5,7 +5,7 @@ import { Route } from "react-router-dom"
 import {
     bankDrawerWidth,
     contentPaneSeparation,
-} from "../../env"
+} from "../StellarFox/env"
 import { ConnectedSwitch as Switch } from "../StellarRouter"
 
 import Balances from "../Balances"
