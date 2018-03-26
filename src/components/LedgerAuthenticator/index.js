@@ -177,7 +177,7 @@ class LedgerAuthenticator extends Component {
             </div>
 
             <div style={{marginTop: "2px",}} className="p-t-small">
-                <div className="tiny">
+                <div className="tiny placeholder-tiny">
                     {this.state.ledgerStatusMessage}
                 </div>
             </div>

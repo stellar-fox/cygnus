@@ -190,3 +190,22 @@ span.red-badge {
     margin-top: 10px;
     font-weight: bold;
 }
+
+
+.placeholder-1rem {
+    display: inline-block;
+    min-height: 1rem;
+}
+
+.placeholder-tiny {
+    display: inline-block;
+    min-height: 11px;
+}
+
+.error {
+    color: rgba(178,34,34,1);
+}
+
+.success {
+    color: rgba(46,125,50,1);
+}
