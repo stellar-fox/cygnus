@@ -568,6 +568,7 @@ class Account extends Component {
                                 <div className="flex-centered">
                                     <div className="p-b">
                                         <Input
+                                            className="lcars-input"
                                             value={this.state.firstNameDisplay}
                                             label="First Name"
                                             inputType="text"
@@ -584,6 +585,7 @@ class Account extends Component {
                                     </div>
                                     <div className="p-t p-b">
                                         <Input
+                                            className="lcars-input"
                                             value={this.state.lastNameDisplay}
                                             label="Last Name"
                                             inputType="text"
@@ -600,6 +602,7 @@ class Account extends Component {
                                     </div>
                                     <div className="p-t p-b">
                                         <Input
+                                            className="lcars-input"
                                             value={this.state.emailDisplay}
                                             label="Email"
                                             inputType="text"
@@ -616,6 +619,7 @@ class Account extends Component {
                                     </div>
                                     <div className="p-t p-b">
                                         <Input
+                                            className="lcars-input"
                                             value={
                                                 this.state.paymentAddressDisplay
                                             }

@@ -1,3 +1,92 @@
+.lcars-input-reverse ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lcars-input-reverse li {
+    display: block;
+    padding: 9px;
+    border-radius: 3px;
+    border: 1px solid rgba(15,46,83,0.55);
+}
+
+.lcars-input-reverse li > label {
+    display: block;
+    float: left;
+    margin-top: -22px;
+    background: rgb(244,176,4);
+    height: 14px;
+    padding: 2px 5px 2px 5px;
+    color: rgba(15,46,83,0.75);
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.lcars-input-reverse input[type="text"],
+.lcars-input-reverse input[type="date"],
+.lcars-input-reverse input[type="datetime"],
+.lcars-input-reverse input[type="email"],
+.lcars-input-reverse input[type="number"],
+.lcars-input-reverse input[type="search"],
+.lcars-input-reverse input[type="time"],
+.lcars-input-reverse input[type="url"],
+.lcars-input-reverse input[type="password"],
+.lcars-input-reverse textarea,
+.lcars-input-reverse select {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    transition: all 0.30s ease-in-out;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: 100%;
+    display: block;
+    outline: none;
+    border: 1px solid rgba(15,46,83,0.35);
+    border-radius: 3px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 16px;
+    color: rgba(15,46,83,0.75);
+    margin-top: 3px;
+    padding-left: 5px;
+    margin-bottom: 8px;
+    background-color: rgba(15,46,83,0.15);
+}
+
+.lcars-input-reverse input[type="text"]:focus,
+.lcars-input-reverse input[type="date"]:focus,
+.lcars-input-reverse input[type="datetime"]:focus,
+.lcars-input-reverse input[type="email"]:focus,
+.lcars-input-reverse input[type="number"]:focus,
+.lcars-input-reverse input[type="search"]:focus,
+.lcars-input-reverse input[type="time"]:focus,
+.lcars-input-reverse input[type="url"]:focus,
+.lcars-input-reverse input[type="password"]:focus,
+.lcars-input-reverse textarea:focus,
+.lcars-input-reverse select:focus {
+    border-color: rgba(15,46,83,0.55);
+}
+
+.lcars-input-reverse li > span {
+    background: rgb(244,176,4);
+    display: block;
+    padding: 3px;
+    margin: 0 -9px -9px -9px;
+    text-align: center;
+    color: rgb(244,176,4);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    border-top: 1px solid rgba(15,46,83,0.35);
+    background: rgba(15,46,83,0.55);
+}
+
+
+/* ========================================================================= */
+
 .lcars-input ul {
     list-style: none;
     padding: 0;

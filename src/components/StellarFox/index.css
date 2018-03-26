@@ -194,7 +194,7 @@ span.red-badge {
 
 .placeholder-1rem {
     display: inline-block;
-    min-height: 1rem;
+    min-height: 0.91rem;
 }
 
 .placeholder-tiny {

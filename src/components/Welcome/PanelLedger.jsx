@@ -104,6 +104,7 @@ class PanelLedger extends Component {
                     </div>
                     <LedgerAuthenticator
                         onConnected={this.logInViaLedger}
+                        className="lcars-input"
                     />
                 </div>
             }

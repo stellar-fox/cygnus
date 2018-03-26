@@ -15,7 +15,7 @@ import {
 } from "../../redux/actions"
 
 import Input from "../../lib/common/Input"
-import Checkbox from "../../lib/common/Checkbox"
+import Toggle from "../../lib/common/Toggle"
 import Button from "../../lib/common/Button"
 
 import "./index.css"
@@ -143,18 +143,31 @@ class LedgerAuthenticator extends Component {
 
     // ...
     render = () =>
-        <div className={this.props.className}>
-            <Checkbox
-                isChecked={this.state.useDefaultAccount}
-                handleChange={this.handleCheckboxClick}
-                label="Use Default Account"
-            />
+        <Fragment>
             <div className="f-b">
                 <div className="f-e-col">
+                    <Toggle
+                        label="Use default account"
+                        onToggle={this.handleCheckboxClick}
+                        defaultToggled={true}
+                        labelStyle={{
+                            color: this.props.className.match(/reverse/) ?
+                                "rgb(15,46,83)" : "rgb(244,176,4)",
+                        }}
+                        thumbSwitchedStyle={{
+                            backgroundColor: this.props.className.match(/reverse/) ?
+                                "rgb(15,46,83)" : "rgb(244,176,4)",
+                        }}
+                        trackSwitchedStyle={{
+                            backgroundColor: this.props.className.match(/reverse/) ?
+                                "rgba(15,46,83,0.75)" : "rgb(244,176,4)",
+                        }}
+                    />
                     {this.state.pathEditable ? (
                         <Fragment>
                             <div className="p-t" />
                             <Input
+                                className={this.props.className}
                                 width="256px"
                                 label="Account Index"
                                 inputType="text"
@@ -171,7 +184,8 @@ class LedgerAuthenticator extends Component {
                     <div className="p-t" />
                     <Button
                         onClick={this.initQueryDevice}
-                        secondary={true}
+                        primary={this.props.className.match(/reverse/) ? true : false}
+                        secondary={this.props.className.match(/reverse/) ? false : true}
                         fullWidth={true}
                         label="Authenticate"
                     />
@@ -183,7 +197,7 @@ class LedgerAuthenticator extends Component {
                     {this.state.ledgerStatusMessage}
                 </div>
             </div>
-        </div>
+        </Fragment>
 
 }
 

@@ -108,7 +108,7 @@ class Heading extends Component {
                     <Button
                         label="Cancel"
                         onClick={this.cancelLogin}
-                        flat={true}
+                        primary={true}
                     />,
                 ]}
             >

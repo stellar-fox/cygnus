@@ -307,12 +307,9 @@ export default class Signup extends Component {
                     color: "rgba(15,46,83,1)",
                 }}>
                     <div className="f-b">
-                        <div className="f-b-col">
+                        <div className="f-b-col bordered m-t">
                             <LedgerAuthenticator
-                                style={{
-                                    marginBottom: "10px",
-                                }}
-                                className="dark"
+                                className="lcars-input-reverse"
                                 onConnected={this.createAccount}
                                 onClick={null}
                             />
