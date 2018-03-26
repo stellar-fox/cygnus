@@ -2,7 +2,7 @@ import {
     handleException,
     nullToUndefined,
 } from "./utils"
-import { ssAppStateKey } from "../env"
+import { ssAppStateKey } from "../components/StellarFox/env"
 
 
 

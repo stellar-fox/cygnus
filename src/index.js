@@ -20,7 +20,7 @@ import {
     appBasePath,
     appRootDomId,
     ssSaveThrottlingTime,
-} from "./env"
+} from "./components/StellarFox/env"
 import {
     loadState,
     saveState,

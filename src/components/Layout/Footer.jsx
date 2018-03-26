@@ -4,7 +4,7 @@ import {
     appName,
     appCopyDates,
     appLandingPageLink,
-} from "../../env"
+} from "../StellarFox/env"
 
 import "./Footer.css"
 

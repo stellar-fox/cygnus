@@ -11,7 +11,7 @@ import {
     formatAmount,
     StellarSdk,
 } from "../../lib/utils"
-import { emoji } from "../../env"
+import { emoji } from "../StellarFox/env"
 import {
     gravatarLink,
 } from "../../lib/deneb"

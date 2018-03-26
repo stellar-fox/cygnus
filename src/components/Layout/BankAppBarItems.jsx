@@ -5,7 +5,7 @@ import {
     pubKeyAbbr,
     handleException,
 } from "../../lib/utils"
-import { unknownPubKeyAbbr } from "../../env"
+import { unknownPubKeyAbbr } from "../StellarFox/env"
 
 import "./BankAppBarItems.css"
 

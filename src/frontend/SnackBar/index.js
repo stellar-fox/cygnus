@@ -1,5 +1,5 @@
 import React from "react"
-import { snackBarAutoHideDuration } from "../../env"
+import { snackBarAutoHideDuration } from "../../components/StellarFox/env"
 import Snackbar from "material-ui/Snackbar"
 
 

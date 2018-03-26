@@ -1,7 +1,7 @@
 import React from "react"
 import axios from "axios"
 import toml from "toml"
-import { bip32Prefix } from "../env"
+import { bip32Prefix } from "../components/StellarFox/env"
 
 
 // TODO: convert-to/use-as module

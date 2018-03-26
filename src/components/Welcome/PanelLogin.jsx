@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { appName } from "../../env"
+import { appName } from "../StellarFox/env"
 import Login from "../Login"
 import Panel from "../Panel"
 

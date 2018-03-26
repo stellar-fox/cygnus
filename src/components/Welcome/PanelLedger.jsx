@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import axios from "axios"
 
 import { config } from "../../config"
-import { ledgerSupportLink } from "../../env"
+import { ledgerSupportLink } from "../StellarFox/env"
 import { extractPathIndex } from "../../lib/utils"
 
 import {

@@ -18,7 +18,7 @@ import {
     insertPathIndex,
 } from "../../lib/utils"
 import { config } from "../../config"
-import { appName } from "../../env"
+import { appName } from "../StellarFox/env"
 import { withLoginManager } from "../LoginManager"
 
 import {

@@ -11,7 +11,7 @@ import {
 import {
     appName,
     NotImplementedBadge,
-} from "../../env"
+} from "../StellarFox/env"
 import { config } from "../../config"
 import { withLoginManager } from "../LoginManager"
 
