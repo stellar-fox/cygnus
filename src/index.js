@@ -6,23 +6,18 @@ import {
     combineReducers,
 } from "redux"
 import thunk from "redux-thunk"
-import { Provider } from "react-redux"
-import createHistory from "history/createBrowserHistory"
-import {
-    ConnectedRouter as Router,
-    routerReducer,
-    // routerMiddleware,
-} from "react-router-redux"
+import { routerReducer } from "react-router-redux"
 import { routerMiddleware } from "./components/StellarRouter"
+import createHistory from "history/createBrowserHistory"
 import {
     composeWithDevTools,
 } from "redux-devtools-extension"
 import throttle from "lodash/throttle"
-
 import {
     unregister,
     // registerServiceWorker,
 } from "./registerServiceWorker"
+
 import reducers from "./reducers"
 import {
     appBasePath,
@@ -34,13 +29,7 @@ import {
     saveState,
 } from "./lib/StatePersistence"
 
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
-import stellarTheme from "./frontend/themes/stellar"
-
-import LoginManager from "./components/LoginManager"
-import Layout from "./components/Layout"
-
-import "./index.css"
+import StellarFox from "./components/StellarFox"
 
 
 
@@ -76,26 +65,11 @@ store.subscribe(
 )
 
 
-// application's root
-const StellarFox = () =>
-    <Provider store={store}>
-        <MuiThemeProvider muiTheme={stellarTheme}>
-            <Router history={history}>
-                <LoginManager>
-                    <Layout />
-                </LoginManager>
-            </Router>
-        </MuiThemeProvider>
-    </Provider>
-
-
 // render application's root into the DOM
 ReactDOM.render(
-    <StellarFox />,
+    React.createElement(StellarFox, { store, history, }),
     document.getElementById(appRootDomId)
 )
-
-
 
 
 // ...
