@@ -95,10 +95,12 @@ class LedgerAuthenticator extends Component {
         let message = ""
         switch (code) {
             case 26625:
-                message = "Ledger is autolocked. Please unlock it first."
+                message =
+                    "Ledger is autolocked. Please unlock it first."
                 break
             case "U2F_5":
-                message = "Ledger sign in timeout. Device turned off or disconnected."
+                message =
+                    "Ledger sign in timeout. Device turned off or disconnected."
                 break
             default:
                 break
