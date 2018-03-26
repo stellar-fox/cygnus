@@ -27,7 +27,7 @@ import {
 import {
     loadState,
     saveState,
-} from "./lib/StatePersistence"
+} from "./lib/statePersistence"
 
 import StellarFox from "./components/StellarFox"
 
