@@ -41,7 +41,7 @@ import {
 } from "material-ui/List"
 import Avatar from "material-ui/Avatar"
 import IconButton from "material-ui/IconButton"
-import SnackBar from "../../frontend/SnackBar"
+import SnackBar from "../../frontend/Snackbar"
 import {
     Table,
     TableBody,
