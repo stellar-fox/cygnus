@@ -1,11 +1,19 @@
-import { config } from "../config"
+import { config } from "../../config"
 
+
+
+
+// ...
 const initState = {
     currency: "eur",
     precision: 2,
     horizon: config.horizon,
 }
 
+
+
+
+// ...
 export default function (state = initState, action) {
     switch (action.type) {
 
@@ -110,6 +118,7 @@ export default function (state = initState, action) {
 
         default:
             return state
+
     }
 
     return state

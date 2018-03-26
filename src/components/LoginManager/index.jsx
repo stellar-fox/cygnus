@@ -8,7 +8,7 @@ import { authenticate } from "./api"
 import {
     ActionConstants,
     changeLoginState,
-} from "../../actions"
+} from "../../redux/actions"
 
 
 

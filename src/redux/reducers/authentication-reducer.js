@@ -1,10 +1,16 @@
+// ...
 const initState = {
     isAuthenticated: false,
     isReadOnly: true,
 }
 
+
+
+
+// ...
 export default function (state = initState, action) {
     switch (action.type) {
+
         case "LOG_IN":
             state = {
                 ...state,
@@ -29,6 +35,8 @@ export default function (state = initState, action) {
 
         default:
             break
+
     }
+
     return state
 }

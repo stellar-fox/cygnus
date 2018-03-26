@@ -1,6 +1,9 @@
 import { ActionConstants } from "../actions"
 
 
+
+
+// ...
 const ActionTypes = {
     CHANGE_LOGIN_STATE: "CHANGE_LOGIN_STATE",
     SET_HW_PARAMS: "SET_HW_PARAMS",
@@ -10,17 +13,22 @@ const ActionTypes = {
 }
 
 
-function createReducer (initState = {}, handlers) {
-    return function reducer (state = initState, action) {
+
+
+// ...
+const createReducer = (initState = {}, handlers) =>
+    (state = initState, action) => {
         if (handlers.hasOwnProperty(action.type)) {
             return handlers[action.type](state, action)
         } else {
             return state
         }
     }
-}
 
 
+
+
+// ...
 export const authReducer = createReducer({
     loginState: ActionConstants.LOGGED_OUT,
     publicKey: null,
@@ -35,6 +43,9 @@ export const authReducer = createReducer({
 })
 
 
+
+
+// ...
 export const navReducer = createReducer({}, {
     [ActionTypes.SELECT_VIEW] (state, action) {
         state = { ...state, view: action.payload, }
@@ -43,6 +54,9 @@ export const navReducer = createReducer({}, {
 })
 
 
+
+
+// ...
 export const uiReducer = createReducer({
     modals: {},
 }, {

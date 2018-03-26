@@ -12,7 +12,7 @@ import {
     selectView,
     changeLoginState,
     ActionConstants,
-} from "../../actions"
+} from "../../redux/actions"
 
 import BankAppBarTitle from "./BankAppBarTitle"
 import BankAppBarItems from "./BankAppBarItems"

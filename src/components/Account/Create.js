@@ -22,7 +22,7 @@ import {
     setPublicKey,
     changeLoginState,
     ActionConstants,
-} from "../../actions"
+} from "../../redux/actions"
 
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import {

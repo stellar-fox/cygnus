@@ -1,3 +1,4 @@
+// ...
 const initState = {
     drawer: {
         isOpened: true,
@@ -9,8 +10,13 @@ const initState = {
     messages: {},
 }
 
+
+
+
+// ...
 export default function (state = initState, action) {
     switch (action.type) {
+
         case "OPEN_DRAWER":
             state = {
                 ...state,
@@ -67,6 +73,8 @@ export default function (state = initState, action) {
 
         default:
             break
+
     }
+
     return state
 }

@@ -37,7 +37,7 @@ import {
     setModalLoaded,
     updateLoadingMessage,
     changeLoginState,
-} from "../../actions"
+} from "../../redux/actions"
 
 import {
     Card,

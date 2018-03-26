@@ -1,5 +1,7 @@
+// ...
 export default function (state = {}, action) {
     switch (action.type) {
+
         case "SET_LOADING":
             state = {
                 ...state,
@@ -23,6 +25,8 @@ export default function (state = {}, action) {
 
         default:
             break
+
     }
+
     return state
 }

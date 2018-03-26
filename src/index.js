@@ -15,7 +15,7 @@ import {
 import throttle from "lodash/throttle"
 import { unregister } from "./lib/registerServiceWorker"
 
-import reducers from "./reducers"
+import reducers from "./redux/reducers"
 import {
     appBasePath,
     appRootDomId,

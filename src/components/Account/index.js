@@ -22,7 +22,7 @@ import {
     setExchangeRate,
     setCurrencyPrecision,
     setTab,
-} from "../../actions"
+} from "../../redux/actions"
 
 import { Tabs, Tab } from "material-ui/Tabs"
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"

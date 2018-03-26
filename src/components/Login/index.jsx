@@ -10,7 +10,7 @@ import {
 import {
     ActionConstants,
     changeLoginState,
-} from "../../actions"
+} from "../../redux/actions"
 
 import LinearProgress from "material-ui/LinearProgress"
 import InputField from "../../lib/common/InputField"

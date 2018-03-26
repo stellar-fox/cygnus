@@ -11,7 +11,7 @@ import {
     ActionConstants,
     changeLoginState,
     setAccountRegistered,
-} from "../../actions/"
+} from "../../redux/actions/"
 
 import Panel from "../Panel"
 import LedgerAuthenticator from "../LedgerAuthenticator"

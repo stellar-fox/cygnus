@@ -12,7 +12,7 @@ import {
 } from "../StellarRouter"
 import { Provide } from "../../lib/utils"
 
-import { selectView } from "../../actions"
+import { selectView } from "../../redux/actions"
 
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"

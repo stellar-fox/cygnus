@@ -15,7 +15,7 @@ import {
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import Bank from "./Bank"
-import { ActionConstants } from "../../actions"
+import { ActionConstants } from "../../redux/actions"
 
 
 

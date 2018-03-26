@@ -1,6 +1,10 @@
+// ...
 const initState = {}
 
 
+
+
+// ...
 export default (state = initState, action) => (
     (type) =>
         type === "SET_TOKEN" ?

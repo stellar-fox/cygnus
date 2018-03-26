@@ -12,7 +12,7 @@ import {
     logIn,
     setAccountRegistered,
     setPublicKey
-} from "../../actions"
+} from "../../redux/actions"
 
 import Input from "../../lib/common/Input"
 import Checkbox from "../../lib/common/Checkbox"

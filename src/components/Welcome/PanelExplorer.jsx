@@ -9,7 +9,7 @@ import {
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
-} from "../../actions/"
+} from "../../redux/actions/"
 
 import {
     pubKeyValid,

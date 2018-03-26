@@ -9,7 +9,7 @@ import {
     changeLoginState,
     changeModalState,
     setAccountRegistered,
-} from "../../actions"
+} from "../../redux/actions"
 
 import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"

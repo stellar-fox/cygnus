@@ -15,7 +15,7 @@ import {
     setAccountRegistered,
     changeLoginState,
     ActionConstants,
-} from "../../actions"
+} from "../../redux/actions"
 
 import {
     Step,
