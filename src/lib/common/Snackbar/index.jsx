@@ -1,6 +1,7 @@
 import React from "react"
-import { snackbarAutoHideDuration } from "../../components/StellarFox/env"
+
 import Snackbar from "material-ui/Snackbar"
+import { snackbarAutoHideDuration } from "../../../components/StellarFox/env"
 
 
 
@@ -14,6 +15,8 @@ const snackbarStyles = {
         color: "rgb(15,46,83)",
     },
 }
+
+
 
 
 // <Snackbar> component

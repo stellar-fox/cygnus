@@ -7,7 +7,7 @@ import "./index.css"
 
 // <Input> component
 export default (props) =>
-    <div style={{width: props.width,}} className="lcars-input">
+    <div style={{ width: props.width, }} className="lcars-input">
         <ul>
             <li>
                 <label htmlFor="name">{props.label}</label>

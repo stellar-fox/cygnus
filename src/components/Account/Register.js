@@ -24,8 +24,8 @@ import {
     StepContent,
 } from "material-ui/Stepper"
 import LinearProgress from "material-ui/LinearProgress"
-import Button from "../../frontend/Button"
-import InputField from "../../frontend/InputField"
+import Button from "../../lib/common/Button"
+import InputField from "../../lib/common/InputField"
 
 
 

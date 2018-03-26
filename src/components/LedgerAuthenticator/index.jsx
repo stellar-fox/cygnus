@@ -14,9 +14,9 @@ import {
     setPublicKey
 } from "../../actions"
 
-import Input from "../../frontend/Input"
-import Checkbox from "../../frontend/Checkbox"
-import Button from "../../frontend/Button"
+import Input from "../../lib/common/Input"
+import Checkbox from "../../lib/common/Checkbox"
+import Button from "../../lib/common/Button"
 
 import "./index.css"
 

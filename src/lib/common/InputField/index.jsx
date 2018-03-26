@@ -7,8 +7,8 @@ import "./index.css"
 
 
 
-// Default styles for TextField compoenent.
-const styles = {
+// ...
+const InputFieldStyles = {
     errorStyle: {
         color: "#E64A19",
     },
@@ -27,7 +27,9 @@ const styles = {
 }
 
 
-// ...
+
+
+// <InputField> component
 export default class InputField extends Component {
 
     // ...
@@ -82,32 +84,32 @@ export default class InputField extends Component {
 
             errorStyle={
                 this.props.errorStyle ||
-                styles.errorStyle
+                InputFieldStyles.errorStyle
             }
 
             underlineStyle={
                 this.props.underlineStyle ||
-                styles.underlineStyle
+                InputFieldStyles.underlineStyle
             }
 
             underlineFocusStyle={
                 this.props.underlineFocusStyle ||
-                styles.underlineStyle
+                InputFieldStyles.underlineStyle
             }
 
             floatingLabelStyle={
                 this.props.floatingLabelStyle ||
-                styles.floatingLabelStyle
+                InputFieldStyles.floatingLabelStyle
             }
 
             floatingLabelFocusStyle={
                 this.props.floatingLabelFocusStyle ||
-                styles.floatingLabelFocusStyle
+                InputFieldStyles.floatingLabelFocusStyle
             }
 
             inputStyle={
                 this.props.inputStyle ||
-                styles.inputStyle
+                InputFieldStyles.inputStyle
             }
         />
 

@@ -12,13 +12,15 @@ import {
 } from "../../lib/utils"
 import md5 from "../../lib/md5"
 import LedgerAuthenticator from "../LedgerAuthenticator"
-import InputField from "../../frontend/InputField"
-import Button from "../../frontend/Button"
+import InputField from "../../lib/common/InputField"
+import Button from "../../lib/common/Button"
 import Axios from "axios"
 import { config } from "../../config"
 
 
-const styles = {
+
+
+const signupStyles = {
     stepLabel: {
         fontSize: "1rem",
     },
@@ -41,6 +43,8 @@ const styles = {
         color: "rgb(15,46,83)",
     },
 }
+
+
 
 
 // <Signup> component
@@ -158,6 +162,7 @@ export default class Signup extends Component {
             error: "",
         })
 
+
     // ...
     validateInput = () => {
 
@@ -194,132 +199,136 @@ export default class Signup extends Component {
 
 
     // ...
-    render = () => <Stepper
-        connector={null}
-        orientation="vertical"
-        activeStep={this.state.stepIndex}>
-        <Step>
-            <StepLabel style={{
-                fontSize: "1rem",
-            }}
-            icon={<i className="material-icons">person</i>}
-            iconContainerStyle={{
-                transform: "scale(1.4)",
-                marginRight: "-10px",
-            }}>Set account access credentials.</StepLabel>
-            <StepContent style={{
-                borderLeft: "1px solid rgba(15,46,83,0.25)",
-                fontSize: "1rem",
-                color: "rgba(15,46,83,1)",
-                marginLeft: "20px",
-                marginBottom: "8px",
-            }}>
-                <div className="f-b">
-                    <div className="f-b-col">
-                        <InputField
-                            name="register-email"
-                            type="email"
-                            placeholder="Email"
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={
-                                styles.underlineFocusStyle
-                            }
-                            floatingLabelStyle={
-                                styles.floatingLabelStyle
-                            }
-                            floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                            }
-                            inputStyle={styles.inputStyle}
-                            validator={this.emailValidator}
-                            action={this.validateInput}
-                            ref={(self) => { this.textInputFieldEmail = self }}
-                        />
-                        <InputField
-                            name="register-password"
-                            type="password"
-                            placeholder="Password"
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={
-                                styles.underlineFocusStyle
-                            }
-                            floatingLabelStyle={
-                                styles.floatingLabelStyle
-                            }
-                            floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                            }
-                            inputStyle={styles.inputStyle}
-                            validator={this.passwordValidator}
-                            action={this.validateInput}
-                            ref={(self) => { this.textInputFieldPassword = self }}
-                        />
-                        <InputField
-                            name="register-password-confirmation"
-                            type="password"
-                            placeholder="Password Confirmation"
-                            underlineStyle={styles.underlineStyle}
-                            underlineFocusStyle={
-                                styles.underlineFocusStyle
-                            }
-                            floatingLabelStyle={
-                                styles.floatingLabelStyle
-                            }
-                            floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                            }
-                            inputStyle={styles.inputStyle}
-                            validator={this.passwordMatchValidator}
-                            action={this.validateInput}
-                            ref={(self) => { this.textInputFieldPasswordConf = self }}
-                            style={{ marginBottom: "15px", }}
-                        />
-                        <Button
-                            label="Next"
-                            primary={true}
-                            onClick={this.handleButtonAction.bind(this, "next")}
-                        />
+    render = () =>
+        <Stepper
+            connector={null}
+            orientation="vertical"
+            activeStep={this.state.stepIndex}>
+            <Step>
+                <StepLabel
+                    style={{
+                        fontSize: "1rem",
+                    }}
+                    icon={<i className="material-icons">person</i>}
+                    iconContainerStyle={{
+                        transform: "scale(1.4)",
+                        marginRight: "-10px",
+                    }}>
+                    Set account access credentials.
+                </StepLabel>
+                <StepContent style={{
+                    borderLeft: "1px solid rgba(15,46,83,0.25)",
+                    fontSize: "1rem",
+                    color: "rgba(15,46,83,1)",
+                    marginLeft: "20px",
+                    marginBottom: "8px",
+                }}>
+                    <div className="f-b">
+                        <div className="f-b-col">
+                            <InputField
+                                name="register-email"
+                                type="email"
+                                placeholder="Email"
+                                underlineStyle={signupStyles.underlineStyle}
+                                underlineFocusStyle={
+                                    signupStyles.underlineFocusStyle
+                                }
+                                floatingLabelStyle={
+                                    signupStyles.floatingLabelStyle
+                                }
+                                floatingLabelFocusStyle={
+                                    signupStyles.floatingLabelFocusStyle
+                                }
+                                inputStyle={signupStyles.inputStyle}
+                                validator={this.emailValidator}
+                                action={this.validateInput}
+                                ref={(self) => { this.textInputFieldEmail = self }}
+                            />
+                            <InputField
+                                name="register-password"
+                                type="password"
+                                placeholder="Password"
+                                underlineStyle={signupStyles.underlineStyle}
+                                underlineFocusStyle={
+                                    signupStyles.underlineFocusStyle
+                                }
+                                floatingLabelStyle={
+                                    signupStyles.floatingLabelStyle
+                                }
+                                floatingLabelFocusStyle={
+                                    signupStyles.floatingLabelFocusStyle
+                                }
+                                inputStyle={signupStyles.inputStyle}
+                                validator={this.passwordValidator}
+                                action={this.validateInput}
+                                ref={(self) => { this.textInputFieldPassword = self }}
+                            />
+                            <InputField
+                                name="register-password-confirmation"
+                                type="password"
+                                placeholder="Password Confirmation"
+                                underlineStyle={signupStyles.underlineStyle}
+                                underlineFocusStyle={
+                                    signupStyles.underlineFocusStyle
+                                }
+                                floatingLabelStyle={
+                                    signupStyles.floatingLabelStyle
+                                }
+                                floatingLabelFocusStyle={
+                                    signupStyles.floatingLabelFocusStyle
+                                }
+                                inputStyle={signupStyles.inputStyle}
+                                validator={this.passwordMatchValidator}
+                                action={this.validateInput}
+                                ref={(self) => { this.textInputFieldPasswordConf = self }}
+                                style={{ marginBottom: "15px", }}
+                            />
+                            <Button
+                                label="Next"
+                                primary={true}
+                                onClick={this.handleButtonAction.bind(this, "next")}
+                            />
+                        </div>
                     </div>
-                </div>
-            </StepContent>
-        </Step>
+                </StepContent>
+            </Step>
 
-        <Step>
-            <StepLabel style={{
-                fontSize: "1rem",
-            }}
-            icon={<i className="material-icons">verified_user</i>}
-            iconContainerStyle={{
-                transform: "scale(1.4)",
-                marginRight: "-10px",
-            }}>Authenticate with Ledger.</StepLabel>
-            <StepContent style={{
-                fontSize: "1rem",
-                color: "rgba(15,46,83,1)",
-            }}>
-                <div className="f-b">
-                    <div className="f-b-col">
-                        <LedgerAuthenticator
-                            style={{
-                                marginBottom: "10px",
-                            }}
-                            className="dark"
-                            onConnected={this.createAccount}
-                            onClick={null}
-                        />
+            <Step>
+                <StepLabel style={{
+                    fontSize: "1rem",
+                }}
+                icon={<i className="material-icons">verified_user</i>}
+                iconContainerStyle={{
+                    transform: "scale(1.4)",
+                    marginRight: "-10px",
+                }}>Authenticate with Ledger.</StepLabel>
+                <StepContent style={{
+                    fontSize: "1rem",
+                    color: "rgba(15,46,83,1)",
+                }}>
+                    <div className="f-b">
+                        <div className="f-b-col">
+                            <LedgerAuthenticator
+                                style={{
+                                    marginBottom: "10px",
+                                }}
+                                className="dark"
+                                onConnected={this.createAccount}
+                                onClick={null}
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="p-t">
-                    <span className="placeholder-1rem">
-                        <span className="success">
-                            {this.state.message}
+                    <div className="p-t">
+                        <span className="placeholder-1rem">
+                            <span className="success">
+                                {this.state.message}
+                            </span>
+                            <span className="error">
+                                {this.state.error}
+                            </span>
                         </span>
-                        <span className="error">
-                            {this.state.error}
-                        </span>
-                    </span>
-                </div>
-            </StepContent>
-        </Step>
-    </Stepper>
+                    </div>
+                </StepContent>
+            </Step>
+        </Stepper>
 }

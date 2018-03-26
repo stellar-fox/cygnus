@@ -46,14 +46,14 @@ import {
     CardText,
 } from "material-ui/Card"
 import { List, ListItem } from "material-ui/List"
-import Button from "../../frontend/Button"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
 import DatePicker from "material-ui/DatePicker"
 import LinearProgress from "material-ui/LinearProgress"
-import InputField from "../../frontend/InputField"
-import SnackBar from "../../frontend/Snackbar"
+import Button from "../../lib/common/Button"
+import InputField from "../../lib/common/InputField"
+import Snackbar from "../../lib/common/Snackbar"
 import RegisterAccount from "../Account/Register"
 
 import "./index.css"
@@ -466,7 +466,7 @@ class Balances extends Component {
 
 
     // ...
-    handlePaymentSnackBarClose = () =>
+    handlePaymentSnackbarClose = () =>
         this.setState({
             sbPayment: false,
         })
@@ -1298,7 +1298,7 @@ class Balances extends Component {
         return (
             <div>
                 <div>
-                    <SnackBar
+                    <Snackbar
                         open={this.state.sbPayment}
                         message={
                             `${
@@ -1310,7 +1310,7 @@ class Balances extends Component {
                             }`
                         }
                         onRequestClose={
-                            this.handlePaymentSnackBarClose
+                            this.handlePaymentSnackbarClose
                         }
                     />
 

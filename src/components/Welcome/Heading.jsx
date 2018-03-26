@@ -11,9 +11,10 @@ import {
     setAccountRegistered,
 } from "../../actions"
 
-import Button from "../../frontend/Button"
-import Modal from "../../frontend/Modal"
+import Button from "../../lib/common/Button"
+import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
+
 import "./Heading.css"
 
 

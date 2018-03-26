@@ -12,9 +12,9 @@ import {
     changeLoginState,
 } from "../../actions"
 
-import InputField from "../../frontend/InputField"
-import Button from "../../frontend/Button"
 import LinearProgress from "material-ui/LinearProgress"
+import InputField from "../../lib/common/InputField"
+import Button from "../../lib/common/Button"
 
 import "./index.css"
 

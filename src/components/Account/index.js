@@ -25,12 +25,12 @@ import {
 } from "../../actions"
 
 import { Tabs, Tab } from "material-ui/Tabs"
-import Button from "../../frontend/Button"
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
 import Dialog from "material-ui/Dialog"
 import Toggle from "material-ui/Toggle"
-import Input from "../../frontend/Input"
-import SnackBar from "../../frontend/Snackbar"
+import Button from "../../lib/common/Button"
+import Input from "../../lib/common/Input"
+import Snackbar from "../../lib/common/Snackbar"
 import RegisterAccount from "./Register"
 
 import "./index.css"
@@ -227,7 +227,7 @@ class Account extends Component {
 
 
     // ...
-    handleCurrencyChangeSnackBarClose = () =>
+    handleCurrencyChangeSnackbarClose = () =>
         this.setState({ sbCurrency: false, })
 
 
@@ -272,27 +272,27 @@ class Account extends Component {
 
 
     // ...
-    handleCurrencyPrecisionChangeSnackBarClose = () =>
+    handleCurrencyPrecisionChangeSnackbarClose = () =>
         this.setState({ sbCurrencyPrecision: false, })
 
 
     // ...
-    handleAccountDiscoverableSnackBarClose = () =>
+    handleAccountDiscoverableSnackbarClose = () =>
         this.setState({ sbAccountDiscoverable: false, })
 
 
     // ...
-    handleAccountProfileSnackBarClose = () =>
+    handleAccountProfileSnackbarClose = () =>
         this.setState({ sbAccountProfileSaved: false, })
 
 
     // ...
-    handleMultisigSnackBarClose = () =>
+    handleMultisigSnackbarClose = () =>
         this.setState({ sbMultisig: false, })
 
 
     // ...
-    handle2FASnackBarClose = () =>
+    handle2FASnackbarClose = () =>
         this.setState({ sb2FA: false, })
 
 
@@ -533,11 +533,11 @@ class Account extends Component {
                     {this.props.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Profile" value="1">
                             <div className="tab-content">
-                                <SnackBar
+                                <Snackbar
                                     open={this.state.sbAccountProfileSaved}
                                     message="Account profile saved."
                                     onRequestClose={
-                                        this.handleAccountProfileSnackBarClose
+                                        this.handleAccountProfileSnackbarClose
                                     }
                                 />
                                 <div className="flex-row">
@@ -684,13 +684,13 @@ class Account extends Component {
                                 account.
                             </div>
                             <div className="flex-start">
-                                <SnackBar
+                                <Snackbar
                                     open={this.state.sbCurrency}
                                     message={
                                         "Currency set to " + this.state.currency
                                     }
                                     onRequestClose={
-                                        this.handleCurrencyChangeSnackBarClose
+                                        this.handleCurrencyChangeSnackbarClose
                                     }
                                 />
                                 <RadioButtonGroup
@@ -785,7 +785,7 @@ class Account extends Component {
                                         </div>
                                         <div>
                                             <div>
-                                                <SnackBar
+                                                <Snackbar
                                                     open={
                                                         this.state
                                                             .sbAccountDiscoverable
@@ -795,7 +795,7 @@ class Account extends Component {
                                                             .accountDiscoverableMessage
                                                     }
                                                     onRequestClose={
-                                                        this.handleAccountDiscoverableSnackBarClose
+                                                        this.handleAccountDiscoverableSnackbarClose
                                                     }
                                                 />
                                                 <Toggle
@@ -863,13 +863,13 @@ class Account extends Component {
                                     </div>
                                     <div>
                                         <div>
-                                            <SnackBar
+                                            <Snackbar
                                                 open={this.state.sb2FA}
                                                 message={
                                                     "Two factor authentication is now enabled."
                                                 }
                                                 onRequestClose={
-                                                    this.handle2FASnackBarClose
+                                                    this.handle2FASnackbarClose
                                                 }
                                             />
                                             <Toggle
@@ -915,13 +915,13 @@ class Account extends Component {
                                     </div>
                                     <div>
                                         <div>
-                                            <SnackBar
+                                            <Snackbar
                                                 open={this.state.sbMultisig}
                                                 message={
                                                     "Account set to multisig."
                                                 }
                                                 onRequestClose={
-                                                    this.handleMultisigSnackBarClose
+                                                    this.handleMultisigSnackbarClose
                                                 }
                                             />
                                             <Toggle

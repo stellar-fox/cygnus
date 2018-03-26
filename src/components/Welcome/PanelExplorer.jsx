@@ -18,8 +18,8 @@ import {
 } from "../../lib/utils"
 
 import Panel from "../Panel"
-import InputField from "../../frontend/InputField"
-import Button from "../../frontend/Button"
+import InputField from "../../lib/common/InputField"
+import Button from "../../lib/common/Button"
 
 
 

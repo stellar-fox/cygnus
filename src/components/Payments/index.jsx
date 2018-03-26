@@ -41,7 +41,7 @@ import {
 } from "material-ui/List"
 import Avatar from "material-ui/Avatar"
 import IconButton from "material-ui/IconButton"
-import SnackBar from "../../frontend/Snackbar"
+import Snackbar from "../../lib/common/Snackbar"
 import {
     Table,
     TableBody,
@@ -255,12 +255,12 @@ class Payments extends Component {
 
 
     // ...
-    handleNoMorePaymentsSnackBarClose = () =>
+    handleNoMorePaymentsSnackbarClose = () =>
         this.setState({ sbNoMorePayments: false, })
 
 
     // ...
-    handleNoMoreTransactionsSnackBarClose = () =>
+    handleNoMoreTransactionsSnackbarClose = () =>
         this.setState({ sbNoMoreTransactions: false, })
 
 
@@ -454,7 +454,7 @@ class Payments extends Component {
 
 
     // ...
-    handlePaymentSnackBarClose = () =>
+    handlePaymentSnackbarClose = () =>
         this.setState({ sbPayment: false, })
 
 
@@ -1195,27 +1195,27 @@ class Payments extends Component {
     // ...
     render = () =>
         <div>
-            <SnackBar
+            <Snackbar
                 open={this.state.sbPayment}
                 message={`${this.state.sbPaymentText} ${
                     this.state.sbPaymentAmount
                 } ${this.state.sbPaymentAssetCode}`}
                 onRequestClose={
-                    this.handlePaymentSnackBarClose.bind(this)
+                    this.handlePaymentSnackbarClose
                 }
             />
-            <SnackBar
+            <Snackbar
                 open={this.state.sbNoMorePayments}
                 message="No more payments found."
                 onRequestClose={
-                    this.handleNoMorePaymentsSnackBarClose.bind(this)
+                    this.handleNoMorePaymentsSnackbarClose
                 }
             />
-            <SnackBar
+            <Snackbar
                 open={this.state.sbNoMoreTransactions}
                 message="No more transactions found."
                 onRequestClose={
-                    this.handleNoMoreTransactionsSnackBarClose.bind(this)
+                    this.handleNoMoreTransactionsSnackbarClose
                 }
             />
             <Tabs
@@ -1322,7 +1322,7 @@ class Payments extends Component {
                                                 }
                                                 tooltipPosition="top-right"
                                                 onClick={
-                                                    this.getPrevPaymentsPage.bind(this)
+                                                    this.getPrevPaymentsPage
                                                 }
                                                 disabled={
                                                     this.state
@@ -1342,7 +1342,7 @@ class Payments extends Component {
                                                 }
                                                 tooltipPosition="top-left"
                                                 onClick={
-                                                    this.getNextPaymentsPage.bind(this)
+                                                    this.getNextPaymentsPage
                                                 }
                                                 disabled={
                                                     this.state

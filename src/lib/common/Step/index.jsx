@@ -1,19 +1,18 @@
-import React, { Component, Fragment } from "react"
+import React, { Fragment } from "react"
 import {
-    Step,
+    Step as MUIStep,
     StepLabel,
     StepContent
 } from "material-ui/Stepper"
 
-import "./index.css"
 
 
 
-// <Modal> component
-export default class StepTemplate extends Component {
-
-    // ...
-    render = () => <Step
+// <Step> component
+export default ({
+    icon, label, active, content,
+}) =>
+    <MUIStep
         children={
             <Fragment>
                 <StepLabel
@@ -21,25 +20,18 @@ export default class StepTemplate extends Component {
                         fontSize: "1.2rem",
                         color: "rgba(15,46,83,0.9)",
                     }}
-                    icon={
-                        <i className="material-icons">
-                            {this.props.icon}
-                        </i>
-                    }
-                    children={this.props.label}
+                    icon={<i className="material-icons">{icon}</i>}
+                    children={label}
                 />
                 <StepContent
-                    active={this.props.active}
+                    active={active}
                     style={{
                         borderLeft: "1px solid rgba(15,46,83,0.2)",
                         fontSize: "1rem",
                         color: "rgba(15,46,83,1)",
                     }}
-                    children={this.props.content}
+                    children={content}
                 />
             </Fragment>
         }
     />
-
-
-}
