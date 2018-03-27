@@ -43,7 +43,7 @@ class PaymentsHistory extends Component {
     // ...
     render = () =>
         <Fragment>
-            <div className="account-title">Payment History</div>
+            <div className="account-title">Payments History</div>
             <div className="account-subtitle">Newest payments shown as first.</div>
             <div className="flex-row-space-between">
                 <div className="flex-row-column">
