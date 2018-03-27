@@ -112,6 +112,10 @@ class Payments extends Component {
 
 
     // ...
+    stellarServer = new StellarSdk.Server(this.props.accountInfo.horizon)
+
+
+    // ...
     componentWillUnmount = () =>
         this.props.accountInfo.streamer.call(this)
 
@@ -124,8 +128,7 @@ class Payments extends Component {
         })
         this.props.setStreamer(this.paymentsStreamer.call(this))
 
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-        server
+        this.stellarServer
             .payments()
             .forAccount(this.props.appAuth.publicKey)
             .order("desc")
@@ -220,18 +223,16 @@ class Payments extends Component {
 
 
     // ...
-    paymentsStreamer = () => {
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-
-        return server
+    paymentsStreamer = () =>
+        this.stellarServer
             .payments()
             .cursor("now")
             .stream({
                 onmessage: (message) => {
 
                     /*
-                    * Payment to fund a new account.
-                    */
+                     * Payment to fund a new account.
+                     */
                     if (
                         message.type === "create_account" &&
                         message.source_account === this.props.appAuth.publicKey
@@ -314,14 +315,11 @@ class Payments extends Component {
                     }
                 },
             })
-    }
 
 
     // ...
-    updateAccount = () => {
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-
-        server
+    updateAccount = () =>
+        this.stellarServer
             .loadAccount(this.props.appAuth.publicKey)
             .catch(StellarSdk.NotFoundError, function (_err) {
                 throw new Error("The destination account does not exist!")
@@ -329,7 +327,7 @@ class Payments extends Component {
             .then(
                 (account) => {
                     this.props.accountExistsOnLedger({ account, })
-                    server
+                    this.stellarServer
                         .payments()
                         .limit(5)
                         .forAccount(this.props.appAuth.publicKey)
@@ -405,7 +403,6 @@ class Payments extends Component {
                 },
                 (_e) => this.props.accountMissingOnLedger()
             )
-    }
 
 
     // ...
@@ -424,8 +421,7 @@ class Payments extends Component {
             this.state.txCursorLeft === null &&
             this.state.txCursorRight === null
         ) {
-            let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-            server
+            this.stellarServer
                 .transactions()
                 .forAccount(this.props.appAuth.publicKey)
                 .order("desc")
@@ -765,10 +761,8 @@ class Payments extends Component {
 
 
     // ...
-    getNextPaymentsPage = () => {
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-
-        server
+    getNextPaymentsPage = () =>
+        this.stellarServer
             .payments()
             .forAccount(this.props.appAuth.publicKey)
             .order("desc")
@@ -829,14 +823,11 @@ class Payments extends Component {
                 // eslint-disable-next-line no-console
                 console.log(err)
             })
-    }
 
 
     // ...
-    getPrevPaymentsPage = () => {
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-
-        server
+    getPrevPaymentsPage = () =>
+        this.stellarServer
             .payments()
             .forAccount(this.props.appAuth.publicKey)
             .order("asc")
@@ -844,7 +835,6 @@ class Payments extends Component {
             .limit(5)
             .call()
             .then((paymentsResult) => {
-
                 const gravatarLinkPromises =
                     paymentsResult.records.map((r) => {
                         let link = ""
@@ -900,14 +890,11 @@ class Payments extends Component {
                 // eslint-disable-next-line no-console
                 console.log(err)
             })
-    }
 
 
     // ...
-    getNextTransactionsPage = () => {
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-
-        server
+    getNextTransactionsPage = () =>
+        this.stellarServer
             .transactions()
             .forAccount(this.props.appAuth.publicKey)
             .order("desc")
@@ -931,14 +918,11 @@ class Payments extends Component {
                 // eslint-disable-next-line no-console
                 console.log(err)
             })
-    }
 
 
     // ...
-    getPrevTransactionsPage = () => {
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-
-        server
+    getPrevTransactionsPage = () =>
+        this.stellarServer
             .transactions()
             .forAccount(this.props.appAuth.publicKey)
             .order("asc")
@@ -963,7 +947,6 @@ class Payments extends Component {
                 // eslint-disable-next-line no-console
                 console.log(err)
             })
-    }
 
 
     // ...
