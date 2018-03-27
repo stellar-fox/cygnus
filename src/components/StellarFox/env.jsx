@@ -86,3 +86,7 @@ export const NotImplementedBadge = () =>
 export const emoji = {
     pencil: "✎",
 }
+
+
+// ...
+export const defaultGravatar = "/img/gravatar.jpg"

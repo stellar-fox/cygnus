@@ -38,6 +38,8 @@ import Snackbar from "../../lib/common/Snackbar"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 
+import Profile from "./Profile"
+
 import "./index.css"
 
 
@@ -575,6 +577,7 @@ class Account extends Component {
                 >
                     {this.props.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Profile" value="1">
+                            <Profile />
                             <div className="tab-content">
                                 <Snackbar
                                     open={this.state.sbAccountProfileSaved}

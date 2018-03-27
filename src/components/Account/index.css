@@ -54,3 +54,9 @@
     display: inline-block;
     text-align: center;
 }
+
+
+.tab-content-headline {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
