@@ -5,7 +5,6 @@ import BigNumber from "bignumber.js"
 
 import {
     pubKeyAbbr,
-    utcToLocaleDateTime,
     getAssetCode,
     formatAmount,
     StellarSdk,
@@ -33,16 +32,8 @@ import {
     Tab,
 } from "material-ui/Tabs"
 import PaymentsHistory from "./PaymentsHistory"
-import IconButton from "material-ui/IconButton"
+import Transactions from "./Transactions"
 import Snackbar from "../../lib/common/Snackbar"
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from "material-ui/Table"
 
 import "./index.css"
 
@@ -51,11 +42,6 @@ import "./index.css"
 
 // ...
 const styles = {
-    headline: {
-        fontSize: 24,
-        marginBottom: 12,
-        fontWeight: 400,
-    },
     tab: {
         backgroundColor: "#2e5077",
         borderRadius: "3px",
@@ -67,13 +53,6 @@ const styles = {
     container: {
         backgroundColor: "#2e5077",
         borderRadius: "3px",
-    },
-    table: {
-        backgroundColor: "rgb(15,46,83)",
-    },
-    tooltip: {
-        backgroundColor: "rgba(244,176,4,0.8)",
-        fontSize: "0.9rem",
     },
 }
 
@@ -87,7 +66,6 @@ class Payments extends Component {
     state = {
         cursorLeft: null,
         cursorRight: null,
-
         prevDisabled: false,
         nextDisabled: false,
         paymentDetails: {
@@ -102,6 +80,7 @@ class Payments extends Component {
         txCursorRight: null,
         txNextDisabled: false,
         txPrevDisabled: false,
+
         tabSelected: "1",
         sbPayment: false,
         sbPaymentAmount: null,
@@ -1156,6 +1135,7 @@ class Payments extends Component {
                     this.handleNoMoreTransactionsSnackbarClose
                 }
             />
+
             <Tabs
                 tabItemContainerStyle={styles.container}
                 inkBarStyle={styles.inkBar}
@@ -1183,139 +1163,17 @@ class Payments extends Component {
 
                 <Tab style={styles.tab} label="Transactions" value="2">
                     <div className="tab-content">
-                        <div className="flex-row">
-                            <div>
-                                <div className="account-title">
-                                    Account Transactions
-                                </div>
-                                <div className="account-subtitle">
-                                    Newest transactions shown as first.
-                                </div>
-                                <div className="p-t" />
-                                {this.props.accountInfo.transactions ? (
-                                    <Table style={styles.table}>
-                                        <TableHeader
-                                            className="tx-table-header"
-                                            displaySelectAll={false}
-                                            adjustForCheckbox={false}
-                                        >
-                                            <TableRow
-                                                className="tx-table-row"
-                                                style={styles.tableRow}
-                                            >
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Transaction Time
-                                                </TableHeaderColumn>
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Account
-                                                </TableHeaderColumn>
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Memo
-                                                </TableHeaderColumn>
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Fee Paid
-                                                </TableHeaderColumn>
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Signature Count
-                                                </TableHeaderColumn>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody
-                                            displayRowCheckbox={false}
-                                        >
-                                            {this.props.accountInfo.transactions.records.map(
-                                                (tx, index) => (
-                                                    <TableRow
-                                                        selectable={
-                                                            false
-                                                        }
-                                                        key={index}
-                                                        className="tx-table-row"
-                                                    >
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            {utcToLocaleDateTime(
-                                                                tx.created_at
-                                                            )}
-                                                        </TableRowColumn>
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            <span>
-                                                                <span>
-                                                                    {pubKeyAbbr(
-                                                                        tx.source_account
-                                                                    )}
-                                                                </span>
-                                                                <span className="account-direction">
-                                                                    {tx.source_account ===
-                                                                    this
-                                                                        .props
-                                                                        .accountInfo
-                                                                        .pubKey
-                                                                        ? "Yours"
-                                                                        : "Theirs"}
-                                                                </span>
-                                                            </span>
-                                                        </TableRowColumn>
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            {tx.memo}
-                                                        </TableRowColumn>
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            {
-                                                                tx.fee_paid
-                                                            }
-                                                        </TableRowColumn>
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            {
-                                                                tx
-                                                                    .signatures
-                                                                    .length
-                                                            }
-                                                        </TableRowColumn>
-                                                    </TableRow>
-                                                )
-                                            )}
-                                        </TableBody>
-                                    </Table>
-                                ) : null}
-                                <div className="p-b" />
-                                <div className="flex-row-space-between p-t">
-                                    <IconButton
-                                        className="paging-icon"
-                                        tooltip="Previous Transactions"
-                                        tooltipStyles={styles.tooltip}
-                                        tooltipPosition="top-right"
-                                        onClick={this.getPrevTransactionsPage.bind(
-                                            this
-                                        )}
-                                        disabled={
-                                            this.state.txPrevDisabled
-                                        }
-                                    >
-                                        <i className="material-icons">
-                                            fast_rewind
-                                        </i>
-                                    </IconButton>
 
-                                    <IconButton
-                                        className="paging-icon"
-                                        tooltip="Next Transactions"
-                                        tooltipStyles={styles.tooltip}
-                                        tooltipPosition="top-left"
-                                        onClick={this.getNextTransactionsPage.bind(
-                                            this
-                                        )}
-                                        disabled={
-                                            this.state.txNextDisabled
-                                        }
-                                    >
-                                        <i className="material-icons">
-                                            fast_forward
-                                        </i>
-                                    </IconButton>
-                                </div>
-                            </div>
-                        </div>
+                        <Transactions
+                            getPrevTransactionsPage={this.getPrevTransactionsPage}
+                            getNextTransactionsPage={this.getNextTransactionsPage}
+                            txNextDisabled={this.state.txNextDisabled}
+                            txPrevDisabled={this.state.txPrevDisabled}
+                        />
+
                     </div>
                 </Tab>
+
             </Tabs>
         </div>
 

@@ -28,6 +28,7 @@ class PaymentsHistory extends Component {
     // ...
     static propTypes = {
         accountInfo: PropTypes.object.isRequired,
+        loginManager: PropTypes.object.isRequired,
         paymentDetails: PropTypes.object.isRequired,
         handlePaymentClick: PropTypes.func.isRequired,
         determineLeftIcon: PropTypes.func.isRequired,
