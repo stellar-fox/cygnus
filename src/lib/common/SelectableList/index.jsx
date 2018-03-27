@@ -18,17 +18,19 @@ export default ((MUISelectableList) =>
             defaultValue: PropTypes.number.isRequired,
         }
 
+
         // ...
-        componentWillMount = () =>
-            this.setState({
-                selectedIndex: this.props.defaultValue,
-            })
+        state = {
+            selectedIndex: this.props.defaultValue,
+        }
+
 
         // ...
         handleRequestChange = (_event, index) =>
             this.setState({
                 selectedIndex: index,
             })
+
 
         // ...
         render = () =>
