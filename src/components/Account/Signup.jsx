@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import {
     Stepper,
     Step,
@@ -57,6 +57,7 @@ export default class Signup extends Component {
         error: "",
         email: null,
         password: null,
+        buttonDisabled: false,
     }
 
 
@@ -99,7 +100,9 @@ export default class Signup extends Component {
                         `${config.api}/account/create/${
                             userId
                         }/${ledgerData.publicKey}?path=${
-                            extractPathIndex(ledgerData.bip32Path)
+                            this.props.config && this.props.config.register ?
+                                ledgerData.bip32Path :
+                                extractPathIndex(ledgerData.bip32Path)
                         }&md5=${md5(this.state.email)}`
                     )
                     .then((response) => {
@@ -122,6 +125,7 @@ export default class Signup extends Component {
 
                 this.setState({
                     message: "Your account has been created.",
+                    buttonDisabled: true,
                 })
 
                 this.props.onComplete.call(this, {
@@ -131,7 +135,10 @@ export default class Signup extends Component {
                     token,
                 })
             } catch (error) {
-                this.setState({error: error.message,})
+                this.setState({
+                    error: error.message,
+                    buttonDisabled: false,
+                })
             }
         }
     }
@@ -308,11 +315,37 @@ export default class Signup extends Component {
                 }}>
                     <div className="f-b">
                         <div className="f-b-col bordered m-t">
-                            <LedgerAuthenticator
-                                className="lcars-input-reverse"
-                                onConnected={this.createAccount}
-                                onClick={null}
-                            />
+                            {this.props.config && this.props.config.register ?
+                                <Fragment>
+                                    <div className="p-b">
+                                        <span style={{
+                                            display: "block",
+                                            marginBottom: "0.8rem",
+                                        }} className="badge-blue">
+                                            {this.state.email}
+                                        </span>
+                                        will be associated with account
+                                        <span className="badge-blue">
+                                            {this.props.config.bip32Path}
+                                        </span>
+                                    </div>
+                                    <Button
+                                        onClick={this.createAccount.bind(this, {
+                                            publicKey: this.props.config.publicKey,
+                                            bip32Path: this.props.config.bip32Path,
+                                        })}
+                                        primary={true}
+                                        fullWidth={true}
+                                        label="Authenticate"
+                                        disabled={this.state.buttonDisabled}
+                                    />
+                                </Fragment> :
+                                <LedgerAuthenticator
+                                    className="lcars-input-reverse"
+                                    onConnected={this.createAccount}
+                                    onClick={null}
+                                />
+                            }
                         </div>
                     </div>
                     <div className="p-t">
