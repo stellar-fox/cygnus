@@ -17,7 +17,7 @@ import { selectView } from "../../redux/actions"
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"
 import BankContent from "./BankContent"
-import Footer from "./Footer"
+import Footer from "../Layout/Footer"
 
 
 
