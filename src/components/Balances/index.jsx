@@ -37,6 +37,8 @@ import {
     setModalLoaded,
     updateLoadingMessage,
     changeLoginState,
+    changeModalState,
+    ActionConstants,
 } from "../../redux/actions"
 
 import {
@@ -54,7 +56,8 @@ import LinearProgress from "material-ui/LinearProgress"
 import Button from "../../lib/common/Button"
 import InputField from "../../lib/common/InputField"
 import Snackbar from "../../lib/common/Snackbar"
-import RegisterAccount from "../Account/Register"
+import Modal from "../../lib/common/Modal"
+import Signup from "../Account/Signup"
 
 import "./index.css"
 
@@ -516,6 +519,28 @@ class Balances extends Component {
         this.setState({
             modalButtonText: "CANCEL",
             modalShown: true,
+        })
+
+
+    // ...
+    showSignupModal = () =>
+        this.props.changeModalState({
+            modals: {
+                signup: {
+                    showing: true,
+                },
+            },
+        })
+
+
+    // ...
+    hideSignupModal = () =>
+        this.props.changeModalState({
+            modals: {
+                signup: {
+                    showing: false,
+                },
+            },
         })
 
 
@@ -1261,6 +1286,19 @@ class Balances extends Component {
 
 
     // ...
+    completeRegistration = (loginObj) => {
+        this.changeButtonText()
+        this.props.setAccountRegistered(true)
+        this.props.changeLoginState({
+            loginState: ActionConstants.LOGGED_IN,
+            publicKey: this.props.appAuth.publicKey,
+            bip32Path: this.props.appAuth.bip32Path,
+            userId: loginObj.userId,
+            token: loginObj.token,
+        })
+    }
+
+    // ...
     render = () => {
         let otherBalances =
             this.props.accountInfo.exists ?
@@ -1328,26 +1366,31 @@ class Balances extends Component {
                         is being continuously deployed.
                     </Dialog>
 
-                    <Dialog
-                        title="Registering Your Account"
+
+                    <Modal
+                        open={
+                            typeof this.props.appUi.modals !== "undefined" &&
+                                typeof this.props.appUi.modals.signup !== "undefined" ?
+                                this.props.appUi.modals.signup.showing : false
+                        }
+                        title="Opening Your Bank - Register Account"
                         actions={[
                             <Button
-                                primary={true}
                                 label={this.state.modalButtonText}
-                                keyboardFocused={false}
-                                onClick={this.doWhateverYourFunctionCurrentlyIs}
+                                onClick={this.hideSignupModal}
+                                primary={true}
                             />,
                         ]}
-                        modal={true}
-                        open={this.state.modalShown}
-                        onRequestClose={this.handleRegistrationModalClose}
-                        paperClassName="modal-body"
-                        titleClassName="modal-title"
-                        repositionOnUpdate={false}
-                        autoScrollBodyContent={true}
                     >
-                        <RegisterAccount onComplete={this.changeButtonText} />
-                    </Dialog>
+                        <Signup onComplete={this.completeRegistration} config={{
+                            register: true,
+                            publicKey: this.props.appAuth.publicKey,
+                            bip32Path: this.props.appAuth.bip32Path,
+                        }} />
+                    </Modal>
+
+
+
 
                     <Dialog
                         title={
@@ -1447,7 +1490,7 @@ class Balances extends Component {
                         </CardText>
                         <CardActions>
                             <Button
-                                onClick={this.handleSignup}
+                                onClick={this.showSignupModal}
                                 backgroundColor="rgb(15,46,83)"
                                 labelColor="rgb(244,176,4)"
                                 label="Register"
@@ -1798,6 +1841,7 @@ export default withLoginManager(connect(
         auth: state.auth,
         modal: state.modal,
         appAuth: state.appAuth,
+        appUi: state.appUi,
     }),
 
     // match dispatch to props.
@@ -1817,5 +1861,7 @@ export default withLoginManager(connect(
         setModalLoaded,
         updateLoadingMessage,
         changeLoginState,
+        changeModalState,
+        ActionConstants,
     }, dispatch)
 )(Balances))

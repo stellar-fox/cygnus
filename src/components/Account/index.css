@@ -44,3 +44,13 @@
 .text-primary {
     color: rgb(15,46,83);
 }
+
+.badge-blue {
+    padding:2px 5px;
+    background: rgba(15,46,83,0.8);
+    border-radius: 3px;
+    color: rgba(244,176,4,0.9);
+    margin: 0px 5px;
+    display: inline-block;
+    text-align: center;
+}

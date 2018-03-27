@@ -22,6 +22,10 @@ import {
     setExchangeRate,
     setCurrencyPrecision,
     setTab,
+    changeModalState,
+    setAccountRegistered,
+    ActionConstants,
+    changeLoginState,
 } from "../../redux/actions"
 
 import { Tabs, Tab } from "material-ui/Tabs"
@@ -31,7 +35,8 @@ import Toggle from "material-ui/Toggle"
 import Button from "../../lib/common/Button"
 import Input from "../../lib/common/Input"
 import Snackbar from "../../lib/common/Snackbar"
-import RegisterAccount from "./Register"
+import Modal from "../../lib/common/Modal"
+import Signup from "../Account/Signup"
 
 import "./index.css"
 
@@ -429,6 +434,21 @@ class Account extends Component {
             })
     }
 
+
+    // ...
+    completeRegistration = (loginObj) => {
+        this.changeButtonText()
+        this.props.setAccountRegistered(true)
+        this.props.changeLoginState({
+            loginState: ActionConstants.LOGGED_IN,
+            publicKey: this.props.appAuth.publicKey,
+            bip32Path: this.props.appAuth.bip32Path,
+            userId: loginObj.userId,
+            token: loginObj.token,
+        })
+    }
+
+
     // ...
     handleTabChange = (_, value) =>
         this.props.setTab({ accounts: value, })
@@ -477,6 +497,27 @@ class Account extends Component {
 
 
     // ...
+    showSignupModal = () =>
+        this.props.changeModalState({
+            modals: {
+                signup: {
+                    showing: true,
+                },
+            },
+        })
+
+
+    // ...
+    hideSignupModal = () =>
+        this.props.changeModalState({
+            modals: {
+                signup: {
+                    showing: false,
+                },
+            },
+        })
+
+    // ...
     render = () => {
         const actions = [
             <Button
@@ -502,25 +543,27 @@ class Account extends Component {
                         feature very soon. Please check back in a while as the
                         feature implementation is being continuously deployed.
                     </Dialog>
-                    <Dialog
-                        title="Registering Your Account"
+                    <Modal
+                        open={
+                            typeof this.props.appUi.modals !== "undefined" &&
+                                typeof this.props.appUi.modals.signup !== "undefined" ?
+                                this.props.appUi.modals.signup.showing : false
+                        }
+                        title="Opening Your Bank - Register Account"
                         actions={[
                             <Button
-                                primary={true}
                                 label={this.state.modalButtonText}
-                                keyboardFocused={false}
-                                onClick={this.doWhateverYourFunctionCurrentlyIs}
+                                onClick={this.hideSignupModal}
+                                primary={true}
                             />,
                         ]}
-                        modal={true}
-                        open={this.state.modalShown}
-                        onRequestClose={this.handleModalClose}
-                        paperClassName="modal-body"
-                        titleClassName="modal-title"
-                        repositionOnUpdate={false}
                     >
-                        <RegisterAccount onComplete={this.changeButtonText} />
-                    </Dialog>
+                        <Signup onComplete={this.completeRegistration} config={{
+                            register: true,
+                            publicKey: this.props.appAuth.publicKey,
+                            bip32Path: this.props.appAuth.bip32Path,
+                        }} />
+                    </Modal>
                 </div>
 
                 <Tabs
@@ -768,7 +811,7 @@ class Account extends Component {
                                     <Button
                                         label="Register"
                                         secondary={true}
-                                        onClick={this.handleSignup}
+                                        onClick={this.showSignupModal}
                                     />
                                 </div> :
                                 null}
@@ -975,6 +1018,7 @@ export default withLoginManager(connect(
         accountInfo: state.accountInfo,
         auth: state.auth,
         appAuth: state.appAuth,
+        appUi: state.appUi,
     }),
 
     // map dispatch to props.
@@ -985,5 +1029,8 @@ export default withLoginManager(connect(
         setExchangeRate,
         setCurrencyPrecision,
         setTab,
+        changeModalState,
+        setAccountRegistered,
+        changeLoginState,
     }, dispatch)
 )(Account))

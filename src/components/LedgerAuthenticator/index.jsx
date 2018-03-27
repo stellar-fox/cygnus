@@ -33,6 +33,7 @@ class LedgerAuthenticator extends Component {
         useDefaultAccount: true,
         ledgerStatusMessage: "",
         errorCode: null,
+        buttonDisabled: false,
     }
 
 
@@ -50,6 +51,7 @@ class LedgerAuthenticator extends Component {
                     ledgerStatusMessage:
                         `Connected. Software ver. ${softwareVersion}`,
                     errorCode: null,
+                    buttonDisabled: true,
                 })
                 const publicKey =
                     await getPublicKey(bip32Path)
@@ -77,6 +79,7 @@ class LedgerAuthenticator extends Component {
                 that.setState({
                     ledgerStatusMessage: softwareVersion.message,
                     errorCode: softwareVersion.originalError.metaData.code,
+                    buttonDisabled: false,
                 })
                 that.props.onConnected.call(that, {
                     publicKey: null,
@@ -183,6 +186,7 @@ class LedgerAuthenticator extends Component {
                     ) : <div style={{width: "256px",}}></div>}
                     <div className="p-t" />
                     <Button
+                        disabled={this.state.buttonDisabled}
                         onClick={this.initQueryDevice}
                         primary={this.props.className.match(/reverse/) ? true : false}
                         secondary={this.props.className.match(/reverse/) ? false : true}
