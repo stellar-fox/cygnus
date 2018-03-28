@@ -167,6 +167,19 @@ export const Provide = ({ children, ...rest }) =>
 
 
 // ...
+export const chooseAction = (state, action) =>
+    (actions) =>
+        action.type in actions ?
+            actions[action.type](state, action) :
+            state
+
+
+// ...
+export const createReducer = (initState = {}) => (actions) =>
+    (state = initState, action) => chooseAction(state, action)(actions)
+
+
+// ...
 export const currencyGlyph = (currency) => (
     (c) => c[currency]
 )({

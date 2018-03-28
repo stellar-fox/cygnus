@@ -1,3 +1,8 @@
+import { createReducer } from "../lib/utils"
+
+
+
+
 // <Payments> component state
 const initState = {
 
@@ -53,14 +58,11 @@ export const action = {
 
 
 // ...
-export const reducer = (state = initState, action) => (
-    (fs) =>
-        action.type in fs ?
-            fs[action.type](state, action) :
-            state
-)({
+export const reducer = createReducer(initState)({
+
     [SET_PAYMENTS_STATE]: (state, action) => ({
         ...state,
         ...action.payload,
     }),
+
 })
