@@ -53,20 +53,14 @@ export const action = {
 
 
 // ...
-export const reducer = (state = initState, action) => {
-    switch (action.type) {
-
-        case SET_PAYMENTS_STATE:
-            state = {
-                ...state,
-                ...action.payload,
-            }
-            break
-
-        default:
-            break
-
-    }
-
-    return state
-}
+export const reducer = (state = initState, action) => (
+    (fs) =>
+        action.type in fs ?
+            fs[action.type](state, action) :
+            state
+)({
+    [SET_PAYMENTS_STATE]: (state, action) => ({
+        ...state,
+        ...action.payload,
+    }),
+})
