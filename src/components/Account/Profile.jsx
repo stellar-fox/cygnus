@@ -1,18 +1,139 @@
 import React, { Component } from "react"
-import {defaultGravatar} from "../StellarFox/env"
+import PropTypes from "prop-types"
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
+import Axios from "axios"
+import { config } from "../../config"
+import {
+    gravatar,
+    gravatarSize
+} from "../StellarFox/env"
 import Input from "../../lib/common/Input"
+import Button from "../../lib/common/Button"
+import MD5 from "../../lib/md5"
+import {
+    emailValid,
+    federationIsAliasOnly,
+} from "../../lib/utils"
+import { action as AccountAction } from "../../redux/Account"
+
+import { withLoginManager } from "../LoginManager"
+
+
 
 
 // <Profile> component
-export default class Profile extends Component {
-    state = {
-        firstName: "",
+class Profile extends Component {
+
+    // ...
+    static propTypes = {
+        setState: PropTypes.func.isRequired,
+    }
+
+    componentDidMount = () => {
+        if (this.props.loginManager.isAuthenticated()) {
+            this.getUserData()
+            this.getAccountData()
+        }
     }
 
     // ...
     changeFirstName = (event) =>
-        this.setState({ firstName: event.target.value, })
+        this.props.setState({ firstName: event.target.value, })
 
+
+    // ...
+    changeLastName = (event) =>
+        this.props.setState({ lastName: event.target.value, })
+
+
+    // ...
+    changeEmail = (event) => {
+        if (emailValid(event.target.value)) {
+            this.props.setState({
+                gravatarPath: this.setGravatarPath(event.target.value),
+            })
+        }
+        this.props.setState({ email: event.target.value, })
+    }
+
+
+    // ...
+    setGravatarPath = (email) =>
+        `${gravatar}${MD5(email)}${gravatarSize}`
+
+
+    // ...
+    changePaymentAddress = (event) =>
+        this.props.setState({paymentAddress: event.target.value,})
+
+
+    // ...
+    getUserData = () => Axios
+        .post(`${config.api}/user/`, {
+            id: this.props.appAuth.userId,
+            token: this.props.appAuth.token,
+        })
+        .then(({data: {data,},}) => {
+            this.props.setState({
+                firstName: data.first_name,
+                lastName: data.last_name,
+                email: data.email,
+                gravatarPath: this.setGravatarPath(data.email),
+            })
+        })
+        // eslint-disable-next-line no-console
+        .catch(error => console.log(error.message))
+
+
+    // ...
+    getAccountData = () => Axios
+        .post(`${config.api}/account/`, {
+            id: this.props.appAuth.userId,
+            token: this.props.appAuth.token,
+        })
+        .then(({data: {data,},}) => {
+            this.props.setState({
+                paymentAddress: (data.alias  &&  data.domain) ?
+                    `${data.alias}*${data.domain}` : "",
+            })
+        })
+        // eslint-disable-next-line no-console
+        .catch(error => console.log(error.message))
+
+
+    // ...
+    updateResource = (resource, attr) => Axios
+        .post(`${config.api}/${resource}/update/`, {
+            ...attr,
+            id: this.props.appAuth.userId,
+            token: this.props.appAuth.token,
+        })
+        // eslint-disable-next-line no-console
+        .catch(error => console.log(error))
+
+
+
+    // ...
+    updateProfile = () => {
+        const alias = this.props.state.paymentAddress.match(/\*/) ?
+            (this.props.state.paymentAddress) :
+            (`${this.props.state.paymentAddress}*stellarfox.net`)
+
+        this.updateResource("user",{
+            first_name: this.props.state.firstName,
+            last_name: this.props.state.lastName,
+        })
+
+        this.updateResource("account", {
+            alias,
+        })
+
+
+    }
+
+
+    // ...
     render = () =>
         <div className="tab-content">
             <div className="f-b space-between">
@@ -31,36 +152,78 @@ export default class Profile extends Component {
                         compliance.
                     </div>
                 </div>
-                <figure style={{
-                    marginRight: "0px",
-                    marginBottom: "0px",
-                }}>
-                    <img
-                        className="image"
-                        src={defaultGravatar}
+                <figure style={{ marginRight: "0px", marginBottom: "0px",}}>
+                    <img className="image" src={this.props.state.gravatarPath}
                         alt="Gravatar"
                     />
                 </figure>
             </div>
-
-            <div className="f-b p-t-large">
-                <Input
-                    width="100%"
-                    className="lcars-input p-b"
-                    value={this.state.firstName}
-                    label="First Name"
-                    inputType="text"
-                    maxLength="100"
-                    autoComplete="off"
-                    handleChange={
-                        this.changeFirstName
-                    }
-                    subLabel={
-                        "First Name: " +
-                        this.state.firstName
-                    }
-                />
-            </div>
-
+            <Input
+                width="100%"
+                className="lcars-input p-b p-t-large"
+                value={this.props.state.firstName}
+                label="First Name"
+                inputType="text"
+                maxLength="100"
+                autoComplete="off"
+                handleChange={this.changeFirstName}
+                subLabel={`First Name: ${this.props.state.firstName}`}
+            />
+            <Input
+                className="lcars-input p-b p-t"
+                value={this.props.state.lastName}
+                label="Last Name"
+                inputType="text"
+                maxLength="100"
+                autoComplete="off"
+                handleChange={this.changeLastName}
+                subLabel={`Last Name: ${this.props.state.lastName}`}
+            />
+            <Input
+                className="lcars-input p-b p-t"
+                value={this.props.state.email}
+                label="Email"
+                inputType="text"
+                maxLength="100"
+                autoComplete="off"
+                handleChange={this.changeEmail}
+                subLabel={`Email: ${this.props.state.email}`}
+            />
+            <Input
+                className="lcars-input p-t p-b-large"
+                value={this.props.state.paymentAddress}
+                label="Payment Address Alias"
+                inputType="text"
+                maxLength="100"
+                autoComplete="off"
+                handleChange={this.changePaymentAddress}
+                subLabel={
+                    federationIsAliasOnly(this.props.state.paymentAddress)
+                        ? `Payment Address: ${
+                            this.props.state
+                                .paymentAddress
+                        }*stellarfox.net`
+                        : `Payment Address: ${
+                            this.props.state
+                                .paymentAddress
+                        }`
+                }
+            />
+            <Button secondary={true} label="Update"
+                onClick={this.updateProfile}
+            />
         </div>
 }
+
+export default withLoginManager(connect(
+    // bind state to props.
+    (state) => ({
+        state: state.Account,
+        appAuth: state.appAuth,
+    }),
+
+    // bind dispatch to props.
+    (dispatch) => bindActionCreators({
+        setState: AccountAction.setState,
+    }, dispatch)
+)(Profile))

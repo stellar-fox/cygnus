@@ -89,4 +89,8 @@ export const emoji = {
 
 
 // ...
-export const defaultGravatar = "/img/gravatar.jpg"
+export const gravatar = "https://www.gravatar.com/avatar/"
+
+
+// ...
+export const gravatarSize = "s=96"

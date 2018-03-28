@@ -123,6 +123,10 @@
     padding-bottom: 1rem;
 }
 
+.p-b-large {
+    padding-bottom: 3rem;
+}
+
 .welcome-content {
     padding-bottom: 40px;
 }

@@ -1,20 +1,14 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import axios from "axios"
-
 import MD5 from "../../lib/md5"
-import {
-    emailValid,
-    federationIsAliasOnly,
-} from "../../lib/utils"
 import {
     appName,
     NotImplementedBadge,
 } from "../StellarFox/env"
 import { config } from "../../config"
 import { withLoginManager } from "../LoginManager"
-
 import {
     showAlert,
     hideAlert,
@@ -27,19 +21,16 @@ import {
     ActionConstants,
     changeLoginState,
 } from "../../redux/actions"
-
+import { action as AccountAction } from "../../redux/Account"
 import { Tabs, Tab } from "material-ui/Tabs"
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
 import Dialog from "material-ui/Dialog"
 import Toggle from "material-ui/Toggle"
 import Button from "../../lib/common/Button"
-import Input from "../../lib/common/Input"
 import Snackbar from "../../lib/common/Snackbar"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
-
 import Profile from "./Profile"
-
 import "./index.css"
 
 
@@ -118,6 +109,10 @@ class Account extends Component {
         modalShown: false,
         modalButtonText: "CANCEL",
         loginButtonDisabled: true,
+        snackBar: {
+            open: false,
+            message: "",
+        },
     }
 
 
@@ -279,8 +274,8 @@ class Account extends Component {
 
 
     // ...
-    handleCurrencyPrecisionChangeSnackbarClose = () =>
-        this.setState({ sbCurrencyPrecision: false, })
+    closeSnackBar = () =>
+        this.setState({ snackBar: { open: false, }, })
 
 
     // ...
@@ -362,35 +357,35 @@ class Account extends Component {
         }
     }
 
-    // ...
-    handleFirstNameChange = (event) =>
-        this.setState({ firstNameDisplay: event.target.value, })
+    // // ...
+    // handleFirstNameChange = (event) =>
+    //     this.setState({ firstNameDisplay: event.target.value, })
 
 
-    // ...
-    handleLastNameChange = (event) =>
-        this.setState({ lastNameDisplay: event.target.value, })
+    // // ...
+    // handleLastNameChange = (event) =>
+    //     this.setState({ lastNameDisplay: event.target.value, })
 
 
-    // ...
-    handleEmailChange = (event) => {
-        if (emailValid(event.target.value)) {
-            this.setState({
-                gravatarPath:
-                    "https://www.gravatar.com/avatar/" +
-                    MD5(event.target.value) +
-                    "?s=96",
-            })
-        }
-        this.setState({ emailDisplay: event.target.value, })
-    }
+    // // ...
+    // handleEmailChange = (event) => {
+    //     if (emailValid(event.target.value)) {
+    //         this.setState({
+    //             gravatarPath:
+    //                 "https://www.gravatar.com/avatar/" +
+    //                 MD5(event.target.value) +
+    //                 "?s=96",
+    //         })
+    //     }
+    //     this.setState({ emailDisplay: event.target.value, })
+    // }
 
 
-    // ...
-    handlePaymentAddressChange = (event) =>
-        this.setState({
-            paymentAddressDisplay: event.target.value,
-        })
+    // // ...
+    // handlePaymentAddressChange = (event) =>
+    //     this.setState({
+    //         paymentAddressDisplay: event.target.value,
+    //     })
 
 
     // ...
@@ -399,18 +394,18 @@ class Account extends Component {
             (this.state.paymentAddressDisplay) :
             (`${this.state.paymentAddressDisplay}*stellarfox.net`)
 
-        axios
-            .post(
-                `${config.api}/user/update/${this.props.appAuth.userId}?token=${
-                    this.props.appAuth.token
-                }&first_name=${this.state.firstNameDisplay}&last_name=${
-                    this.state.lastNameDisplay
-                }`
-            )
-            .catch((error) => {
-                // eslint-disable-next-line no-console
-                console.log(error)
-            })
+        // axios
+        //     .post(
+        //         `${config.api}/user/update/${this.props.appAuth.userId}?token=${
+        //             this.props.appAuth.token
+        //         }&first_name=${this.state.firstNameDisplay}&last_name=${
+        //             this.state.lastNameDisplay
+        //         }`
+        //     )
+        //     .catch((error) => {
+        //         // eslint-disable-next-line no-console
+        //         console.log(error)
+        //     })
         axios
             .post(
                 `${config.api}/account/update/${this.props.appAuth.userId}?token=${
@@ -531,7 +526,7 @@ class Account extends Component {
 
         return (
             <div>
-                <div>
+                <Fragment>
                     <Dialog
                         title="Not Yet Implemented"
                         actions={actions}
@@ -566,7 +561,14 @@ class Account extends Component {
                             bip32Path: this.props.appAuth.bip32Path,
                         }} />
                     </Modal>
-                </div>
+
+                    <Snackbar
+                        open={this.state.snackBar.open}
+                        message={this.state.snackBar.message}
+                        onRequestClose={this.closeSnackBar}
+                    />
+
+                </Fragment>
 
                 <Tabs
                     tabItemContainerStyle={styles.container}
@@ -578,7 +580,7 @@ class Account extends Component {
                     {this.props.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Profile" value="1">
                             <Profile />
-                            <div className="tab-content">
+                            {/* <div className="tab-content">
                                 <Snackbar
                                     open={this.state.sbAccountProfileSaved}
                                     message="Account profile saved."
@@ -702,7 +704,7 @@ class Account extends Component {
                                         }
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                         </Tab>
                     ) : null}
                     <Tab style={styles.tab} label="Settings" value="2">
@@ -1016,6 +1018,8 @@ class Account extends Component {
 export default withLoginManager(connect(
     // map state to props.
     (state) => ({
+        state: state.Account,
+
         modal: state.modal,
         ui: state.ui,
         accountInfo: state.accountInfo,
@@ -1026,6 +1030,8 @@ export default withLoginManager(connect(
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        setState: AccountAction.setState,
+
         showAlert,
         hideAlert,
         setCurrency,
