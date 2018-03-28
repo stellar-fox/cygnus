@@ -27,6 +27,7 @@ import {
     setModalLoaded,
     updateLoadingMessage,
 } from "../../redux/actions"
+import { action as PaymentsAction } from "../../redux/Payments"
 
 import {
     Tabs,
@@ -62,34 +63,6 @@ const styles = {
 
 // <Payments> component
 class Payments extends Component {
-
-    // ...
-    state = {
-        cursorLeft: null,
-        cursorRight: null,
-        prevDisabled: false,
-        nextDisabled: false,
-        paymentDetails: {
-            txid: null,
-            created_at: null,
-            memo: "",
-            effects: [],
-            selectedPaymentId: null,
-        },
-
-        txCursorLeft: null,
-        txCursorRight: null,
-        txNextDisabled: false,
-        txPrevDisabled: false,
-
-        tabSelected: "1",
-        sbPayment: false,
-        sbPaymentAmount: null,
-        sbPaymentAssetCode: null,
-        sbNoMorePayments: false,
-        sbNoMoreTransactions: false,
-    }
-
 
     // ...
     stellarServer = new StellarSdk.Server(this.props.accountInfo.horizon)
@@ -154,7 +127,7 @@ class Payments extends Component {
                     this.updateCursors(paymentsResult.records)
                     paymentsResult.records[0].effects().then((effects) => {
                         paymentsResult.records[0].transaction().then((tx) => {
-                            this.setState({
+                            this.props.setState({
                                 paymentDetails: {
                                     txid: paymentsResult.records[0].id,
                                     created_at:
@@ -179,27 +152,34 @@ class Payments extends Component {
 
     // ...
     noMorePaymentsNotice = (state) =>
-        this.setState(
-            { sbNoMorePayments: true, },
-            (_prevState) => this.setState(state)
+        this.props.setState(
+            {
+                sbNoMorePayments: true,
+                ...state,
+            }
+            // (_prevState) => this.props.setState(state)
         )
 
 
     // ...
     noMoreTransactionsNotice = (state) =>
-        this.setState({ sbNoMoreTransactions: true, },
-            (_prevState) => this.setState(state)
+        this.props.setState(
+            {
+                sbNoMoreTransactions: true,
+                ...state,
+            }
+            // (_prevState) => this.props.setState(state)
         )
 
 
     // ...
     handleNoMorePaymentsSnackbarClose = () =>
-        this.setState({ sbNoMorePayments: false, })
+        this.props.setState({ sbNoMorePayments: false, })
 
 
     // ...
     handleNoMoreTransactionsSnackbarClose = () =>
-        this.setState({ sbNoMoreTransactions: false, })
+        this.props.setState({ sbNoMoreTransactions: false, })
 
 
     // ...
@@ -218,7 +198,7 @@ class Payments extends Component {
                         message.source_account === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.setState({
+                        this.props.setState({
                             sbPayment: true,
                             sbPaymentText:
                                 `Payment sent to new account [${
@@ -240,7 +220,7 @@ class Payments extends Component {
                         message.account === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.setState({
+                        this.props.setState({
                             sbPayment: true,
                             sbPaymentText: "Account Funded: ",
                             sbPaymentAmount:
@@ -258,7 +238,7 @@ class Payments extends Component {
                         message.to === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.setState({
+                        this.props.setState({
                             sbPayment: true,
                             sbPaymentText: "Payment Received: ",
                             sbPaymentAmount: formatAmount(
@@ -280,7 +260,7 @@ class Payments extends Component {
                         message.from === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.setState({
+                        this.props.setState({
                             sbPayment: true,
                             sbPaymentText: "Payment Sent: ",
                             sbPaymentAmount: formatAmount(
@@ -359,7 +339,7 @@ class Payments extends Component {
                                 this.updateCursors(paymentsResult.records)
                                 paymentsResult.records[0].effects().then((effects) => {
                                     paymentsResult.records[0].transaction().then((tx) => {
-                                        this.setState({
+                                        this.props.setState({
                                             paymentDetails: {
                                                 txid:
                                                     paymentsResult
@@ -387,19 +367,19 @@ class Payments extends Component {
 
     // ...
     handlePaymentSnackbarClose = () =>
-        this.setState({ sbPayment: false, })
+        this.props.setState({ sbPayment: false, })
 
 
     // ...
     handleTabSelect = (_, value) => {
         this.props.setTab({ payments: value, })
-        this.setState({
+        this.props.setState({
             tabSelected: value,
         })
         if (
             value === "2" &&
-            this.state.txCursorLeft === null &&
-            this.state.txCursorRight === null
+            this.props.state.txCursorLeft === null &&
+            this.props.state.txCursorRight === null
         ) {
             this.stellarServer
                 .transactions()
@@ -423,7 +403,7 @@ class Payments extends Component {
     handlePaymentClick = (payment, paymentId) =>
         payment.effects().then((effects) =>
             payment.transaction().then((tx) =>
-                this.setState({
+                this.props.setState({
                     paymentDetails: {
                         txid: payment.id,
                         created_at: payment.created_at,
@@ -487,7 +467,7 @@ class Payments extends Component {
                                     <div className="payment-details-memo">
                                         <span className="smaller">Memo:</span>
                                         {" "}
-                                        {this.state.paymentDetails.memo}
+                                        {this.props.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
                                         ID: {effect.id}
@@ -599,7 +579,7 @@ class Payments extends Component {
                                     <div className="payment-details-memo">
                                         <span className="smaller">Memo:</span>
                                         {" "}
-                                        {this.state.paymentDetails.memo}
+                                        {this.props.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
                                         ID: {effect.id}
@@ -670,7 +650,7 @@ class Payments extends Component {
                                     <div className="payment-details-memo">
                                         <span className="smaller">Memo:</span>
                                         {" "}
-                                        {this.state.paymentDetails.memo}
+                                        {this.props.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
                                         ID: {effect.id}
@@ -726,7 +706,7 @@ class Payments extends Component {
 
     // ...
     updateCursors = (records) =>
-        this.setState({
+        this.props.setState({
             cursorLeft: records[0].paging_token,
             cursorRight: records[records.length - 1].paging_token,
         })
@@ -734,7 +714,7 @@ class Payments extends Component {
 
     // ...
     updateTransactionsCursors = (records) =>
-        this.setState({
+        this.props.setState({
             txCursorLeft: records[0].paging_token,
             txCursorRight: records[records.length - 1].paging_token,
         })
@@ -746,7 +726,7 @@ class Payments extends Component {
             .payments()
             .forAccount(this.props.appAuth.publicKey)
             .order("desc")
-            .cursor(this.state.cursorRight)
+            .cursor(this.props.state.cursorRight)
             .limit(5)
             .call()
             .then((paymentsResult) => {
@@ -787,7 +767,7 @@ class Payments extends Component {
                         paymentsResult.records[index].domain = link.domain
                     })
                     if (paymentsResult.records.length > 0) {
-                        this.setState({
+                        this.props.setState({
                             prevDisabled: false,
                         })
                         this.props.setAccountPayments(paymentsResult)
@@ -811,7 +791,7 @@ class Payments extends Component {
             .payments()
             .forAccount(this.props.appAuth.publicKey)
             .order("asc")
-            .cursor(this.state.cursorLeft)
+            .cursor(this.props.state.cursorLeft)
             .limit(5)
             .call()
             .then((paymentsResult) => {
@@ -853,7 +833,7 @@ class Payments extends Component {
                         paymentsResult.records[index].domain = link.domain
                     })
                     if (paymentsResult.records.length > 0) {
-                        this.setState({
+                        this.props.setState({
                             nextDisabled: false,
                         })
                         paymentsResult.records.reverse()
@@ -878,12 +858,12 @@ class Payments extends Component {
             .transactions()
             .forAccount(this.props.appAuth.publicKey)
             .order("desc")
-            .cursor(this.state.txCursorRight)
+            .cursor(this.props.state.txCursorRight)
             .limit(5)
             .call()
             .then((transactionsResult) => {
                 if (transactionsResult.records.length > 0) {
-                    this.setState({
+                    this.props.setState({
                         txPrevDisabled: false,
                     })
                     this.props.setAccountTransactions(transactionsResult)
@@ -906,12 +886,12 @@ class Payments extends Component {
             .transactions()
             .forAccount(this.props.appAuth.publicKey)
             .order("asc")
-            .cursor(this.state.txCursorLeft)
+            .cursor(this.props.state.txCursorLeft)
             .limit(5)
             .call()
             .then((transactionsResult) => {
                 if (transactionsResult.records.length > 0) {
-                    this.setState({
+                    this.props.setState({
                         txNextDisabled: false,
                     })
                     transactionsResult.records.reverse()
@@ -1101,23 +1081,23 @@ class Payments extends Component {
     render = () =>
         <div>
             <Snackbar
-                open={this.state.sbPayment}
-                message={`${this.state.sbPaymentText} ${
-                    this.state.sbPaymentAmount
-                } ${this.state.sbPaymentAssetCode}`}
+                open={this.props.state.sbPayment}
+                message={`${this.props.state.sbPaymentText} ${
+                    this.props.state.sbPaymentAmount
+                } ${this.props.state.sbPaymentAssetCode}`}
                 onRequestClose={
                     this.handlePaymentSnackbarClose
                 }
             />
             <Snackbar
-                open={this.state.sbNoMorePayments}
+                open={this.props.state.sbNoMorePayments}
                 message="No more payments found."
                 onRequestClose={
                     this.handleNoMorePaymentsSnackbarClose
                 }
             />
             <Snackbar
-                open={this.state.sbNoMoreTransactions}
+                open={this.props.state.sbNoMoreTransactions}
                 message="No more transactions found."
                 onRequestClose={
                     this.handleNoMoreTransactionsSnackbarClose
@@ -1135,14 +1115,14 @@ class Payments extends Component {
                     <div className="tab-content">
 
                         <PaymentsHistory
-                            paymentDetails={this.state.paymentDetails}
+                            paymentDetails={this.props.state.paymentDetails}
                             handlePaymentClick={this.handlePaymentClick}
                             determineLeftIcon={this.determineLeftIcon}
                             determinePrimaryText={this.determinePrimaryText}
                             getPrevPaymentsPage={this.getPrevPaymentsPage}
                             getNextPaymentsPage={this.getNextPaymentsPage}
-                            nextDisabled={this.state.nextDisabled}
-                            prevDisabled={this.state.prevDisabled}
+                            nextDisabled={this.props.state.nextDisabled}
+                            prevDisabled={this.props.state.prevDisabled}
                             decodeEffectType={this.decodeEffectType}
                         />
 
@@ -1155,8 +1135,8 @@ class Payments extends Component {
                         <Transactions
                             getPrevTransactionsPage={this.getPrevTransactionsPage}
                             getNextTransactionsPage={this.getNextTransactionsPage}
-                            txNextDisabled={this.state.txNextDisabled}
-                            txPrevDisabled={this.state.txPrevDisabled}
+                            txNextDisabled={this.props.state.txNextDisabled}
+                            txPrevDisabled={this.props.state.txPrevDisabled}
                         />
 
                     </div>
@@ -1172,6 +1152,8 @@ class Payments extends Component {
 export default withLoginManager(connect(
     // map state to props.
     (state) => ({
+        state: state.Payments,
+
         accountInfo: state.accountInfo,
         loadingModal: state.loadingModal,
         ui: state.ui,
@@ -1181,6 +1163,8 @@ export default withLoginManager(connect(
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        setState : PaymentsAction.setState,
+
         setAccountPayments,
         setAccountTransactions,
         setStreamer,
