@@ -164,3 +164,16 @@ export const Provide = ({ children, ...rest }) =>
         children,
         (child) => child ? React.cloneElement(child, rest) : child
     )
+
+
+// ...
+export const currencyGlyph = (currency) => (
+    (c) => c[currency]
+)({
+    eur: "€",
+    usd: "$",
+    aud: "$",
+    nzd: "$",
+    thb: "฿",
+    pln: "zł",
+})

@@ -9,6 +9,8 @@ import LoadingModalReducer from "./loading-modal-reducer"
 import UiStateReducer from "./ui-state-reducer"
 import ModalReducer from "./modal-reducer"
 
+import { reducer as PaymentsReducer } from "../Payments"
+
 
 
 
@@ -23,4 +25,6 @@ export default {
     appAuth: authReducer,
     appNav: navReducer,
     appUi: uiReducer,
+
+    Payments: PaymentsReducer,
 }

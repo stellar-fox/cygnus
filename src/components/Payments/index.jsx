@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import BigNumber from "bignumber.js"
 
 import {
+    currencyGlyph,
     pubKeyAbbr,
-    utcToLocaleDateTime,
     getAssetCode,
     formatAmount,
     StellarSdk,
@@ -27,24 +27,15 @@ import {
     setModalLoaded,
     updateLoadingMessage,
 } from "../../redux/actions"
+import { action as PaymentsAction } from "../../redux/Payments"
 
 import {
     Tabs,
     Tab,
 } from "material-ui/Tabs"
-import { ListItem } from "material-ui/List"
-import Avatar from "material-ui/Avatar"
-import IconButton from "material-ui/IconButton"
-import SelectableList from "../../lib/common/SelectableList"
+import PaymentsHistory from "./PaymentsHistory"
+import Transactions from "./Transactions"
 import Snackbar from "../../lib/common/Snackbar"
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-} from "material-ui/Table"
 
 import "./index.css"
 
@@ -53,11 +44,6 @@ import "./index.css"
 
 // ...
 const styles = {
-    headline: {
-        fontSize: 24,
-        marginBottom: 12,
-        fontWeight: 400,
-    },
     tab: {
         backgroundColor: "#2e5077",
         borderRadius: "3px",
@@ -70,13 +56,6 @@ const styles = {
         backgroundColor: "#2e5077",
         borderRadius: "3px",
     },
-    table: {
-        backgroundColor: "rgb(15,46,83)",
-    },
-    tooltip: {
-        backgroundColor: "rgba(244,176,4,0.8)",
-        fontSize: "0.9rem",
-    },
 }
 
 
@@ -84,32 +63,6 @@ const styles = {
 
 // <Payments> component
 class Payments extends Component {
-
-    // ...
-    state = {
-        cursorLeft: null,
-        cursorRight: null,
-        prevDisabled: false,
-        nextDisabled: false,
-        txCursorLeft: null,
-        txCursorRight: null,
-        txNextDisabled: false,
-        txPrevDisabled: false,
-        tabSelected: "1",
-        paymentDetails: {
-            txid: null,
-            created_at: null,
-            memo: "",
-            effects: [],
-            selectedPaymentId: null,
-        },
-        sbPayment: false,
-        sbPaymentAmount: null,
-        sbPaymentAssetCode: null,
-        sbNoMorePayments: false,
-        sbNoMoreTransactions: false,
-    }
-
 
     // ...
     stellarServer = new StellarSdk.Server(this.props.accountInfo.horizon)
@@ -174,7 +127,7 @@ class Payments extends Component {
                     this.updateCursors(paymentsResult.records)
                     paymentsResult.records[0].effects().then((effects) => {
                         paymentsResult.records[0].transaction().then((tx) => {
-                            this.setState({
+                            this.props.setState({
                                 paymentDetails: {
                                     txid: paymentsResult.records[0].id,
                                     created_at:
@@ -199,27 +152,34 @@ class Payments extends Component {
 
     // ...
     noMorePaymentsNotice = (state) =>
-        this.setState(
-            { sbNoMorePayments: true, },
-            (_prevState) => this.setState(state)
+        this.props.setState(
+            {
+                sbNoMorePayments: true,
+                ...state,
+            }
+            // (_prevState) => this.props.setState(state)
         )
 
 
     // ...
     noMoreTransactionsNotice = (state) =>
-        this.setState({ sbNoMoreTransactions: true, },
-            (_prevState) => this.setState(state)
+        this.props.setState(
+            {
+                sbNoMoreTransactions: true,
+                ...state,
+            }
+            // (_prevState) => this.props.setState(state)
         )
 
 
     // ...
     handleNoMorePaymentsSnackbarClose = () =>
-        this.setState({ sbNoMorePayments: false, })
+        this.props.setState({ sbNoMorePayments: false, })
 
 
     // ...
     handleNoMoreTransactionsSnackbarClose = () =>
-        this.setState({ sbNoMoreTransactions: false, })
+        this.props.setState({ sbNoMoreTransactions: false, })
 
 
     // ...
@@ -238,7 +198,7 @@ class Payments extends Component {
                         message.source_account === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.setState({
+                        this.props.setState({
                             sbPayment: true,
                             sbPaymentText:
                                 `Payment sent to new account [${
@@ -260,7 +220,7 @@ class Payments extends Component {
                         message.account === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.setState({
+                        this.props.setState({
                             sbPayment: true,
                             sbPaymentText: "Account Funded: ",
                             sbPaymentAmount:
@@ -278,7 +238,7 @@ class Payments extends Component {
                         message.to === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.setState({
+                        this.props.setState({
                             sbPayment: true,
                             sbPaymentText: "Payment Received: ",
                             sbPaymentAmount: formatAmount(
@@ -300,7 +260,7 @@ class Payments extends Component {
                         message.from === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.setState({
+                        this.props.setState({
                             sbPayment: true,
                             sbPaymentText: "Payment Sent: ",
                             sbPaymentAmount: formatAmount(
@@ -379,7 +339,7 @@ class Payments extends Component {
                                 this.updateCursors(paymentsResult.records)
                                 paymentsResult.records[0].effects().then((effects) => {
                                     paymentsResult.records[0].transaction().then((tx) => {
-                                        this.setState({
+                                        this.props.setState({
                                             paymentDetails: {
                                                 txid:
                                                     paymentsResult
@@ -407,19 +367,19 @@ class Payments extends Component {
 
     // ...
     handlePaymentSnackbarClose = () =>
-        this.setState({ sbPayment: false, })
+        this.props.setState({ sbPayment: false, })
 
 
     // ...
     handleTabSelect = (_, value) => {
         this.props.setTab({ payments: value, })
-        this.setState({
+        this.props.setState({
             tabSelected: value,
         })
         if (
             value === "2" &&
-            this.state.txCursorLeft === null &&
-            this.state.txCursorRight === null
+            this.props.state.txCursorLeft === null &&
+            this.props.state.txCursorRight === null
         ) {
             this.stellarServer
                 .transactions()
@@ -443,7 +403,7 @@ class Payments extends Component {
     handlePaymentClick = (payment, paymentId) =>
         payment.effects().then((effects) =>
             payment.transaction().then((tx) =>
-                this.setState({
+                this.props.setState({
                     paymentDetails: {
                         txid: payment.id,
                         created_at: payment.created_at,
@@ -480,7 +440,7 @@ class Payments extends Component {
                                 <div>
                                     <span className="credit">
                                         {" "}&#x0002B;{" "}
-                                        {this.getCurrencyGlyph(
+                                        {currencyGlyph(
                                             this.props.accountInfo.currency
                                         )}{" "}
                                         {this.convertToFiat(
@@ -507,7 +467,7 @@ class Payments extends Component {
                                     <div className="payment-details-memo">
                                         <span className="smaller">Memo:</span>
                                         {" "}
-                                        {this.state.paymentDetails.memo}
+                                        {this.props.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
                                         ID: {effect.id}
@@ -581,7 +541,7 @@ class Payments extends Component {
                                         {getAssetCode(effect) === "XLM" ? (
                                             <span className="credit">
                                                 {" "}&#x0002B;{" "}
-                                                {this.getCurrencyGlyph(
+                                                {currencyGlyph(
                                                     this.props
                                                         .accountInfo.currency
                                                 )}{" "}
@@ -619,7 +579,7 @@ class Payments extends Component {
                                     <div className="payment-details-memo">
                                         <span className="smaller">Memo:</span>
                                         {" "}
-                                        {this.state.paymentDetails.memo}
+                                        {this.props.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
                                         ID: {effect.id}
@@ -651,7 +611,7 @@ class Payments extends Component {
                                         {getAssetCode(effect) === "XLM" ? (
                                             <span className="debit">
                                                 {" "}&#x02212;{" "}
-                                                {this.getCurrencyGlyph(
+                                                {currencyGlyph(
                                                     this.props
                                                         .accountInfo.currency
                                                 )}{" "}
@@ -690,7 +650,7 @@ class Payments extends Component {
                                     <div className="payment-details-memo">
                                         <span className="smaller">Memo:</span>
                                         {" "}
-                                        {this.state.paymentDetails.memo}
+                                        {this.props.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
                                         ID: {effect.id}
@@ -746,7 +706,7 @@ class Payments extends Component {
 
     // ...
     updateCursors = (records) =>
-        this.setState({
+        this.props.setState({
             cursorLeft: records[0].paging_token,
             cursorRight: records[records.length - 1].paging_token,
         })
@@ -754,7 +714,7 @@ class Payments extends Component {
 
     // ...
     updateTransactionsCursors = (records) =>
-        this.setState({
+        this.props.setState({
             txCursorLeft: records[0].paging_token,
             txCursorRight: records[records.length - 1].paging_token,
         })
@@ -766,7 +726,7 @@ class Payments extends Component {
             .payments()
             .forAccount(this.props.appAuth.publicKey)
             .order("desc")
-            .cursor(this.state.cursorRight)
+            .cursor(this.props.state.cursorRight)
             .limit(5)
             .call()
             .then((paymentsResult) => {
@@ -807,7 +767,7 @@ class Payments extends Component {
                         paymentsResult.records[index].domain = link.domain
                     })
                     if (paymentsResult.records.length > 0) {
-                        this.setState({
+                        this.props.setState({
                             prevDisabled: false,
                         })
                         this.props.setAccountPayments(paymentsResult)
@@ -831,7 +791,7 @@ class Payments extends Component {
             .payments()
             .forAccount(this.props.appAuth.publicKey)
             .order("asc")
-            .cursor(this.state.cursorLeft)
+            .cursor(this.props.state.cursorLeft)
             .limit(5)
             .call()
             .then((paymentsResult) => {
@@ -873,7 +833,7 @@ class Payments extends Component {
                         paymentsResult.records[index].domain = link.domain
                     })
                     if (paymentsResult.records.length > 0) {
-                        this.setState({
+                        this.props.setState({
                             nextDisabled: false,
                         })
                         paymentsResult.records.reverse()
@@ -898,12 +858,12 @@ class Payments extends Component {
             .transactions()
             .forAccount(this.props.appAuth.publicKey)
             .order("desc")
-            .cursor(this.state.txCursorRight)
+            .cursor(this.props.state.txCursorRight)
             .limit(5)
             .call()
             .then((transactionsResult) => {
                 if (transactionsResult.records.length > 0) {
-                    this.setState({
+                    this.props.setState({
                         txPrevDisabled: false,
                     })
                     this.props.setAccountTransactions(transactionsResult)
@@ -926,12 +886,12 @@ class Payments extends Component {
             .transactions()
             .forAccount(this.props.appAuth.publicKey)
             .order("asc")
-            .cursor(this.state.txCursorLeft)
+            .cursor(this.props.state.txCursorLeft)
             .limit(5)
             .call()
             .then((transactionsResult) => {
                 if (transactionsResult.records.length > 0) {
-                    this.setState({
+                    this.props.setState({
                         txNextDisabled: false,
                     })
                     transactionsResult.records.reverse()
@@ -1009,7 +969,7 @@ class Payments extends Component {
                         <span>
                             &#x02212;
                             {" "}
-                            {this.getCurrencyGlyph(
+                            {currencyGlyph(
                                 this.props.accountInfo.currency
                             )}
                             {" "}
@@ -1018,7 +978,7 @@ class Payments extends Component {
                         <span>
                             &#x0002B;
                             {" "}
-                            {this.getCurrencyGlyph(
+                            {currencyGlyph(
                                 this.props.accountInfo.currency
                             )}
                             {" "}
@@ -1037,7 +997,7 @@ class Payments extends Component {
                             <span>
                                 &#x0002B;
                                 {" "}
-                                {this.getCurrencyGlyph(
+                                {currencyGlyph(
                                     this.props.accountInfo.currency
                                 )}
                                 {" "}
@@ -1046,7 +1006,7 @@ class Payments extends Component {
                             <span>
                                 &#x02212;
                                 {" "}
-                                {this.getCurrencyGlyph(
+                                {currencyGlyph(
                                     this.props.accountInfo.currency
                                 )}
                                 {" "}
@@ -1118,363 +1078,70 @@ class Payments extends Component {
 
 
     // ...
-    getCurrencyGlyph = (currency) => (
-        (c) => c[Object.keys(c).filter((key) => key === currency)]
-    )({
-        eur: "€",
-        usd: "$",
-        aud: "$",
-        nzd: "$",
-        thb: "฿",
-        pln: "zł",
-    })
-
-
-    // ...
     render = () =>
         <div>
             <Snackbar
-                open={this.state.sbPayment}
-                message={`${this.state.sbPaymentText} ${
-                    this.state.sbPaymentAmount
-                } ${this.state.sbPaymentAssetCode}`}
+                open={this.props.state.sbPayment}
+                message={`${this.props.state.sbPaymentText} ${
+                    this.props.state.sbPaymentAmount
+                } ${this.props.state.sbPaymentAssetCode}`}
                 onRequestClose={
                     this.handlePaymentSnackbarClose
                 }
             />
             <Snackbar
-                open={this.state.sbNoMorePayments}
+                open={this.props.state.sbNoMorePayments}
                 message="No more payments found."
                 onRequestClose={
                     this.handleNoMorePaymentsSnackbarClose
                 }
             />
             <Snackbar
-                open={this.state.sbNoMoreTransactions}
+                open={this.props.state.sbNoMoreTransactions}
                 message="No more transactions found."
                 onRequestClose={
                     this.handleNoMoreTransactionsSnackbarClose
                 }
             />
+
             <Tabs
                 tabItemContainerStyle={styles.container}
                 inkBarStyle={styles.inkBar}
                 value={this.props.ui.tabs.payments}
                 onChange={this.handleTabSelect.bind(this, this.value)}
             >
+
                 <Tab style={styles.tab} label="History" value="1">
                     <div className="tab-content">
-                        <div className="account-title">
-                            Payment History
-                        </div>
-                        <div className="account-subtitle">
-                            Newest payments shown as first.
-                        </div>
-                        <div className="flex-row-space-between">
-                            <div className="flex-row-column">
-                                <div>
-                                    {this.props.accountInfo.payments ? (
-                                        <div>
-                                            <SelectableList
-                                                defaultValue={1}
-                                            >
-                                                {this.props.accountInfo.payments.records.map(
-                                                    (
-                                                        payment,
-                                                        index
-                                                    ) => (
-                                                        <div
-                                                            key={
-                                                                payment.id
-                                                            }
-                                                            className={
-                                                                this
-                                                                    .state
-                                                                    .paymentDetails
-                                                                    .selectedPaymentId ===
-                                                                payment.id
-                                                                    ? "payment-item-active"
-                                                                    : "payment-item"
-                                                            }
-                                                        >
-                                                            <ListItem
-                                                                value={
-                                                                    index +
-                                                                    1
-                                                                }
-                                                                onClick={this.handlePaymentClick.bind(
-                                                                    this,
-                                                                    payment,
-                                                                    payment.id
-                                                                )}
-                                                                leftIcon={this.determineLeftIcon.call(
-                                                                    this,
-                                                                    payment
-                                                                )}
-                                                                hoverColor="rgba(244,176,4,0.95)"
-                                                                secondaryText={
-                                                                    <Fragment>
-                                                                        <div className="tiny fade-strong">
-                                                                            {utcToLocaleDateTime(
-                                                                                payment.created_at
-                                                                            )}
-                                                                        </div>
-                                                                        {this.props.loginManager.isAuthenticated() ?
-                                                                            (<div className="small fade">
-                                                                                {payment.firstName ? payment.firstName : "Unknown"} {payment.lastName ? payment.lastName : "Payee"}
-                                                                                {(payment.alias && payment.domain) ?
-                                                                                    (<span className="p-l-small micro">[{payment.alias}*{payment.domain}]</span>) :
-                                                                                    (<span className="p-l-small micro">&#x0205F;</span>)}
-                                                                            </div>) : null}
-                                                                    </Fragment>
-                                                                }
-                                                                primaryText={this.determinePrimaryText.call(
-                                                                    this,
-                                                                    payment
-                                                                )}
-                                                                rightAvatar={
-                                                                    this.props.loginManager.isAuthenticated() ? (
-                                                                        <Avatar
-                                                                            className="square-avatar"
-                                                                            backgroundColor="rgba(244,176,4,1)"
-                                                                            size={
-                                                                                70
-                                                                            }
-                                                                            src={payment.gravatar}
-                                                                        />) : null
-                                                                }
-                                                            />
-                                                        </div>
-                                                    )
-                                                )}
-                                            </SelectableList>
-                                        </div>
-                                    ) : null}
-                                    <div>
-                                        <div className="flex-row-space-between p-t">
-                                            <IconButton
-                                                className="paging-icon"
-                                                tooltip="Previous Payments"
-                                                tooltipStyles={
-                                                    styles.tooltip
-                                                }
-                                                tooltipPosition="top-right"
-                                                onClick={
-                                                    this.getPrevPaymentsPage
-                                                }
-                                                disabled={
-                                                    this.state
-                                                        .prevDisabled
-                                                }
-                                            >
-                                                <i className="material-icons">
-                                                    fast_rewind
-                                                </i>
-                                            </IconButton>
 
-                                            <IconButton
-                                                className="paging-icon"
-                                                tooltip="Next Payments"
-                                                tooltipStyles={
-                                                    styles.tooltip
-                                                }
-                                                tooltipPosition="top-left"
-                                                onClick={
-                                                    this.getNextPaymentsPage
-                                                }
-                                                disabled={
-                                                    this.state
-                                                        .nextDisabled
-                                                }
-                                            >
-                                                <i className="material-icons">
-                                                    fast_forward
-                                                </i>
-                                            </IconButton>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex-row-column">
-                                <div>
-                                    <div className="transaction-details-header">
-                                        <div className="flex-row">
-                                            <div>
-                                                Payment ID:{" "}
-                                                {
-                                                    this.state
-                                                        .paymentDetails
-                                                        .txid
-                                                }
-                                            </div>
-                                            <div>
-                                                {utcToLocaleDateTime(
-                                                    this.state
-                                                        .paymentDetails
-                                                        .created_at
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="transaction-details-body">
-                                        {this.state.paymentDetails.effects.map(
-                                            (effect, index) => {
-                                                return (
-                                                    <div
-                                                        key={index}
-                                                        className="payment-details-item"
-                                                    >
-                                                        <span className="effect-title">
-                                                            {this.decodeEffectType(
-                                                                effect,
-                                                                index
-                                                            )}
-                                                        </span>
-                                                    </div>
-                                                )
-                                            }
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <PaymentsHistory
+                            paymentDetails={this.props.state.paymentDetails}
+                            handlePaymentClick={this.handlePaymentClick}
+                            determineLeftIcon={this.determineLeftIcon}
+                            determinePrimaryText={this.determinePrimaryText}
+                            getPrevPaymentsPage={this.getPrevPaymentsPage}
+                            getNextPaymentsPage={this.getNextPaymentsPage}
+                            nextDisabled={this.props.state.nextDisabled}
+                            prevDisabled={this.props.state.prevDisabled}
+                            decodeEffectType={this.decodeEffectType}
+                        />
+
                     </div>
                 </Tab>
+
                 <Tab style={styles.tab} label="Transactions" value="2">
                     <div className="tab-content">
-                        <div className="flex-row">
-                            <div>
-                                <div className="account-title">
-                                    Account Transactions
-                                </div>
-                                <div className="account-subtitle">
-                                    Newest transactions shown as first.
-                                </div>
-                                <div className="p-t" />
-                                {this.props.accountInfo.transactions ? (
-                                    <Table style={styles.table}>
-                                        <TableHeader
-                                            className="tx-table-header"
-                                            displaySelectAll={false}
-                                            adjustForCheckbox={false}
-                                        >
-                                            <TableRow
-                                                className="tx-table-row"
-                                                style={styles.tableRow}
-                                            >
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Transaction Time
-                                                </TableHeaderColumn>
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Account
-                                                </TableHeaderColumn>
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Memo
-                                                </TableHeaderColumn>
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Fee Paid
-                                                </TableHeaderColumn>
-                                                <TableHeaderColumn className="tx-table-header-column">
-                                                    Signature Count
-                                                </TableHeaderColumn>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody
-                                            displayRowCheckbox={false}
-                                        >
-                                            {this.props.accountInfo.transactions.records.map(
-                                                (tx, index) => (
-                                                    <TableRow
-                                                        selectable={
-                                                            false
-                                                        }
-                                                        key={index}
-                                                        className="tx-table-row"
-                                                    >
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            {utcToLocaleDateTime(
-                                                                tx.created_at
-                                                            )}
-                                                        </TableRowColumn>
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            <span>
-                                                                <span>
-                                                                    {pubKeyAbbr(
-                                                                        tx.source_account
-                                                                    )}
-                                                                </span>
-                                                                <span className="account-direction">
-                                                                    {tx.source_account ===
-                                                                    this
-                                                                        .props
-                                                                        .accountInfo
-                                                                        .pubKey
-                                                                        ? "Yours"
-                                                                        : "Theirs"}
-                                                                </span>
-                                                            </span>
-                                                        </TableRowColumn>
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            {tx.memo}
-                                                        </TableRowColumn>
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            {
-                                                                tx.fee_paid
-                                                            }
-                                                        </TableRowColumn>
-                                                        <TableRowColumn className="tx-table-row-column">
-                                                            {
-                                                                tx
-                                                                    .signatures
-                                                                    .length
-                                                            }
-                                                        </TableRowColumn>
-                                                    </TableRow>
-                                                )
-                                            )}
-                                        </TableBody>
-                                    </Table>
-                                ) : null}
-                                <div className="p-b" />
-                                <div className="flex-row-space-between p-t">
-                                    <IconButton
-                                        className="paging-icon"
-                                        tooltip="Previous Transactions"
-                                        tooltipStyles={styles.tooltip}
-                                        tooltipPosition="top-right"
-                                        onClick={this.getPrevTransactionsPage.bind(
-                                            this
-                                        )}
-                                        disabled={
-                                            this.state.txPrevDisabled
-                                        }
-                                    >
-                                        <i className="material-icons">
-                                            fast_rewind
-                                        </i>
-                                    </IconButton>
 
-                                    <IconButton
-                                        className="paging-icon"
-                                        tooltip="Next Transactions"
-                                        tooltipStyles={styles.tooltip}
-                                        tooltipPosition="top-left"
-                                        onClick={this.getNextTransactionsPage.bind(
-                                            this
-                                        )}
-                                        disabled={
-                                            this.state.txNextDisabled
-                                        }
-                                    >
-                                        <i className="material-icons">
-                                            fast_forward
-                                        </i>
-                                    </IconButton>
-                                </div>
-                            </div>
-                        </div>
+                        <Transactions
+                            getPrevTransactionsPage={this.getPrevTransactionsPage}
+                            getNextTransactionsPage={this.getNextTransactionsPage}
+                            txNextDisabled={this.props.state.txNextDisabled}
+                            txPrevDisabled={this.props.state.txPrevDisabled}
+                        />
+
                     </div>
                 </Tab>
+
             </Tabs>
         </div>
 
@@ -1485,6 +1152,8 @@ class Payments extends Component {
 export default withLoginManager(connect(
     // map state to props.
     (state) => ({
+        state: state.Payments,
+
         accountInfo: state.accountInfo,
         loadingModal: state.loadingModal,
         ui: state.ui,
@@ -1494,6 +1163,8 @@ export default withLoginManager(connect(
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        setState : PaymentsAction.setState,
+
         setAccountPayments,
         setAccountTransactions,
         setStreamer,

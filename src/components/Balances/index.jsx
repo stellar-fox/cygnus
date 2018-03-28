@@ -9,6 +9,7 @@ import "number-to-text/converters/en-us"
 
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import {
+    currencyGlyph,
     pubKeyValid,
     federationAddressValid,
     federationLookup,
@@ -201,19 +202,6 @@ class Balances extends Component {
 
             })
     }
-
-
-    // ...
-    getCurrencyGlyph = (currency) => (
-        (c) => c[Object.keys(c).filter((key) => key === currency)]
-    )({
-        eur: (<span>&#x20ac;</span>),
-        usd: (<span>&#x24;</span>),
-        aud: (<span>&#x24;</span>),
-        nzd: (<span>&#x24;</span>),
-        thb: (<span>&#xe3f;</span>),
-        pln: (<span>&#x7a;&#x142;</span>),
-    })
 
 
     // ...
@@ -1533,7 +1521,7 @@ class Balances extends Component {
                                     <div>
                                         <div className="balance">
                                             <span className="fade currency-glyph">
-                                                {this.getCurrencyGlyph(
+                                                {currencyGlyph(
                                                     this.props.accountInfo.currency
                                                 )}
                                             </span>
@@ -1630,7 +1618,7 @@ class Balances extends Component {
                                 <div>
                                     <div className='balance'>
                                         <span className="fade currency-glyph">
-                                            {this.getCurrencyGlyph(
+                                            {currencyGlyph(
                                                 this.props.accountInfo.currency
                                             )}
                                         </span> 0.00
@@ -1718,7 +1706,7 @@ class Balances extends Component {
                                 </div>
                                 <div className="payment-header f-s">
                                     <div className="p-r leading-label-align payment-currency">
-                                        {this.getCurrencyGlyph(
+                                        {currencyGlyph(
                                             this.props.accountInfo.currency
                                         )}
                                     </div>
