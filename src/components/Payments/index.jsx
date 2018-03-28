@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import BigNumber from "bignumber.js"
 
 import {
+    currencyGlyph,
     pubKeyAbbr,
     getAssetCode,
     formatAmount,
@@ -459,7 +460,7 @@ class Payments extends Component {
                                 <div>
                                     <span className="credit">
                                         {" "}&#x0002B;{" "}
-                                        {this.getCurrencyGlyph(
+                                        {currencyGlyph(
                                             this.props.accountInfo.currency
                                         )}{" "}
                                         {this.convertToFiat(
@@ -560,7 +561,7 @@ class Payments extends Component {
                                         {getAssetCode(effect) === "XLM" ? (
                                             <span className="credit">
                                                 {" "}&#x0002B;{" "}
-                                                {this.getCurrencyGlyph(
+                                                {currencyGlyph(
                                                     this.props
                                                         .accountInfo.currency
                                                 )}{" "}
@@ -630,7 +631,7 @@ class Payments extends Component {
                                         {getAssetCode(effect) === "XLM" ? (
                                             <span className="debit">
                                                 {" "}&#x02212;{" "}
-                                                {this.getCurrencyGlyph(
+                                                {currencyGlyph(
                                                     this.props
                                                         .accountInfo.currency
                                                 )}{" "}
@@ -988,7 +989,7 @@ class Payments extends Component {
                         <span>
                             &#x02212;
                             {" "}
-                            {this.getCurrencyGlyph(
+                            {currencyGlyph(
                                 this.props.accountInfo.currency
                             )}
                             {" "}
@@ -997,7 +998,7 @@ class Payments extends Component {
                         <span>
                             &#x0002B;
                             {" "}
-                            {this.getCurrencyGlyph(
+                            {currencyGlyph(
                                 this.props.accountInfo.currency
                             )}
                             {" "}
@@ -1016,7 +1017,7 @@ class Payments extends Component {
                             <span>
                                 &#x0002B;
                                 {" "}
-                                {this.getCurrencyGlyph(
+                                {currencyGlyph(
                                     this.props.accountInfo.currency
                                 )}
                                 {" "}
@@ -1025,7 +1026,7 @@ class Payments extends Component {
                             <span>
                                 &#x02212;
                                 {" "}
-                                {this.getCurrencyGlyph(
+                                {currencyGlyph(
                                     this.props.accountInfo.currency
                                 )}
                                 {" "}
@@ -1094,19 +1095,6 @@ class Payments extends Component {
 
         return "0"
     }
-
-
-    // ...
-    getCurrencyGlyph = (currency) => (
-        (c) => c[Object.keys(c).filter((key) => key === currency)]
-    )({
-        eur: "€",
-        usd: "$",
-        aud: "$",
-        nzd: "$",
-        thb: "฿",
-        pln: "zł",
-    })
 
 
     // ...
