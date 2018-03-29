@@ -40,12 +40,9 @@ class PaymentsHistory extends Component {
         accountInfo: PropTypes.object.isRequired,
         loginManager: PropTypes.object.isRequired,
         appAuth: PropTypes.object.isRequired,
-        paymentDetails: PropTypes.object.isRequired,
         handlePaymentClick: PropTypes.func.isRequired,
         determineLeftIcon: PropTypes.func.isRequired,
         determinePrimaryText: PropTypes.func.isRequired,
-        nextDisabled: PropTypes.bool.isRequired,
-        prevDisabled: PropTypes.bool.isRequired,
         decodeEffectType: PropTypes.func.isRequired,
         setAccountPayments: PropTypes.func.isRequired,
         updateCursors: PropTypes.func.isRequired,
@@ -206,6 +203,7 @@ class PaymentsHistory extends Component {
                                                 className={
                                                     this
                                                         .props
+                                                        .state
                                                         .paymentDetails
                                                         .selectedPaymentId ===
                                                         payment.id ?
@@ -265,7 +263,7 @@ class PaymentsHistory extends Component {
                                 tooltipStyles={styles.tooltip}
                                 tooltipPosition="top-right"
                                 onClick={this.getPrevPaymentsPage}
-                                disabled={this.props.prevDisabled}
+                                disabled={this.props.state.prevDisabled}
                             >
                                 <i className="material-icons">
                                     fast_rewind
@@ -278,7 +276,7 @@ class PaymentsHistory extends Component {
                                 tooltipStyles={styles.tooltip}
                                 tooltipPosition="top-left"
                                 onClick={this.getNextPaymentsPage}
-                                disabled={this.props.nextDisabled}
+                                disabled={this.props.state.nextDisabled}
                             >
                                 <i className="material-icons">
                                     fast_forward
@@ -294,16 +292,16 @@ class PaymentsHistory extends Component {
                                 <div>
                                     Payment ID:
                                     {" "}
-                                    {this.props.paymentDetails.txid}
+                                    {this.props.state.paymentDetails.txid}
                                 </div>
                                 <div>
-                                    {utcToLocaleDateTime(this.props.paymentDetails.created_at)}
+                                    {utcToLocaleDateTime(this.props.state.paymentDetails.created_at)}
                                 </div>
                             </div>
                         </div>
                         <div className="transaction-details-body">
                             {
-                                this.props.paymentDetails.effects.map(
+                                this.props.state.paymentDetails.effects.map(
                                     (effect, index) =>
                                         <div
                                             key={index}

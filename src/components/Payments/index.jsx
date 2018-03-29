@@ -971,12 +971,9 @@ class Payments extends Component {
 
                         <PaymentsHistory
                             stellarServer={this.stellarServer}
-                            paymentDetails={this.props.state.paymentDetails}
                             handlePaymentClick={this.handlePaymentClick}
                             determineLeftIcon={this.determineLeftIcon}
                             determinePrimaryText={this.determinePrimaryText}
-                            nextDisabled={this.props.state.nextDisabled}
-                            prevDisabled={this.props.state.prevDisabled}
                             decodeEffectType={this.decodeEffectType}
                             updateCursors={this.updateCursors}
                         />
