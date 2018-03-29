@@ -5,12 +5,12 @@ import { connect } from "react-redux"
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
 import Button from "../../lib/common/Button"
 import Toggle from "../../lib/common/Toggle"
-// import Axios from "axios"
-// import { config } from "../../config"
 import { appName } from "../StellarFox/env"
 import { action as AccountAction } from "../../redux/Account"
 import { withLoginManager } from "../LoginManager"
-// import { setExchangeRate } from "../../redux/actions"
+import { withAssetManager } from "../AssetManager"
+
+
 
 // <Settings> component
 class Settings extends Component {
@@ -25,6 +25,7 @@ class Settings extends Component {
     updateExchangeRate = () => {
         // eslint-disable-next-line no-console
         console.log("TODO: handle action")
+        this.props.assetManager.updateExchangeRate()
     }
 
 
@@ -154,7 +155,7 @@ class Settings extends Component {
         </div>
 }
 
-export default withLoginManager(connect(
+export default withLoginManager(withAssetManager(connect(
     // bind state to props.
     (state) => ({
         state: state.Account,
@@ -166,4 +167,4 @@ export default withLoginManager(connect(
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
     }, dispatch)
-)(Settings))
+)(Settings)))

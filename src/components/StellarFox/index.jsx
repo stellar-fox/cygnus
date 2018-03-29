@@ -6,6 +6,7 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "./theme"
 
 import LoginManager from "../LoginManager"
+import AssetManager from "../AssetManager"
 import Layout from "../Layout"
 
 import "./index.css"
@@ -21,7 +22,9 @@ export default ({
         <MuiThemeProvider muiTheme={stellarTheme}>
             <Router history={history}>
                 <LoginManager>
-                    <Layout />
+                    <AssetManager>
+                        <Layout />
+                    </AssetManager>
                 </LoginManager>
             </Router>
         </MuiThemeProvider>
