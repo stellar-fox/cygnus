@@ -191,29 +191,23 @@ class PaymentsHistory extends Component {
                 this.props.loginManager.isAuthenticated() ?
                     "material-icons badge" :
                     "material-icons",
-            rendered = ""
-
-        switch (payment.type) {
-            case "create_account":
-                rendered =
+            actions = {
+                "create_account": () =>
                     payment.funder === this.props.appAuth.publicKey ?
                         <i className={iClassName}>card_giftcard</i> :
-                        <i className={iClassName}>account_balance</i>
-                break
+                        <i className={iClassName}>account_balance</i>,
 
-            case "account_merge":
-                rendered = <i className={iClassName}> merge_type</i>
-                break
+                "account_merge": () =>
+                    <i className={iClassName}>merge_type</i>,
+            },
+            defaultAction = () =>
+                payment.to === this.props.appAuth.publicKey ?
+                    <i className={iClassName}>account_balance_wallet</i> :
+                    <i className={iClassName}>payment</i>
 
-            default:
-                rendered =
-                    payment.to === this.props.appAuth.publicKey ?
-                        <i className={iClassName}>account_balance_wallet</i> :
-                        <i className={iClassName}>payment</i>
-                break
-        }
-
-        return rendered
+        return payment.type in actions ?
+            actions[payment.type]() :
+            defaultAction()
     }
 
 
