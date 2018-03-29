@@ -11,9 +11,7 @@ import {
     StellarSdk,
 } from "../../lib/utils"
 import { emoji } from "../StellarFox/env"
-import {
-    gravatarLink,
-} from "../../lib/deneb"
+import { gravatarLink } from "../../lib/deneb"
 import { withLoginManager } from "../LoginManager"
 
 import {
@@ -148,17 +146,6 @@ class Payments extends Component {
                 console.log(err)
             })
     }
-
-
-    // ...
-    noMorePaymentsNotice = (state) =>
-        this.props.setState(
-            {
-                sbNoMorePayments: true,
-                ...state,
-            }
-            // (_prevState) => this.props.setState(state)
-        )
 
 
     // ...
@@ -721,138 +708,6 @@ class Payments extends Component {
 
 
     // ...
-    getNextPaymentsPage = () =>
-        this.stellarServer
-            .payments()
-            .forAccount(this.props.appAuth.publicKey)
-            .order("desc")
-            .cursor(this.props.state.cursorRight)
-            .limit(5)
-            .call()
-            .then((paymentsResult) => {
-                const gravatarLinkPromises =
-                    paymentsResult.records.map((r) => {
-                        let link = ""
-                        switch (r.type) {
-                            case "create_account":
-                                if (
-                                    r.funder ===
-                                        this.props.appAuth.publicKey
-                                ) {
-                                    link = gravatarLink(r.account)
-                                } else {
-                                    link = gravatarLink(r.funder)
-                                }
-                                break
-
-                            // payment
-                            default:
-                                if (r.to === this.props.appAuth.publicKey) {
-                                    link = gravatarLink(r.from)
-                                } else {
-                                    link = gravatarLink(r.to)
-                                }
-                                break
-                        }
-                        return link
-                    })
-
-                Promise.all(gravatarLinkPromises).then((links) => {
-                    links.forEach((link, index) => {
-                        paymentsResult.records[index].gravatar = link.link
-                        paymentsResult.records[index].firstName = link.firstName
-                        paymentsResult.records[index].lastName = link.lastName
-                        paymentsResult.records[index].email = link.email
-                        paymentsResult.records[index].alias = link.alias
-                        paymentsResult.records[index].domain = link.domain
-                    })
-                    if (paymentsResult.records.length > 0) {
-                        this.props.setState({
-                            prevDisabled: false,
-                        })
-                        this.props.setAccountPayments(paymentsResult)
-                        this.updateCursors(paymentsResult.records)
-                    } else {
-                        this.noMorePaymentsNotice.call(
-                            this, { nextDisabled: true, }
-                        )
-                    }
-                })
-            })
-            .catch(function (err) {
-                // eslint-disable-next-line no-console
-                console.log(err)
-            })
-
-
-    // ...
-    getPrevPaymentsPage = () =>
-        this.stellarServer
-            .payments()
-            .forAccount(this.props.appAuth.publicKey)
-            .order("asc")
-            .cursor(this.props.state.cursorLeft)
-            .limit(5)
-            .call()
-            .then((paymentsResult) => {
-                const gravatarLinkPromises =
-                    paymentsResult.records.map((r) => {
-                        let link = ""
-                        switch (r.type) {
-                            case "create_account":
-                                if (
-                                    r.funder ===
-                                        this.props.appAuth.publicKey
-                                ) {
-                                    link = gravatarLink(r.account)
-                                } else {
-                                    link = gravatarLink(r.funder)
-                                }
-                                break
-
-                            // payment
-                            default:
-                                if (r.to === this.props.appAuth.publicKey) {
-                                    link = gravatarLink(r.from)
-                                } else {
-                                    link = gravatarLink(r.to)
-                                }
-                                break
-                        }
-                        return link
-                    })
-
-                Promise.all(gravatarLinkPromises).then((links) => {
-
-                    links.forEach((link, index) => {
-                        paymentsResult.records[index].gravatar = link.link
-                        paymentsResult.records[index].firstName = link.firstName
-                        paymentsResult.records[index].lastName = link.lastName
-                        paymentsResult.records[index].email = link.email
-                        paymentsResult.records[index].alias = link.alias
-                        paymentsResult.records[index].domain = link.domain
-                    })
-                    if (paymentsResult.records.length > 0) {
-                        this.props.setState({
-                            nextDisabled: false,
-                        })
-                        paymentsResult.records.reverse()
-                        this.props.setAccountPayments(paymentsResult)
-                        this.updateCursors(paymentsResult.records)
-                    } else {
-                        this.noMorePaymentsNotice.call(
-                            this, { prevDisabled: true, }
-                        )
-                    }
-                })
-            })
-            .catch(function (err) {
-                // eslint-disable-next-line no-console
-                console.log(err)
-            })
-
-
-    // ...
     getNextTransactionsPage = () =>
         this.stellarServer
             .transactions()
@@ -907,55 +762,6 @@ class Payments extends Component {
                 // eslint-disable-next-line no-console
                 console.log(err)
             })
-
-
-    // ...
-    determineLeftIcon = (payment) => {
-        let rendered = ""
-
-        switch (payment.type) {
-            case "create_account":
-                rendered =
-                    payment.funder === this.props.appAuth.publicKey ?
-                        <i className={
-                            this.props.loginManager.isAuthenticated() ?
-                                ("material-icons badge") :
-                                ("material-icons")
-                        }>card_giftcard</i> :
-                        <i className={
-                            this.props.loginManager.isAuthenticated() ?
-                                ("material-icons badge") :
-                                ("material-icons")
-                        }>account_balance</i>
-                break
-
-            case "account_merge":
-                rendered =
-                    <i className={
-                        this.props.loginManager.isAuthenticated() ?
-                            ("material-icons badge") :
-                            ("material-icons")
-                    }>merge_type</i>
-                break
-
-            default:
-                rendered =
-                    payment.to === this.props.appAuth.publicKey ?
-                        <i className={
-                            this.props.loginManager.isAuthenticated() ?
-                                ("material-icons badge") :
-                                ("material-icons")
-                        }>account_balance_wallet</i> :
-                        <i className={
-                            this.props.loginManager.isAuthenticated() ?
-                                ("material-icons badge") :
-                                ("material-icons")
-                        }>payment</i>
-                break
-        }
-
-        return rendered
-    }
 
 
     // ...
@@ -1115,15 +921,11 @@ class Payments extends Component {
                     <div className="tab-content">
 
                         <PaymentsHistory
-                            paymentDetails={this.props.state.paymentDetails}
+                            stellarServer={this.stellarServer}
                             handlePaymentClick={this.handlePaymentClick}
-                            determineLeftIcon={this.determineLeftIcon}
                             determinePrimaryText={this.determinePrimaryText}
-                            getPrevPaymentsPage={this.getPrevPaymentsPage}
-                            getNextPaymentsPage={this.getNextPaymentsPage}
-                            nextDisabled={this.props.state.nextDisabled}
-                            prevDisabled={this.props.state.prevDisabled}
                             decodeEffectType={this.decodeEffectType}
+                            updateCursors={this.updateCursors}
                         />
 
                     </div>
@@ -1163,7 +965,7 @@ export default withLoginManager(connect(
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        setState : PaymentsAction.setState,
+        setState: PaymentsAction.setState,
 
         setAccountPayments,
         setAccountTransactions,

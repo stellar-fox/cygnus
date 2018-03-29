@@ -167,16 +167,26 @@ export const Provide = ({ children, ...rest }) =>
 
 
 // ...
-export const chooseAction = (state, action) =>
-    (actions) =>
-        action.type in actions ?
-            actions[action.type](state, action) :
-            state
+export const choose = (
+    key,
+    actions = {},
+    defaultAction = () => null,
+    args = []
+) =>
+    key in actions ?
+        actions[key](...args) :
+        defaultAction(...args)
 
 
 // ...
 export const createReducer = (initState = {}) => (actions) =>
-    (state = initState, action) => chooseAction(state, action)(actions)
+    (state = initState, action) =>
+        choose(
+            action.type,
+            actions,
+            (s, _a) => s,
+            [state, action,]
+        )
 
 
 // ...
