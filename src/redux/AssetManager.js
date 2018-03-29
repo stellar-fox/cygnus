@@ -5,18 +5,16 @@ import { createReducer } from "../lib/utils"
 
 // <ASSETS> component state
 const initState = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    paymentAddress: "",
-    discoverable: true,
+    rates: [],
+    preferredCurrency: "eur",
+    foo: null,
 }
 
 
 
 
 // ...
-export const SET_ASSETS_STATE = "SET_ASSETS_STATE"
+export const SET_ASSET_MANAGER_STATE = "SET_ASSET_MANAGER_STATE"
 
 
 
@@ -26,7 +24,7 @@ export const action = {
 
     // ...
     setState: (state) => ({
-        type: SET_ASSETS_STATE,
+        type: SET_ASSET_MANAGER_STATE,
         payload: state,
     }),
 
@@ -38,7 +36,7 @@ export const action = {
 // ...
 export const reducer = createReducer(initState)({
 
-    [SET_ASSETS_STATE]: (state, action) => ({
+    [SET_ASSET_MANAGER_STATE]: (state, action) => ({
         ...state,
         ...action.payload,
     }),

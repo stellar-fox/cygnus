@@ -5,8 +5,9 @@ import PropTypes from "prop-types"
 import hoistStatics from "hoist-non-react-statics"
 
 import { setExchangeRate } from "../../redux/actions"
-// import Axios from "axios"
-// import { config } from "../../config"
+import Axios from "axios"
+import { config } from "../../config"
+import { action as AssetManagerAction } from "../../redux/AssetManager"
 
 
 
@@ -24,8 +25,35 @@ class AssetManager extends Component {
 
 
     // ...
-    updateExchangeRate = () => {
+    rateStale = (currency) => (
+        !this.props.state.rates ||
+        !this.props.state.rates[currency] ||
+        this.props.state.rates[currency].lastFetch + 300000 < Date.now()
+    )
 
+
+    // ...
+    updateExchangeRate = (currency) => {
+        if (this.rateStale(currency)) {
+            Axios.get(`${config.api}/ticker/latest/${currency}`)
+                .then((response) => {
+                    // this.props.setState({
+                    //     [currency]: {
+                    //         rate: response.data.data[`price_${currency}`],
+                    //         lastFetch: Date.now(),
+                    //     },
+                    // })
+
+                    this.props.setState({
+                        foo: "bar",
+                        rates: "test",
+                    })
+                })
+                .catch(function (error) {
+                    // eslint-disable-next-line no-console
+                    console.log(error.message)
+                })
+        }
     }
 
 
@@ -39,7 +67,7 @@ export default connect(
     // map state to props.
     (state) => ({
         state: state.Assets,
-
+        setState: AssetManagerAction.setState,
     }),
 
     // map dispatch to props.

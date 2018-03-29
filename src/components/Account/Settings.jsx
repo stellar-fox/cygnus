@@ -22,10 +22,10 @@ class Settings extends Component {
 
 
     // ...
-    updateExchangeRate = () => {
+    changeCurrency = (event) => {
         // eslint-disable-next-line no-console
-        console.log("TODO: handle action")
-        this.props.assetManager.updateExchangeRate()
+        console.log("TODO: handle action", event.target.value)
+        this.props.assetManager.updateExchangeRate(event.target.value)
     }
 
 
@@ -62,7 +62,7 @@ class Settings extends Component {
                 account.
             </div>
             <RadioButtonGroup
-                onChange={this.updateExchangeRate}
+                onChange={this.changeCurrency}
                 className="account-radio-group m-t"
                 name="currencySelect"
                 defaultSelected={this.props.accountInfo.currency}
