@@ -41,7 +41,6 @@ class PaymentsHistory extends Component {
         loginManager: PropTypes.object.isRequired,
         appAuth: PropTypes.object.isRequired,
         handlePaymentClick: PropTypes.func.isRequired,
-        determineLeftIcon: PropTypes.func.isRequired,
         determinePrimaryText: PropTypes.func.isRequired,
         decodeEffectType: PropTypes.func.isRequired,
         setAccountPayments: PropTypes.func.isRequired,
@@ -186,6 +185,39 @@ class PaymentsHistory extends Component {
 
 
     // ...
+    determineLeftIcon = (payment) => {
+        let
+            iClassName =
+                this.props.loginManager.isAuthenticated() ?
+                    "material-icons badge" :
+                    "material-icons",
+            rendered = ""
+
+        switch (payment.type) {
+            case "create_account":
+                rendered =
+                    payment.funder === this.props.appAuth.publicKey ?
+                        <i className={iClassName}>card_giftcard</i> :
+                        <i className={iClassName}>account_balance</i>
+                break
+
+            case "account_merge":
+                rendered = <i className={iClassName}> merge_type</i>
+                break
+
+            default:
+                rendered =
+                    payment.to === this.props.appAuth.publicKey ?
+                        <i className={iClassName}>account_balance_wallet</i> :
+                        <i className={iClassName}>payment</i>
+                break
+        }
+
+        return rendered
+    }
+
+
+    // ...
     render = () =>
         <Fragment>
             <div className="account-title">Payments History</div>
@@ -214,7 +246,7 @@ class PaymentsHistory extends Component {
                                                 <ListItem
                                                     value={index + 1}
                                                     onClick={this.props.handlePaymentClick.bind(this, payment, payment.id)}
-                                                    leftIcon={this.props.determineLeftIcon.call(this, payment)}
+                                                    leftIcon={this.determineLeftIcon(payment)}
                                                     hoverColor="rgba(244,176,4,0.95)"
                                                     secondaryText={
                                                         <Fragment>

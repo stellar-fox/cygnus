@@ -765,55 +765,6 @@ class Payments extends Component {
 
 
     // ...
-    determineLeftIcon = (payment) => {
-        let rendered = ""
-
-        switch (payment.type) {
-            case "create_account":
-                rendered =
-                    payment.funder === this.props.appAuth.publicKey ?
-                        <i className={
-                            this.props.loginManager.isAuthenticated() ?
-                                ("material-icons badge") :
-                                ("material-icons")
-                        }>card_giftcard</i> :
-                        <i className={
-                            this.props.loginManager.isAuthenticated() ?
-                                ("material-icons badge") :
-                                ("material-icons")
-                        }>account_balance</i>
-                break
-
-            case "account_merge":
-                rendered =
-                    <i className={
-                        this.props.loginManager.isAuthenticated() ?
-                            ("material-icons badge") :
-                            ("material-icons")
-                    }>merge_type</i>
-                break
-
-            default:
-                rendered =
-                    payment.to === this.props.appAuth.publicKey ?
-                        <i className={
-                            this.props.loginManager.isAuthenticated() ?
-                                ("material-icons badge") :
-                                ("material-icons")
-                        }>account_balance_wallet</i> :
-                        <i className={
-                            this.props.loginManager.isAuthenticated() ?
-                                ("material-icons badge") :
-                                ("material-icons")
-                        }>payment</i>
-                break
-        }
-
-        return rendered
-    }
-
-
-    // ...
     determinePrimaryText = (payment) => {
         let rendered = ""
 
@@ -972,7 +923,6 @@ class Payments extends Component {
                         <PaymentsHistory
                             stellarServer={this.stellarServer}
                             handlePaymentClick={this.handlePaymentClick}
-                            determineLeftIcon={this.determineLeftIcon}
                             determinePrimaryText={this.determinePrimaryText}
                             decodeEffectType={this.decodeEffectType}
                             updateCursors={this.updateCursors}
