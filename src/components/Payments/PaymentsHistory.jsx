@@ -4,7 +4,10 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { withLoginManager } from "../LoginManager"
 
-import { utcToLocaleDateTime } from "../../lib/utils"
+import {
+    utcToLocaleDateTime,
+    choose,
+} from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
 
 
@@ -185,30 +188,28 @@ class PaymentsHistory extends Component {
 
 
     // ...
-    determineLeftIcon = (payment) => {
-        let
-            iClassName =
-                this.props.loginManager.isAuthenticated() ?
-                    "material-icons badge" :
-                    "material-icons",
-            actions = {
-                "create_account": () =>
-                    payment.funder === this.props.appAuth.publicKey ?
-                        <i className={iClassName}>card_giftcard</i> :
-                        <i className={iClassName}>account_balance</i>,
-
-                "account_merge": () =>
-                    <i className={iClassName}>merge_type</i>,
-            },
-            defaultAction = () =>
-                payment.to === this.props.appAuth.publicKey ?
-                    <i className={iClassName}>account_balance_wallet</i> :
-                    <i className={iClassName}>payment</i>
-
-        return payment.type in actions ?
-            actions[payment.type]() :
-            defaultAction()
-    }
+    determineLeftIcon = (payment) => (
+        (iClassName) =>
+            choose(
+                payment.type,
+                {
+                    "create_account": () =>
+                        payment.funder === this.props.appAuth.publicKey ?
+                            <i className={iClassName}>card_giftcard</i> :
+                            <i className={iClassName}>account_balance</i>,
+                    "account_merge": () =>
+                        <i className={iClassName}>merge_type</i>,
+                },
+                () =>
+                    payment.to === this.props.appAuth.publicKey ?
+                        <i className={iClassName}>account_balance_wallet</i> :
+                        <i className={iClassName}>payment</i>
+            )
+    )(
+        this.props.loginManager.isAuthenticated() ?
+            "material-icons badge" :
+            "material-icons"
+    )
 
 
     // ...
