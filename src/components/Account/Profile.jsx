@@ -16,7 +16,6 @@ import {
     federationIsAliasOnly,
 } from "../../lib/utils"
 import { action as AccountAction } from "../../redux/Account"
-
 import { withLoginManager } from "../LoginManager"
 
 
@@ -96,6 +95,7 @@ class Profile extends Component {
             this.props.setState({
                 paymentAddress: (data.alias  &&  data.domain) ?
                     `${data.alias}*${data.domain}` : "",
+                discoverable: data.visible,
             })
         })
         // eslint-disable-next-line no-console

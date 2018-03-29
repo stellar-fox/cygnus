@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import axios from "axios"
 import MD5 from "../../lib/md5"
 import {
-    appName,
+    // appName,
     NotImplementedBadge,
 } from "../StellarFox/env"
 import { config } from "../../config"
@@ -23,7 +23,7 @@ import {
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
 import { Tabs, Tab } from "material-ui/Tabs"
-import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
+// import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
 import Dialog from "material-ui/Dialog"
 import Toggle from "material-ui/Toggle"
 import Button from "../../lib/common/Button"
@@ -31,6 +31,7 @@ import Snackbar from "../../lib/common/Snackbar"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 import Profile from "./Profile"
+import Settings from "./Settings"
 import "./index.css"
 
 
@@ -580,135 +581,12 @@ class Account extends Component {
                     {this.props.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Profile" value="1">
                             <Profile />
-                            {/* <div className="tab-content">
-                                <Snackbar
-                                    open={this.state.sbAccountProfileSaved}
-                                    message="Account profile saved."
-                                    onRequestClose={
-                                        this.handleAccountProfileSnackbarClose
-                                    }
-                                />
-                                <div className="flex-row">
-                                    <div>
-                                        <h2 style={styles.headline}>
-                                            Account Profile
-                                        </h2>
-                                        <div className="account-title">
-                                            Fill out your profile details.
-                                        </div>
-                                        <div className="account-subtitle">
-                                            Only your payment address is visible
-                                            to public. The details of your
-                                            account profile contribute to
-                                            KYC/AML compliance.
-                                        </div>
-                                    </div>
-                                    <div className="gravatar">
-                                        <figure>
-                                            <img
-                                                className="image"
-                                                src={this.state.gravatarPath}
-                                                alt="Gravatar"
-                                            />
-                                        </figure>
-                                    </div>
-                                </div>
-                                <div className="flex-centered">
-                                    <div className="p-b">
-                                        <Input
-                                            className="lcars-input"
-                                            value={this.state.firstNameDisplay}
-                                            label="First Name"
-                                            inputType="text"
-                                            maxLength="100"
-                                            autoComplete="off"
-                                            handleChange={
-                                                this.handleFirstNameChange
-                                            }
-                                            subLabel={
-                                                "First Name: " +
-                                                this.state.firstNameDisplay
-                                            }
-                                        />
-                                    </div>
-                                    <div className="p-t p-b">
-                                        <Input
-                                            className="lcars-input"
-                                            value={this.state.lastNameDisplay}
-                                            label="Last Name"
-                                            inputType="text"
-                                            maxLength="100"
-                                            autoComplete="off"
-                                            handleChange={
-                                                this.handleLastNameChange
-                                            }
-                                            subLabel={
-                                                "Last Name: " +
-                                                this.state.lastNameDisplay
-                                            }
-                                        />
-                                    </div>
-                                    <div className="p-t p-b">
-                                        <Input
-                                            className="lcars-input"
-                                            value={this.state.emailDisplay}
-                                            label="Email"
-                                            inputType="text"
-                                            maxLength="100"
-                                            autoComplete="off"
-                                            handleChange={
-                                                this.handleEmailChange
-                                            }
-                                            subLabel={
-                                                "Email: " +
-                                                this.state.emailDisplay
-                                            }
-                                        />
-                                    </div>
-                                    <div className="p-t p-b">
-                                        <Input
-                                            className="lcars-input"
-                                            value={
-                                                this.state.paymentAddressDisplay
-                                            }
-                                            label="Payment Address Alias"
-                                            inputType="text"
-                                            maxLength="100"
-                                            autoComplete="off"
-                                            handleChange={
-                                                this.handlePaymentAddressChange
-                                            }
-                                            subLabel={
-                                                federationIsAliasOnly(
-                                                    this.state
-                                                        .paymentAddressDisplay
-                                                )
-                                                    ? `Payment Address: ${
-                                                        this.state
-                                                            .paymentAddressDisplay
-                                                    }*stellarfox.net`
-                                                    : `Payment Address: ${
-                                                        this.state
-                                                            .paymentAddressDisplay
-                                                    }`
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="p-t">
-                                    <Button
-                                        secondary={true}
-                                        label="Update"
-                                        onClick={
-                                            this.handleProfileUpdate
-                                        }
-                                    />
-                                </div>
-                            </div> */}
                         </Tab>
                     ) : null}
                     <Tab style={styles.tab} label="Settings" value="2">
-                        <div>
+                        <Settings />
+
+                        {/* <div>
                             <h2 style={styles.headline}>Account Settings</h2>
                             <div className="account-title">
                                 Adjust settings for your account.
@@ -885,7 +763,7 @@ class Account extends Component {
                                     </div>
                                 </div>
                             ) : null}
-                        </div>
+                        </div> */}
                     </Tab>
                     {this.props.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Security" value="3">
