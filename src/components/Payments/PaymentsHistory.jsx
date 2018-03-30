@@ -215,12 +215,11 @@ class PaymentsHistory extends Component {
 
 
     // ...
-    determinePrimaryText = (payment) => {
-        let rendered = ""
-
-        switch (payment.type) {
-            case "create_account":
-                rendered =
+    determinePrimaryText = (payment) =>
+        choose(
+            payment.type,
+            {
+                "create_account": () =>
                     payment.funder === this.props.appAuth.publicKey ?
                         <span>
                             &#x02212;
@@ -235,54 +234,44 @@ class PaymentsHistory extends Component {
                             {currencyGlyph(this.props.accountInfo.currency)}
                             {" "}
                             {this.props.convertToFiat(payment.starting_balance)}
+                        </span>,
+
+                "account_merge": () => "Account Merged",
+            },
+            () =>
+                getAssetCode(payment) === "XLM" ?
+                    payment.to === this.props.appAuth.publicKey ?
+                        <span>
+                            &#x0002B;
+                            {" "}
+                            {currencyGlyph(this.props.accountInfo.currency)}
+                            {" "}
+                            {this.props.convertToFiat(payment.amount)}
+                        </span> :
+                        <span>
+                            &#x02212;
+                            {" "}
+                            {currencyGlyph(this.props.accountInfo.currency)}
+                            {" "}
+                            {this.props.convertToFiat(payment.amount)}
                         </span>
-                break
-
-            case "account_merge":
-                rendered = "Account Merged"
-                break
-
-            default:
-                if (getAssetCode(payment) === "XLM") {
-                    rendered =
-                        payment.to === this.props.appAuth.publicKey ?
-                            <span>
-                                &#x0002B;
-                                {" "}
-                                {currencyGlyph(this.props.accountInfo.currency)}
-                                {" "}
-                                {this.props.convertToFiat(payment.amount)}
-                            </span> :
-                            <span>
-                                &#x02212;
-                                {" "}
-                                {currencyGlyph(this.props.accountInfo.currency)}
-                                {" "}
-                                {this.props.convertToFiat(payment.amount)}
-                            </span>
-                } else {
-                    rendered =
-                        payment.to === this.props.appAuth.publicKey ?
-                            <span>
-                                &#x0002B;
-                                {" "}
-                                {payment.amount}
-                                {" "}
-                                {getAssetCode(payment)}
-                            </span> :
-                            <span>
-                                &#x02212;
-                                {" "}
-                                {payment.amount}
-                                {" "}
-                                {getAssetCode(payment)}
-                            </span>
-                }
-                break
-        }
-
-        return rendered
-    }
+                    :
+                    payment.to === this.props.appAuth.publicKey ?
+                        <span>
+                            &#x0002B;
+                            {" "}
+                            {payment.amount}
+                            {" "}
+                            {getAssetCode(payment)}
+                        </span> :
+                        <span>
+                            &#x02212;
+                            {" "}
+                            {payment.amount}
+                            {" "}
+                            {getAssetCode(payment)}
+                        </span>
+        )
 
 
     // ...
