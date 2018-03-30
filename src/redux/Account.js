@@ -10,6 +10,7 @@ const initState = {
     email: "",
     paymentAddress: "",
     discoverable: true,
+    currency: "eur",
 }
 
 

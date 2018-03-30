@@ -4,11 +4,7 @@ import { createReducer } from "../lib/utils"
 
 
 // <ASSETS> component state
-const initState = {
-    rates: [],
-    preferredCurrency: "eur",
-    foo: null,
-}
+const initState = {}
 
 
 

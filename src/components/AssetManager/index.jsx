@@ -37,16 +37,11 @@ class AssetManager extends Component {
         if (this.rateStale(currency)) {
             Axios.get(`${config.api}/ticker/latest/${currency}`)
                 .then((response) => {
-                    // this.props.setState({
-                    //     [currency]: {
-                    //         rate: response.data.data[`price_${currency}`],
-                    //         lastFetch: Date.now(),
-                    //     },
-                    // })
-
                     this.props.setState({
-                        foo: "bar",
-                        rates: "test",
+                        [currency]: {
+                            rate: response.data.data[`price_${currency}`],
+                            lastFetch: Date.now(),
+                        },
                     })
                 })
                 .catch(function (error) {
@@ -67,11 +62,11 @@ export default connect(
     // map state to props.
     (state) => ({
         state: state.Assets,
-        setState: AssetManagerAction.setState,
     }),
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        setState: AssetManagerAction.setState,
         setExchangeRate,
     }, dispatch)
 )(AssetManager)
