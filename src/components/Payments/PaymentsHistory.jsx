@@ -5,8 +5,10 @@ import { connect } from "react-redux"
 import { withLoginManager } from "../LoginManager"
 
 import {
-    utcToLocaleDateTime,
     choose,
+    currencyGlyph,
+    getAssetCode,
+    utcToLocaleDateTime,
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
 
@@ -44,7 +46,7 @@ class PaymentsHistory extends Component {
         loginManager: PropTypes.object.isRequired,
         appAuth: PropTypes.object.isRequired,
         handlePaymentClick: PropTypes.func.isRequired,
-        determinePrimaryText: PropTypes.func.isRequired,
+        convertToFiat: PropTypes.func.isRequired,
         decodeEffectType: PropTypes.func.isRequired,
         setAccountPayments: PropTypes.func.isRequired,
         updateCursors: PropTypes.func.isRequired,
@@ -213,6 +215,77 @@ class PaymentsHistory extends Component {
 
 
     // ...
+    determinePrimaryText = (payment) => {
+        let rendered = ""
+
+        switch (payment.type) {
+            case "create_account":
+                rendered =
+                    payment.funder === this.props.appAuth.publicKey ?
+                        <span>
+                            &#x02212;
+                            {" "}
+                            {currencyGlyph(this.props.accountInfo.currency)}
+                            {" "}
+                            {this.props.convertToFiat(payment.starting_balance)}
+                        </span> :
+                        <span>
+                            &#x0002B;
+                            {" "}
+                            {currencyGlyph(this.props.accountInfo.currency)}
+                            {" "}
+                            {this.props.convertToFiat(payment.starting_balance)}
+                        </span>
+                break
+
+            case "account_merge":
+                rendered = "Account Merged"
+                break
+
+            default:
+                if (getAssetCode(payment) === "XLM") {
+                    rendered =
+                        payment.to === this.props.appAuth.publicKey ?
+                            <span>
+                                &#x0002B;
+                                {" "}
+                                {currencyGlyph(this.props.accountInfo.currency)}
+                                {" "}
+                                {this.props.convertToFiat(payment.amount)}
+                            </span> :
+                            <span>
+                                &#x02212;
+                                {" "}
+                                {currencyGlyph(this.props.accountInfo.currency)}
+                                {" "}
+                                {this.props.convertToFiat(payment.amount)}
+                            </span>
+                } else {
+                    rendered =
+                        payment.to === this.props.appAuth.publicKey ?
+                            <span>
+                                &#x0002B;
+                                {" "}
+                                {payment.amount}
+                                {" "}
+                                {getAssetCode(payment)}
+                            </span> :
+                            <span>
+                                &#x02212;
+                                {" "}
+                                {payment.amount}
+                                {" "}
+                                {getAssetCode(payment)}
+                            </span>
+                }
+                break
+        }
+
+        return rendered
+    }
+
+
+    // ...
     render = () =>
         <Fragment>
             <div className="account-title">Payments History</div>
@@ -264,7 +337,7 @@ class PaymentsHistory extends Component {
                                                             }
                                                         </Fragment>
                                                     }
-                                                    primaryText={this.props.determinePrimaryText.call(this, payment)}
+                                                    primaryText={this.determinePrimaryText(payment)}
                                                     rightAvatar={
                                                         this.props.loginManager.isAuthenticated() ?
                                                             <Avatar
