@@ -765,85 +765,6 @@ class Payments extends Component {
 
 
     // ...
-    determinePrimaryText = (payment) => {
-        let rendered = ""
-
-        switch (payment.type) {
-            case "create_account":
-                rendered =
-                    payment.funder === this.props.appAuth.publicKey ?
-                        <span>
-                            &#x02212;
-                            {" "}
-                            {currencyGlyph(
-                                this.props.accountInfo.currency
-                            )}
-                            {" "}
-                            {this.convertToFiat(payment.starting_balance)}
-                        </span> :
-                        <span>
-                            &#x0002B;
-                            {" "}
-                            {currencyGlyph(
-                                this.props.accountInfo.currency
-                            )}
-                            {" "}
-                            {this.convertToFiat(payment.starting_balance)}
-                        </span>
-                break
-
-            case "account_merge":
-                rendered = "Account Merged"
-                break
-
-            default:
-                if (getAssetCode(payment) === "XLM") {
-                    rendered =
-                        payment.to === this.props.appAuth.publicKey ?
-                            <span>
-                                &#x0002B;
-                                {" "}
-                                {currencyGlyph(
-                                    this.props.accountInfo.currency
-                                )}
-                                {" "}
-                                {this.convertToFiat(payment.amount)}
-                            </span> :
-                            <span>
-                                &#x02212;
-                                {" "}
-                                {currencyGlyph(
-                                    this.props.accountInfo.currency
-                                )}
-                                {" "}
-                                {this.convertToFiat(payment.amount)}
-                            </span>
-                } else {
-                    rendered =
-                        payment.to === this.props.appAuth.publicKey ?
-                            <span>
-                                &#x0002B;
-                                {" "}
-                                {payment.amount}
-                                {" "}
-                                {getAssetCode(payment)}
-                            </span> :
-                            <span>
-                                &#x02212;
-                                {" "}
-                                {payment.amount}
-                                {" "}
-                                {getAssetCode(payment)}
-                            </span>
-                }
-                break
-        }
-
-        return rendered
-    }
-
-
-    // ...
     convertToXLM = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
         const fiatAmount = new BigNumber(amount)
@@ -923,9 +844,9 @@ class Payments extends Component {
                         <PaymentsHistory
                             stellarServer={this.stellarServer}
                             handlePaymentClick={this.handlePaymentClick}
-                            determinePrimaryText={this.determinePrimaryText}
                             decodeEffectType={this.decodeEffectType}
                             updateCursors={this.updateCursors}
+                            convertToFiat={this.convertToFiat}
                         />
 
                     </div>
