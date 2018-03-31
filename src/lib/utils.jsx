@@ -1,6 +1,7 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
+import BigNumber from "bignumber.js"
 import { bip32Prefix } from "../components/StellarFox/env"
 
 
@@ -26,16 +27,6 @@ export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
             `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}` :
             date.toLocaleDateString()
 )(utcDateTime ? new Date(utcDateTime) : new Date())
-
-
-// ...
-export const getAssetCode = (asset) =>
-    asset.asset_type === "native" ? "XLM" : asset.asset_code
-
-
-// ...
-export const formatAmount = (amount, precision = 2) =>
-    Number.parseFloat(amount).toFixed(precision)
 
 
 // ...
@@ -187,6 +178,23 @@ export const createReducer = (initState = {}) => (actions) =>
             (s, _a) => s,
             [state, action,]
         )
+
+
+// ...
+export const getAssetCode = (asset) =>
+    asset.asset_type === "native" ? "XLM" : asset.asset_code
+
+
+// ...
+export const formatAmount = (amount, precision = 2) =>
+    Number.parseFloat(amount).toFixed(precision)
+
+
+// ...
+export const toFiat = (amount, rate = 0) => {
+    BigNumber.config({ DECIMAL_PLACES: 2, })
+    return (new BigNumber(amount)).multipliedBy(rate).toFixed(2)
+}
 
 
 // ...
