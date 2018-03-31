@@ -89,11 +89,9 @@ export const emoji = {
 
 
 // ...
-export const htmlChar = (name) => (
-    (c) => c[name]
-)({
-    "minus": <Fragment>&#x02212;</Fragment>,
-    "plus": <Fragment>&#x0002B;</Fragment>,
-    "space": <Fragment>{" "}</Fragment>,
-    "nbsp": <Fragment>&nbsp;</Fragment>,
-})
+export const htmlEntities = {
+    Minus: () => <Fragment>&#x02212;</Fragment>,
+    Plus: () => <Fragment>&#x0002B;</Fragment>,
+    Space: () => <Fragment>{" "}</Fragment>,
+    Nbsp: () => <Fragment>&nbsp;</Fragment>,
+}
