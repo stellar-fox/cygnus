@@ -8,11 +8,10 @@ import {
     choose,
     currencyGlyph,
     getAssetCode,
+    htmlEntities as he,
     utcToLocaleDateTime,
 } from "../../lib/utils"
-import { htmlEntities as he } from "../StellarFox/env"
 import { gravatarLink } from "../../lib/deneb"
-
 
 import { setAccountPayments } from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"
+import React from "react"
 import { version } from "../../../package.json"
 
 
@@ -80,18 +80,3 @@ export const TopBarSecurityMessage = () =>
 // ...
 export const NotImplementedBadge = () =>
     <span className="red-badge">NOT IMPLEMENTED YET</span>
-
-
-// ...
-export const emoji = {
-    "pencil": "✎",
-}
-
-
-// ...
-export const htmlEntities = {
-    Minus: () => <Fragment>&#x02212;</Fragment>,
-    Plus: () => <Fragment>&#x0002B;</Fragment>,
-    Space: () => <Fragment>{" "}</Fragment>,
-    Nbsp: () => <Fragment>&nbsp;</Fragment>,
-}

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
 import { bip32Prefix } from "../components/StellarFox/env"
@@ -166,7 +166,7 @@ export const Provide = ({ children, ...rest }) =>
     )
 
 
-// ...
+// functional replacement of 'switch' statement
 export const choose = (
     key,
     actions = {},
@@ -200,3 +200,23 @@ export const currencyGlyph = (currency) => (
     "thb": "฿",
     "pln": "zł",
 })
+
+
+// ...
+export const capitalize = (str) =>
+    str.substring(0, 1).toUpperCase() + str.substring(1)
+
+
+// ...
+export const emoji = {
+    "pencil": "✎",
+}
+
+
+// ...
+export const htmlEntities = {
+    Minus: () => <Fragment>&#x02212;</Fragment>,
+    Plus: () => <Fragment>&#x0002B;</Fragment>,
+    Space: () => <Fragment>{" "}</Fragment>,
+    Nbsp: () => <Fragment>&nbsp;</Fragment>,
+}

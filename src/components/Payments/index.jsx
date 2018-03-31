@@ -5,12 +5,12 @@ import BigNumber from "bignumber.js"
 
 import {
     currencyGlyph,
-    pubKeyAbbr,
-    getAssetCode,
+    emoji,
     formatAmount,
+    getAssetCode,
+    pubKeyAbbr,
     StellarSdk,
 } from "../../lib/utils"
-import { emoji } from "../StellarFox/env"
 import { gravatarLink } from "../../lib/deneb"
 import { withLoginManager } from "../LoginManager"
 
