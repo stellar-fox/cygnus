@@ -17,6 +17,7 @@ import {
     setCurrencyPrecision,
     setTab,
     changeModalState,
+    changeSnackbarState,
     setAccountRegistered,
     ActionConstants,
     changeLoginState,
@@ -278,7 +279,13 @@ class Account extends Component {
 
     // ...
     closeSnackBar = () =>
-        this.setState({ snackBar: { open: false, }, })
+        // this.setState({ snackBar: { open: false, }, })
+        this.props.changeSnackbarState({
+            snackbar: {
+                open: false,
+                message: "",
+            },
+        })
 
 
     // ...
@@ -566,8 +573,8 @@ class Account extends Component {
                     </Modal>
 
                     <Snackbar
-                        open={this.state.snackBar.open}
-                        message={this.state.snackBar.message}
+                        open={this.props.appUi.snackbar.open}
+                        message={this.props.appUi.snackbar.message}
                         onRequestClose={this.closeSnackBar}
                     />
 
@@ -919,6 +926,7 @@ export default withLoginManager(connect(
         setCurrencyPrecision,
         setTab,
         changeModalState,
+        changeSnackbarState,
         setAccountRegistered,
         changeLoginState,
     }, dispatch)

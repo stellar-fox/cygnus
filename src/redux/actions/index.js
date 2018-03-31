@@ -218,6 +218,13 @@ export const changeModalState = (modalState) => ({
 
 
 // ...
+export const changeSnackbarState = (snackbarState) => ({
+    type: "CHANGE_SNACKBAR_STATE",
+    payload: snackbarState, // Object
+})
+
+
+// ...
 export const setHorizonEndPoint = (uri) => ({
     type: "SET_HORIZON_END_POINT",
     payload: uri,

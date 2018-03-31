@@ -10,6 +10,7 @@ const ActionTypes = {
     SELECT_VIEW: "SELECT_VIEW",
     SET_PUBKEY: "SET_PUBKEY",
     CHANGE_MODAL_STATE: "CHANGE_MODAL_STATE",
+    CHANGE_SNACKBAR_STATE: "CHANGE_SNACKBAR_STATE",
 }
 
 
@@ -59,8 +60,17 @@ export const navReducer = createReducer({}, {
 // ...
 export const uiReducer = createReducer({
     modals: {},
+    snackbar: {
+        open: false,
+        message: "",
+
+    },
 }, {
     [ActionTypes.CHANGE_MODAL_STATE] (state, action) {
+        state = Object.assign(...state, action.payload)
+        return state
+    },
+    [ActionTypes.CHANGE_SNACKBAR_STATE] (state, action) {
         state = Object.assign(...state, action.payload)
         return state
     },

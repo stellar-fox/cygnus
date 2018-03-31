@@ -2,6 +2,8 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import Axios from "axios"
+import { config } from "../../config"
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
 import Button from "../../lib/common/Button"
 import Toggle from "../../lib/common/Toggle"
@@ -9,7 +11,9 @@ import { appName } from "../StellarFox/env"
 import { action as AccountAction } from "../../redux/Account"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
-
+import {
+    changeSnackbarState,
+} from "../../redux/actions"
 
 
 // <Settings> component
@@ -25,8 +29,33 @@ class Settings extends Component {
     changeCurrency = (event) => {
         this.props.assetManager.updateExchangeRate(event.target.value)
         this.props.setState({ currency: event.target.value, })
+        this.saveCurrency(event.target.value)
     }
 
+
+    // ...
+    saveCurrency = (currency) => {
+        if (this.props.loginManager.isAuthenticated()) {
+            Axios
+                .post(
+                    `${config.api}/account/update/`, {
+                        id: this.props.appAuth.userId,
+                        token: this.props.appAuth.token,
+                        currency,
+                    }
+                )
+                .then((_) => this.props.changeSnackbarState({
+                    snackbar: {
+                        open: true,
+                        message: `Currency has been changed to ${currency.toUpperCase()}.`,
+                    },
+                }))
+                .catch((error) => {
+                    // eslint-disable-next-line no-console
+                    console.log(error.message)
+                })
+        }
+    }
 
     // ...
     render = () =>
@@ -165,5 +194,6 @@ export default withLoginManager(withAssetManager(connect(
     // bind dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
+        changeSnackbarState,
     }, dispatch)
 )(Settings)))
