@@ -8,7 +8,9 @@ import {
     choose,
     currencyGlyph,
     getAssetCode,
+    handleException,
     htmlEntities as he,
+    toFiat,
     utcToLocaleDateTime,
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
@@ -46,7 +48,6 @@ class PaymentsHistory extends Component {
         loginManager: PropTypes.object.isRequired,
         appAuth: PropTypes.object.isRequired,
         handlePaymentClick: PropTypes.func.isRequired,
-        convertToFiat: PropTypes.func.isRequired,
         decodeEffectType: PropTypes.func.isRequired,
         setAccountPayments: PropTypes.func.isRequired,
         updateCursors: PropTypes.func.isRequired,
@@ -215,57 +216,49 @@ class PaymentsHistory extends Component {
 
 
     // ...
-    determinePrimaryText = (payment) =>
-        choose(
-            payment.type,
-            {
-                "create_account": () =>
-                    payment.funder === this.props.appAuth.publicKey ?
+    determinePrimaryText = (payment) => (
+        (rate, glyph) =>
+            choose(
+                payment.type,
+                {
+                    "create_account": () => (
+                        (Sign) =>
+                            <span>
+                                <Sign /><he.Space />{glyph}<he.Space />
+                                {toFiat(payment.starting_balance, rate)}
+                            </span>
+                    )(
+                        payment.funder === this.props.appAuth.publicKey ?
+                            he.Minus : he.Plus
+                    ),
+                    "account_merge": () => "Account Merged",
+                },
+                () => (
+                    (assetCode, Sign) => assetCode === "XLM" ?
                         <span>
-                            <he.Minus /><he.Space />
-                            {currencyGlyph(this.props.accountInfo.currency)}
-                            <he.Space />
-                            {this.props.convertToFiat(payment.starting_balance)}
+                            <Sign /><he.Space />{glyph}<he.Space />
+                            {toFiat(payment.amount, rate)}
                         </span> :
                         <span>
-                            <he.Plus /><he.Space />
-                            {currencyGlyph(this.props.accountInfo.currency)}
-                            <he.Space />
-                            {this.props.convertToFiat(payment.starting_balance)}
-                        </span>,
-
-                "account_merge": () => "Account Merged",
-            },
+                            <Sign /><he.Space />
+                            {payment.amount}<he.Space />{assetCode}
+                        </span>
+                )(
+                    getAssetCode(payment),
+                    payment.to === this.props.appAuth.publicKey ?
+                        he.Plus : he.Minus
+                )
+            )
+    )(
+        handleException(
             () =>
-                getAssetCode(payment) === "XLM" ?
-                    payment.to === this.props.appAuth.publicKey ?
-                        <span>
-                            <he.Plus /><he.Space />
-                            {currencyGlyph(this.props.accountInfo.currency)}
-                            <he.Space />
-                            {this.props.convertToFiat(payment.amount)}
-                        </span> :
-                        <span>
-                            <he.Minus /><he.Space />
-                            {currencyGlyph(this.props.accountInfo.currency)}
-                            <he.Space />
-                            {this.props.convertToFiat(payment.amount)}
-                        </span>
-                    :
-                    payment.to === this.props.appAuth.publicKey ?
-                        <span>
-                            <he.Plus /><he.Space />
-                            {payment.amount}
-                            <he.Space />
-                            {getAssetCode(payment)}
-                        </span> :
-                        <span>
-                            <he.Minus /><he.Space />
-                            {payment.amount}
-                            <he.Space />
-                            {getAssetCode(payment)}
-                        </span>
-        )
+                this.props.accountInfo.rates[
+                    this.props.accountInfo.currency
+                ].rate,
+            () => 0
+        ),
+        currencyGlyph(this.props.accountInfo.currency)
+    )
 
 
     // ...

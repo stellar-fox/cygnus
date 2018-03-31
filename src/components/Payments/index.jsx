@@ -846,7 +846,6 @@ class Payments extends Component {
                             handlePaymentClick={this.handlePaymentClick}
                             decodeEffectType={this.decodeEffectType}
                             updateCursors={this.updateCursors}
-                            convertToFiat={this.convertToFiat}
                         />
 
                     </div>
