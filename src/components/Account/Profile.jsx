@@ -17,7 +17,9 @@ import {
 } from "../../lib/utils"
 import { action as AccountAction } from "../../redux/Account"
 import { withLoginManager } from "../LoginManager"
-
+import {
+    changeSnackbarState,
+} from "../../redux/actions"
 
 
 
@@ -103,7 +105,7 @@ class Profile extends Component {
 
 
     // ...
-    updateResource = (resource, attr) => Axios
+    updateResource = async (resource, attr) => Axios
         .post(`${config.api}/${resource}/update/`, {
             ...attr,
             id: this.props.appAuth.userId,
@@ -115,21 +117,26 @@ class Profile extends Component {
 
 
     // ...
-    updateProfile = () => {
+    updateProfile = async () => {
         const alias = this.props.state.paymentAddress.match(/\*/) ?
             (this.props.state.paymentAddress) :
             (`${this.props.state.paymentAddress}*stellarfox.net`)
 
-        this.updateResource("user",{
+        await this.updateResource("user",{
             first_name: this.props.state.firstName,
             last_name: this.props.state.lastName,
         })
 
-        this.updateResource("account", {
+        await this.updateResource("account", {
             alias,
         })
 
-
+        this.props.changeSnackbarState({
+            snackbar: {
+                open: true,
+                message: "User profile has been updated.",
+            },
+        })
     }
 
 
@@ -225,5 +232,6 @@ export default withLoginManager(connect(
     // bind dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
+        changeSnackbarState,
     }, dispatch)
 )(Profile))

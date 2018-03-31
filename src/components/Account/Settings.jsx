@@ -57,6 +57,37 @@ class Settings extends Component {
         }
     }
 
+
+    // ...
+    changeAccountDiscoverability = (_event, isInputChecked) => {
+        if (this.props.loginManager.isAuthenticated()) {
+            Axios
+                .post(
+                    `${config.api}/account/update/`, {
+                        id: this.props.appAuth.userId,
+                        token: this.props.appAuth.token,
+                        visible: isInputChecked ? "true" : "false",
+                    }
+                )
+                .then((_) => {
+                    this.props.setState({ discoverable: isInputChecked, })
+                    this.props.changeSnackbarState({
+                        snackbar: {
+                            open: true,
+                            message: isInputChecked ?
+                                "Account is now discoverable." :
+                                "Account is now hidden from public search.",
+                        },
+                    })
+                })
+                .catch((error) => {
+                    // eslint-disable-next-line no-console
+                    console.log(error.message)
+                })
+        }
+    }
+
+    
     // ...
     render = () =>
         <div className="tab-content">
@@ -173,7 +204,7 @@ class Settings extends Component {
                     </div>
                     <div>
                         <Toggle
-                            defaultToggled={this.props.state.discoverable}
+                            toggled={this.props.state.discoverable}
                             onToggle={this.changeAccountDiscoverability}
                         />
                     </div>

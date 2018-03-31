@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 import axios from "axios"
 import MD5 from "../../lib/md5"
 import {
-    // appName,
     NotImplementedBadge,
 } from "../StellarFox/env"
 import { config } from "../../config"
@@ -153,6 +152,7 @@ class Account extends Component {
                     })
                     this.props.setState({
                         currency: response.data.data.currency,
+                        discoverable: response.data.data.visible,
                     })
                 })
                 .catch((error) => {
@@ -367,36 +367,7 @@ class Account extends Component {
         }
     }
 
-    // // ...
-    // handleFirstNameChange = (event) =>
-    //     this.setState({ firstNameDisplay: event.target.value, })
-
-
-    // // ...
-    // handleLastNameChange = (event) =>
-    //     this.setState({ lastNameDisplay: event.target.value, })
-
-
-    // // ...
-    // handleEmailChange = (event) => {
-    //     if (emailValid(event.target.value)) {
-    //         this.setState({
-    //             gravatarPath:
-    //                 "https://www.gravatar.com/avatar/" +
-    //                 MD5(event.target.value) +
-    //                 "?s=96",
-    //         })
-    //     }
-    //     this.setState({ emailDisplay: event.target.value, })
-    // }
-
-
-    // // ...
-    // handlePaymentAddressChange = (event) =>
-    //     this.setState({
-    //         paymentAddressDisplay: event.target.value,
-    //     })
-
+    
 
     // ...
     handleProfileUpdate = (_event) => {
@@ -404,18 +375,6 @@ class Account extends Component {
             (this.state.paymentAddressDisplay) :
             (`${this.state.paymentAddressDisplay}*stellarfox.net`)
 
-        // axios
-        //     .post(
-        //         `${config.api}/user/update/${this.props.appAuth.userId}?token=${
-        //             this.props.appAuth.token
-        //         }&first_name=${this.state.firstNameDisplay}&last_name=${
-        //             this.state.lastNameDisplay
-        //         }`
-        //     )
-        //     .catch((error) => {
-        //         // eslint-disable-next-line no-console
-        //         console.log(error)
-        //     })
         axios
             .post(
                 `${config.api}/account/update/${this.props.appAuth.userId}?token=${
@@ -594,185 +553,6 @@ class Account extends Component {
                     ) : null}
                     <Tab style={styles.tab} label="Settings" value="2">
                         <Settings />
-
-                        {/* <div>
-                            <h2 style={styles.headline}>Account Settings</h2>
-                            <div className="account-title">
-                                Adjust settings for your account.
-                            </div>
-                            <div className="account-subtitle">
-                                General account related settings. This
-                                configuration specifies how the account related
-                                views are displayed to the user.
-                            </div>
-                            <div className="p-t p-b" />
-                            <div className="account-title p-t">
-                                Extended Account Number:
-                            </div>
-                            <div className="account-subtitle m-t-small">
-                                <span className="bg-green">
-                                    {this.props.appAuth.publicKey}
-                                </span>
-                            </div>
-                            <div className="p-t p-b" />
-                            <div className="account-title p-t">
-                                Display Currency:
-                            </div>
-                            <div className="account-subtitle">
-                                Choose the currency you want to use in your
-                                account.
-                            </div>
-                            <div className="flex-start">
-                                <Snackbar
-                                    open={this.state.sbCurrency}
-                                    message={
-                                        "Currency set to " + this.state.currency
-                                    }
-                                    onRequestClose={
-                                        this.handleCurrencyChangeSnackbarClose
-                                    }
-                                />
-                                <RadioButtonGroup
-                                    onChange={
-                                        this.handleCurrencyChange
-                                    }
-                                    className="account-radio-group"
-                                    name="currencySelect"
-                                    defaultSelected={
-                                        this.props.accountInfo.currency
-                                    }
-                                >
-                                    <RadioButton
-                                        className="p-b-small"
-                                        value="eur"
-                                        label="Euro [EUR]"
-                                        labelStyle={styles.radioButton.label}
-                                        iconStyle={styles.radioButton.icon}
-                                    />
-                                    <RadioButton
-                                        className="p-b-small"
-                                        value="usd"
-                                        label="U.S. Dollar [USD]"
-                                        labelStyle={styles.radioButton.label}
-                                        iconStyle={styles.radioButton.icon}
-                                    />
-                                    <RadioButton
-                                        className="p-b-small"
-                                        value="aud"
-                                        label="Australian Dollar [AUD]"
-                                        labelStyle={styles.radioButton.label}
-                                        iconStyle={styles.radioButton.icon}
-                                    />
-                                    <RadioButton
-                                        className="p-b-small"
-                                        value="nzd"
-                                        label="New Zealand Dollar [NZD]"
-                                        labelStyle={styles.radioButton.label}
-                                        iconStyle={styles.radioButton.icon}
-                                    />
-                                    <RadioButton
-                                        className="p-b-small"
-                                        value="pln"
-                                        label="Polish Złoty [PLN]"
-                                        labelStyle={styles.radioButton.label}
-                                        iconStyle={styles.radioButton.icon}
-                                    />
-                                    <RadioButton
-                                        value="thb"
-                                        label="Thai Baht [THB]"
-                                        labelStyle={styles.radioButton.label}
-                                        iconStyle={styles.radioButton.icon}
-                                    />
-                                </RadioButtonGroup>
-                            </div>
-
-                            {(
-                                !this.props.accountInfo.registered &&
-                                !this.props.loginManager.isExploreOnly()
-                            ) ?
-                                <div>
-                                    <div className="p-t p-b" />
-                                    <div className="account-title p-t">
-                                    Register this account with {appName}:
-                                    </div>
-                                    <div className="account-subtitle">
-                                    Get access to unique services and
-                                    remittance service.
-                                    </div>
-                                    <div className="p-b" />
-                                    <Button
-                                        label="Register"
-                                        secondary={true}
-                                        onClick={this.showSignupModal}
-                                    />
-                                </div> :
-                                null}
-                            {this.props.loginManager.isAuthenticated() ? (
-                                <div>
-                                    <div className="p-t p-b" />
-                                    <div className="flex-row outline">
-                                        <div>
-                                            <div className="account-title">
-                                                Make Account Discoverable
-                                            </div>
-                                            <div className="account-subtitle">
-                                                Your account number will be
-                                                publicly discoverable and can be
-                                                found by others via your payment
-                                                address.
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div>
-                                                <Snackbar
-                                                    open={
-                                                        this.state
-                                                            .sbAccountDiscoverable
-                                                    }
-                                                    message={
-                                                        this.state
-                                                            .accountDiscoverableMessage
-                                                    }
-                                                    onRequestClose={
-                                                        this.handleAccountDiscoverableSnackbarClose
-                                                    }
-                                                />
-                                                <Toggle
-                                                    toggled={
-                                                        this.state
-                                                            .accountDiscoverable
-                                                    }
-                                                    onToggle={
-                                                        this.handleAccountDiscoverableToggle
-                                                    }
-                                                    labelPosition="right"
-                                                    thumbStyle={
-                                                        styles.toggleSwitch
-                                                            .thumbOff
-                                                    }
-                                                    trackStyle={
-                                                        styles.toggleSwitch
-                                                            .trackOff
-                                                    }
-                                                    thumbSwitchedStyle={
-                                                        styles.toggleSwitch
-                                                            .thumbSwitched
-                                                    }
-                                                    trackSwitchedStyle={
-                                                        styles.toggleSwitch
-                                                            .trackSwitched
-                                                    }
-                                                    labelStyle={
-                                                        styles.toggleSwitch
-                                                            .labelStyle
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : null}
-                        </div> */}
                     </Tab>
                     {this.props.loginManager.isAuthenticated() ? (
                         <Tab style={styles.tab} label="Security" value="3">

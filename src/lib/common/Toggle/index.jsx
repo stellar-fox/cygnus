@@ -37,5 +37,5 @@ export default (props) =>
             styles.trackSwitchedStyle}
         labelStyle={props.labelStyle || styles.labelStyle}
         onToggle={props.onToggle}
-        defaultToggled={props.defaultToggled}
+        toggled={props.toggled}
     />
