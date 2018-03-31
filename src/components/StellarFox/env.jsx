@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { version } from "../../../package.json"
 
 
@@ -84,5 +84,16 @@ export const NotImplementedBadge = () =>
 
 // ...
 export const emoji = {
-    pencil: "✎",
+    "pencil": "✎",
 }
+
+
+// ...
+export const htmlChar = (name) => (
+    (c) => c[name]
+)({
+    "minus": <Fragment>&#x02212;</Fragment>,
+    "plus": <Fragment>&#x0002B;</Fragment>,
+    "space": <Fragment>{" "}</Fragment>,
+    "nbsp": <Fragment>&nbsp;</Fragment>,
+})

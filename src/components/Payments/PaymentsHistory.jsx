@@ -10,6 +10,7 @@ import {
     getAssetCode,
     utcToLocaleDateTime,
 } from "../../lib/utils"
+import { htmlChar } from "../StellarFox/env"
 import { gravatarLink } from "../../lib/deneb"
 
 
@@ -222,17 +223,17 @@ class PaymentsHistory extends Component {
                 "create_account": () =>
                     payment.funder === this.props.appAuth.publicKey ?
                         <span>
-                            &#x02212;
-                            {" "}
+                            {htmlChar("minus")}
+                            {htmlChar("space")}
                             {currencyGlyph(this.props.accountInfo.currency)}
-                            {" "}
+                            {htmlChar("space")}
                             {this.props.convertToFiat(payment.starting_balance)}
                         </span> :
                         <span>
-                            &#x0002B;
-                            {" "}
+                            {htmlChar("plus")}
+                            {htmlChar("space")}
                             {currencyGlyph(this.props.accountInfo.currency)}
-                            {" "}
+                            {htmlChar("space")}
                             {this.props.convertToFiat(payment.starting_balance)}
                         </span>,
 
@@ -242,33 +243,33 @@ class PaymentsHistory extends Component {
                 getAssetCode(payment) === "XLM" ?
                     payment.to === this.props.appAuth.publicKey ?
                         <span>
-                            &#x0002B;
-                            {" "}
+                            {htmlChar("plus")}
+                            {htmlChar("space")}
                             {currencyGlyph(this.props.accountInfo.currency)}
-                            {" "}
+                            {htmlChar("space")}
                             {this.props.convertToFiat(payment.amount)}
                         </span> :
                         <span>
-                            &#x02212;
-                            {" "}
+                            {htmlChar("minus")}
+                            {htmlChar("space")}
                             {currencyGlyph(this.props.accountInfo.currency)}
-                            {" "}
+                            {htmlChar("space")}
                             {this.props.convertToFiat(payment.amount)}
                         </span>
                     :
                     payment.to === this.props.appAuth.publicKey ?
                         <span>
-                            &#x0002B;
-                            {" "}
+                            {htmlChar("plus")}
+                            {htmlChar("space")}
                             {payment.amount}
-                            {" "}
+                            {htmlChar("space")}
                             {getAssetCode(payment)}
                         </span> :
                         <span>
-                            &#x02212;
-                            {" "}
+                            {htmlChar("minus")}
+                            {htmlChar("space")}
                             {payment.amount}
-                            {" "}
+                            {htmlChar("space")}
                             {getAssetCode(payment)}
                         </span>
         )

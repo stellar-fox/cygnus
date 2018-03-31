@@ -193,10 +193,10 @@ export const createReducer = (initState = {}) => (actions) =>
 export const currencyGlyph = (currency) => (
     (c) => c[currency]
 )({
-    eur: "€",
-    usd: "$",
-    aud: "$",
-    nzd: "$",
-    thb: "฿",
-    pln: "zł",
+    "eur": "€",
+    "usd": "$",
+    "aud": "$",
+    "nzd": "$",
+    "thb": "฿",
+    "pln": "zł",
 })
