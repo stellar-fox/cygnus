@@ -26,9 +26,8 @@ class AssetManager extends Component {
 
     // ...
     rateStale = (currency) => (
-        !this.props.state.rates ||
-        !this.props.state.rates[currency] ||
-        this.props.state.rates[currency].lastFetch + 300000 < Date.now()
+        !this.props.state[currency] ||
+        this.props.state[currency].lastFetch + 300000 < Date.now()
     )
 
 

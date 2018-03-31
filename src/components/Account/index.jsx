@@ -23,7 +23,6 @@ import {
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
 import { Tabs, Tab } from "material-ui/Tabs"
-// import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
 import Dialog from "material-ui/Dialog"
 import Toggle from "material-ui/Toggle"
 import Button from "../../lib/common/Button"
@@ -150,6 +149,9 @@ class Account extends Component {
                         accountDiscoverable: response.data.data.visible,
                         currency: response.data.data.currency,
                         currencyPrecision: response.data.data.precision,
+                    })
+                    this.props.setState({
+                        currency: response.data.data.currency,
                     })
                 })
                 .catch((error) => {
