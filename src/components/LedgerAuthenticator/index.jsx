@@ -152,7 +152,7 @@ class LedgerAuthenticator extends Component {
                     <Toggle
                         label="Use default account"
                         onToggle={this.handleCheckboxClick}
-                        defaultToggled={true}
+                        toggled={this.state.useDefaultAccount}
                         labelStyle={{
                             color: this.props.className.match(/reverse/) ?
                                 "rgb(15,46,83)" : "rgb(244,176,4)",
