@@ -39,6 +39,7 @@ import {
     updateLoadingMessage,
     changeLoginState,
     changeModalState,
+    changeSnackbarState,
     ActionConstants,
 } from "../../redux/actions"
 
@@ -59,7 +60,7 @@ import InputField from "../../lib/common/InputField"
 import Snackbar from "../../lib/common/Snackbar"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
-
+import RegisterCard from "./RegisterCard"
 import "./index.css"
 
 
@@ -109,6 +110,13 @@ class Balances extends Component {
 
     // ...
     componentDidMount = () => {
+        this.props.changeSnackbarState({
+            snackbar: {
+                open: false,
+                message: "",
+            },
+        })
+
         if (!this.props.accountInfo.account) {
 
             this.props.setModalLoading()
@@ -143,12 +151,12 @@ class Balances extends Component {
                 })
         }
 
-        this.getExchangeRate(this.props.accountInfo.currency)
+        this.getExchangeRate(this.props.Account.currency)
         this.setState({
-            currencySymbol: this.props.accountInfo.currency,
+            currencySymbol: this.props.Account.currency,
             currencyText:
                 this.getCurrencyText(
-                    this.props.accountInfo.currency
+                    this.props.Account.currency
                 ),
         })
 
@@ -288,7 +296,7 @@ class Balances extends Component {
                         sbPaymentAmount:
                             this.convertToFiat(message.starting_balance),
                         sbPaymentAssetCode:
-                            this.props.accountInfo.currency.toUpperCase(),
+                            this.props.Account.currency.toUpperCase(),
                     })
                 }
 
@@ -306,7 +314,7 @@ class Balances extends Component {
                         sbPaymentAmount:
                             this.convertToFiat(message.starting_balance),
                         sbPaymentAssetCode:
-                            this.props.accountInfo.currency.toUpperCase(),
+                            this.props.Account.currency.toUpperCase(),
                     })
                 }
 
@@ -323,7 +331,7 @@ class Balances extends Component {
                         sbPaymentText: "Balance Updated. Payment Received: ",
                         sbPaymentAmount: this.convertToFiat(message.amount),
                         sbPaymentAssetCode:
-                            this.props.accountInfo.currency.toUpperCase(),
+                            this.props.Account.currency.toUpperCase(),
                     })
                 }
 
@@ -340,7 +348,7 @@ class Balances extends Component {
                         sbPaymentText: "Balance Updated. Payment Sent: ",
                         sbPaymentAmount: this.convertToFiat(message.amount),
                         sbPaymentAssetCode:
-                            this.props.accountInfo.currency.toUpperCase(),
+                            this.props.Account.currency.toUpperCase(),
                     })
                 }
             },
@@ -387,7 +395,7 @@ class Balances extends Component {
     // ...
     exchangeRateFetched = () => (
         this.props.accountInfo.rates  &&
-            this.props.accountInfo.rates[this.props.accountInfo.currency]
+            this.props.accountInfo.rates[this.props.Account.currency]
     )
 
 
@@ -760,11 +768,11 @@ class Balances extends Component {
 
         if (
             this.props.accountInfo.rates &&
-            this.props.accountInfo.rates[this.props.accountInfo.currency]
+            this.props.accountInfo.rates[this.props.Account.currency]
         ) {
             return fiatAmount.dividedBy(
                 this.props.accountInfo.rates[
-                    this.props.accountInfo.currency
+                    this.props.Account.currency
                 ].rate
             ).toString()
         } else {
@@ -780,10 +788,10 @@ class Balances extends Component {
 
         if (
             this.props.accountInfo.rates &&
-            this.props.accountInfo.rates[this.props.accountInfo.currency]
+            this.props.accountInfo.rates[this.props.Account.currency]
         ) {
             return nativeAmount.multipliedBy(
-                this.props.accountInfo.rates[this.props.accountInfo.currency].rate
+                this.props.accountInfo.rates[this.props.Account.currency].rate
             ).toFixed(2)
         } else {
             return "0"
@@ -1444,48 +1452,7 @@ class Balances extends Component {
                 </div>
 
                 {!this.props.accountInfo.registered && !this.props.loginManager.isExploreOnly() ? (
-                    <Card className="welcome-card">
-                        <CardText>
-                            <div className="flex-row">
-                                <div>
-                                    <div className="balance">Hi there!</div>
-                                    <div>
-                                        <p>
-                                            It looks like this account is not yet registered with our service.
-                                            Registered accounts put you in compliance with local and
-                                            international money transmitting laws. You will also be able
-                                            to transact easily with anyone and take advantage of
-                                            some awesome features that we offer!
-                                        </p>
-                                        <p> Here are some of them:</p>
-                                        <ul>
-                                            <li>One click, pay to contact.</li>
-                                            <li>Create multiple escrow accounts.</li>
-                                            <li>Customize your payment address.</li>
-                                            <li>Create and manage contact book of your payees.</li>
-                                            <li>Gain access to powerful account settings.</li>
-                                        </ul>
-                                        <p>Would you like to open one today? It&apos;s super easy!</p>
-                                    </div>
-                                    <div className="fade-extreme small-icon">
-                                        <i className="material-icons">blur_on</i>
-                                        Registering with our service is free. Forever.
-                                        We only charge fractional fees when you choose
-                                        to use our remittance service.
-                                    </div>
-                                </div>
-                            </div>
-                        </CardText>
-                        <CardActions>
-                            <Button
-                                onClick={this.showSignupModal}
-                                backgroundColor="rgb(15,46,83)"
-                                labelColor="rgb(244,176,4)"
-                                label="Register"
-                            />
-                        </CardActions>
-                    </Card>
-
+                    <RegisterCard />
                 ) : null}
 
                 {this.props.accountInfo.exists ? (
@@ -1502,7 +1469,7 @@ class Balances extends Component {
                                     <span>
                                         <span>
                                             {this.getCurrencyLongText(
-                                                this.props.accountInfo.currency
+                                                this.props.Account.currency
                                             )}
                                         </span>
                                         <span className="fade currency-iso p-l-small">
@@ -1522,7 +1489,7 @@ class Balances extends Component {
                                         <div className="balance">
                                             <span className="fade currency-glyph">
                                                 {currencyGlyph(
-                                                    this.props.accountInfo.currency
+                                                    this.props.Account.currency
                                                 )}
                                             </span>
                                             <span className="p-l-small">
@@ -1599,7 +1566,7 @@ class Balances extends Component {
                                 <span>
                                     <span>
                                         {this.getCurrencyLongText(
-                                            this.props.accountInfo.currency
+                                            this.props.Account.currency
                                         )}
                                     </span>
                                     <span className="fade currency-iso p-l-small">
@@ -1619,7 +1586,7 @@ class Balances extends Component {
                                     <div className='balance'>
                                         <span className="fade currency-glyph">
                                             {currencyGlyph(
-                                                this.props.accountInfo.currency
+                                                this.props.Account.currency
                                             )}
                                         </span> 0.00
                                     </div>
@@ -1707,7 +1674,7 @@ class Balances extends Component {
                                 <div className="payment-header f-s">
                                     <div className="p-r leading-label-align payment-currency">
                                         {currencyGlyph(
-                                            this.props.accountInfo.currency
+                                            this.props.Account.currency
                                         )}
                                     </div>
                                     <div>
@@ -1825,6 +1792,7 @@ class Balances extends Component {
 export default withLoginManager(connect(
     // map state to props.
     (state) => ({
+        Account: state.Account,
         accountInfo: state.accountInfo,
         auth: state.auth,
         modal: state.modal,
@@ -1850,6 +1818,7 @@ export default withLoginManager(connect(
         updateLoadingMessage,
         changeLoginState,
         changeModalState,
+        changeSnackbarState,
         ActionConstants,
     }, dispatch)
 )(Balances))

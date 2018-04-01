@@ -13,6 +13,7 @@ import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import {
     changeSnackbarState,
+    changeModalState,
 } from "../../redux/actions"
 
 
@@ -23,6 +24,17 @@ class Settings extends Component {
     static propTypes = {
         setState: PropTypes.func.isRequired,
     }
+
+
+    // ...
+    showSignupModal = () =>
+        this.props.changeModalState({
+            modals: {
+                signup: {
+                    showing: true,
+                },
+            },
+        })
 
 
     // ...
@@ -44,17 +56,18 @@ class Settings extends Component {
                         currency,
                     }
                 )
-                .then((_) => this.props.changeSnackbarState({
-                    snackbar: {
-                        open: true,
-                        message: `Currency has been changed to ${currency.toUpperCase()}.`,
-                    },
-                }))
                 .catch((error) => {
                     // eslint-disable-next-line no-console
                     console.log(error.message)
                 })
         }
+
+        this.props.changeSnackbarState({
+            snackbar: {
+                open: true,
+                message: `Currency has been changed to ${currency.toUpperCase()}.`,
+            },
+        })
     }
 
 
@@ -220,11 +233,13 @@ export default withLoginManager(withAssetManager(connect(
         state: state.Account,
         appAuth: state.appAuth,
         accountInfo: state.accountInfo,
+        appUi: state.appUi,
     }),
 
     // bind dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
         changeSnackbarState,
+        changeModalState,
     }, dispatch)
 )(Settings)))

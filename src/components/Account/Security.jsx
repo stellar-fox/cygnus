@@ -1,15 +1,10 @@
 import React, { Component } from "react"
-import PropTypes from "prop-types"
 import { NotImplementedBadge } from "../StellarFox/env"
 import Toggle from "../../lib/common/Toggle"
 
 export default class Security extends Component {
 
     // ...
-    static propTypes = {
-        setState: PropTypes.func.isRequired,
-    }
-
     render = () => 
         <div className="tab-content">
             <div className="f-b space-between">
