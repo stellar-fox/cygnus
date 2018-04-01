@@ -149,17 +149,6 @@ class Payments extends Component {
 
 
     // ...
-    noMoreTransactionsNotice = (state) =>
-        this.props.setState(
-            {
-                sbNoMoreTransactions: true,
-                ...state,
-            }
-            // (_prevState) => this.props.setState(state)
-        )
-
-
-    // ...
     handleNoMorePaymentsSnackbarClose = () =>
         this.props.setState({ sbNoMorePayments: false, })
 
@@ -708,63 +697,6 @@ class Payments extends Component {
 
 
     // ...
-    getNextTransactionsPage = () =>
-        this.stellarServer
-            .transactions()
-            .forAccount(this.props.appAuth.publicKey)
-            .order("desc")
-            .cursor(this.props.state.txCursorRight)
-            .limit(5)
-            .call()
-            .then((transactionsResult) => {
-                if (transactionsResult.records.length > 0) {
-                    this.props.setState({
-                        txPrevDisabled: false,
-                    })
-                    this.props.setAccountTransactions(transactionsResult)
-                    this.updateTransactionsCursors(transactionsResult.records)
-                } else {
-                    this.noMoreTransactionsNotice.call(this, {
-                        txNextDisabled: true,
-                    })
-                }
-            })
-            .catch(function (err) {
-                // eslint-disable-next-line no-console
-                console.log(err)
-            })
-
-
-    // ...
-    getPrevTransactionsPage = () =>
-        this.stellarServer
-            .transactions()
-            .forAccount(this.props.appAuth.publicKey)
-            .order("asc")
-            .cursor(this.props.state.txCursorLeft)
-            .limit(5)
-            .call()
-            .then((transactionsResult) => {
-                if (transactionsResult.records.length > 0) {
-                    this.props.setState({
-                        txNextDisabled: false,
-                    })
-                    transactionsResult.records.reverse()
-                    this.props.setAccountTransactions(transactionsResult)
-                    this.updateTransactionsCursors(transactionsResult.records)
-                } else {
-                    this.noMoreTransactionsNotice.call(this, {
-                        txPrevDisabled: true,
-                    })
-                }
-            })
-            .catch(function (err) {
-                // eslint-disable-next-line no-console
-                console.log(err)
-            })
-
-
-    // ...
     convertToXLM = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
         const fiatAmount = new BigNumber(amount)
@@ -855,10 +787,8 @@ class Payments extends Component {
                     <div className="tab-content">
 
                         <Transactions
-                            getPrevTransactionsPage={this.getPrevTransactionsPage}
-                            getNextTransactionsPage={this.getNextTransactionsPage}
-                            txNextDisabled={this.props.state.txNextDisabled}
-                            txPrevDisabled={this.props.state.txPrevDisabled}
+                            stellarServer={this.stellarServer}
+                            updateTransactionsCursors={this.updateTransactionsCursors}
                         />
 
                     </div>

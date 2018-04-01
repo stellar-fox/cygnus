@@ -44,6 +44,7 @@ class PaymentsHistory extends Component {
     static propTypes = {
         stellarServer: PropTypes.object.isRequired,
         state: PropTypes.object.isRequired,
+        setState: PropTypes.func.isRequired,
         accountInfo: PropTypes.object.isRequired,
         loginManager: PropTypes.object.isRequired,
         appAuth: PropTypes.object.isRequired,

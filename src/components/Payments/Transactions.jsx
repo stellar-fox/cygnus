@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
 import {
@@ -7,8 +8,10 @@ import {
     utcToLocaleDateTime,
 } from "../../lib/utils"
 
-import IconButton from "material-ui/IconButton"
+import { setAccountTransactions } from "../../redux/actions"
+import { action as PaymentsAction } from "../../redux/Payments"
 
+import IconButton from "material-ui/IconButton"
 import {
     Table,
     TableBody,
@@ -41,12 +44,82 @@ class Transactions extends Component {
 
     // ...
     static propTypes = {
+        stellarServer: PropTypes.object.isRequired,
+        state: PropTypes.object.isRequired,
+        setState: PropTypes.func.isRequired,
         accountInfo: PropTypes.object.isRequired,
-        getPrevTransactionsPage: PropTypes.func.isRequired,
-        getNextTransactionsPage: PropTypes.func.isRequired,
-        txNextDisabled: PropTypes.bool.isRequired,
-        txPrevDisabled: PropTypes.bool.isRequired,
+        appAuth: PropTypes.object.isRequired,
+        updateTransactionsCursors: PropTypes.func.isRequired,
     }
+
+
+    // ...
+    noMoreTransactionsNotice = (state) =>
+        this.props.setState({
+            sbNoMoreTransactions: true,
+            ...state,
+        })
+
+
+    // ...
+    getNextTransactionsPage = () =>
+        this.props.stellarServer
+            .transactions()
+            .forAccount(this.props.appAuth.publicKey)
+            .order("desc")
+            .cursor(this.props.state.txCursorRight)
+            .limit(5)
+            .call()
+            .then((transactionsResult) => {
+                if (transactionsResult.records.length > 0) {
+                    this.props.setState({
+                        txPrevDisabled: false,
+                    })
+                    this.props.setAccountTransactions(transactionsResult)
+                    this.props.updateTransactionsCursors(
+                        transactionsResult.records
+                    )
+                } else {
+                    this.noMoreTransactionsNotice.call(this, {
+                        txNextDisabled: true,
+                    })
+                }
+            })
+            .catch(function (err) {
+                // eslint-disable-next-line no-console
+                console.log(err)
+            })
+
+
+    // ...
+    getPrevTransactionsPage = () =>
+        this.props.stellarServer
+            .transactions()
+            .forAccount(this.props.appAuth.publicKey)
+            .order("asc")
+            .cursor(this.props.state.txCursorLeft)
+            .limit(5)
+            .call()
+            .then((transactionsResult) => {
+                if (transactionsResult.records.length > 0) {
+                    this.props.setState({
+                        txNextDisabled: false,
+                    })
+                    transactionsResult.records.reverse()
+                    this.props.setAccountTransactions(transactionsResult)
+                    this.props.updateTransactionsCursors(
+                        transactionsResult.records
+                    )
+                } else {
+                    this.noMoreTransactionsNotice.call(this, {
+                        txPrevDisabled: true,
+                    })
+                }
+            })
+            .catch(function (err) {
+                // eslint-disable-next-line no-console
+                console.log(err)
+            })
 
 
     // ...
@@ -139,8 +212,8 @@ class Transactions extends Component {
                         tooltip="Previous Transactions"
                         tooltipStyles={styles.tooltip}
                         tooltipPosition="top-right"
-                        onClick={this.props.getPrevTransactionsPage}
-                        disabled={this.props.txPrevDisabled}
+                        onClick={this.getPrevTransactionsPage}
+                        disabled={this.props.state.txPrevDisabled}
                     >
                         <i className="material-icons">fast_rewind</i>
                     </IconButton>
@@ -150,8 +223,8 @@ class Transactions extends Component {
                         tooltip="Next Transactions"
                         tooltipStyles={styles.tooltip}
                         tooltipPosition="top-left"
-                        onClick={this.props.getNextTransactionsPage}
-                        disabled={this.props.txNextDisabled}
+                        onClick={this.getNextTransactionsPage}
+                        disabled={this.props.state.txNextDisabled}
                     >
                         <i className="material-icons">fast_forward</i>
                     </IconButton>
@@ -166,6 +239,14 @@ class Transactions extends Component {
 export default connect(
     // map state to props.
     (state) => ({
+        state: state.Payments,
         accountInfo: state.accountInfo,
-    })
+        appAuth: state.appAuth,
+    }),
+
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        setState: PaymentsAction.setState,
+        setAccountTransactions,
+    }, dispatch)
 )(Transactions)
