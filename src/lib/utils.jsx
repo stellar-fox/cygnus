@@ -1,6 +1,7 @@
-import React from "react"
+import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
+import BigNumber from "bignumber.js"
 import { bip32Prefix } from "../components/StellarFox/env"
 
 
@@ -26,16 +27,6 @@ export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
             `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}` :
             date.toLocaleDateString()
 )(utcDateTime ? new Date(utcDateTime) : new Date())
-
-
-// ...
-export const getAssetCode = (asset) =>
-    asset.asset_type === "native" ? "XLM" : asset.asset_code
-
-
-// ...
-export const formatAmount = (amount, precision = 2) =>
-    Number.parseFloat(amount).toFixed(precision)
 
 
 // ...
@@ -166,7 +157,7 @@ export const Provide = ({ children, ...rest }) =>
     )
 
 
-// ...
+// functional replacement of 'switch' statement
 export const choose = (
     key,
     actions = {},
@@ -190,13 +181,50 @@ export const createReducer = (initState = {}) => (actions) =>
 
 
 // ...
+export const getAssetCode = (asset) =>
+    asset.asset_type === "native" ? "XLM" : asset.asset_code
+
+
+// ...
+export const formatAmount = (amount, precision = 2) =>
+    Number.parseFloat(amount).toFixed(precision)
+
+
+// ...
+export const toFiat = (amount, rate = 0) => {
+    BigNumber.config({ DECIMAL_PLACES: 2, })
+    return (new BigNumber(amount)).multipliedBy(rate).toFixed(2)
+}
+
+
+// ...
 export const currencyGlyph = (currency) => (
     (c) => c[currency]
 )({
-    eur: "€",
-    usd: "$",
-    aud: "$",
-    nzd: "$",
-    thb: "฿",
-    pln: "zł",
+    "eur": "€",
+    "usd": "$",
+    "aud": "$",
+    "nzd": "$",
+    "thb": "฿",
+    "pln": "zł",
 })
+
+
+// ...
+export const capitalize = (str) =>
+    str.substring(0, 1).toUpperCase() + str.substring(1)
+
+
+// ...
+export const emoji = {
+    "pencil": "✎",
+}
+
+
+// ...
+export const htmlEntities = {
+    Minus: () => <Fragment>&#x02212;</Fragment>,
+    Plus: () => <Fragment>&#x0002B;</Fragment>,
+    Space: () => <Fragment>{" "}</Fragment>,
+    Nbsp: () => <Fragment>&nbsp;</Fragment>,
+}

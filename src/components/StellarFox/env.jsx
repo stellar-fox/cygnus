@@ -83,12 +83,6 @@ export const NotImplementedBadge = () =>
 
 
 // ...
-export const emoji = {
-    pencil: "✎",
-}
-
-
-// ...
 export const gravatar = "https://www.gravatar.com/avatar/"
 
 
