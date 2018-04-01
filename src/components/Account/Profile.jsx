@@ -30,7 +30,9 @@ class Profile extends Component {
     static propTypes = {
         setState: PropTypes.func.isRequired,
     }
+ 
 
+    // ...
     componentDidMount = () => {
         if (this.props.loginManager.isAuthenticated()) {
             this.getUserData()
@@ -38,6 +40,7 @@ class Profile extends Component {
         }
     }
 
+    
     // ...
     changeFirstName = (event) =>
         this.props.setState({ firstName: event.target.value, })
