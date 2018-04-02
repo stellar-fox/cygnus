@@ -88,3 +88,7 @@ export const gravatar = "https://www.gravatar.com/avatar/"
 
 // ...
 export const gravatarSize = "s=96"
+
+
+// ...
+export const defaultCurrencyRateUpdateTime = 300000
