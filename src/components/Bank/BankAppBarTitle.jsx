@@ -11,7 +11,6 @@ import "./BankAppBarTitle.css"
 export default connect(
     (state) => ({
         ledgerVer: state.auth.ledgerSoftwareVersion,
-        viewName: state.appNav.view,
     })
 )(
     ({
