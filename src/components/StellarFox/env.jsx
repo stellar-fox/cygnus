@@ -1,5 +1,8 @@
 import React from "react"
-import { version } from "../../../package.json"
+import {
+    homepage,
+    version,
+} from "../../../package.json"
 
 
 // ...
@@ -15,7 +18,7 @@ export const appCopyDates = "2017-2018"
 
 
 // ...
-export const appLandingPageLink = "https://stellarfox.net/"
+export const appLandingPageLink = homepage
 
 
 // ...
