@@ -181,23 +181,27 @@ export const createReducer = (initState = {}) => (actions) =>
 
 
 // ...
+// TODO: move to <AssetManager> (?)
 export const getAssetCode = (asset) =>
     asset.asset_type === "native" ? "XLM" : asset.asset_code
 
 
 // ...
+// TODO: move to <AssetManager> (?)
 export const formatAmount = (amount, precision = 2) =>
     Number.parseFloat(amount).toFixed(precision)
 
 
 // ...
-export const toFiat = (amount, rate = 0) => {
+// TODO: move to <AssetManager> (?)
+export const currencyAmountConvert = (amount, rate = 0) => {
     BigNumber.config({ DECIMAL_PLACES: 2, })
     return (new BigNumber(amount)).multipliedBy(rate).toFixed(2)
 }
 
 
 // ...
+// TODO: move to <AssetManager> (?)
 export const currencyGlyph = (currency) => (
     (c) => c[currency]
 )({

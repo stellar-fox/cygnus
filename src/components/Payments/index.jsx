@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import BigNumber from "bignumber.js"
 
 import {
+    currencyAmountConvert,
     currencyGlyph,
     emoji,
     formatAmount,
@@ -718,18 +719,16 @@ class Payments extends Component {
 
     // ...
     convertToFiat = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 2, })
-        const nativeAmount = new BigNumber(amount)
-
         if (
             this.props.accountInfo.rates  &&
             this.props.accountInfo.rates[this.props.accountInfo.currency]
         ) {
-            return nativeAmount.multipliedBy(
+            return currencyAmountConvert(
+                amount,
                 this.props.accountInfo.rates[
                     this.props.accountInfo.currency
                 ].rate
-            ).toFixed(2)
+            )
         }
 
         return "0"

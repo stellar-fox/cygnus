@@ -10,7 +10,7 @@ import {
     getAssetCode,
     handleException,
     htmlEntities as he,
-    toFiat,
+    currencyAmountConvert,
     utcToLocaleDateTime,
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
@@ -226,7 +226,7 @@ class PaymentsHistory extends Component {
                         (Sign) =>
                             <span>
                                 <Sign /><he.Space />{glyph}<he.Space />
-                                {toFiat(payment.starting_balance, rate)}
+                                {currencyAmountConvert(payment.starting_balance, rate)}
                             </span>
                     )(
                         payment.funder === this.props.appAuth.publicKey ?
@@ -238,7 +238,7 @@ class PaymentsHistory extends Component {
                     (assetCode, Sign) => assetCode === "XLM" ?
                         <span>
                             <Sign /><he.Space />{glyph}<he.Space />
-                            {toFiat(payment.amount, rate)}
+                            {currencyAmountConvert(payment.amount, rate)}
                         </span> :
                         <span>
                             <Sign /><he.Space />
