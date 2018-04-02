@@ -65,7 +65,7 @@ export default withRouter(connect(
 
 
         // ...
-        componentWillReceiveProps = ({ currentPath, }) => {
+        UNSAFE_componentWillReceiveProps = ({ currentPath, }) => {
             if (currentPath !== this.props.currentPath) {
                 this.props.selectView(this.routeToViewMap[currentPath])
             }

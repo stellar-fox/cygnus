@@ -47,7 +47,7 @@ export default connect(
 
 
         // ...
-        componentWillReceiveProps = ({ drawerOpened, }) => {
+        UNSAFE_componentWillReceiveProps = ({ drawerOpened, }) => {
             if (this.props.drawerOpened !== drawerOpened) {
                 this.setState({
                     style: this.computeStyle(drawerOpened),
