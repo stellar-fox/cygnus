@@ -149,7 +149,7 @@ export const RenderGroup = (props) => props.children
 export const inject = (C, p) => (props) => <C {...{ ...props, ...p, }} />
 
 
-// provide props into all children components
+// provide props into all children components (non-recursive)
 export const Provide = ({ children, ...rest }) =>
     React.Children.map(
         children,
@@ -232,3 +232,20 @@ export const htmlEntities = {
     Space: () => <Fragment>{" "}</Fragment>,
     Nbsp: () => <Fragment>&nbsp;</Fragment>,
 }
+
+
+// construct object from result of Object.entries() call
+// entries = [[k1,v1], ... [kn, vn]]
+// imitates Python's dict()
+export const dict = (entries) => entries.reduce(
+    (acc, [k, v,]) => Object.assign(acc, { [k]: v, }), {}
+)
+
+
+// when o = { a: "b", c: "d" }
+// then swap(o) = { b: "a", d: "c" }
+export const swap = (o) => dict(
+    Object
+        .entries(o)
+        .map((kv) => [].concat(kv).reverse())
+)
