@@ -1,13 +1,15 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import PropTypes from "prop-types"
+import Axios from "axios"
 import hoistStatics from "hoist-non-react-statics"
 
 import { setExchangeRate } from "../../redux/actions"
-import Axios from "axios"
-import { config } from "../../config"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
+
+import { defaultCurrencyRateUpdateTime } from "../StellarFox/env"
+import { config } from "../../config"
 
 
 
@@ -26,8 +28,9 @@ class AssetManager extends Component {
 
     // ...
     rateStale = (currency) => (
-        !this.props.state[currency] ||
-        this.props.state[currency].lastFetch + 300000 < Date.now()
+        !this.props.state[currency]  ||
+            this.props.state[currency].lastFetch +
+                defaultCurrencyRateUpdateTime < Date.now()
     )
 
 
