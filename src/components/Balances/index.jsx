@@ -61,6 +61,7 @@ import Snackbar from "../../lib/common/Snackbar"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 import RegisterCard from "./RegisterCard"
+import BalancesCard from "./BalanceCard"
 import "./index.css"
 
 
@@ -425,28 +426,28 @@ class Balances extends Component {
     }
 
 
-    // ...
-    getOtherBalances = (account) =>
-        account.balances.map((balance, index) => {
-            if (balance.asset_type !== "native") {
-                return (
-                    <p className="other-assets" key={`${index}-${balance.asset_code}`}>
-                        <span className="other-asset-balance">
-                            {
-                                Number.parseFloat(balance.balance)
-                                    .toFixed(
-                                        this.props.accountInfo.precision
-                                    )
-                            }
-                        </span>
-                        <span className="other-asset-code">
-                            {balance.asset_code}
-                        </span>
-                    </p>
-                )
-            }
-            return null
-        })
+    // // ...
+    // getOtherBalances = (account) =>
+    //     account.balances.map((balance, index) => {
+    //         if (balance.asset_type !== "native") {
+    //             return (
+    //                 <p className="other-assets" key={`${index}-${balance.asset_code}`}>
+    //                     <span className="other-asset-balance">
+    //                         {
+    //                             Number.parseFloat(balance.balance)
+    //                                 .toFixed(
+    //                                     this.props.accountInfo.precision
+    //                                 )
+    //                         }
+    //                     </span>
+    //                     <span className="other-asset-code">
+    //                         {balance.asset_code}
+    //                     </span>
+    //                 </p>
+    //             )
+    //         }
+    //         return null
+    //     })
 
 
     // ...
@@ -1296,12 +1297,12 @@ class Balances extends Component {
 
     // ...
     render = () => {
-        let otherBalances =
-            this.props.accountInfo.exists ?
-                this.getOtherBalances.call(
-                    this, this.props.accountInfo.account.account
-                ) :
-                null
+        // let otherBalances =
+        //     this.props.accountInfo.exists ?
+        //         this.getOtherBalances.call(
+        //             this, this.props.accountInfo.account.account
+        //         ) :
+        //         null
 
         const
             actions = [
@@ -1456,8 +1457,10 @@ class Balances extends Component {
                 ) : null}
 
                 {this.props.accountInfo.exists ? (
-                    <div>
-                        <Card className="account">
+                    <Fragment>
+                        <BalancesCard />
+                    
+                        {/* <Card className="account">
                             <CardHeader
                                 title={
                                     <span>
@@ -1551,8 +1554,8 @@ class Balances extends Component {
                                     </div>
                                 </div>
                             </CardText>
-                        </Card>
-                    </div>
+                        </Card> */}
+                    </Fragment>
                 ) : (
                     <Card className='account'>
                         <CardHeader
