@@ -17,6 +17,17 @@ import "./BankContent.css"
 
 
 
+// compute div's padding-left value
+const computeStyle = (drawerOpened) => ({
+    paddingLeft:
+        drawerOpened ?
+            bankDrawerWidth + contentPaneSeparation :
+            contentPaneSeparation,
+})
+
+
+
+
 // <BankContent> component
 export default connect(
     // map state to props.
@@ -34,25 +45,17 @@ export default connect(
 
 
         // ...
-        computeStyle = (drawerOpened) => ({
-            paddingLeft:
-                drawerOpened ?
-                    bankDrawerWidth + contentPaneSeparation :
-                    contentPaneSeparation,
-        })
+        static getDerivedStateFromProps = ({ drawerOpened, }, prevState) =>
+            prevState.drawerOpened !== drawerOpened ? {
+                drawerOpened,
+                style: computeStyle(drawerOpened),
+            } :  null
 
 
         // ...
-        state = { style: this.computeStyle(this.props.drawerOpened), }
-
-
-        // ...
-        UNSAFE_componentWillReceiveProps = ({ drawerOpened, }) => {
-            if (this.props.drawerOpened !== drawerOpened) {
-                this.setState({
-                    style: this.computeStyle(drawerOpened),
-                })
-            }
+        state = {
+            drawerOpened: this.props.drawerOpened,
+            style: computeStyle(this.props.drawerOpened),
         }
 
 
