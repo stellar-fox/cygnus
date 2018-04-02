@@ -16,6 +16,13 @@
         "type": "git",
         "url": "https://github.com/stellar-fox/cygnus.git"
     },
+    "main": "src/index.js",
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test --env=jsdom",
+        "eject": "react-scripts eject"
+    },
     "dependencies": {
         "@ledgerhq/hw-app-str": "^4.0.0",
         "@ledgerhq/hw-transport-u2f": "^4.0.0",
@@ -40,12 +47,6 @@
         "stellar-base": "^0.7.6",
         "stellar-sdk": "^0.8.0",
         "toml": "^2.3.3"
-    },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test --env=jsdom",
-        "eject": "react-scripts eject"
     },
     "devDependencies": {
         "babel-eslint": "^8.2.2",
