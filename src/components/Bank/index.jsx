@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import { bindActionCreators } from "redux"
-import { connect } from "react-redux"
 import {
     Redirect,
     withRouter,
@@ -12,8 +10,6 @@ import {
 } from "../StellarRouter"
 import { Provide } from "../../lib/utils"
 
-import { selectView } from "../../redux/actions"
-
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"
 import BankContent from "./BankContent"
@@ -23,24 +19,12 @@ import Footer from "../Layout/Footer"
 
 
 // <Bank> component
-export default withRouter(connect(
-    // map state to props.
-    (state) => ({
-        currentPath: state.router.location.pathname,
-    }),
-
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        selectView,
-    }, dispatch)
-)(
+export default withRouter(
     class Bank extends Component {
 
         // ...
         static propTypes = {
             match: PropTypes.object.isRequired,
-            currentPath: PropTypes.string.isRequired,
-            selectView: PropTypes.func.isRequired,
         }
 
 
@@ -56,22 +40,6 @@ export default withRouter(connect(
         }
 
 
-        // route mapping
-        routeToViewMap = {
-            [this.paths.Balances]: "Balances",
-            [this.paths.Payments]: "Payments",
-            [this.paths.Account]: "Account",
-        }
-
-
-        // ...
-        componentWillReceiveProps = ({ currentPath, }) => {
-            if (currentPath !== this.props.currentPath) {
-                this.props.selectView(this.routeToViewMap[currentPath])
-            }
-        }
-
-
         // ...
         render = () =>
             <Fragment>
@@ -81,8 +49,8 @@ export default withRouter(connect(
                         to={this.paths.Balances}
                     />
                 </Switch>
-                <BankAppBar />
                 <Provide paths={this.paths}>
+                    <BankAppBar />
                     <BankDrawer />
                     <BankContent />
                 </Provide>
@@ -90,4 +58,4 @@ export default withRouter(connect(
             </Fragment>
 
     }
-))
+)

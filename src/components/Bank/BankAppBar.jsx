@@ -2,18 +2,18 @@ import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
-import AppBar from "material-ui/AppBar"
-import IconButton from "material-ui/IconButton"
+import { swap } from "../../lib/utils"
 
 import {
     logOut,
     openDrawer,
     closeDrawer,
-    selectView,
     changeLoginState,
     ActionConstants,
 } from "../../redux/actions"
 
+import AppBar from "material-ui/AppBar"
+import IconButton from "material-ui/IconButton"
 import BankAppBarTitle from "./BankAppBarTitle"
 import BankAppBarItems from "./BankAppBarItems"
 
@@ -29,7 +29,7 @@ const style = {
         zIndex: 10001,
     },
     icon : {
-        color: "rgba(15,46,83,0.45)",
+        color: "rgba(15, 46, 83, 0.45)",
     },
 }
 
@@ -40,7 +40,7 @@ const style = {
 class BankAppBar extends Component {
 
     // ...
-    handleToggle = () =>
+    drawerToggle = () =>
         this.props.drawerOpened ?
             this.props.closeDrawer() :
             this.props.openDrawer()
@@ -56,9 +56,12 @@ class BankAppBar extends Component {
             token: null,
         })
         this.props.logOut()
-        this.props.selectView(ActionConstants.VIEW_WELCOME)
         sessionStorage.clear()
     }
+
+
+    // route mapping (replace keys with values on paths object)
+    routeToViewMap = swap(this.props.paths)
 
 
     // ...
@@ -66,13 +69,15 @@ class BankAppBar extends Component {
         <AppBar
             title={
                 <div className="flex-row">
-                    <BankAppBarTitle />
+                    <BankAppBarTitle
+                        viewName={this.routeToViewMap[this.props.currentPath]}
+                    />
                     <BankAppBarItems />
                 </div>
             }
             className="navbar"
             style={style.appBar}
-            onLeftIconButtonClick={this.handleToggle}
+            onLeftIconButtonClick={this.drawerToggle}
             iconElementRight={
                 <IconButton
                     iconStyle={style.icon}
@@ -91,6 +96,7 @@ export default connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
+        currentPath: state.router.location.pathname,
     }),
 
     // map dispatch to props.
@@ -98,7 +104,6 @@ export default connect(
         logOut,
         openDrawer,
         closeDrawer,
-        selectView,
         changeLoginState,
     }, dispatch)
 )(BankAppBar)

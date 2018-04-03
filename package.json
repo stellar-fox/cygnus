@@ -3,7 +3,10 @@
     "version": "0.1.32",
     "description": "Stellar Fox (frontend)",
     "keywords": [
-        "stellar", "remittance", "bank", "frontend"
+        "stellar",
+        "remittance",
+        "bank",
+        "frontend"
     ],
     "homepage": "https://stellarfox.net/",
     "bugs": {
@@ -11,7 +14,10 @@
     },
     "license": "Apache-2.0",
     "private": true,
-    "contributors": ["syntaxval", "drmats"],
+    "contributors": [
+        "syntaxval",
+        "drmats"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/stellar-fox/cygnus.git"
@@ -34,12 +40,12 @@
         "material-ui": "^0.20.0",
         "number-to-text": "^0.3.2",
         "prop-types": "^15.6.1",
-        "react": "^16.2.0",
-        "react-dom": "^16.2.0",
-        "react-redux": "^5.0.6",
+        "react": "^16.3.0",
+        "react-dom": "^16.3.0",
+        "react-redux": "^5.0.7",
         "react-router-dom": "^4.2.2",
         "react-router-redux": "^5.0.0-alpha.9",
-        "react-scripts": "1.0.17",
+        "react-scripts": "1.1.1",
         "redux": "^3.7.2",
         "redux-devtools-extension": "^2.13.2",
         "redux-thunk": "^2.2.0",
@@ -50,8 +56,8 @@
     },
     "devDependencies": {
         "babel-eslint": "^8.2.2",
-        "eslint": "^4.18.0",
-        "eslint-plugin-react": "^7.6.1",
-        "eslint-config-react-app": "^2.1.0"
+        "eslint": "^4.19.1",
+        "eslint-config-react-app": "^2.1.0",
+        "eslint-plugin-react": "^7.7.0"
     }
 }

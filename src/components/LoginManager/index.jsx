@@ -1,7 +1,7 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import PropTypes from "prop-types"
 import hoistStatics from "hoist-non-react-statics"
 import { authenticate } from "./api"
 
@@ -13,18 +13,14 @@ import {
 
 
 
+// ...
+const LoginManagerContext = React.createContext({})
+
+
+
+
 // <LoginManager> component
 class LoginManager extends Component {
-
-    // ...
-    static childContextTypes = {
-        loginManager: PropTypes.object,
-    }
-
-
-    // ...
-    getChildContext = () => ({ loginManager: this, })
-
 
     // ...
     attemptLogin = async (email, password) => {
@@ -62,28 +58,31 @@ class LoginManager extends Component {
     // ...
     isAuthenticated = () => (
         this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
-            this.props.appAuth.token
+        this.props.appAuth.token
     )
 
 
     // ...
     isExploreOnly = () => (
         this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
-            this.props.appAuth.publicKey  &&
-            !this.props.appAuth.bip32Path
+        this.props.appAuth.publicKey  &&
+        !this.props.appAuth.bip32Path
     )
 
 
     // ...
     isPayEnabled = () => (
         this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
-            this.props.appAuth.publicKey &&
-            this.props.appAuth.bip32Path
+        this.props.appAuth.publicKey  &&
+        this.props.appAuth.bip32Path
     )
 
 
     // ...
-    render = () => this.props.children
+    render = () =>
+        <LoginManagerContext.Provider value={this}>
+            { this.props.children }
+        </LoginManagerContext.Provider>
 
 }
 
@@ -110,11 +109,6 @@ export const withLoginManager = (WrappedComponent) =>
         class WithLoginManager extends Component {
 
             // ...
-            static contextTypes = {
-                loginManager: PropTypes.object.isRequired,
-            }
-
-            // ...
             static propTypes = {
                 wrappedComponentRef: PropTypes.func,
             }
@@ -131,11 +125,16 @@ export const withLoginManager = (WrappedComponent) =>
             // ...
             render = () => (
                 ({ wrappedComponentRef, ...restOfTheProps }) =>
-                    React.createElement(WrappedComponent, {
-                        ...restOfTheProps,
-                        ref: wrappedComponentRef,
-                        loginManager: this.context.loginManager,
-                    })
+                    <LoginManagerContext.Consumer>
+                        {
+                            (loginManager) =>
+                                React.createElement(WrappedComponent, {
+                                    ...restOfTheProps,
+                                    ref: wrappedComponentRef,
+                                    loginManager,
+                                })
+                        }
+                    </LoginManagerContext.Consumer>
             )(this.props)
 
         },

@@ -188,11 +188,6 @@ export const ActionConstants = {
     LOGGING_OUT: "LOGGING_OUT",
     LOGGED_IN: "LOGGED_IN",
     LOGGED_OUT: "LOGGED_OUT",
-
-    VIEW_WELCOME: "Welcome",
-    VIEW_BALANCES: "Balances",
-    VIEW_PAYMENTS: "Payments",
-    VIEW_ACCOUNT: "Account",
 }
 
 
@@ -200,13 +195,6 @@ export const ActionConstants = {
 export const changeLoginState = (loginState) => ({
     type: "CHANGE_LOGIN_STATE",
     payload: loginState,  // Object
-})
-
-
-// ...
-export const selectView = (viewName) => ({
-    type: "SELECT_VIEW",
-    payload: viewName, // String
 })
 
 

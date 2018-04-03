@@ -14,23 +14,20 @@ import { config } from "../../config"
 
 
 
+// ...
+const AssetManagerContext = React.createContext({})
+
+
+
+
+// <AssetManager> component
 class AssetManager extends Component {
-
-    // ...
-    static childContextTypes = {
-        assetManager: PropTypes.object,
-    }
-
-
-    // ...
-    getChildContext = () => ({ assetManager: this, })
-
 
     // ...
     rateStale = (currency) => (
         !this.props.state[currency]  ||
-            this.props.state[currency].lastFetch +
-                defaultCurrencyRateUpdateTime < Date.now()
+        this.props.state[currency].lastFetch +
+            defaultCurrencyRateUpdateTime < Date.now()
     )
 
 
@@ -55,7 +52,10 @@ class AssetManager extends Component {
 
 
     // ...
-    render = () => this.props.children
+    render = () =>
+        <AssetManagerContext.Provider value={this}>
+            { this.props.children }
+        </AssetManagerContext.Provider>
 }
 
 
@@ -82,11 +82,6 @@ export const withAssetManager = (WrappedComponent) =>
         class WithAssetManager extends Component {
 
             // ...
-            static contextTypes = {
-                assetManager: PropTypes.object.isRequired,
-            }
-
-            // ...
             static propTypes = {
                 wrappedComponentRef: PropTypes.func,
             }
@@ -103,11 +98,16 @@ export const withAssetManager = (WrappedComponent) =>
             // ...
             render = () => (
                 ({ wrappedComponentRef, ...restOfTheProps }) =>
-                    React.createElement(WrappedComponent, {
-                        ...restOfTheProps,
-                        ref: wrappedComponentRef,
-                        assetManager: this.context.assetManager,
-                    })
+                    <AssetManagerContext.Consumer>
+                        {
+                            (assetManager) =>
+                                React.createElement(WrappedComponent, {
+                                    ...restOfTheProps,
+                                    ref: wrappedComponentRef,
+                                    assetManager,
+                                })
+                        }
+                    </AssetManagerContext.Consumer>
             )(this.props)
 
         },
