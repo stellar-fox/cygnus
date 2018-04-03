@@ -64,8 +64,8 @@ export default withRouter(connect(
                 <Provide paths={this.props.paths}>
                     <BankAppBar />
                     <BankDrawer />
-                    <BankContent />
                 </Provide>
+                <BankContent />
                 <Footer />
             </Fragment>
 

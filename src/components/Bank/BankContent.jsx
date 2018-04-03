@@ -33,6 +33,7 @@ export default connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
+        paths: state.Router.paths,
     })
 )(
     class BankContent extends Component {
