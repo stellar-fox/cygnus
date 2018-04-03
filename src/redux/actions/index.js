@@ -213,6 +213,12 @@ export const changeSnackbarState = (snackbarState) => ({
 
 
 // ...
+export const togglePaymentCard = (cardState) => ({
+    type: "TOGGLE_PAYMENT_CARD",
+    payload: cardState, // Object
+})
+
+// ...
 export const setHorizonEndPoint = (uri) => ({
     type: "SET_HORIZON_END_POINT",
     payload: uri,

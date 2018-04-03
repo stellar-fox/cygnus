@@ -21,6 +21,7 @@ import {
 import { config } from "../../config"
 import { appName } from "../StellarFox/env"
 import { withLoginManager } from "../LoginManager"
+import { withAssetManager } from "../AssetManager"
 
 import {
     setExchangeRate,
@@ -112,10 +113,8 @@ class Balances extends Component {
     // ...
     componentDidMount = () => {
         this.props.changeSnackbarState({
-            snackbar: {
-                open: false,
-                message: "",
-            },
+            open: false,
+            message: "",
         })
 
         if (!this.props.accountInfo.account) {
@@ -295,7 +294,8 @@ class Balances extends Component {
                                 pubKeyAbbr(message.account)
                             }]: `,
                         sbPaymentAmount:
-                            this.convertToFiat(message.starting_balance),
+                            this.props.assetManager.convertToAsset(
+                                message.starting_balance),
                         sbPaymentAssetCode:
                             this.props.Account.currency.toUpperCase(),
                     })
@@ -313,7 +313,8 @@ class Balances extends Component {
                         sbPayment: true,
                         sbPaymentText: "Account Funded: ",
                         sbPaymentAmount:
-                            this.convertToFiat(message.starting_balance),
+                            this.props.assetManager.convertToAsset(
+                                message.starting_balance),
                         sbPaymentAssetCode:
                             this.props.Account.currency.toUpperCase(),
                     })
@@ -330,7 +331,8 @@ class Balances extends Component {
                     this.setState({
                         sbPayment: true,
                         sbPaymentText: "Balance Updated. Payment Received: ",
-                        sbPaymentAmount: this.convertToFiat(message.amount),
+                        sbPaymentAmount: this.props.assetManager.convertToAsset(
+                            message.amount),
                         sbPaymentAssetCode:
                             this.props.Account.currency.toUpperCase(),
                     })
@@ -347,7 +349,8 @@ class Balances extends Component {
                     this.setState({
                         sbPayment: true,
                         sbPaymentText: "Balance Updated. Payment Sent: ",
-                        sbPaymentAmount: this.convertToFiat(message.amount),
+                        sbPaymentAmount: this.props.assetManager.convertToAsset(
+                            message.amount),
                         sbPaymentAssetCode:
                             this.props.Account.currency.toUpperCase(),
                     })
@@ -522,10 +525,8 @@ class Balances extends Component {
     // ...
     showSignupModal = () =>
         this.props.changeModalState({
-            modals: {
-                signup: {
-                    showing: true,
-                },
+            signup: {
+                showing: true,
             },
         })
 
@@ -533,10 +534,8 @@ class Balances extends Component {
     // ...
     hideSignupModal = () =>
         this.props.changeModalState({
-            modals: {
-                signup: {
-                    showing: false,
-                },
+            signup: {
+                showing: false,
             },
         })
 
@@ -592,7 +591,8 @@ class Balances extends Component {
                         .addOperation(StellarSdk.Operation.createAccount({
                             destination: this.state.payee,
                             startingBalance:
-                                this.convertToXLM(this.state.amount),  // in XLM
+                                this.props.assetManager.convertToNative(
+                                    this.state.amount),
                         }))
                         .addMemo(
                             StellarSdk.Memo.text(
@@ -681,7 +681,7 @@ class Balances extends Component {
                             // Because Stellar allows transaction in many currencies, you must
                             // specify the asset type. The special "native" asset represents Lumens.
                             asset: StellarSdk.Asset.native(),
-                            amount: this.convertToXLM(this.state.amount),
+                            amount: this.props.assetManager.convertToNative(this.state.amount),
                         }))
                         // A memo allows you to add your own metadata to a transaction. It's
                         // optional and does not affect how Stellar treats the transaction.
@@ -763,45 +763,6 @@ class Balances extends Component {
 
 
     // ...
-    convertToXLM = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
-        const fiatAmount = new BigNumber(amount)
-
-        if (
-            this.props.accountInfo.rates &&
-            this.props.accountInfo.rates[this.props.Account.currency]
-        ) {
-            return fiatAmount.dividedBy(
-                this.props.accountInfo.rates[
-                    this.props.Account.currency
-                ].rate
-            ).toString()
-        } else {
-            return "0"
-        }
-    }
-
-
-    // ...
-    convertToFiat = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 2, })
-        const nativeAmount = new BigNumber(amount)
-
-        if (
-            this.props.accountInfo.rates &&
-            this.props.accountInfo.rates[this.props.Account.currency]
-        ) {
-            return nativeAmount.multipliedBy(
-                this.props.accountInfo.rates[this.props.Account.currency].rate
-            ).toFixed(2)
-        } else {
-            return "0"
-        }
-    }
-
-
-
-    // ...
     sendPayment = async () => {
         // check if device is connected first (if not deviceCheck is an error object)
         const deviceCheck = await awaitConnection()
@@ -821,8 +782,9 @@ class Balances extends Component {
         if (
             this.state.newAccount  &&
             this.state.amountEntered  &&
-            parseInt(this.convertToXLM(this.state.amount), 10) <
-                parseInt(config.reserve, 10)
+            parseInt(this.props.assetManager.convertToNative(
+                this.state.amount), 10) <
+                    parseInt(config.reserve, 10)
         ) {
             this.setState({
                 buttonSendDisabled: true,
@@ -1178,7 +1140,7 @@ class Balances extends Component {
                     disabled={true}
                     primaryText="Amount"
                     secondaryText={
-                        `${this.convertToXLM(this.state.amount)} XLM`
+                        `${this.props.assetManager.convertToNative(this.state.amount)} XLM`
                     }
                     leftIcon={
                         <i className="green material-icons md-icon-small">
@@ -1459,7 +1421,7 @@ class Balances extends Component {
                 {this.props.accountInfo.exists ? (
                     <Fragment>
                         <BalancesCard />
-                    
+
                         {/* <Card className="account">
                             <CardHeader
                                 title={
@@ -1792,7 +1754,7 @@ class Balances extends Component {
 
 
 // ...
-export default withLoginManager(connect(
+export default withLoginManager(withAssetManager(connect(
     // map state to props.
     (state) => ({
         Account: state.Account,
@@ -1824,4 +1786,4 @@ export default withLoginManager(connect(
         changeSnackbarState,
         ActionConstants,
     }, dispatch)
-)(Balances))
+)(Balances)))

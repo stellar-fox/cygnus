@@ -3,14 +3,13 @@ import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { withLoginManager } from "../LoginManager"
+import { withAssetManager } from "../AssetManager"
 
 import {
     choose,
     currencyGlyph,
     getAssetCode,
-    handleException,
     htmlEntities as he,
-    currencyAmountConvert,
     utcToLocaleDateTime,
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
@@ -218,7 +217,7 @@ class PaymentsHistory extends Component {
 
     // ...
     determinePrimaryText = (payment) => (
-        (rate, glyph) =>
+        (glyph) =>
             choose(
                 payment.type,
                 {
@@ -226,7 +225,8 @@ class PaymentsHistory extends Component {
                         (Sign) =>
                             <span>
                                 <Sign /><he.Space />{glyph}<he.Space />
-                                {currencyAmountConvert(payment.starting_balance, rate)}
+                                {this.props.assetManager.convertToAsset(
+                                    payment.starting_balance)}
                             </span>
                     )(
                         payment.funder === this.props.appAuth.publicKey ?
@@ -238,7 +238,8 @@ class PaymentsHistory extends Component {
                     (assetCode, Sign) => assetCode === "XLM" ?
                         <span>
                             <Sign /><he.Space />{glyph}<he.Space />
-                            {currencyAmountConvert(payment.amount, rate)}
+                            {this.props.assetManager.convertToAsset(
+                                payment.amount)}
                         </span> :
                         <span>
                             <Sign /><he.Space />
@@ -250,16 +251,7 @@ class PaymentsHistory extends Component {
                         he.Plus : he.Minus
                 )
             )
-    )(
-        handleException(
-            () =>
-                this.props.accountInfo.rates[
-                    this.props.accountInfo.currency
-                ].rate,
-            () => 0
-        ),
-        currencyGlyph(this.props.accountInfo.currency)
-    )
+    )(currencyGlyph(this.props.Account.currency))
 
 
     // ...
@@ -400,12 +392,13 @@ class PaymentsHistory extends Component {
 
 
 // ...
-export default withLoginManager(connect(
+export default withLoginManager(withAssetManager(connect(
     // map state to props.
     (state) => ({
         state: state.Payments,
         accountInfo: state.accountInfo,
         appAuth: state.appAuth,
+        Account: state.Account,
     }),
 
     // map dispatch to props.
@@ -413,4 +406,4 @@ export default withLoginManager(connect(
         setState: PaymentsAction.setState,
         setAccountPayments,
     }, dispatch)
-)(PaymentsHistory))
+)(PaymentsHistory)))

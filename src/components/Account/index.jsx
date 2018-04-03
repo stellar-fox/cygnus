@@ -57,10 +57,8 @@ class Account extends Component {
     // ...
     closeSnackBar = () =>
         this.props.changeSnackbarState({
-            snackbar: {
-                open: false,
-                message: "",
-            },
+            open: false,
+            message: "",
         })
 
 
@@ -93,10 +91,8 @@ class Account extends Component {
     // ...
     hideSignupModal = () =>
         this.props.changeModalState({
-            modals: {
-                signup: {
-                    showing: false,
-                },
+            signup: {
+                showing: false,
             },
         })
 

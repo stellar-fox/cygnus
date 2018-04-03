@@ -1,7 +1,6 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
-import BigNumber from "bignumber.js"
 import { bip32Prefix } from "../components/StellarFox/env"
 
 
@@ -190,14 +189,6 @@ export const getAssetCode = (asset) =>
 // TODO: move to <AssetManager> (?)
 export const formatAmount = (amount, precision = 2) =>
     Number.parseFloat(amount).toFixed(precision)
-
-
-// ...
-// TODO: move to <AssetManager> (?)
-export const currencyAmountConvert = (amount, rate = 0) => {
-    BigNumber.config({ DECIMAL_PLACES: 2, })
-    return (new BigNumber(amount)).multipliedBy(rate).toFixed(2)
-}
 
 
 // ...

@@ -11,14 +11,12 @@ export default class RegisterCard extends Component {
     // ...
     showSignupModal = () =>
         this.props.changeModalState({
-            modals: {
-                signup: {
-                    showing: true,
-                },
+            signup: {
+                showing: true,
             },
         })
 
-        
+
     // ...
     render = () => <Card className="welcome-card">
         <CardText>

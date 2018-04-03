@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { BigNumber } from "bignumber.js"
+import { bindActionCreators } from "redux"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import {
@@ -13,14 +13,29 @@ import {
     currencyGlyph,
 } from "../../lib/utils"
 import Button from "../../lib/common/Button"
+import {
+    togglePaymentCard,
+} from "../../redux/actions"
 
 
 class BalanceCard extends Component {
 
     constructor (props) {
         super(props)
+        this.nativeBalance = this.props.assetManager.getAccountNativeBalance(
+            this.props.strAccount)
         this.otherBalances = this.getOtherBalances(this.props.strAccount)
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
+    }
+
+
+    // ...
+    showPaymentCard = () => {
+        this.props.togglePaymentCard({
+            payment: {
+                opened: true,
+            },
+        })
     }
 
 
@@ -44,32 +59,13 @@ class BalanceCard extends Component {
 
 
     // ...
-    getNativeBalance = (account) => {
-        let nativeBalance = 0
-
-        account.balances.forEach((balance) => {
-            if (balance.asset_type === "native") {
-                nativeBalance = balance.balance
-            }
-        })
-
-        return nativeBalance
-    }
-
-
-    // ...
     getOtherBalances = (account) =>
         account.balances.map((balance, index) => {
             if (balance.asset_type !== "native") {
                 return (
                     <p className="other-assets" key={`${index}-${balance.asset_code}`}>
                         <span className="other-asset-balance">
-                            {balance.balance
-                                // Number.parseFloat(balance.balance)
-                                //     .toFixed(
-                                //         this.props.accountInfo.precision
-                                //     )
-                            }
+                            {balance.balance}
                         </span>
                         <span className="other-asset-code">
                             {balance.asset_code}
@@ -79,21 +75,6 @@ class BalanceCard extends Component {
             }
             return null
         })
-
-
-    // ...
-    convertToFiat = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 2, })
-        const nativeAmount = new BigNumber(amount)
-
-        if (this.props.Assets[this.props.Account.currency]) {
-            return nativeAmount.multipliedBy(
-                this.props.Assets[this.props.Account.currency].rate
-            ).toFixed(2)
-        } else {
-            return "0"
-        }
-    }
 
 
     // ...
@@ -128,15 +109,13 @@ class BalanceCard extends Component {
                             {currencyGlyph(this.props.Account.currency)}
                         </span>
                         <span className="p-l-small">
-                            {this.exchangeRateFetched() &&
-                                this.convertToFiat(
-                                    this.getNativeBalance(
-                                        this.props.strAccount))
-                            }
+                            {this.props.assetManager.convertToAsset(
+                                this.nativeBalance
+                            )}
                         </span>
                     </div>
                     <div className="fade-extreme micro">
-                        {this.getNativeBalance(this.props.strAccount)} XLM
+                        {this.nativeBalance} XLM
                     </div>
                 </div>
                 <div></div>
@@ -190,12 +169,11 @@ export default withLoginManager(withAssetManager(connect(
         Account: state.Account,
         Assets: state.Assets,
         strAccount: state.accountInfo.account.account,
+        appUi: state.appUi,
     }),
 
-    // // map dispatch to props.
-    // (dispatch) => bindActionCreators({
-    //     changeLoginState,
-    //     changeModalState,
-    //     setAccountRegistered,
-    // }, dispatch)
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        togglePaymentCard,
+    }, dispatch)
 )(BalanceCard)))

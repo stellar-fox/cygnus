@@ -10,6 +10,7 @@ const ActionTypes = {
     SET_PUBKEY: "SET_PUBKEY",
     CHANGE_MODAL_STATE: "CHANGE_MODAL_STATE",
     CHANGE_SNACKBAR_STATE: "CHANGE_SNACKBAR_STATE",
+    TOGGLE_PAYMENT_CARD: "TOGGLE_PAYMENT_CARD",
 }
 
 
@@ -53,13 +54,31 @@ export const uiReducer = createReducer({
         message: "",
 
     },
+    cards: {},
 }, {
     [ActionTypes.CHANGE_MODAL_STATE] (state, action) {
-        state = Object.assign(...state, action.payload)
+        // state = Object.assign(...state, action.payload)
+        state = {
+            ...state,
+            modals: Object.assign(action.payload),
+        }
+        // state = Object.assign(...state, state.modals || {}, action.payload)
         return state
     },
     [ActionTypes.CHANGE_SNACKBAR_STATE] (state, action) {
-        state = Object.assign(...state, action.payload)
+        state = {
+            ...state,
+            snackbar: Object.assign(action.payload),
+        }
+        // state = Object.assign(...state, action.payload)
+        return state
+    },
+    [ActionTypes.TOGGLE_PAYMENT_CARD] (state, action) {
+        state = {
+            ...state,
+            cards: Object.assign(action.payload),
+        }
+        // state = Object.assign(...state, action.payload)
         return state
     },
 })

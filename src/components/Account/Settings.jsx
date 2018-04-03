@@ -29,10 +29,8 @@ class Settings extends Component {
     // ...
     showSignupModal = () =>
         this.props.changeModalState({
-            modals: {
-                signup: {
-                    showing: true,
-                },
+            signup: {
+                showing: true,
             },
         })
 
@@ -63,10 +61,8 @@ class Settings extends Component {
         }
 
         this.props.changeSnackbarState({
-            snackbar: {
-                open: true,
-                message: `Currency has been changed to ${currency.toUpperCase()}.`,
-            },
+            open: true,
+            message: `Currency has been changed to ${currency.toUpperCase()}.`,
         })
     }
 
@@ -85,12 +81,10 @@ class Settings extends Component {
                 .then((_) => {
                     this.props.setState({ discoverable: isInputChecked, })
                     this.props.changeSnackbarState({
-                        snackbar: {
-                            open: true,
-                            message: isInputChecked ?
-                                "Account is now discoverable." :
-                                "Account is now hidden from public search.",
-                        },
+                        open: true,
+                        message: isInputChecked ?
+                            "Account is now discoverable." :
+                            "Account is now hidden from public search.",
                     })
                 })
                 .catch((error) => {
@@ -100,7 +94,7 @@ class Settings extends Component {
         }
     }
 
-    
+
     // ...
     render = () =>
         <div className="tab-content">

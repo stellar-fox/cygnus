@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import Axios from "axios"
 import hoistStatics from "hoist-non-react-statics"
+import { BigNumber } from "bignumber.js"
 
 import { setExchangeRate } from "../../redux/actions"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
@@ -52,6 +53,31 @@ class AssetManager extends Component {
 
 
     // ...
+    getAccountNativeBalance = (account) =>
+        account.balances.find(obj => obj.asset_type === "native").balance
+
+
+    // ...
+    convertToNative = (amount) => {
+        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+        return this.props.state[this.props.Account.currency] ?
+            new BigNumber(amount).dividedBy(
+                this.props.state[this.props.Account.currency].rate
+            ).toString() : "0.0000000"
+    }
+
+
+    // ...
+    convertToAsset = (amount) => {
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        return this.props.state[this.props.Account.currency] ?
+            new BigNumber(amount).multipliedBy(
+                this.props.state[this.props.Account.currency].rate
+            ).toFixed(2) : "0.00"
+    }
+
+
+    // ...
     render = () =>
         <AssetManagerContext.Provider value={this}>
             { this.props.children }
@@ -64,6 +90,7 @@ export default connect(
     // map state to props.
     (state) => ({
         state: state.Assets,
+        Account: state.Account,
     }),
 
     // map dispatch to props.

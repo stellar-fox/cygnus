@@ -1,10 +1,8 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import BigNumber from "bignumber.js"
 
 import {
-    currencyAmountConvert,
     currencyGlyph,
     emoji,
     formatAmount,
@@ -14,6 +12,7 @@ import {
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
 import { withLoginManager } from "../LoginManager"
+import { withAssetManager } from "../AssetManager"
 
 import {
     setAccountPayments,
@@ -182,9 +181,10 @@ class Payments extends Component {
                                     pubKeyAbbr(message.account)
                                 }]: `,
                             sbPaymentAmount:
-                                this.convertToFiat(message.starting_balance),
+                                this.props.assetManager.convertToAsset(
+                                    message.starting_balance),
                             sbPaymentAssetCode:
-                                this.props.accountInfo.currency.toUpperCase(),
+                                this.props.Account.currency.toUpperCase(),
                         })
                     }
 
@@ -201,9 +201,10 @@ class Payments extends Component {
                             sbPayment: true,
                             sbPaymentText: "Account Funded: ",
                             sbPaymentAmount:
-                                this.convertToFiat(message.starting_balance),
+                                this.props.assetManager.convertToAsset(
+                                    message.starting_balance),
                             sbPaymentAssetCode:
-                                this.props.accountInfo.currency.toUpperCase(),
+                                this.props.Account.currency.toUpperCase(),
                         })
                     }
 
@@ -418,11 +419,10 @@ class Payments extends Component {
                                     <span className="credit">
                                         {" "}&#x0002B;{" "}
                                         {currencyGlyph(
-                                            this.props.accountInfo.currency
+                                            this.props.Account.currency
                                         )}{" "}
-                                        {this.convertToFiat(
-                                            effect.starting_balance
-                                        )}
+                                        {this.props.assetManager.convertToAsset(
+                                            effect.starting_balance)}
                                     </span>
                                 </div>
                                 <div className="fade-extreme">
@@ -519,12 +519,10 @@ class Payments extends Component {
                                             <span className="credit">
                                                 {" "}&#x0002B;{" "}
                                                 {currencyGlyph(
-                                                    this.props
-                                                        .accountInfo.currency
+                                                    this.props.Account.currency
                                                 )}{" "}
-                                                {this.convertToFiat(
-                                                    effect.amount
-                                                )}
+                                                {this.props.assetManager.convertToAsset(
+                                                    effect.amount)}
                                             </span>
                                         ) : (
                                             <span className="credit">
@@ -589,12 +587,10 @@ class Payments extends Component {
                                             <span className="debit">
                                                 {" "}&#x02212;{" "}
                                                 {currencyGlyph(
-                                                    this.props
-                                                        .accountInfo.currency
+                                                    this.props.Account.currency
                                                 )}{" "}
-                                                {this.convertToFiat(
-                                                    effect.amount
-                                                )}
+                                                {this.props.assetManager.convertToAsset(
+                                                    effect.amount)}
                                             </span>
                                         ) : (
                                             <span className="debit">
@@ -698,44 +694,6 @@ class Payments extends Component {
 
 
     // ...
-    convertToXLM = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
-        const fiatAmount = new BigNumber(amount)
-
-        if (
-            this.props.accountInfo.rates  &&
-            this.props.accountInfo.rates[this.props.accountInfo.currency]
-        ) {
-            return fiatAmount.dividedBy(
-                this.props.accountInfo.rates[
-                    this.props.accountInfo.currency
-                ].rate
-            ).toString()
-        }
-
-        return "0"
-    }
-
-
-    // ...
-    convertToFiat = (amount) => {
-        if (
-            this.props.accountInfo.rates  &&
-            this.props.accountInfo.rates[this.props.accountInfo.currency]
-        ) {
-            return currencyAmountConvert(
-                amount,
-                this.props.accountInfo.rates[
-                    this.props.accountInfo.currency
-                ].rate
-            )
-        }
-
-        return "0"
-    }
-
-
-    // ...
     render = () =>
         <div>
             <Snackbar
@@ -800,10 +758,11 @@ class Payments extends Component {
 
 
 // ...
-export default withLoginManager(connect(
+export default withLoginManager(withAssetManager(connect(
     // map state to props.
     (state) => ({
         state: state.Payments,
+        Account: state.Account,
 
         accountInfo: state.accountInfo,
         loadingModal: state.loadingModal,
@@ -826,4 +785,4 @@ export default withLoginManager(connect(
         setModalLoaded,
         updateLoadingMessage,
     }, dispatch)
-)(Payments))
+)(Payments)))

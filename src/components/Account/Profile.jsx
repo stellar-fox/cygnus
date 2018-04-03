@@ -30,7 +30,7 @@ class Profile extends Component {
     static propTypes = {
         setState: PropTypes.func.isRequired,
     }
- 
+
 
     // ...
     componentDidMount = () => {
@@ -40,7 +40,7 @@ class Profile extends Component {
         }
     }
 
-    
+
     // ...
     changeFirstName = (event) =>
         this.props.setState({ firstName: event.target.value, })
@@ -135,10 +135,8 @@ class Profile extends Component {
         })
 
         this.props.changeSnackbarState({
-            snackbar: {
-                open: true,
-                message: "User profile has been updated.",
-            },
+            open: true,
+            message: "User profile has been updated.",
         })
     }
 

@@ -33,10 +33,8 @@ class Heading extends Component {
     // ...
     showSignupModal = () =>
         this.props.changeModalState({
-            modals: {
-                signup: {
-                    showing: true,
-                },
+            signup: {
+                showing: true,
             },
         })
 
@@ -44,10 +42,8 @@ class Heading extends Component {
     // ...
     hideSignupModal = () =>
         this.props.changeModalState({
-            modals: {
-                signup: {
-                    showing: false,
-                },
+            signup: {
+                showing: false,
             },
         })
 
