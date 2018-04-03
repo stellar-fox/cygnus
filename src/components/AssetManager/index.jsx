@@ -78,6 +78,19 @@ class AssetManager extends Component {
 
 
     // ...
+    getAssetDescription = (currency) => (
+        (c) => c[currency]
+    )({
+        eur: "European Union Euro",
+        usd: "United States Dollar",
+        aud: "Australian Dollar",
+        nzd: "New Zealand Dollar",
+        thb: "Thai Baht",
+        pln: "Polish Złoty",
+    })
+
+
+    // ...
     render = () =>
         <AssetManagerContext.Provider value={this}>
             { this.props.children }

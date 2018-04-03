@@ -50,7 +50,6 @@ import {
 import {
     Card,
     CardActions,
-    CardHeader,
     CardText,
 } from "material-ui/Card"
 import { List, ListItem } from "material-ui/List"
@@ -66,6 +65,7 @@ import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 import RegisterCard from "./RegisterCard"
 import BalancesCard from "./BalanceCard"
+import NoAccountCard from "./NoAccountCard"
 import "./index.css"
 
 
@@ -232,19 +232,6 @@ class Balances extends Component {
         nzd: "NEW ZEALAND DOLLARS",
         thb: "THAI BAHT บาท",
         pln: "ZŁOTYCH",
-    })
-
-
-    // ...
-    getCurrencyLongText = (currency) => (
-        (c) => c[Object.keys(c).filter((key) => key === currency)]
-    )({
-        eur: "European Union Euro",
-        usd: "United States Dollar",
-        aud: "Australian Dollar",
-        nzd: "New Zealand Dollar",
-        thb: "Thai Baht",
-        pln: "Polish Złoty",
     })
 
 
@@ -1424,170 +1411,14 @@ class Balances extends Component {
                     </Dialog>
                 </div>
 
-                {!this.props.accountInfo.registered && !this.props.loginManager.isExploreOnly() ? (
-                    <RegisterCard />
-                ) : null}
+                {!this.props.accountInfo.registered &&
+                    !this.props.loginManager.isExploreOnly() ?
+                    <RegisterCard /> : null
+                }
 
-                {this.props.accountInfo.exists ? (
-                    <Fragment>
-                        <BalancesCard />
-
-                        {/* <Card className="account">
-                            <CardHeader
-                                title={
-                                    <span>
-                                        <span>Current Balance </span>
-                                        <i className="material-icons">hearing</i>
-                                    </span>
-                                }
-                                subtitle={
-                                    <span>
-                                        <span>
-                                            {this.getCurrencyLongText(
-                                                this.props.Account.currency
-                                            )}
-                                        </span>
-                                        <span className="fade currency-iso p-l-small">
-                                            ({this.props.accountInfo
-                                                .currency.toUpperCase()})
-                                        </span>
-                                    </span>
-                                }
-                                actAsExpander={true}
-                                showExpandableButton={true}
-                            />
-
-
-                            <CardText>
-                                <div className="flex-row">
-                                    <div>
-                                        <div className="balance">
-                                            <span className="fade currency-glyph">
-                                                {currencyGlyph(
-                                                    this.props.Account.currency
-                                                )}
-                                            </span>
-                                            <span className="p-l-small">
-                                                {this.exchangeRateFetched() &&
-                                                    this.convertToFiat(
-                                                        this.getNativeBalance(
-                                                            this.props
-                                                                .accountInfo
-                                                                .account.account))
-                                                }
-                                            </span>
-                                        </div>
-                                        <div className="fade-extreme micro">
-                                            {this.getNativeBalance(
-                                                this.props
-                                                    .accountInfo.account
-                                                    .account
-                                            )} XLM
-                                        </div>
-                                    </div>
-                                    <div></div>
-                                </div>
-                            </CardText>
-
-
-                            <CardActions>
-                                <Button
-                                    backgroundColor="rgb(15,46,83)"
-                                    labelColor="#228B22"
-                                    label="Fund"
-                                    onClick={this.handleOpen}
-                                />
-                                <Button
-                                    backgroundColor="rgb(15,46,83)"
-                                    labelColor="rgb(244,176,4)"
-                                    label="Request"
-                                    onClick={this.handleOpen}
-                                />
-                                {this.props.loginManager.isPayEnabled() ||
-                                    this.props.loginManager.isAuthenticated() ?
-                                    <Button
-                                        backgroundColor="rgb(15,46,83)"
-                                        labelColor="#d32f2f"
-                                        label="Pay"
-                                        onClick={this.showPaymentCard}
-                                    /> : null
-                                }
-                            </CardActions>
-                            <CardText expandable={true}>
-                                <div>
-                                    <div>Other Assets</div>
-                                    <div>
-                                        {otherBalances  &&  otherBalances[0] ?
-                                            otherBalances :
-                                            <div className='faded'>
-                                                You currently do not own any other assets.
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            </CardText>
-                        </Card> */}
-                    </Fragment>
-                ) : (
-                    <Card className='account'>
-                        <CardHeader
-                            title={
-                                <span>
-                                    <span>Current Balance&nbsp;</span>
-                                    <i className="material-icons">hearing</i>
-                                </span>
-                            }
-                            subtitle={
-                                <span>
-                                    <span>
-                                        {this.getCurrencyLongText(
-                                            this.props.Account.currency
-                                        )}
-                                    </span>
-                                    <span className="fade currency-iso p-l-small">
-                                        ({this.props
-                                            .accountInfo
-                                            .currency.toUpperCase()})
-                                    </span>
-                                </span>
-                            }
-                            actAsExpander={false}
-                            showExpandableButton={false}
-                        />
-
-                        <CardText>
-                            <div className='flex-row'>
-                                <div>
-                                    <div className='balance'>
-                                        <span className="fade currency-glyph">
-                                            {currencyGlyph(
-                                                this.props.Account.currency
-                                            )}
-                                        </span> 0.00
-                                    </div>
-                                    <div className="fade-extreme micro">
-                                        0.0000000 XLM
-                                    </div>
-                                </div>
-                                <div></div>
-                            </div>
-                        </CardText>
-
-                        <CardActions>
-                            <Button
-                                onClick={this.handleOpen}
-                                backgroundColor="rgb(15,46,83)"
-                                labelColor="#228B22"
-                                label="Fund" />
-                            <Button
-                                backgroundColor="rgb(15,46,83)"
-                                labelColor="rgb(244,176,4)"
-                                label="Request"
-                                onClick={this.handleOpen}
-                            />
-                        </CardActions>
-                    </Card>
-                )}
+                {this.props.accountInfo.exists ?
+                    <BalancesCard /> : <NoAccountCard />
+                }
 
                 {this.state.paymentCardVisible && (
                     <Card className="payment-card">
