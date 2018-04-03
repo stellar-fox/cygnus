@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
+import { connect } from "react-redux"
 import {
     Redirect,
     withRouter,
@@ -10,6 +11,8 @@ import {
 } from "../StellarRouter"
 import { Provide } from "../../lib/utils"
 
+import { action as RouterAction } from "../../redux/StellarRouter"
+
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"
 import BankContent from "./BankContent"
@@ -19,24 +22,33 @@ import Footer from "../Layout/Footer"
 
 
 // <Bank> component
-export default withRouter(
+export default withRouter(connect(
+    (state) => ({ paths: state.Router.paths, }),
+    (dispatch) => ({ addPaths: (ps) => dispatch(RouterAction.addPaths(ps)), })
+)(
     class Bank extends Component {
 
         // ...
         static propTypes = {
             match: PropTypes.object.isRequired,
+            paths: PropTypes.object.isRequired,
+            addPaths: PropTypes.func.isRequired,
         }
 
 
-        // relative resolve
-        rr = resolvePath(this.props.match.path)
+        // ...
+        constructor (props) {
+            super(props)
 
+            // relative resolve
+            this.rr = resolvePath(this.props.match.path)
 
-        // local paths
-        paths = {
-            Balances: this.rr("balances/"),
-            Payments: this.rr("payments/"),
-            Account: this.rr("account/"),
+            // local paths
+            this.props.addPaths({
+                Balances: this.rr("balances/"),
+                Payments: this.rr("payments/"),
+                Account: this.rr("account/"),
+            })
         }
 
 
@@ -46,10 +58,10 @@ export default withRouter(
                 <Switch>
                     <Redirect exact
                         from={this.rr(".")}
-                        to={this.paths.Balances}
+                        to={this.props.paths.Balances}
                     />
                 </Switch>
-                <Provide paths={this.paths}>
+                <Provide paths={this.props.paths}>
                     <BankAppBar />
                     <BankDrawer />
                     <BankContent />
@@ -58,4 +70,4 @@ export default withRouter(
             </Fragment>
 
     }
-)
+))
