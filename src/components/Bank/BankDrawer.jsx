@@ -52,12 +52,13 @@ const BalancesNavLink = ({ paths, }) =>
 
 
 // <PaymentsNavLink> component
-const PaymentsNavLink = ({ paths, }) =>
-    <NavLinkTemplate
-        to={paths.Payments}
-        icon="payment"
-        label="Payments"
-    />
+const PaymentsNavLink = ({ show, paths, }) =>
+    show ?
+        <NavLinkTemplate
+            to={paths.Payments}
+            icon="payment"
+            label="Payments"
+        /> : null
 
 
 
@@ -113,10 +114,7 @@ export default connect(
             >
                 <Provide paths={this.props.paths}>
                     <BalancesNavLink />
-                    {
-                        this.props.accountInfo.exists ?
-                            <PaymentsNavLink /> : null
-                    }
+                    <PaymentsNavLink show={this.props.accountInfo.exists} />
                     <AccountNavLink />
                 </Provide>
             </Drawer>
