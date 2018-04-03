@@ -1,6 +1,6 @@
 import React from "react"
 import { Provider } from "react-redux"
-import { ConnectedRouter as Router } from "react-router-redux"
+import { StellarRouter as Router } from "../StellarRouter"
 
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import stellarTheme from "./theme"

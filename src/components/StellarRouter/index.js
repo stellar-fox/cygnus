@@ -1,7 +1,14 @@
+import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { Switch } from "react-router-dom"
+import {
+    CALL_HISTORY_METHOD,
+    ConnectedRouter as Router,
+} from "react-router-redux"
 import resolvePathname from "resolve-pathname"
-import { CALL_HISTORY_METHOD } from "react-router-redux"
+
+import { action as RouterAction } from "../../redux/StellarRouter"
 
 
 
@@ -34,6 +41,48 @@ export const resolvePath = (base) => (path) =>
 export const ConnectedSwitch = connect(
     (state) => ({ location: state.router.location, })
 )(Switch)
+
+
+
+
+// ...
+const StellarRouterContext = React.createContext({})
+
+
+
+
+// <StellarRouter> component
+export const StellarRouter = connect(
+    (state) => ({ paths: state.Router.paths, }),
+    (dispatch) => ({ addPaths: (ps) => dispatch(RouterAction.addPaths(ps)), })
+)(
+    class StellarRouter extends Component {
+
+        // ...
+        propTypes = {
+            paths: PropTypes.object.isRequired,
+            addPaths: PropTypes.func.isRequired,
+        }
+
+
+        // don't re-render when paths are updated
+        shouldComponentUpdate = (nextProps) =>
+            nextProps !== this.props  ||
+            nextProps.paths === this.props.paths
+
+
+        // ...
+        render = () => (
+            ({ paths, addPaths, ...restOfTheProps }) =>
+                React.createElement(
+                    StellarRouterContext.Provider,
+                    { value: { paths, addPaths, }, },
+                    React.createElement(Router, restOfTheProps)
+                )
+        )(this.props)
+
+    }
+)
 
 
 
