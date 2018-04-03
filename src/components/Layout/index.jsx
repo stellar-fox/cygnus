@@ -12,10 +12,12 @@ import {
     resolvePath,
 } from "../StellarRouter"
 
+import { ActionConstants } from "../../redux/actions"
+import { action as RouterAction } from "../../redux/StellarRouter"
+
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import Bank from "../Bank"
-import { ActionConstants } from "../../redux/actions"
 
 
 
@@ -24,7 +26,9 @@ import { ActionConstants } from "../../redux/actions"
 export default withRouter(connect(
     (state) => ({
         loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN,
-    })
+        paths: state.Router.paths,
+    }),
+    (dispatch) => ({ addPaths: (ps) => dispatch(RouterAction.addPaths(ps)), })
 )(
     class Layout extends Component {
 
@@ -32,17 +36,23 @@ export default withRouter(connect(
         static propTypes = {
             loggedIn: PropTypes.bool.isRequired,
             match: PropTypes.object.isRequired,
+            paths: PropTypes.object.isRequired,
+            addPaths: PropTypes.func.isRequired,
         }
 
 
-        // relative resolve
-        rr = resolvePath(this.props.match.path)
+        // ...
+        constructor (props) {
+            super(props)
 
+            // relative resolve
+            this.rr = resolvePath(this.props.match.path)
 
-        // local paths
-        paths = {
-            Welcome: this.rr("."),
-            Bank: this.rr("bank/"),
+            // local paths
+            this.props.addPaths({
+                Welcome: this.rr("."),
+                Bank: this.rr("bank/"),
+            })
         }
 
 
@@ -51,21 +61,21 @@ export default withRouter(connect(
             <Fragment>
                 <LoadingModal />
                 <Switch>
-                    <Route exact path={this.paths.Welcome}>
+                    <Route exact path={this.props.paths.Welcome}>
                         {
                             !this.props.loggedIn ?
                                 <Welcome /> :
-                                <Redirect to={this.paths.Bank} />
+                                <Redirect to={this.props.paths.Bank} />
                         }
                     </Route>
-                    <Route path={this.paths.Bank}>
+                    <Route path={this.props.paths.Bank}>
                         {
                             this.props.loggedIn ?
                                 <Bank /> :
-                                <Redirect to={this.paths.Welcome} />
+                                <Redirect to={this.props.paths.Welcome} />
                         }
                     </Route>
-                    <Redirect to={this.paths.Welcome} />
+                    <Redirect to={this.props.paths.Welcome} />
                 </Switch>
             </Fragment>
 
