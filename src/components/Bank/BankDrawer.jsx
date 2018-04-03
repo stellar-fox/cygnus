@@ -29,13 +29,13 @@ const BalancesNavLink = navLinkConnect(
             className="menu-item"
             onClick={(e) => {
                 e.preventDefault()
-                if (currentPath !== paths.Balances) {
+                if (!currentPath.startsWith(paths.Balances)) {
                     push(paths.Balances)
                 }
             }}
             exact
             activeClassName="active"
-            isActive={() => currentPath === paths.Balances}
+            isActive={() => currentPath.startsWith(paths.Balances)}
             to={paths.Balances}
         >
             <i className="material-icons">account_balance_wallet</i>
@@ -53,12 +53,12 @@ const PaymentsNavLink = navLinkConnect(
             className="menu-item"
             onClick={(e) => {
                 e.preventDefault()
-                if (currentPath !== paths.Payments) {
+                if (!currentPath.startsWith(paths.Payments)) {
                     push(paths.Payments)
                 }
             }}
             exact
-            isActive={() => currentPath === paths.Payments}
+            isActive={() => currentPath.startsWith(paths.Payments)}
             activeClassName="active"
             to={paths.Payments}
         >
@@ -77,12 +77,12 @@ const AccountNavLink = navLinkConnect(
             className="menu-item"
             onClick={(e) => {
                 e.preventDefault()
-                if (currentPath !== paths.Account) {
+                if (!currentPath.startsWith(paths.Account)) {
                     push(paths.Account)
                 }
             }}
             exact
-            isActive={() => currentPath === paths.Account}
+            isActive={() => currentPath.startsWith(paths.Account)}
             activeClassName="active"
             to={paths.Account}
         >
