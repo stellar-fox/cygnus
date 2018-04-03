@@ -13,83 +13,62 @@ import "./BankDrawer.css"
 
 
 
-// binds 'currentPath' state prop and 'push' dispatcher
-const navLinkConnect = connect(
+// <NavLinkTemplate> component
+// with bound 'currentPath' state prop and 'push' dispatcher
+const NavLinkTemplate = connect(
     (state) => ({ currentPath: state.router.location.pathname, }),
     (dispatch) => ({ push: (p) => dispatch(push(p)), })
+)(({
+    currentPath, push, to, icon, label,
+}) =>
+    <NavLink
+        className="menu-item"
+        onClick={(e) => {
+            e.preventDefault()
+            if (!currentPath.startsWith(to)) { push(to) }
+        }}
+        exact
+        activeClassName="active"
+        isActive={() => currentPath.startsWith(to)}
+        to={to}
+    >
+        <i className="material-icons">{icon}</i>
+        {label}
+    </NavLink>
 )
 
 
 
 
 // <BalancesNavLink> component
-const BalancesNavLink = navLinkConnect(
-    ({ currentPath, paths, push, }) =>
-        <NavLink
-            className="menu-item"
-            onClick={(e) => {
-                e.preventDefault()
-                if (!currentPath.startsWith(paths.Balances)) {
-                    push(paths.Balances)
-                }
-            }}
-            exact
-            activeClassName="active"
-            isActive={() => currentPath.startsWith(paths.Balances)}
-            to={paths.Balances}
-        >
-            <i className="material-icons">account_balance_wallet</i>
-            Balances
-        </NavLink>
-)
+const BalancesNavLink = ({ paths, }) =>
+    <NavLinkTemplate
+        to={paths.Balances}
+        icon="account_balance_wallet"
+        label="Balances"
+    />
 
 
 
 
 // <PaymentsNavLink> component
-const PaymentsNavLink = navLinkConnect(
-    ({ currentPath, paths, push, }) =>
-        <NavLink
-            className="menu-item"
-            onClick={(e) => {
-                e.preventDefault()
-                if (!currentPath.startsWith(paths.Payments)) {
-                    push(paths.Payments)
-                }
-            }}
-            exact
-            isActive={() => currentPath.startsWith(paths.Payments)}
-            activeClassName="active"
-            to={paths.Payments}
-        >
-            <i className="material-icons">payment</i>
-            Payments
-        </NavLink>
-)
+const PaymentsNavLink = ({ paths, }) =>
+    <NavLinkTemplate
+        to={paths.Payments}
+        icon="payment"
+        label="Payments"
+    />
 
 
 
 
 // <AccountNavLink> component
-const AccountNavLink = navLinkConnect(
-    ({ currentPath, paths, push, }) =>
-        <NavLink
-            className="menu-item"
-            onClick={(e) => {
-                e.preventDefault()
-                if (!currentPath.startsWith(paths.Account)) {
-                    push(paths.Account)
-                }
-            }}
-            exact
-            isActive={() => currentPath.startsWith(paths.Account)}
-            activeClassName="active"
-            to={paths.Account}
-        >
-            <i className="material-icons">account_balance</i>
-            Account
-        </NavLink>
-)
+const AccountNavLink = ({ paths, }) =>
+    <NavLinkTemplate
+        to={paths.Account}
+        icon="account_balance"
+        label="Account"
+    />
 
 
 
