@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { BigNumber } from "bignumber.js"
 import { withLoginManager } from "../LoginManager"
+import { withAssetManager } from "../AssetManager"
 import {
     Card,
     CardActions,
@@ -19,8 +20,9 @@ class BalanceCard extends Component {
     constructor (props) {
         super(props)
         this.otherBalances = this.getOtherBalances(this.props.strAccount)
+        this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
-    
+
 
     // ...
     getCurrencyLongText = (currency) => (
@@ -77,6 +79,7 @@ class BalanceCard extends Component {
             }
             return null
         })
+
 
     // ...
     convertToFiat = (amount) => {
@@ -181,7 +184,7 @@ class BalanceCard extends Component {
 }
 
 // ...
-export default withLoginManager(connect(
+export default withLoginManager(withAssetManager(connect(
     // map state to props.
     (state) => ({
         Account: state.Account,
@@ -195,4 +198,4 @@ export default withLoginManager(connect(
     //     changeModalState,
     //     setAccountRegistered,
     // }, dispatch)
-)(BalanceCard))
+)(BalanceCard)))
