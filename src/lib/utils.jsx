@@ -1,7 +1,10 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
-import { bip32Prefix } from "../components/StellarFox/env"
+import {
+    bip32Prefix,
+    federationEndpoint,
+} from "../components/StellarFox/env"
 
 
 // TODO: convert-to/use-as module
@@ -56,12 +59,31 @@ export const federationAddressValid = (federationAddress) => !!(
 ).test(federationAddress)
 
 
+export const paymentAddressValidator = (address) => {
+    // Looks like something totally invalid for this field.
+    if (!address.match(/\*/) && !address.match(/^G/)) {
+        return "Invalid input."
+    }
+    // Looks like user is entering Federation Address format.
+    if (address.match(/\*/) && !federationAddressValid(address)) {
+        return "Invalid payment address."
+    }
+    // This must be an attempt at a Stellar public key format.
+    if (address.match(/^G/) && !address.match(/\*/)) {
+        const publicKeyValidityObj = pubKeyValid(address)
+        if (!publicKeyValidityObj.valid) {
+            return publicKeyValidityObj.message
+        }
+    }
+    return null
+}
+
 // ...
 export const federationLookup = (federationAddress) => (
     (federationDomain) =>
         federationDomain ?
             axios
-                .get(`https://${federationDomain[0]}/.well-known/stellar.toml`)
+                .get(federationEndpoint(federationDomain[0]))
                 .then((response) => ({
                     ok: true,
                     endpoint: toml.parse(response.data).FEDERATION_SERVER,

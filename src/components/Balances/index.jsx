@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import axios from "axios"
-import debounce from "lodash/debounce"
+
 import numberToText from "number-to-text"
 import { BigNumber } from "bignumber.js"
 import "number-to-text/converters/en-us"
@@ -12,7 +12,6 @@ import { action as AccountAction } from "../../redux/Account"
 
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import {
-    currencyGlyph,
     pubKeyValid,
     federationAddressValid,
     federationLookup,
@@ -47,25 +46,17 @@ import {
     ActionConstants,
 } from "../../redux/actions"
 
-import {
-    Card,
-    CardActions,
-    CardText,
-} from "material-ui/Card"
 import { List, ListItem } from "material-ui/List"
-import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
 import Dialog from "material-ui/Dialog"
-import DatePicker from "material-ui/DatePicker"
 import LinearProgress from "material-ui/LinearProgress"
 import Button from "../../lib/common/Button"
-import InputField from "../../lib/common/InputField"
 import Snackbar from "../../lib/common/Snackbar"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 import RegisterCard from "./RegisterCard"
 import BalancesCard from "./BalanceCard"
 import NoAccountCard from "./NoAccountCard"
+import PaymentCard from "./PaymentCard"
 import "./index.css"
 
 
@@ -1256,12 +1247,6 @@ class Balances extends Component {
 
     // ...
     render = () => {
-        // let otherBalances =
-        //     this.props.accountInfo.exists ?
-        //         this.getOtherBalances.call(
-        //             this, this.props.accountInfo.account.account
-        //         ) :
-        //         null
 
         const
             actions = [
@@ -1420,174 +1405,10 @@ class Balances extends Component {
                     <BalancesCard /> : <NoAccountCard />
                 }
 
-                {this.state.paymentCardVisible && (
-                    <Card className="payment-card">
-                        <CardText>
-                            <div className="f-e space-between">
-                                <div>
-                                    <div>
-                                        <img
-                                            style={{
-                                                opacity: "0.2",
-                                            }}
-                                            src="/img/sf.svg"
-                                            width="140px"
-                                            alt={appName}
-                                        />
-                                    </div>
-
-                                </div>
-                                <DatePicker
-                                    className="date-picker"
-                                    defaultDate={this.state.minDate}
-                                    floatingLabelText="Date"
-                                    minDate={this.state.minDate}
-                                    underlineShow={true}
-                                    onChange={this.updateDate}
-                                />
-                            </div>
-                            <div className="f-s space-between">
-                                <div className="payment-header f-s">
-                                    <div className="p-r leading-label-align nowrap">
-                                        Pay to the order of:
-                                    </div>
-                                    <div className="p-r">
-                                        <InputField
-                                            name="paycheck-payment-address"
-                                            type="text"
-                                            placeholder="Payment Address"
-                                            underlineStyle={{
-                                                borderColor: "rgba(15, 46, 83, 0.5)",
-                                            }}
-                                            underlineFocusStyle={{
-                                                borderColor: "rgba(15, 46, 83, 0.8)",
-                                            }}
-                                            inputStyle={{
-                                                color: "rgba(15, 46, 83, 0.8)",
-                                            }}
-                                            validator={
-                                                debounce(
-                                                    this.compoundFederationValidator,
-                                                    1000
-                                                )
-                                            }
-                                            ref={(self) => {
-                                                this.textInputFieldFederationAddress = self
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="payment-header f-s">
-                                    <div className="p-r leading-label-align payment-currency">
-                                        {currencyGlyph(
-                                            this.props.Account.currency
-                                        )}
-                                    </div>
-                                    <div>
-                                        <InputField
-                                            name="paycheck-payment-amount"
-                                            type="text"
-                                            validator={
-                                                debounce(this.amountValidator, 500)
-                                            }
-                                            ref={(self) => {
-                                                this.textInputFieldAmount = self
-                                            }}
-                                            placeholder="Amount"
-                                            underlineStyle={{
-                                                borderColor: "rgba(15, 46, 83, 0.5)",
-                                            }}
-                                            underlineFocusStyle={{
-                                                borderColor: "rgba(15, 46, 83, 0.8)",
-                                            }}
-                                            inputStyle={{
-                                                color: "rgba(15, 46, 83, 0.8)",
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="f-s space-between verbatim-underlined">
-                                <div>
-                                    {(this.state.amountEntered && this.state.amountText) ?
-                                        (this.state.amountEntered && this.state.amountText) :
-                                        <span className="transparent">NOTHING</span>}
-                                </div>
-                                <div>{this.state.currencyText}</div>
-                            </div>
-                            <div className="p-t"></div>
-                            <div className="f-e">
-                                <div>
-                                    <i className="material-icons">lock</i>
-                                </div>
-                                <div className="micro nowrap">
-                                    <span>Security Features</span><br/>
-                                    {this.recipientIndicatorMessage.call(this)}
-
-                                </div>
-
-                            </div>
-                            <div className="p-b"></div>
-                            <div className="f-s space-between">
-                                <div>
-                                    <span className="payment-header">
-                                        <span className="p-r">For:</span>
-                                        <InputField
-                                            name="paycheck-memo"
-                                            type="text"
-                                            placeholder="Memo"
-                                            underlineStyle={{
-                                                borderColor: "rgba(15, 46, 83, 0.5)",
-                                            }}
-                                            underlineFocusStyle={{
-                                                borderColor: "rgba(15, 46, 83, 0.8)",
-                                            }}
-                                            inputStyle={{
-                                                color: "rgba(15, 46, 83, 0.8)",
-                                            }}
-                                            ref={(self) => {
-                                                this.textInputFieldMemo = self
-                                            }}
-                                            validator={
-                                                debounce(this.memoValidator, 500)
-                                            }
-                                        />
-                                    </span>
-                                </div>
-                            </div>
-                        </CardText>
-                        <CardActions>
-                            <div className="f-e space-between">
-
-                                {this.bottomIndicatorMessage.call(this)}
-
-                                <div>
-                                    <span className="p-r">
-                                        <RaisedButton
-                                            onClick={this.sendPayment}
-                                            backgroundColor="rgb(15,46,83)"
-                                            labelColor="rgb(244,176,4)"
-                                            label="SIGN"
-                                            disabledBackgroundColor="rgba(15,46,83,0.3)"
-                                            disabledLabelColor="#cfd8dc"
-                                            disabled={
-                                                this.state.buttonSendDisabled
-                                            }
-                                        />
-                                    </span>
-                                    <FlatButton
-                                        label="CANCEL"
-                                        disableTouchRipple={true}
-                                        disableFocusRipple={true}
-                                        onClick={this.hidePaymentCard}
-                                    />
-                                </div>
-                            </div>
-                            <div className="p-b"></div>
-                        </CardActions>
-                    </Card>
-                )}
+                {
+                    this.props.appUi.cards.payment &&
+                    this.props.appUi.cards.payment.opened && <PaymentCard />
+                }
             </div>
         )
     }

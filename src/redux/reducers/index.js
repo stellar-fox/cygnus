@@ -10,6 +10,7 @@ import ModalReducer from "./modal-reducer"
 
 import { reducer as AccountReducer } from "../Account"
 import { reducer as AssetManagerReducer } from "../AssetManager"
+import { reducer as BalancesReducer } from "../Balances"
 import { reducer as PaymentsReducer } from "../Payments"
 
 
@@ -28,5 +29,6 @@ export default {
 
     Account: AccountReducer,
     Assets: AssetManagerReducer,
+    Balances: BalancesReducer,
     Payments: PaymentsReducer,
 }

@@ -95,3 +95,8 @@ export const gravatarSize = "s=96"
 
 // ...
 export const defaultCurrencyRateUpdateTime = 300000
+
+
+// ...
+export const federationEndpoint = (domain) =>
+    `https://${domain}/.well-known/stellar.toml`

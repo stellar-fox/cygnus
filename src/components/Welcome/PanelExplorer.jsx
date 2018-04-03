@@ -12,9 +12,8 @@ import {
 } from "../../redux/actions/"
 
 import {
-    pubKeyValid,
-    federationAddressValid,
     federationLookup,
+    paymentAddressValidator,
 } from "../../lib/utils"
 
 import Panel from "../Panel"
@@ -49,37 +48,13 @@ const styles = {
 // <PanelExplorer> component
 class PanelExplorer extends Component {
 
-    // ...
-    federationValidator = () => {
-        const address = this.input.state.value
-
-        // Looks like something totally invalid for this field.
-        if (!address.match(/\*/) && !address.match(/^G/)) {
-            return "Invalid input."
-        }
-        // Looks like user is entering Federation Address format.
-        if (address.match(/\*/) && !federationAddressValid(address)) {
-            return "Invalid payment address."
-        }
-        // This must be an attempt at a Stellar public key format.
-        if (address.match(/^G/) && !address.match(/\*/)) {
-            const publicKeyValidityObj = pubKeyValid(address)
-            if (!publicKeyValidityObj.valid) {
-                return publicKeyValidityObj.message
-            }
-        }
-        return null
-    }
-
 
     // ...
     compoundFederationValidator = () => (
         (addressValidity) => addressValidity ?
             this.input.setState({error: addressValidity,}) :
             this.enterExplorer.call(this)
-    )(this.federationValidator(this.input.state.value))
-
-
+    )(paymentAddressValidator(this.input.state.value))
 
 
     // ...
@@ -156,6 +131,7 @@ class PanelExplorer extends Component {
         }
 
     }
+
 
     // ...
     render = () =>
