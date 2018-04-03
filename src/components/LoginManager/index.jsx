@@ -1,7 +1,7 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import PropTypes from "prop-types"
 import hoistStatics from "hoist-non-react-statics"
 import { authenticate } from "./api"
 
@@ -131,7 +131,7 @@ export const withLoginManager = (WrappedComponent) =>
                                 React.createElement(WrappedComponent, {
                                     ...restOfTheProps,
                                     ref: wrappedComponentRef,
-                                    loginManager: loginManager,
+                                    loginManager,
                                 })
                         }
                     </LoginManagerContext.Consumer>
