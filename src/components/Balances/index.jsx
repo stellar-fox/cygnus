@@ -1,11 +1,14 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import PropTypes from "prop-types"
 import axios from "axios"
 import debounce from "lodash/debounce"
 import numberToText from "number-to-text"
 import { BigNumber } from "bignumber.js"
 import "number-to-text/converters/en-us"
+
+import { action as AccountAction } from "../../redux/Account"
 
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import {
@@ -76,6 +79,11 @@ const server = new StellarSdk.Server(config.horizon)
 
 // <Balances> component
 class Balances extends Component {
+
+    // ...
+    static propTypes = {
+        setState: PropTypes.func.isRequired,
+    }
 
     // ...
     state = ((now) => ({
@@ -199,9 +207,11 @@ class Balances extends Component {
             .loadAccount(this.props.appAuth.publicKey)
             .then((account) => {
                 this.props.accountExistsOnLedger({ account, })
+                this.props.setState({ exists: true, })
             })
             .catch(StellarSdk.NotFoundError, () => {
                 this.props.accountMissingOnLedger()
+                this.props.setState({ exists: false, })
             })
             .finally(() => {
                 setTimeout(() => {
@@ -1767,6 +1777,7 @@ export default withLoginManager(withAssetManager(connect(
 
     // match dispatch to props.
     (dispatch) => bindActionCreators({
+        setState: AccountAction.setState,
         setExchangeRate,
         showAlert,
         hideAlert,

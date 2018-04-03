@@ -11,6 +11,7 @@ const initState = {
     paymentAddress: "",
     discoverable: true,
     currency: "eur",
+    exists: false,
 }
 
 
