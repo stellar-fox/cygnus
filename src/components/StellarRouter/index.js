@@ -122,22 +122,24 @@ export const StellarRouter = connect(
                 ""
 
 
-        // provide 'addStaticPaths', 'getStaticPath' and 'getViewName'
-        // functions through react's context
         render = () => (
-            ({ addStaticPaths, getStaticPath, getViewName, }) =>
+            ({ addStaticPaths, getStaticPath, getViewName, }, { children, }) =>
                 React.createElement(
-                    StellarRouterContext.Provider,
-                    {
-                        value: {
-                            addStaticPaths,
-                            getStaticPath,
-                            getViewName,
+                    Router,
+                    this.props,
+                    React.createElement(
+                        StellarRouterContext.Provider,
+                        {
+                            value: {
+                                addStaticPaths,
+                                getStaticPath,
+                                getViewName,
+                            },
                         },
-                    },
-                    React.createElement(Router, this.props)
+                        children
+                    )
                 )
-        )(this)
+        )(this, this.props)
 
     }
 )
