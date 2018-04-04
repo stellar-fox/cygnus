@@ -170,14 +170,15 @@ export const choose = (
 
 
 // ...
-export const createReducer = (initState = {}) => (actions) =>
-    (state = initState, action) =>
-        choose(
-            action.type,
-            actions,
-            (s, _a) => s,
-            [state, action,]
-        )
+export const createReducer = (initState = {}) =>
+    (actions, defaultAction = (s, _a) => s) =>
+        (state = initState, action) =>
+            choose(
+                action.type,
+                actions,
+                defaultAction,
+                [state, action,]
+            )
 
 
 // ...
