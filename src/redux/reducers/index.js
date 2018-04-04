@@ -11,7 +11,7 @@ import ModalReducer from "./modal-reducer"
 import { reducer as AccountReducer } from "../Account"
 import { reducer as AssetManagerReducer } from "../AssetManager"
 import { reducer as PaymentsReducer } from "../Payments"
-import { reducer as StellarRouterReducer } from "../StellarRouter"
+import { routerReducer as RouterReducer} from "react-router-redux"
 
 
 
@@ -30,5 +30,5 @@ export default {
     Account: AccountReducer,
     Assets: AssetManagerReducer,
     Payments: PaymentsReducer,
-    Router: StellarRouterReducer,
+    Router: RouterReducer,
 }

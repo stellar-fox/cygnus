@@ -104,7 +104,7 @@ export default withStellarRouter(connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
-        currentPath: state.router.location.pathname,
+        currentPath: state.Router.location.pathname,
     }),
 
     // map dispatch to props.

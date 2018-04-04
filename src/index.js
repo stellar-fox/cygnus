@@ -6,7 +6,6 @@ import {
     combineReducers,
 } from "redux"
 import thunk from "redux-thunk"
-import { routerReducer } from "react-router-redux"
 import { routerMiddleware } from "./components/StellarRouter"
 import createHistory from "history/createBrowserHistory"
 import {
@@ -39,10 +38,7 @@ const history = createHistory({
 
 // store with router-redux integration and redux-devtools-extension
 const store = createStore(
-    combineReducers({
-        ...reducers,
-        router: routerReducer,
-    }),
+    combineReducers(reducers),
     loadState(),
     composeWithDevTools(
         applyMiddleware(

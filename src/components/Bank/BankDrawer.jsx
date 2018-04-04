@@ -16,7 +16,7 @@ import "./BankDrawer.css"
 // <NavLinkTemplate> component
 // with bound 'currentPath', 'paths' state props and 'push' dispatcher
 const NavLinkTemplate = withStellarRouter(connect(
-    (state) => ({ currentPath: state.router.location.pathname, }),
+    (state) => ({ currentPath: state.Router.location.pathname, }),
     (dispatch) => ({ push: (p) => dispatch(push(p)), })
 )(({
     stellarRouter, currentPath, push, to, icon,

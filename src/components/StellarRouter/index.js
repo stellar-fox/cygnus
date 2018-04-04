@@ -46,7 +46,7 @@ export const resolvePath = (base) => (path) =>
 
 // redux-connected <Switch>
 export const ConnectedSwitch = connect(
-    (state) => ({ location: state.router.location, })
+    (state) => ({ location: state.Router.location, })
 )(Switch)
 
 
