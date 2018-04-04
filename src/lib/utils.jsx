@@ -249,3 +249,14 @@ export const swap = (o) => dict(
         .entries(o)
         .map((kv) => [].concat(kv).reverse())
 )
+
+
+// shallowly compare two objects
+export const shallowEquals = (objA, objB) => {
+    if (Object.keys(objA).length !== Object.keys(objB).length)
+        return false
+    for (let k in objA)
+        if (!(k in objB) || objA[k] !== objB[k])
+            return false
+    return true
+}
