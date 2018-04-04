@@ -13,7 +13,7 @@ import {
 
 import {
     federationLookup,
-    paymentAddressValidator,
+    errorMessageForInvalidPaymentAddress,
 } from "../../lib/utils"
 
 import Panel from "../Panel"
@@ -54,7 +54,7 @@ class PanelExplorer extends Component {
         (addressValidity) => addressValidity ?
             this.input.setState({error: addressValidity,}) :
             this.enterExplorer.call(this)
-    )(paymentAddressValidator(this.input.state.value))
+    )(errorMessageForInvalidPaymentAddress(this.input.state.value))
 
 
     // ...

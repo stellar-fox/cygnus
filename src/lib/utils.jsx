@@ -59,7 +59,7 @@ export const federationAddressValid = (federationAddress) => !!(
 ).test(federationAddress)
 
 
-export const paymentAddressValidator = (address) => {
+export const errorMessageForInvalidPaymentAddress = (address) => {
     // Looks like something totally invalid for this field.
     if (!address.match(/\*/) && !address.match(/^G/)) {
         return "Invalid input."
@@ -77,6 +77,58 @@ export const paymentAddressValidator = (address) => {
     }
     return null
 }
+
+
+export const fedToPub = (input) => {
+    if (input.match(/^G/) && !input.match(/\*/)) {
+        const publicKeyValidityObj = pubKeyValid(input)
+        if (publicKeyValidityObj.valid) {
+            return Promise.resolve({ok: true, publicKey: input,})
+        }
+    }
+    if (input.match(/\*/) && federationAddressValid(input)) {
+        return fedToPubLookup(input)
+    }
+}
+
+
+export const fedToPubLookup = (input) => (
+    async (fedAddress) => {
+        try {
+            let endpoint = await endpointLookup(fedAddress)
+
+            let publicKey = await axios.get(`${endpoint.endpoint}?q=${fedAddress}&type=name`)
+
+            return {
+                ok: true,
+                publicKey: publicKey.data.account_id,
+            }
+
+        } catch (error) {
+            return { error, }
+        }
+    }
+)(input)
+
+
+
+export const endpointLookup = (address) => (
+    async (domain) => {
+        try {
+            if (domain) {
+                let endpoint = await axios.get(federationEndpoint(domain[0]))
+                return {
+                    ok: true,
+                    endpoint: toml.parse(endpoint.data).FEDERATION_SERVER,
+                }
+            }
+        } catch (error) {
+            return {error,}
+        }
+    }
+)(address.match(domainRegex))
+
+
 
 // ...
 export const federationLookup = (federationAddress) => (

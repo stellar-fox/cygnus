@@ -57,12 +57,10 @@ export const uiReducer = createReducer({
     cards: {},
 }, {
     [ActionTypes.CHANGE_MODAL_STATE] (state, action) {
-        // state = Object.assign(...state, action.payload)
         state = {
             ...state,
             modals: Object.assign(action.payload),
         }
-        // state = Object.assign(...state, state.modals || {}, action.payload)
         return state
     },
     [ActionTypes.CHANGE_SNACKBAR_STATE] (state, action) {
@@ -70,7 +68,6 @@ export const uiReducer = createReducer({
             ...state,
             snackbar: Object.assign(action.payload),
         }
-        // state = Object.assign(...state, action.payload)
         return state
     },
     [ActionTypes.TOGGLE_PAYMENT_CARD] (state, action) {
@@ -78,7 +75,6 @@ export const uiReducer = createReducer({
             ...state,
             cards: Object.assign(action.payload),
         }
-        // state = Object.assign(...state, action.payload)
         return state
     },
 })

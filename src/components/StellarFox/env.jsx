@@ -100,3 +100,12 @@ export const defaultCurrencyRateUpdateTime = 300000
 // ...
 export const federationEndpoint = (domain) =>
     `https://${domain}/.well-known/stellar.toml`
+
+
+// ...
+export const minimumAccountReserve = 1
+
+
+// ...
+export const minimumReserveMessage = `Minimum reserve of ${
+    minimumAccountReserve} required.`

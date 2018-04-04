@@ -3,8 +3,6 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import axios from "axios"
-
-import numberToText from "number-to-text"
 import { BigNumber } from "bignumber.js"
 import "number-to-text/converters/en-us"
 
@@ -78,6 +76,9 @@ class Balances extends Component {
 
     // ...
     state = ((now) => ({
+        paymentsStreamer: null,
+
+
         sbPayment: false,
         sbPaymentAmount: null,
         sbPaymentAssetCode: null,
@@ -111,6 +112,17 @@ class Balances extends Component {
 
     // ...
     componentDidMount = () => {
+
+        // FIXME: merge streamers
+        // this.props.setStreamer(this.paymentsStreamer.call(this))
+        // this.props.setOptionsStreamer(this.optionsStreamer.call(this))
+
+        this.setState({
+            paymentsStreamer: this.paymentsStreamer.call(this),
+            optionsStreamer: this.optionsStreamer.call(this),
+        })
+
+
         this.props.changeSnackbarState({
             open: false,
             message: "",
@@ -128,47 +140,47 @@ class Balances extends Component {
 
         }
 
-        if (this.props.loginManager.isAuthenticated()) {
-            axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
-                .then((response) => {
-                    this.props.setCurrency(response.data.data.currency)
-                    this.props.setCurrencyPrecision(
-                        response.data.data.precision
-                    )
-                    this.getExchangeRate(response.data.data.currency)
-                    this.setState({
-                        currencySymbol: response.data.data.currency,
-                        currencyText:
-                            this.getCurrencyText(
-                                response.data.data.currency
-                            ),
-                    })
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line no-console
-                    console.log(error.message)
-                })
-        }
+        // if (this.props.loginManager.isAuthenticated()) {
+        //     axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
+        //         .then((response) => {
+        //             this.props.setCurrency(response.data.data.currency)
+        //             this.props.setCurrencyPrecision(
+        //                 response.data.data.precision
+        //             )
+        //             // this.getExchangeRate(response.data.data.currency)
+        //             this.setState({
+        //                 currencySymbol: response.data.data.currency,
+        //                 currencyText:
+        //                     this.getCurrencyText(
+        //                         response.data.data.currency
+        //                     ),
+        //             })
+        //         })
+        //         .catch((error) => {
+        //             // eslint-disable-next-line no-console
+        //             console.log(error.message)
+        //         })
+        // }
 
-        this.getExchangeRate(this.props.Account.currency)
-        this.setState({
-            currencySymbol: this.props.Account.currency,
-            currencyText:
-                this.getCurrencyText(
-                    this.props.Account.currency
-                ),
-        })
+        // this.getExchangeRate(this.props.Account.currency)
+        // this.setState({
+        //     currencySymbol: this.props.Account.currency,
+        //     currencyText:
+        //         this.getCurrencyText(
+        //             this.props.Account.currency
+        //         ),
+        // })
 
-        // FIXME: merge streamers
-        this.props.setStreamer(this.paymentsStreamer.call(this))
-        this.props.setOptionsStreamer(this.optionsStreamer.call(this))
+
     }
 
 
     // ...
     componentWillUnmount = () => {
-        this.props.accountInfo.streamer.call(this)
-        this.props.accountInfo.optionsStreamer.call(this)
+        this.state.paymentsStreamer.call(this)
+        this.state.optionsStreamer.call(this)
+        // this.props.accountInfo.paymentsStreamer.call(this)
+        // this.props.accountInfo.optionsStreamer.call(this)
     }
 
 
@@ -211,19 +223,6 @@ class Balances extends Component {
 
             })
     }
-
-
-    // ...
-    getCurrencyText = (currency) => (
-        (c) => c[Object.keys(c).filter((key) => key === currency)]
-    )({
-        eur: "EUROS",
-        usd: "DOLLARS",
-        aud: "AUSTRALIAN DOLLARS",
-        nzd: "NEW ZEALAND DOLLARS",
-        thb: "THAI BAHT บาท",
-        pln: "ZŁOTYCH",
-    })
 
 
     // ...
@@ -385,36 +384,36 @@ class Balances extends Component {
 
 
     // ...
-    exchangeRateFetched = () => (
-        this.props.accountInfo.rates  &&
-            this.props.accountInfo.rates[this.props.Account.currency]
-    )
+    // exchangeRateFetched = () => (
+    //     this.props.accountInfo.rates  &&
+    //         this.props.accountInfo.rates[this.props.Account.currency]
+    // )
 
 
-    // ...
-    exchangeRateStale = (currency) => (
-        !this.props.accountInfo.rates  ||
-            !this.props.accountInfo.rates[currency]  ||
-            this.props.accountInfo.rates[currency].lastFetch + 300000 < Date.now()
-    )
+    // // ...
+    // exchangeRateStale = (currency) => (
+    //     !this.props.accountInfo.rates  ||
+    //         !this.props.accountInfo.rates[currency]  ||
+    //         this.props.accountInfo.rates[currency].lastFetch + 300000 < Date.now()
+    // )
 
 
-    // ...
-    getExchangeRate = (currency) => {
-        if (this.exchangeRateStale(currency)) {
-            axios.get(`${config.api}/ticker/latest/${currency}`)
-                .then((response) => {
-                    this.props.setExchangeRate({[currency]: {
-                        rate: response.data.data[`price_${currency}`],
-                        lastFetch: Date.now(),
-                    },})
-                })
-                .catch(function (error) {
-                    // eslint-disable-next-line no-console
-                    console.log(error.message)
-                })
-        }
-    }
+    // // ...
+    // getExchangeRate = (currency) => {
+    //     if (this.exchangeRateStale(currency)) {
+    //         axios.get(`${config.api}/ticker/latest/${currency}`)
+    //             .then((response) => {
+    //                 this.props.setExchangeRate({[currency]: {
+    //                     rate: response.data.data[`price_${currency}`],
+    //                     lastFetch: Date.now(),
+    //                 },})
+    //             })
+    //             .catch(function (error) {
+    //                 // eslint-disable-next-line no-console
+    //                 console.log(error.message)
+    //             })
+    //     }
+    // }
 
 
     // // ...
@@ -821,89 +820,89 @@ class Balances extends Component {
 
 
     // ...
-    memoValidator = () => {
-        if (
-            this.state.memoRequired  &&
-            this.textInputFieldMemo.state.value === ""
-        ) {
-            this.setState({
-                memoValid: false,
-                memo: "",
-            })
-        } else {
-            this.setState({
-                memoValid: true,
-                memo: this.textInputFieldMemo.state.value,
-            })
-        }
+    // memoValidator = () => {
+    //     if (
+    //         this.state.memoRequired  &&
+    //         this.textInputFieldMemo.state.value === ""
+    //     ) {
+    //         this.setState({
+    //             memoValid: false,
+    //             memo: "",
+    //         })
+    //     } else {
+    //         this.setState({
+    //             memoValid: true,
+    //             memo: this.textInputFieldMemo.state.value,
+    //         })
+    //     }
 
-        this.compoundPaymentValidator.call(this)
+    //     this.compoundPaymentValidator.call(this)
 
-        return true
-    }
+    //     return true
+    // }
 
 
     // ...
-    amountValidator = () => {
-        // nothing was typed (reset any previous errors)
-        if (this.textInputFieldAmount.state.value === "") {
-            this.setState({
-                amountEntered: false,
-                amountValid: false,
-            })
-            this.textInputFieldAmount.setState({
-                error: null,
-            })
-            this.compoundPaymentValidator.call(this)
-            return null
-        }
+    // amountValidator = () => {
+    //     // nothing was typed (reset any previous errors)
+    //     if (this.textInputFieldAmount.state.value === "") {
+    //         this.setState({
+    //             amountEntered: false,
+    //             amountValid: false,
+    //         })
+    //         this.textInputFieldAmount.setState({
+    //             error: null,
+    //         })
+    //         this.compoundPaymentValidator.call(this)
+    //         return null
+    //     }
 
-        let parsedValidAmount = this.textInputFieldAmount.state.value.match(
-            /^(\d+)([.,](\d{1,2}))?$/
-        )
+    //     let parsedValidAmount = this.textInputFieldAmount.state.value.match(
+    //         /^(\d+)([.,](\d{1,2}))?$/
+    //     )
 
-        // check if amount typed is valid
-        if (parsedValidAmount) {
-            // decimals present
-            if (parsedValidAmount[3]) {
-                this.setState({
-                    amount: `${parsedValidAmount[1]}.${parsedValidAmount[3]}`,
-                    amountEntered: true,
-                    amountText:
-                        `${numberToText.convertToText(
-                            parsedValidAmount[1]
-                        )} and ${parsedValidAmount[3]}/100`,
-                })
-            }
-            // whole amount
-            else {
-                this.setState({
-                    amount: `${parsedValidAmount[1]}`,
-                    amountEntered: true,
-                    amountText:
-                        numberToText.convertToText(parsedValidAmount[1]),
-                })
-            }
-            this.textInputFieldAmount.setState({
-                error: null,
-            })
-            this.compoundPaymentValidator.call(this)
-            return null
-        }
+    //     // check if amount typed is valid
+    //     if (parsedValidAmount) {
+    //         // decimals present
+    //         if (parsedValidAmount[3]) {
+    //             this.setState({
+    //                 amount: `${parsedValidAmount[1]}.${parsedValidAmount[3]}`,
+    //                 amountEntered: true,
+    //                 amountText:
+    //                     `${numberToText.convertToText(
+    //                         parsedValidAmount[1]
+    //                     )} and ${parsedValidAmount[3]}/100`,
+    //             })
+    //         }
+    //         // whole amount
+    //         else {
+    //             this.setState({
+    //                 amount: `${parsedValidAmount[1]}`,
+    //                 amountEntered: true,
+    //                 amountText:
+    //                     numberToText.convertToText(parsedValidAmount[1]),
+    //             })
+    //         }
+    //         this.textInputFieldAmount.setState({
+    //             error: null,
+    //         })
+    //         this.compoundPaymentValidator.call(this)
+    //         return null
+    //     }
 
-        // invalid amount was typed in
-        else {
-            this.setState({
-                amountEntered: false,
-            })
-            this.textInputFieldAmount.setState({
-                error: "invalid amount entered",
-            })
-            this.compoundPaymentValidator.call(this)
-            return "invalid amount entered"
-        }
+    //     // invalid amount was typed in
+    //     else {
+    //         this.setState({
+    //             amountEntered: false,
+    //         })
+    //         this.textInputFieldAmount.setState({
+    //             error: "invalid amount entered",
+    //         })
+    //         this.compoundPaymentValidator.call(this)
+    //         return "invalid amount entered"
+    //     }
 
-    }
+    // }
 
 
     // ...
@@ -1064,47 +1063,47 @@ class Balances extends Component {
 
 
     // ...
-    recipientIndicatorMessage = () => {
-        let message = <span className="fade-extreme">XXXXXXXXXXXX</span>
+    // recipientIndicatorMessage = () => {
+    //     let message = <span className="fade-extreme">XXXXXXXXXXXX</span>
 
-        if (this.state.payee) {
-            message = <span className="green">Recipient Verified</span>
-        }
+    //     if (this.state.payee) {
+    //         message = <span className="green">Recipient Verified</span>
+    //     }
 
-        if (this.state.newAccount) {
-            message = <span className="red">New Account</span>
-        }
+    //     if (this.state.newAccount) {
+    //         message = <span className="red">New Account</span>
+    //     }
 
-        return message
-    }
+    //     return message
+    // }
 
 
-    // ...
-    bottomIndicatorMessage = () => {
-        let message = (<div className="p-l nowrap fade-extreme">
-            <span className="bigger">
-                &#x1D54A;&#x1D543;
-                {" "}
-                {this.props.accountInfo.account.account.sequence}
-            </span>
-        </div>)
+    // // ...
+    // bottomIndicatorMessage = () => {
+    //     let message = (<div className="p-l nowrap fade-extreme">
+    //         <span className="bigger">
+    //             &#x1D54A;&#x1D543;
+    //             {" "}
+    //             {this.props.accountInfo.account.account.sequence}
+    //         </span>
+    //     </div>)
 
-        if (this.state.memoRequired && !this.state.memoValid) {
-            message = (<div className='fade p-l nowrap red'>
-                <i className="material-icons md-icon-small">assignment_late</i>
-                Payment recipient requires Memo entry!
-            </div>)
-        }
+    //     if (this.state.memoRequired && !this.state.memoValid) {
+    //         message = (<div className='fade p-l nowrap red'>
+    //             <i className="material-icons md-icon-small">assignment_late</i>
+    //             Payment recipient requires Memo entry!
+    //         </div>)
+    //     }
 
-        if (this.state.minimumReserveMessage !== "") {
-            message = (<div className='fade p-l nowrap red'>
-                <i className="material-icons md-icon-small">assignment_late</i>
-                {this.state.minimumReserveMessage}
-            </div>)
-        }
+    //     if (this.state.minimumReserveMessage !== "") {
+    //         message = (<div className='fade p-l nowrap red'>
+    //             <i className="material-icons md-icon-small">assignment_late</i>
+    //             {this.state.minimumReserveMessage}
+    //         </div>)
+    //     }
 
-        return message
-    }
+    //     return message
+    // }
 
 
     // ...

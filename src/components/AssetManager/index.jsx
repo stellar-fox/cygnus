@@ -91,6 +91,19 @@ class AssetManager extends Component {
 
 
     // ...
+    getAssetDenomination = (currency) => (
+        (c) => c[currency]
+    )({
+        eur: "EUROS",
+        usd: "DOLLARS",
+        aud: "AUSTRALIAN DOLLARS",
+        nzd: "NEW ZEALAND DOLLARS",
+        thb: "THAI BAHT บาท",
+        pln: "ZŁOTYCH",
+    })
+
+
+    // ...
     render = () =>
         <AssetManagerContext.Provider value={this}>
             { this.props.children }
