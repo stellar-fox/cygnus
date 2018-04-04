@@ -1,12 +1,13 @@
 import { createReducer } from "../lib/utils"
-
+import { routerReducer } from "react-router-redux"
 
 
 
 // <StellarRouter> component state
 const initState = {
 
-    paths: {},
+    location: {},
+    staticPaths: {},
 
 }
 
@@ -30,9 +31,9 @@ export const action = {
     }),
 
     // ...
-    addPaths: (paths) => ({
+    addStaticPaths: (staticPaths) => ({
         type: ADD_STATIC_PATHS,
-        payload: paths,
+        payload: staticPaths,
     }),
 
 }
@@ -50,10 +51,10 @@ export const reducer = createReducer(initState)({
 
     [ADD_STATIC_PATHS]: (state, action) => ({
         ...state,
-        paths: {
-            ...state.paths,
+        staticPaths: {
+            ...state.staticPaths,
             ...action.payload,
         },
     }),
 
-})
+}, routerReducer)

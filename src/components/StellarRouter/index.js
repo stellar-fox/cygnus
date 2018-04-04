@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { Switch, Route, } from "react-router-dom"
 import hoistStatics from "hoist-non-react-statics"
@@ -7,6 +8,7 @@ import {
     CALL_HISTORY_METHOD,
     ConnectedRouter as Router,
 } from "react-router-redux"
+import { action as StellarRouterAction } from "../../redux/StellarRouter"
 import resolvePathname from "resolve-pathname"
 import { swap } from "../../lib/utils"
 
@@ -59,44 +61,64 @@ const StellarRouterContext = React.createContext({})
 
 
 // <StellarRouter> component
-export class StellarRouter extends Component {
+export const StellarRouter = connect(
+    null,
+    (dispatch) => bindActionCreators({
+        addStaticPaths: StellarRouterAction.addStaticPaths,
+    }, dispatch)
+)(
+    class StellarRouter extends Component {
 
-    // following properties are meant to be mutable and
-    // they are intentionally not obeying react's lifecycle rules
-    // (thus they are not put into this.state or redux's store)
-    _staticPaths = {}
-    _pathToViewMap = {}
+        // ...
+        static propTypes = {
+            addStaticPaths: PropTypes.func.isRequired,
+        }
 
 
-    // whenever new set of static paths are added
-    // a new path-to-view mapping is computed
-    addStaticPaths = (paths) => {
-        this._staticPaths = { ...this._staticPaths, ...paths, }
-        this._pathToViewMap = swap(this._staticPaths)
-        return this._staticPaths
+        // following properties are meant to be mutable and
+        // they are intentionally not obeying react's lifecycle rules
+        // (thus they are not put into this.state or redux's store)
+        _staticPaths = {}
+        _pathToViewMap = {}
+
+
+        // whenever new set of static paths are added
+        // a new path-to-view mapping is computed
+        addStaticPaths = (paths) => {
+            this.props.addStaticPaths(paths)
+            this._staticPaths = { ...this._staticPaths, ...paths, }
+            this._pathToViewMap = swap(this._staticPaths)
+            return this._staticPaths
+        }
+
+
+        // takes view name and returns stored static path
+        getStaticPath = (viewName) => this._staticPaths[viewName]
+
+
+        // takes static path and returns associated view name
+        getViewName = (path) => this._pathToViewMap[path]
+
+
+        // provide 'addStaticPaths', 'getStaticPath' and 'getViewName'
+        // functions through react's context
+        render = () => (
+            ({ addStaticPaths, getStaticPath, getViewName, }) =>
+                React.createElement(
+                    StellarRouterContext.Provider,
+                    {
+                        value: {
+                            addStaticPaths,
+                            getStaticPath,
+                            getViewName,
+                        },
+                    },
+                    React.createElement(Router, this.props)
+                )
+        )(this)
+
     }
-
-
-    // takes view name and returns stored static path
-    getStaticPath = (viewName) => this._staticPaths[viewName]
-
-
-    // takes static path and returns associated view name
-    getViewName = (path) => this._pathToViewMap[path]
-
-
-    // provide 'addStaticPaths', 'getStaticPath' and 'getViewName'
-    // functions through react's context
-    render = () => (
-        ({ addStaticPaths, getStaticPath, getViewName, }) =>
-            React.createElement(
-                StellarRouterContext.Provider,
-                { value: { addStaticPaths, getStaticPath, getViewName, }, },
-                React.createElement(Router, this.props)
-            )
-    )(this)
-
-}
+)
 
 
 
