@@ -39,9 +39,9 @@ export const action = {
     }),
 
     // ...
-    addStaticPaths: (staticPaths) => ({
+    addStaticPaths: (paths) => ({
         type: ADD_STATIC_PATHS,
-        payload: staticPaths,
+        payload: paths,
     }),
 
     // ...

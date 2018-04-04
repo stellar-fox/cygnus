@@ -94,7 +94,7 @@ export const StaticRouter = connect(
 
         // whenever new set of static paths are added
         // a new path-to-view mapping is computed
-        addStaticPaths = (paths) => {
+        addPaths = (paths) => {
             this.props.addStaticPaths(paths)
             this._staticPaths = { ...this._staticPaths, ...paths, }
             this._pathToViewMap = swap(this._staticPaths)
@@ -110,7 +110,7 @@ export const StaticRouter = connect(
 
 
         // takes view name and returns stored static path
-        getStaticPath = (viewName) =>
+        getPath = (viewName) =>
             viewName in this._staticPaths ?
                 this._staticPaths[viewName] :
                 appBasePath
@@ -124,16 +124,10 @@ export const StaticRouter = connect(
 
 
         render = () => (
-            ({ addStaticPaths, getStaticPath, getViewName, }, { children, }) =>
+            ({ addPaths, getPath, getViewName, }, { children, }) =>
                 React.createElement(
                     StaticRouterContext.Provider,
-                    {
-                        value: {
-                            addStaticPaths,
-                            getStaticPath,
-                            getViewName,
-                        },
-                    },
+                    { value: { addPaths, getPath, getViewName, }, },
                     children
                 )
         )(this, this.props)
@@ -160,9 +154,9 @@ export const StellarRouter = ({ children, ...restOfTheProps }) =>
 
 
 // <withStellarRouter(...)> HOC
-// provides 'stellarRouter' and all '<Route>' props to wrapped component
+// provides 'staticRouter' and all '<Route>' props to wrapped component
 // (in other words, provides exactly the same props as 'withRouter' HOC
-// and additionally a 'stellarRouter' prop)
+// and additionally a 'staticRouter' prop)
 export const withStellarRouter = (WrappedComponent) =>
     hoistStatics(
         class WithStellarRouter extends Component {
@@ -191,12 +185,12 @@ export const withStellarRouter = (WrappedComponent) =>
                                 React.createElement(
                                     StaticRouterContext.Consumer,
                                     null,
-                                    (stellarRouter) =>
+                                    (staticRouter) =>
                                         React.createElement(WrappedComponent, {
                                             ...restOfTheProps,
                                             ...routeComponentProps,
                                             ref: wrappedComponentRef,
-                                            stellarRouter,
+                                            staticRouter,
                                         })
                                 ),
                         }

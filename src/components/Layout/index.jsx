@@ -33,7 +33,7 @@ export default withStellarRouter(connect(
         static propTypes = {
             loggedIn: PropTypes.bool.isRequired,
             match: PropTypes.object.isRequired,
-            stellarRouter: PropTypes.object.isRequired,
+            staticRouter: PropTypes.object.isRequired,
         }
 
 
@@ -45,7 +45,7 @@ export default withStellarRouter(connect(
             this.rr = resolvePath(this.props.match.path)
 
             // static paths
-            this.props.stellarRouter.addStaticPaths({
+            this.props.staticRouter.addPaths({
                 "Welcome": this.rr("."),
                 "Bank": this.rr("bank/"),
             })
@@ -54,28 +54,28 @@ export default withStellarRouter(connect(
 
         // ...
         render = () => (
-            ({ loggedIn, }, getStaticPath) =>
+            ({ loggedIn, }, getPath) =>
                 <Fragment>
                     <LoadingModal />
                     <Switch>
-                        <Route exact path={getStaticPath("Welcome")}>
+                        <Route exact path={getPath("Welcome")}>
                             {
                                 !loggedIn ?
                                     <Welcome /> :
-                                    <Redirect to={getStaticPath("Bank")} />
+                                    <Redirect to={getPath("Bank")} />
                             }
                         </Route>
-                        <Route path={getStaticPath("Bank")}>
+                        <Route path={getPath("Bank")}>
                             {
                                 loggedIn ?
                                     <Bank /> :
-                                    <Redirect to={getStaticPath("Welcome")} />
+                                    <Redirect to={getPath("Welcome")} />
                             }
                         </Route>
-                        <Redirect to={getStaticPath("Welcome")} />
+                        <Redirect to={getPath("Welcome")} />
                     </Switch>
                 </Fragment>
-        )(this.props, this.props.stellarRouter.getStaticPath)
+        )(this.props, this.props.staticRouter.getPath)
 
     }
 ))

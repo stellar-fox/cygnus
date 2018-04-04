@@ -22,7 +22,7 @@ export default withStellarRouter(
         // ...
         static propTypes = {
             match: PropTypes.object.isRequired,
-            stellarRouter: PropTypes.object.isRequired,
+            staticRouter: PropTypes.object.isRequired,
         }
 
 
@@ -34,7 +34,7 @@ export default withStellarRouter(
             this.rr = resolvePath(this.props.match.path)
 
             // static paths
-            this.props.stellarRouter.addStaticPaths({
+            this.props.staticRouter.addPaths({
                 "Balances": this.rr("balances/"),
                 "Payments": this.rr("payments/"),
                 "Account": this.rr("account/"),
@@ -44,12 +44,12 @@ export default withStellarRouter(
 
         // ...
         render = () => (
-            (getStaticPath) =>
+            (getPath) =>
                 <Fragment>
                     <Switch>
                         <Redirect exact
                             from={this.rr(".")}
-                            to={getStaticPath("Balances")}
+                            to={getPath("Balances")}
                         />
                     </Switch>
                     <BankAppBar />
@@ -57,7 +57,7 @@ export default withStellarRouter(
                     <BankContent />
                     <Footer />
                 </Fragment>
-        )(this.props.stellarRouter.getStaticPath)
+        )(this.props.staticRouter.getPath)
 
     }
 )

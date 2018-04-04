@@ -40,7 +40,7 @@ export default withStellarRouter(connect(
         // ...
         static propTypes = {
             drawerOpened: PropTypes.bool.isRequired,
-            stellarRouter: PropTypes.object.isRequired,
+            staticRouter: PropTypes.object.isRequired,
         }
 
 
@@ -61,24 +61,24 @@ export default withStellarRouter(connect(
 
         // ...
         render = () => (
-            ({ style, }, getStaticPath) =>
+            ({ style, }, getPath) =>
                 <div style={style} className="bank-content">
                     <Switch>
                         <Route
-                            path={getStaticPath("Balances")}
+                            path={getPath("Balances")}
                             component={Balances}
                         />
                         <Route
-                            path={getStaticPath("Payments")}
+                            path={getPath("Payments")}
                             component={Payments}
                         />
                         <Route
-                            path={getStaticPath("Account")}
+                            path={getPath("Account")}
                             component={Account}
                         />
                     </Switch>
                 </div>
-        )(this.state, this.props.stellarRouter.getStaticPath)
+        )(this.state, this.props.staticRouter.getPath)
 
     }
 ))

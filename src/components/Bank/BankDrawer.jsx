@@ -19,22 +19,22 @@ const NavLinkTemplate = withStellarRouter(connect(
     (state) => ({ currentPath: state.Router.location.pathname, }),
     (dispatch) => ({ push: (p) => dispatch(push(p)), })
 )(({
-    stellarRouter, currentPath, push, to, icon,
+    staticRouter, currentPath, push, to, icon,
 }) =>
     <NavLink
         className="menu-item"
         onClick={(e) => {
             e.preventDefault()
-            if (!currentPath.startsWith(stellarRouter.getStaticPath(to))) {
-                push(stellarRouter.getStaticPath(to))
+            if (!currentPath.startsWith(staticRouter.getPath(to))) {
+                push(staticRouter.getPath(to))
             }
         }}
         exact
         activeClassName="active"
         isActive={
-            () => currentPath.startsWith(stellarRouter.getStaticPath(to))
+            () => currentPath.startsWith(staticRouter.getPath(to))
         }
-        to={stellarRouter.getStaticPath(to)}
+        to={staticRouter.getPath(to)}
     >
         <i className="material-icons">{icon}</i>
         {to}

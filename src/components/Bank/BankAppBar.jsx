@@ -43,7 +43,7 @@ class BankAppBar extends Component {
     static propTypes = {
         drawerOpened: PropTypes.bool.isRequired,
         currentPath: PropTypes.string.isRequired,
-        stellarRouter: PropTypes.object.isRequired,
+        staticRouter: PropTypes.object.isRequired,
         logOut: PropTypes.func.isRequired,
         openDrawer: PropTypes.func.isRequired,
         closeDrawer: PropTypes.func.isRequired,
@@ -94,7 +94,7 @@ class BankAppBar extends Component {
                     </IconButton>
                 }
             />
-    )(this.props, this.props.stellarRouter.getViewName)
+    )(this.props, this.props.staticRouter.getViewName)
 
 }
 
