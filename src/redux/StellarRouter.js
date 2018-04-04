@@ -3,10 +3,17 @@ import { routerReducer } from "react-router-redux"
 
 
 
+
 // <StellarRouter> component state
 const initState = {
 
-    location: {},
+    currentView: "",
+    location: {
+        pathname: "",
+        search: "",
+        hash: "",
+        key: "",
+    },
     staticPaths: {},
 
 }
@@ -17,6 +24,7 @@ const initState = {
 // ...
 export const SET_STELLAR_ROUTER_STATE = "SET_STELLAR_ROUTER_STATE"
 export const ADD_STATIC_PATHS = "ADD_STATIC_PATHS"
+export const SET_CURRENT_VIEW = "SET_CURRENT_VIEW"
 
 
 
@@ -34,6 +42,12 @@ export const action = {
     addStaticPaths: (staticPaths) => ({
         type: ADD_STATIC_PATHS,
         payload: staticPaths,
+    }),
+
+    // ...
+    setCurrentView: (viewName) => ({
+        type: SET_CURRENT_VIEW,
+        payload: viewName,
     }),
 
 }
@@ -55,6 +69,11 @@ export const reducer = createReducer(initState)({
             ...state.staticPaths,
             ...action.payload,
         },
+    }),
+
+    [SET_CURRENT_VIEW]: (state, action) => ({
+        ...state,
+        currentView: action.payload,
     }),
 
 }, routerReducer)

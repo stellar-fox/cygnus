@@ -11,6 +11,7 @@ import {
 import { action as StellarRouterAction } from "../../redux/StellarRouter"
 import resolvePathname from "resolve-pathname"
 import { swap } from "../../lib/utils"
+import { appBasePath } from "../StellarFox/env"
 
 
 
@@ -62,16 +63,25 @@ const StellarRouterContext = React.createContext({})
 
 // <StellarRouter> component
 export const StellarRouter = connect(
-    null,
+    // map state to props.
+    (state) => ({
+        currentPath: state.Router.location.pathname,
+        currentView: state.Router.currentView,
+    }),
+    // map dispatch to props.
     (dispatch) => bindActionCreators({
         addStaticPaths: StellarRouterAction.addStaticPaths,
+        setCurrentView: StellarRouterAction.setCurrentView,
     }, dispatch)
 )(
     class StellarRouter extends Component {
 
         // ...
         static propTypes = {
+            currentPath: PropTypes.string.isRequired,
+            currentView: PropTypes.string.isRequired,
             addStaticPaths: PropTypes.func.isRequired,
+            setCurrentView: PropTypes.func.isRequired,
         }
 
 
@@ -88,16 +98,28 @@ export const StellarRouter = connect(
             this.props.addStaticPaths(paths)
             this._staticPaths = { ...this._staticPaths, ...paths, }
             this._pathToViewMap = swap(this._staticPaths)
+
+            let newView = this.getViewName(this.props.currentPath)
+            if (this.props.currentView !== newView) {
+                this.props.setCurrentView(newView)
+            }
+
             return this._staticPaths
         }
 
 
         // takes view name and returns stored static path
-        getStaticPath = (viewName) => this._staticPaths[viewName]
+        getStaticPath = (viewName) =>
+            viewName in this._staticPaths ?
+                this._staticPaths[viewName] :
+                appBasePath
 
 
         // takes static path and returns associated view name
-        getViewName = (path) => this._pathToViewMap[path]
+        getViewName = (path) =>
+            path in this._pathToViewMap ?
+                this._pathToViewMap[path] :
+                ""
 
 
         // provide 'addStaticPaths', 'getStaticPath' and 'getViewName'
