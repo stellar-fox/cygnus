@@ -59,7 +59,7 @@ export const StellarRouter = connect(
     class StellarRouter extends Component {
 
         // ...
-        propTypes = {
+        static propTypes = {
             paths: PropTypes.object.isRequired,
             addPaths: PropTypes.func.isRequired,
         }
