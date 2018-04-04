@@ -1,16 +1,11 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import { connect } from "react-redux"
-import {
-    Redirect,
-    withRouter,
-} from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import {
     ConnectedSwitch as Switch,
     resolvePath,
+    withStellarRouter,
 } from "../StellarRouter"
-
-import { action as RouterAction } from "../../redux/StellarRouter"
 
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"
@@ -21,17 +16,13 @@ import Footer from "../Layout/Footer"
 
 
 // <Bank> component
-export default withRouter(connect(
-    (state) => ({ paths: state.Router.paths, }),
-    (dispatch) => ({ addPaths: (ps) => dispatch(RouterAction.addPaths(ps)), })
-)(
+export default withStellarRouter(
     class Bank extends Component {
 
         // ...
         static propTypes = {
             match: PropTypes.object.isRequired,
-            paths: PropTypes.object.isRequired,
-            addPaths: PropTypes.func.isRequired,
+            stellarRouter: PropTypes.object.isRequired,
         }
 
 
@@ -42,23 +33,23 @@ export default withRouter(connect(
             // relative resolve
             this.rr = resolvePath(this.props.match.path)
 
-            // static paths (for <Bank(*)> children)
-            this.props.addPaths({
-                Balances: this.rr("balances/"),
-                Payments: this.rr("payments/"),
-                Account: this.rr("account/"),
+            // static paths
+            this.props.stellarRouter.addStaticPaths({
+                "Balances": this.rr("balances/"),
+                "Payments": this.rr("payments/"),
+                "Account": this.rr("account/"),
             })
         }
 
 
         // ...
         render = () => (
-            ({ paths, }) =>
+            (getStaticPath) =>
                 <Fragment>
                     <Switch>
                         <Redirect exact
                             from={this.rr(".")}
-                            to={paths.Balances}
+                            to={getStaticPath("Balances")}
                         />
                     </Switch>
                     <BankAppBar />
@@ -66,7 +57,7 @@ export default withRouter(connect(
                     <BankContent />
                     <Footer />
                 </Fragment>
-        )(this.props)
+        )(this.props.stellarRouter.getStaticPath)
 
     }
-))
+)

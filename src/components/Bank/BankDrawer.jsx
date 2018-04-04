@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { NavLink } from "react-router-dom"
 import { push } from "react-router-redux"
+import { withStellarRouter } from "../StellarRouter"
 import { bankDrawerWidth } from "../StellarFox/env"
 
 import Drawer from "material-ui/Drawer"
@@ -14,30 +15,31 @@ import "./BankDrawer.css"
 
 // <NavLinkTemplate> component
 // with bound 'currentPath', 'paths' state props and 'push' dispatcher
-const NavLinkTemplate = connect(
-    (state) => ({
-        currentPath: state.router.location.pathname,
-        paths: state.Router.paths,
-    }),
+const NavLinkTemplate = withStellarRouter(connect(
+    (state) => ({ currentPath: state.router.location.pathname, }),
     (dispatch) => ({ push: (p) => dispatch(push(p)), })
 )(({
-    currentPath, paths, push, to, icon,
+    stellarRouter, currentPath, push, to, icon,
 }) =>
     <NavLink
         className="menu-item"
         onClick={(e) => {
             e.preventDefault()
-            if (!currentPath.startsWith(paths[to])) { push(paths[to]) }
+            if (!currentPath.startsWith(stellarRouter.getStaticPath(to))) {
+                push(stellarRouter.getStaticPath(to))
+            }
         }}
         exact
         activeClassName="active"
-        isActive={() => currentPath.startsWith(paths[to])}
-        to={paths[to]}
+        isActive={
+            () => currentPath.startsWith(stellarRouter.getStaticPath(to))
+        }
+        to={stellarRouter.getStaticPath(to)}
     >
         <i className="material-icons">{icon}</i>
         {to}
     </NavLink>
-)
+))
 
 
 
@@ -96,15 +98,17 @@ export default connect(
 
 
         // ...
-        render = () =>
-            <Drawer
-                containerStyle={bankDrawerStyle}
-                open={this.props.drawerOpened}
-            >
-                <BalancesNavLink />
-                <PaymentsNavLink show={this.props.accountInfo.exists} />
-                <AccountNavLink />
-            </Drawer>
+        render = () => (
+            ({ drawerOpened, accountInfo, }) =>
+                <Drawer
+                    containerStyle={bankDrawerStyle}
+                    open={drawerOpened}
+                >
+                    <BalancesNavLink />
+                    <PaymentsNavLink show={accountInfo.exists} />
+                    <AccountNavLink />
+                </Drawer>
+        )(this.props)
 
     }
 )

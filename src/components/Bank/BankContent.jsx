@@ -6,7 +6,10 @@ import {
     bankDrawerWidth,
     contentPaneSeparation,
 } from "../StellarFox/env"
-import { ConnectedSwitch as Switch } from "../StellarRouter"
+import {
+    ConnectedSwitch as Switch,
+    withStellarRouter,
+} from "../StellarRouter"
 
 import Balances from "../Balances"
 import Payments from "../Payments"
@@ -29,19 +32,15 @@ const computeStyle = (drawerOpened) => ({
 
 
 // <BankContent> component
-export default connect(
-    // map state to props.
-    (state) => ({
-        drawerOpened: state.ui.drawer.isOpened,
-        paths: state.Router.paths,
-    })
+export default withStellarRouter(connect(
+    (state) => ({ drawerOpened: state.ui.drawer.isOpened, })
 )(
     class BankContent extends Component {
 
         // ...
         static propTypes = {
             drawerOpened: PropTypes.bool.isRequired,
-            paths: PropTypes.object.isRequired,
+            stellarRouter: PropTypes.object.isRequired,
         }
 
 
@@ -61,23 +60,25 @@ export default connect(
 
 
         // ...
-        render = () =>
-            <div style={this.state.style} className="bank-content">
-                <Switch>
-                    <Route
-                        path={this.props.paths.Balances}
-                        component={Balances}
-                    />
-                    <Route
-                        path={this.props.paths.Payments}
-                        component={Payments}
-                    />
-                    <Route
-                        path={this.props.paths.Account}
-                        component={Account}
-                    />
-                </Switch>
-            </div>
+        render = () => (
+            ({ style, }, getStaticPath) =>
+                <div style={style} className="bank-content">
+                    <Switch>
+                        <Route
+                            path={getStaticPath("Balances")}
+                            component={Balances}
+                        />
+                        <Route
+                            path={getStaticPath("Payments")}
+                            component={Payments}
+                        />
+                        <Route
+                            path={getStaticPath("Account")}
+                            component={Account}
+                        />
+                    </Switch>
+                </div>
+        )(this.state, this.props.stellarRouter.getStaticPath)
 
     }
-)
+))

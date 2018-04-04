@@ -6,7 +6,11 @@ import {
     Route,
 } from "react-router-dom"
 
-import { ConnectedSwitch as Switch } from "../StellarRouter"
+import {
+    ConnectedSwitch as Switch,
+    resolvePath,
+    withStellarRouter,
+} from "../StellarRouter"
 
 import { ActionConstants } from "../../redux/actions"
 
@@ -18,10 +22,9 @@ import Bank from "../Bank"
 
 
 // <Layout> component
-export default connect(
+export default withStellarRouter(connect(
     (state) => ({
         loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN,
-        paths: state.Router.paths,
     })
 )(
     class Layout extends Component {
@@ -29,34 +32,50 @@ export default connect(
         // ...
         static propTypes = {
             loggedIn: PropTypes.bool.isRequired,
-            paths: PropTypes.object.isRequired,
+            match: PropTypes.object.isRequired,
+            stellarRouter: PropTypes.object.isRequired,
+        }
+
+
+        // ...
+        constructor (props) {
+            super(props)
+
+            // relative resolve
+            this.rr = resolvePath(this.props.match.path)
+
+            // static paths
+            this.props.stellarRouter.addStaticPaths({
+                "Welcome": this.rr("."),
+                "Bank": this.rr("bank/"),
+            })
         }
 
 
         // ...
         render = () => (
-            ({ loggedIn, paths, }) =>
+            ({ loggedIn, }, getStaticPath) =>
                 <Fragment>
                     <LoadingModal />
                     <Switch>
-                        <Route exact path={paths.Welcome}>
+                        <Route exact path={getStaticPath("Welcome")}>
                             {
                                 !loggedIn ?
                                     <Welcome /> :
-                                    <Redirect to={paths.Bank} />
+                                    <Redirect to={getStaticPath("Bank")} />
                             }
                         </Route>
-                        <Route path={paths.Bank}>
+                        <Route path={getStaticPath("Bank")}>
                             {
                                 loggedIn ?
                                     <Bank /> :
-                                    <Redirect to={paths.Welcome} />
+                                    <Redirect to={getStaticPath("Welcome")} />
                             }
                         </Route>
-                        <Redirect to={paths.Welcome} />
+                        <Redirect to={getStaticPath("Welcome")} />
                     </Switch>
                 </Fragment>
-        )(this.props)
+        )(this.props, this.props.stellarRouter.getStaticPath)
 
     }
-)
+))
