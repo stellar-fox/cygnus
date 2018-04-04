@@ -1,8 +1,12 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
-import { swap } from "../../lib/utils"
+import {
+    swap,
+    shallowEquals,
+} from "../../lib/utils"
 
 import {
     logOut,
@@ -40,6 +44,18 @@ const style = {
 class BankAppBar extends Component {
 
     // ...
+    static propTypes = {
+        paths: PropTypes.object.isRequired,
+        currentPath: PropTypes.string.isRequired,
+        drawerOpened: PropTypes.bool.isRequired,
+        logOut: PropTypes.func.isRequired,
+        openDrawer: PropTypes.func.isRequired,
+        closeDrawer: PropTypes.func.isRequired,
+        changeLoginState: PropTypes.func.isRequired,
+    }
+
+
+    // ...
     drawerToggle = () =>
         this.props.drawerOpened ?
             this.props.closeDrawer() :
@@ -60,8 +76,20 @@ class BankAppBar extends Component {
     }
 
 
-    // route mapping (replace keys with values on paths object)
-    routeToViewMap = swap(this.props.paths)
+    // ...
+    state = {
+        paths: this.props.paths,
+        // route mapping (keys with values on paths object replaced)
+        routeToViewMap: swap(this.props.paths),
+    }
+
+
+    // ...
+    static getDerivedStateFromProps = (nextProps, prevState) =>
+        !shallowEquals(nextProps.paths, prevState.paths) ? {
+            paths: nextProps.paths,
+            routeToViewMap: swap(nextProps.paths),
+        } : null
 
 
     // ...
@@ -70,7 +98,7 @@ class BankAppBar extends Component {
             title={
                 <div className="flex-row">
                     <BankAppBarTitle
-                        viewName={this.routeToViewMap[this.props.currentPath]}
+                        viewName={this.state.routeToViewMap[this.props.currentPath]}
                     />
                     <BankAppBarItems />
                 </div>
@@ -97,6 +125,7 @@ export default connect(
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
         currentPath: state.router.location.pathname,
+        paths: state.Router.paths,
     }),
 
     // map dispatch to props.

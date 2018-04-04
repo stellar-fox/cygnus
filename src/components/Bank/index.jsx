@@ -9,7 +9,6 @@ import {
     ConnectedSwitch as Switch,
     resolvePath,
 } from "../StellarRouter"
-import { Provide } from "../../lib/utils"
 
 import { action as RouterAction } from "../../redux/StellarRouter"
 
@@ -43,7 +42,7 @@ export default withRouter(connect(
             // relative resolve
             this.rr = resolvePath(this.props.match.path)
 
-            // local paths
+            // static paths (for <Bank(*)> children)
             this.props.addPaths({
                 Balances: this.rr("balances/"),
                 Payments: this.rr("payments/"),
@@ -53,21 +52,21 @@ export default withRouter(connect(
 
 
         // ...
-        render = () =>
-            <Fragment>
-                <Switch>
-                    <Redirect exact
-                        from={this.rr(".")}
-                        to={this.props.paths.Balances}
-                    />
-                </Switch>
-                <Provide paths={this.props.paths}>
+        render = () => (
+            ({ paths, }) =>
+                <Fragment>
+                    <Switch>
+                        <Redirect exact
+                            from={this.rr(".")}
+                            to={paths.Balances}
+                        />
+                    </Switch>
                     <BankAppBar />
-                </Provide>
-                <BankDrawer />
-                <BankContent />
-                <Footer />
-            </Fragment>
+                    <BankDrawer />
+                    <BankContent />
+                    <Footer />
+                </Fragment>
+        )(this.props)
 
     }
 ))
