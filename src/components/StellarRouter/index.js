@@ -55,14 +55,14 @@ export const ConnectedSwitch = connect(
 
 
 
-// react's context for <StellarRouter>
-const StellarRouterContext = React.createContext({})
+// react's context for <StaticRouter>
+const StaticRouterContext = React.createContext({})
 
 
 
 
-// <StellarRouter> component
-export const StellarRouter = connect(
+// <StaticRouter> component
+export const StaticRouter = connect(
     // map state to props.
     (state) => ({
         currentPath: state.Router.location.pathname,
@@ -74,7 +74,7 @@ export const StellarRouter = connect(
         setCurrentView: StellarRouterAction.setCurrentView,
     }, dispatch)
 )(
-    class StellarRouter extends Component {
+    class StaticRouter extends Component {
 
         // ...
         static propTypes = {
@@ -100,6 +100,7 @@ export const StellarRouter = connect(
             this._pathToViewMap = swap(this._staticPaths)
 
             let newView = this.getViewName(this.props.currentPath)
+
             if (this.props.currentView !== newView) {
                 this.props.setCurrentView(newView)
             }
@@ -125,24 +126,35 @@ export const StellarRouter = connect(
         render = () => (
             ({ addStaticPaths, getStaticPath, getViewName, }, { children, }) =>
                 React.createElement(
-                    Router,
-                    this.props,
-                    React.createElement(
-                        StellarRouterContext.Provider,
-                        {
-                            value: {
-                                addStaticPaths,
-                                getStaticPath,
-                                getViewName,
-                            },
+                    StaticRouterContext.Provider,
+                    {
+                        value: {
+                            addStaticPaths,
+                            getStaticPath,
+                            getViewName,
                         },
-                        children
-                    )
+                    },
+                    children
                 )
         )(this, this.props)
 
     }
 )
+
+
+
+
+// <StellarRouter> component
+export const StellarRouter = ({ children, ...restOfTheProps }) =>
+    React.createElement(
+        Router,
+        restOfTheProps,
+        React.createElement(
+            StaticRouter,
+            null,
+            children
+        )
+    )
 
 
 
@@ -177,7 +189,7 @@ export const withStellarRouter = (WrappedComponent) =>
                         {
                             children: (routeComponentProps) =>
                                 React.createElement(
-                                    StellarRouterContext.Consumer,
+                                    StaticRouterContext.Consumer,
                                     null,
                                     (stellarRouter) =>
                                         React.createElement(WrappedComponent, {
