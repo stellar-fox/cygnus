@@ -17,7 +17,7 @@ const initState = {
 
 
 // ...
-export const SET_ACCOUNT_STATE = "SET_ACCOUNT_STATE"
+export const SET_STATE = "@Account/SET_STATE"
 
 
 
@@ -27,7 +27,7 @@ export const action = {
 
     // ...
     setState: (state) => ({
-        type: SET_ACCOUNT_STATE,
+        type: SET_STATE,
         payload: state,
     }),
 
@@ -39,7 +39,7 @@ export const action = {
 // ...
 export const reducer = createReducer(initState)({
 
-    [SET_ACCOUNT_STATE]: (state, action) => ({
+    [SET_STATE]: (state, action) => ({
         ...state,
         ...action.payload,
     }),

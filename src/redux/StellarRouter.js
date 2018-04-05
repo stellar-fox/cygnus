@@ -30,9 +30,9 @@ const initState = {
 
 
 // ...
-export const SET_STELLAR_ROUTER_STATE = "SET_STELLAR_ROUTER_STATE"
-export const ADD_STATIC_PATHS = "ADD_STATIC_PATHS"
-export const SET_CURRENT_VIEW = "SET_CURRENT_VIEW"
+export const SET_STATE = "@StellarRouter/SET_STATE"
+export const ADD_STATIC_PATHS = "@StellarRouter/ADD_STATIC_PATHS"
+export const SET_CURRENT_VIEW = "@StellarRouter/SET_CURRENT_VIEW"
 
 
 
@@ -42,7 +42,7 @@ export const action = {
 
     // ...
     setState: (state) => ({
-        type: SET_STELLAR_ROUTER_STATE,
+        type: SET_STATE,
         payload: state,
     }),
 
@@ -67,7 +67,7 @@ export const action = {
 export const reducer = createReducer(initState)({
 
     // ...
-    [SET_STELLAR_ROUTER_STATE]: (state, action) => ({
+    [SET_STATE]: (state, action) => ({
         ...state,
         ...action.payload,
     }),
