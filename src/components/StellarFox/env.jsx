@@ -107,5 +107,5 @@ export const minimumAccountReserve = 1
 
 
 // ...
-export const minimumReserveMessage = `Minimum reserve of ${
-    minimumAccountReserve} required.`
+export const minimumReserveMessage =
+    `Minimum reserve of ${minimumAccountReserve} required.`

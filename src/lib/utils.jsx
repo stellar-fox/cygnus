@@ -8,12 +8,18 @@ import {
 } from "../components/StellarFox/env"
 
 
+
+
 // TODO: convert-to/use-as module
 export const StellarSdk = window.StellarSdk
 
 
+
+
 // ...
 const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+
 
 
 // ...
@@ -23,6 +29,8 @@ export const pubKeyAbbr = (pubKey) => handleException(
 )
 
 
+
+
 // ...
 export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
     (date) =>
@@ -30,6 +38,8 @@ export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
             `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}` :
             date.toLocaleDateString()
 )(utcDateTime ? new Date(utcDateTime) : new Date())
+
+
 
 
 // ...
@@ -42,13 +52,19 @@ export const emailValid = (email) => !!(
 ).test(email)
 
 
+
+
 // ...
 export const passwordValid = (password) => !!/^.{8,}$/.test(password)
+
+
 
 
 // ...
 export const federationIsAliasOnly = (federationAddress) =>
     !!/^[a-zA-Z\-0-9.@][^*]+$/.test(federationAddress)
+
+
 
 
 // ...
@@ -58,6 +74,8 @@ export const federationAddressValid = (federationAddress) => !!(
         domainRegex,
     ].map(r => r.source).join(""))
 ).test(federationAddress)
+
+
 
 
 // ...
@@ -81,6 +99,8 @@ export const errorMessageForInvalidPaymentAddress = (address) => {
 }
 
 
+
+
 // ...
 export const fedToPub = (input) => {
     if (input.match(/^G/) && !input.match(/\*/)) {
@@ -95,13 +115,18 @@ export const fedToPub = (input) => {
 }
 
 
+
+
 // ...
 export const fedToPubLookup = (input) => (
     async (fedAddress) => {
         try {
             let endpoint = await endpointLookup(fedAddress)
 
-            let publicKey = await axios.get(`${endpoint.endpoint}?q=${fedAddress}&type=name`)
+            let publicKey =
+                await axios.get(
+                    `${endpoint.endpoint}?q=${fedAddress}&type=name`
+                )
 
             return {
                 ok: true,
@@ -113,6 +138,8 @@ export const fedToPubLookup = (input) => (
         }
     }
 )(input)
+
+
 
 
 // ...
@@ -134,6 +161,7 @@ export const endpointLookup = (address) => (
 
 
 
+
 // ...DEPRECATED
 export const federationLookup = (federationAddress) => (
     (federationDomain) =>
@@ -147,6 +175,8 @@ export const federationLookup = (federationAddress) => (
             // in case of failure - return rejected promise with error description
             Promise.reject(new Error("Federation address domain not found..."))
 )(federationAddress.match(domainRegex))
+
+
 
 
 // ...
@@ -184,6 +214,8 @@ export const pubKeyValid = (pubKey) => {
 }
 
 
+
+
 // ...
 export const publicKeyExists = (publicKey) => (
     async () => {
@@ -198,6 +230,8 @@ export const publicKeyExists = (publicKey) => (
 )(publicKey)
 
 
+
+
 // extracts Z from "XX'/YYY'/Z'"
 export const extractPathIndex = (path) => handleException(
     () => path.match(/\/(\d{1,})'$/)[1],
@@ -205,8 +239,12 @@ export const extractPathIndex = (path) => handleException(
 )
 
 
+
+
 // inserts path index substituting Z in "XX'/YYY'/Z'"
 export const insertPathIndex = (index) => `${bip32Prefix}${index}'`
+
+
 
 
 // ...
@@ -216,12 +254,18 @@ export const handleException = (fn, handler) => {
 }
 
 
+
+
 // ...
 export const nullToUndefined = (val) => val === null ? undefined : val
 
 
+
+
 // ...
 export const flatten = (arr) => arr.reduce((acc, el) => acc.concat(el), [])
+
+
 
 
 // declarative conditional rendering in JSX
@@ -232,12 +276,18 @@ export const ConditionalRender = (props) => (
 )(props.children)
 
 
+
+
 // React.Fragment can only receive 'key' and 'children' as props, so...
 export const RenderGroup = (props) => props.children
 
 
+
+
 // inject props "p" into component "C"
 export const inject = (C, p) => (props) => <C {...{ ...props, ...p, }} />
+
+
 
 
 // provide props into all children components (non-recursive)
@@ -246,6 +296,8 @@ export const Provide = ({ children, ...rest }) =>
         children,
         (child) => child ? React.cloneElement(child, rest) : child
     )
+
+
 
 
 // functional replacement of 'switch' statement
@@ -260,6 +312,8 @@ export const choose = (
         defaultAction(...args)
 
 
+
+
 // ...
 export const createReducer = (initState = {}) =>
     (actions, defaultAction = (s, _a) => s) =>
@@ -272,16 +326,22 @@ export const createReducer = (initState = {}) =>
             )
 
 
+
+
 // ...
 // TODO: move to <AssetManager> (?)
 export const getAssetCode = (asset) =>
     asset.asset_type === "native" ? "XLM" : asset.asset_code
 
 
+
+
 // ...
 // TODO: move to <AssetManager> (?)
 export const formatAmount = (amount, precision = 2) =>
     Number.parseFloat(amount).toFixed(precision)
+
+
 
 
 // ...
@@ -298,15 +358,21 @@ export const currencyGlyph = (currency) => (
 })
 
 
+
+
 // ...
 export const capitalize = (str) =>
     str.substring(0, 1).toUpperCase() + str.substring(1)
+
+
 
 
 // ...
 export const emoji = {
     "pencil": "✎",
 }
+
+
 
 
 // ...
@@ -318,12 +384,16 @@ export const htmlEntities = {
 }
 
 
+
+
 // construct object from result of Object.entries() call
 // entries = [[k1,v1], ... [kn, vn]]
 // imitates Python's dict()
 export const dict = (entries) => entries.reduce(
     (acc, [k, v,]) => Object.assign(acc, { [k]: v, }), {}
 )
+
+
 
 
 // when o = { a: "b", c: "d" }
@@ -333,6 +403,8 @@ export const swap = (o) => dict(
         .entries(o)
         .map((kv) => [].concat(kv).reverse())
 )
+
+
 
 
 // shallowly compare two objects

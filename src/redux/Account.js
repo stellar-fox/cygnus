@@ -40,6 +40,7 @@ export const action = {
 // ...
 export const reducer = createReducer(initState)({
 
+    // ...
     [SET_STATE]: (state, action) => ({
         ...state,
         ...action.payload,

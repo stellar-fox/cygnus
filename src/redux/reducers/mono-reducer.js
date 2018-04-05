@@ -1,4 +1,5 @@
 import { ActionConstants } from "../actions"
+import { createReducer } from "../../lib/utils"
 
 
 
@@ -17,30 +18,20 @@ const ActionTypes = {
 
 
 // ...
-const createReducer = (initState = {}, handlers) =>
-    (state = initState, action) => {
-        if (handlers.hasOwnProperty(action.type)) {
-            return handlers[action.type](state, action)
-        } else {
-            return state
-        }
-    }
-
-
-
-
-// ...
 export const authReducer = createReducer({
     loginState: ActionConstants.LOGGED_OUT,
     publicKey: null,
     bip32Path: null,
     userId: null,
     token: null,
-}, {
-    [ActionTypes.CHANGE_LOGIN_STATE] (state = {}, action) {
-        state = Object.assign(...state, action.payload)
-        return state
-    },
+})({
+
+    // ...
+    [ActionTypes.CHANGE_LOGIN_STATE]: (state = {}, action) => ({
+        ...state,
+        ...action.payload,
+    }),
+
 })
 
 
@@ -52,29 +43,28 @@ export const uiReducer = createReducer({
     snackbar: {
         open: false,
         message: "",
-
     },
     cards: {},
-}, {
-    [ActionTypes.CHANGE_MODAL_STATE] (state, action) {
-        state = {
-            ...state,
-            modals: Object.assign(action.payload),
-        }
-        return state
-    },
-    [ActionTypes.CHANGE_SNACKBAR_STATE] (state, action) {
-        state = {
-            ...state,
-            snackbar: Object.assign(action.payload),
-        }
-        return state
-    },
-    [ActionTypes.TOGGLE_PAYMENT_CARD] (state, action) {
-        state = {
-            ...state,
-            cards: Object.assign(action.payload),
-        }
-        return state
-    },
+})({
+
+    // ...
+    [ActionTypes.CHANGE_MODAL_STATE]: (state, action) => ({
+        ...state,
+        modals: action.payload,
+    }),
+
+
+    // ..
+    [ActionTypes.CHANGE_SNACKBAR_STATE]: (state, action) => ({
+        ...state,
+        snackbar: action.payload,
+    }),
+
+
+    // ...
+    [ActionTypes.TOGGLE_PAYMENT_CARD]: (state, action) => ({
+        ...state,
+        cards: action.payload,
+    }),
+
 })
