@@ -1,6 +1,13 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
+import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import { Redirect } from "react-router-dom"
+import {
+    ConnectedSwitch as Switch,
+    resolvePath,
+    withStellarRouter,
+} from "../StellarRouter"
 
 import {
     currencyGlyph,
@@ -20,7 +27,6 @@ import {
     setStreamer,
     accountExistsOnLedger,
     accountMissingOnLedger,
-    setTab,
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
@@ -61,6 +67,32 @@ const styles = {
 
 // <Payments> component
 class Payments extends Component {
+
+    // ...
+    static propTypes = {
+        match: PropTypes.object.isRequired,
+        staticRouter: PropTypes.object.isRequired,
+    }
+
+
+    // ...
+    constructor (props) {
+        super(props)
+
+        // relative resolve
+        this.rr = resolvePath(this.props.match.path)
+
+        // static paths
+        this.props.staticRouter.addPaths({
+            "History": this.rr("history/"),
+            "Transactions": this.rr("transactions/"),
+        })
+    }
+
+
+    // ...
+    validTabNames = ["History", "Transactions", ]
+
 
     // ...
     stellarServer = new StellarSdk.Server(this.props.accountInfo.horizon)
@@ -349,14 +381,12 @@ class Payments extends Component {
 
 
     // ...
-    handleTabSelect = (_, value) => {
-        this.props.setTab({ payments: value, })
-        this.props.setState({
-            tabSelected: value,
-        })
+    handleTabSelect = (value) => {
+        this.props.setState({ tabSelected: value, })
+        this.props.staticRouter.pushByView(value)
         if (
-            value === "2" &&
-            this.props.state.txCursorLeft === null &&
+            value === "2"  &&
+            this.props.state.txCursorLeft === null  &&
             this.props.state.txCursorRight === null
         ) {
             this.stellarServer
@@ -694,71 +724,91 @@ class Payments extends Component {
 
 
     // ...
-    render = () =>
-        <div>
-            <Snackbar
-                open={this.props.state.sbPayment}
-                message={`${this.props.state.sbPaymentText} ${
-                    this.props.state.sbPaymentAmount
-                } ${this.props.state.sbPaymentAssetCode}`}
-                onRequestClose={
-                    this.handlePaymentSnackbarClose
-                }
-            />
-            <Snackbar
-                open={this.props.state.sbNoMorePayments}
-                message="No more payments found."
-                onRequestClose={
-                    this.handleNoMorePaymentsSnackbarClose
-                }
-            />
-            <Snackbar
-                open={this.props.state.sbNoMoreTransactions}
-                message="No more transactions found."
-                onRequestClose={
-                    this.handleNoMoreTransactionsSnackbarClose
-                }
-            />
+    render = () => (
+        ({ staticRouter, state, }) =>
+            <Fragment>
+                <Switch>
+                    <Redirect exact
+                        from={this.rr(".")}
+                        to={staticRouter.getPath(state.tabSelected)}
+                    />
+                </Switch>
+                <Snackbar
+                    open={state.sbPayment}
+                    message={`${state.sbPaymentText} ${
+                        state.sbPaymentAmount
+                    } ${state.sbPaymentAssetCode}`}
+                    onRequestClose={
+                        this.handlePaymentSnackbarClose
+                    }
+                />
+                <Snackbar
+                    open={state.sbNoMorePayments}
+                    message="No more payments found."
+                    onRequestClose={
+                        this.handleNoMorePaymentsSnackbarClose
+                    }
+                />
+                <Snackbar
+                    open={state.sbNoMoreTransactions}
+                    message="No more transactions found."
+                    onRequestClose={
+                        this.handleNoMoreTransactionsSnackbarClose
+                    }
+                />
 
-            <Tabs
-                tabItemContainerStyle={styles.container}
-                inkBarStyle={styles.inkBar}
-                value={this.props.ui.tabs.payments}
-                onChange={this.handleTabSelect.bind(this, this.value)}
-            >
+                <Tabs
+                    tabItemContainerStyle={styles.container}
+                    inkBarStyle={styles.inkBar}
+                    value={
+                        this.validTabNames.indexOf(
+                            staticRouter.currentView
+                        ) !== -1 ?
+                            staticRouter.currentView :
+                            state.tabSelected
+                    }
+                    onChange={this.handleTabSelect}
+                >
 
-                <Tab style={styles.tab} label="History" value="1">
-                    <div className="tab-content">
+                    <Tab style={styles.tab} label="History" value="History">
+                        <div className="tab-content">
 
-                        <PaymentsHistory
-                            stellarServer={this.stellarServer}
-                            handlePaymentClick={this.handlePaymentClick}
-                            decodeEffectType={this.decodeEffectType}
-                            updateCursors={this.updateCursors}
-                        />
+                            <PaymentsHistory
+                                stellarServer={this.stellarServer}
+                                handlePaymentClick={this.handlePaymentClick}
+                                decodeEffectType={this.decodeEffectType}
+                                updateCursors={this.updateCursors}
+                            />
 
-                    </div>
-                </Tab>
+                        </div>
+                    </Tab>
 
-                <Tab style={styles.tab} label="Transactions" value="2">
-                    <div className="tab-content">
+                    <Tab
+                        style={styles.tab}
+                        label="Transactions"
+                        value="Transactions"
+                    >
+                        <div className="tab-content">
 
-                        <Transactions
-                            stellarServer={this.stellarServer}
-                            updateTransactionsCursors={this.updateTransactionsCursors}
-                        />
+                            <Transactions
+                                stellarServer={this.stellarServer}
+                                updateTransactionsCursors={
+                                    this.updateTransactionsCursors
+                                }
+                            />
 
-                    </div>
-                </Tab>
+                        </div>
+                    </Tab>
 
-            </Tabs>
-        </div>
+                </Tabs>
+            </Fragment>
+    )(this.props)
 
 }
 
 
 // ...
-export default withLoginManager(withAssetManager(connect(
+export default withStellarRouter(withLoginManager(withAssetManager(connect(
     // map state to props.
     (state) => ({
         state: state.Payments,
@@ -780,9 +830,8 @@ export default withLoginManager(withAssetManager(connect(
         setStreamer,
         accountExistsOnLedger,
         accountMissingOnLedger,
-        setTab,
         setModalLoading,
         setModalLoaded,
         updateLoadingMessage,
     }, dispatch)
-)(Payments)))
+)(Payments))))

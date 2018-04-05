@@ -2,9 +2,8 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { NavLink } from "react-router-dom"
-import { push } from "react-router-redux"
+import { withStellarRouter } from "../StellarRouter"
 import { bankDrawerWidth } from "../StellarFox/env"
-import { Provide } from "../../lib/utils"
 
 import Drawer from "material-ui/Drawer"
 
@@ -13,83 +12,47 @@ import "./BankDrawer.css"
 
 
 
-// binds 'currentPath' state prop and 'push' dispatcher
-const navLinkConnect = connect(
-    (state) => ({ currentPath: state.router.location.pathname, }),
-    (dispatch) => ({ push: (p) => dispatch(push(p)), })
+// <NavLinkTemplate> component
+// with bound 'currentPath', 'paths' state props and 'push' dispatcher
+const NavLinkTemplate = withStellarRouter(
+    ({ staticRouter: { currentPath, pushByView, getPath, }, to, icon, }) =>
+        <NavLink
+            className="menu-item"
+            onClick={(e) => {
+                e.preventDefault()
+                if (!currentPath.startsWith(getPath(to))) {
+                    pushByView(to)
+                }
+            }}
+            exact
+            activeClassName="active"
+            isActive={() => currentPath.startsWith(getPath(to))}
+            to={getPath(to)}
+        >
+            <i className="material-icons">{icon}</i>{to}
+        </NavLink>
 )
 
 
 
 
 // <BalancesNavLink> component
-const BalancesNavLink = navLinkConnect(
-    ({ currentPath, paths, push, }) =>
-        <NavLink
-            className="menu-item"
-            onClick={(e) => {
-                e.preventDefault()
-                if (currentPath !== paths.Balances) {
-                    push(paths.Balances)
-                }
-            }}
-            exact
-            activeClassName="active"
-            isActive={() => currentPath === paths.Balances}
-            to={paths.Balances}
-        >
-            <i className="material-icons">account_balance_wallet</i>
-            Balances
-        </NavLink>
-)
+const BalancesNavLink = () =>
+    <NavLinkTemplate to="Balances" icon="account_balance_wallet" />
 
 
 
 
 // <PaymentsNavLink> component
-const PaymentsNavLink = navLinkConnect(
-    ({ currentPath, paths, push, }) =>
-        <NavLink
-            className="menu-item"
-            onClick={(e) => {
-                e.preventDefault()
-                if (currentPath !== paths.Payments) {
-                    push(paths.Payments)
-                }
-            }}
-            exact
-            isActive={() => currentPath === paths.Payments}
-            activeClassName="active"
-            to={paths.Payments}
-        >
-            <i className="material-icons">payment</i>
-            Payments
-        </NavLink>
-)
+const PaymentsNavLink = ({ show, }) =>
+    show ? <NavLinkTemplate to="Payments" icon="payment" /> : null
 
 
 
 
 // <AccountNavLink> component
-const AccountNavLink = navLinkConnect(
-    ({ currentPath, paths, push, }) =>
-        <NavLink
-            className="menu-item"
-            onClick={(e) => {
-                e.preventDefault()
-                if (currentPath !== paths.Account) {
-                    push(paths.Account)
-                }
-            }}
-            exact
-            isActive={() => currentPath === paths.Account}
-            activeClassName="active"
-            to={paths.Account}
-        >
-            <i className="material-icons">account_balance</i>
-            Account
-        </NavLink>
-)
+const AccountNavLink = () =>
+    <NavLinkTemplate to="Account" icon="account_balance" />
 
 
 
@@ -112,35 +75,33 @@ const bankDrawerStyle = {
 
 // <BankDrawer> component
 export default connect(
+    // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
-        drawerOpened: state.ui.drawer.isOpened,
+        drawerVisible: state.Bank.drawerVisible,
     })
 )(
-    class BankDrawer extends Component {
+    class extends Component {
 
         // ...
         static propTypes = {
-            drawerOpened: PropTypes.bool.isRequired,
-            paths: PropTypes.object.isRequired,
+            accountInfo: PropTypes.object.isRequired,
+            drawerVisible: PropTypes.bool.isRequired,
         }
 
 
         // ...
-        render = () =>
-            <Drawer
-                containerStyle={bankDrawerStyle}
-                open={this.props.drawerOpened}
-            >
-                <Provide paths={this.props.paths}>
+        render = () => (
+            ({ drawerVisible, accountInfo, }) =>
+                <Drawer
+                    containerStyle={bankDrawerStyle}
+                    open={drawerVisible}
+                >
                     <BalancesNavLink />
-                    {
-                        this.props.accountInfo.exists ?
-                            <PaymentsNavLink /> : null
-                    }
+                    <PaymentsNavLink show={accountInfo.exists} />
                     <AccountNavLink />
-                </Provide>
-            </Drawer>
+                </Drawer>
+        )(this.props)
 
     }
 )

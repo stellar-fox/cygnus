@@ -30,7 +30,7 @@ const initState = {
     sbNoMorePayments: false,
     sbNoMoreTransactions: false,
 
-    tabSelected: "1",
+    tabSelected: "History",
 
 }
 
@@ -38,7 +38,7 @@ const initState = {
 
 
 // ...
-export const SET_PAYMENTS_STATE = "SET_PAYMENTS_STATE"
+export const SET_STATE = "@Payments/SET_STATE"
 
 
 
@@ -48,7 +48,7 @@ export const action = {
 
     // ...
     setState: (state) => ({
-        type: SET_PAYMENTS_STATE,
+        type: SET_STATE,
         payload: state,
     }),
 
@@ -60,7 +60,7 @@ export const action = {
 // ...
 export const reducer = createReducer(initState)({
 
-    [SET_PAYMENTS_STATE]: (state, action) => ({
+    [SET_STATE]: (state, action) => ({
         ...state,
         ...action.payload,
     }),

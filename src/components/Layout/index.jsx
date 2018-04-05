@@ -4,70 +4,79 @@ import { connect } from "react-redux"
 import {
     Redirect,
     Route,
-    withRouter,
 } from "react-router-dom"
 
 import {
     ConnectedSwitch as Switch,
     resolvePath,
+    withStellarRouter,
 } from "../StellarRouter"
+
+import { ActionConstants } from "../../redux/actions"
 
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import Bank from "../Bank"
-import { ActionConstants } from "../../redux/actions"
 
 
 
 
 // <Layout> component
-export default withRouter(connect(
+export default withStellarRouter(connect(
+    // map state to props.
     (state) => ({
         loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN,
     })
 )(
-    class Layout extends Component {
+    class extends Component {
 
         // ...
         static propTypes = {
             loggedIn: PropTypes.bool.isRequired,
             match: PropTypes.object.isRequired,
-        }
-
-
-        // relative resolve
-        rr = resolvePath(this.props.match.path)
-
-
-        // local paths
-        paths = {
-            Welcome: this.rr("."),
-            Bank: this.rr("bank/"),
+            staticRouter: PropTypes.object.isRequired,
         }
 
 
         // ...
-        render = () =>
-            <Fragment>
-                <LoadingModal />
-                <Switch>
-                    <Route exact path={this.paths.Welcome}>
-                        {
-                            !this.props.loggedIn ?
-                                <Welcome /> :
-                                <Redirect to={this.paths.Bank} />
-                        }
-                    </Route>
-                    <Route path={this.paths.Bank}>
-                        {
-                            this.props.loggedIn ?
-                                <Bank /> :
-                                <Redirect to={this.paths.Welcome} />
-                        }
-                    </Route>
-                    <Redirect to={this.paths.Welcome} />
-                </Switch>
-            </Fragment>
+        constructor (props) {
+            super(props)
+
+            // relative resolve
+            this.rr = resolvePath(this.props.match.path)
+
+            // static paths
+            this.props.staticRouter.addPaths({
+                "Welcome": this.rr("."),
+                "Bank": this.rr("bank/"),
+            })
+        }
+
+
+        // ...
+        render = () => (
+            ({ loggedIn, }, getPath) =>
+                <Fragment>
+                    <LoadingModal />
+                    <Switch>
+                        <Route exact path={getPath("Welcome")}>
+                            {
+                                !loggedIn ?
+                                    <Welcome /> :
+                                    <Redirect to={getPath("Bank")} />
+                            }
+                        </Route>
+                        <Route path={getPath("Bank")}>
+                            {
+                                loggedIn ?
+                                    <Bank /> :
+                                    <Redirect to={getPath("Welcome")} />
+                            }
+                        </Route>
+                        <Redirect to={getPath("Welcome")} />
+                    </Switch>
+                </Fragment>
+        )(this.props, this.props.staticRouter.getPath)
 
     }
 ))

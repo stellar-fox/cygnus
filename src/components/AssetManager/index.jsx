@@ -15,7 +15,7 @@ import { config } from "../../config"
 
 
 
-// ...
+// react's AssetManager context
 const AssetManagerContext = React.createContext({})
 
 
@@ -132,7 +132,7 @@ export default connect(
 // <withAssetManager(...)> HOC
 export const withAssetManager = (WrappedComponent) =>
     hoistStatics(
-        class WithAssetManager extends Component {
+        class extends Component {
 
             // ...
             static propTypes = {
@@ -151,16 +151,16 @@ export const withAssetManager = (WrappedComponent) =>
             // ...
             render = () => (
                 ({ wrappedComponentRef, ...restOfTheProps }) =>
-                    <AssetManagerContext.Consumer>
-                        {
-                            (assetManager) =>
-                                React.createElement(WrappedComponent, {
-                                    ...restOfTheProps,
-                                    ref: wrappedComponentRef,
-                                    assetManager,
-                                })
-                        }
-                    </AssetManagerContext.Consumer>
+                    React.createElement(
+                        AssetManagerContext.Consumer,
+                        null,
+                        (assetManager) =>
+                            React.createElement(WrappedComponent, {
+                                ...restOfTheProps,
+                                ref: wrappedComponentRef,
+                                assetManager,
+                            })
+                    )
             )(this.props)
 
         },

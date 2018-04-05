@@ -1,14 +1,11 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import {
-    Redirect,
-    withRouter,
-} from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import {
     ConnectedSwitch as Switch,
     resolvePath,
+    withStellarRouter,
 } from "../StellarRouter"
-import { Provide } from "../../lib/utils"
 
 import BankAppBar from "./BankAppBar"
 import BankDrawer from "./BankDrawer"
@@ -19,43 +16,48 @@ import Footer from "../Layout/Footer"
 
 
 // <Bank> component
-export default withRouter(
-    class Bank extends Component {
+export default withStellarRouter(
+    class extends Component {
 
         // ...
         static propTypes = {
             match: PropTypes.object.isRequired,
-        }
-
-
-        // relative resolve
-        rr = resolvePath(this.props.match.path)
-
-
-        // local paths
-        paths = {
-            Balances: this.rr("balances/"),
-            Payments: this.rr("payments/"),
-            Account: this.rr("account/"),
+            staticRouter: PropTypes.object.isRequired,
         }
 
 
         // ...
-        render = () =>
-            <Fragment>
-                <Switch>
-                    <Redirect exact
-                        from={this.rr(".")}
-                        to={this.paths.Balances}
-                    />
-                </Switch>
-                <Provide paths={this.paths}>
+        constructor (props) {
+            super(props)
+
+            // relative resolve
+            this.rr = resolvePath(this.props.match.path)
+
+            // static paths
+            this.props.staticRouter.addPaths({
+                "Balances": this.rr("balances/"),
+                "Payments": this.rr("payments/"),
+                "Account": this.rr("account/"),
+            })
+        }
+
+
+        // ...
+        render = () => (
+            (getPath) =>
+                <Fragment>
+                    <Switch>
+                        <Redirect exact
+                            from={this.rr(".")}
+                            to={getPath("Balances")}
+                        />
+                    </Switch>
                     <BankAppBar />
                     <BankDrawer />
                     <BankContent />
-                </Provide>
-                <Footer />
-            </Fragment>
+                    <Footer />
+                </Fragment>
+        )(this.props.staticRouter.getPath)
 
     }
 )

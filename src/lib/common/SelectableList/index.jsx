@@ -10,7 +10,7 @@ import {
 
 // <SelectableList> component
 export default ((MUISelectableList) =>
-    class SelectableList extends Component {
+    class extends Component {
 
         // ...
         static propTypes = {

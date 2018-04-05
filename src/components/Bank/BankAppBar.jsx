@@ -1,16 +1,14 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
-import { swap } from "../../lib/utils"
-
 import {
     logOut,
-    openDrawer,
-    closeDrawer,
     changeLoginState,
     ActionConstants,
 } from "../../redux/actions"
+import { action as BankAction } from "../../redux/Bank"
 
 import AppBar from "material-ui/AppBar"
 import IconButton from "material-ui/IconButton"
@@ -37,73 +35,68 @@ const style = {
 
 
 // <BankAppBar> component
-class BankAppBar extends Component {
-
-    // ...
-    drawerToggle = () =>
-        this.props.drawerOpened ?
-            this.props.closeDrawer() :
-            this.props.openDrawer()
-
-
-    // ...
-    handleLogOutClick = () => {
-        this.props.changeLoginState({
-            loginState: ActionConstants.LOGGED_OUT,
-            publicKey: null,
-            bip32Path: null,
-            userId: null,
-            token: null,
-        })
-        this.props.logOut()
-        sessionStorage.clear()
-    }
-
-
-    // route mapping (replace keys with values on paths object)
-    routeToViewMap = swap(this.props.paths)
-
-
-    // ...
-    render = () =>
-        <AppBar
-            title={
-                <div className="flex-row">
-                    <BankAppBarTitle
-                        viewName={this.routeToViewMap[this.props.currentPath]}
-                    />
-                    <BankAppBarItems />
-                </div>
-            }
-            className="navbar"
-            style={style.appBar}
-            onLeftIconButtonClick={this.drawerToggle}
-            iconElementRight={
-                <IconButton
-                    iconStyle={style.icon}
-                    onClick={this.handleLogOutClick}
-                >
-                    <i className="material-icons">power_settings_new</i>
-                </IconButton>
-            }
-        />
-
-}
-
-
-// ...
 export default connect(
     // map state to props.
     (state) => ({
-        drawerOpened: state.ui.drawer.isOpened,
-        currentPath: state.router.location.pathname,
+        currentView: state.Router.currentView,
     }),
-
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        logOut,
-        openDrawer,
-        closeDrawer,
         changeLoginState,
+        logOut,
+        toggleDrawer: BankAction.toggleDrawer,
     }, dispatch)
-)(BankAppBar)
+)(
+    class extends Component {
+
+        // ...
+        static propTypes = {
+            currentView: PropTypes.string.isRequired,
+            changeLoginState: PropTypes.func.isRequired,
+            logOut: PropTypes.func.isRequired,
+            toggleDrawer: PropTypes.func.isRequired,
+        }
+
+
+        // ...
+        handleLogOutClick = () => {
+            this.props.changeLoginState({
+                loginState: ActionConstants.LOGGED_OUT,
+                publicKey: null,
+                bip32Path: null,
+                userId: null,
+                token: null,
+            })
+            this.props.logOut()
+            sessionStorage.clear()
+        }
+
+
+        // ...
+        render = () => (
+            ({ currentView, toggleDrawer, }) =>
+                <AppBar
+                    title={
+                        <div className="flex-row">
+                            <BankAppBarTitle viewName={currentView} />
+                            <BankAppBarItems />
+                        </div>
+                    }
+                    className="navbar"
+                    style={style.appBar}
+                    onLeftIconButtonClick={toggleDrawer}
+                    iconElementRight={
+                        <IconButton
+                            iconStyle={style.icon}
+                            onClick={this.handleLogOutClick}
+                        >
+                            <i className="material-icons">
+                                power_settings_new
+                            </i>
+                        </IconButton>
+                    }
+                />
+        )(this.props)
+
+    }
+)

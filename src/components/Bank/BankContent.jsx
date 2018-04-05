@@ -6,7 +6,10 @@ import {
     bankDrawerWidth,
     contentPaneSeparation,
 } from "../StellarFox/env"
-import { ConnectedSwitch as Switch } from "../StellarRouter"
+import {
+    ConnectedSwitch as Switch,
+    withStellarRouter,
+} from "../StellarRouter"
 
 import Balances from "../Balances"
 import Payments from "../Payments"
@@ -18,9 +21,9 @@ import "./BankContent.css"
 
 
 // compute div's padding-left value
-const computeStyle = (drawerOpened) => ({
+const computeStyle = (drawerVisible) => ({
     paddingLeft:
-        drawerOpened ?
+        drawerVisible ?
             bankDrawerWidth + contentPaneSeparation :
             contentPaneSeparation,
 })
@@ -29,54 +32,54 @@ const computeStyle = (drawerOpened) => ({
 
 
 // <BankContent> component
-export default connect(
+export default withStellarRouter(connect(
     // map state to props.
-    (state) => ({
-        drawerOpened: state.ui.drawer.isOpened,
-    })
+    (state) => ({ drawerVisible: state.Bank.drawerVisible, })
 )(
-    class BankContent extends Component {
+    class extends Component {
 
         // ...
         static propTypes = {
-            drawerOpened: PropTypes.bool.isRequired,
-            paths: PropTypes.object.isRequired,
+            drawerVisible: PropTypes.bool.isRequired,
+            staticRouter: PropTypes.object.isRequired,
         }
 
 
         // ...
-        static getDerivedStateFromProps = ({ drawerOpened, }, prevState) =>
-            prevState.drawerOpened !== drawerOpened ? {
-                drawerOpened,
-                style: computeStyle(drawerOpened),
+        static getDerivedStateFromProps = ({ drawerVisible, }, prevState) =>
+            prevState.drawerVisible !== drawerVisible ? {
+                drawerVisible,
+                style: computeStyle(drawerVisible),
             } :  null
 
 
         // ...
         state = {
-            drawerOpened: this.props.drawerOpened,
-            style: computeStyle(this.props.drawerOpened),
+            drawerVisible: this.props.drawerVisible,
+            style: computeStyle(this.props.drawerVisible),
         }
 
 
         // ...
-        render = () =>
-            <div style={this.state.style} className="bank-content">
-                <Switch>
-                    <Route
-                        path={this.props.paths.Balances}
-                        component={Balances}
-                    />
-                    <Route
-                        path={this.props.paths.Payments}
-                        component={Payments}
-                    />
-                    <Route
-                        path={this.props.paths.Account}
-                        component={Account}
-                    />
-                </Switch>
-            </div>
+        render = () => (
+            ({ style, }, getPath) =>
+                <div style={style} className="bank-content">
+                    <Switch>
+                        <Route
+                            path={getPath("Balances")}
+                            component={Balances}
+                        />
+                        <Route
+                            path={getPath("Payments")}
+                            component={Payments}
+                        />
+                        <Route
+                            path={getPath("Account")}
+                            component={Account}
+                        />
+                    </Switch>
+                </div>
+        )(this.state, this.props.staticRouter.getPath)
 
     }
-)
+))

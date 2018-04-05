@@ -1,8 +1,5 @@
 // ...
 const initState = {
-    drawer: {
-        isOpened: true,
-    },
     authenticateButton: {
         isDisabled: true,
     },
@@ -16,20 +13,6 @@ const initState = {
 // ...
 export default function (state = initState, action) {
     switch (action.type) {
-
-        case "OPEN_DRAWER":
-            state = {
-                ...state,
-                drawer: { isOpened: true, },
-            }
-            break
-
-        case "CLOSE_DRAWER":
-            state = {
-                ...state,
-                drawer: { isOpened: false, },
-            }
-            break
 
         case "DISABLE_AUTHENTICATE_BUTTON":
             state = {
@@ -45,6 +28,7 @@ export default function (state = initState, action) {
             }
             break
 
+        // TODO: move this functionality to <Account> reducer
         case "SET_TAB_SELECTED":
             state = {
                 ...state,

@@ -9,14 +9,10 @@ import "./BankAppBarTitle.css"
 
 // <BankAppBarTitle> component
 export default connect(
-    (state) => ({
-        ledgerVer: state.auth.ledgerSoftwareVersion,
-    })
+    // map state to props.
+    (state) => ({ ledgerVer: state.auth.ledgerSoftwareVersion, })
 )(
-    ({
-        ledgerVer,
-        viewName,
-    }) =>
+    ({ ledgerVer, viewName, }) =>
         <div className="flex-start">
             <div className="app-bar-title">
                 <div className="bar-title">{appName}</div>
