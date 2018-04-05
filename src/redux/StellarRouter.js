@@ -1,5 +1,9 @@
 import { createReducer } from "../lib/utils"
-import { routerReducer } from "react-router-redux"
+import {
+    LOCATION_CHANGE,
+    routerReducer,
+} from "react-router-redux"
+import { swap } from "../lib/utils"
 
 
 
@@ -15,6 +19,7 @@ const initState = {
         key: "",
     },
     staticPaths: {},
+    pathToView: {},
 
 }
 
@@ -58,22 +63,48 @@ export const action = {
 // ...
 export const reducer = createReducer(initState)({
 
+    // ...
     [SET_STELLAR_ROUTER_STATE]: (state, action) => ({
         ...state,
         ...action.payload,
     }),
 
-    [ADD_STATIC_PATHS]: (state, action) => ({
-        ...state,
-        staticPaths: {
-            ...state.staticPaths,
-            ...action.payload,
-        },
+
+    // add static paths, (re-)create pathToView mapping
+    [ADD_STATIC_PATHS]: (state, action) => (
+        (newPaths) => ({
+            ...state,
+            staticPaths: newPaths,
+            pathToView: swap(newPaths),
+        })
+    )({
+        ...state.staticPaths,
+        ...action.payload,
     }),
 
+
+    // arbitrairly set 'currentView' key in state
     [SET_CURRENT_VIEW]: (state, action) => ({
         ...state,
         currentView: action.payload,
     }),
+
+
+    // intercept react-router's LOCATION_CHANGE action,
+    // perform react-router's routerReducer and
+    // compute new currentView value
+    [LOCATION_CHANGE]: (state, action) => {
+        let
+            s = routerReducer(state, action),
+            newView =
+                s.location.pathname in s.pathToView ?
+                    s.pathToView[s.location.pathname] : ""
+        return {
+            ...s,
+            currentView:
+                newView !== s.currentView ?
+                    newView : s.currentView,
+        }
+    },
 
 }, routerReducer)

@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { withStellarRouter } from "../StellarRouter"
 
 import {
     logOut,
@@ -42,8 +41,7 @@ class BankAppBar extends Component {
     // ...
     static propTypes = {
         drawerOpened: PropTypes.bool.isRequired,
-        currentPath: PropTypes.string.isRequired,
-        staticRouter: PropTypes.object.isRequired,
+        currentView: PropTypes.string.isRequired,
         logOut: PropTypes.func.isRequired,
         openDrawer: PropTypes.func.isRequired,
         closeDrawer: PropTypes.func.isRequired,
@@ -74,11 +72,11 @@ class BankAppBar extends Component {
 
     // ...
     render = () => (
-        ({ currentPath, }, getViewName) =>
+        ({ currentView, }) =>
             <AppBar
                 title={
                     <div className="flex-row">
-                        <BankAppBarTitle viewName={getViewName(currentPath)} />
+                        <BankAppBarTitle viewName={currentView} />
                         <BankAppBarItems />
                     </div>
                 }
@@ -94,17 +92,17 @@ class BankAppBar extends Component {
                     </IconButton>
                 }
             />
-    )(this.props, this.props.staticRouter.getViewName)
+    )(this.props)
 
 }
 
 
 // ...
-export default withStellarRouter(connect(
+export default connect(
     // map state to props.
     (state) => ({
         drawerOpened: state.ui.drawer.isOpened,
-        currentPath: state.Router.location.pathname,
+        currentView: state.Router.currentView,
     }),
 
     // map dispatch to props.
@@ -114,4 +112,4 @@ export default withStellarRouter(connect(
         closeDrawer,
         changeLoginState,
     }, dispatch)
-)(BankAppBar))
+)(BankAppBar)
