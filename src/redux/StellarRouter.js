@@ -1,9 +1,12 @@
-import { createReducer } from "../lib/utils"
+import {
+    createReducer,
+    swap,
+} from "../lib/utils"
 import {
     LOCATION_CHANGE,
     routerReducer,
 } from "react-router-redux"
-import { swap } from "../lib/utils"
+import { StaticRouter } from "../components/StellarRouter"
 
 
 
@@ -70,17 +73,27 @@ export const reducer = createReducer(initState)({
     }),
 
 
-    // add static paths, (re-)create pathToView mapping
-    [ADD_STATIC_PATHS]: (state, action) => (
-        (newPaths) => ({
+    // add static paths, (re-)create 'pathToView' mapping
+    // and compute new 'currentView' value
+    [ADD_STATIC_PATHS]: (state, action) => {
+        let
+            newPaths = {
+                ...state.staticPaths,
+                ...action.payload,
+            },
+            newPathToView = swap(newPaths),
+            newView = StaticRouter.getView(
+                state.location.pathname, newPathToView
+            )
+        return {
             ...state,
             staticPaths: newPaths,
-            pathToView: swap(newPaths),
-        })
-    )({
-        ...state.staticPaths,
-        ...action.payload,
-    }),
+            pathToView: newPathToView,
+            currentView:
+                newView !== state.currentView ?
+                    newView : state.currentView,
+        }
+    },
 
 
     // arbitrairly set 'currentView' key in state
@@ -90,15 +103,15 @@ export const reducer = createReducer(initState)({
     }),
 
 
-    // intercept react-router's LOCATION_CHANGE action,
-    // perform react-router's routerReducer and
-    // compute new currentView value
+    // intercept react-router's 'LOCATION_CHANGE' action,
+    // perform react-router's 'routerReducer'
+    // and compute new 'currentView' value
     [LOCATION_CHANGE]: (state, action) => {
         let
             s = routerReducer(state, action),
-            newView =
-                s.location.pathname in s.pathToView ?
-                    s.pathToView[s.location.pathname] : ""
+            newView = StaticRouter.getView(
+                s.location.pathname, s.pathToView
+            )
         return {
             ...s,
             currentView:

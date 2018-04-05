@@ -70,23 +70,20 @@ export const StaticRouter = connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         addStaticPaths: StellarRouterAction.addStaticPaths,
-        setCurrentView: StellarRouterAction.setCurrentView,
     }, dispatch)
 )(
-    class StaticRouter extends Component {
+    class extends Component {
 
         // ...
         static propTypes = {
             currentPath: PropTypes.string.isRequired,
             addStaticPaths: PropTypes.func.isRequired,
-            setCurrentView: PropTypes.func.isRequired,
         }
 
 
         // following properties are meant to be mutable and
         // they are intentionally not obeying react's lifecycle rules
         // (thus they are not put into this.state or redux's store)
-        _currentView = ""
         _staticPaths = {}
         _pathToViewMap = {}
 
@@ -97,14 +94,6 @@ export const StaticRouter = connect(
             this._staticPaths = { ...this._staticPaths, ...paths, }
             this._pathToViewMap = swap(this._staticPaths)
             this.props.addStaticPaths(paths)
-
-            let newView = this.getViewName(this.props.currentPath)
-
-            if (this._currentView !== newView) {
-                this._currentView = newView
-                this.props.setCurrentView(newView)
-            }
-
             return this._staticPaths
         }
 
@@ -117,17 +106,14 @@ export const StaticRouter = connect(
 
 
         // takes static path and returns associated view name
-        getViewName = (path) =>
-            path in this._pathToViewMap ?
-                this._pathToViewMap[path] :
-                ""
+        static getView = (path, map) => path in map ? map[path] : ""
 
 
         render = () => (
-            ({ addPaths, getPath, getViewName, }, { children, }) =>
+            ({ addPaths, getPath, }, { children, }) =>
                 React.createElement(
                     StaticRouterContext.Provider,
-                    { value: { addPaths, getPath, getViewName, }, },
+                    { value: { addPaths, getPath, }, },
                     children
                 )
         )(this, this.props)
@@ -139,16 +125,17 @@ export const StaticRouter = connect(
 
 
 // <StellarRouter> component
-export const StellarRouter = ({ children, ...restOfTheProps }) =>
-    React.createElement(
-        Router,
-        restOfTheProps,
+export const StellarRouter =
+    ({ children, ...restOfTheProps }) =>
         React.createElement(
-            StaticRouter,
-            null,
-            children
+            Router,
+            restOfTheProps,
+            React.createElement(
+                StaticRouter,
+                null,
+                children
+            )
         )
-    )
 
 
 
@@ -159,7 +146,7 @@ export const StellarRouter = ({ children, ...restOfTheProps }) =>
 // and additionally a 'staticRouter' prop)
 export const withStellarRouter = (WrappedComponent) =>
     hoistStatics(
-        class WithStellarRouter extends Component {
+        class extends Component {
 
             // ...
             static propTypes = {
