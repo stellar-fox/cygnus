@@ -5,11 +5,10 @@ import { connect } from "react-redux"
 
 import {
     logOut,
-    openDrawer,
-    closeDrawer,
     changeLoginState,
     ActionConstants,
 } from "../../redux/actions"
+import { action as BankAction } from "../../redux/Bank"
 
 import AppBar from "material-ui/AppBar"
 import IconButton from "material-ui/IconButton"
@@ -39,35 +38,24 @@ const style = {
 export default connect(
     // map state to props.
     (state) => ({
-        drawerOpened: state.ui.drawer.isOpened,
         currentView: state.Router.currentView,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        logOut,
-        openDrawer,
-        closeDrawer,
         changeLoginState,
+        logOut,
+        toggleDrawer: BankAction.toggleDrawer,
     }, dispatch)
 )(
     class extends Component {
 
         // ...
         static propTypes = {
-            drawerOpened: PropTypes.bool.isRequired,
             currentView: PropTypes.string.isRequired,
-            logOut: PropTypes.func.isRequired,
-            openDrawer: PropTypes.func.isRequired,
-            closeDrawer: PropTypes.func.isRequired,
             changeLoginState: PropTypes.func.isRequired,
+            logOut: PropTypes.func.isRequired,
+            toggleDrawer: PropTypes.func.isRequired,
         }
-
-
-        // ...
-        drawerToggle = () =>
-            this.props.drawerOpened ?
-                this.props.closeDrawer() :
-                this.props.openDrawer()
 
 
         // ...
@@ -86,7 +74,7 @@ export default connect(
 
         // ...
         render = () => (
-            ({ currentView, }) =>
+            ({ currentView, toggleDrawer, }) =>
                 <AppBar
                     title={
                         <div className="flex-row">
@@ -96,7 +84,7 @@ export default connect(
                     }
                     className="navbar"
                     style={style.appBar}
-                    onLeftIconButtonClick={this.drawerToggle}
+                    onLeftIconButtonClick={toggleDrawer}
                     iconElementRight={
                         <IconButton
                             iconStyle={style.icon}

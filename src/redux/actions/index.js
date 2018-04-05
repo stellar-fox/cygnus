@@ -55,20 +55,6 @@ export const logOut = (state) => ({
 
 
 // ...
-export const openDrawer = (state) => ({
-    type: "OPEN_DRAWER",
-    payload: state,
-})
-
-
-// ...
-export const closeDrawer = (state) => ({
-    type: "CLOSE_DRAWER",
-    payload: state,
-})
-
-
-// ...
 export const enableAuthenticateButton = (state) => ({
     type: "ENABLE_AUTHENTICATE_BUTTON",
     payload: state,

@@ -29,8 +29,7 @@ const NavLinkTemplate = withStellarRouter(
             isActive={() => currentPath.startsWith(getPath(to))}
             to={getPath(to)}
         >
-            <i className="material-icons">{icon}</i>
-            {to}
+            <i className="material-icons">{icon}</i>{to}
         </NavLink>
 )
 
@@ -79,7 +78,7 @@ export default connect(
     // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
-        drawerOpened: state.ui.drawer.isOpened,
+        drawerVisible: state.Bank.drawerVisible,
     })
 )(
     class extends Component {
@@ -87,16 +86,16 @@ export default connect(
         // ...
         static propTypes = {
             accountInfo: PropTypes.object.isRequired,
-            drawerOpened: PropTypes.bool.isRequired,
+            drawerVisible: PropTypes.bool.isRequired,
         }
 
 
         // ...
         render = () => (
-            ({ drawerOpened, accountInfo, }) =>
+            ({ drawerVisible, accountInfo, }) =>
                 <Drawer
                     containerStyle={bankDrawerStyle}
-                    open={drawerOpened}
+                    open={drawerVisible}
                 >
                     <BalancesNavLink />
                     <PaymentsNavLink show={accountInfo.exists} />

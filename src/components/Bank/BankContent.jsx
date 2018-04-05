@@ -21,9 +21,9 @@ import "./BankContent.css"
 
 
 // compute div's padding-left value
-const computeStyle = (drawerOpened) => ({
+const computeStyle = (drawerVisible) => ({
     paddingLeft:
-        drawerOpened ?
+        drawerVisible ?
             bankDrawerWidth + contentPaneSeparation :
             contentPaneSeparation,
 })
@@ -34,29 +34,29 @@ const computeStyle = (drawerOpened) => ({
 // <BankContent> component
 export default withStellarRouter(connect(
     // map state to props.
-    (state) => ({ drawerOpened: state.ui.drawer.isOpened, })
+    (state) => ({ drawerVisible: state.Bank.drawerVisible, })
 )(
     class extends Component {
 
         // ...
         static propTypes = {
-            drawerOpened: PropTypes.bool.isRequired,
+            drawerVisible: PropTypes.bool.isRequired,
             staticRouter: PropTypes.object.isRequired,
         }
 
 
         // ...
-        static getDerivedStateFromProps = ({ drawerOpened, }, prevState) =>
-            prevState.drawerOpened !== drawerOpened ? {
-                drawerOpened,
-                style: computeStyle(drawerOpened),
+        static getDerivedStateFromProps = ({ drawerVisible, }, prevState) =>
+            prevState.drawerVisible !== drawerVisible ? {
+                drawerVisible,
+                style: computeStyle(drawerVisible),
             } :  null
 
 
         // ...
         state = {
-            drawerOpened: this.props.drawerOpened,
-            style: computeStyle(this.props.drawerOpened),
+            drawerVisible: this.props.drawerVisible,
+            style: computeStyle(this.props.drawerVisible),
         }
 
 
