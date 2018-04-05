@@ -305,11 +305,15 @@ class Balances extends Component {
 
 
     // ...
-    handleOpen = () => this.props.showAlert()
+    handleOpen = () => this.props.changeModalState({
+        notImplemented: {showing: true,},
+    })
 
 
     // ...
-    handleClose = () => this.props.hideAlert()
+    handleClose = () => this.props.changeModalState({
+        notImplemented: { showing: false, },
+    })
 
 
     // ...
@@ -330,6 +334,14 @@ class Balances extends Component {
     hideSignupModal = () =>
         this.props.changeModalState({
             signup: {
+                showing: false,
+            },
+        })
+
+    // ...
+    hideNotImplementedModal = () =>
+        this.props.changeModalState({
+            notImplemented: {
                 showing: false,
             },
         })
@@ -685,14 +697,6 @@ class Balances extends Component {
     render = () => {
 
         const
-            actions = [
-                <Button
-                    primary={true}
-                    label="OK"
-                    keyboardFocused={true}
-                    onClick={this.handleClose}
-                />,
-            ],
             actionsError = [
                 <Button
                     primary={true}
@@ -721,19 +725,21 @@ class Balances extends Component {
                         onRequestClose={this.handlePaymentSnackbarClose}
                     />
 
-                    <Dialog
-                        title="Not Yet Implemented"
-                        actions={actions}
-                        modal={false}
-                        open={this.props.modal.isShowing}
-                        onRequestClose={this.handleClose}
-                        paperClassName="modal-body"
-                        titleClassName="modal-title"
-                    >
+
+                    <Modal open={this.props.appUi.modals.notImplemented ?
+                        this.props.appUi.modals.notImplemented.showing : false
+                    } title="Not Yet Implemented" actions={[
+                        <Button
+                            primary={true}
+                            label="OK"
+                            keyboardFocused={true}
+                            onClick={this.handleClose}
+                        />,
+                    ]}>
                         We are hard at work to bring you this feature very
                         soon. Please check back in a while as our code
-                        is being frequently deployed.
-                    </Dialog>
+                        is being frequently deployed. (M)
+                    </Modal>
 
 
                     <Modal
