@@ -22,7 +22,6 @@ import { withAssetManager } from "../AssetManager"
 import {
     showAlert,
     hideAlert,
-    setCurrency,
     accountExistsOnLedger,
     accountMissingOnLedger,
     setAccountRegistered,
@@ -68,10 +67,8 @@ class Balances extends Component {
     }
 
     // ...
-    state = ((now) => ({
+    state = {
         paymentsStreamer: null,
-
-
         sbPayment: false,
         sbPaymentAmount: null,
         sbPaymentAssetCode: null,
@@ -81,15 +78,10 @@ class Balances extends Component {
         errorModalShown: false,
         errorModalMessage: "",
         modalButtonText: "CANCEL",
-        currencySymbol: null,
-        currencyText: null,
-        minDate: now,
-        payDate: now,
         // the following are resetable
         amountEntered: false,
         payee: null,
         memoRequired: false,
-        memo: "",
         amountValid: false,
         amount: 0,
         transactionType: null,
@@ -97,10 +89,8 @@ class Balances extends Component {
         buttonSendDisabled: true,
         paymentCardVisible: false,
         newAccount: false,
-        minimumReserveMessage: "",
         sendingCompleteModalShown: false,
-        loginButtonDisabled: true,
-    }))(new Date())
+    }
 
 
     // ...
@@ -300,13 +290,6 @@ class Balances extends Component {
 
 
     // ...
-    updateDate = (_, date) =>
-        this.setState({
-            payDate: date,
-        })
-
-
-    // ...
     updateAccount = () => {
         let server = new StellarSdk.Server(this.props.accountInfo.horizon)
         server.loadAccount(this.props.appAuth.publicKey)
@@ -319,24 +302,6 @@ class Balances extends Component {
                 this.props.accountMissingOnLedger()
             })
     }
-
-
-    // ...
-    getNativeBalance = (account) => {
-        let nativeBalance = 0
-
-        account.balances.forEach((balance) => {
-            if (balance.asset_type === "native") {
-                nativeBalance = balance.balance
-            }
-        })
-
-        return nativeBalance
-    }
-
-
-    // ...
-    handleOpen = () => this.props.showAlert()
 
 
     // ...
@@ -358,100 +323,12 @@ class Balances extends Component {
 
 
     // ...
-    handleModalClose = () =>
-        axios
-            .post(
-                `${config.api}/user/ledgerauth/${
-                    this.props.appAuth.publicKey
-                }/${
-                    this.props.appAuth.bip32Path
-                }`
-            )
-            .then((response) => {
-                this.props.setAccountRegistered(true)
-                this.props.logIn({
-                    userId: response.data.user_id,
-                    token: response.data.token,
-                })
-                this.setState({
-                    modalShown: false,
-                })
-            })
-            .catch((error) => {
-                if (error.response.status === 401) {
-                    // theoretically this should not happen
-                    // eslint-disable-next-line no-console
-                    console.log("Ledger user not found.")
-                } else {
-                    // eslint-disable-next-line no-console
-                    console.log(error.response.statusText)
-                }
-            })
-
-
-    // ...
-    handleRegistrationModalClose = () =>
-        this.setState({
-            modalShown: false,
-        })
-
-
-    // ...
-    handleSignup = () =>
-        this.setState({
-            modalButtonText: "CANCEL",
-            modalShown: true,
-        })
-
-
-    // ...
-    showSignupModal = () =>
-        this.props.changeModalState({
-            signup: {
-                showing: true,
-            },
-        })
-
-
-    // ...
     hideSignupModal = () =>
         this.props.changeModalState({
             signup: {
                 showing: false,
             },
         })
-
-
-    // ...
-    setModalButtonText = (text) =>
-        this.setState({
-            modalButtonText: text,
-        })
-
-
-    // ...
-    showPaymentCard = () =>
-        this.setState({
-            paymentCardVisible: true,
-        })
-
-
-    // ...
-    hidePaymentCard = () =>
-        this.setState({
-            paymentCardVisible: false,
-        })
-
-
-    // ...
-    queryStellarAccount = (pubKey) =>
-        server.loadAccount(pubKey)
-            .catch(StellarSdk.NotFoundError, (_) => {
-                throw new Error("The destination account does not exist!")
-            })
-            .then((account) => {
-                return this.getNativeBalance(account)
-            })
 
 
     // ...
@@ -781,13 +658,6 @@ class Balances extends Component {
 
 
     // ...
-    doWhateverYourFunctionCurrentlyIs = () =>
-        this.setState({
-            modalShown: false,
-        })
-
-
-    // ...
     changeButtonText = () =>
         this.setState({
             modalButtonText: "DONE",
@@ -841,18 +711,10 @@ class Balances extends Component {
                 <div>
                     <Snackbar
                         open={this.state.sbPayment}
-                        message={
-                            `${
-                                this.state.sbPaymentText
-                            } ${
-                                this.state.sbPaymentAmount
-                            } ${
-                                this.state.sbPaymentAssetCode
-                            }`
-                        }
-                        onRequestClose={
-                            this.handlePaymentSnackbarClose
-                        }
+                        message={`${this.state.sbPaymentText} ${
+                            this.state.sbPaymentAmount} ${
+                            this.state.sbPaymentAssetCode}`}
+                        onRequestClose={this.handlePaymentSnackbarClose}
                     />
 
                     <Dialog
@@ -864,9 +726,9 @@ class Balances extends Component {
                         paperClassName="modal-body"
                         titleClassName="modal-title"
                     >
-                        Pardon the mess. We are working hard to bring you this feature very
-                        soon. Please check back in a while as the feature implementation
-                        is being continuously deployed.
+                        We are hard at work to bring you this feature very
+                        soon. Please check back in a while as our code
+                        is being deployed frequently.
                     </Dialog>
 
 
@@ -994,7 +856,6 @@ export default withLoginManager(withAssetManager(connect(
         setState: AccountAction.setState,
         showAlert,
         hideAlert,
-        setCurrency,
         accountExistsOnLedger,
         accountMissingOnLedger,
         setAccountRegistered,
