@@ -88,11 +88,8 @@ class Heading extends Component {
     render = () =>
         <Fragment>
             <Modal
-                open={
-                    typeof this.props.appUi.modals !== "undefined" &&
-                    typeof this.props.appUi.modals.signup !== "undefined" ?
-                        this.props.appUi.modals.signup.showing : false
-                }
+                open={this.props.appUi.modals.signup ?
+                    this.props.appUi.modals.signup.showing : false}
                 title="Opening Your Bank"
                 actions={[
                     <Button

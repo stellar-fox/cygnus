@@ -100,7 +100,8 @@ export default class Signup extends Component {
                         `${config.api}/account/create/${
                             userId
                         }/${ledgerData.publicKey}?path=${
-                            this.props.config && this.props.config.register ?
+                            this.props.config &&
+                            this.props.config.useAsRegistrationForm ?
                                 ledgerData.bip32Path :
                                 extractPathIndex(ledgerData.bip32Path)
                         }&md5=${md5(this.state.email)}`
@@ -315,7 +316,8 @@ export default class Signup extends Component {
                 }}>
                     <div className="f-b">
                         <div className="f-b-col bordered m-t">
-                            {this.props.config && this.props.config.register ?
+                            {this.props.config &&
+                             this.props.config.useAsRegistrationForm ?
                                 <Fragment>
                                     <div className="p-b">
                                         <span style={{

@@ -737,10 +737,8 @@ class Balances extends Component {
 
 
                     <Modal
-                        open={
-                            typeof this.props.appUi.modals !== "undefined" &&
-                                typeof this.props.appUi.modals.signup !== "undefined" ?
-                                this.props.appUi.modals.signup.showing : false
+                        open={this.props.appUi.modals.signup ?
+                            this.props.appUi.modals.signup.showing : false
                         }
                         title="Opening Your Bank - Register Account"
                         actions={[
@@ -751,11 +749,13 @@ class Balances extends Component {
                             />,
                         ]}
                     >
-                        <Signup onComplete={this.completeRegistration} config={{
-                            register: true,
-                            publicKey: this.props.appAuth.publicKey,
-                            bip32Path: this.props.appAuth.bip32Path,
-                        }} />
+                        <Signup onComplete={this.completeRegistration}
+                            config={{
+                                useAsRegistrationForm: true,
+                                publicKey: this.props.appAuth.publicKey,
+                                bip32Path: this.props.appAuth.bip32Path,
+                            }}
+                        />
                     </Modal>
 
 

@@ -119,11 +119,8 @@ class Account extends Component {
                 feature implementation is being continuously deployed.
             </Dialog>
             <Modal
-                open={
-                    typeof this.props.appUi.modals !== "undefined" &&
-                        typeof this.props.appUi.modals.signup !== "undefined" ?
-                        this.props.appUi.modals.signup.showing : false
-                }
+                open={this.props.appUi.modals.signup ?
+                    this.props.appUi.modals.signup.showing : false}
                 title="Opening Your Bank - Register Account"
                 actions={[
                     <Button
@@ -134,7 +131,7 @@ class Account extends Component {
                 ]}
             >
                 <Signup onComplete={this.completeRegistration} config={{
-                    register: true,
+                    useAsRegistrationForm: true,
                     publicKey: this.props.appAuth.publicKey,
                     bip32Path: this.props.appAuth.bip32Path,
                 }} />
