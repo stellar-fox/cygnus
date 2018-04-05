@@ -20,13 +20,9 @@ import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 
 import {
-    setExchangeRate,
     showAlert,
     hideAlert,
     setCurrency,
-    setStreamer,
-    setOptionsStreamer,
-    setCurrencyPrecision,
     accountExistsOnLedger,
     accountMissingOnLedger,
     setAccountRegistered,
@@ -988,7 +984,6 @@ export default withLoginManager(withAssetManager(connect(
         Account: state.Account,
         Balances: state.Balances,
         accountInfo: state.accountInfo,
-        auth: state.auth,
         modal: state.modal,
         appAuth: state.appAuth,
         appUi: state.appUi,
@@ -997,13 +992,9 @@ export default withLoginManager(withAssetManager(connect(
     // match dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
-        setExchangeRate,
         showAlert,
         hideAlert,
         setCurrency,
-        setStreamer,
-        setOptionsStreamer,
-        setCurrencyPrecision,
         accountExistsOnLedger,
         accountMissingOnLedger,
         setAccountRegistered,
