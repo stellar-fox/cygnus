@@ -67,6 +67,7 @@ export const StaticRouter = connect(
     // map state to props.
     (state) => ({
         currentPath: state.Router.location.pathname,
+        currentView: state.Router.currentView,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
@@ -78,8 +79,9 @@ export const StaticRouter = connect(
 
         // ...
         static propTypes = {
-            currentPath: PropTypes.string.isRequired,
             addStaticPaths: PropTypes.func.isRequired,
+            currentPath: PropTypes.string.isRequired,
+            currentView: PropTypes.string.isRequired,
         }
 
 
@@ -112,11 +114,17 @@ export const StaticRouter = connect(
 
 
         render = () => (
-            ({ addPaths, getPath, }, { children, currentPath, push, }) =>
+            (
+                { addPaths, getPath, },
+                { children, currentPath, currentView, push, }
+            ) =>
                 React.createElement(
-                    StaticRouterContext.Provider,
-                    { value: { addPaths, getPath, currentPath, push, }, },
-                    children
+                    StaticRouterContext.Provider, {
+                        value: {
+                            addPaths, getPath, push,
+                            currentPath, currentView,
+                        },
+                    }, children
                 )
         )(this, this.props)
 
