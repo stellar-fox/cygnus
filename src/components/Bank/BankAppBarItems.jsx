@@ -14,6 +14,7 @@ import "./BankAppBarItems.css"
 
 // <BankAppBarItems> component
 export default connect(
+    // map state to props.
     (state) => ({
         accountExists: state.accountInfo.exists,
         homeDomain:

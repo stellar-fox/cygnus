@@ -23,11 +23,12 @@ import Bank from "../Bank"
 
 // <Layout> component
 export default withStellarRouter(connect(
+    // map state to props.
     (state) => ({
         loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN,
     })
 )(
-    class Layout extends Component {
+    class extends Component {
 
         // ...
         static propTypes = {

@@ -16,7 +16,9 @@ import "./BankDrawer.css"
 // <NavLinkTemplate> component
 // with bound 'currentPath', 'paths' state props and 'push' dispatcher
 const NavLinkTemplate = withStellarRouter(connect(
+    // map state to props.
     (state) => ({ currentPath: state.Router.location.pathname, }),
+    // map dispatch to props.
     (dispatch) => ({ push: (p) => dispatch(push(p)), })
 )(({
     staticRouter, currentPath, push, to, icon,
@@ -83,12 +85,13 @@ const bankDrawerStyle = {
 
 // <BankDrawer> component
 export default connect(
+    // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
         drawerOpened: state.ui.drawer.isOpened,
     })
 )(
-    class BankDrawer extends Component {
+    class extends Component {
 
         // ...
         static propTypes = {

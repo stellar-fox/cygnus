@@ -17,7 +17,7 @@ import Footer from "../Layout/Footer"
 
 // <Bank> component
 export default withStellarRouter(
-    class Bank extends Component {
+    class extends Component {
 
         // ...
         static propTypes = {

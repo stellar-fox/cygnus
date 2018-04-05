@@ -5,52 +5,51 @@ import PanelLedger from "./PanelLedger"
 import PanelLogin from "./PanelLogin"
 import PanelExplorer from "./PanelExplorer"
 import Footer from "../Layout/Footer"
+
 import "./index.css"
 
 
 
 
 // <Welcome> component
-class Welcome extends Component {
+export default withLoginManager(
+    class extends Component {
 
-    // ...
-    state = {
-        modalShown: false,
-        modalButtonText: "CANCEL",
-    }
-
-
-    // ...
-    handleSignup = () =>
-        this.setState({
+        // ...
+        state = {
+            modalShown: false,
             modalButtonText: "CANCEL",
-            modalShown: true,
-        })
+        }
 
 
-    // ...
-    setModalButtonText = (text) =>
-        this.setState({
-            modalButtonText: text,
-        })
+        // ...
+        handleSignup = () =>
+            this.setState({
+                modalButtonText: "CANCEL",
+                modalShown: true,
+            })
 
 
-    // ...
-    render = () =>
-        <div className="welcome-content">
-            <Heading />
-            <div>
-                <div className="flex-row-space-between">
-                    <PanelLedger />
-                    <PanelLogin />
-                    <PanelExplorer />
+        // ...
+        setModalButtonText = (text) =>
+            this.setState({
+                modalButtonText: text,
+            })
+
+
+        // ...
+        render = () =>
+            <div className="welcome-content">
+                <Heading />
+                <div>
+                    <div className="flex-row-space-between">
+                        <PanelLedger />
+                        <PanelLogin />
+                        <PanelExplorer />
+                    </div>
                 </div>
+                <Footer />
             </div>
-            <Footer />
-        </div>
 
-}
-
-
-// ...
-export default withLoginManager(Welcome)
+    }
+)

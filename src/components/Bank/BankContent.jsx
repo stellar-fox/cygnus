@@ -33,9 +33,10 @@ const computeStyle = (drawerOpened) => ({
 
 // <BankContent> component
 export default withStellarRouter(connect(
+    // map state to props.
     (state) => ({ drawerOpened: state.ui.drawer.isOpened, })
 )(
-    class BankContent extends Component {
+    class extends Component {
 
         // ...
         static propTypes = {
