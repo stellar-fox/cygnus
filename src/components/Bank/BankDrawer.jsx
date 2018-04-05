@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { NavLink } from "react-router-dom"
-import { push } from "react-router-redux"
 import { withStellarRouter } from "../StellarRouter"
 import { bankDrawerWidth } from "../StellarFox/env"
 
@@ -15,33 +14,25 @@ import "./BankDrawer.css"
 
 // <NavLinkTemplate> component
 // with bound 'currentPath', 'paths' state props and 'push' dispatcher
-const NavLinkTemplate = withStellarRouter(connect(
-    // map state to props.
-    (state) => ({ currentPath: state.Router.location.pathname, }),
-    // map dispatch to props.
-    (dispatch) => ({ push: (p) => dispatch(push(p)), })
-)(({
-    staticRouter, currentPath, push, to, icon,
-}) =>
-    <NavLink
-        className="menu-item"
-        onClick={(e) => {
-            e.preventDefault()
-            if (!currentPath.startsWith(staticRouter.getPath(to))) {
-                push(staticRouter.getPath(to))
-            }
-        }}
-        exact
-        activeClassName="active"
-        isActive={
-            () => currentPath.startsWith(staticRouter.getPath(to))
-        }
-        to={staticRouter.getPath(to)}
-    >
-        <i className="material-icons">{icon}</i>
-        {to}
-    </NavLink>
-))
+const NavLinkTemplate = withStellarRouter(
+    ({ staticRouter: { currentPath, push, getPath, }, to, icon, }) =>
+        <NavLink
+            className="menu-item"
+            onClick={(e) => {
+                e.preventDefault()
+                if (!currentPath.startsWith(getPath(to))) {
+                    push(getPath(to))
+                }
+            }}
+            exact
+            activeClassName="active"
+            isActive={() => currentPath.startsWith(getPath(to))}
+            to={getPath(to)}
+        >
+            <i className="material-icons">{icon}</i>
+            {to}
+        </NavLink>
+)
 
 
 

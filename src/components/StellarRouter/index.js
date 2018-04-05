@@ -7,6 +7,7 @@ import hoistStatics from "hoist-non-react-statics"
 import {
     CALL_HISTORY_METHOD,
     ConnectedRouter as Router,
+    push,
 } from "react-router-redux"
 import { action as StellarRouterAction } from "../../redux/StellarRouter"
 import resolvePathname from "resolve-pathname"
@@ -70,6 +71,7 @@ export const StaticRouter = connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         addStaticPaths: StellarRouterAction.addStaticPaths,
+        push,
     }, dispatch)
 )(
     class extends Component {
@@ -110,10 +112,10 @@ export const StaticRouter = connect(
 
 
         render = () => (
-            ({ addPaths, getPath, }, { children, }) =>
+            ({ addPaths, getPath, }, { children, currentPath, push, }) =>
                 React.createElement(
                     StaticRouterContext.Provider,
-                    { value: { addPaths, getPath, }, },
+                    { value: { addPaths, getPath, currentPath, push, }, },
                     children
                 )
         )(this, this.props)
