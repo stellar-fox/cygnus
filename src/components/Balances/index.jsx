@@ -44,7 +44,7 @@ import Snackbar from "../../lib/common/Snackbar"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 import RegisterCard from "./RegisterCard"
-import BalancesCard from "./BalanceCard"
+import BalancesCard from "./BalancesCard"
 import NoAccountCard from "./NoAccountCard"
 import PaymentCard from "./PaymentCard"
 import "./index.css"
@@ -302,6 +302,10 @@ class Balances extends Component {
                 this.props.accountMissingOnLedger()
             })
     }
+
+
+    // ...
+    handleOpen = () => this.props.showAlert()
 
 
     // ...
@@ -728,7 +732,7 @@ class Balances extends Component {
                     >
                         We are hard at work to bring you this feature very
                         soon. Please check back in a while as our code
-                        is being deployed frequently.
+                        is being frequently deployed.
                     </Dialog>
 
 
@@ -826,7 +830,7 @@ class Balances extends Component {
                 }
 
                 {this.props.accountInfo.exists ?
-                    <BalancesCard /> : <NoAccountCard />
+                    <BalancesCard notImplemented={this.handleOpen} /> : <NoAccountCard />
                 }
 
                 {

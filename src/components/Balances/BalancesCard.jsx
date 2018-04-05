@@ -116,13 +116,13 @@ class BalanceCard extends Component {
                 backgroundColor="rgb(15,46,83)"
                 labelColor="#228B22"
                 label="Fund"
-                onClick={this.handleOpen}
+                onClick={this.props.notImplemented}
             />
             <Button
                 backgroundColor="rgb(15,46,83)"
                 labelColor="rgb(244,176,4)"
                 label="Request"
-                onClick={this.handleOpen}
+                onClick={this.props.notImplemented}
             />
             {this.props.loginManager.isPayEnabled() ||
                 this.props.loginManager.isAuthenticated() ?
