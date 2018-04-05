@@ -89,7 +89,7 @@ export const hideAlert = (state) => ({
 })
 
 
-// ...
+// TODO: REMOVE - only used by <Account> now
 export const setTab = (state) => ({
     type: "SET_TAB_SELECTED",
     payload: state,

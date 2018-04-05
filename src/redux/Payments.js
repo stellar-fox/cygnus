@@ -30,7 +30,7 @@ const initState = {
     sbNoMorePayments: false,
     sbNoMoreTransactions: false,
 
-    tabSelected: "1",
+    tabSelected: "History",
 
 }
 

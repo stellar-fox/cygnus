@@ -28,6 +28,7 @@ export default function (state = initState, action) {
             }
             break
 
+        // TODO: move this functionality to <Account> reducer
         case "SET_TAB_SELECTED":
             state = {
                 ...state,
