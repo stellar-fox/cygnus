@@ -3,16 +3,12 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import axios from "axios"
-import { BigNumber } from "bignumber.js"
 import "number-to-text/converters/en-us"
 
 import { action as AccountAction } from "../../redux/Account"
 
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import {
-    pubKeyValid,
-    federationAddressValid,
-    federationLookup,
     StellarSdk,
     pubKeyAbbr,
     handleException,
@@ -42,6 +38,7 @@ import {
     changeModalState,
     changeSnackbarState,
     ActionConstants,
+    togglePaymentCard,
 } from "../../redux/actions"
 
 import { List, ListItem } from "material-ui/List"
@@ -114,14 +111,10 @@ class Balances extends Component {
     componentDidMount = () => {
 
         // FIXME: merge streamers
-        // this.props.setStreamer(this.paymentsStreamer.call(this))
-        // this.props.setOptionsStreamer(this.optionsStreamer.call(this))
-
         this.setState({
             paymentsStreamer: this.paymentsStreamer.call(this),
             optionsStreamer: this.optionsStreamer.call(this),
         })
-
 
         this.props.changeSnackbarState({
             open: false,
@@ -129,7 +122,6 @@ class Balances extends Component {
         })
 
         if (!this.props.accountInfo.account) {
-
             this.props.setModalLoading()
             this.props.updateLoadingMessage({
                 message: "Searching for account ...",
@@ -137,41 +129,7 @@ class Balances extends Component {
 
             this._tmpQueryHorizon()
             this._tmpAccountExists()
-
         }
-
-        // if (this.props.loginManager.isAuthenticated()) {
-        //     axios.get(`${config.api}/account/${this.props.appAuth.userId}`)
-        //         .then((response) => {
-        //             this.props.setCurrency(response.data.data.currency)
-        //             this.props.setCurrencyPrecision(
-        //                 response.data.data.precision
-        //             )
-        //             // this.getExchangeRate(response.data.data.currency)
-        //             this.setState({
-        //                 currencySymbol: response.data.data.currency,
-        //                 currencyText:
-        //                     this.getCurrencyText(
-        //                         response.data.data.currency
-        //                     ),
-        //             })
-        //         })
-        //         .catch((error) => {
-        //             // eslint-disable-next-line no-console
-        //             console.log(error.message)
-        //         })
-        // }
-
-        // this.getExchangeRate(this.props.Account.currency)
-        // this.setState({
-        //     currencySymbol: this.props.Account.currency,
-        //     currencyText:
-        //         this.getCurrencyText(
-        //             this.props.Account.currency
-        //         ),
-        // })
-
-
     }
 
 
@@ -179,8 +137,6 @@ class Balances extends Component {
     componentWillUnmount = () => {
         this.state.paymentsStreamer.call(this)
         this.state.optionsStreamer.call(this)
-        // this.props.accountInfo.paymentsStreamer.call(this)
-        // this.props.accountInfo.optionsStreamer.call(this)
     }
 
 
@@ -384,63 +340,6 @@ class Balances extends Component {
 
 
     // ...
-    // exchangeRateFetched = () => (
-    //     this.props.accountInfo.rates  &&
-    //         this.props.accountInfo.rates[this.props.Account.currency]
-    // )
-
-
-    // // ...
-    // exchangeRateStale = (currency) => (
-    //     !this.props.accountInfo.rates  ||
-    //         !this.props.accountInfo.rates[currency]  ||
-    //         this.props.accountInfo.rates[currency].lastFetch + 300000 < Date.now()
-    // )
-
-
-    // // ...
-    // getExchangeRate = (currency) => {
-    //     if (this.exchangeRateStale(currency)) {
-    //         axios.get(`${config.api}/ticker/latest/${currency}`)
-    //             .then((response) => {
-    //                 this.props.setExchangeRate({[currency]: {
-    //                     rate: response.data.data[`price_${currency}`],
-    //                     lastFetch: Date.now(),
-    //                 },})
-    //             })
-    //             .catch(function (error) {
-    //                 // eslint-disable-next-line no-console
-    //                 console.log(error.message)
-    //             })
-    //     }
-    // }
-
-
-    // // ...
-    // getOtherBalances = (account) =>
-    //     account.balances.map((balance, index) => {
-    //         if (balance.asset_type !== "native") {
-    //             return (
-    //                 <p className="other-assets" key={`${index}-${balance.asset_code}`}>
-    //                     <span className="other-asset-balance">
-    //                         {
-    //                             Number.parseFloat(balance.balance)
-    //                                 .toFixed(
-    //                                     this.props.accountInfo.precision
-    //                                 )
-    //                         }
-    //                     </span>
-    //                     <span className="other-asset-code">
-    //                         {balance.asset_code}
-    //                     </span>
-    //                 </p>
-    //             )
-    //         }
-    //         return null
-    //     })
-
-
-    // ...
     handleOpen = () => this.props.showAlert()
 
 
@@ -562,12 +461,12 @@ class Balances extends Component {
     // ...
     buildSendTransaction = () => {
         let
-            destinationId = this.state.payee,
+            destinationId = this.props.Balances.payee,
             // Transaction will hold a built transaction we can resubmit
             // if the result is unknown.
             transaction = null
 
-        if (this.state.newAccount) {
+        if (this.props.Balances.newAccount) {
 
             // This function is "async"
             // as it waits for signature from the device
@@ -576,14 +475,14 @@ class Balances extends Component {
                     // Start building the transaction.
                     transaction = new StellarSdk.TransactionBuilder(sourceAccount)
                         .addOperation(StellarSdk.Operation.createAccount({
-                            destination: this.state.payee,
+                            destination: this.props.Balances.payee,
                             startingBalance:
                                 this.props.assetManager.convertToNative(
-                                    this.state.amount),
+                                    this.props.Balances.amount),
                         }))
                         .addMemo(
                             StellarSdk.Memo.text(
-                                this.textInputFieldMemo.state.value
+                                this.props.Balances.memoText
                             )
                         )
                         .build()
@@ -627,6 +526,11 @@ class Balances extends Component {
                         paymentCardVisible: false,
                         newAccount: false,
                     })
+                    this.props.togglePaymentCard({
+                        payment: {
+                            opened: false,
+                        },
+                    })
                 })
                 .catch((error) => {
                     this.setState({
@@ -668,11 +572,11 @@ class Balances extends Component {
                             // Because Stellar allows transaction in many currencies, you must
                             // specify the asset type. The special "native" asset represents Lumens.
                             asset: StellarSdk.Asset.native(),
-                            amount: this.props.assetManager.convertToNative(this.state.amount),
+                            amount: this.props.assetManager.convertToNative(this.props.Balances.amount),
                         }))
                         // A memo allows you to add your own metadata to a transaction. It's
                         // optional and does not affect how Stellar treats the transaction.
-                        .addMemo(StellarSdk.Memo.text(this.textInputFieldMemo.state.value))
+                        .addMemo(StellarSdk.Memo.text(this.props.Balances.memoText))
                         .build()
                     // Sign the transaction to prove you are actually the person sending it.
                     // transaction.sign(sourceKeys)
@@ -709,6 +613,11 @@ class Balances extends Component {
                         buttonSendDisabled: true,
                         paymentCardVisible: false,
                         newAccount: false,
+                    })
+                    this.props.togglePaymentCard({
+                        payment: {
+                            opened: false,
+                        },
                     })
                 })
                 .catch((error) => {
@@ -765,348 +674,6 @@ class Balances extends Component {
 
 
     // ...
-    compoundPaymentValidator = () => {
-        if (
-            this.state.newAccount  &&
-            this.state.amountEntered  &&
-            parseInt(this.props.assetManager.convertToNative(
-                this.state.amount), 10) <
-                    parseInt(config.reserve, 10)
-        ) {
-            this.setState({
-                buttonSendDisabled: true,
-                minimumReserveMessage:
-                    `Minimum reserve of ${config.reserve} required.`,
-            })
-            return false
-        }
-
-        if (!this.state.payee) {
-            this.setState({
-                buttonSendDisabled: true,
-            })
-            return false
-        }
-
-        if (!this.state.amountEntered) {
-            this.setState({
-                buttonSendDisabled: true,
-                minimumReserveMessage: "",
-            })
-            return false
-        }
-
-        if (!(BigNumber(this.state.amount) > BigNumber("0"))) {
-            this.setState({
-                buttonSendDisabled: true,
-            })
-            return false
-        }
-
-        if (!this.state.memoValid && this.state.memoRequired) {
-            this.setState({
-                buttonSendDisabled: true,
-            })
-            return false
-        }
-
-        this.setState({
-            buttonSendDisabled: false,
-            minimumReserveMessage: "",
-        })
-
-        return true
-    }
-
-
-    // ...
-    // memoValidator = () => {
-    //     if (
-    //         this.state.memoRequired  &&
-    //         this.textInputFieldMemo.state.value === ""
-    //     ) {
-    //         this.setState({
-    //             memoValid: false,
-    //             memo: "",
-    //         })
-    //     } else {
-    //         this.setState({
-    //             memoValid: true,
-    //             memo: this.textInputFieldMemo.state.value,
-    //         })
-    //     }
-
-    //     this.compoundPaymentValidator.call(this)
-
-    //     return true
-    // }
-
-
-    // ...
-    // amountValidator = () => {
-    //     // nothing was typed (reset any previous errors)
-    //     if (this.textInputFieldAmount.state.value === "") {
-    //         this.setState({
-    //             amountEntered: false,
-    //             amountValid: false,
-    //         })
-    //         this.textInputFieldAmount.setState({
-    //             error: null,
-    //         })
-    //         this.compoundPaymentValidator.call(this)
-    //         return null
-    //     }
-
-    //     let parsedValidAmount = this.textInputFieldAmount.state.value.match(
-    //         /^(\d+)([.,](\d{1,2}))?$/
-    //     )
-
-    //     // check if amount typed is valid
-    //     if (parsedValidAmount) {
-    //         // decimals present
-    //         if (parsedValidAmount[3]) {
-    //             this.setState({
-    //                 amount: `${parsedValidAmount[1]}.${parsedValidAmount[3]}`,
-    //                 amountEntered: true,
-    //                 amountText:
-    //                     `${numberToText.convertToText(
-    //                         parsedValidAmount[1]
-    //                     )} and ${parsedValidAmount[3]}/100`,
-    //             })
-    //         }
-    //         // whole amount
-    //         else {
-    //             this.setState({
-    //                 amount: `${parsedValidAmount[1]}`,
-    //                 amountEntered: true,
-    //                 amountText:
-    //                     numberToText.convertToText(parsedValidAmount[1]),
-    //             })
-    //         }
-    //         this.textInputFieldAmount.setState({
-    //             error: null,
-    //         })
-    //         this.compoundPaymentValidator.call(this)
-    //         return null
-    //     }
-
-    //     // invalid amount was typed in
-    //     else {
-    //         this.setState({
-    //             amountEntered: false,
-    //         })
-    //         this.textInputFieldAmount.setState({
-    //             error: "invalid amount entered",
-    //         })
-    //         this.compoundPaymentValidator.call(this)
-    //         return "invalid amount entered"
-    //     }
-
-    // }
-
-
-    // ...
-    federationValidator = () => {
-        // reset any previous errors
-        this.textInputFieldFederationAddress.setState({
-            error: null,
-        })
-
-        const address = this.textInputFieldFederationAddress.state.value
-        // Looks like something totally invalid for this field.
-        if (!address.match(/\*/) && !address.match(/^G/)) {
-            return "invalid input"
-        }
-        // Looks like user is entering Federation Address format.
-        if (address.match(/\*/) && !federationAddressValid(address)) {
-            return "invalid federation address"
-        }
-        // This must be an attempt at a Stellar public key format.
-        if (address.match(/^G/) && !address.match(/\*/)) {
-            let publicKeyValidityObj = pubKeyValid(address)
-            if (!publicKeyValidityObj.valid) {
-                return publicKeyValidityObj.message
-            }
-        }
-
-        return null
-    }
-
-
-    // ...
-    compoundFederationValidator = () => {
-        const addressValidity = this.federationValidator(
-            this.textInputFieldFederationAddress.state.value
-        )
-        if (addressValidity === null) {
-
-            // valid federation address
-            if (this.textInputFieldFederationAddress.state.value.match(/\*/)) {
-                federationLookup(this.textInputFieldFederationAddress.state.value)
-                    .then((federationEndpointObj) => {
-                        if (federationEndpointObj.ok) {
-                            axios
-                                .get(`${
-                                    federationEndpointObj.endpoint
-                                }?q=${
-                                    this.textInputFieldFederationAddress
-                                        .state.value
-                                }&type=name`)
-                                .then((response) => {
-                                    this.queryStellarAccount(
-                                        response.data.account_id
-                                    )
-                                        .catch((_) => {
-                                            this.setState({
-                                                payee: response.data.account_id,
-                                                newAccount: true,
-                                            })
-                                            this.compoundPaymentValidator
-                                                .call(this)
-                                            throw new Error(
-                                                "The destination account does not exist!"
-                                            )
-                                        })
-                                        .then((_) => {
-                                            this.setState({
-                                                payee: response.data.account_id,
-                                                newAccount: false,
-                                            })
-                                            this.compoundPaymentValidator.call(this)
-                                        })
-                                        .catch((error) => {
-                                            // eslint-disable-next-line no-console
-                                            console.log(error.message)
-                                        })
-                                })
-                                .catch((error) => {
-                                    this.setState({
-                                        payee: null,
-                                        newAccount: false,
-                                    })
-                                    this.compoundPaymentValidator.call(this)
-                                    if (error.response.data.detail) {
-                                        this.textInputFieldFederationAddress.setState({
-                                            error: error.response.data.detail,
-                                        })
-                                    } else {
-                                        this.textInputFieldFederationAddress.setState({
-                                            error: error.response.data.message,
-                                        })
-                                    }
-                                })
-                        } else {
-                            this.setState({
-                                payee: null,
-                            })
-                            this.compoundPaymentValidator.call(this)
-                            this.textInputFieldFederationAddress.setState({
-                                error: federationEndpointObj.error.message,
-                            })
-                        }
-                    })
-                    .catch((error) => {
-                        this.setState({
-                            payee: null,
-                            newAccount: false,
-                        })
-                        this.compoundPaymentValidator.call(this)
-                        this.textInputFieldFederationAddress.setState({
-                            error: error.message,
-                        })
-                        // eslint-disable-next-line no-console
-                        console.log(error)
-                    })
-            }
-
-            // valid public key
-            else {
-                this.queryStellarAccount(
-                    this.textInputFieldFederationAddress.state.value
-                )
-                    .catch((_) => {
-                        this.setState({
-                            payee:
-                                this.textInputFieldFederationAddress
-                                    .state.value,
-                            newAccount: true,
-                        })
-                        this.compoundPaymentValidator.call(this)
-                        throw new Error(
-                            "The destination account does not exist!"
-                        )
-                    })
-                    .then((_) => {
-                        this.setState({
-                            payee:
-                                this.textInputFieldFederationAddress
-                                    .state.value,
-                            newAccount : false,
-                        })
-                        this.compoundPaymentValidator.call(this)
-                    })
-                    .catch((error) => {
-                        // eslint-disable-next-line no-console
-                        console.log(error.message)
-                    })
-            }
-
-        } else {
-
-            this.setState({
-                newAccount: false,
-                payee: null,
-            })
-
-        }
-    }
-
-
-    // ...
-    // recipientIndicatorMessage = () => {
-    //     let message = <span className="fade-extreme">XXXXXXXXXXXX</span>
-
-    //     if (this.state.payee) {
-    //         message = <span className="green">Recipient Verified</span>
-    //     }
-
-    //     if (this.state.newAccount) {
-    //         message = <span className="red">New Account</span>
-    //     }
-
-    //     return message
-    // }
-
-
-    // // ...
-    // bottomIndicatorMessage = () => {
-    //     let message = (<div className="p-l nowrap fade-extreme">
-    //         <span className="bigger">
-    //             &#x1D54A;&#x1D543;
-    //             {" "}
-    //             {this.props.accountInfo.account.account.sequence}
-    //         </span>
-    //     </div>)
-
-    //     if (this.state.memoRequired && !this.state.memoValid) {
-    //         message = (<div className='fade p-l nowrap red'>
-    //             <i className="material-icons md-icon-small">assignment_late</i>
-    //             Payment recipient requires Memo entry!
-    //         </div>)
-    //     }
-
-    //     if (this.state.minimumReserveMessage !== "") {
-    //         message = (<div className='fade p-l nowrap red'>
-    //             <i className="material-icons md-icon-small">assignment_late</i>
-    //             {this.state.minimumReserveMessage}
-    //         </div>)
-    //     }
-
-    //     return message
-    // }
-
-
-    // ...
     transactionFeedbackMessage = () =>
         <Fragment>
             <div>
@@ -1127,7 +694,7 @@ class Balances extends Component {
                     disabled={true}
                     primaryText="Amount"
                     secondaryText={
-                        `${this.props.assetManager.convertToNative(this.state.amount)} XLM`
+                        `${this.props.assetManager.convertToNative(this.props.Balances.amount)} XLM`
                     }
                     leftIcon={
                         <i className="green material-icons md-icon-small">
@@ -1140,7 +707,7 @@ class Balances extends Component {
                     primaryText="Destination"
                     secondaryText={
                         handleException(
-                            () => pubKeyAbbr(this.state.payee),
+                            () => pubKeyAbbr(this.props.Balances.payee),
                             () => "Not Available"
                         )
                     }
@@ -1153,7 +720,7 @@ class Balances extends Component {
                 <ListItem
                     disabled={true}
                     primaryText="Memo"
-                    secondaryText={this.state.memo}
+                    secondaryText={this.props.Balances.memoText}
                     leftIcon={
                         <i className="green material-icons md-icon-small">
                             speaker_notes
@@ -1406,7 +973,7 @@ class Balances extends Component {
 
                 {
                     this.props.appUi.cards.payment &&
-                    this.props.appUi.cards.payment.opened && <PaymentCard />
+                    this.props.appUi.cards.payment.opened && <PaymentCard onSignTransaction={this.sendPayment} />
                 }
             </div>
         )
@@ -1419,6 +986,7 @@ export default withLoginManager(withAssetManager(connect(
     // map state to props.
     (state) => ({
         Account: state.Account,
+        Balances: state.Balances,
         accountInfo: state.accountInfo,
         auth: state.auth,
         modal: state.modal,
@@ -1447,5 +1015,6 @@ export default withLoginManager(withAssetManager(connect(
         changeModalState,
         changeSnackbarState,
         ActionConstants,
+        togglePaymentCard,
     }, dispatch)
 )(Balances)))

@@ -60,7 +60,7 @@ class AssetManager extends Component {
     // ...
     convertToNative = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
-        return this.props.state[this.props.Account.currency] ?
+        return this.props.state[this.props.Account.currency] && amount !== "" ?
             new BigNumber(amount).dividedBy(
                 this.props.state[this.props.Account.currency].rate
             ).toString() : "0.0000000"
@@ -70,7 +70,7 @@ class AssetManager extends Component {
     // ...
     convertToAsset = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
-        return this.props.state[this.props.Account.currency] ?
+        return this.props.state[this.props.Account.currency] && amount !== "" ?
             new BigNumber(amount).multipliedBy(
                 this.props.state[this.props.Account.currency].rate
             ).toFixed(2) : "0.00"

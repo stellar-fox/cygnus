@@ -22,8 +22,6 @@ class BalanceCard extends Component {
 
     constructor (props) {
         super(props)
-        this.nativeBalance = this.props.assetManager.getAccountNativeBalance(
-            this.props.strAccount)
         this.otherBalances = this.getOtherBalances(this.props.strAccount)
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
@@ -98,12 +96,14 @@ class BalanceCard extends Component {
                         </span>
                         <span className="p-l-small">
                             {this.props.assetManager.convertToAsset(
-                                this.nativeBalance
+                                this.props.assetManager.getAccountNativeBalance(
+                                    this.props.strAccount)
                             )}
                         </span>
                     </div>
                     <div className="fade-extreme micro">
-                        {this.nativeBalance} XLM
+                        {this.props.assetManager.getAccountNativeBalance(
+                            this.props.strAccount)} XLM
                     </div>
                 </div>
                 <div></div>

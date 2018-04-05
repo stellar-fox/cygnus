@@ -50,7 +50,6 @@ class PaymentCard extends Component {
             payDate: now,
             amount: "",
             amountText: "",
-            amountWasEntered: false,
             amountIsValid: false,
             payee: null,
             newAccount: false,
@@ -121,8 +120,7 @@ class PaymentCard extends Component {
                 error: "Invalid amount entered.",
             })
             this.props.setState({
-                amount: this.textInputFieldAmount.state.value,
-                amountWasEntered: true,
+                amount: "",
                 amountIsValid: false,
                 amountText: "",
             })
@@ -135,8 +133,7 @@ class PaymentCard extends Component {
                 error: "Amount needs to be greater than zero.",
             })
             this.props.setState({
-                amount: this.textInputFieldAmount.state.value,
-                amountWasEntered: true,
+                amount: "",
                 amountIsValid: false,
                 amountText: "",
             })
@@ -146,7 +143,6 @@ class PaymentCard extends Component {
 
         this.props.setState({
             amount: this.textInputFieldAmount.state.value,
-            amountWasEntered: true,
             amountIsValid: true,
         })
         this.textInputFieldAmount.setState({
@@ -181,6 +177,7 @@ class PaymentCard extends Component {
     // ...
     memoValidator = () => {
         this.props.setState({
+            memoText: this.textInputFieldMemo.state.value,
             memoValid: this.props.Balances.memoRequired &&
                 this.textInputFieldMemo.state.value === "" ? false : true,
         })
@@ -194,9 +191,11 @@ class PaymentCard extends Component {
                     this.props.setState({
                         indicatorMessage: "Recipient Verified",
                         indicatorStyle: "green",
+                        newAccount: false,
                     }) : this.props.setState({
                         indicatorMessage: "New Account",
                         indicatorStyle: "red",
+                        newAccount: true,
                     })
             })
             return status
@@ -394,7 +393,7 @@ class PaymentCard extends Component {
                 <div>
                     <span className="p-r">
                         <RaisedButton
-                            onClick={this.sendPayment}
+                            onClick={this.props.onSignTransaction}
                             backgroundColor="rgb(15,46,83)"
                             labelColor="rgb(244,176,4)"
                             label="SIGN"
@@ -434,6 +433,5 @@ export default withLoginManager(withAssetManager(connect(
     (dispatch) => bindActionCreators({
         setState: BalancesAction.setState,
         togglePaymentCard,
-
     }, dispatch)
 )(PaymentCard)))

@@ -9,7 +9,6 @@ const initState = ((now) => ({
     payDate: now,
     amount: "",
     amountText: "",
-    amountWasEntered: false,
     amountIsValid: false,
     payee: null,
     newAccount: false,

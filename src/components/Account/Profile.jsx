@@ -80,8 +80,8 @@ class Profile extends Component {
         })
         .then(({data: {data,},}) => {
             this.props.setState({
-                firstName: data.first_name,
-                lastName: data.last_name,
+                firstName: data.first_name || "",
+                lastName: data.last_name || "",
                 email: data.email,
                 gravatarPath: this.setGravatarPath(data.email),
             })
