@@ -1,6 +1,7 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
+import { config } from "../config"
 import {
     bip32Prefix,
     federationEndpoint,
@@ -59,6 +60,7 @@ export const federationAddressValid = (federationAddress) => !!(
 ).test(federationAddress)
 
 
+// ...
 export const errorMessageForInvalidPaymentAddress = (address) => {
     // Looks like something totally invalid for this field.
     if (!address.match(/\*/) && !address.match(/^G/)) {
@@ -79,6 +81,7 @@ export const errorMessageForInvalidPaymentAddress = (address) => {
 }
 
 
+// ...
 export const fedToPub = (input) => {
     if (input.match(/^G/) && !input.match(/\*/)) {
         const publicKeyValidityObj = pubKeyValid(input)
@@ -92,6 +95,7 @@ export const fedToPub = (input) => {
 }
 
 
+// ...
 export const fedToPubLookup = (input) => (
     async (fedAddress) => {
         try {
@@ -111,7 +115,7 @@ export const fedToPubLookup = (input) => (
 )(input)
 
 
-
+// ...
 export const endpointLookup = (address) => (
     async (domain) => {
         try {
@@ -130,7 +134,7 @@ export const endpointLookup = (address) => (
 
 
 
-// ...
+// ...DEPRECATED
 export const federationLookup = (federationAddress) => (
     (federationDomain) =>
         federationDomain ?
@@ -178,6 +182,20 @@ export const pubKeyValid = (pubKey) => {
     }
     return validity
 }
+
+
+// ...
+export const publicKeyExists = (publicKey) => (
+    async () => {
+        const server = new StellarSdk.Server(config.horizon)
+        try {
+            await server.loadAccount(publicKey)
+            return true
+        } catch (error) {
+            return false
+        }
+    }
+)(publicKey)
 
 
 // extracts Z from "XX'/YYY'/Z'"

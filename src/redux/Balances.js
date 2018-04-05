@@ -18,6 +18,8 @@ const initState = ((now) => ({
     memoText: "",
     minimumReserveMessage: "",
     sendIsDisabled: true,
+    indicatorMessage: "XXXXXXXXXXXX",
+    indicatorStyle: "fade-extreme",
 }))(new Date())
 
 

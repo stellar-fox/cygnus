@@ -28,6 +28,7 @@ import {
     fedToPub,
     errorMessageForInvalidPaymentAddress as ErrorPaymentAddress,
     StellarSdk,
+    publicKeyExists,
 } from "../../lib/utils"
 
 BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
@@ -41,17 +42,61 @@ class PaymentCard extends Component {
         setState: PropTypes.func.isRequired,
     }
 
+    componentDidMount = () => {
+        // reset payment variables
+        const now = new Date()
+        this.props.setState({
+            today: now,
+            payDate: now,
+            amount: "",
+            amountText: "",
+            amountWasEntered: false,
+            amountIsValid: false,
+            payee: null,
+            newAccount: false,
+            memoRequired: false,
+            memoIsValid: true,
+            memoText: "",
+            minimumReserveMessage: "",
+            sendIsDisabled: true,
+            indicatorMessage: "XXXXXXXXXXXX",
+            indicatorStyle: "fade-extreme",
+        })
+    }
+
+    // ...
+    checkIfPaymentIsValid = () =>
+        this.props.Balances.payee && this.props.Balances.amountIsValid ?
+            true : false
+
+
+    // ...
+    enableSignButtonWhenValid = () => {
+        this.props.setState({
+            sendIsDisabled: !this.checkIfPaymentIsValid(),
+        })
+    }
+
 
     // ...
     paymentAddressValidator = () => {
         let error = ErrorPaymentAddress(
             this.textInputFieldPaymentAddress.state.value
         )
-        error ?
-            this.textInputFieldPaymentAddress.setState({ error, }) :
-            this.textInputFieldPaymentAddress.setState({ error: "", })
-
-        !error ? this.setRecipient() : this.props.setState({ payee: null, })
+        if (error) {
+            this.textInputFieldPaymentAddress.setState({
+                error,
+            })
+            this.props.setState({
+                indicatorMessage: "XXXXXXXXXXXX",
+                indicatorStyle: "fade-extreme",
+                payee: null,
+            })
+            this.enableSignButtonWhenValid()
+            return false
+        }
+        this.textInputFieldPaymentAddress.setState({ error: "", })
+        this.setRecipient()
     }
 
 
@@ -59,12 +104,13 @@ class PaymentCard extends Component {
     setRecipient = () => {
         fedToPub(this.textInputFieldPaymentAddress.state.value)
             .then(r => {
-                r.ok ? this.props.setState({
+                r.ok && this.props.setState({
                     payee: r.publicKey,
-                }) : this.props.setState({
-                    payee: null,
                 })
+                this.enableSignButtonWhenValid()
+                return this.updateIndicatorMessage(r.publicKey)
             })
+
     }
 
 
@@ -78,9 +124,26 @@ class PaymentCard extends Component {
                 amount: this.textInputFieldAmount.state.value,
                 amountWasEntered: true,
                 amountIsValid: false,
+                amountText: "",
             })
+            this.enableSignButtonWhenValid()
             return false
         }
+
+        if (new BigNumber(this.textInputFieldAmount.state.value).isEqualTo(0)) {
+            this.textInputFieldAmount.setState({
+                error: "Amount needs to be greater than zero.",
+            })
+            this.props.setState({
+                amount: this.textInputFieldAmount.state.value,
+                amountWasEntered: true,
+                amountIsValid: false,
+                amountText: "",
+            })
+            this.enableSignButtonWhenValid()
+            return false
+        }
+
         this.props.setState({
             amount: this.textInputFieldAmount.state.value,
             amountWasEntered: true,
@@ -89,36 +152,28 @@ class PaymentCard extends Component {
         this.textInputFieldAmount.setState({
             error: "",
         })
-        this.amountToText()
+
+        this.props.setState({
+            amountText: this.amountToText(
+                this.textInputFieldAmount.state.value),
+        })
+        this.enableSignButtonWhenValid()
     }
 
 
     // ...
-    amountToText = () => {
-        let amount = this.textInputFieldAmount.state.value.match(
+    amountToText = (amount) => {
+        const grouped = amount.match(
             /^(\d+)([.](\d{1,2}))?$/
         )
-        if (amount) {
-            // fractions case
-            if (amount[3]) {
-                this.props.setState({
-                    amount: `${amount[1]}.${amount[3]}`,
-                    amountText: `${numberToText.convertToText(
-                        amount[1])} and ${amount[3]}/100`,
-                })
-            }
-            // whole amount case
-            else {
-                this.props.setState({
-                    amount: `${amount[1]}`,
-                    amountText: numberToText.convertToText(amount[1]),
-                })
-            }
-            // common properties for valid amount
-            this.props.setState({
-                amountWasEntered: true,
-                amountIsValid: true,
-            })
+        // fractions case
+        if (grouped[3]) {
+            return `${numberToText.convertToText(grouped[1])} and ${
+                grouped[3]}/100`
+        }
+        // whole amount case
+        else if (grouped[1] && !grouped[2]) {
+            return numberToText.convertToText(grouped[1])
         }
     }
 
@@ -131,21 +186,22 @@ class PaymentCard extends Component {
         })
     }
 
-
     // ...
-    recipientIndicatorMessage = () => {
-        let message = <span className="fade-extreme">XXXXXXXXXXXX</span>
-
-        if (this.props.Balances.payee) {
-            message = <span className="green">Recipient Verified</span>
+    updateIndicatorMessage = async (publicKey) => (
+        (status) => {
+            status.then(s => {
+                s ?
+                    this.props.setState({
+                        indicatorMessage: "Recipient Verified",
+                        indicatorStyle: "green",
+                    }) : this.props.setState({
+                        indicatorMessage: "New Account",
+                        indicatorStyle: "red",
+                    })
+            })
+            return status
         }
-
-        if (this.props.Balances.newAccount) {
-            message = <span className="red">New Account</span>
-        }
-
-        return message
-    }
+    )(publicKeyExists(publicKey))
 
 
     // ...
@@ -282,7 +338,10 @@ class PaymentCard extends Component {
                         (this.props.Balances.amount && this.props.Balances.amountText) :
                         <span className="transparent">NOTHING</span>}
                 </div>
-                <div>{this.props.assetManager.getAssetDenomination(this.props.Account.currency)}</div>
+                <div>
+                    {this.props.assetManager.getAssetDenomination(
+                        this.props.Account.currency)}
+                </div>
             </div>
             <div className="p-t"></div>
             <div className="f-e">
@@ -291,7 +350,9 @@ class PaymentCard extends Component {
                 </div>
                 <div className="micro nowrap">
                     <span>Security Features</span><br />
-                    {this.recipientIndicatorMessage.call(this)}
+                    <span className={this.props.Balances.indicatorStyle}>
+                        {this.props.Balances.indicatorMessage}
+                    </span>
 
                 </div>
 
