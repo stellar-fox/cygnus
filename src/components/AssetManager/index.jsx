@@ -14,64 +14,59 @@ import { config } from "../../config"
 
 
 
-// ...
+// react's AssetManager context
 const AssetManagerContext = React.createContext({})
 
 
 
 
 // <AssetManager> component
-class AssetManager extends Component {
-
-    // ...
-    rateStale = (currency) => (
-        !this.props.state[currency]  ||
-        this.props.state[currency].lastFetch +
-            defaultCurrencyRateUpdateTime < Date.now()
-    )
-
-
-    // ...
-    updateExchangeRate = (currency) => {
-        if (this.rateStale(currency)) {
-            Axios.get(`${config.api}/ticker/latest/${currency}`)
-                .then((response) => {
-                    this.props.setState({
-                        [currency]: {
-                            rate: response.data.data[`price_${currency}`],
-                            lastFetch: Date.now(),
-                        },
-                    })
-                })
-                .catch(function (error) {
-                    // eslint-disable-next-line no-console
-                    console.log(error.message)
-                })
-        }
-    }
-
-
-    // ...
-    render = () =>
-        <AssetManagerContext.Provider value={this}>
-            { this.props.children }
-        </AssetManagerContext.Provider>
-}
-
-
-// ...
 export default connect(
     // map state to props.
-    (state) => ({
-        state: state.Assets,
-    }),
-
+    (state) => ({ state: state.Assets, }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AssetManagerAction.setState,
         setExchangeRate,
     }, dispatch)
-)(AssetManager)
+)(
+    class extends Component {
+
+        // ...
+        rateStale = (currency) => (
+            !this.props.state[currency]  ||
+            this.props.state[currency].lastFetch +
+                defaultCurrencyRateUpdateTime < Date.now()
+        )
+
+
+        // ...
+        updateExchangeRate = (currency) => {
+            if (this.rateStale(currency)) {
+                Axios.get(`${config.api}/ticker/latest/${currency}`)
+                    .then((response) => {
+                        this.props.setState({
+                            [currency]: {
+                                rate: response.data.data[`price_${currency}`],
+                                lastFetch: Date.now(),
+                            },
+                        })
+                    })
+                    .catch(function (error) {
+                        // eslint-disable-next-line no-console
+                        console.log(error.message)
+                    })
+            }
+        }
+
+
+        // ...
+        render = () =>
+            <AssetManagerContext.Provider value={this}>
+                { this.props.children }
+            </AssetManagerContext.Provider>
+    }
+)
 
 
 
@@ -79,7 +74,7 @@ export default connect(
 // <withAssetManager(...)> HOC
 export const withAssetManager = (WrappedComponent) =>
     hoistStatics(
-        class WithAssetManager extends Component {
+        class extends Component {
 
             // ...
             static propTypes = {
@@ -98,16 +93,16 @@ export const withAssetManager = (WrappedComponent) =>
             // ...
             render = () => (
                 ({ wrappedComponentRef, ...restOfTheProps }) =>
-                    <AssetManagerContext.Consumer>
-                        {
-                            (assetManager) =>
-                                React.createElement(WrappedComponent, {
-                                    ...restOfTheProps,
-                                    ref: wrappedComponentRef,
-                                    assetManager,
-                                })
-                        }
-                    </AssetManagerContext.Consumer>
+                    React.createElement(
+                        AssetManagerContext.Consumer,
+                        null,
+                        (assetManager) =>
+                            React.createElement(WrappedComponent, {
+                                ...restOfTheProps,
+                                ref: wrappedComponentRef,
+                                assetManager,
+                            })
+                    )
             )(this.props)
 
         },
