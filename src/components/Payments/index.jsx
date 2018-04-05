@@ -381,15 +381,13 @@ class Payments extends Component {
 
 
     // ...
-    handleTabSelect = (value) => {
-        this.props.setState({ tabSelected: value, })
-        this.props.staticRouter.pushByView(value)
+    getTransactions = () => {
         if (
-            value === "2"  &&
-            this.props.state.txCursorLeft === null  &&
-            this.props.state.txCursorRight === null
+            (this.props.state.txCursorLeft === null  &&
+            this.props.state.txCursorRight === null)  ||
+            !this.props.accountInfo.transactions
         ) {
-            this.stellarServer
+            return this.stellarServer
                 .transactions()
                 .forAccount(this.props.appAuth.publicKey)
                 .order("desc")
@@ -403,6 +401,17 @@ class Payments extends Component {
                     // eslint-disable-next-line no-console
                     console.log(err)
                 })
+        }
+        return Promise.resolve()
+    }
+
+
+    // ...
+    handleTabSelect = (value) => {
+        this.props.setState({ tabSelected: value, })
+        this.props.staticRouter.pushByView(value)
+        if (value === "Transactions") {
+            this.getTransactions()
         }
     }
 
@@ -795,6 +804,7 @@ class Payments extends Component {
                                 updateTransactionsCursors={
                                     this.updateTransactionsCursors
                                 }
+                                getTransactions={this.getTransactions}
                             />
 
                         </div>

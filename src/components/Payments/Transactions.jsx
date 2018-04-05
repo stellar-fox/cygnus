@@ -123,6 +123,10 @@ class Transactions extends Component {
 
 
     // ...
+    componentDidMount = () => this.props.getTransactions()
+
+
+    // ...
     render = () =>
         <div className="flex-row">
             <div>
