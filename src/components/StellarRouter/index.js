@@ -82,6 +82,7 @@ export const StaticRouter = connect(
             addStaticPaths: PropTypes.func.isRequired,
             currentPath: PropTypes.string.isRequired,
             currentView: PropTypes.string.isRequired,
+            push: PropTypes.func.isRequired,
         }
 
 
@@ -109,20 +110,24 @@ export const StaticRouter = connect(
                 appBasePath
 
 
+        // convenience method
+        pushByView = (viewName) => this.props.push(this.getPath(viewName))
+
+
         // takes static path and returns associated view name
         static getView = (path, map) => path in map ? map[path] : ""
 
 
         render = () => (
             (
-                { addPaths, getPath, },
+                { addPaths, getPath, pushByView, },
                 { children, currentPath, currentView, push, }
             ) =>
                 React.createElement(
                     StaticRouterContext.Provider, {
                         value: {
-                            addPaths, getPath, push,
-                            currentPath, currentView,
+                            addPaths, getPath, push, currentPath,
+                            currentView, pushByView,
                         },
                     }, children
                 )

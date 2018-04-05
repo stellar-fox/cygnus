@@ -15,13 +15,13 @@ import "./BankDrawer.css"
 // <NavLinkTemplate> component
 // with bound 'currentPath', 'paths' state props and 'push' dispatcher
 const NavLinkTemplate = withStellarRouter(
-    ({ staticRouter: { currentPath, push, getPath, }, to, icon, }) =>
+    ({ staticRouter: { currentPath, pushByView, getPath, }, to, icon, }) =>
         <NavLink
             className="menu-item"
             onClick={(e) => {
                 e.preventDefault()
                 if (!currentPath.startsWith(getPath(to))) {
-                    push(getPath(to))
+                    pushByView(to)
                 }
             }}
             exact
