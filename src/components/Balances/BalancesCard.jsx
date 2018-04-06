@@ -14,6 +14,7 @@ import {
 } from "../../lib/utils"
 import Button from "../../lib/common/Button"
 import {
+    changeModalState,
     togglePaymentCard,
 } from "../../redux/actions"
 
@@ -35,6 +36,11 @@ class BalanceCard extends Component {
             },
         })
     }
+
+    // ...
+    showNotImplementedModal = () => this.props.changeModalState({
+        notImplemented: { showing: true, },
+    })
 
 
     // ...
@@ -116,13 +122,13 @@ class BalanceCard extends Component {
                 backgroundColor="rgb(15,46,83)"
                 labelColor="#228B22"
                 label="Fund"
-                onClick={this.props.notImplemented}
+                onClick={this.showNotImplementedModal}
             />
             <Button
                 backgroundColor="rgb(15,46,83)"
                 labelColor="rgb(244,176,4)"
                 label="Request"
-                onClick={this.props.notImplemented}
+                onClick={this.showNotImplementedModal}
             />
             {this.props.loginManager.isPayEnabled() ||
                 this.props.loginManager.isAuthenticated() ?
@@ -162,6 +168,7 @@ export default withLoginManager(withAssetManager(connect(
 
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        changeModalState,
         togglePaymentCard,
     }, dispatch)
 )(BalanceCard)))

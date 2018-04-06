@@ -47,6 +47,7 @@ import RegisterCard from "./RegisterCard"
 import BalancesCard from "./BalancesCard"
 import NoAccountCard from "./NoAccountCard"
 import PaymentCard from "./PaymentCard"
+import AlertModal from "../Layout/AlertModal"
 import "./index.css"
 
 
@@ -305,18 +306,6 @@ class Balances extends Component {
 
 
     // ...
-    handleOpen = () => this.props.changeModalState({
-        notImplemented: {showing: true,},
-    })
-
-
-    // ...
-    handleClose = () => this.props.changeModalState({
-        notImplemented: { showing: false, },
-    })
-
-
-    // ...
     closeSendingCompleteModal = () =>
         this.setState({
             sendingCompleteModalShown: false,
@@ -334,14 +323,6 @@ class Balances extends Component {
     hideSignupModal = () =>
         this.props.changeModalState({
             signup: {
-                showing: false,
-            },
-        })
-
-    // ...
-    hideNotImplementedModal = () =>
-        this.props.changeModalState({
-            notImplemented: {
                 showing: false,
             },
         })
@@ -693,6 +674,7 @@ class Balances extends Component {
         })
     }
 
+
     // ...
     render = () => {
 
@@ -725,22 +707,10 @@ class Balances extends Component {
                         onRequestClose={this.handlePaymentSnackbarClose}
                     />
 
-
-                    <Modal open={this.props.appUi.modals.notImplemented ?
-                        this.props.appUi.modals.notImplemented.showing : false
-                    } title="Not Yet Implemented" actions={[
-                        <Button
-                            primary={true}
-                            label="OK"
-                            keyboardFocused={true}
-                            onClick={this.handleClose}
-                        />,
-                    ]}>
-                        We are hard at work to bring you this feature very
-                        soon. Please check back in a while as our code
-                        is being frequently deployed. (M)
-                    </Modal>
-
+                    <AlertModal modalName="notImplemented" open={
+                        this.props.appUi.modals.notImplemented ?
+                            this.props.appUi.modals.notImplemented.showing : false
+                    } />
 
                     <Modal
                         open={this.props.appUi.modals.signup ?
