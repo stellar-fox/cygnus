@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
+import { notImplementedText } from "../StellarFox/env"
 import {
     Card,
     CardActions,
@@ -39,7 +40,11 @@ class BalanceCard extends Component {
 
     // ...
     showNotImplementedModal = () => this.props.changeModalState({
-        notImplemented: { showing: true, },
+        alertWithDismiss: {
+            showing: true,
+            title: "Not Yet Implemented",
+            content: notImplementedText,
+        },
     })
 
 
@@ -92,7 +97,6 @@ class BalanceCard extends Component {
             showExpandableButton={true}
         />
 
-
         <CardText>
             <div className="flex-row">
                 <div>
@@ -115,7 +119,6 @@ class BalanceCard extends Component {
                 <div></div>
             </div>
         </CardText>
-
 
         <CardActions>
             <Button
@@ -140,6 +143,7 @@ class BalanceCard extends Component {
                 /> : null
             }
         </CardActions>
+
         <CardText expandable={true}>
             <div>
                 <div>Other Assets</div>

@@ -109,3 +109,8 @@ export const minimumAccountReserve = 1
 // ...
 export const minimumReserveMessage =
     `Minimum reserve of ${minimumAccountReserve} required.`
+
+
+// ...
+export const notImplementedText =
+    "We are hard at work to bring you this feature very soon. Please check back in a while as our codeis being frequently deployed."

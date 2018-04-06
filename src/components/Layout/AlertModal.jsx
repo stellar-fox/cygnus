@@ -1,7 +1,6 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import PropTypes from "prop-types"
 import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"
 
@@ -13,10 +12,11 @@ import {
 
 
 // ...
-const NotImplementedModal = ({open, onDismiss,}) =>
+const AlertWithDismiss = ({open, onDismiss, title, content,}) =>
     <Modal
         open={open}
-        title="Not Yet Implemented" actions={[
+        title={title}
+        actions={[
             <Button
                 primary={true}
                 label="Dismiss"
@@ -24,11 +24,8 @@ const NotImplementedModal = ({open, onDismiss,}) =>
                 onClick={onDismiss}
             />,
         ]}>
-            We are hard at work to bring you this feature very
-            soon. Please check back in a while as our code
-            is being frequently deployed.
+        {content}
     </Modal>
-
 
 
 
@@ -45,29 +42,24 @@ export default connect(
     }, dispatch)
 )(
     class extends Component {
-        // ...
-        static propTypes = {
-            open: PropTypes.bool.isRequired,
-            modalName: PropTypes.string.isRequired,
-        }
 
         // ...
-        onDismiss = ({ modalName, }) => this.props.changeModalState({
-            [modalName]: { showing: false, },
+        onDismiss = () => this.props.changeModalState({
+            alertWithDismiss: { showing: false, content: "", },
         })
 
         // ...
         render = () => (
-            ({ open, }) =>
-                <Fragment>
-                    {this.props.modalName === "notImplemented" ?
-                        <NotImplementedModal
-                            open={open}
-                            onDismiss={
-                                this.onDismiss.bind(this, "notImplemented")
-                            }
-                        /> : null}
-                </Fragment>
-        )(this.props)
+            ({ modals, }) =>
+                <AlertWithDismiss
+                    open={modals.alertWithDismiss ?
+                        modals.alertWithDismiss.showing : false}
+                    onDismiss={this.onDismiss}
+                    title={modals.alertWithDismiss ?
+                        modals.alertWithDismiss.title : false}
+                    content={modals.alertWithDismiss ?
+                        modals.alertWithDismiss.content : false}
+                />
+        )(this.props.appUi)
     }
 )

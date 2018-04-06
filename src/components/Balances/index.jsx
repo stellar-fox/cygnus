@@ -513,12 +513,15 @@ class Balances extends Component {
 
 
     // ...
-    showErrorModal = (message) =>
-        this.setState({
-            errorModalShown: true,
-            errorModalMessage: message,
+    showErrorModal = (message) => {
+        this.props.changeModalState({
+            alertWithDismiss: {
+                showing: true,
+                title: "Error",
+                content: message,
+            },
         })
-
+    }
 
     // ...
     closeErrorModal = () =>
@@ -707,10 +710,7 @@ class Balances extends Component {
                         onRequestClose={this.handlePaymentSnackbarClose}
                     />
 
-                    <AlertModal modalName="notImplemented" open={
-                        this.props.appUi.modals.notImplemented ?
-                            this.props.appUi.modals.notImplemented.showing : false
-                    } />
+                    <AlertModal />
 
                     <Modal
                         open={this.props.appUi.modals.signup ?
@@ -733,9 +733,6 @@ class Balances extends Component {
                             }}
                         />
                     </Modal>
-
-
-
 
                     <Dialog
                         title={
