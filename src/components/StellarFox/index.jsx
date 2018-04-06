@@ -22,11 +22,8 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import LoginManager from "../LoginManager"
 import AssetManager from "../AssetManager"
 import Layout from "../Layout"
-import {
-    appBasePath,
-    ssSaveThrottlingTime,
-} from "../StellarFox/env"
 import stellarTheme from "./theme"
+import * as env from "./env"
 
 import "./index.css"
 
@@ -35,7 +32,7 @@ import "./index.css"
 
 // browser history
 export const appHistory = createHistory({
-    basename: appBasePath,
+    basename: env.appBasePath,
 })
 
 
@@ -59,7 +56,7 @@ export const appStore = (() => {
     s.subscribe(
         throttle(
             () => saveState(s.getState()),
-            ssSaveThrottlingTime
+            env.ssSaveThrottlingTime
         )
     )
 
@@ -82,3 +79,9 @@ export default () =>
             </MuiThemeProvider>
         </Router>
     </Provider>
+
+
+
+
+// ...
+export { env }

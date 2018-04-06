@@ -2,10 +2,7 @@ import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
 import { config } from "../config"
-import {
-    bip32Prefix,
-    federationEndpoint,
-} from "../components/StellarFox/env"
+import { env } from "../components/StellarFox"
 
 
 
@@ -147,7 +144,7 @@ export const endpointLookup = (address) => (
     async (domain) => {
         try {
             if (domain) {
-                let endpoint = await axios.get(federationEndpoint(domain[0]))
+                let endpoint = await axios.get(env.federationEndpoint(domain[0]))
                 return {
                     ok: true,
                     endpoint: toml.parse(endpoint.data).FEDERATION_SERVER,
@@ -167,7 +164,7 @@ export const federationLookup = (federationAddress) => (
     (federationDomain) =>
         federationDomain ?
             axios
-                .get(federationEndpoint(federationDomain[0]))
+                .get(env.federationEndpoint(federationDomain[0]))
                 .then((response) => ({
                     ok: true,
                     endpoint: toml.parse(response.data).FEDERATION_SERVER,
@@ -242,7 +239,7 @@ export const extractPathIndex = (path) => handleException(
 
 
 // inserts path index substituting Z in "XX'/YYY'/Z'"
-export const insertPathIndex = (index) => `${bip32Prefix}${index}'`
+export const insertPathIndex = (index) => `${env.bip32Prefix}${index}'`
 
 
 

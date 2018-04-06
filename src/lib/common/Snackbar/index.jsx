@@ -1,7 +1,6 @@
 import React from "react"
-
+import { env } from "../../../components/StellarFox"
 import Snackbar from "material-ui/Snackbar"
-import { snackbarAutoHideDuration } from "../../../components/StellarFox/env"
 
 
 
@@ -28,6 +27,6 @@ export default ({
         contentStyle={snackbarStyles.content}
         open={open}
         message={message}
-        autoHideDuration={snackbarAutoHideDuration}
+        autoHideDuration={env.snackbarAutoHideDuration}
         onRequestClose={onRequestClose}
     />

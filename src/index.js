@@ -1,8 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import StellarFox, { env } from "./components/StellarFox"
 import { unregister } from "./lib/registerServiceWorker"
-import { appRootDomId } from "./components/StellarFox/env"
-import StellarFox from "./components/StellarFox"
 
 
 
@@ -10,7 +9,7 @@ import StellarFox from "./components/StellarFox"
 // render application's root into the DOM
 ReactDOM.render(
     React.createElement(StellarFox),
-    document.getElementById(appRootDomId)
+    document.getElementById(env.appRootDomId)
 )
 
 

@@ -12,7 +12,7 @@ import {
 import { action as StellarRouterAction } from "../../redux/StellarRouter"
 import resolvePathname from "resolve-pathname"
 import { swap } from "../../lib/utils"
-import { appBasePath } from "../StellarFox/env"
+import { env } from "../StellarFox"
 
 
 
@@ -107,7 +107,7 @@ export const StaticRouter = connect(
         getPath = (viewName) =>
             viewName in this._staticPaths ?
                 this._staticPaths[viewName] :
-                appBasePath
+                env.appBasePath
 
 
         // convenience method

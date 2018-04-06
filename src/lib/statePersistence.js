@@ -2,7 +2,7 @@ import {
     handleException,
     nullToUndefined,
 } from "./utils"
-import { ssAppStateKey } from "../components/StellarFox/env"
+import { env } from "../components/StellarFox"
 
 
 
@@ -10,7 +10,7 @@ import { ssAppStateKey } from "../components/StellarFox/env"
 // Persists current state of the application (see src/index.js)
 export const saveState = (state) =>
     handleException(
-        () => sessionStorage.setItem(ssAppStateKey, JSON.stringify(state)),
+        () => sessionStorage.setItem(env.ssAppStateKey, JSON.stringify(state)),
         // eslint-disable-next-line no-console
         console.log
     )
@@ -23,7 +23,7 @@ export const saveState = (state) =>
 export const loadState = () =>
     handleException(
         () => nullToUndefined(
-            JSON.parse(sessionStorage.getItem(ssAppStateKey))
+            JSON.parse(sessionStorage.getItem(env.ssAppStateKey))
         ),
         // eslint-disable-next-line no-console
         (ex) => nullToUndefined(console.log(ex))
