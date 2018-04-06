@@ -279,7 +279,13 @@ export const ConditionalRender = (props) => (
 
 
 // React.Fragment can only receive 'key' and 'children' as props, so...
-export const RenderGroup = (props) => props.children
+export const RenderGroup = ({ children, }) => children
+
+
+
+
+// ...
+export const Null = () => null
 
 
 
