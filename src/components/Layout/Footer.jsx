@@ -15,22 +15,22 @@ export default () =>
     <div className="footer">
         <div className="flex-row-space-between">
             <div>
-                <emoji.Lightning /><he.Nbsp /><he.Nbsp />
+                <he.Nbsp /><he.Nbsp />
                 <he.Copy /><he.Nbsp /><he.Nbsp />
                 <a target="_blank"
                     href={env.appLandingPageLink}>
                     <span className="stellar-style">{env.appName}</span>
                 </a>
                 <he.Nbsp /><he.Nbsp />
-                <emoji.Stars /><emoji.Rocket /><emoji.Fox /><emoji.Stars />
+                <emoji.Fox />
                 <he.Nbsp /><he.Nbsp />
-                {env.appCopyDates}<he.Nbsp /><he.Nbsp /><emoji.Lightning />.
+                {env.appCopyDates}.
             </div>
             <div>
                 ver.<he.Nbsp />
                 <span className="stellar-style">{env.appVersion}</span>
                 <he.Nbsp /><he.Nbsp />
-                <emoji.Fire />
+                <emoji.Rocket />
                 <he.Nbsp /><he.Nbsp />
             </div>
         </div>
