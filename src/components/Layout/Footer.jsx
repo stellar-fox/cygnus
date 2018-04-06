@@ -6,8 +6,8 @@ import {
     appLandingPageLink,
 } from "../StellarFox/env"
 import {
+    emoji,
     htmlEntities as he,
-    emoji
 } from "../../lib/utils"
 
 import "./Footer.css"
@@ -20,15 +20,16 @@ export default () =>
     <div className="footer">
         <div className="flex-row-space-between">
             <div>
+                <emoji.Lightning /><he.Nbsp /><he.Nbsp />
                 <he.Copy /><he.Nbsp /><he.Nbsp />
                 <a target="_blank"
                     href={appLandingPageLink}>
                     <span className="stellar-style">{appName}</span>
                 </a>
                 <he.Nbsp /><he.Nbsp />
-                <emoji.Rocket />
+                <emoji.Stars /><emoji.Rocket /><emoji.Fox /><emoji.Stars />
                 <he.Nbsp /><he.Nbsp />
-                {appCopyDates}.
+                {appCopyDates}<he.Nbsp /><he.Nbsp /><emoji.Lightning />.
             </div>
             <div>
                 ver.<he.Nbsp />

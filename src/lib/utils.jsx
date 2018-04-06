@@ -379,6 +379,10 @@ export const emojiString = {
     "rocket": "🚀",
     "fire": "🔥",
     "love": "❤️",
+    "fox": "🦊",
+    "star": "⭐️",
+    "stars": "✨",
+    "lightning": "⚡️",
 }
 
 
