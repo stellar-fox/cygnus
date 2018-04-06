@@ -279,7 +279,13 @@ export const ConditionalRender = (props) => (
 
 
 // React.Fragment can only receive 'key' and 'children' as props, so...
-export const RenderGroup = (props) => props.children
+export const RenderGroup = ({ children, }) => children
+
+
+
+
+// ...
+export const Null = () => null
 
 
 
@@ -360,27 +366,73 @@ export const currencyGlyph = (currency) => (
 
 
 
-// ...
+// makes first letter capital (e.g. "hello" -> "Hello")
 export const capitalize = (str) =>
     str.substring(0, 1).toUpperCase() + str.substring(1)
 
 
 
 
-// ...
-export const emoji = {
+// emojis!
+export const emojiString = {
     "pencil": "✎",
+    "rocket": "🚀",
+    "fire": "🔥",
+    "love": "❤️",
 }
 
 
 
 
-// ...
+// emoji components (built on the 'emojiString' object base)
+export const emoji = Object.keys(emojiString).reduce(
+    (acc, ek) => ({
+        ...acc,
+        [capitalize(ek)]: () =>
+            React.createElement(Fragment, null, emojiString[ek]),
+    }), {}
+)
+
+
+
+
+// commonly-used HTML entities
 export const htmlEntities = {
-    Minus: () => <Fragment>&#x02212;</Fragment>,
-    Plus: () => <Fragment>&#x0002B;</Fragment>,
+
+    // https://www.fileformat.info/info/unicode/char/2212/index.htm
+    //
+    // Minus: () => React.createElement(
+    //     Fragment, null, String.fromCharCode(0x2212)
+    // ),
+    Minus: () => <Fragment>&#x2212;</Fragment>,
+
+    // https://www.fileformat.info/info/unicode/char/2b/index.htm
+    //
+    // Plus: () => React.createElement(
+    //     Fragment, null, String.fromCharCode(0x2B)
+    // ),
+    Plus: () => <Fragment>&#x2B;</Fragment>,
+
+    // https://www.fileformat.info/info/unicode/char/20/index.htm
+    //
+    // Space: () => React.createElement(
+    //     Fragment, null, String.fromCharCode(0x20)
+    // ),
     Space: () => <Fragment>{" "}</Fragment>,
+
+    // https://www.fileformat.info/info/unicode/char/a0/index.htm
+    //
+    // Nbsp: () => React.createElement(
+    //     Fragment, null, String.fromCharCode(0xA0)
+    // ),
     Nbsp: () => <Fragment>&nbsp;</Fragment>,
+
+    // https://www.fileformat.info/info/unicode/char/a9/index.htm
+    //
+    // Copy: () => React.createElement(
+    //     Fragment, null, String.fromCharCode(0xA9)
+    // ),
+    Copy: () => <Fragment>&copy;</Fragment>,
 }
 
 
