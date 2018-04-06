@@ -680,7 +680,7 @@ class Payments extends Component {
                         <div className="flex-row">
                             <div>
                                 <i className="material-icons">{icon}</i>
-                                <span>Signer Created {emoji.pencil}</span>
+                                <span>Signer Created <emoji.Pencil /></span>
                                 {" "}
                                 <span className="account-direction">
                                     {effect.public_key ===
