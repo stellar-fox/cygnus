@@ -818,7 +818,8 @@ class Payments extends Component {
 
 
 // ...
-export default withStellarRouter(withLoginManager(withAssetManager(connect(
+export default withLoginManager(withAssetManager(withStellarRouter(connect(
+// export default connect(
     // map state to props.
     (state) => ({
         state: state.Payments,
@@ -845,3 +846,4 @@ export default withStellarRouter(withLoginManager(withAssetManager(connect(
         updateLoadingMessage,
     }, dispatch)
 )(Payments))))
+// )(Payments)
