@@ -183,8 +183,9 @@ class PanelExplorer extends Component {
                     </div>
                     <div className="p-t micro-font fade-strong">
                         “Stellar” is a trademark of the<he.Nbsp />
-                        <a href={stellarFoundationLink}>Stellar Development
-                        Foundation.</a>
+                        <a href={stellarFoundationLink} target="_blank">
+                            Stellar Development Foundation
+                        </a>.
                     </div>
                 </div>
             }
