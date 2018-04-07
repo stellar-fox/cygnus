@@ -123,14 +123,12 @@ export const StaticRouter = connect(
                 { addPaths, getPath, pushByView, },
                 { children, currentPath, currentView, push, }
             ) =>
-                React.createElement(
-                    StaticRouterContext.Provider, {
-                        value: {
-                            addPaths, getPath, push, currentPath,
-                            currentView, pushByView,
-                        },
-                    }, children
-                )
+                React.createElement(StaticRouterContext.Provider, {
+                    value: {
+                        addPaths, getPath, push, currentPath,
+                        currentView, pushByView,
+                    },
+                }, children)
         )(this, this.props)
 
     }
@@ -142,14 +140,8 @@ export const StaticRouter = connect(
 // <StellarRouter> component
 export const StellarRouter =
     ({ children, ...restOfTheProps }) =>
-        React.createElement(
-            Router,
-            restOfTheProps,
-            React.createElement(
-                StaticRouter,
-                null,
-                children
-            )
+        React.createElement(Router, restOfTheProps,
+            React.createElement(StaticRouter, null, children)
         )
 
 
@@ -171,13 +163,10 @@ export const withStellarRouter = (WrappedComponent) => {
             // ...
             render = () => (
                 ({ forwardedRef, ...restOfTheProps }) =>
-                    React.createElement(
-                        Route,
-                        null,
+                    React.createElement(Route, null,
                         (routeComponentProps) =>
                             React.createElement(
-                                StaticRouterContext.Consumer,
-                                null,
+                                StaticRouterContext.Consumer, null,
                                 (staticRouter) =>
                                     React.createElement(WrappedComponent, {
                                         ...restOfTheProps,
@@ -194,8 +183,7 @@ export const withStellarRouter = (WrappedComponent) => {
 
     // ...
     let forwardRef = (props, ref) =>
-        React.createElement(
-            WithStellarRouter,
+        React.createElement(WithStellarRouter,
             { ...props, forwardedRef: ref, }
         )
 

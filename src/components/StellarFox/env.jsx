@@ -86,6 +86,12 @@ export const contentPaneSeparation = 20
 
 
 // ...
+export const stellarFoundationLink = "https://www.stellar.org/"
+
+
+
+
+// ...
 export const securityGuideLink =
     "https://github.com/stellar-fox/cygnus/wiki/Security-Guide"
 
