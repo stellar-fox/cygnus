@@ -47,7 +47,6 @@ import RegisterCard from "./RegisterCard"
 import BalancesCard from "./BalancesCard"
 import NoAccountCard from "./NoAccountCard"
 import PaymentCard from "./PaymentCard"
-import AlertModal from "../Layout/AlertModal"
 import "./index.css"
 
 
@@ -709,8 +708,6 @@ class Balances extends Component {
                             this.state.sbPaymentAssetCode}`}
                         onRequestClose={this.handlePaymentSnackbarClose}
                     />
-
-                    <AlertModal />
 
                     <Modal
                         open={this.props.appUi.modals.signup ?

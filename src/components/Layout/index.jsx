@@ -14,6 +14,7 @@ import {
 
 import { ActionConstants } from "../../redux/actions"
 
+import AlertModal from "./AlertModal"
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import Bank from "../Bank"
@@ -57,6 +58,7 @@ export default withStellarRouter(connect(
         render = () => (
             ({ loggedIn, }, getPath) =>
                 <Fragment>
+                    <AlertModal />
                     <LoadingModal />
                     <Switch>
                         <Route exact path={getPath("Welcome")}>
