@@ -6,6 +6,8 @@ StellarSdk.Network.useTestNetwork()
 const server = new StellarSdk.Server(config.horizon)
 
 
+
+
 // ...
 export const fetchAccount = async (publicKey) => {
     try {
@@ -14,6 +16,8 @@ export const fetchAccount = async (publicKey) => {
         return error
     }
 }
+
+
 
 
 // ...
@@ -29,6 +33,9 @@ export const createAccountTx = async (txData) => {
         return error
     }
 }
+
+
+
 
 // ...
 export const signTx = async (txData) => {

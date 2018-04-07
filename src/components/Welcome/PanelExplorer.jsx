@@ -16,6 +16,7 @@ import {
     federationLookup,
     errorMessageForInvalidPaymentAddress,
 } from "../../lib/utils"
+import { stellarFoundationLink } from "../StellarFox/env"
 
 import Panel from "../Panel"
 import InputField from "../../lib/common/InputField"
@@ -182,7 +183,7 @@ class PanelExplorer extends Component {
                     </div>
                     <div className="p-t micro-font fade-strong">
                         “Stellar” is a trademark of the<he.Nbsp />
-                        <a href="https://www.stellar.org/">Stellar Development
+                        <a href={stellarFoundationLink}>Stellar Development
                         Foundation.</a>
                     </div>
                 </div>
