@@ -12,6 +12,7 @@ import {
 } from "../../redux/actions/"
 
 import {
+    htmlEntities as he,
     federationLookup,
     errorMessageForInvalidPaymentAddress,
 } from "../../lib/utils"
@@ -148,8 +149,7 @@ class PanelExplorer extends Component {
                     <div className="title">
                         To access global ledger
                         explorer enter your{" "}
-                        <em>Payment Address</em> or{" "}
-                        <em>Account Number</em>.
+                        <em>Payment Address</em>.
                     </div>
                     <div className="title-small p-t p-b">
                         Your account operations are
@@ -158,14 +158,6 @@ class PanelExplorer extends Component {
                         knows your account number or
                         payment address can view
                         your public transactions.
-                    </div>
-                    <div className="title-small p-t p-b">
-                        <strong>
-                            Please note that this
-                            application will{" "}
-                            <u>never</u> ask you to
-                            enter your Secret key.
-                        </strong>
                     </div>
                     <div className="f-b">
                         <div className="f-e-col">
@@ -187,6 +179,11 @@ class PanelExplorer extends Component {
                                 fullWidth={true}
                             />
                         </div>
+                    </div>
+                    <div className="p-t micro-font fade-strong">
+                        “Stellar” is a trademark of the<he.Nbsp />
+                        <a href="https://www.stellar.org/">Stellar Development
+                        Foundation.</a>
                     </div>
                 </div>
             }
