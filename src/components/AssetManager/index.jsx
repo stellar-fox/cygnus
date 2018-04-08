@@ -118,7 +118,6 @@ export default connect(
         state: state.Assets,
         Account: state.Account,
     }),
-
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AssetManagerAction.setState,

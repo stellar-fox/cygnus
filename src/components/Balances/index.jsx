@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from "react"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import axios from "axios"
@@ -616,29 +619,32 @@ class Balances extends Component {
 
 
 // ...
-export default withLoginManager(withAssetManager(connect(
-    // map state to props.
-    (state) => ({
-        Account: state.Account,
-        Balances: state.Balances,
-        accountInfo: state.accountInfo,
-        appAuth: state.appAuth,
-        appUi: state.appUi,
-    }),
-
-    // match dispatch to props.
-    (dispatch) => bindActionCreators({
-        setState: AccountAction.setState,
-        accountExistsOnLedger,
-        accountMissingOnLedger,
-        setAccountRegistered,
-        setModalLoading,
-        setModalLoaded,
-        updateLoadingMessage,
-        changeLoginState,
-        changeModalState,
-        changeSnackbarState,
-        ActionConstants,
-        togglePaymentCard,
-    }, dispatch)
-)(Balances)))
+export default compose(
+    withLoginManager,
+    withAssetManager,
+    connect(
+        // map state to props.
+        (state) => ({
+            Account: state.Account,
+            Balances: state.Balances,
+            accountInfo: state.accountInfo,
+            appAuth: state.appAuth,
+            appUi: state.appUi,
+        }),
+        // match dispatch to props.
+        (dispatch) => bindActionCreators({
+            setState: AccountAction.setState,
+            accountExistsOnLedger,
+            accountMissingOnLedger,
+            setAccountRegistered,
+            setModalLoading,
+            setModalLoaded,
+            updateLoadingMessage,
+            changeLoginState,
+            changeModalState,
+            changeSnackbarState,
+            ActionConstants,
+            togglePaymentCard,
+        }, dispatch)
+    )
+)(Balances)

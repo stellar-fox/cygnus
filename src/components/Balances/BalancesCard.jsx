@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { notImplementedText } from "../StellarFox/env"
@@ -20,8 +23,12 @@ import {
 } from "../../redux/actions"
 
 
-class BalanceCard extends Component {
 
+
+// <BalancesCard> component
+class BalancesCard extends Component {
+
+    // ...
     constructor (props) {
         super(props)
         this.otherBalances = this.getOtherBalances(this.props.strAccount)
@@ -160,19 +167,23 @@ class BalanceCard extends Component {
     </Card>
 }
 
-// ...
-export default withLoginManager(withAssetManager(connect(
-    // map state to props.
-    (state) => ({
-        Account: state.Account,
-        Assets: state.Assets,
-        strAccount: state.accountInfo.account.account,
-        appUi: state.appUi,
-    }),
 
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        changeModalState,
-        togglePaymentCard,
-    }, dispatch)
-)(BalanceCard)))
+// ...
+export default compose(
+    withLoginManager,
+    withAssetManager,
+    connect(
+        // map state to props.
+        (state) => ({
+            Account: state.Account,
+            Assets: state.Assets,
+            strAccount: state.accountInfo.account.account,
+            appUi: state.appUi,
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            changeModalState,
+            togglePaymentCard,
+        }, dispatch)
+    )
+)(BalancesCard)

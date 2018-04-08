@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
@@ -392,18 +395,21 @@ class PaymentsHistory extends Component {
 
 
 // ...
-export default withLoginManager(withAssetManager(connect(
-    // map state to props.
-    (state) => ({
-        state: state.Payments,
-        accountInfo: state.accountInfo,
-        appAuth: state.appAuth,
-        Account: state.Account,
-    }),
-
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        setState: PaymentsAction.setState,
-        setAccountPayments,
-    }, dispatch)
-)(PaymentsHistory)))
+export default compose(
+    withLoginManager,
+    withAssetManager,
+    connect(
+        // map state to props.
+        (state) => ({
+            state: state.Payments,
+            accountInfo: state.accountInfo,
+            appAuth: state.appAuth,
+            Account: state.Account,
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            setState: PaymentsAction.setState,
+            setAccountPayments,
+        }, dispatch)
+    )
+)(PaymentsHistory)

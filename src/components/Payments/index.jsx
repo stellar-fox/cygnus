@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
 import {
@@ -818,32 +821,32 @@ class Payments extends Component {
 
 
 // ...
-export default withLoginManager(withAssetManager(withStellarRouter(connect(
-// export default connect(
-    // map state to props.
-    (state) => ({
-        state: state.Payments,
-        Account: state.Account,
-
-        accountInfo: state.accountInfo,
-        loadingModal: state.loadingModal,
-        ui: state.ui,
-        isAuthenticated: state.auth.isAuthenticated,
-        appAuth: state.appAuth,
-    }),
-
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        setState: PaymentsAction.setState,
-
-        setAccountPayments,
-        setAccountTransactions,
-        setStreamer,
-        accountExistsOnLedger,
-        accountMissingOnLedger,
-        setModalLoading,
-        setModalLoaded,
-        updateLoadingMessage,
-    }, dispatch)
-)(Payments))))
-// )(Payments)
+export default compose(
+    withLoginManager,
+    withAssetManager,
+    withStellarRouter,
+    connect(
+        // map state to props.
+        (state) => ({
+            state: state.Payments,
+            Account: state.Account,
+            accountInfo: state.accountInfo,
+            loadingModal: state.loadingModal,
+            ui: state.ui,
+            isAuthenticated: state.auth.isAuthenticated,
+            appAuth: state.appAuth,
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            setState: PaymentsAction.setState,
+            setAccountPayments,
+            setAccountTransactions,
+            setStreamer,
+            accountExistsOnLedger,
+            accountMissingOnLedger,
+            setModalLoading,
+            setModalLoaded,
+            updateLoadingMessage,
+        }, dispatch)
+    )
+)(Payments)

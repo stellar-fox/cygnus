@@ -188,8 +188,8 @@ class LedgerAuthenticator extends Component {
                     <Button
                         disabled={this.state.buttonDisabled}
                         onClick={this.initQueryDevice}
-                        primary={this.props.className.match(/reverse/) ? true : false}
-                        secondary={this.props.className.match(/reverse/) ? false : true}
+                        primary={this.props.className.match(/reverse/)}
+                        secondary={!this.props.className.match(/reverse/)}
                         fullWidth={true}
                         label="Authenticate"
                     />
@@ -212,7 +212,6 @@ export default connect(
     (state) => ({
         auth: state.auth,
     }),
-
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         logIn,

@@ -118,7 +118,6 @@ export default connect(
     (state) => ({
         appAuth: state.appAuth,
     }),
-
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         changeLoginState,

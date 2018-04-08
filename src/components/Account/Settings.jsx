@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import Axios from "axios"
 import { config } from "../../config"
@@ -15,6 +18,8 @@ import {
     changeSnackbarState,
     changeModalState,
 } from "../../redux/actions"
+
+
 
 
 // <Settings> component
@@ -221,19 +226,24 @@ class Settings extends Component {
         </div>
 }
 
-export default withLoginManager(withAssetManager(connect(
-    // bind state to props.
-    (state) => ({
-        state: state.Account,
-        appAuth: state.appAuth,
-        accountInfo: state.accountInfo,
-        appUi: state.appUi,
-    }),
 
-    // bind dispatch to props.
-    (dispatch) => bindActionCreators({
-        setState: AccountAction.setState,
-        changeSnackbarState,
-        changeModalState,
-    }, dispatch)
-)(Settings)))
+// ...
+export default compose(
+    withLoginManager,
+    withAssetManager,
+    connect(
+        // bind state to props.
+        (state) => ({
+            state: state.Account,
+            appAuth: state.appAuth,
+            accountInfo: state.accountInfo,
+            appUi: state.appUi,
+        }),
+        // bind dispatch to props.
+        (dispatch) => bindActionCreators({
+            setState: AccountAction.setState,
+            changeSnackbarState,
+            changeModalState,
+        }, dispatch)
+    )
+)(Settings)

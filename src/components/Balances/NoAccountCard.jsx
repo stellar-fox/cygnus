@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { compose } from "redux"
 import { connect } from "react-redux"
 import { withAssetManager } from "../AssetManager"
 import {
@@ -13,9 +14,10 @@ import {
 import Button from "../../lib/common/Button"
 
 
+
+
+// <NoAccountCard> component
 class NoAccountCard extends Component {
-
-
 
     // ...
     render = () => <Card className='account'>
@@ -76,10 +78,12 @@ class NoAccountCard extends Component {
     </Card>
 }
 
+
 // ...
-export default withAssetManager(connect(
-    // map state to props.
-    (state) => ({
-        Account: state.Account,
-    }),
-)(NoAccountCard))
+export default compose(
+    withAssetManager,
+    connect(
+        // map state to props.
+        (state) => ({ Account: state.Account, }),
+    )
+)(NoAccountCard)

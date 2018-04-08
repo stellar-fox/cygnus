@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { compose } from "redux"
 import { connect } from "react-redux"
 import { Route } from "react-router-dom"
 import {
@@ -32,9 +33,12 @@ const computeStyle = (drawerVisible) => ({
 
 
 // <BankContent> component
-export default withStellarRouter(connect(
-    // map state to props.
-    (state) => ({ drawerVisible: state.Bank.drawerVisible, })
+export default compose(
+    withStellarRouter,
+    connect(
+        // map state to props.
+        (state) => ({ drawerVisible: state.Bank.drawerVisible, })
+    )
 )(
     class extends Component {
 
@@ -82,4 +86,4 @@ export default withStellarRouter(connect(
         )(this.state, this.props.staticRouter.getPath)
 
     }
-))
+)
