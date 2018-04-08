@@ -129,34 +129,24 @@ export default connect(
 
 
 // <withAssetManager(...)> HOC
-export const withAssetManager = (WrappedComponent) =>
-    hoistStatics(
+export const withAssetManager = (WrappedComponent) => {
+    let WithAssetManager = hoistStatics(
         class extends Component {
 
             // ...
             static propTypes = {
-                wrappedComponentRef: PropTypes.func,
+                forwardedRef: PropTypes.func,
             }
 
             // ...
-            static displayName =
-                `withAssetManager(${
-                    WrappedComponent.displayName || WrappedComponent.name
-                })`
-
-            // ...
-            static WrappedComponent = WrappedComponent
-
-            // ...
             render = () => (
-                ({ wrappedComponentRef, ...restOfTheProps }) =>
+                ({ forwardedRef, ...restOfTheProps }) =>
                     React.createElement(
-                        AssetManagerContext.Consumer,
-                        null,
+                        AssetManagerContext.Consumer, null,
                         (assetManager) =>
                             React.createElement(WrappedComponent, {
                                 ...restOfTheProps,
-                                ref: wrappedComponentRef,
+                                ref: forwardedRef,
                                 assetManager,
                             })
                     )
@@ -165,3 +155,22 @@ export const withAssetManager = (WrappedComponent) =>
         },
         WrappedComponent
     )
+
+    // ...
+    let forwardRef = (props, ref) =>
+        React.createElement(WithAssetManager,
+            { ...props, forwardedRef: ref, }
+        )
+
+    // ...
+    forwardRef.displayName =
+        `withAssetManager(${
+            WrappedComponent.displayName || WrappedComponent.name
+        })`
+
+    // ...
+    forwardRef.WrappedComponent = WrappedComponent
+
+    // ...
+    return React.forwardRef(forwardRef)
+}
