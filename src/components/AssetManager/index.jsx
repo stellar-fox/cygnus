@@ -130,37 +130,41 @@ export default connect(
 
 // <withAssetManager(...)> HOC
 export const withAssetManager = (WrappedComponent) => {
-    let WithAssetManager = hoistStatics(
-        class extends Component {
+    let
+        // ...
+        WithAssetManager = hoistStatics(
+            class extends Component {
 
-            // ...
-            static propTypes = {
-                forwardedRef: PropTypes.func,
-            }
+                // ...
+                static propTypes = {
+                    forwardedRef: PropTypes.func,
+                }
 
-            // ...
-            render = () => (
-                ({ forwardedRef, ...restOfTheProps }) =>
-                    React.createElement(
-                        AssetManagerContext.Consumer, null,
-                        (assetManager) =>
-                            React.createElement(WrappedComponent, {
-                                ...restOfTheProps,
-                                ref: forwardedRef,
-                                assetManager,
-                            })
-                    )
-            )(this.props)
+                // ...
+                render = () => (
+                    ({ forwardedRef, ...restOfTheProps }) =>
+                        React.createElement(
+                            AssetManagerContext.Consumer, null,
+                            (assetManager) =>
+                                React.createElement(
+                                    WrappedComponent, {
+                                        ...restOfTheProps,
+                                        ref: forwardedRef,
+                                        assetManager,
+                                    }
+                                )
+                        )
+                )(this.props)
 
-        },
-        WrappedComponent
-    )
+            },
+            WrappedComponent
+        ),
 
-    // ...
-    let forwardRef = (props, ref) =>
-        React.createElement(WithAssetManager,
-            { ...props, forwardedRef: ref, }
-        )
+        // ...
+        forwardRef = (props, ref) =>
+            React.createElement(WithAssetManager,
+                { ...props, forwardedRef: ref, }
+            )
 
     // ...
     forwardRef.displayName =

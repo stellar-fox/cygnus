@@ -152,40 +152,45 @@ export const StellarRouter =
 // (in other words, provides exactly the same props as 'withRouter' HOC
 // and additionally a 'staticRouter' prop)
 export const withStellarRouter = (WrappedComponent) => {
-    let WithStellarRouter = hoistStatics(
-        class extends Component {
+    let
+        // ...
+        WithStellarRouter = hoistStatics(
+            class extends Component {
 
-            // ...
-            static propTypes = {
-                forwardedRef: PropTypes.func,
-            }
+                // ...
+                static propTypes = {
+                    forwardedRef: PropTypes.func,
+                }
 
-            // ...
-            render = () => (
-                ({ forwardedRef, ...restOfTheProps }) =>
-                    React.createElement(Route, null,
-                        (routeComponentProps) =>
-                            React.createElement(
-                                StaticRouterContext.Consumer, null,
-                                (staticRouter) =>
-                                    React.createElement(WrappedComponent, {
-                                        ...restOfTheProps,
-                                        ...routeComponentProps,
-                                        ref: forwardedRef,
-                                        staticRouter,
-                                    })
-                            )
-                    )
-            )(this.props)
-        },
-        WrappedComponent
-    )
+                // ...
+                render = () => (
+                    ({ forwardedRef, ...restOfTheProps }) =>
+                        React.createElement(Route, null,
+                            (routeComponentProps) =>
+                                React.createElement(
+                                    StaticRouterContext.Consumer, null,
+                                    (staticRouter) =>
+                                        React.createElement(
+                                            WrappedComponent, {
+                                                ...restOfTheProps,
+                                                ...routeComponentProps,
+                                                ref: forwardedRef,
+                                                staticRouter,
+                                            }
+                                        )
+                                )
+                        )
+                )(this.props)
 
-    // ...
-    let forwardRef = (props, ref) =>
-        React.createElement(WithStellarRouter,
-            { ...props, forwardedRef: ref, }
-        )
+            },
+            WrappedComponent
+        ),
+
+        // ...
+        forwardRef = (props, ref) =>
+            React.createElement(WithStellarRouter,
+                { ...props, forwardedRef: ref, }
+            )
 
     // ...
     forwardRef.displayName =

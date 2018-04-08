@@ -100,36 +100,39 @@ export default connect(
 
 // <withLoginManager(...)> HOC
 export const withLoginManager = (WrappedComponent) => {
-    let WithLoginManager = hoistStatics(
-        class extends Component {
+    let
+        // ...
+        WithLoginManager = hoistStatics(
+            class extends Component {
 
-            // ...
-            static propTypes = {
-                forwardedRef: PropTypes.func,
-            }
+                // ...
+                static propTypes = {
+                    forwardedRef: PropTypes.func,
+                }
 
-            // ...
-            render = () => (
-                ({ forwardedRef, ...restOfTheProps }) =>
-                    React.createElement(LoginManagerContext.Consumer, null,
-                        (loginManager) =>
-                            React.createElement(WrappedComponent, {
-                                ...restOfTheProps,
-                                ref: forwardedRef,
-                                loginManager,
-                            })
-                    )
-            )(this.props)
+                // ...
+                render = () => (
+                    ({ forwardedRef, ...restOfTheProps }) =>
+                        React.createElement(
+                            LoginManagerContext.Consumer, null,
+                            (loginManager) =>
+                                React.createElement(WrappedComponent, {
+                                    ...restOfTheProps,
+                                    ref: forwardedRef,
+                                    loginManager,
+                                })
+                        )
+                )(this.props)
 
-        },
-        WrappedComponent
-    )
+            },
+            WrappedComponent
+        ),
 
-    // ...
-    let forwardRef = (props, ref) =>
-        React.createElement(WithLoginManager,
-            { ...props, forwardedRef: ref, }
-        )
+        // ...
+        forwardRef = (props, ref) =>
+            React.createElement(WithLoginManager,
+                { ...props, forwardedRef: ref, }
+            )
 
     // ...
     forwardRef.displayName =
