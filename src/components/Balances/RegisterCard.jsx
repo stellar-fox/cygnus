@@ -6,6 +6,10 @@ import {
 } from "material-ui/Card"
 import Button from "../../lib/common/Button"
 
+
+
+
+// <RegisterCard> component
 export default class RegisterCard extends Component {
 
     // ...

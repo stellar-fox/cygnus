@@ -99,39 +99,50 @@ export default connect(
 
 
 // <withLoginManager(...)> HOC
-export const withLoginManager = (WrappedComponent) =>
-    hoistStatics(
-        class extends Component {
+export const withLoginManager = (WrappedComponent) => {
+    let
+        // ...
+        WithLoginManager = hoistStatics(
+            class extends Component {
 
-            // ...
-            static propTypes = {
-                wrappedComponentRef: PropTypes.func,
-            }
+                // ...
+                static propTypes = {
+                    forwardedRef: PropTypes.func,
+                }
 
-            // ...
-            static displayName =
-                `withLoginManager(${
-                    WrappedComponent.displayName || WrappedComponent.name
-                })`
+                // ...
+                render = () => (
+                    ({ forwardedRef, ...restOfTheProps }) =>
+                        React.createElement(
+                            LoginManagerContext.Consumer, null,
+                            (loginManager) =>
+                                React.createElement(WrappedComponent, {
+                                    ...restOfTheProps,
+                                    ref: forwardedRef,
+                                    loginManager,
+                                })
+                        )
+                )(this.props)
 
-            // ...
-            static WrappedComponent = WrappedComponent
+            },
+            WrappedComponent
+        ),
 
-            // ...
-            render = () => (
-                ({ wrappedComponentRef, ...restOfTheProps }) =>
-                    React.createElement(
-                        LoginManagerContext.Consumer,
-                        null,
-                        (loginManager) =>
-                            React.createElement(WrappedComponent, {
-                                ...restOfTheProps,
-                                ref: wrappedComponentRef,
-                                loginManager,
-                            })
-                    )
-            )(this.props)
+        // ...
+        forwardRef = (props, ref) =>
+            React.createElement(WithLoginManager,
+                { ...props, forwardedRef: ref, }
+            )
 
-        },
-        WrappedComponent
-    )
+    // ...
+    forwardRef.displayName =
+        `withLoginManager(${
+            WrappedComponent.displayName || WrappedComponent.name
+        })`
+
+    // ...
+    forwardRef.WrappedComponent = WrappedComponent
+
+    // ...
+    return React.forwardRef(forwardRef)
+}

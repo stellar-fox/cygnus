@@ -2,10 +2,14 @@ import React, { Component } from "react"
 import { NotImplementedBadge } from "../StellarFox/env"
 import Toggle from "../../lib/common/Toggle"
 
+
+
+
+// <Security> component
 export default class Security extends Component {
 
     // ...
-    render = () => 
+    render = () =>
         <div className="tab-content">
             <div className="f-b space-between">
                 <div>

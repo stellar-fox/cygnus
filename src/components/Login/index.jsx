@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 
 import { withLoginManager } from "../LoginManager"
 import {
@@ -127,14 +130,17 @@ class Login extends Component {
 
 
 // ...
-export default withLoginManager(connect(
-    // map state to props.
-    (state) => ({
-        auth: state.auth,
-    }),
+export default compose(
+    withLoginManager,
+    connect(
+        // map state to props.
+        (state) => ({
+            auth: state.auth,
+        }),
 
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        changeLoginState,
-    }, dispatch)
-)(Login))
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            changeLoginState,
+        }, dispatch)
+    )
+)(Login)

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
+import { compose } from "redux"
 import { connect } from "react-redux"
 import {
     Redirect,
@@ -23,11 +24,14 @@ import Bank from "../Bank"
 
 
 // <Layout> component
-export default withStellarRouter(connect(
-    // map state to props.
-    (state) => ({
-        loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN,
-    })
+export default compose(
+    withStellarRouter,
+    connect(
+        // map state to props.
+        (state) => ({
+            loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN,
+        })
+    )
 )(
     class extends Component {
 
@@ -62,17 +66,15 @@ export default withStellarRouter(connect(
                     <LoadingModal />
                     <Switch>
                         <Route exact path={getPath("Welcome")}>
-                            {
-                                !loggedIn ?
-                                    <Welcome /> :
-                                    <Redirect to={getPath("Bank")} />
+                            { (routeProps) => !loggedIn ?
+                                <Welcome {...routeProps} /> :
+                                <Redirect to={getPath("Bank")} />
                             }
                         </Route>
                         <Route path={getPath("Bank")}>
-                            {
-                                loggedIn ?
-                                    <Bank /> :
-                                    <Redirect to={getPath("Welcome")} />
+                            { (routeProps) => loggedIn ?
+                                <Bank {...routeProps} /> :
+                                <Redirect to={getPath("Welcome")} />
                             }
                         </Route>
                         <Redirect to={getPath("Welcome")} />
@@ -81,4 +83,4 @@ export default withStellarRouter(connect(
         )(this.props, this.props.staticRouter.getPath)
 
     }
-))
+)

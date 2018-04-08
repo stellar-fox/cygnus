@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from "react"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import { withLoginManager } from "../LoginManager"
 import {
@@ -96,6 +99,7 @@ class Account extends Component {
             },
         })
 
+
     // ...
     render = () =>
         <Fragment>
@@ -165,28 +169,31 @@ class Account extends Component {
                 ) : null}
             </Tabs>
         </Fragment>
+
 }
 
 
 // ...
-export default withLoginManager(connect(
-    // map state to props.
-    (state) => ({
-        state: state.Account,
-        modal: state.modal,
-        ui: state.ui,
-        appAuth: state.appAuth,
-        appUi: state.appUi,
-    }),
-
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        setState: AccountAction.setState,
-        hideAlert,
-        setTab,
-        changeModalState,
-        changeSnackbarState,
-        setAccountRegistered,
-        changeLoginState,
-    }, dispatch)
-)(Account))
+export default compose(
+    withLoginManager,
+    connect(
+        // map state to props.
+        (state) => ({
+            state: state.Account,
+            modal: state.modal,
+            ui: state.ui,
+            appAuth: state.appAuth,
+            appUi: state.appUi,
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            setState: AccountAction.setState,
+            hideAlert,
+            setTab,
+            changeModalState,
+            changeSnackbarState,
+            setAccountRegistered,
+            changeLoginState,
+        }, dispatch)
+    )
+)(Account)

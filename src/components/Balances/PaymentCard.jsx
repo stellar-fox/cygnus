@@ -1,7 +1,10 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import numberToText from "number-to-text"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
@@ -35,6 +38,10 @@ BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
 
 StellarSdk.Network.useTestNetwork()
 
+
+
+
+// <PaymentCard> component
 class PaymentCard extends Component {
 
     // ...
@@ -178,10 +185,13 @@ class PaymentCard extends Component {
     memoValidator = () => {
         this.props.setState({
             memoText: this.textInputFieldMemo.state.value,
-            memoValid: this.props.Balances.memoRequired &&
-                this.textInputFieldMemo.state.value === "" ? false : true,
+            memoValid: !(
+                this.props.Balances.memoRequired  &&
+                this.textInputFieldMemo.state.value === ""
+            ),
         })
     }
+
 
     // ...
     updateIndicatorMessage = async (publicKey) => (
@@ -419,19 +429,25 @@ class PaymentCard extends Component {
 
 
 // ...
-export default withLoginManager(withAssetManager(connect(
-    // map state to props.
-    (state) => ({
-        Account: state.Account,
-        Assets: state.Assets,
-        Balances: state.Balances,
-        strAccount: (state.accountInfo.account ? state.accountInfo.account.account : null),
-        appUi: state.appUi,
-    }),
-
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        setState: BalancesAction.setState,
-        togglePaymentCard,
-    }, dispatch)
-)(PaymentCard)))
+export default compose(
+    withLoginManager,
+    withAssetManager,
+    connect(
+        // map state to props.
+        (state) => ({
+            Account: state.Account,
+            Assets: state.Assets,
+            Balances: state.Balances,
+            strAccount:
+                state.accountInfo.account ?
+                    state.accountInfo.account.account :
+                    null,
+            appUi: state.appUi,
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            setState: BalancesAction.setState,
+            togglePaymentCard,
+        }, dispatch)
+    )
+)(PaymentCard)

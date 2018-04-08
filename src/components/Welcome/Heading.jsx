@@ -201,7 +201,6 @@ export default connect(
     (state) => ({
         appUi: state.appUi,
     }),
-
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         changeLoginState,

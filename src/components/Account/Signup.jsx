@@ -20,6 +20,7 @@ import { config } from "../../config"
 
 
 
+// ...
 const signupStyles = {
     stepLabel: {
         fontSize: "1rem",

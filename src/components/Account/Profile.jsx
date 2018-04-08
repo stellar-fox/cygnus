@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import Axios from "axios"
 import { config } from "../../config"
@@ -20,6 +23,7 @@ import { withLoginManager } from "../LoginManager"
 import {
     changeSnackbarState,
 } from "../../redux/actions"
+
 
 
 
@@ -116,7 +120,6 @@ class Profile extends Component {
         })
         // eslint-disable-next-line no-console
         .catch(error => console.log(error))
-
 
 
     // ...
@@ -223,16 +226,20 @@ class Profile extends Component {
         </div>
 }
 
-export default withLoginManager(connect(
-    // bind state to props.
-    (state) => ({
-        state: state.Account,
-        appAuth: state.appAuth,
-    }),
 
-    // bind dispatch to props.
-    (dispatch) => bindActionCreators({
-        setState: AccountAction.setState,
-        changeSnackbarState,
-    }, dispatch)
-)(Profile))
+// ...
+export default compose(
+    withLoginManager,
+    connect(
+        // bind state to props.
+        (state) => ({
+            state: state.Account,
+            appAuth: state.appAuth,
+        }),
+        // bind dispatch to props.
+        (dispatch) => bindActionCreators({
+            setState: AccountAction.setState,
+            changeSnackbarState,
+        }, dispatch)
+    )
+)(Profile)

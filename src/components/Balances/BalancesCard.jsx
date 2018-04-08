@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { notImplementedText } from "../StellarFox/env"
@@ -20,10 +23,13 @@ import {
 } from "../../redux/actions"
 
 
-class BalanceCard extends Component {
 
-    constructor (props) {
-        super(props)
+
+// <BalancesCard> component
+class BalancesCard extends Component {
+
+    // ...
+    componentDidMount = () => {
         this.otherBalances = this.getOtherBalances(this.props.strAccount)
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
@@ -37,6 +43,7 @@ class BalanceCard extends Component {
             },
         })
     }
+
 
     // ...
     showNotImplementedModal = () => this.props.changeModalState({
@@ -160,19 +167,23 @@ class BalanceCard extends Component {
     </Card>
 }
 
-// ...
-export default withLoginManager(withAssetManager(connect(
-    // map state to props.
-    (state) => ({
-        Account: state.Account,
-        Assets: state.Assets,
-        strAccount: state.accountInfo.account.account,
-        appUi: state.appUi,
-    }),
 
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        changeModalState,
-        togglePaymentCard,
-    }, dispatch)
-)(BalanceCard)))
+// ...
+export default compose(
+    withLoginManager,
+    withAssetManager,
+    connect(
+        // map state to props.
+        (state) => ({
+            Account: state.Account,
+            Assets: state.Assets,
+            strAccount: state.accountInfo.account.account,
+            appUi: state.appUi,
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            changeModalState,
+            togglePaymentCard,
+        }, dispatch)
+    )
+)(BalancesCard)

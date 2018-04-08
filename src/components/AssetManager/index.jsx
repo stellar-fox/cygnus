@@ -118,7 +118,6 @@ export default connect(
         state: state.Assets,
         Account: state.Account,
     }),
-
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AssetManagerAction.setState,
@@ -130,39 +129,52 @@ export default connect(
 
 
 // <withAssetManager(...)> HOC
-export const withAssetManager = (WrappedComponent) =>
-    hoistStatics(
-        class extends Component {
+export const withAssetManager = (WrappedComponent) => {
+    let
+        // ...
+        WithAssetManager = hoistStatics(
+            class extends Component {
 
-            // ...
-            static propTypes = {
-                wrappedComponentRef: PropTypes.func,
-            }
+                // ...
+                static propTypes = {
+                    forwardedRef: PropTypes.func,
+                }
 
-            // ...
-            static displayName =
-                `withAssetManager(${
-                    WrappedComponent.displayName || WrappedComponent.name
-                })`
+                // ...
+                render = () => (
+                    ({ forwardedRef, ...restOfTheProps }) =>
+                        React.createElement(
+                            AssetManagerContext.Consumer, null,
+                            (assetManager) =>
+                                React.createElement(
+                                    WrappedComponent, {
+                                        ...restOfTheProps,
+                                        ref: forwardedRef,
+                                        assetManager,
+                                    }
+                                )
+                        )
+                )(this.props)
 
-            // ...
-            static WrappedComponent = WrappedComponent
+            },
+            WrappedComponent
+        ),
 
-            // ...
-            render = () => (
-                ({ wrappedComponentRef, ...restOfTheProps }) =>
-                    React.createElement(
-                        AssetManagerContext.Consumer,
-                        null,
-                        (assetManager) =>
-                            React.createElement(WrappedComponent, {
-                                ...restOfTheProps,
-                                ref: wrappedComponentRef,
-                                assetManager,
-                            })
-                    )
-            )(this.props)
+        // ...
+        forwardRef = (props, ref) =>
+            React.createElement(WithAssetManager,
+                { ...props, forwardedRef: ref, }
+            )
 
-        },
-        WrappedComponent
-    )
+    // ...
+    forwardRef.displayName =
+        `withAssetManager(${
+            WrappedComponent.displayName || WrappedComponent.name
+        })`
+
+    // ...
+    forwardRef.WrappedComponent = WrappedComponent
+
+    // ...
+    return React.forwardRef(forwardRef)
+}
