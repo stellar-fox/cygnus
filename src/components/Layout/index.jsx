@@ -66,17 +66,15 @@ export default compose(
                     <LoadingModal />
                     <Switch>
                         <Route exact path={getPath("Welcome")}>
-                            {
-                                !loggedIn ?
-                                    <Welcome /> :
-                                    <Redirect to={getPath("Bank")} />
+                            { (routeProps) => !loggedIn ?
+                                <Welcome {...routeProps} /> :
+                                <Redirect to={getPath("Bank")} />
                             }
                         </Route>
                         <Route path={getPath("Bank")}>
-                            {
-                                loggedIn ?
-                                    <Bank /> :
-                                    <Redirect to={getPath("Welcome")} />
+                            { (routeProps) => loggedIn ?
+                                <Bank {...routeProps} /> :
+                                <Redirect to={getPath("Welcome")} />
                             }
                         </Route>
                         <Redirect to={getPath("Welcome")} />
