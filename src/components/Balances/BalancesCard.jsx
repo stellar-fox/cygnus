@@ -29,8 +29,7 @@ import {
 class BalancesCard extends Component {
 
     // ...
-    constructor (props) {
-        super(props)
+    componentDidMount = () => {
         this.otherBalances = this.getOtherBalances(this.props.strAccount)
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
@@ -44,6 +43,7 @@ class BalancesCard extends Component {
             },
         })
     }
+
 
     // ...
     showNotImplementedModal = () => this.props.changeModalState({
