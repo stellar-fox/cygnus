@@ -5,6 +5,7 @@ import PropTypes from "prop-types"
 import axios from "axios"
 import "number-to-text/converters/en-us"
 import { action as AccountAction } from "../../redux/Account"
+import { action as BalancesAction } from "../../redux/Balances"
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import {
     StellarSdk,
@@ -398,6 +399,9 @@ class Balances extends Component {
                 content: message,
             },
         })
+        this.props.setStateForBalances({
+            sendIsDisabled: false,
+        })
     }
 
 
@@ -415,6 +419,10 @@ class Balances extends Component {
 
     // ...
     sendPayment = async () => {
+        this.props.setStateForBalances({
+            sendIsDisabled: true,
+        })
+
         // check if device is connected first (if not deviceCheck is an error object)
         const deviceCheck = await awaitConnection()
 
@@ -629,6 +637,7 @@ export default withLoginManager(withAssetManager(connect(
     // match dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
+        setStateForBalances: BalancesAction.setState,
         accountExistsOnLedger,
         accountMissingOnLedger,
         setAccountRegistered,
