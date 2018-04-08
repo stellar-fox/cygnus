@@ -19,8 +19,8 @@ export default ({
         modal={true}
         open={open}
         onRequestClose={hideModal}
-        autoScrollBodyContent={true}
-        repositionOnUpdate={false}
+        autoScrollBodyContent={false}
+        repositionOnUpdate={true}
     >
         {children}
     </Dialog>
