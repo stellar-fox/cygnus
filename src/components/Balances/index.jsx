@@ -4,9 +4,7 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import axios from "axios"
 import "number-to-text/converters/en-us"
-
 import { action as AccountAction } from "../../redux/Account"
-
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import {
     StellarSdk,
@@ -23,14 +21,10 @@ import { config } from "../../config"
 import { appName } from "../StellarFox/env"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
-
 import {
-    showAlert,
-    hideAlert,
     accountExistsOnLedger,
     accountMissingOnLedger,
     setAccountRegistered,
-    logIn,
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
@@ -40,9 +34,7 @@ import {
     ActionConstants,
     togglePaymentCard,
 } from "../../redux/actions"
-
 import { List, ListItem } from "material-ui/List"
-import Dialog from "material-ui/Dialog"
 import LinearProgress from "material-ui/LinearProgress"
 import Button from "../../lib/common/Button"
 import Snackbar from "../../lib/common/Snackbar"
@@ -71,13 +63,7 @@ class Balances extends Component {
         sbPayment: false,
         sbPaymentAmount: null,
         sbPaymentAssetCode: null,
-        modalShown: false,
-        deviceConfirmModalShown: false,
-        broadcastTxModalShown: false,
-        errorModalShown: false,
-        errorModalMessage: "",
         modalButtonText: "CANCEL",
-        // the following are resetable
         amountEntered: false,
         payee: null,
         memoRequired: false,
@@ -88,7 +74,6 @@ class Balances extends Component {
         buttonSendDisabled: true,
         paymentCardVisible: false,
         newAccount: false,
-        sendingCompleteModalShown: false,
         paymentId: "",
         ledgerId: "",
     }
@@ -306,13 +291,6 @@ class Balances extends Component {
 
 
     // ...
-    closeSendingCompleteModal = () =>
-        this.setState({
-            sendingCompleteModalShown: false,
-        })
-
-
-    // ...
     handlePaymentSnackbarClose = () =>
         this.setState({
             sbPayment: false,
@@ -348,7 +326,11 @@ class Balances extends Component {
             this.setState({
                 transactionType: this.props.Balances.newAccount ?
                     "Create Account" : "Payment",
-                deviceConfirmModalShown: true,
+            })
+
+            this.showNotice({
+                title: "Confirm on Hardware Device",
+                content: this.transactionFeedbackMessage(),
             })
 
             const signedTx = await signTransaction(
@@ -357,18 +339,20 @@ class Balances extends Component {
                 tx
             )
 
-            this.setState({
-                deviceConfirmModalShown: false,
-                broadcastTxModalShown: true,
+            this.showNotice({
+                title: "Sending Money",
+                content: this.broadcastTransactionMessage(),
             })
 
             const broadcast = await broadcastTx(signedTx)
 
-            this.setState({
-                transactionType: null,
-                broadcastTxModalShown: false,
-                sendingCompleteModalShown: true,
+            this.setState({ transactionType: null, })
+
+            this.showNotice({
+                title: "Completed",
+                content: this.sendingCompleteMessage(),
             })
+
             this.setState({
                 amountEntered: false,
                 payee: null,
@@ -390,9 +374,6 @@ class Balances extends Component {
         } catch (error) {
             this.setState({
                 transactionType: null,
-                deviceConfirmModalShown: false,
-                broadcastTxModalShown: false,
-                sendingCompleteModalShown: false,
                 amountEntered: false,
                 payee: null,
                 memoRequired: false,
@@ -403,13 +384,13 @@ class Balances extends Component {
                 paymentCardVisible: false,
                 newAccount: false,
             })
-            this.showErrorModal.call(this, error.message)
+            this.showError.call(this, error.message)
         }
     }
 
 
     // ...
-    showErrorModal = (message) => {
+    showError = (message) => {
         this.props.changeModalState({
             alertWithDismiss: {
                 showing: true,
@@ -419,12 +400,17 @@ class Balances extends Component {
         })
     }
 
+
     // ...
-    closeErrorModal = () =>
-        this.setState({
-            errorModalShown: false,
-            errorModalMessage: "",
+    showNotice = (content) => {
+        this.props.changeModalState({
+            alertWithDismiss: {
+                showing: true,
+                title: content.title,
+                content: content.content,
+            },
         })
+    }
 
 
     // ...
@@ -436,7 +422,7 @@ class Balances extends Component {
             this.buildSendTransaction.call(this)
             return true
         } else {
-            this.showErrorModal.call(this, deviceCheck.message)
+            this.showError.call(this, deviceCheck.message)
             return false
         }
     }
@@ -575,138 +561,57 @@ class Balances extends Component {
 
 
     // ...
-    render = () => {
-
-        const
-            actionsError = [
-                <Button
-                    primary={true}
-                    label="OK"
-                    keyboardFocused={true}
-                    onClick={this.closeErrorModal}
-                />,
-            ],
-            actionsSendingComplete = [
-                <Button
-                    primary={true}
-                    label="OK"
-                    keyboardFocused={true}
-                    onClick={this.closeSendingCompleteModal}
-                />,
-            ]
-
-        return (
+    render = () =>
+        <div>
             <div>
-                <div>
-                    <Snackbar
-                        open={this.state.sbPayment}
-                        message={`${this.state.sbPaymentText} ${
-                            this.state.sbPaymentAmount} ${
-                            this.state.sbPaymentAssetCode}`}
-                        onRequestClose={this.handlePaymentSnackbarClose}
+                <Snackbar
+                    open={this.state.sbPayment}
+                    message={`${this.state.sbPaymentText} ${
+                        this.state.sbPaymentAmount} ${
+                        this.state.sbPaymentAssetCode}`}
+                    onRequestClose={this.handlePaymentSnackbarClose}
+                />
+
+                <Modal
+                    open={this.props.appUi.modals.signup ?
+                        this.props.appUi.modals.signup.showing : false
+                    }
+                    title="Opening Your Bank - Register Account"
+                    actions={[
+                        <Button
+                            label={this.state.modalButtonText}
+                            onClick={this.hideSignupModal}
+                            primary={true}
+                        />,
+                    ]}
+                >
+                    <Signup onComplete={this.completeRegistration}
+                        config={{
+                            useAsRegistrationForm: true,
+                            publicKey: this.props.appAuth.publicKey,
+                            bip32Path: this.props.appAuth.bip32Path,
+                        }}
                     />
+                </Modal>
 
-                    <Modal
-                        open={this.props.appUi.modals.signup ?
-                            this.props.appUi.modals.signup.showing : false
-                        }
-                        title="Opening Your Bank - Register Account"
-                        actions={[
-                            <Button
-                                label={this.state.modalButtonText}
-                                onClick={this.hideSignupModal}
-                                primary={true}
-                            />,
-                        ]}
-                    >
-                        <Signup onComplete={this.completeRegistration}
-                            config={{
-                                useAsRegistrationForm: true,
-                                publicKey: this.props.appAuth.publicKey,
-                                bip32Path: this.props.appAuth.bip32Path,
-                            }}
-                        />
-                    </Modal>
-
-                    <Dialog
-                        title={
-                            <div>
-                                <i className="material-icons">
-                                    developer_board
-                                </i> Confirm on Ledger
-                            </div>
-                        }
-                        actions={null}
-                        modal={true}
-                        open={this.state.deviceConfirmModalShown}
-                        paperClassName="modal-body"
-                        titleClassName="modal-title"
-                    >
-                        {this.transactionFeedbackMessage.call(this)}
-                    </Dialog>
-
-                    <Dialog
-                        title={
-                            <div className="header-icon">
-                                <i className="material-icons">send</i>
-                                <span>Sending Payment</span>
-                            </div>
-                        }
-                        actions={null}
-                        modal={true}
-                        open={this.state.broadcastTxModalShown}
-                        paperClassName="modal-body"
-                        titleClassName="modal-title"
-                    >
-                        {this.broadcastTransactionMessage.call(this)}
-                    </Dialog>
-
-                    <Dialog
-                        title="Error"
-                        actions={actionsError}
-                        modal={false}
-                        open={this.state.errorModalShown}
-                        onRequestClose={this.closeErrorModal}
-                        paperClassName="modal-body"
-                        titleClassName="modal-title"
-                    >
-                        {this.state.errorModalMessage}
-                    </Dialog>
-
-                    <Dialog
-                        title={
-                            <div className="header-icon">
-                                <i className="material-icons">send</i>
-                                <span>Transfer complete.</span>
-                            </div>
-                        }
-                        actions={actionsSendingComplete}
-                        modal={true}
-                        open={this.state.sendingCompleteModalShown}
-                        onRequestClose={this.closeSendingCompleteModal}
-                        paperClassName="modal-body"
-                        titleClassName="modal-title"
-                    >
-                        {this.sendingCompleteMessage.call(this)}
-                    </Dialog>
-                </div>
-
-                {!this.props.accountInfo.registered &&
-                    !this.props.loginManager.isExploreOnly() ?
-                    <RegisterCard /> : null
-                }
-
-                {this.props.accountInfo.exists ?
-                    <BalancesCard notImplemented={this.handleOpen} /> : <NoAccountCard />
-                }
-
-                {
-                    this.props.appUi.cards.payment &&
-                    this.props.appUi.cards.payment.opened && <PaymentCard onSignTransaction={this.sendPayment} />
-                }
             </div>
-        )
-    }
+
+            {!this.props.accountInfo.registered &&
+                !this.props.loginManager.isExploreOnly() ?
+                <RegisterCard /> : null
+            }
+
+            {this.props.accountInfo.exists ?
+                <BalancesCard notImplemented={this.handleOpen} /> :
+                <NoAccountCard />
+            }
+
+            {
+                this.props.appUi.cards.payment &&
+                this.props.appUi.cards.payment.opened &&
+                <PaymentCard onSignTransaction={this.sendPayment} />
+            }
+        </div>
 }
 
 
@@ -717,7 +622,6 @@ export default withLoginManager(withAssetManager(connect(
         Account: state.Account,
         Balances: state.Balances,
         accountInfo: state.accountInfo,
-        modal: state.modal,
         appAuth: state.appAuth,
         appUi: state.appUi,
     }),
@@ -725,12 +629,9 @@ export default withLoginManager(withAssetManager(connect(
     // match dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
-        showAlert,
-        hideAlert,
         accountExistsOnLedger,
         accountMissingOnLedger,
         setAccountRegistered,
-        logIn,
         setModalLoading,
         setModalLoaded,
         updateLoadingMessage,
