@@ -14,6 +14,11 @@ import {
     handleException,
     insertPathIndex,
 } from "../../lib/utils"
+import {
+    buildCreateAccountTx,
+    buildPaymentTx,
+    broadcastTx,
+} from "../../lib/stellar-tx"
 import { config } from "../../config"
 import { appName } from "../StellarFox/env"
 import { withLoginManager } from "../LoginManager"
@@ -52,12 +57,6 @@ import "./index.css"
 
 
 
-StellarSdk.Network.useTestNetwork()
-const server = new StellarSdk.Server(config.horizon)
-
-
-
-
 // <Balances> component
 class Balances extends Component {
 
@@ -90,6 +89,8 @@ class Balances extends Component {
         paymentCardVisible: false,
         newAccount: false,
         sendingCompleteModalShown: false,
+        paymentId: "",
+        ledgerId: "",
     }
 
 
@@ -328,185 +329,81 @@ class Balances extends Component {
 
 
     // ...
-    buildSendTransaction = () => {
-        let
-            destinationId = this.props.Balances.payee,
-            // Transaction will hold a built transaction we can resubmit
-            // if the result is unknown.
-            transaction = null
+    buildSendTransaction = async () => {
+        try {
+            let tx = null
+            const paymentData = {
+                source: this.props.appAuth.publicKey,
+                destination: this.props.Balances.payee,
+                amount: this.props.assetManager.convertToNative(
+                    this.props.Balances.amount),
+                memo: this.props.Balances.memoText,
+            }
+            if (this.props.Balances.newAccount) {
+                tx = await buildCreateAccountTx(paymentData)
+            } else {
+                tx = await buildPaymentTx(paymentData)
+            }
 
-        if (this.props.Balances.newAccount) {
+            this.setState({
+                transactionType: this.props.Balances.newAccount ?
+                    "Create Account" : "Payment",
+                deviceConfirmModalShown: true,
+            })
 
-            // This function is "async"
-            // as it waits for signature from the device
-            server.loadAccount(this.props.appAuth.publicKey)
-                .then(async (sourceAccount) => {
-                    // Start building the transaction.
-                    transaction = new StellarSdk.TransactionBuilder(sourceAccount)
-                        .addOperation(StellarSdk.Operation.createAccount({
-                            destination: this.props.Balances.payee,
-                            startingBalance:
-                                this.props.assetManager.convertToNative(
-                                    this.props.Balances.amount),
-                        }))
-                        .addMemo(
-                            StellarSdk.Memo.text(
-                                this.props.Balances.memoText
-                            )
-                        )
-                        .build()
+            const signedTx = await signTransaction(
+                insertPathIndex(this.props.appAuth.bip32Path),
+                this.props.appAuth.publicKey,
+                tx
+            )
 
-                    this.setState({
-                        transactionType: "Create Account",
-                        deviceConfirmModalShown: true,
-                    })
+            this.setState({
+                deviceConfirmModalShown: false,
+                broadcastTxModalShown: true,
+            })
 
-                    // Sign the transaction to prove you are actually the person sending it.
-                    // transaction.sign(sourceKeys)
-                    const signedTransaction = await signTransaction(
-                        insertPathIndex(this.props.appAuth.bip32Path),
-                        this.props.appAuth.publicKey,
-                        transaction
-                    )
+            const broadcast = await broadcastTx(signedTx)
 
-                    this.setState({
-                        deviceConfirmModalShown: false,
-                        broadcastTxModalShown: true,
-                    })
-
-                    // And finally, send it off to Stellar!
-                    return server.submitTransaction(signedTransaction)
-                })
-                .then((_result) => {
-                    // TODO: display xdr hash on receipt.
-                    this.setState({
-                        transactionType: null,
-                        broadcastTxModalShown: false,
-                        sendingCompleteModalShown: true,
-                    })
-                    this.setState({
-                        amountEntered: false,
-                        payee: null,
-                        memoRequired: false,
-                        amountValid: false,
-                        amount: 0,
-                        memoValid: false,
-                        buttonSendDisabled: true,
-                        paymentCardVisible: false,
-                        newAccount: false,
-                    })
-                    this.props.togglePaymentCard({
-                        payment: {
-                            opened: false,
-                        },
-                    })
-                })
-                .catch((error) => {
-                    this.setState({
-                        transactionType: null,
-                        deviceConfirmModalShown: false,
-                        broadcastTxModalShown: false,
-                        sendingCompleteModalShown: false,
-                        amountEntered: false,
-                        payee: null,
-                        memoRequired: false,
-                        amountValid: false,
-                        amount: 0,
-                        memoValid: false,
-                        buttonSendDisabled: true,
-                        paymentCardVisible: false,
-                        newAccount: false,
-                    })
-                    this.showErrorModal.call(this, error.message)
-                })
-
-        } else {
-
-            // First, check to make sure that the destination account exists.
-            // You could skip this, but if the account does not exist, you will be charged
-            // the transaction fee when the transaction fails.
-            server.loadAccount(destinationId)
-                // If the account is not found, surface a nicer error message for logging.
-                .catch(StellarSdk.NotFoundError, (_) => {
-                    throw new Error("The destination account does not exist!")
-                })
-                // If there was no error, load up-to-date information on your account.
-                .then(() => server.loadAccount(this.props.appAuth.publicKey))
-                // This function is "async" as it waits for signature from the device
-                .then(async (sourceAccount) => {
-                    // Start building the transaction.
-                    transaction = new StellarSdk.TransactionBuilder(sourceAccount)
-                        .addOperation(StellarSdk.Operation.payment({
-                            destination: destinationId,
-                            // Because Stellar allows transaction in many currencies, you must
-                            // specify the asset type. The special "native" asset represents Lumens.
-                            asset: StellarSdk.Asset.native(),
-                            amount: this.props.assetManager.convertToNative(this.props.Balances.amount),
-                        }))
-                        // A memo allows you to add your own metadata to a transaction. It's
-                        // optional and does not affect how Stellar treats the transaction.
-                        .addMemo(StellarSdk.Memo.text(this.props.Balances.memoText))
-                        .build()
-                    // Sign the transaction to prove you are actually the person sending it.
-                    // transaction.sign(sourceKeys)
-                    this.setState({
-                        transactionType: "Payment",
-                        deviceConfirmModalShown: true,
-                    })
-                    const signedTransaction = await signTransaction(
-                        insertPathIndex(this.props.appAuth.bip32Path),
-                        this.props.appAuth.publicKey,
-                        transaction
-                    )
-                    this.setState({
-                        deviceConfirmModalShown: false,
-                        broadcastTxModalShown: true,
-                    })
-                    // And finally, send it off to Stellar!
-                    return server.submitTransaction(signedTransaction)
-                })
-                .then((_result) => {
-                    //TODO: display xdr hash on receipt
-                    this.setState({
-                        transactionType: null,
-                        broadcastTxModalShown: false,
-                        sendingCompleteModalShown: true,
-                    })
-                    this.setState({
-                        amountEntered: false,
-                        payee: null,
-                        memoRequired: false,
-                        amountValid: false,
-                        amount: 0,
-                        memoValid: false,
-                        buttonSendDisabled: true,
-                        paymentCardVisible: false,
-                        newAccount: false,
-                    })
-                    this.props.togglePaymentCard({
-                        payment: {
-                            opened: false,
-                        },
-                    })
-                })
-                .catch((error) => {
-                    this.setState({
-                        transactionType: null,
-                        deviceConfirmModalShown: false,
-                        broadcastTxModalShown: false,
-                        sendingCompleteModalShown: false,
-                        amountEntered: false,
-                        payee: null,
-                        memoRequired: false,
-                        amountValid: false,
-                        amount: 0,
-                        memoValid: false,
-                        buttonSendDisabled: true,
-                        paymentCardVisible: false,
-                        newAccount: false,
-                    })
-                    this.showErrorModal.call(this, error.message)
-                })
+            this.setState({
+                transactionType: null,
+                broadcastTxModalShown: false,
+                sendingCompleteModalShown: true,
+            })
+            this.setState({
+                amountEntered: false,
+                payee: null,
+                memoRequired: false,
+                amountValid: false,
+                amount: 0,
+                memoValid: false,
+                buttonSendDisabled: true,
+                paymentCardVisible: false,
+                newAccount: false,
+                paymentId: broadcast.hash,
+                ledgerId: broadcast.ledger,
+            })
+            this.props.togglePaymentCard({
+                payment: {
+                    opened: false,
+                },
+            })
+        } catch (error) {
+            this.setState({
+                transactionType: null,
+                deviceConfirmModalShown: false,
+                broadcastTxModalShown: false,
+                sendingCompleteModalShown: false,
+                amountEntered: false,
+                payee: null,
+                memoRequired: false,
+                amountValid: false,
+                amount: 0,
+                memoValid: false,
+                buttonSendDisabled: true,
+                paymentCardVisible: false,
+                newAccount: false,
+            })
+            this.showErrorModal.call(this, error.message)
         }
     }
 
