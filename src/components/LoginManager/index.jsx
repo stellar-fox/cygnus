@@ -99,34 +99,23 @@ export default connect(
 
 
 // <withLoginManager(...)> HOC
-export const withLoginManager = (WrappedComponent) =>
-    hoistStatics(
+export const withLoginManager = (WrappedComponent) => {
+    let WithLoginManager = hoistStatics(
         class extends Component {
 
             // ...
             static propTypes = {
-                wrappedComponentRef: PropTypes.func,
+                forwardedRef: PropTypes.func,
             }
 
             // ...
-            static displayName =
-                `withLoginManager(${
-                    WrappedComponent.displayName || WrappedComponent.name
-                })`
-
-            // ...
-            static WrappedComponent = WrappedComponent
-
-            // ...
             render = () => (
-                ({ wrappedComponentRef, ...restOfTheProps }) =>
-                    React.createElement(
-                        LoginManagerContext.Consumer,
-                        null,
+                ({ forwardedRef, ...restOfTheProps }) =>
+                    React.createElement(LoginManagerContext.Consumer, null,
                         (loginManager) =>
                             React.createElement(WrappedComponent, {
                                 ...restOfTheProps,
-                                ref: wrappedComponentRef,
+                                ref: forwardedRef,
                                 loginManager,
                             })
                     )
@@ -135,3 +124,22 @@ export const withLoginManager = (WrappedComponent) =>
         },
         WrappedComponent
     )
+
+    // ...
+    let forwardRef = (props, ref) =>
+        React.createElement(WithLoginManager,
+            { ...props, forwardedRef: ref, }
+        )
+
+    // ...
+    forwardRef.displayName =
+        `withLoginManager(${
+            WrappedComponent.displayName || WrappedComponent.name
+        })`
+
+    // ...
+    forwardRef.WrappedComponent = WrappedComponent
+
+    // ...
+    return React.forwardRef(forwardRef)
+}

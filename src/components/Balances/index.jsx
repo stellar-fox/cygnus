@@ -620,8 +620,8 @@ class Balances extends Component {
 
 // ...
 export default compose(
-    withLoginManager,
     withAssetManager,
+    withLoginManager,
     connect(
         // map state to props.
         (state) => ({

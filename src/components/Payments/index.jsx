@@ -822,8 +822,8 @@ class Payments extends Component {
 
 // ...
 export default compose(
-    withLoginManager,
     withAssetManager,
+    withLoginManager,
     withStellarRouter,
     connect(
         // map state to props.

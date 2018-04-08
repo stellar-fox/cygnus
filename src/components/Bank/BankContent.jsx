@@ -69,18 +69,15 @@ export default compose(
             ({ style, }, getPath) =>
                 <div style={style} className="bank-content">
                     <Switch>
-                        <Route
-                            path={getPath("Balances")}
-                            component={Balances}
-                        />
-                        <Route
-                            path={getPath("Payments")}
-                            component={Payments}
-                        />
-                        <Route
-                            path={getPath("Account")}
-                            component={Account}
-                        />
+                        <Route path={getPath("Balances")}>
+                            { (routeProps) => <Balances {...routeProps} /> }
+                        </Route>
+                        <Route path={getPath("Payments")}>
+                            { (routeProps) => <Payments {...routeProps} /> }
+                        </Route>
+                        <Route path={getPath("Account")}>
+                            { (routeProps) => <Account {...routeProps} /> }
+                        </Route>
                     </Switch>
                 </div>
         )(this.state, this.props.staticRouter.getPath)
