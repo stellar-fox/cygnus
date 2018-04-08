@@ -434,6 +434,18 @@ export const htmlEntities = {
     //     Fragment, null, String.fromCharCode(0xA9)
     // ),
     Copy: () => <Fragment>&copy;</Fragment>,
+
+    // https://www.fileformat.info/info/unicode/char/27/index.htm
+    // Apos: () => React.createElement(
+    //     Fragment, null, String.fromCharCode(0x27)
+    // ),
+    Apos: () => <Fragment>&apos;</Fragment>,
+
+    // https://www.fileformat.info/info/unicode/char/2713/index.htm
+    // Apos: () => React.createElement(
+    //     Fragment, null, String.fromCharCode(0x2713)
+    // ),
+    Check: () => <Fragment>&#10003;</Fragment>,
 }
 
 

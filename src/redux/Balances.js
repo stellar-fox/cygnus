@@ -20,6 +20,9 @@ const initState = ((now) => ({
     sendIsDisabled: true,
     indicatorMessage: "XXXXXXXXXXXX",
     indicatorStyle: "fade-extreme",
+    transactionType: null,
+    paymentId: null,
+    ledgerId: null,
 
 }))(new Date())
 

@@ -38,7 +38,6 @@ import {
     ActionConstants,
     togglePaymentCard,
 } from "../../redux/actions"
-import { List, ListItem } from "material-ui/List"
 import LinearProgress from "material-ui/LinearProgress"
 import Button from "../../lib/common/Button"
 import Snackbar from "../../lib/common/Snackbar"
@@ -48,6 +47,7 @@ import RegisterCard from "./RegisterCard"
 import BalancesCard from "./BalancesCard"
 import NoAccountCard from "./NoAccountCard"
 import PaymentCard from "./PaymentCard"
+import TxConfirmMsg from "./TxConfirmMsg"
 import "./index.css"
 
 
@@ -73,19 +73,17 @@ class Balances extends Component {
         memoRequired: false,
         amountValid: false,
         amount: 0,
-        transactionType: null,
         memoValid: false,
         buttonSendDisabled: true,
         paymentCardVisible: false,
         newAccount: false,
-        paymentId: "",
-        ledgerId: "",
+        paymentId: null,
+        ledgerId: null,
     }
 
 
     // ...
     componentDidMount = () => {
-
         // FIXME: merge streamers
         this.setState({
             paymentsStreamer: this.paymentsStreamer.call(this),
@@ -323,18 +321,28 @@ class Balances extends Component {
             }
             if (this.props.Balances.newAccount) {
                 tx = await buildCreateAccountTx(paymentData)
+                this.props.setStateForBalances({
+                    transactionType: "Create Acc",
+                })
             } else {
                 tx = await buildPaymentTx(paymentData)
+                this.props.setStateForBalances({
+                    transactionType: "Payment",
+                })
             }
-
-            this.setState({
-                transactionType: this.props.Balances.newAccount ?
-                    "Create Account" : "Payment",
-            })
 
             this.showNotice({
                 title: "Confirm on Hardware Device",
-                content: this.transactionFeedbackMessage(),
+                content: TxConfirmMsg({
+                    amount: this.props.assetManager.convertToNative(
+                        this.props.Balances.amount),
+                    publicKeyAbbr: handleException(
+                        () => pubKeyAbbr(this.props.Balances.payee),
+                        () => "Not Available"
+                    ),
+                    transactionType: this.props.Balances.transactionType,
+                    memo: this.props.Balances.memoText,
+                }),
             })
 
             const signedTx = await signTransaction(
@@ -350,7 +358,9 @@ class Balances extends Component {
 
             const broadcast = await broadcastTx(signedTx)
 
-            this.setState({ transactionType: null, })
+            this.props.setStateForBalances({
+                transactionType: null,
+            })
 
             this.showNotice({
                 title: "Completed",
@@ -377,7 +387,6 @@ class Balances extends Component {
             })
         } catch (error) {
             this.setState({
-                transactionType: null,
                 amountEntered: false,
                 payee: null,
                 memoRequired: false,
@@ -440,88 +449,6 @@ class Balances extends Component {
 
 
     // ...
-    transactionFeedbackMessage = () =>
-        <Fragment>
-            <div>
-                Please confirm the following info on your device&apos;s screen.
-            </div>
-            <List>
-                <ListItem
-                    disabled={true}
-                    primaryText="Type"
-                    secondaryText={this.state.transactionType}
-                    leftIcon={
-                        <i className="green material-icons md-icon-small">
-                            assignment_late
-                        </i>
-                    }
-                />
-                <ListItem
-                    disabled={true}
-                    primaryText="Amount"
-                    secondaryText={
-                        `${this.props.assetManager.convertToNative(this.props.Balances.amount)} XLM`
-                    }
-                    leftIcon={
-                        <i className="green material-icons md-icon-small">
-                            account_balance_wallet
-                        </i>
-                    }
-                />
-                <ListItem
-                    disabled={true}
-                    primaryText="Destination"
-                    secondaryText={
-                        handleException(
-                            () => pubKeyAbbr(this.props.Balances.payee),
-                            () => "Not Available"
-                        )
-                    }
-                    leftIcon={
-                        <i className="green material-icons md-icon-small">
-                            local_post_office
-                        </i>
-                    }
-                />
-                <ListItem
-                    disabled={true}
-                    primaryText="Memo"
-                    secondaryText={this.props.Balances.memoText}
-                    leftIcon={
-                        <i className="green material-icons md-icon-small">
-                            speaker_notes
-                        </i>
-                    }
-                />
-                <ListItem
-                    disabled={true}
-                    primaryText="Fee"
-                    secondaryText="0.000001 XLM"
-                    leftIcon={
-                        <i className="green material-icons md-icon-small">
-                            credit_card
-                        </i>
-                    }
-                />
-                <ListItem
-                    disabled={true}
-                    primaryText="Network"
-                    secondaryText="Test"
-                    leftIcon={
-                        <i className="green material-icons md-icon-small">
-                            network_check
-                        </i>
-                    }
-                />
-            </List>
-            <div>
-                When you are sure it is correct press "&#10003;"
-                on the device to sign your transaction and send it off.
-            </div>
-        </Fragment>
-
-
-    // ...
     broadcastTransactionMessage = () =>
         <Fragment>
             <div className="bigger green">
@@ -572,57 +499,56 @@ class Balances extends Component {
 
 
     // ...
-    render = () =>
-        <div>
-            <div>
-                <Snackbar
-                    open={this.state.sbPayment}
-                    message={`${this.state.sbPaymentText} ${
-                        this.state.sbPaymentAmount} ${
-                        this.state.sbPaymentAssetCode}`}
-                    onRequestClose={this.handlePaymentSnackbarClose}
-                />
+    render = () => <Fragment>
 
-                <Modal
-                    open={this.props.appUi.modals.signup ?
-                        this.props.appUi.modals.signup.showing : false
-                    }
-                    title="Opening Your Bank - Register Account"
-                    actions={[
-                        <Button
-                            label={this.state.modalButtonText}
-                            onClick={this.hideSignupModal}
-                            primary={true}
-                        />,
-                    ]}
-                >
-                    <Signup onComplete={this.completeRegistration}
-                        config={{
-                            useAsRegistrationForm: true,
-                            publicKey: this.props.appAuth.publicKey,
-                            bip32Path: this.props.appAuth.bip32Path,
-                        }}
-                    />
-                </Modal>
+        <Snackbar
+            open={this.state.sbPayment}
+            message={`${this.state.sbPaymentText} ${
+                this.state.sbPaymentAmount} ${
+                this.state.sbPaymentAssetCode}`}
+            onRequestClose={this.handlePaymentSnackbarClose}
+        />
 
-            </div>
-
-            {!this.props.accountInfo.registered &&
-                !this.props.loginManager.isExploreOnly() ?
-                <RegisterCard /> : null
+        <Modal
+            open={this.props.appUi.modals.signup ?
+                this.props.appUi.modals.signup.showing : false
             }
+            title="Opening Your Bank - Register Account"
+            actions={[
+                <Button
+                    label={this.state.modalButtonText}
+                    onClick={this.hideSignupModal}
+                    primary={true}
+                />,
+            ]}
+        >
+            <Signup onComplete={this.completeRegistration}
+                config={{
+                    useAsRegistrationForm: true,
+                    publicKey: this.props.appAuth.publicKey,
+                    bip32Path: this.props.appAuth.bip32Path,
+                }}
+            />
+        </Modal>
 
-            {this.props.accountInfo.exists ?
-                <BalancesCard notImplemented={this.handleOpen} /> :
-                <NoAccountCard />
-            }
 
-            {
-                this.props.appUi.cards.payment &&
-                this.props.appUi.cards.payment.opened &&
-                <PaymentCard onSignTransaction={this.sendPayment} />
-            }
-        </div>
+        {!this.props.accountInfo.registered &&
+            !this.props.loginManager.isExploreOnly() ?
+            <RegisterCard /> : null
+        }
+
+        {this.props.accountInfo.exists ?
+            <BalancesCard notImplemented={this.handleOpen} /> :
+            <NoAccountCard />
+        }
+
+        {
+            this.props.appUi.cards.payment &&
+            this.props.appUi.cards.payment.opened &&
+            <PaymentCard onSignTransaction={this.sendPayment} />
+        }
+
+    </Fragment>
 }
 
 
