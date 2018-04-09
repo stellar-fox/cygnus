@@ -317,14 +317,6 @@ export const getAssetCode = (asset) =>
 
 // ...
 // TODO: move to <AssetManager> (?)
-export const formatAmount = (amount, precision = 2) =>
-    Number.parseFloat(amount).toFixed(precision)
-
-
-
-
-// ...
-// TODO: move to <AssetManager> (?)
 export const currencyGlyph = (currency) => (
     (c) => c[currency]
 )({
