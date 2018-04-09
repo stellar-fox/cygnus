@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom"
 import {
     ConnectedSwitch as Switch,
     resolvePath,
-    withStellarRouter,
+    withStaticRouter,
 } from "../StellarRouter"
 
 import BankAppBar from "./BankAppBar"
@@ -16,7 +16,7 @@ import Footer from "../Layout/Footer"
 
 
 // <Bank> component
-export default withStellarRouter(
+export default withStaticRouter(
     class extends Component {
 
         // ...
