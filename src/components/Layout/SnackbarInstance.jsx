@@ -36,7 +36,7 @@ export default connect(
 
         // ...
         onDismiss = () => this.props.changeSnackbarState({
-            snackbar: { open: false, content: "", },
+            open: false, message: "",
         })
 
         // ...
