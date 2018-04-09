@@ -108,6 +108,7 @@ class AssetManager extends Component {
         <AssetManagerContext.Provider value={this}>
             { this.props.children }
         </AssetManagerContext.Provider>
+
 }
 
 
@@ -130,6 +131,7 @@ export default connect(
 
 // <withAssetManager(...)> HOC
 export const withAssetManager = (WrappedComponent) => {
+
     let
         // ...
         WithAssetManager = hoistStatics(
@@ -177,4 +179,5 @@ export const withAssetManager = (WrappedComponent) => {
 
     // ...
     return React.forwardRef(forwardRef)
+
 }

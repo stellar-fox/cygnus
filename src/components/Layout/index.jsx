@@ -59,28 +59,36 @@ export default compose(
 
 
         // ...
+        renderWelcome = (routeProps) =>
+            !this.props.loggedIn ?
+                <Welcome {...routeProps} /> :
+                <Redirect to={this.props.staticRouter.getPath("Bank")} />
+
+
+        // ...
+        renderBank = (routeProps) =>
+            this.props.loggedIn ?
+                <Bank {...routeProps} /> :
+                <Redirect to={this.props.staticRouter.getPath("Welcome")} />
+
+
+        // ...
         render = () => (
-            ({ loggedIn, }, getPath) =>
+            (getPath) =>
                 <Fragment>
                     <AlertModal />
                     <LoadingModal />
                     <Switch>
                         <Route exact path={getPath("Welcome")}>
-                            { (routeProps) => !loggedIn ?
-                                <Welcome {...routeProps} /> :
-                                <Redirect to={getPath("Bank")} />
-                            }
+                            { this.renderWelcome }
                         </Route>
                         <Route path={getPath("Bank")}>
-                            { (routeProps) => loggedIn ?
-                                <Bank {...routeProps} /> :
-                                <Redirect to={getPath("Welcome")} />
-                            }
+                            { this.renderBank }
                         </Route>
                         <Redirect to={getPath("Welcome")} />
                     </Switch>
                 </Fragment>
-        )(this.props, this.props.staticRouter.getPath)
+        )(this.props.staticRouter.getPath)
 
     }
 )

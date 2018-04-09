@@ -2,7 +2,10 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { Switch, Route, } from "react-router-dom"
+import {
+    Switch,
+    Route,
+} from "react-router-dom"
 import hoistStatics from "hoist-non-react-statics"
 import {
     CALL_HISTORY_METHOD,
@@ -118,6 +121,7 @@ export const StaticRouter = connect(
         static getView = (path, map) => path in map ? map[path] : ""
 
 
+        // ...
         render = () => (
             (
                 { addPaths, getPath, pushByView, },
@@ -152,6 +156,7 @@ export const StellarRouter =
 // (in other words, provides exactly the same props as 'withRouter' HOC
 // and additionally a 'staticRouter' prop)
 export const withStellarRouter = (WrappedComponent) => {
+
     let
         // ...
         WithStellarRouter = hoistStatics(
@@ -203,6 +208,7 @@ export const withStellarRouter = (WrappedComponent) => {
 
     // ...
     return React.forwardRef(forwardRef)
+
 }
 
 

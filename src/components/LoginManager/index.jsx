@@ -93,6 +93,7 @@ export default connect(
             </LoginManagerContext.Provider>
 
     }
+
 )
 
 
@@ -100,6 +101,7 @@ export default connect(
 
 // <withLoginManager(...)> HOC
 export const withLoginManager = (WrappedComponent) => {
+
     let
         // ...
         WithLoginManager = hoistStatics(
@@ -145,4 +147,5 @@ export const withLoginManager = (WrappedComponent) => {
 
     // ...
     return React.forwardRef(forwardRef)
+
 }
