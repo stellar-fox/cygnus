@@ -12,7 +12,6 @@ import { action as BalancesAction } from "../../redux/Balances"
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import {
     pubKeyAbbr,
-    handleException,
     insertPathIndex,
 } from "../../lib/utils"
 import {
@@ -301,18 +300,9 @@ class Balances extends Component {
                 })
             }
 
-            this.showNotice({
-                title: "Confirm on Hardware Device",
-                content: TxConfirmMsg({
-                    amount: this.props.assetManager.convertToNative(
-                        this.props.Balances.amount),
-                    publicKeyAbbr: handleException(
-                        () => pubKeyAbbr(this.props.Balances.payee),
-                        () => "Not Available"
-                    ),
-                    transactionType: this.props.Balances.transactionType,
-                    memo: this.props.Balances.memoText,
-                }),
+
+            this.props.changeModalState({
+                txConfirmMsg: { showing: true, },
             })
 
             const signedTx = await signTransaction(
@@ -472,6 +462,16 @@ class Balances extends Component {
                 }}
             />
         </Modal>
+
+        <Modal
+            open={this.props.appUi.modals.txConfirmMsg ?
+                this.props.appUi.modals.txConfirmMsg.showing : false
+            }
+            title="Confirm on Hardware Device"
+        >
+            <TxConfirmMsg />
+        </Modal>
+
 
 
         {!this.props.accountInfo.registered &&
