@@ -17,7 +17,6 @@ import {
     emoji,
     getAssetCode,
     pubKeyAbbr,
-    StellarSdk,
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
 import { withLoginManager } from "../LoginManager"
@@ -44,6 +43,7 @@ import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
 
 import "./index.css"
+import { StellarSdk, fetchAccount } from "../../lib/stellar-tx"
 
 
 
@@ -273,8 +273,7 @@ class Payments extends Component {
 
     // ...
     updateAccount = () =>
-        this.stellarServer
-            .loadAccount(this.props.appAuth.publicKey)
+        fetchAccount(this.props.appAuth.publicKey)
             .catch(StellarSdk.NotFoundError, function (_err) {
                 throw new Error("The destination account does not exist!")
             })

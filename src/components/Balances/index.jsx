@@ -11,12 +11,13 @@ import { action as AccountAction } from "../../redux/Account"
 import { action as BalancesAction } from "../../redux/Balances"
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import {
-    StellarSdk,
     pubKeyAbbr,
     handleException,
     insertPathIndex,
 } from "../../lib/utils"
 import {
+    StellarSdk,
+    fetchAccount,
     buildCreateAccountTx,
     buildPaymentTx,
     broadcastTx,
@@ -114,12 +115,7 @@ class Balances extends Component {
 
     // ...
     _tmpQueryHorizon = () => {
-        let server = new StellarSdk.Server(
-            this.props.accountInfo.horizon
-        )
-
-        server
-            .loadAccount(this.props.appAuth.publicKey)
+        fetchAccount(this.props.appAuth.publicKey)
             .then((account) => {
                 this.props.accountExistsOnLedger({ account, })
                 this.props.setState({ exists: true, })
@@ -267,8 +263,7 @@ class Balances extends Component {
 
     // ...
     updateAccount = () => {
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-        server.loadAccount(this.props.appAuth.publicKey)
+        fetchAccount(this.props.appAuth.publicKey)
             .catch(StellarSdk.NotFoundError, (_) => {
                 throw new Error("The destination account does not exist!")
             })

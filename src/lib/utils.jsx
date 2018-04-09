@@ -1,14 +1,8 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
-import { config } from "../config"
+import { StellarSdk, fetchAccount } from "./stellar-tx"
 import { env } from "../components/StellarFox"
-
-
-
-
-// TODO: convert-to/use-as module
-export const StellarSdk = window.StellarSdk
 
 
 
@@ -159,23 +153,6 @@ export const endpointLookup = (address) => (
 
 
 
-// ...DEPRECATED
-export const federationLookup = (federationAddress) => (
-    (federationDomain) =>
-        federationDomain ?
-            axios
-                .get(env.federationEndpoint(federationDomain[0]))
-                .then((response) => ({
-                    ok: true,
-                    endpoint: toml.parse(response.data).FEDERATION_SERVER,
-                })) :
-            // in case of failure - return rejected promise with error description
-            Promise.reject(new Error("Federation address domain not found..."))
-)(federationAddress.match(domainRegex))
-
-
-
-
 // ...
 export const pubKeyValid = (pubKey) => {
     let validity = {}
@@ -216,9 +193,8 @@ export const pubKeyValid = (pubKey) => {
 // ...
 export const publicKeyExists = (publicKey) => (
     async () => {
-        const server = new StellarSdk.Server(config.horizon)
         try {
-            await server.loadAccount(publicKey)
+            await fetchAccount(publicKey)
             return true
         } catch (error) {
             return false
