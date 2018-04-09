@@ -127,12 +127,6 @@ class Balances extends Component {
             .finally(() => {
                 setTimeout(() => {
                     this.props.setModalLoaded()
-
-                    this.props.changeSnackbarState({
-                        open: true,
-                        message: "Account Loaded",
-                    })
-
                 }, 500)
 
             })
