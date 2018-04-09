@@ -40,7 +40,6 @@ import {
 } from "../../redux/actions"
 import LinearProgress from "material-ui/LinearProgress"
 import Button from "../../lib/common/Button"
-import Snackbar from "../../lib/common/Snackbar"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 import RegisterCard from "./RegisterCard"
@@ -64,9 +63,6 @@ class Balances extends Component {
     // ...
     state = {
         paymentsStreamer: null,
-        sbPayment: false,
-        sbPaymentAmount: null,
-        sbPaymentAssetCode: null,
         modalButtonText: "CANCEL",
         amountEntered: false,
         payee: null,
@@ -88,11 +84,6 @@ class Balances extends Component {
         this.setState({
             paymentsStreamer: this.paymentsStreamer.call(this),
             optionsStreamer: this.optionsStreamer.call(this),
-        })
-
-        this.props.changeSnackbarState({
-            open: false,
-            message: "",
         })
 
         if (!this.props.accountInfo.account) {
@@ -149,6 +140,12 @@ class Balances extends Component {
             .finally(() => {
                 setTimeout(() => {
                     this.props.setModalLoaded()
+
+                    this.props.changeSnackbarState({
+                        open: true,
+                        message: "Account Loaded",
+                    })
+
                 }, 500)
 
             })
@@ -175,14 +172,14 @@ class Balances extends Component {
 
                 ) {
                     this.updateAccount.call(this)
-                    this.setState({
-                        sbPayment: true,
-                        sbPaymentText: "Home domain changed: ",
-                        sbPaymentAmount:
+
+                    this.props.changeSnackbarState({
+                        open: true,
+                        message: `Home domain changed: ${
                             message.home_domain ?
-                                message.home_domain : "DOMAIN REMOVED",
-                        sbPaymentAssetCode: "",
+                                message.home_domain : "DOMAIN REMOVED"}`,
                     })
+
                 }
 
             },
@@ -204,18 +201,16 @@ class Balances extends Component {
                     message.source_account === this.props.appAuth.publicKey
                 ) {
                     this.updateAccount.call(this)
-                    this.setState({
-                        sbPayment: true,
-                        sbPaymentText:
-                            `Payment sent to new account [${
-                                pubKeyAbbr(message.account)
-                            }]: `,
-                        sbPaymentAmount:
+
+                    this.props.changeSnackbarState({
+                        open: true,
+                        message: `Payment sent to new account [${
+                            pubKeyAbbr(message.acount)}]: ${
                             this.props.assetManager.convertToAsset(
-                                message.starting_balance),
-                        sbPaymentAssetCode:
-                            this.props.Account.currency.toUpperCase(),
+                                message.starting_balance)} ${
+                            this.props.Account.currency.toUpperCase()}`,
                     })
+
                 }
 
                 /*
@@ -226,15 +221,15 @@ class Balances extends Component {
                     message.account === this.props.appAuth.publicKey
                 ) {
                     this.updateAccount.call(this)
-                    this.setState({
-                        sbPayment: true,
-                        sbPaymentText: "Account Funded: ",
-                        sbPaymentAmount:
+
+                    this.props.changeSnackbarState({
+                        open: true,
+                        message: `Account Funded: ${
                             this.props.assetManager.convertToAsset(
-                                message.starting_balance),
-                        sbPaymentAssetCode:
-                            this.props.Account.currency.toUpperCase(),
+                                message.starting_balance)} ${
+                            this.props.Account.currency.toUpperCase()}`,
                     })
+
                 }
 
                 /*
@@ -245,14 +240,15 @@ class Balances extends Component {
                     message.to === this.props.appAuth.publicKey
                 ) {
                     this.updateAccount.call(this)
-                    this.setState({
-                        sbPayment: true,
-                        sbPaymentText: "Balance Updated. Payment Received: ",
-                        sbPaymentAmount: this.props.assetManager.convertToAsset(
-                            message.amount),
-                        sbPaymentAssetCode:
-                            this.props.Account.currency.toUpperCase(),
+
+                    this.props.changeSnackbarState({
+                        open: true,
+                        message: `Balance Updated. Payment Received: ${
+                            this.props.assetManager.convertToAsset(
+                                message.amount)} ${
+                            this.props.Account.currency.toUpperCase()}`,
                     })
+
                 }
 
                 /*
@@ -263,14 +259,15 @@ class Balances extends Component {
                     message.from === this.props.appAuth.publicKey
                 ) {
                     this.updateAccount.call(this)
-                    this.setState({
-                        sbPayment: true,
-                        sbPaymentText: "Balance Updated. Payment Sent: ",
-                        sbPaymentAmount: this.props.assetManager.convertToAsset(
-                            message.amount),
-                        sbPaymentAssetCode:
-                            this.props.Account.currency.toUpperCase(),
+
+                    this.props.changeSnackbarState({
+                        open: true,
+                        message: `Balance Updated. Payment Sent: ${
+                            this.props.assetManager.convertToAsset(
+                                message.amount)} ${
+                            this.props.Account.currency.toUpperCase()}`,
                     })
+
                 }
             },
         })
@@ -290,13 +287,6 @@ class Balances extends Component {
                 this.props.accountMissingOnLedger()
             })
     }
-
-
-    // ...
-    handlePaymentSnackbarClose = () =>
-        this.setState({
-            sbPayment: false,
-        })
 
 
     // ...
@@ -500,14 +490,6 @@ class Balances extends Component {
 
     // ...
     render = () => <Fragment>
-
-        <Snackbar
-            open={this.state.sbPayment}
-            message={`${this.state.sbPaymentText} ${
-                this.state.sbPaymentAmount} ${
-                this.state.sbPaymentAssetCode}`}
-            onRequestClose={this.handlePaymentSnackbarClose}
-        />
 
         <Modal
             open={this.props.appUi.modals.signup ?

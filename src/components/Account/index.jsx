@@ -9,7 +9,6 @@ import {
     hideAlert,
     setTab,
     changeModalState,
-    changeSnackbarState,
     setAccountRegistered,
     ActionConstants,
     changeLoginState,
@@ -18,7 +17,6 @@ import { action as AccountAction } from "../../redux/Account"
 import { Tabs, Tab } from "material-ui/Tabs"
 import Dialog from "material-ui/Dialog"
 import Button from "../../lib/common/Button"
-import Snackbar from "../../lib/common/Snackbar"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 import Profile from "./Profile"
@@ -55,14 +53,6 @@ class Account extends Component {
     state = {
         modalButtonText: "CANCEL",
     }
-
-
-    // ...
-    closeSnackBar = () =>
-        this.props.changeSnackbarState({
-            open: false,
-            message: "",
-        })
 
 
     // ...
@@ -141,12 +131,6 @@ class Account extends Component {
                 }} />
             </Modal>
 
-            <Snackbar
-                open={this.props.appUi.snackbar.open}
-                message={this.props.appUi.snackbar.message}
-                onRequestClose={this.closeSnackBar}
-            />
-
             <Tabs
                 tabItemContainerStyle={styles.container}
                 inkBarStyle={styles.inkBar}
@@ -191,7 +175,6 @@ export default compose(
             hideAlert,
             setTab,
             changeModalState,
-            changeSnackbarState,
             setAccountRegistered,
             changeLoginState,
         }, dispatch)

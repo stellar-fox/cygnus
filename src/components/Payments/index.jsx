@@ -15,7 +15,6 @@ import {
 import {
     currencyGlyph,
     emoji,
-    formatAmount,
     getAssetCode,
     pubKeyAbbr,
     StellarSdk,
@@ -33,6 +32,7 @@ import {
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
+    changeSnackbarState,
 } from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
 
@@ -42,7 +42,6 @@ import {
 } from "material-ui/Tabs"
 import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
-import Snackbar from "../../lib/common/Snackbar"
 
 import "./index.css"
 
@@ -184,16 +183,6 @@ class Payments extends Component {
 
 
     // ...
-    handleNoMorePaymentsSnackbarClose = () =>
-        this.props.setState({ sbNoMorePayments: false, })
-
-
-    // ...
-    handleNoMoreTransactionsSnackbarClose = () =>
-        this.props.setState({ sbNoMoreTransactions: false, })
-
-
-    // ...
     paymentsStreamer = () =>
         this.stellarServer
             .payments()
@@ -209,18 +198,16 @@ class Payments extends Component {
                         message.source_account === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.props.setState({
-                            sbPayment: true,
-                            sbPaymentText:
-                                `Payment sent to new account [${
-                                    pubKeyAbbr(message.account)
-                                }]: `,
-                            sbPaymentAmount:
+
+                        this.props.changeSnackbarState({
+                            open: true,
+                            message: `Payment sent to new account [${
+                                pubKeyAbbr(message.acount)}]: ${
                                 this.props.assetManager.convertToAsset(
-                                    message.starting_balance),
-                            sbPaymentAssetCode:
-                                this.props.Account.currency.toUpperCase(),
+                                    message.starting_balance)} ${
+                                this.props.Account.currency.toUpperCase()}`,
                         })
+
                     }
 
 
@@ -232,15 +219,15 @@ class Payments extends Component {
                         message.account === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.props.setState({
-                            sbPayment: true,
-                            sbPaymentText: "Account Funded: ",
-                            sbPaymentAmount:
+
+                        this.props.changeSnackbarState({
+                            open: true,
+                            message: `Account Funded: ${
                                 this.props.assetManager.convertToAsset(
-                                    message.starting_balance),
-                            sbPaymentAssetCode:
-                                this.props.Account.currency.toUpperCase(),
+                                    message.starting_balance)} ${
+                                this.props.Account.currency.toUpperCase()}`,
                         })
+
                     }
 
                     /*
@@ -251,18 +238,15 @@ class Payments extends Component {
                         message.to === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.props.setState({
-                            sbPayment: true,
-                            sbPaymentText: "Payment Received: ",
-                            sbPaymentAmount: formatAmount(
-                                message.amount,
-                                this.props.accountInfo.precision
-                            ),
-                            sbPaymentAssetCode:
-                                message.asset_type === "native"
-                                    ? "XLM"
-                                    : message.asset_code,
+
+                        this.props.changeSnackbarState({
+                            open: true,
+                            message: `Payment Received: ${
+                                this.props.assetManager.convertToAsset(
+                                    message.amount)} ${
+                                this.props.Account.currency.toUpperCase()}`,
                         })
+
                     }
 
                     /*
@@ -273,18 +257,15 @@ class Payments extends Component {
                         message.from === this.props.appAuth.publicKey
                     ) {
                         this.updateAccount.call(this)
-                        this.props.setState({
-                            sbPayment: true,
-                            sbPaymentText: "Payment Sent: ",
-                            sbPaymentAmount: formatAmount(
-                                message.amount,
-                                this.props.accountInfo.precision
-                            ),
-                            sbPaymentAssetCode:
-                                message.asset_type === "native"
-                                    ? "XLM"
-                                    : message.asset_code,
+
+                        this.props.changeSnackbarState({
+                            open: true,
+                            message: `Payment Sent: ${
+                                this.props.assetManager.convertToAsset(
+                                    message.amount)} ${
+                                this.props.Account.currency.toUpperCase()}`,
                         })
+
                     }
                 },
             })
@@ -376,11 +357,6 @@ class Payments extends Component {
                 },
                 (_e) => this.props.accountMissingOnLedger()
             )
-
-
-    // ...
-    handlePaymentSnackbarClose = () =>
-        this.props.setState({ sbPayment: false, })
 
 
     // ...
@@ -745,29 +721,6 @@ class Payments extends Component {
                         to={staticRouter.getPath(state.tabSelected)}
                     />
                 </Switch>
-                <Snackbar
-                    open={state.sbPayment}
-                    message={`${state.sbPaymentText} ${
-                        state.sbPaymentAmount
-                    } ${state.sbPaymentAssetCode}`}
-                    onRequestClose={
-                        this.handlePaymentSnackbarClose
-                    }
-                />
-                <Snackbar
-                    open={state.sbNoMorePayments}
-                    message="No more payments found."
-                    onRequestClose={
-                        this.handleNoMorePaymentsSnackbarClose
-                    }
-                />
-                <Snackbar
-                    open={state.sbNoMoreTransactions}
-                    message="No more transactions found."
-                    onRequestClose={
-                        this.handleNoMoreTransactionsSnackbarClose
-                    }
-                />
 
                 <Tabs
                     tabItemContainerStyle={styles.container}
@@ -847,6 +800,7 @@ export default compose(
             setModalLoading,
             setModalLoaded,
             updateLoadingMessage,
+            changeSnackbarState,
         }, dispatch)
     )
 )(Payments)

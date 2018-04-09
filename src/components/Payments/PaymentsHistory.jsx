@@ -17,7 +17,10 @@ import {
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
 
-import { setAccountPayments } from "../../redux/actions"
+import {
+    changeSnackbarState,
+    setAccountPayments,
+} from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
 
 import { ListItem } from "material-ui/List"
@@ -186,12 +189,15 @@ class PaymentsHistory extends Component {
 
 
     // ...
-    noMorePayments = (state) =>
+    noMorePayments = (state) => {
         this.props.setState({
-            sbNoMorePayments: true,
             ...state,
         })
-
+        this.props.changeSnackbarState({
+            open: true,
+            message: "No more payments data.",
+        })
+    }
 
     // ...
     determineLeftIcon = (payment) => (
@@ -409,6 +415,7 @@ export default compose(
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: PaymentsAction.setState,
+            changeSnackbarState,
             setAccountPayments,
         }, dispatch)
     )
