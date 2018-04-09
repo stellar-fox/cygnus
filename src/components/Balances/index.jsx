@@ -64,15 +64,6 @@ class Balances extends Component {
     state = {
         paymentsStreamer: null,
         modalButtonText: "CANCEL",
-        amountEntered: false,
-        payee: null,
-        memoRequired: false,
-        amountValid: false,
-        amount: 0,
-        memoValid: false,
-        buttonSendDisabled: true,
-        paymentCardVisible: false,
-        newAccount: false,
         paymentId: null,
         ledgerId: null,
     }
@@ -358,15 +349,6 @@ class Balances extends Component {
             })
 
             this.setState({
-                amountEntered: false,
-                payee: null,
-                memoRequired: false,
-                amountValid: false,
-                amount: 0,
-                memoValid: false,
-                buttonSendDisabled: true,
-                paymentCardVisible: false,
-                newAccount: false,
                 paymentId: broadcast.hash,
                 ledgerId: broadcast.ledger,
             })
@@ -376,17 +358,6 @@ class Balances extends Component {
                 },
             })
         } catch (error) {
-            this.setState({
-                amountEntered: false,
-                payee: null,
-                memoRequired: false,
-                amountValid: false,
-                amount: 0,
-                memoValid: false,
-                buttonSendDisabled: true,
-                paymentCardVisible: false,
-                newAccount: false,
-            })
             this.showError.call(this, error.message)
         }
     }
