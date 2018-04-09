@@ -1,5 +1,8 @@
-import { StellarSdk } from "./utils"
+// import { StellarSdk } from "./utils"
 import { config } from "../config"
+
+// TODO: convert-to/use-as module
+export const StellarSdk = window.StellarSdk
 
 StellarSdk.Network.useTestNetwork()
 const server = new StellarSdk.Server(config.horizon)

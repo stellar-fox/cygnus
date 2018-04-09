@@ -17,6 +17,7 @@ import { ActionConstants } from "../../redux/actions"
 
 import AlertModal from "./AlertModal"
 import LoadingModal from "../LoadingModal"
+import SnackbarInstance from "./SnackbarInstance"
 import Welcome from "../Welcome"
 import Bank from "../Bank"
 
@@ -78,6 +79,7 @@ export default compose(
                 <Fragment>
                     <AlertModal />
                     <LoadingModal />
+                    <SnackbarInstance />
                     <Switch>
                         <Route exact path={getPath("Welcome")}>
                             { this.renderWelcome }

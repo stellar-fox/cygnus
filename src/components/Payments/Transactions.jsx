@@ -8,7 +8,10 @@ import {
     utcToLocaleDateTime,
 } from "../../lib/utils"
 
-import { setAccountTransactions } from "../../redux/actions"
+import {
+    changeSnackbarState,
+    setAccountTransactions,
+} from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
 
 import IconButton from "material-ui/IconButton"
@@ -54,12 +57,15 @@ class Transactions extends Component {
 
 
     // ...
-    noMoreTransactionsNotice = (state) =>
+    noMoreTransactionsNotice = (state) => {
         this.props.setState({
-            sbNoMoreTransactions: true,
             ...state,
         })
-
+        this.props.changeSnackbarState({
+            open: true,
+            message: "No more transactions data.",
+        })
+    }
 
     // ...
     getNextTransactionsPage = () =>
@@ -250,6 +256,7 @@ export default connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: PaymentsAction.setState,
+        changeSnackbarState,
         setAccountTransactions,
     }, dispatch)
 )(Transactions)

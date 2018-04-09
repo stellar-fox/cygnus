@@ -30,9 +30,10 @@ import { action as BalancesAction } from "../../redux/Balances"
 import {
     fedToPub,
     errorMessageForInvalidPaymentAddress as ErrorPaymentAddress,
-    StellarSdk,
     publicKeyExists,
 } from "../../lib/utils"
+
+import { StellarSdk } from "../../lib/stellar-tx"
 
 BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
 

@@ -1,6 +1,6 @@
 import Transport from "@ledgerhq/hw-transport-u2f"
 import Str from "@ledgerhq/hw-app-str"
-import { StellarSdk } from "./utils"
+import { StellarSdk } from "./stellar-tx"
 
 
 /**

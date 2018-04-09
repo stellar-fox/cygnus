@@ -13,7 +13,7 @@ import {
 
 import {
     htmlEntities as he,
-    federationLookup,
+    endpointLookup,
     errorMessageForInvalidPaymentAddress,
 } from "../../lib/utils"
 import { stellarFoundationLink } from "../StellarFox/env"
@@ -74,7 +74,7 @@ class PanelExplorer extends Component {
             this.props.updateLoadingMessage({
                 message: "Looking up federation endpoint ...",
             })
-            federationLookup(textInputValue)
+            endpointLookup(textInputValue)
                 .then((federationEndpointObj) => {
                     if (federationEndpointObj.ok) {
                         axios
