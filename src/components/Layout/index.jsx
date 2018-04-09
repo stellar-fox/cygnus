@@ -10,7 +10,7 @@ import {
 import {
     ConnectedSwitch as Switch,
     resolvePath,
-    withStellarRouter,
+    withStaticRouter,
 } from "../StellarRouter"
 
 import { ActionConstants } from "../../redux/actions"
@@ -26,7 +26,7 @@ import Bank from "../Bank"
 
 // <Layout> component
 export default compose(
-    withStellarRouter,
+    withStaticRouter,
     connect(
         // map state to props.
         (state) => ({

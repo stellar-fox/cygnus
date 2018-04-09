@@ -68,10 +68,7 @@ const StaticRouterContext = React.createContext({})
 // <StaticRouter> component
 export const StaticRouter = connect(
     // map state to props.
-    (state) => ({
-        currentPath: state.Router.location.pathname,
-        currentView: state.Router.currentView,
-    }),
+    null,
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         addStaticPaths: StellarRouterAction.addStaticPaths,
@@ -83,8 +80,6 @@ export const StaticRouter = connect(
         // ...
         static propTypes = {
             addStaticPaths: PropTypes.func.isRequired,
-            currentPath: PropTypes.string.isRequired,
-            currentView: PropTypes.string.isRequired,
             push: PropTypes.func.isRequired,
         }
 
@@ -125,13 +120,10 @@ export const StaticRouter = connect(
         render = () => (
             (
                 { addPaths, getPath, pushByView, },
-                { children, currentPath, currentView, push, }
+                { children, push, }
             ) =>
                 React.createElement(StaticRouterContext.Provider, {
-                    value: {
-                        addPaths, getPath, push, currentPath,
-                        currentView, pushByView,
-                    },
+                    value: { addPaths, getPath, push, pushByView, },
                 }, children)
         )(this, this.props)
 
@@ -151,15 +143,14 @@ export const StellarRouter =
 
 
 
-// <withStellarRouter(...)> HOC
-// provides 'staticRouter' and all '<Route>' props to wrapped component
-// (in other words, provides exactly the same props as 'withRouter' HOC
+// <withStaticRouter(...)> HOC
+// provides the same props as 'withRouter' HOC
 // and additionally a 'staticRouter' prop)
-export const withStellarRouter = (WrappedComponent) => {
+export const withStaticRouter = (WrappedComponent) => {
 
     let
         // ...
-        WithStellarRouter = hoistStatics(
+        WithStaticRouter = hoistStatics(
             class extends Component {
 
                 // ...
@@ -193,13 +184,13 @@ export const withStellarRouter = (WrappedComponent) => {
 
         // ...
         forwardRef = (props, ref) =>
-            React.createElement(WithStellarRouter,
+            React.createElement(WithStaticRouter,
                 { ...props, forwardedRef: ref, }
             )
 
     // ...
     forwardRef.displayName =
-        `withStellarRouter(${
+        `withStaticRouter(${
             WrappedComponent.displayName || WrappedComponent.name
         })`
 
@@ -210,6 +201,18 @@ export const withStellarRouter = (WrappedComponent) => {
     return React.forwardRef(forwardRef)
 
 }
+
+
+
+
+// HOC binding 'currentPath' and 'currentView'
+// from application's redux state Router
+export const withDynamicRoutes = connect(
+    (state) => ({
+        currentPath: state.Router.location.pathname,
+        currentView: state.Router.currentView,
+    }),
+)
 
 
 

@@ -1,8 +1,12 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { compose } from "redux"
 import { connect } from "react-redux"
 import { NavLink } from "react-router-dom"
-import { withStellarRouter } from "../StellarRouter"
+import {
+    withDynamicRoutes,
+    withStaticRouter
+} from "../StellarRouter"
 import { bankDrawerWidth } from "../StellarFox/env"
 
 import Drawer from "material-ui/Drawer"
@@ -13,9 +17,11 @@ import "./BankDrawer.css"
 
 
 // <NavLinkTemplate> component
-// with bound 'currentPath', 'paths' state props and 'push' dispatcher
-const NavLinkTemplate = withStellarRouter(
-    ({ staticRouter: { currentPath, pushByView, getPath, }, to, icon, }) =>
+const NavLinkTemplate = compose(
+    withStaticRouter,
+    withDynamicRoutes
+)(
+    ({ currentPath, staticRouter: { pushByView, getPath, }, to, icon, }) =>
         <NavLink
             className="menu-item"
             onClick={(e) => {
