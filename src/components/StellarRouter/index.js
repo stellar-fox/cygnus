@@ -102,10 +102,10 @@ export const StaticRouter = connect(
 
 
         // takes view name and returns stored static path
-        getPath = (viewName) =>
+        getPath = (viewName, fallback = env.appBasePath) =>
             viewName in this._staticPaths ?
                 this._staticPaths[viewName] :
-                env.appBasePath
+                fallback
 
 
         // convenience method
