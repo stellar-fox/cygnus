@@ -15,7 +15,6 @@ import {
 
 import {
     emoji,
-    getAssetCode,
     pubKeyAbbr,
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
@@ -532,7 +531,7 @@ class Payments extends Component {
                             <div>
                                 <div className="f-e-col">
                                     <div>
-                                        {getAssetCode(effect) === "XLM" ? (
+                                        {this.props.assetManager.getAssetCode(effect) === "XLM" ? (
                                             <span className="credit">
                                                 {" "}&#x0002B;{" "}
                                                 {this.props.assetManager.getAssetGlyph(
@@ -546,7 +545,7 @@ class Payments extends Component {
                                                 {" "}&#x0002B;{" "}
                                                 {effect.amount}{" "}
                                                 <span className="smaller">
-                                                    {getAssetCode(effect)}
+                                                    {this.props.assetManager.getAssetCode(effect)}
                                                 </span>
                                             </span>
                                         )}
@@ -600,7 +599,7 @@ class Payments extends Component {
                             <div>
                                 <div className="f-e-col">
                                     <div>
-                                        {getAssetCode(effect) === "XLM" ? (
+                                        {this.props.assetManager.getAssetCode(effect) === "XLM" ? (
                                             <span className="debit">
                                                 {" "}&#x02212;{" "}
                                                 {this.props.assetManager.getAssetGlyph(
@@ -614,7 +613,7 @@ class Payments extends Component {
                                                 {" "}&#x02212;{" "}
                                                 {effect.amount}{" "}
                                                 <span className="smaller">
-                                                    {getAssetCode(effect)}
+                                                    {this.props.assetManager.getAssetCode(effect)}
                                                 </span>
                                             </span>
                                         )}

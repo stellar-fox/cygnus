@@ -10,7 +10,6 @@ import { withAssetManager } from "../AssetManager"
 
 import {
     choose,
-    getAssetCode,
     htmlEntities as he,
     utcToLocaleDateTime,
 } from "../../lib/utils"
@@ -254,7 +253,7 @@ class PaymentsHistory extends Component {
                             {payment.amount}<he.Space />{assetCode}
                         </span>
                 )(
-                    getAssetCode(payment),
+                    this.props.assetManager.getAssetCode(payment),
                     payment.to === this.props.appAuth.publicKey ?
                         he.Plus : he.Minus
                 )

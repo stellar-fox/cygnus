@@ -307,14 +307,6 @@ export const createReducer = (initState = {}) =>
 
 
 
-// ...
-// TODO: move to <AssetManager> (?)
-export const getAssetCode = (asset) =>
-    asset.asset_type === "native" ? "XLM" : asset.asset_code
-
-
-
-
 // makes first letter capital (e.g. "hello" -> "Hello")
 export const capitalize = (str) =>
     str.substring(0, 1).toUpperCase() + str.substring(1)

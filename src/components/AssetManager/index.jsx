@@ -78,6 +78,11 @@ class AssetManager extends Component {
 
 
     // ...
+    getAssetCode = (asset) =>
+        asset.asset_type === "native" ? "XLM" : asset.asset_code
+
+
+    // ...
     getAssetDescription = (currency) => (
         (c) => c[currency]
     )({
