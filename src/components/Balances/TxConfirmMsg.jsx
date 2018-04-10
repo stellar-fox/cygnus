@@ -34,7 +34,7 @@ export default connect(
                 <ListItem
                     disabled={true}
                     primaryText="Amount"
-                    secondaryText={`${Balances.amount} XLM`}
+                    secondaryText={`${Balances.amountNative} XLM`}
                     leftIcon={
                         <i className="green material-icons md-icon-small">
                             account_balance_wallet
