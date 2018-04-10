@@ -9,7 +9,7 @@ import {
 } from "../StellarFox/env"
 import {
     ConnectedSwitch as Switch,
-    withStellarRouter,
+    withStaticRouter,
 } from "../StellarRouter"
 
 import Balances from "../Balances"
@@ -34,7 +34,7 @@ const computeStyle = (drawerVisible) => ({
 
 // <BankContent> component
 export default compose(
-    withStellarRouter,
+    withStaticRouter,
     connect(
         // map state to props.
         (state) => ({ drawerVisible: state.Bank.drawerVisible, })

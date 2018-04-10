@@ -10,14 +10,14 @@ import {
 import {
     ConnectedSwitch as Switch,
     resolvePath,
-    withStellarRouter,
+    withStaticRouter,
 } from "../StellarRouter"
 
 import { ActionConstants } from "../../redux/actions"
 
 import AlertModal from "./AlertModal"
 import LoadingModal from "../LoadingModal"
-import SnackbarInstance from "./SnackbarInstance"
+import ConnectedSnackbar from "./ConnectedSnackbar"
 import Welcome from "../Welcome"
 import Bank from "../Bank"
 
@@ -26,7 +26,7 @@ import Bank from "../Bank"
 
 // <Layout> component
 export default compose(
-    withStellarRouter,
+    withStaticRouter,
     connect(
         // map state to props.
         (state) => ({
@@ -79,7 +79,7 @@ export default compose(
                 <Fragment>
                     <AlertModal />
                     <LoadingModal />
-                    <SnackbarInstance />
+                    <ConnectedSnackbar />
                     <Switch>
                         <Route exact path={getPath("Welcome")}>
                             { this.renderWelcome }

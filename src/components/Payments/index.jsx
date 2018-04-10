@@ -9,7 +9,8 @@ import { Redirect } from "react-router-dom"
 import {
     ConnectedSwitch as Switch,
     resolvePath,
-    withStellarRouter,
+    withDynamicRoutes,
+    withStaticRouter,
 } from "../StellarRouter"
 
 import {
@@ -712,7 +713,7 @@ class Payments extends Component {
 
     // ...
     render = () => (
-        ({ staticRouter, state, }) =>
+        ({ currentView, staticRouter, state, }) =>
             <Fragment>
                 <Switch>
                     <Redirect exact
@@ -725,10 +726,8 @@ class Payments extends Component {
                     tabItemContainerStyle={styles.container}
                     inkBarStyle={styles.inkBar}
                     value={
-                        this.validTabNames.indexOf(
-                            staticRouter.currentView
-                        ) !== -1 ?
-                            staticRouter.currentView :
+                        this.validTabNames.indexOf(currentView) !== -1 ?
+                            currentView :
                             state.tabSelected
                     }
                     onChange={this.handleTabSelect}
@@ -776,7 +775,8 @@ class Payments extends Component {
 export default compose(
     withAssetManager,
     withLoginManager,
-    withStellarRouter,
+    withStaticRouter,
+    withDynamicRoutes,
     connect(
         // map state to props.
         (state) => ({
@@ -801,5 +801,5 @@ export default compose(
             updateLoadingMessage,
             changeSnackbarState,
         }, dispatch)
-    )
+    ),
 )(Payments)
