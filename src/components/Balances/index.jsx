@@ -11,7 +11,6 @@ import { action as AccountAction } from "../../redux/Account"
 import { action as BalancesAction } from "../../redux/Balances"
 import { signTransaction, awaitConnection } from "../../lib/ledger"
 import {
-    pubKeyAbbr,
     insertPathIndex,
 } from "../../lib/utils"
 import {
@@ -47,6 +46,10 @@ import BalancesCard from "./BalancesCard"
 import NoAccountCard from "./NoAccountCard"
 import PaymentCard from "./PaymentCard"
 import TxConfirmMsg from "./TxConfirmMsg"
+import {
+    operationsStreamer,
+    paymentsStreamer
+} from "../Streamers"
 import "./index.css"
 
 
@@ -63,6 +66,7 @@ class Balances extends Component {
     // ...
     state = {
         paymentsStreamer: null,
+        operationsStreamer: null,
         modalButtonText: "CANCEL",
         paymentId: null,
         ledgerId: null,
@@ -71,10 +75,18 @@ class Balances extends Component {
 
     // ...
     componentDidMount = () => {
-        // FIXME: merge streamers
+
         this.setState({
-            paymentsStreamer: this.paymentsStreamer.call(this),
-            optionsStreamer: this.optionsStreamer.call(this),
+            paymentsStreamer: paymentsStreamer(
+                this.props.appAuth.publicKey,
+                this.props.changeSnackbarState,
+                this.props.accountExistsOnLedger
+            ),
+            operationsStreamer: operationsStreamer(
+                this.props.appAuth.publicKey,
+                this.props.changeSnackbarState,
+                this.props.accountExistsOnLedger
+            ),
         })
 
         if (!this.props.accountInfo.account) {
@@ -92,7 +104,7 @@ class Balances extends Component {
     // ...
     componentWillUnmount = () => {
         this.state.paymentsStreamer.call(this)
-        this.state.optionsStreamer.call(this)
+        this.state.operationsStreamer.call(this)
     }
 
 
@@ -128,142 +140,6 @@ class Balances extends Component {
                     this.props.setModalLoaded()
                 }, 500)
 
-            })
-    }
-
-
-    // ...
-    optionsStreamer = () => {
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-
-        return server.operations().cursor("now").stream({
-            onmessage: (message) => {
-
-                /*
-                * Set options. (home_domain - experiment)
-                */
-                if (
-                    message.type === "set_options"  &&
-                    message.source_account ===
-                        this.props.appAuth.publicKey  &&
-                    this.props
-                        .accountInfo.account
-                        .account.home_domain !== message.home_domain
-
-                ) {
-                    this.updateAccount.call(this)
-
-                    this.props.changeSnackbarState({
-                        open: true,
-                        message: `Home domain changed: ${
-                            message.home_domain ?
-                                message.home_domain : "DOMAIN REMOVED"}`,
-                    })
-
-                }
-
-            },
-        })
-    }
-
-
-    // ...
-    paymentsStreamer = () => {
-        let server = new StellarSdk.Server(this.props.accountInfo.horizon)
-        return server.payments().cursor("now").stream({
-            onmessage: (message) => {
-
-                /*
-                * Payment to fund a new account.
-                */
-                if (
-                    message.type === "create_account" &&
-                    message.source_account === this.props.appAuth.publicKey
-                ) {
-                    this.updateAccount.call(this)
-
-                    this.props.changeSnackbarState({
-                        open: true,
-                        message: `Payment sent to new account [${
-                            pubKeyAbbr(message.acount)}]: ${
-                            this.props.assetManager.convertToAsset(
-                                message.starting_balance)} ${
-                            this.props.Account.currency.toUpperCase()}`,
-                    })
-
-                }
-
-                /*
-                * Initial funding of own account.
-                */
-                if (
-                    message.type === "create_account" &&
-                    message.account === this.props.appAuth.publicKey
-                ) {
-                    this.updateAccount.call(this)
-
-                    this.props.changeSnackbarState({
-                        open: true,
-                        message: `Account Funded: ${
-                            this.props.assetManager.convertToAsset(
-                                message.starting_balance)} ${
-                            this.props.Account.currency.toUpperCase()}`,
-                    })
-
-                }
-
-                /*
-                * Receiving payment.
-                */
-                if (
-                    message.type === "payment" &&
-                    message.to === this.props.appAuth.publicKey
-                ) {
-                    this.updateAccount.call(this)
-
-                    this.props.changeSnackbarState({
-                        open: true,
-                        message: `Balance Updated. Payment Received: ${
-                            this.props.assetManager.convertToAsset(
-                                message.amount)} ${
-                            this.props.Account.currency.toUpperCase()}`,
-                    })
-
-                }
-
-                /*
-                * Sending payment.
-                */
-                if (
-                    message.type === "payment" &&
-                    message.from === this.props.appAuth.publicKey
-                ) {
-                    this.updateAccount.call(this)
-
-                    this.props.changeSnackbarState({
-                        open: true,
-                        message: `Balance Updated. Payment Sent: ${
-                            this.props.assetManager.convertToAsset(
-                                message.amount)} ${
-                            this.props.Account.currency.toUpperCase()}`,
-                    })
-
-                }
-            },
-        })
-    }
-
-
-    // ...
-    updateAccount = () => {
-        fetchAccount(this.props.appAuth.publicKey)
-            .catch(StellarSdk.NotFoundError, (_) => {
-                throw new Error("The destination account does not exist!")
-            })
-            .then((account) => {
-                this.props.accountExistsOnLedger({account,})
-            }, (_) => {
-                this.props.accountMissingOnLedger()
             })
     }
 
