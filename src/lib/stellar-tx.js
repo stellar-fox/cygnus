@@ -14,6 +14,16 @@ export const fetchAccount = async (publicKey) =>
 
 
 // ...
+export const payments = () =>
+    server.payments().cursor("now")
+
+
+// ...
+export const operations = () =>
+    server.operations().cursor("now")
+
+
+// ...
 export const buildCreateAccountTx = async (txData) =>
     new StellarSdk.TransactionBuilder(
         await fetchAccount(txData.source)
