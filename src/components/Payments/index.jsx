@@ -8,6 +8,7 @@ import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
 import {
     ConnectedSwitch as Switch,
+    ensureTrailingSlash,
     resolvePath,
     withDynamicRoutes,
     withStaticRouter,
@@ -83,16 +84,20 @@ class Payments extends Component {
         // relative resolve
         this.rr = resolvePath(this.props.match.path)
 
+        // ...
+        this.validTabNames = ["History", "Transactions", ]
+
         // static paths
-        this.props.staticRouter.addPaths({
-            "History": this.rr("history/"),
-            "Transactions": this.rr("transactions/"),
-        })
+        this.props.staticRouter.addPaths(
+            this.validTabNames.reduce((acc, tn) => ({
+                ...acc,
+                [tn]: this.rr(ensureTrailingSlash(tn.toLowerCase())),
+            }), {})
+        )
     }
 
 
-    // ...
-    validTabNames = ["History", "Transactions", ]
+
 
 
     // ...
@@ -731,7 +736,11 @@ class Payments extends Component {
                     onChange={this.handleTabSelect}
                 >
 
-                    <Tab style={styles.tab} label="History" value="History">
+                    <Tab
+                        style={styles.tab}
+                        label={this.validTabNames[0]}
+                        value={this.validTabNames[0]}
+                    >
                         <div className="tab-content">
 
                             <PaymentsHistory
@@ -746,8 +755,8 @@ class Payments extends Component {
 
                     <Tab
                         style={styles.tab}
-                        label="Transactions"
-                        value="Transactions"
+                        label={this.validTabNames[1]}
+                        value={this.validTabNames[1]}
                     >
                         <div className="tab-content">
 
