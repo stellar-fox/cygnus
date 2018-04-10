@@ -4,6 +4,12 @@
     padding: 15px;
 }
 
+.frame-blue {
+    border: 1px solid rgb(15,46,83);
+    border-radius: 3px;
+    padding: 15px;
+}
+
 .m-t {
     margin-top: 1rem;
 }
