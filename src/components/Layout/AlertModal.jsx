@@ -25,7 +25,7 @@ const AlertWithDismiss =
                     onClick={onDismiss}
                 />,
             ]}>
-            <div class="p-t">{ content }</div>
+            <div className="p-t">{ content }</div>
         </Modal>
 
 
