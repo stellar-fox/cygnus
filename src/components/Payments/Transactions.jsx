@@ -158,6 +158,9 @@ class Transactions extends Component {
                                         Account
                                     </TableHeaderColumn>
                                     <TableHeaderColumn className="tx-table-header-column">
+                                        Cost Bearer
+                                    </TableHeaderColumn>
+                                    <TableHeaderColumn className="tx-table-header-column">
                                         Memo
                                     </TableHeaderColumn>
                                     <TableHeaderColumn className="tx-table-header-column">
@@ -182,20 +185,20 @@ class Transactions extends Component {
                                                 </TableRowColumn>
                                                 <TableRowColumn className="tx-table-row-column">
                                                     <span>
-                                                        <span>
-                                                            {pubKeyAbbr(tx.source_account)}
-                                                        </span>
-                                                        <span className="account-direction">
-                                                            {
-                                                                tx.source_account ===
-                                                                    this
-                                                                        .props
-                                                                        .accountInfo
-                                                                        .pubKey ?
-                                                                    "Yours" :
-                                                                    "Theirs"
-                                                            }
-                                                        </span>
+                                                        {pubKeyAbbr(tx.source_account)}
+                                                    </span>
+                                                </TableRowColumn>
+                                                <TableRowColumn className="tx-table-row-column">
+                                                    <span className="account-direction">
+                                                        {
+                                                            tx.source_account ===
+                                                                this
+                                                                    .props
+                                                                    .accountInfo
+                                                                    .pubKey ?
+                                                                "You" :
+                                                                "Them"
+                                                        }
                                                     </span>
                                                 </TableRowColumn>
                                                 <TableRowColumn className="tx-table-row-column">
