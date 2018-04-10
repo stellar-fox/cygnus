@@ -1,16 +1,21 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 import {
     Card,
     CardActions,
     CardText,
 } from "material-ui/Card"
+import { htmlEntities as he } from "../../lib/utils"
 import Button from "../../lib/common/Button"
-
+import {
+    changeModalState,
+} from "../../redux/actions"
 
 
 
 // <RegisterCard> component
-export default class RegisterCard extends Component {
+class RegisterCard extends Component {
 
     // ...
     showSignupModal = () =>
@@ -43,7 +48,8 @@ export default class RegisterCard extends Component {
                             <li>Create and manage contact book of your payees.</li>
                             <li>Gain access to powerful account settings.</li>
                         </ul>
-                        <p>Would you like to open one today? It&apos;s super easy!</p>
+                        <p>Would you like to open one today?
+                            It<he.Apos />s super easy!</p>
                     </div>
                     <div className="fade-extreme small-icon">
                         <i className="material-icons">blur_on</i>
@@ -64,3 +70,14 @@ export default class RegisterCard extends Component {
         </CardActions>
     </Card>
 }
+
+
+// ...
+export default connect(
+    // map state to props.
+    (_state) => ({}),
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        changeModalState,
+    }, dispatch)
+)(RegisterCard)
