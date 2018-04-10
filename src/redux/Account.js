@@ -12,6 +12,7 @@ const initState = {
     discoverable: true,
     currency: "eur",
     exists: false,
+    tabSelected: "Profile",
 }
 
 

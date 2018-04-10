@@ -1,9 +1,6 @@
 // ...
 const initState = {
-    authenticateButton: {
-        isDisabled: true,
-    },
-    tabs: {},
+    authenticateButton: { isDisabled: true, },
     messages: {},
 }
 
@@ -25,14 +22,6 @@ export default function (state = initState, action) {
             state = {
                 ...state,
                 authenticateButton: { isDisabled: false, },
-            }
-            break
-
-        // TODO: move this functionality to <Account> reducer
-        case "SET_TAB_SELECTED":
-            state = {
-                ...state,
-                tabs: Object.assign(state.tabs || {}, action.payload),
             }
             break
 

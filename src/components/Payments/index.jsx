@@ -97,9 +97,6 @@ class Payments extends Component {
     }
 
 
-
-
-
     // ...
     stellarServer = new StellarSdk.Server(this.props.accountInfo.horizon)
 
@@ -730,8 +727,7 @@ class Payments extends Component {
                     inkBarStyle={styles.inkBar}
                     value={
                         this.validTabNames.indexOf(currentView) !== -1 ?
-                            currentView :
-                            state.tabSelected
+                            currentView : state.tabSelected
                     }
                     onChange={this.handleTabSelect}
                 >
