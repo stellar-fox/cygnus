@@ -14,7 +14,6 @@ import {
 } from "../StellarRouter"
 
 import {
-    currencyGlyph,
     emoji,
     getAssetCode,
     pubKeyAbbr,
@@ -436,7 +435,7 @@ class Payments extends Component {
                                 <div>
                                     <span className="credit">
                                         {" "}&#x0002B;{" "}
-                                        {currencyGlyph(
+                                        {this.props.assetManager.getAssetGlyph(
                                             this.props.Account.currency
                                         )}{" "}
                                         {this.props.assetManager.convertToAsset(
@@ -536,7 +535,7 @@ class Payments extends Component {
                                         {getAssetCode(effect) === "XLM" ? (
                                             <span className="credit">
                                                 {" "}&#x0002B;{" "}
-                                                {currencyGlyph(
+                                                {this.props.assetManager.getAssetGlyph(
                                                     this.props.Account.currency
                                                 )}{" "}
                                                 {this.props.assetManager.convertToAsset(
@@ -604,7 +603,7 @@ class Payments extends Component {
                                         {getAssetCode(effect) === "XLM" ? (
                                             <span className="debit">
                                                 {" "}&#x02212;{" "}
-                                                {currencyGlyph(
+                                                {this.props.assetManager.getAssetGlyph(
                                                     this.props.Account.currency
                                                 )}{" "}
                                                 {this.props.assetManager.convertToAsset(

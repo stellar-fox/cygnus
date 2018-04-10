@@ -10,7 +10,6 @@ import { withAssetManager } from "../AssetManager"
 
 import {
     choose,
-    currencyGlyph,
     getAssetCode,
     htmlEntities as he,
     utcToLocaleDateTime,
@@ -260,7 +259,7 @@ class PaymentsHistory extends Component {
                         he.Plus : he.Minus
                 )
             )
-    )(currencyGlyph(this.props.Account.currency))
+    )(this.props.assetManager.getAssetGlyph(this.props.Account.currency))
 
 
     // ...

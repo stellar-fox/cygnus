@@ -91,6 +91,19 @@ class AssetManager extends Component {
 
 
     // ...
+    getAssetGlyph = (currency) => (
+        (c) => c[currency]
+    )({
+        eur: "€",
+        usd: "$",
+        aud: "$",
+        nzd: "$",
+        thb: "฿",
+        pln: "zł",
+    })
+
+
+    // ...
     getAssetDenomination = (currency) => (
         (c) => c[currency]
     )({

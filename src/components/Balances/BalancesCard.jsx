@@ -13,9 +13,6 @@ import {
     CardHeader,
     CardText,
 } from "material-ui/Card"
-import {
-    currencyGlyph,
-} from "../../lib/utils"
 import Button from "../../lib/common/Button"
 import {
     changeModalState,
@@ -109,7 +106,8 @@ class BalancesCard extends Component {
                 <div>
                     <div className="balance">
                         <span className="fade currency-glyph">
-                            {currencyGlyph(this.props.Account.currency)}
+                            {this.props.assetManager.getAssetGlyph(
+                                this.props.Account.currency)}
                         </span>
                         <span className="p-l-small">
                             {this.props.assetManager.convertToAsset(

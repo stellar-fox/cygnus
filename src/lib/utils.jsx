@@ -315,22 +315,6 @@ export const getAssetCode = (asset) =>
 
 
 
-// ...
-// TODO: move to <AssetManager> (?)
-export const currencyGlyph = (currency) => (
-    (c) => c[currency]
-)({
-    "eur": "€",
-    "usd": "$",
-    "aud": "$",
-    "nzd": "$",
-    "thb": "฿",
-    "pln": "zł",
-})
-
-
-
-
 // makes first letter capital (e.g. "hello" -> "Hello")
 export const capitalize = (str) =>
     str.substring(0, 1).toUpperCase() + str.substring(1)

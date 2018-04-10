@@ -16,9 +16,6 @@ import {
     CardActions,
     CardText,
 } from "material-ui/Card"
-import {
-    currencyGlyph,
-} from "../../lib/utils"
 import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import InputField from "../../lib/common/InputField"
@@ -50,6 +47,7 @@ class PaymentCard extends Component {
         setState: PropTypes.func.isRequired,
     }
 
+    // ...
     componentDidMount = () => {
         // reset payment variables
         const now = new Date()
@@ -151,6 +149,8 @@ class PaymentCard extends Component {
 
         this.props.setState({
             amount: this.textInputFieldAmount.state.value,
+            amountNative: this.props.assetManager.convertToNative(
+                this.textInputFieldAmount.state.value),
             amountIsValid: true,
         })
         this.textInputFieldAmount.setState({
@@ -313,7 +313,7 @@ class PaymentCard extends Component {
                 </div>
                 <div className="payment-header f-s">
                     <div className="p-r leading-label-align payment-currency">
-                        {currencyGlyph(
+                        {this.props.assetManager.getAssetGlyph(
                             this.props.Account.currency
                         )}
                     </div>

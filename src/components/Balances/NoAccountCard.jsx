@@ -8,9 +8,6 @@ import {
     CardHeader,
     CardText,
 } from "material-ui/Card"
-import {
-    currencyGlyph,
-} from "../../lib/utils"
 import Button from "../../lib/common/Button"
 
 
@@ -49,7 +46,7 @@ class NoAccountCard extends Component {
                 <div>
                     <div className='balance'>
                         <span className="fade currency-glyph">
-                            {currencyGlyph(
+                            {this.props.assetManager.getAssetGlyph(
                                 this.props.Account.currency
                             )}
                         </span> 0.00
