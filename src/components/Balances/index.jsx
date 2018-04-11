@@ -322,7 +322,7 @@ class Balances extends Component {
             title="Transaction Complete"
             actions={[
                 <Button
-                    label="Dismiss"
+                    label="OK"
                     onClick={this.hideTxCompleteModal}
                     primary={true}
                 />,

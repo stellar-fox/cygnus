@@ -19,7 +19,7 @@ export default connect(
 )(
     ({ Balances, }) =>
         <Fragment>
-            <div className="p-t p-b text-primary">
+            <div className="p-t p-b">
                 Funds have arrived to the destination account.
             </div>
 
