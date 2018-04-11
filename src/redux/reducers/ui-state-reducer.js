@@ -40,7 +40,6 @@ export default function (state = initState, action) {
                 ...state,
                 tabs: {},
                 messages: {},
-                drawer: { isOpened: true, },
             }
             break
 
