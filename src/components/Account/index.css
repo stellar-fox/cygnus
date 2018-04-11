@@ -38,11 +38,11 @@
 }
 
 .text-normal {
-    font-size: 1rem;
+    font-size: 1rem !important;
 }
 
 .text-primary {
-    color: rgb(15,46,83);
+    color: rgb(15,46,83) !important;
 }
 
 .badge-blue {
