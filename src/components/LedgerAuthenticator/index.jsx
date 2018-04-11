@@ -43,10 +43,9 @@ class LedgerAuthenticator extends Component {
         return (async function _initQueryDevice () {
             that.setState({ ledgerStatusMessage: "Waiting for device ...", })
             let bip32Path = that.formBip32Path.call(that)
-            const softwareVersion = await awaitConnection()
-
-            // connection successful (softwareVersion is a string)
-            if (typeof softwareVersion === "string") {
+            let softwareVersion = null
+            try {
+                softwareVersion = await awaitConnection()
                 that.setState({
                     ledgerStatusMessage:
                         `Connected. Software ver. ${softwareVersion}`,
@@ -72,21 +71,18 @@ class LedgerAuthenticator extends Component {
                     errorCode: null,
                     errorMessage: null,
                 })
-            }
-
-            // error wih connection attempt
-            else {
+            } catch (ex) {
                 that.setState({
-                    ledgerStatusMessage: softwareVersion.message,
-                    errorCode: softwareVersion.originalError.metaData.code,
+                    ledgerStatusMessage: ex.message,
+                    errorCode: ex.originalError.metaData.code,
                     buttonDisabled: false,
                 })
                 that.props.onConnected.call(that, {
                     publicKey: null,
                     softwareVersion: null,
                     bip32Path: null,
-                    errorCode: softwareVersion.originalError.metaData.code,
-                    errorMessage: softwareVersion.message,
+                    errorCode: ex.originalError.metaData.code,
+                    errorMessage: ex.message,
                 })
             }
         }())

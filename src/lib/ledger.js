@@ -10,15 +10,11 @@ import { StellarSdk } from "./stellar-tx"
  * @returns {String}
  */
 export const awaitConnection = async () => {
-    try {
-        const
-            transport = await Transport.create(),
-            str = new Str(transport),
-            result = await str.getAppConfiguration()
-        return result.version
-    } catch (error) {
-        return error
-    }
+    const
+        transport = await Transport.create(),
+        str = new Str(transport),
+        result = await str.getAppConfiguration()
+    return result.version
 }
 
 

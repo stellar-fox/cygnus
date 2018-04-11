@@ -242,15 +242,11 @@ class Balances extends Component {
             sendIsDisabled: true,
         })
 
-        // check if device is connected first (if not deviceCheck is an error object)
-        const deviceCheck = await awaitConnection()
-
-        if (typeof deviceCheck === "string") {
-            this.buildSendTransaction.call(this)
-            return true
-        } else {
-            this.showError.call(this, deviceCheck.message)
-            return false
+        try {
+            await awaitConnection()
+            this.buildSendTransaction()
+        } catch (ex) {
+            this.showError.call(this, ex.message)
         }
     }
 
