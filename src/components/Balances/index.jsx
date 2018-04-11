@@ -9,7 +9,7 @@ import axios from "axios"
 import "number-to-text/converters/en-us"
 import { action as AccountAction } from "../../redux/Account"
 import { action as BalancesAction } from "../../redux/Balances"
-import { signTransaction, awaitConnection } from "../../lib/ledger"
+import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
     insertPathIndex,
 } from "../../lib/utils"
@@ -243,7 +243,7 @@ class Balances extends Component {
         })
 
         try {
-            await awaitConnection()
+            await getSoftwareVersion()
             this.buildSendTransaction()
         } catch (ex) {
             this.showError.call(this, ex.message)

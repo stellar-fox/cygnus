@@ -9,7 +9,7 @@ import { StellarSdk } from "./stellar-tx"
  *
  * @returns {String}
  */
-export const awaitConnection = async () => {
+export const getSoftwareVersion = async () => {
     const
         transport = await Transport.create(),
         str = new Str(transport),

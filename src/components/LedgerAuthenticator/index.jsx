@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 
 import { bip32Prefix } from "../StellarFox/env"
 import {
-    awaitConnection,
+    getSoftwareVersion,
     getPublicKey,
 } from "../../lib/ledger"
 
@@ -45,7 +45,7 @@ class LedgerAuthenticator extends Component {
             let bip32Path = that.formBip32Path.call(that)
             let softwareVersion = null
             try {
-                softwareVersion = await awaitConnection()
+                softwareVersion = await getSoftwareVersion()
                 that.setState({
                     ledgerStatusMessage:
                         `Connected. Software ver. ${softwareVersion}`,
