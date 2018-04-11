@@ -169,16 +169,17 @@ export const pubKeyValidMessage = (pubKey) => {
 
 
 // ...
-export const publicKeyExists = (publicKey) => (
-    async () => {
-        try {
-            await fetchAccount(publicKey)
-            return true
-        } catch (error) {
+export const publicKeyExists = async (publicKey) => {
+    try {
+        await fetchAccount(publicKey)
+        return true
+    } catch (ex) {
+        if (ex.message  &&  ex.message.status === 404) {
             return false
         }
+        throw ex
     }
-)(publicKey)
+}
 
 
 

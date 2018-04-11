@@ -105,13 +105,17 @@ class PaymentCard extends Component {
     }
 
 
-    // ...
+
+
+    // TODO: describe recipient-setting algorithm
     setRecipient = async () => {
         let
             input = this.textInputFieldPaymentAddress.state.value,
             publicKey = null
 
+        // ...
         if (federationAddressValid(input)) {
+
             try {
                 publicKey = await fedToPub(input)
             } catch (ex) {
@@ -129,19 +133,57 @@ class PaymentCard extends Component {
                     })
                 }
             }
+
+        // ...
         } else if (pubKeyValid(input)) {
+
             publicKey = input
+
         }
 
+        // ...
         if (publicKey) {
-            this.props.setState({
-                payee: publicKey,
-                payeeAddress: input,
-            })
+            // ...
+            if (await publicKeyExists(publicKey)) {
+
+                this.setTransactionType("EXISTING_ACCOUNT")
+                this.updateIndicatorMessage("Recipient Verified", "green")
+
+            } else {
+
+                this.setTransactionType("NEW_ACCOUNT")
+                this.updateIndicatorMessage("New Account", "red")
+
+            }
+
+            this.setPaymentDestination(publicKey, input)
+
             this.enableSignButton()
-            this.updateIndicatorMessage(publicKey)
         }
     }
+
+
+
+
+    // ...
+    setTransactionType = (tt) =>
+        this.props.setState({ newAccount: tt === "NEW_ACCOUNT", })
+
+
+    // ...
+    setPaymentDestination = (pk, input) =>
+        this.props.setState({
+            payee: pk,
+            payeeAddress: input,
+        })
+
+
+    // ...
+    updateIndicatorMessage = (message, style) =>
+        this.props.setState({
+            indicatorMessage: message,
+            indicatorStyle: style,
+        })
 
 
     // ...
@@ -217,26 +259,6 @@ class PaymentCard extends Component {
             ),
         })
     }
-
-
-    // ...
-    updateIndicatorMessage = async (publicKey) => (
-        (status) => {
-            status.then(s => {
-                s ?
-                    this.props.setState({
-                        indicatorMessage: "Recipient Verified",
-                        indicatorStyle: "green",
-                        newAccount: false,
-                    }) : this.props.setState({
-                        indicatorMessage: "New Account",
-                        indicatorStyle: "red",
-                        newAccount: true,
-                    })
-            })
-            return status
-        }
-    )(publicKeyExists(publicKey))
 
 
     // ...
