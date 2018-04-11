@@ -12,6 +12,7 @@ import { reducer as AccountReducer } from "../Account"
 import { reducer as AssetManagerReducer } from "../AssetManager"
 import { reducer as BalancesReducer } from "../Balances"
 import { reducer as BankReducer } from "../Bank"
+import { reducer as LedgerHQReducer } from "../LedgerHQ"
 import { reducer as PaymentsReducer } from "../Payments"
 import { reducer as RouterReducer } from "../StellarRouter"
 
@@ -33,6 +34,7 @@ export default {
     Assets: AssetManagerReducer,
     Balances: BalancesReducer,
     Bank: BankReducer,
+    LedgerHQ: LedgerHQReducer,
     Payments: PaymentsReducer,
     Router: RouterReducer,
 }
