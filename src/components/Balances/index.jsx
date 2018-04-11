@@ -21,7 +21,6 @@ import {
     broadcastTx,
 } from "../../lib/stellar-tx"
 import { config } from "../../config"
-import { appName } from "../StellarFox/env"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import {
@@ -37,7 +36,6 @@ import {
     ActionConstants,
     togglePaymentCard,
 } from "../../redux/actions"
-import LinearProgress from "material-ui/LinearProgress"
 import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
@@ -46,6 +44,8 @@ import BalancesCard from "./BalancesCard"
 import NoAccountCard from "./NoAccountCard"
 import PaymentCard from "./PaymentCard"
 import TxConfirmMsg from "./TxConfirmMsg"
+import TxBroadcastMsg from "./TxBroadcastMsg"
+import TxCompleteMsg from "./TxCompleteMsg"
 import {
     operationsStreamer,
     paymentsStreamer
@@ -63,19 +63,17 @@ class Balances extends Component {
         setState: PropTypes.func.isRequired,
     }
 
+
     // ...
     state = {
         paymentsStreamer: null,
         operationsStreamer: null,
         modalButtonText: "CANCEL",
-        paymentId: null,
-        ledgerId: null,
     }
 
 
     // ...
     componentDidMount = () => {
-
         this.setState({
             paymentsStreamer: paymentsStreamer(
                 this.props.appAuth.publicKey,
@@ -88,13 +86,11 @@ class Balances extends Component {
                 this.props.accountExistsOnLedger
             ),
         })
-
         if (!this.props.accountInfo.account) {
             this.props.setModalLoading()
             this.props.updateLoadingMessage({
                 message: "Searching for account ...",
             })
-
             this._tmpQueryHorizon()
             this._tmpAccountExists()
         }
@@ -154,6 +150,15 @@ class Balances extends Component {
 
 
     // ...
+    hideTxCompleteModal = () =>
+        this.props.changeModalState({
+            txCompleteMsg: {
+                showing: false,
+            },
+        })
+
+
+    // ...
     buildSendTransaction = async () => {
         try {
             let tx = null
@@ -176,7 +181,6 @@ class Balances extends Component {
                 })
             }
 
-
             this.props.changeModalState({
                 txConfirmMsg: { showing: true, },
             })
@@ -187,26 +191,25 @@ class Balances extends Component {
                 tx
             )
 
-            this.showNotice({
-                title: "Sending Money",
-                content: this.broadcastTransactionMessage(),
+            this.props.changeModalState({
+                txBroadcastMsg: { showing: true, },
             })
 
             const broadcast = await broadcastTx(signedTx)
 
             this.props.setStateForBalances({
-                transactionType: null,
-            })
-
-            this.showNotice({
-                title: "Completed",
-                content: this.sendingCompleteMessage(),
-            })
-
-            this.setState({
                 paymentId: broadcast.hash,
                 ledgerId: broadcast.ledger,
             })
+
+            this.props.setStateForBalances({
+                transactionType: null,
+            })
+
+            this.props.changeModalState({
+                txCompleteMsg: { showing: true, },
+            })
+
             this.props.togglePaymentCard({
                 payment: {
                     opened: false,
@@ -234,18 +237,6 @@ class Balances extends Component {
 
 
     // ...
-    showNotice = (content) => {
-        this.props.changeModalState({
-            alertWithDismiss: {
-                showing: true,
-                title: content.title,
-                content: content.content,
-            },
-        })
-    }
-
-
-    // ...
     sendPayment = async () => {
         this.props.setStateForBalances({
             sendIsDisabled: true,
@@ -262,35 +253,6 @@ class Balances extends Component {
             return false
         }
     }
-
-
-    // ...
-    broadcastTransactionMessage = () =>
-        <Fragment>
-            <div className="bigger green">
-                Your money transfer is on its way.
-            </div>
-            <div className="faded p-b">
-                Estimated arrival time: 5 seconds
-            </div>
-            <LinearProgress
-                style={{ background: "rgb(244,176,4)", }}
-                color="rgba(15,46,83,0.6)"
-                mode="indeterminate"
-            />
-        </Fragment>
-
-
-    // ...
-    sendingCompleteMessage = () =>
-        <Fragment>
-            <div className="bigger green">
-                The money has arrived to its destination.
-            </div>
-            <div className="faded p-b">
-                Thank you for using {appName}.
-            </div>
-        </Fragment>
 
 
     // ...
@@ -348,6 +310,30 @@ class Balances extends Component {
             <TxConfirmMsg />
         </Modal>
 
+        <Modal
+            open={this.props.appUi.modals.txBroadcastMsg ?
+                this.props.appUi.modals.txBroadcastMsg.showing : false
+            }
+            title="Transmiting ..."
+        >
+            <TxBroadcastMsg />
+        </Modal>
+
+        <Modal
+            open={this.props.appUi.modals.txCompleteMsg ?
+                this.props.appUi.modals.txCompleteMsg.showing : false
+            }
+            title="Transaction Complete"
+            actions={[
+                <Button
+                    label="Dismiss"
+                    onClick={this.hideTxCompleteModal}
+                    primary={true}
+                />,
+            ]}
+        >
+            <TxCompleteMsg />
+        </Modal>
 
 
         {!this.props.accountInfo.registered &&

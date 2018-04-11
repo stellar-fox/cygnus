@@ -111,11 +111,11 @@ class PaymentCard extends Component {
             .then(r => {
                 r.ok && this.props.setState({
                     payee: r.publicKey,
+                    payeeAddress: this.textInputFieldPaymentAddress.state.value,
                 })
                 this.enableSignButtonWhenValid()
                 return this.updateIndicatorMessage(r.publicKey)
             })
-
     }
 
 

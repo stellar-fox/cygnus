@@ -13,6 +13,7 @@ const initState = ((now) => ({
     amountText: "",
     amountIsValid: false,
     payee: null,
+    payeeAddress: "",
     newAccount: false,
     memoRequired: false,
     memoIsValid: true,
