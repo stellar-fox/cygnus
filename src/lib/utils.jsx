@@ -69,6 +69,17 @@ export const federationAddressValid = (federationAddress) => !!(
 
 
 
+// Validates given public key (string)
+// returns true/false  (valid/invalid key).
+export const pubKeyValid = (pubKey) =>
+    pubKey.match(/^G/)  &&
+    !pubKey.match(/\*/)  &&
+    pubKey.length === 56
+    // TODO: && matches appropriate letter groups
+
+
+
+
 // ...
 export const errorMessageForInvalidPaymentAddress = (address) => {
     // Looks like something totally invalid for this field.
@@ -81,7 +92,7 @@ export const errorMessageForInvalidPaymentAddress = (address) => {
     }
     // This must be an attempt at a Stellar public key format.
     if (address.match(/^G/) && !address.match(/\*/)) {
-        const publicKeyValidityObj = pubKeyValid(address)
+        const publicKeyValidityObj = pubKeyValidMessage(address)
         if (!publicKeyValidityObj.valid) {
             return publicKeyValidityObj.message
         }
@@ -92,69 +103,36 @@ export const errorMessageForInvalidPaymentAddress = (address) => {
 
 
 
-// ...
-export const fedToPub = (input) => {
-    if (input.match(/^G/) && !input.match(/\*/)) {
-        const publicKeyValidityObj = pubKeyValid(input)
-        if (publicKeyValidityObj.valid) {
-            return Promise.resolve({ok: true, publicKey: input,})
-        }
-    }
-    if (input.match(/\*/) && federationAddressValid(input)) {
-        return fedToPubLookup(input)
-    }
-}
+// Based on given 'federationAddress' (name*domain)
+// returns corresponding stellar public key
+export const fedToPub = async (fedAddress) =>
+    (await axios.get(`${
+        await endpointLookup(fedAddress)
+    }?q=${fedAddress}&type=name`)).data.account_id
 
 
 
 
-// ...
-export const fedToPubLookup = (input) => (
-    async (fedAddress) => {
-        try {
-            let endpoint = await endpointLookup(fedAddress)
-
-            let publicKey =
-                await axios.get(
-                    `${endpoint.endpoint}?q=${fedAddress}&type=name`
-                )
-
-            return {
-                ok: true,
-                publicKey: publicKey.data.account_id,
-            }
-
-        } catch (error) {
-            return { error, }
-        }
-    }
-)(input)
-
-
-
-
-// ...
-export const endpointLookup = (address) => (
+// Based on given 'federationAddress' (name*domain)
+// returns federation server URL for that domain.
+export const endpointLookup = (federationAddress) => (
     async (domain) => {
-        try {
-            if (domain) {
-                let endpoint = await axios.get(env.federationEndpoint(domain[0]))
-                return {
-                    ok: true,
-                    endpoint: toml.parse(endpoint.data).FEDERATION_SERVER,
-                }
-            }
-        } catch (error) {
-            return {error,}
+        if (domain) {
+            return toml.parse(
+                (await axios.get(
+                    env.federationEndpoint(domain[0]))
+                ).data
+            ).FEDERATION_SERVER
         }
+        throw new Error("Wrong address format.")
     }
-)(address.match(domainRegex))
+)(federationAddress.match(domainRegex))
 
 
 
 
-// ...
-export const pubKeyValid = (pubKey) => {
+// TODO: refactor
+export const pubKeyValidMessage = (pubKey) => {
     let validity = {}
     switch (true) {
         case pubKey.length < 56:

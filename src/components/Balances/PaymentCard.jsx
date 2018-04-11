@@ -25,8 +25,10 @@ import {
 } from "../../redux/actions"
 import { action as BalancesAction } from "../../redux/Balances"
 import {
+    errorMessageForInvalidPaymentAddress as errorPaymentAddress,
+    federationAddressValid,
     fedToPub,
-    errorMessageForInvalidPaymentAddress as ErrorPaymentAddress,
+    pubKeyValid,
     publicKeyExists,
 } from "../../lib/utils"
 
@@ -69,35 +71,33 @@ class PaymentCard extends Component {
         })
     }
 
+
     // ...
-    checkIfPaymentIsValid = () =>
-        this.props.Balances.payee && this.props.Balances.amountIsValid ?
-            true : false
+    isPaymentValid = () =>
+        this.props.Balances.payee && this.props.Balances.amountIsValid
 
 
     // ...
-    enableSignButtonWhenValid = () => {
+    enableSignButton = () => {
         this.props.setState({
-            sendIsDisabled: !this.checkIfPaymentIsValid(),
+            sendIsDisabled: !this.isPaymentValid(),
         })
     }
 
 
     // ...
     paymentAddressValidator = () => {
-        let error = ErrorPaymentAddress(
+        let error = errorPaymentAddress(
             this.textInputFieldPaymentAddress.state.value
         )
         if (error) {
-            this.textInputFieldPaymentAddress.setState({
-                error,
-            })
+            this.textInputFieldPaymentAddress.setState({ error, })
             this.props.setState({
                 indicatorMessage: "XXXXXXXXXXXX",
                 indicatorStyle: "fade-extreme",
                 payee: null,
             })
-            this.enableSignButtonWhenValid()
+            // this.enableSignButton()
             return false
         }
         this.textInputFieldPaymentAddress.setState({ error: "", })
@@ -106,16 +106,41 @@ class PaymentCard extends Component {
 
 
     // ...
-    setRecipient = () => {
-        fedToPub(this.textInputFieldPaymentAddress.state.value)
-            .then(r => {
-                r.ok && this.props.setState({
-                    payee: r.publicKey,
-                    payeeAddress: this.textInputFieldPaymentAddress.state.value,
-                })
-                this.enableSignButtonWhenValid()
-                return this.updateIndicatorMessage(r.publicKey)
+    setRecipient = async () => {
+        let
+            input = this.textInputFieldPaymentAddress.state.value,
+            publicKey = null
+
+        if (federationAddressValid(input)) {
+            try {
+                publicKey = await fedToPub(input)
+            } catch (ex) {
+                if (!ex.response) {
+                    this.textInputFieldPaymentAddress.setState({
+                        error: "Federation domain not exist.",
+                    })
+                } else if (ex.response.status === 404) {
+                    this.textInputFieldPaymentAddress.setState({
+                        error: "Recipient not found.",
+                    })
+                } else {
+                    this.textInputFieldPaymentAddress.setState({
+                        error: ex.message,
+                    })
+                }
+            }
+        } else if (pubKeyValid(input)) {
+            publicKey = input
+        }
+
+        if (publicKey) {
+            this.props.setState({
+                payee: publicKey,
+                payeeAddress: input,
             })
+            this.enableSignButton()
+            this.updateIndicatorMessage(publicKey)
+        }
     }
 
 
@@ -130,7 +155,7 @@ class PaymentCard extends Component {
                 amountIsValid: false,
                 amountText: "",
             })
-            this.enableSignButtonWhenValid()
+            this.enableSignButton()
             return false
         }
 
@@ -143,7 +168,7 @@ class PaymentCard extends Component {
                 amountIsValid: false,
                 amountText: "",
             })
-            this.enableSignButtonWhenValid()
+            this.enableSignButton()
             return false
         }
 
@@ -161,7 +186,7 @@ class PaymentCard extends Component {
             amountText: this.amountToText(
                 this.textInputFieldAmount.state.value),
         })
-        this.enableSignButtonWhenValid()
+        this.enableSignButton()
     }
 
 

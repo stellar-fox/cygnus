@@ -216,7 +216,7 @@ class Balances extends Component {
                 },
             })
         } catch (error) {
-            this.showError.call(this, error.message)
+            this.showError(error.message)
         }
     }
 
@@ -246,7 +246,7 @@ class Balances extends Component {
             await getSoftwareVersion()
             this.buildSendTransaction()
         } catch (ex) {
-            this.showError.call(this, ex.message)
+            this.showError(ex.message)
         }
     }
 
