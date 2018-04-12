@@ -117,15 +117,18 @@ class PaymentCard extends Component {
 
 
 
-    // TODO: describe recipient-setting algorithm
+    // ...
     setRecipient = async () => {
+        // read user entered input from payment address field
+        // set initial public key to null
         let
             input = this.textInputFieldPaymentAddress.state.value,
             publicKey = null
 
-        // ...
+        // check user's input for valid federation address format
         if (federationAddressValid(input)) {
-
+            // user has entered a valid federation address so convert it
+            // to public key so it can be used as payment destination
             try {
                 publicKey = await fedToPub(input)
             } catch (ex) {
@@ -144,16 +147,19 @@ class PaymentCard extends Component {
                 }
             }
 
-        // ...
+        // user did not enter a valid federation address but we also accept
+        // a valid public key at this time
         } else if (publicKeyValid(input)) {
 
             publicKey = input
 
         }
 
-        // ...
+        // at this point we have a valid public key that we can set as
+        // payment destination address
         if (publicKey) {
-            // ...
+            // check if this public key already exists on Stellar network
+            // and based on the outcome set appropriate transaction type
             if (await publicKeyExists(publicKey)) {
 
                 this.setTransactionType("EXISTING_ACCOUNT")
