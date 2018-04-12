@@ -49,6 +49,10 @@ export default compose(
 
 
         // ...
+        state = {}
+
+
+        // ...
         render = () => (
             ({ style, }, getPath) =>
                 <div style={style} className="bank-content">
