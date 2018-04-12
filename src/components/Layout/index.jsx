@@ -6,6 +6,7 @@ import {
     Redirect,
     Route,
 } from "react-router-dom"
+import raf from "raf"
 
 import {
     ConnectedSwitch as Switch,
@@ -14,12 +15,12 @@ import {
 } from "../StellarRouter"
 
 import { ActionConstants } from "../../redux/actions"
+import { Null } from "../../lib/utils"
 
 import AlertModal from "./AlertModal"
 import LoadingModal from "../LoadingModal"
 import ConnectedSnackbar from "./ConnectedSnackbar"
 import Welcome from "../Welcome"
-import Bank from "../Bank"
 
 import "./index.css"
 
@@ -47,6 +48,10 @@ export default compose(
 
 
         // ...
+        state = { Bank: Null, }
+
+
+        // ...
         constructor (props) {
             super(props)
 
@@ -71,8 +76,17 @@ export default compose(
         // ...
         renderBank = (routeProps) =>
             this.props.loggedIn ?
-                <Bank {...routeProps} /> :
+                <this.state.Bank {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Welcome")} />
+
+
+        // ...
+        componentDidMount = () => raf(() =>
+            import("../Bank")
+                .then((B) => this.setState(
+                    () => ({ Bank: B.default, })
+                ))
+        )
 
 
         // ...
