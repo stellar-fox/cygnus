@@ -14,7 +14,6 @@ import {
     withDynamicRoutes,
     withStaticRouter,
 } from "../StellarRouter"
-import { Null } from "../../lib/utils"
 
 import {
     hideAlert,
@@ -204,8 +203,7 @@ class Account extends Component {
                                 value={this.validTabNames[0]}
                             >
                                 <Profile />
-                            </Tab> :
-                            <Null />
+                            </Tab> : null
                     }
                     <Tab
                         style={styles.tab}
@@ -222,8 +220,7 @@ class Account extends Component {
                                 value={this.validTabNames[2]}
                             >
                                 <Security />
-                            </Tab> :
-                            <Null />
+                            </Tab> : null
                     }
                 </Tabs>
             </Fragment>
