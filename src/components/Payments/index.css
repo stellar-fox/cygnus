@@ -1,25 +1,3 @@
-div.flex-row-space-between {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-div.flex-row-centered {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-div.flex-row-column {
-    width: 48%;
-    margin: 0px 5px 0px 5px;
-}
-
-/* div.flex-row-column-50 {
-    width: 50%;
-    margin: 0px 5px 0px 5px;
-} */
-
 div.payment-item {
     margin: 5px 0px;
     -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
@@ -106,7 +84,6 @@ div.payment-item-active {
     cursor: pointer;
 }
 
-
 .payment-container-active {
     font-size: 1rem;
     background: rgba(244,176,4,1);
@@ -123,9 +100,7 @@ div.payment-item-active {
     cursor: pointer;
 }
 
-.payment-container:last-child {
-    margin-bottom: 0px;
-}
+.payment-container:last-child { margin-bottom: 0px; }
 
 .payment-details-item {
     margin: 0px 0px 30px 0px;
@@ -139,9 +114,7 @@ div.payment-item-active {
     border-bottom: none;
 }
 
-.payment-details-body {
-    margin: 0px 20px 0px 20px;
-}
+.payment-details-body { margin: 0px 20px 0px 20px; }
 
 .payment-details-account {
     font-size: 12px;
@@ -175,18 +148,6 @@ div.payment-item-active {
     border-radius: 3px;
 }
 
-.micro-font {
-    font-size: 11px;
-}
-
-.pico-font {
-    font-size: 9px;
-}
-
-.small-caps {
-    font-variant: small-caps;
-}
-
 .account-direction {
     font-size: 0.7rem;
     border: 1px solid rgba(244,176,4,0.8);
@@ -197,33 +158,9 @@ div.payment-item-active {
     margin: 5px;
 }
 
-.paging-icon {
-    color: rgba(244,176,4,0.85) !important;
-}
+.paging-icon { color: rgba(244,176,4,0.85) !important; }
 
-.payment-details-fieldset {
-    padding: 20px 0px 0px 0px;
-}
-
-.tiny {
-    font-size: 11px;
-    font-weight: 100;
-}
-
-.small {
-    font-size: 12px;
-    font-weight: 400;
-}
-
-.link {
-    color: rgba(255,255,255,0.7);
-    cursor: pointer;
-}
-
-.smaller {
-    font-size: 12px;
-    font-weight: 600;
-}
+.payment-details-fieldset { padding: 20px 0px 0px 0px; }
 
 .tx-table-header {
     background-color: rgb(15,46,83);

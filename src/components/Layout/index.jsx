@@ -21,6 +21,8 @@ import ConnectedSnackbar from "./ConnectedSnackbar"
 import Welcome from "../Welcome"
 import Bank from "../Bank"
 
+import "./index.css"
+
 
 
 

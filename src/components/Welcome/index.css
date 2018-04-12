@@ -43,22 +43,9 @@
     text-shadow: 0px 0px 5px rgb(15,46,83);
 }
 
-.container {
-    position: relative;
-    padding: 1rem;
-}
+.mui-text-input { margin-top: -0.8rem; }
 
-.centered {
-    text-align: center;
-}
-
-.mui-text-input {
-    margin-top: -0.8rem;
-}
-
-.title-small {
-    font-size: 0.8rem;
-}
+.title-small { font-size: 0.8rem; }
 
 .subtitle {
     padding-top: 5px;
@@ -91,49 +78,13 @@
     padding-bottom: 0.2rem;
 }
 
-.svg {
-    width: 100px;
-}
+.svg { width: 100px; }
 
-.svg-logo-ledger {
-    fill: rgba(244,176,4,1);
-}
+.svg-logo-ledger { fill: rgba(244,176,4,1); }
 
-.svg-logo-stellar {
-    fill: rgb(77,186,232);
-}
+.svg-logo-stellar { fill: rgb(77,186,232); }
 
-.p-t {
-    padding-top: 1rem;
-}
-
-.m-t-small {
-    padding-top: 3px;
-}
-
-.m-t-large {
-    margin-top: 3rem;
-}
-
-.p-t-medium {
-    padding-top: 2rem;
-}
-
-.p-t-large {
-    padding-top: 3rem;
-}
-
-.p-b {
-    padding-bottom: 1rem;
-}
-
-.p-b-large {
-    padding-bottom: 3rem;
-}
-
-.welcome-content {
-    padding-bottom: 40px;
-}
+.welcome-content { padding-bottom: 40px; }
 
 .navy {
     color: rgb(15,46,83);
