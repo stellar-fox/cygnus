@@ -21,17 +21,6 @@ import "./BankContent.css"
 
 
 
-// compute div's padding-left value
-const computeStyle = (drawerVisible) => ({
-    paddingLeft:
-        drawerVisible ?
-            bankDrawerWidth + contentPaneSeparation :
-            contentPaneSeparation,
-})
-
-
-
-
 // <BankContent> component
 export default compose(
     withStaticRouter,
@@ -50,18 +39,13 @@ export default compose(
 
 
         // ...
-        static getDerivedStateFromProps = ({ drawerVisible, }, prevState) =>
-            prevState.drawerVisible !== drawerVisible ? {
-                drawerVisible,
-                style: computeStyle(drawerVisible),
-            } :  null
-
-
-        // ...
-        state = {
-            drawerVisible: this.props.drawerVisible,
-            style: computeStyle(this.props.drawerVisible),
-        }
+        static getDerivedStateFromProps = ({ drawerVisible, }) => ({
+            style: {
+                paddingLeft: drawerVisible ?
+                    bankDrawerWidth + contentPaneSeparation :
+                    contentPaneSeparation,
+            },
+        })
 
 
         // ...
