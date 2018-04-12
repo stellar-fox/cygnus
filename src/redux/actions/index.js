@@ -1,3 +1,6 @@
+import { ActionTypes } from "../reducers/mono-reducer"
+
+
 // ...
 export const setPublicKey = (state) => ({
     type: "SET_PUBKEY",
@@ -172,28 +175,28 @@ export const ActionConstants = {
 
 // ...
 export const changeLoginState = (loginState) => ({
-    type: "CHANGE_LOGIN_STATE",
-    payload: loginState,  // Object
+    type: ActionTypes.CHANGE_LOGIN_STATE,
+    payload: loginState,
 })
 
 
 // ...
 export const changeModalState = (modalState) => ({
-    type: "CHANGE_MODAL_STATE",
-    payload: modalState, // Object
+    type: ActionTypes.CHANGE_MODAL_STATE,
+    payload: modalState,
 })
 
 
 // ...
 export const changeSnackbarState = (snackbarState) => ({
-    type: "CHANGE_SNACKBAR_STATE",
-    payload: snackbarState, // Object
+    type: ActionTypes.CHANGE_SNACKBAR_STATE,
+    payload: snackbarState,
 })
 
 
 // ...
 export const togglePaymentCard = (cardState) => ({
-    type: "TOGGLE_PAYMENT_CARD",
+    type: ActionTypes.TOGGLE_PAYMENT_CARD,
     payload: cardState, // Object
 })
 
@@ -201,4 +204,9 @@ export const togglePaymentCard = (cardState) => ({
 export const setHorizonEndPoint = (uri) => ({
     type: "SET_HORIZON_END_POINT",
     payload: uri,
+})
+
+// ...
+export const resetUiState = () => ({
+    type: ActionTypes.RESET_UI_STATE,
 })

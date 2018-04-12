@@ -4,8 +4,9 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
 import {
-    logOut,
     changeLoginState,
+    logOut,
+    resetUiState,
     ActionConstants,
 } from "../../redux/actions"
 import { action as BankAction } from "../../redux/Bank"
@@ -44,6 +45,7 @@ export default connect(
     (dispatch) => bindActionCreators({
         changeLoginState,
         logOut,
+        resetUiState,
         toggleDrawer: BankAction.toggleDrawer,
     }, dispatch)
 )(
@@ -54,6 +56,7 @@ export default connect(
             currentView: PropTypes.string.isRequired,
             changeLoginState: PropTypes.func.isRequired,
             logOut: PropTypes.func.isRequired,
+            resetUiState: PropTypes.func.isRequired,
             toggleDrawer: PropTypes.func.isRequired,
         }
 
@@ -67,6 +70,7 @@ export default connect(
                 userId: null,
                 token: null,
             })
+            this.props.resetUiState()
             this.props.logOut()
             sessionStorage.clear()
         }
