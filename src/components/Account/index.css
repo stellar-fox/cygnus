@@ -1,6 +1,4 @@
-.account-title {
-    font-size: 1rem;
-}
+.account-title { font-size: 1rem; }
 
 .account-subtitle {
     font-size: 0.8rem !important;
@@ -17,9 +15,7 @@
     border-radius: 3px;
 }
 
-.tab-content {
-    padding: 1rem;
-}
+.tab-content { padding: 1rem; }
 
 .account-radio-group {
     padding: 10px;
@@ -31,18 +27,6 @@
     padding-bottom: 35px;
     background: rgb(15,46,83);
     border-radius: 3px;
-}
-
-.text-large {
-    font-size: 1.5rem;
-}
-
-.text-normal {
-    font-size: 1rem !important;
-}
-
-.text-primary {
-    color: rgb(15,46,83) !important;
 }
 
 .badge-blue {

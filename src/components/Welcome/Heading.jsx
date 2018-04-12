@@ -15,8 +15,6 @@ import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 
-import "./Heading.css"
-
 
 
 

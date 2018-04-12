@@ -31,31 +31,6 @@
         url('./fonts/ledger/ledger-font.ttf') format('truetype');
 }
 
-.material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-
-    /* Support for all WebKit browsers. */
-    -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
-    text-rendering: optimizeLegibility;
-
-    /* Support for Firefox. */
-    -moz-osx-font-smoothing: grayscale;
-
-    /* Support for IE. */
-    font-feature-settings: 'liga';
-}
-
 html, body {
     margin: 0;
     padding: 0;
@@ -66,146 +41,21 @@ html, body {
 }
 
 .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
     font-size: 21px !important;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
     vertical-align: text-bottom;
     padding-right: 10px;
-}
-
-div.flex-centered {
-    display: flex;
-    flex-direction: column;
-    margin-left: 5%;
-    margin-right: 5%;
-}
-
-div.flex-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-div.flex-start {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-}
-
-div.indicator-set-col {
-    line-height: 15px;
-    padding: 10px 0px;
-    margin-left: 10px;
-    font-size: 14px;
-}
-
-.p-b-small {
-    padding-bottom: 5px;
-}
-
-div.p-b-small-block {
-    padding-bottom: 5px;
-    display: inline-block;
-}
-
-div.p-b-small-block::after {
-    content: '.';
-    visibility: hidden;
-}
-
-.outline {
-    border: 1px solid rgba(244,176,4,0.75);
-    border-radius: 3px;
-    padding: 10px;
-}
-
-.outline-error {
-    border: 1px solid #D32F2F;
-    border-radius: 3px;
-    padding: 10px;
-}
-
-.p-l {
-    padding-left: 1rem;
-}
-
-.p-l-small {
-    padding-left: 5px;
-}
-
-.p-r {
-    padding-right: 1rem;
-}
-
-a {
-    text-decoration: none;
-    color: rgba(255,255,255,0.7);
-}
-
-strong {
-    color: rgb(212,228,188);
-}
-
-.announcement-top-first {
-    position: static;
-    display: flex;
-    flex-direction: column;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    opacity: 1;
-    background: #aeea00;
-    color: #3e2723;
-    padding: 5px;
-    font-size: 1rem;
-}
-
-.nowrap {
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.alert-message {
-    padding: 4px;
-    font-size: 1.3rem;
-    font-variant: small-caps;
-    background: rgba(178,34,34,0.8);
-    color: rgba(244,176,4,1);
-    text-align: center;
-}
-
-span.red-badge {
-    display: inline-block;
-    font-size: 0.7rem;
-    line-height: 1rem;
-    vertical-align: 0.1rem;
-    background-color: rgba(178,34,34,0.8);
-    color: rgba(244,176,4,1);
-    padding: 2px 6px;
-    border-radius: 3px;
-    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding-box;
-    background-clip: padding-box;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-
-.placeholder-1rem {
-    display: inline-block;
-    min-height: 0.91rem;
-}
-
-.placeholder-tiny {
-    display: inline-block;
-    min-height: 11px;
-}
-
-.error {
-    color: rgba(178,34,34,1);
-}
-
-.success {
-    color: rgba(46,125,50,1);
 }
