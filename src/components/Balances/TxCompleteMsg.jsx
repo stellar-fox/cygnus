@@ -1,7 +1,9 @@
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { appName } from "../StellarFox/env"
-
+import {
+    htmlEntities as he,
+} from "../../lib/utils"
 import {
     Table,
     TableBody,
@@ -12,12 +14,15 @@ import {
     pubKeyAbbr,
 } from "../../lib/utils"
 
+
+
+
 // ...
 export default connect(
     // map state to props.
-    (state) => ({ Balances: state.Balances, })
+    (state) => ({ balances: state.Balances, account: state.Account,  })
 )(
-    ({ Balances, }) =>
+    ({ balances, account, assetManager, }) =>
         <Fragment>
             <div className="p-t p-b">
                 Funds have arrived to the destination account.
@@ -29,10 +34,26 @@ export default connect(
                 <TableBody displayRowCheckbox={false}>
                     <TableRow className="table-row-primary">
                         <TableRowColumn className="text-normal text-primary">
+                            Amount Sent:
+                        </TableRowColumn>
+                        <TableRowColumn className="text-normal fade">
+                            <span className="small">
+                                {assetManager.getAssetGlyph(account.currency)}
+                            </span>
+                            <he.Nbsp />
+                            {balances.amount}
+                            <he.Nbsp /><he.Nbsp /><he.Nbsp />
+                            <span className="tiny fade-extreme">
+                                {balances.amountNative} XLM
+                            </span>
+                        </TableRowColumn>
+                    </TableRow>
+                    <TableRow className="table-row-primary">
+                        <TableRowColumn className="text-normal text-primary">
                             Payee Address:
                         </TableRowColumn>
                         <TableRowColumn className="text-normal fade">
-                            {Balances.payeeAddress}
+                            {balances.payeeAddress}
                         </TableRowColumn>
                     </TableRow>
                     <TableRow className="table-row-primary">
@@ -40,7 +61,15 @@ export default connect(
                             Payee Account:
                         </TableRowColumn>
                         <TableRowColumn className="text-normal fade">
-                            {pubKeyAbbr(Balances.payee)}
+                            {pubKeyAbbr(balances.payee)}
+                        </TableRowColumn>
+                    </TableRow>
+                    <TableRow className="table-row-primary">
+                        <TableRowColumn className="text-normal text-primary">
+                            Memo Text:
+                        </TableRowColumn>
+                        <TableRowColumn className="text-normal fade">
+                            {balances.memoText}
                         </TableRowColumn>
                     </TableRow>
                     <TableRow className="table-row-primary">
@@ -48,7 +77,7 @@ export default connect(
                             Transaction ID:
                         </TableRowColumn>
                         <TableRowColumn className="text-normal fade">
-                            {Balances.paymentId}
+                            {balances.paymentId}
                         </TableRowColumn>
                     </TableRow>
                     <TableRow className="table-row-primary">
@@ -56,7 +85,7 @@ export default connect(
                             Ledger Number:
                         </TableRowColumn>
                         <TableRowColumn className="text-normal fade">
-                            {Balances.ledgerId}
+                            {balances.ledgerId}
                         </TableRowColumn>
                     </TableRow>
                 </TableBody>

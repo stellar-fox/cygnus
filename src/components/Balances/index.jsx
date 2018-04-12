@@ -327,7 +327,9 @@ class Balances extends Component {
                 />,
             ]}
         >
-            <TxCompleteMsg />
+            <TxCompleteMsg
+                assetManager={this.props.assetManager}
+            />
         </Modal>
 
 
