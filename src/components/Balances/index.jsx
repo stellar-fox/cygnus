@@ -14,7 +14,6 @@ import {
     insertPathIndex,
 } from "../../lib/utils"
 import {
-    StellarSdk,
     loadAccount,
     buildCreateAccountTx,
     buildPaymentTx,
@@ -122,22 +121,17 @@ class Balances extends Component {
 
 
     // ...
-    _tmpQueryHorizon = () => {
-        loadAccount(this.props.appAuth.publicKey)
-            .then((account) => {
-                this.props.accountExistsOnLedger({ account, })
-                this.props.setState({ exists: true, })
-            })
-            .catch(StellarSdk.NotFoundError, () => {
-                this.props.accountMissingOnLedger()
-                this.props.setState({ exists: false, })
-            })
-            .finally(() => {
-                setTimeout(() => {
-                    this.props.setModalLoaded()
-                }, 500)
-
-            })
+    _tmpQueryHorizon = async () => {
+        try {
+            const account = await loadAccount(this.props.appAuth.publicKey)
+            this.props.accountExistsOnLedger({ account, })
+            this.props.setState({ exists: true, })
+        } catch (error) {
+            this.props.accountMissingOnLedger()
+            this.props.setState({ exists: false, })
+        } finally {
+            this.props.setModalLoaded()
+        }
     }
 
 
