@@ -9,7 +9,7 @@ const server = new StellarSdk.Server(config.horizon)
 
 
 // ...
-export const fetchAccount = async (publicKey) =>
+export const loadAccount = async (publicKey) =>
     await server.loadAccount(publicKey)
 
 
@@ -26,7 +26,7 @@ export const operations = () =>
 // ...
 export const buildCreateAccountTx = async (txData) =>
     new StellarSdk.TransactionBuilder(
-        await fetchAccount(txData.source)
+        await loadAccount(txData.source)
     ).addOperation(StellarSdk.Operation.createAccount({
         destination: txData.destination,
         startingBalance: txData.amount,
@@ -36,7 +36,7 @@ export const buildCreateAccountTx = async (txData) =>
 // ...
 export const buildPaymentTx = async (txData) =>
     new StellarSdk.TransactionBuilder(
-        await fetchAccount(txData.source)
+        await loadAccount(txData.source)
     ).addOperation(StellarSdk.Operation.payment({
         destination: txData.destination,
         asset: StellarSdk.Asset.native(),
@@ -45,5 +45,5 @@ export const buildPaymentTx = async (txData) =>
 
 
 // ...
-export const broadcastTx = async (signedTx) =>
+export const submitTransaction = async (signedTx) =>
     server.submitTransaction(signedTx)

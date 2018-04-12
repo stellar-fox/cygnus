@@ -43,7 +43,7 @@ import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
 
 import "./index.css"
-import { StellarSdk, fetchAccount } from "../../lib/stellar-tx"
+import { StellarSdk, loadAccount } from "../../lib/stellar-tx"
 
 
 
@@ -274,7 +274,7 @@ class Payments extends Component {
 
     // ...
     updateAccount = () =>
-        fetchAccount(this.props.appAuth.publicKey)
+        loadAccount(this.props.appAuth.publicKey)
             .catch(StellarSdk.NotFoundError, function (_err) {
                 throw new Error("The destination account does not exist!")
             })

@@ -1,7 +1,7 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
-import { StellarSdk, fetchAccount } from "./stellar-tx"
+import { StellarSdk, loadAccount } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 
 
@@ -134,7 +134,7 @@ export const endpointLookup = (federationAddress) => (
 // ...
 export const publicKeyExists = async (publicKey) => {
     try {
-        await fetchAccount(publicKey)
+        await loadAccount(publicKey)
         return true
     } catch (ex) {
         if (ex.message  &&  ex.message.status === 404) {

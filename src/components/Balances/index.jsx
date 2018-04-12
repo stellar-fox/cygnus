@@ -15,10 +15,10 @@ import {
 } from "../../lib/utils"
 import {
     StellarSdk,
-    fetchAccount,
+    loadAccount,
     buildCreateAccountTx,
     buildPaymentTx,
-    broadcastTx,
+    submitTransaction,
 } from "../../lib/stellar-tx"
 import { config } from "../../config"
 import { withLoginManager } from "../LoginManager"
@@ -122,7 +122,7 @@ class Balances extends Component {
 
     // ...
     _tmpQueryHorizon = () => {
-        fetchAccount(this.props.appAuth.publicKey)
+        loadAccount(this.props.appAuth.publicKey)
             .then((account) => {
                 this.props.accountExistsOnLedger({ account, })
                 this.props.setState({ exists: true, })
@@ -195,7 +195,7 @@ class Balances extends Component {
                 txBroadcastMsg: { showing: true, },
             })
 
-            const broadcast = await broadcastTx(signedTx)
+            const broadcast = await submitTransaction(signedTx)
 
             this.props.setStateForBalances({
                 paymentId: broadcast.hash,

@@ -1,5 +1,5 @@
 import {
-    fetchAccount,
+    loadAccount,
     operations,
     payments,
 } from "../../lib/stellar-tx"
@@ -28,14 +28,14 @@ export const paymentsStreamer = (publicKey, changeSnackbarState, accountExistsOn
             RECEIVED.some(el => el) && changeSnackbarState({
                 open: true,
                 message: "Payment received.",
-            }) && fetchAccount(publicKey).then(
+            }) && loadAccount(publicKey).then(
                 account => accountExistsOnLedger({ account, })
             )
 
             SENT.some(el => el) && changeSnackbarState({
                 open: true,
                 message: "Payment sent.",
-            }) && fetchAccount(publicKey).then(
+            }) && loadAccount(publicKey).then(
                 account => accountExistsOnLedger({ account, })
             )
         },
@@ -63,14 +63,14 @@ export const operationsStreamer = (publicKey, changeSnackbarState, accountExists
             HOME_DOMAIN_ADD.some(el => el) && changeSnackbarState({
                 open: true,
                 message: "Account domain updated.",
-            }) && fetchAccount(publicKey).then(
+            }) && loadAccount(publicKey).then(
                 account => accountExistsOnLedger({ account, })
             )
 
             HOME_DOMAIN_REMOVE.some(el => el) && changeSnackbarState({
                 open: true,
                 message: "Account domain removed.",
-            }) && fetchAccount(publicKey).then(
+            }) && loadAccount(publicKey).then(
                 account => accountExistsOnLedger({ account, })
             )
         },
