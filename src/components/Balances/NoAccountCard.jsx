@@ -1,13 +1,18 @@
 import React, { Component } from "react"
-import { compose } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import { withAssetManager } from "../AssetManager"
+import { notImplementedText } from "../StellarFox/env"
 import {
     Card,
     CardActions,
     CardHeader,
     CardText,
 } from "material-ui/Card"
+import { changeModalState } from "../../redux/actions"
 import Button from "../../lib/common/Button"
 
 
@@ -15,6 +20,15 @@ import Button from "../../lib/common/Button"
 
 // <NoAccountCard> component
 class NoAccountCard extends Component {
+
+    // ...
+    showNotImplementedModal = () => this.props.changeModalState({
+        alertWithDismiss: {
+            showing: true,
+            title: "Not Yet Implemented",
+            content: notImplementedText,
+        },
+    })
 
     // ...
     render = () => <Card className='account'>
@@ -61,7 +75,7 @@ class NoAccountCard extends Component {
 
         <CardActions>
             <Button
-                onClick={this.handleOpen}
+                onClick={this.showNotImplementedModal}
                 backgroundColor="rgb(15,46,83)"
                 labelColor="#228B22"
                 label="Fund" />
@@ -69,7 +83,7 @@ class NoAccountCard extends Component {
                 backgroundColor="rgb(15,46,83)"
                 labelColor="rgb(244,176,4)"
                 label="Request"
-                onClick={this.handleOpen}
+                onClick={this.showNotImplementedModal}
             />
         </CardActions>
     </Card>
@@ -82,5 +96,9 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({ Account: state.Account, }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            changeModalState,
+        }, dispatch)
     )
 )(NoAccountCard)
