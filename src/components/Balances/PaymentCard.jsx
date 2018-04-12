@@ -32,12 +32,6 @@ import {
     publicKeyExists,
 } from "../../lib/utils"
 
-import { StellarSdk } from "../../lib/stellar-tx"
-
-BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
-
-StellarSdk.Network.useTestNetwork()
-
 
 
 
@@ -62,19 +56,21 @@ class PaymentCard extends Component {
             payee: null,
             newAccount: false,
             memoRequired: false,
-            memoIsValid: true,
             memoText: "",
             minimumReserveMessage: "",
             sendEnabled: false,
             indicatorMessage: "XXXXXXXXXXXX",
             indicatorStyle: "fade-extreme",
+            error: "",
         })
     }
 
 
     // ...
     paymentValid = () =>
-        this.props.Balances.payee && this.props.Balances.amountIsValid
+        this.props.Balances.payee &&
+        this.props.Balances.amountIsValid &&
+        this.memoValid()
 
 
     // ...
@@ -180,6 +176,8 @@ class PaymentCard extends Component {
 
             this.setPaymentDestination(publicKey, input)
 
+            this.memoValidator()
+
             this.toggleSignButton()
         }
     }
@@ -223,7 +221,12 @@ class PaymentCard extends Component {
             return false
         }
 
-        if (new BigNumber(this.textInputFieldAmount.state.value).isEqualTo(0)) {
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        const amountAsBigNumber = new BigNumber(
+            this.textInputFieldAmount.state.value)
+        const amount = amountAsBigNumber.toFixed(2)
+
+        if (amountAsBigNumber.isEqualTo(0)) {
             this.textInputFieldAmount.setState({
                 error: "Amount needs to be greater than zero.",
             })
@@ -236,25 +239,19 @@ class PaymentCard extends Component {
             return false
         }
 
+        // amount is a valid positive number with fixed precision of 2 decimals
         this.props.setState({
-            amount: this.textInputFieldAmount.state.value,
-            amountNative: this.props.assetManager.convertToNative(
-                this.textInputFieldAmount.state.value),
+            amount,
+            amountNative: this.props.assetManager.convertToNative(amount),
             amountIsValid: true,
         })
-        this.textInputFieldAmount.setState({
-            error: "",
-        })
 
-        this.props.setState({
-            amountText: this.amountToText(
-                this.textInputFieldAmount.state.value),
-        })
+        this.textInputFieldAmount.setState({ error: "", })
+
+        this.props.setState({ amountText: this.amountToText(amount), })
+
         this.toggleSignButton()
     }
-
-    // ...
-    userInputToBigNumber = (input) => new BigNumber(input)
 
 
     // ...
@@ -262,7 +259,7 @@ class PaymentCard extends Component {
         const grouped = amount.match(
             /^(\d+)([.](\d{1,2}))?$/
         )
-        // fractions case
+        // amount with fractions case
         if (grouped[3]) {
             return `${numberToText.convertToText(grouped[1])} and ${
                 grouped[3]}/100`
@@ -275,40 +272,23 @@ class PaymentCard extends Component {
 
 
     // ...
-    memoValidator = () => {
-        this.props.setState({
-            memoText: this.textInputFieldMemo.state.value,
-            memoValid: !(
-                this.props.Balances.memoRequired  &&
-                this.textInputFieldMemo.state.value === ""
-            ),
-        })
+    memoValid = () => {
+        if (this.props.Balances.memoRequired &&
+            this.textInputFieldMemo.state.value === "") {
+            return false
+        }
+        return true
     }
 
 
     // ...
-    bottomIndicatorMessage = () => {
-        let message = (<div className="p-l nowrap fade-extreme">
-            <span className="bigger">
-                𝕊𝕃{" "}{this.props.strAccount && this.props.strAccount.sequence}
-            </span>
-        </div>)
-
-        if (this.props.Balances.memoRequired && !this.props.Balances.memoIsValid) {
-            message = (<div className='fade p-l nowrap red'>
-                <i className="material-icons md-icon-small">assignment_late</i>
-                Payment recipient requires Memo entry!
-            </div>)
-        }
-
-        if (this.props.Balances.minimumReserveMessage !== "") {
-            message = (<div className='fade p-l nowrap red'>
-                <i className="material-icons md-icon-small">assignment_late</i>
-                {this.props.Balances.minimumReserveMessage}
-            </div>)
-        }
-
-        return message
+    memoValidator = () => {
+        this.props.setState({
+            memoText: this.textInputFieldMemo.state.value,
+            error: this.memoValid() ?
+                "" : "Memo is required for this payee.",
+        })
+        this.toggleSignButton()
     }
 
 
@@ -471,7 +451,22 @@ class PaymentCard extends Component {
         <CardActions>
             <div className="f-e space-between">
 
-                {this.bottomIndicatorMessage.call(this)}
+                {this.props.Balances.error ?
+
+                    <div className="p-l nowrap red">
+                        <i className="material-icons md-icon-small">warning</i>
+                        {this.props.Balances.error}
+                    </div>
+
+                    :
+
+                    <div className="p-l nowrap fade-extreme">
+                        <span className="bigger">
+                            𝕊𝕃{" "}{this.props.strAccount
+                                && this.props.strAccount.sequence}
+                        </span>
+                    </div>
+                }
 
                 <div>
                     <span className="p-r">
