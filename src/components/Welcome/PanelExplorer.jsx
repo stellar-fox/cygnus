@@ -14,7 +14,7 @@ import {
 import {
     htmlEntities as he,
     endpointLookup,
-    errorMessageForInvalidPaymentAddress,
+    invalidPaymentAddressMessage,
 } from "../../lib/utils"
 import { stellarFoundationLink } from "../StellarFox/env"
 
@@ -56,7 +56,7 @@ class PanelExplorer extends Component {
         (addressValidity) => addressValidity ?
             this.input.setState({error: addressValidity,}) :
             this.enterExplorer.call(this)
-    )(errorMessageForInvalidPaymentAddress(this.input.state.value))
+    )(invalidPaymentAddressMessage(this.input.state.value))
 
 
     // ...

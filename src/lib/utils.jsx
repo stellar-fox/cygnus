@@ -71,17 +71,14 @@ export const federationAddressValid = (federationAddress) => !!(
 
 // Validates given public key (string)
 // returns true/false  (valid/invalid key).
-export const pubKeyValid = (pubKey) =>
-    pubKey.match(/^G/)  &&
-    !pubKey.match(/\*/)  &&
-    pubKey.length === 56
-    // TODO: && matches appropriate letter groups
+export const publicKeyValid = (publicKey) =>
+    StellarSdk.StrKey.isValidEd25519PublicKey(publicKey)
 
 
 
 
 // ...
-export const errorMessageForInvalidPaymentAddress = (address) => {
+export const invalidPaymentAddressMessage = (address) => {
     // Looks like something totally invalid for this field.
     if (!address.match(/\*/) && !address.match(/^G/)) {
         return "Invalid input."
@@ -91,14 +88,17 @@ export const errorMessageForInvalidPaymentAddress = (address) => {
         return "Invalid payment address."
     }
     // This must be an attempt at a Stellar public key format.
-    if (address.match(/^G/) && !address.match(/\*/)) {
-        const publicKeyValidityObj = pubKeyValidMessage(address)
-        if (!publicKeyValidityObj.valid) {
-            return publicKeyValidityObj.message
-        }
+    if (!publicKeyValid(address)) {
+        return publicKeyMissingCharsMessage(address)
     }
-    return null
 }
+
+
+
+
+// ...
+export const publicKeyMissingCharsMessage = (publicKey) =>
+    `Needs ${(56 - publicKey.length)} more characters.`
 
 
 
@@ -127,43 +127,6 @@ export const endpointLookup = (federationAddress) => (
         throw new Error("Wrong address format.")
     }
 )(federationAddress.match(domainRegex))
-
-
-
-
-// TODO: refactor
-export const pubKeyValidMessage = (pubKey) => {
-    let validity = {}
-    switch (true) {
-        case pubKey.length < 56:
-            validity = Object.assign(validity || {}, {
-                valid: false,
-                length: 56 - pubKey.length,
-                message:
-                    pubKey.length !== 0
-                        ? `needs ${56 - pubKey.length} more characters`
-                        : null,
-            })
-            break
-        case pubKey.length === 56:
-            try {
-                StellarSdk.Keypair.fromPublicKey(pubKey)
-                validity = Object.assign(validity || {}, {
-                    valid: true,
-                    message: null,
-                })
-            } catch (error) {
-                validity = Object.assign(validity || {}, {
-                    valid: false,
-                    message: error.message,
-                })
-            }
-            break
-        default:
-            break
-    }
-    return validity
-}
 
 
 

@@ -25,10 +25,10 @@ import {
 } from "../../redux/actions"
 import { action as BalancesAction } from "../../redux/Balances"
 import {
-    errorMessageForInvalidPaymentAddress as errorPaymentAddress,
+    invalidPaymentAddressMessage,
     federationAddressValid,
     fedToPub,
-    pubKeyValid,
+    publicKeyValid,
     publicKeyExists,
 } from "../../lib/utils"
 
@@ -87,22 +87,32 @@ class PaymentCard extends Component {
 
     // ...
     paymentAddressValidator = () => {
-        let error = errorPaymentAddress(
+        let errorMessage = invalidPaymentAddressMessage(
             this.textInputFieldPaymentAddress.state.value
         )
-        if (error) {
-            this.textInputFieldPaymentAddress.setState({ error, })
-            this.props.setState({
-                indicatorMessage: "XXXXXXXXXXXX",
-                indicatorStyle: "fade-extreme",
-                payee: null,
-            })
-            // this.enableSignButton()
-            return false
+
+        if (errorMessage) {
+            this.setInvalidPaymentAddressMessage(errorMessage)
+            this.resetPayee()
         }
+
         this.textInputFieldPaymentAddress.setState({ error: "", })
         this.setRecipient()
     }
+
+
+    // ...
+    setInvalidPaymentAddressMessage = (errorMessage) => {
+        this.textInputFieldPaymentAddress.setState({ error: errorMessage, })
+        this.props.setState({
+            indicatorMessage: "XXXXXXXXXXXX",
+            indicatorStyle: "fade-extreme",
+        })
+    }
+
+
+    // ...
+    resetPayee = () => this.props.setState({ payee: null, })
 
 
 
@@ -121,7 +131,7 @@ class PaymentCard extends Component {
             } catch (ex) {
                 if (!ex.response) {
                     this.textInputFieldPaymentAddress.setState({
-                        error: "Federation domain not exist.",
+                        error: "Service not found at this domain.",
                     })
                 } else if (ex.response.status === 404) {
                     this.textInputFieldPaymentAddress.setState({
@@ -135,7 +145,7 @@ class PaymentCard extends Component {
             }
 
         // ...
-        } else if (pubKeyValid(input)) {
+        } else if (publicKeyValid(input)) {
 
             publicKey = input
 
