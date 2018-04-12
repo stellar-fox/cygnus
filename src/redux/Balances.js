@@ -16,15 +16,15 @@ const initState = ((now) => ({
     payeeAddress: "",
     newAccount: false,
     memoRequired: false,
-    memoIsValid: true,
     memoText: "",
     minimumReserveMessage: "",
-    sendIsDisabled: true,
+    sendEnabled: false,
     indicatorMessage: "XXXXXXXXXXXX",
     indicatorStyle: "fade-extreme",
     transactionType: null,
     paymentId: null,
     ledgerId: null,
+    error: "",
 
 }))(new Date())
 

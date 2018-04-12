@@ -32,12 +32,6 @@ import {
     publicKeyExists,
 } from "../../lib/utils"
 
-import { StellarSdk } from "../../lib/stellar-tx"
-
-BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
-
-StellarSdk.Network.useTestNetwork()
-
 
 
 
@@ -62,27 +56,35 @@ class PaymentCard extends Component {
             payee: null,
             newAccount: false,
             memoRequired: false,
-            memoIsValid: true,
             memoText: "",
             minimumReserveMessage: "",
-            sendIsDisabled: true,
+            sendEnabled: false,
             indicatorMessage: "XXXXXXXXXXXX",
             indicatorStyle: "fade-extreme",
+            error: "",
         })
     }
 
 
     // ...
-    isPaymentValid = () =>
-        this.props.Balances.payee && this.props.Balances.amountIsValid
+    paymentValid = () =>
+        this.props.Balances.payee &&
+        this.props.Balances.amountIsValid &&
+        this.memoValid()
 
 
     // ...
-    enableSignButton = () => {
-        this.props.setState({
-            sendIsDisabled: !this.isPaymentValid(),
-        })
-    }
+    toggleSignButton = () =>
+        this.paymentValid() ?
+            this.enableSignButton() : this.disableSignButton()
+
+
+    // ...
+    enableSignButton = () => this.props.setState({ sendEnabled: true, })
+
+
+    // ...
+    disableSignButton = () => this.props.setState({ sendEnabled: false, })
 
 
     // ...
@@ -117,15 +119,18 @@ class PaymentCard extends Component {
 
 
 
-    // TODO: describe recipient-setting algorithm
+    // ...
     setRecipient = async () => {
+        // read user entered input from payment address field
+        // set initial public key to null
         let
             input = this.textInputFieldPaymentAddress.state.value,
             publicKey = null
 
-        // ...
+        // check user's input for valid federation address format
         if (federationAddressValid(input)) {
-
+            // user has entered a valid federation address so convert it
+            // to public key so it can be used as payment destination
             try {
                 publicKey = await fedToPub(input)
             } catch (ex) {
@@ -144,16 +149,19 @@ class PaymentCard extends Component {
                 }
             }
 
-        // ...
+        // user did not enter a valid federation address but we also accept
+        // a valid public key at this time
         } else if (publicKeyValid(input)) {
 
             publicKey = input
 
         }
 
-        // ...
+        // at this point we have a valid public key that we can set as
+        // payment destination address
         if (publicKey) {
-            // ...
+            // check if this public key already exists on Stellar network
+            // and based on the outcome set appropriate transaction type
             if (await publicKeyExists(publicKey)) {
 
                 this.setTransactionType("EXISTING_ACCOUNT")
@@ -168,7 +176,9 @@ class PaymentCard extends Component {
 
             this.setPaymentDestination(publicKey, input)
 
-            this.enableSignButton()
+            this.memoValidator()
+
+            this.toggleSignButton()
         }
     }
 
@@ -207,11 +217,16 @@ class PaymentCard extends Component {
                 amountIsValid: false,
                 amountText: "",
             })
-            this.enableSignButton()
+            this.toggleSignButton()
             return false
         }
 
-        if (new BigNumber(this.textInputFieldAmount.state.value).isEqualTo(0)) {
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        const amountAsBigNumber = new BigNumber(
+            this.textInputFieldAmount.state.value)
+        const amount = amountAsBigNumber.toFixed(2)
+
+        if (amountAsBigNumber.isEqualTo(0)) {
             this.textInputFieldAmount.setState({
                 error: "Amount needs to be greater than zero.",
             })
@@ -220,25 +235,22 @@ class PaymentCard extends Component {
                 amountIsValid: false,
                 amountText: "",
             })
-            this.enableSignButton()
+            this.toggleSignButton()
             return false
         }
 
+        // amount is a valid positive number with fixed precision of 2 decimals
         this.props.setState({
-            amount: this.textInputFieldAmount.state.value,
-            amountNative: this.props.assetManager.convertToNative(
-                this.textInputFieldAmount.state.value),
+            amount,
+            amountNative: this.props.assetManager.convertToNative(amount),
             amountIsValid: true,
         })
-        this.textInputFieldAmount.setState({
-            error: "",
-        })
 
-        this.props.setState({
-            amountText: this.amountToText(
-                this.textInputFieldAmount.state.value),
-        })
-        this.enableSignButton()
+        this.textInputFieldAmount.setState({ error: "", })
+
+        this.props.setState({ amountText: this.amountToText(amount), })
+
+        this.toggleSignButton()
     }
 
 
@@ -247,7 +259,7 @@ class PaymentCard extends Component {
         const grouped = amount.match(
             /^(\d+)([.](\d{1,2}))?$/
         )
-        // fractions case
+        // amount with fractions case
         if (grouped[3]) {
             return `${numberToText.convertToText(grouped[1])} and ${
                 grouped[3]}/100`
@@ -260,40 +272,23 @@ class PaymentCard extends Component {
 
 
     // ...
-    memoValidator = () => {
-        this.props.setState({
-            memoText: this.textInputFieldMemo.state.value,
-            memoValid: !(
-                this.props.Balances.memoRequired  &&
-                this.textInputFieldMemo.state.value === ""
-            ),
-        })
+    memoValid = () => {
+        if (this.props.Balances.memoRequired &&
+            this.textInputFieldMemo.state.value === "") {
+            return false
+        }
+        return true
     }
 
 
     // ...
-    bottomIndicatorMessage = () => {
-        let message = (<div className="p-l nowrap fade-extreme">
-            <span className="bigger">
-                𝕊𝕃{" "}{this.props.strAccount && this.props.strAccount.sequence}
-            </span>
-        </div>)
-
-        if (this.props.Balances.memoRequired && !this.props.Balances.memoIsValid) {
-            message = (<div className='fade p-l nowrap red'>
-                <i className="material-icons md-icon-small">assignment_late</i>
-                Payment recipient requires Memo entry!
-            </div>)
-        }
-
-        if (this.props.Balances.minimumReserveMessage !== "") {
-            message = (<div className='fade p-l nowrap red'>
-                <i className="material-icons md-icon-small">assignment_late</i>
-                {this.props.Balances.minimumReserveMessage}
-            </div>)
-        }
-
-        return message
+    memoValidator = () => {
+        this.props.setState({
+            memoText: this.textInputFieldMemo.state.value,
+            error: this.memoValid() ?
+                "" : "Memo is required for this payee.",
+        })
+        this.toggleSignButton()
     }
 
 
@@ -456,7 +451,22 @@ class PaymentCard extends Component {
         <CardActions>
             <div className="f-e space-between">
 
-                {this.bottomIndicatorMessage.call(this)}
+                {this.props.Balances.error ?
+
+                    <div className="p-l nowrap red">
+                        <i className="material-icons md-icon-small">warning</i>
+                        {this.props.Balances.error}
+                    </div>
+
+                    :
+
+                    <div className="p-l nowrap fade-extreme">
+                        <span className="bigger">
+                            𝕊𝕃{" "}{this.props.strAccount
+                                && this.props.strAccount.sequence}
+                        </span>
+                    </div>
+                }
 
                 <div>
                     <span className="p-r">
@@ -468,7 +478,7 @@ class PaymentCard extends Component {
                             disabledBackgroundColor="rgba(15,46,83,0.3)"
                             disabledLabelColor="#cfd8dc"
                             disabled={
-                                this.props.Balances.sendIsDisabled
+                                !this.props.Balances.sendEnabled
                             }
                         />
                     </span>

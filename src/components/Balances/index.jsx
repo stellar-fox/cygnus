@@ -217,7 +217,11 @@ class Balances extends Component {
                 },
             })
         } catch (error) {
-            this.showError(error.message)
+            if (error.name === "BadResponseError") {
+                this.showError(`${error.data.title}.`)
+            } else {
+                this.showError(error.message)
+            }
         }
     }
 
