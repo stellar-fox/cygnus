@@ -65,7 +65,7 @@ class PaymentCard extends Component {
             memoIsValid: true,
             memoText: "",
             minimumReserveMessage: "",
-            sendIsDisabled: true,
+            sendEnabled: false,
             indicatorMessage: "XXXXXXXXXXXX",
             indicatorStyle: "fade-extreme",
         })
@@ -73,16 +73,22 @@ class PaymentCard extends Component {
 
 
     // ...
-    isPaymentValid = () =>
+    paymentValid = () =>
         this.props.Balances.payee && this.props.Balances.amountIsValid
 
 
     // ...
-    enableSignButton = () => {
-        this.props.setState({
-            sendIsDisabled: !this.isPaymentValid(),
-        })
-    }
+    toggleSignButton = () =>
+        this.paymentValid() ?
+            this.enableSignButton() : this.disableSignButton()
+
+
+    // ...
+    enableSignButton = () => this.props.setState({ sendEnabled: true, })
+
+
+    // ...
+    disableSignButton = () => this.props.setState({ sendEnabled: false, })
 
 
     // ...
@@ -174,7 +180,7 @@ class PaymentCard extends Component {
 
             this.setPaymentDestination(publicKey, input)
 
-            this.enableSignButton()
+            this.toggleSignButton()
         }
     }
 
@@ -213,7 +219,7 @@ class PaymentCard extends Component {
                 amountIsValid: false,
                 amountText: "",
             })
-            this.enableSignButton()
+            this.toggleSignButton()
             return false
         }
 
@@ -226,7 +232,7 @@ class PaymentCard extends Component {
                 amountIsValid: false,
                 amountText: "",
             })
-            this.enableSignButton()
+            this.toggleSignButton()
             return false
         }
 
@@ -244,8 +250,11 @@ class PaymentCard extends Component {
             amountText: this.amountToText(
                 this.textInputFieldAmount.state.value),
         })
-        this.enableSignButton()
+        this.toggleSignButton()
     }
+
+    // ...
+    userInputToBigNumber = (input) => new BigNumber(input)
 
 
     // ...
@@ -474,7 +483,7 @@ class PaymentCard extends Component {
                             disabledBackgroundColor="rgba(15,46,83,0.3)"
                             disabledLabelColor="#cfd8dc"
                             disabled={
-                                this.props.Balances.sendIsDisabled
+                                !this.props.Balances.sendEnabled
                             }
                         />
                     </span>

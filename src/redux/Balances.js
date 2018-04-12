@@ -19,7 +19,7 @@ const initState = ((now) => ({
     memoIsValid: true,
     memoText: "",
     minimumReserveMessage: "",
-    sendIsDisabled: true,
+    sendEnabled: false,
     indicatorMessage: "XXXXXXXXXXXX",
     indicatorStyle: "fade-extreme",
     transactionType: null,
