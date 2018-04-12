@@ -5,13 +5,14 @@ import { createReducer } from "../../lib/utils"
 
 
 // ...
-const ActionTypes = {
+export const ActionTypes = {
     CHANGE_LOGIN_STATE: "CHANGE_LOGIN_STATE",
     SET_HW_PARAMS: "SET_HW_PARAMS",
     SET_PUBKEY: "SET_PUBKEY",
     CHANGE_MODAL_STATE: "CHANGE_MODAL_STATE",
     CHANGE_SNACKBAR_STATE: "CHANGE_SNACKBAR_STATE",
     TOGGLE_PAYMENT_CARD: "TOGGLE_PAYMENT_CARD",
+    RESET_UI_STATE: "MonoReducer/RESET_UI_STATE",
 }
 
 
@@ -38,14 +39,20 @@ export const authReducer = createReducer({
 
 
 // ...
-export const uiReducer = createReducer({
+const uiInitState = {
     modals: {},
     snackbar: {
         open: false,
         message: "",
     },
     cards: {},
-})({
+}
+
+
+
+
+// ...
+export const uiReducer = createReducer(uiInitState)({
 
     // ...
     [ActionTypes.CHANGE_MODAL_STATE]: (state, action) => ({
@@ -66,5 +73,8 @@ export const uiReducer = createReducer({
         ...state,
         cards: action.payload,
     }),
+
+    // ...
+    [ActionTypes.RESET_UI_STATE]: () => uiInitState,
 
 })
