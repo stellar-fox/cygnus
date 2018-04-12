@@ -101,6 +101,7 @@ class Balances extends Component {
     componentWillUnmount = () => {
         this.state.paymentsStreamer.call(this)
         this.state.operationsStreamer.call(this)
+        this.props.resetBalancesState()
     }
 
 
@@ -369,6 +370,7 @@ export default compose(
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
             setStateForBalances: BalancesAction.setState,
+            resetBalancesState: BalancesAction.resetState,
             accountExistsOnLedger,
             accountMissingOnLedger,
             setAccountRegistered,
