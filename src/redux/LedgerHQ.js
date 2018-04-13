@@ -1,5 +1,5 @@
 import { createReducer } from "../lib/utils"
-import { getSoftwareVersion } from "../lib/ledger"
+import { getSoftwareVersion as ledgerGetSoftwareVersion } from "../lib/ledger"
 
 
 
@@ -8,7 +8,7 @@ import { getSoftwareVersion } from "../lib/ledger"
 const initState = {
     connected: false,
     version: "unknown",
-    status: "idle",
+    status: "",
 }
 
 
@@ -16,6 +16,7 @@ const initState = {
 
 // ...
 export const SET_STATE = "LedgerHQ/SET_STATE"
+export const RESET_STATE = "LedgerHQ/RESET_STATE"
 export const SET_SOFTWARE_VERSION = "LedgerHQ/SET_SOFTWARE_VERSION"
 export const SET_CONNECTED = "LedgerHQ/SET_CONNECTED"
 export const SET_STATUS = "LedgerHQ/SET_STATUS"
@@ -34,6 +35,12 @@ export const action = {
 
 
     // ...
+    resetState: () => ({
+        type: RESET_STATE,
+    }),
+
+
+    // ...
     setConnected: (state) => ({
         type: SET_CONNECTED,
         state,
@@ -48,24 +55,31 @@ export const action = {
 
 
     // ...
-    setStatus: (status="idle") => ({
+    setStatus: (status="") => ({
         type: SET_STATUS,
         status,
     }),
 
 
     // ...
-    queryForSoftwareVersion: () =>
+    getSoftwareVersion: () =>
         async (dispatch, _getState) => {
             let version = null
-            dispatch(action.setStatus("getting version"))
-            dispatch(action.setSoftwareVersion())
-            dispatch(action.setConnected(false))
-            version = await getSoftwareVersion()
-            dispatch(action.setSoftwareVersion(version))
-            dispatch(action.setConnected(true))
-            dispatch(action.setStatus())
-            return version
+            try {
+                dispatch(action.setStatus("Waiting for device ..."))
+                dispatch(action.setSoftwareVersion())
+                dispatch(action.setConnected(false))
+                version = await ledgerGetSoftwareVersion()
+                dispatch(action.setSoftwareVersion(version))
+                dispatch(action.setConnected(true))
+                dispatch(action.setStatus(`Connected. Version: ${version}`))
+                return version
+            } catch (ex) {
+                dispatch(action.setStatus(`Error: ${ex.message}`))
+                dispatch(action.setSoftwareVersion())
+                dispatch(action.setConnected(false))
+                throw ex
+            }
         },
 
 }
@@ -81,6 +95,10 @@ export const reducer = createReducer(initState)({
         ...state,
         ...action.payload,
     }),
+
+
+    // ...
+    [RESET_STATE]: () => initState,
 
 
     // ...

@@ -1,19 +1,14 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-
 import { bip32Prefix } from "../StellarFox/env"
-import {
-    getSoftwareVersion,
-    getPublicKey,
-} from "../../lib/ledger"
-
+import { getPublicKey } from "../../lib/ledger"
 import {
     logIn,
     setAccountRegistered,
     setPublicKey
 } from "../../redux/actions"
-
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import Input from "../../lib/common/Input"
 import Toggle from "../../lib/common/Toggle"
 import Button from "../../lib/common/Button"
@@ -31,61 +26,53 @@ class LedgerAuthenticator extends Component {
         derivationPath: "0",
         pathEditable: false,
         useDefaultAccount: true,
-        ledgerStatusMessage: "",
         errorCode: null,
         buttonDisabled: false,
     }
 
 
     // ...
-    initQueryDevice = () => {
-        let that = this
-        return (async function _initQueryDevice () {
-            that.setState({ ledgerStatusMessage: "Waiting for device ...", })
-            let bip32Path = that.formBip32Path.call(that)
-            let softwareVersion = null
-            try {
-                softwareVersion = await getSoftwareVersion()
-                that.setState({
-                    ledgerStatusMessage:
-                        `Connected. Software ver. ${softwareVersion}`,
-                    errorCode: null,
-                    buttonDisabled: true,
-                })
-                const publicKey =
-                    await getPublicKey(bip32Path)
-                        .catch((error) => {
-                            that.setState({
-                                ledgerStatusMessage:
-                                    that.errorCodeToUserMessage(
-                                        error.statusCode
-                                    ),
-                                errorCode: error.statusCode,
-                            })
+    initQueryDevice = async () => {
+        let bip32Path = this.formBip32Path()
+        let softwareVersion = null
+        try {
+            softwareVersion = await this.props.getSoftwareVersion()
+            this.setState({
+                errorCode: null,
+                buttonDisabled: true,
+            })
+            const publicKey =
+                await getPublicKey(bip32Path)
+                    .catch((error) => {
+                        this.setState({
+                            // ledgerStatusMessage:
+                            //     this.errorCodeToUserMessage(
+                            //         error.statusCode
+                            //     ),
+                            errorCode: error.statusCode,
                         })
-                that.props.setPublicKey(publicKey)
-                that.props.onConnected.call(that, {
-                    publicKey,
-                    softwareVersion,
-                    bip32Path,
-                    errorCode: null,
-                    errorMessage: null,
-                })
-            } catch (ex) {
-                that.setState({
-                    ledgerStatusMessage: ex.message,
-                    errorCode: ex.originalError.metaData.code,
-                    buttonDisabled: false,
-                })
-                that.props.onConnected.call(that, {
-                    publicKey: null,
-                    softwareVersion: null,
-                    bip32Path: null,
-                    errorCode: ex.originalError.metaData.code,
-                    errorMessage: ex.message,
-                })
-            }
-        }())
+                    })
+            this.props.setPublicKey(publicKey)
+            this.props.onConnected.call(this, {
+                publicKey,
+                softwareVersion,
+                bip32Path,
+                errorCode: null,
+                errorMessage: null,
+            })
+        } catch (ex) {
+            this.setState({
+                errorCode: ex.originalError.metaData.code,
+                buttonDisabled: false,
+            })
+            this.props.onConnected.call(this, {
+                publicKey: null,
+                softwareVersion: null,
+                bip32Path: null,
+                errorCode: ex.originalError.metaData.code,
+                errorMessage: ex.message,
+            })
+        }
     }
 
 
@@ -138,6 +125,10 @@ class LedgerAuthenticator extends Component {
             this.setState({ derivationPath: "0", })
         }
     }
+
+
+    // ...
+    componentDidMount = () => this.props.resetLedgerState()
 
 
     // ...
@@ -194,7 +185,7 @@ class LedgerAuthenticator extends Component {
 
             <div style={{marginTop: "2px",}} className="p-t-small">
                 <div className="tiny placeholder-tiny">
-                    {this.state.ledgerStatusMessage}
+                    {this.props.LedgerHQ.status}
                 </div>
             </div>
         </Fragment>
@@ -207,9 +198,12 @@ export default connect(
     // map state to props.
     (state) => ({
         auth: state.auth,
+        LedgerHQ: state.LedgerHQ,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        getSoftwareVersion: LedgerHQAction.getSoftwareVersion,
+        resetLedgerState: LedgerHQAction.resetState,
         logIn,
         setAccountRegistered,
         setPublicKey,
