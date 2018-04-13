@@ -47,7 +47,7 @@
         "react-router-dom": "^4.3.0-rc.2",
         "react-router-redux": "^5.0.0-alpha.9",
         "react-scripts": "1.1.4",
-        "redux": "^4.0.0-rc.1",
+        "redux": "^3.7.2",
         "redux-devtools-extension": "^2.13.2",
         "redux-thunk": "^2.2.0",
         "resolve-pathname": "^2.2.0",
