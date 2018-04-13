@@ -72,13 +72,6 @@ export default function (state = initState, action) {
             }
             break
 
-        case "SET_HORIZON_END_POINT":
-            state = {
-                ...state,
-                horizon: action.payload,
-            }
-            break
-
         case "SET_CURRENCY":
             state = {
                 ...state,

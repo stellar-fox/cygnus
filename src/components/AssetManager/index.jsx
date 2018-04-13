@@ -5,10 +5,7 @@ import { bindActionCreators } from "redux"
 import Axios from "axios"
 import hoistStatics from "hoist-non-react-statics"
 import { BigNumber } from "bignumber.js"
-
-import { setExchangeRate } from "../../redux/actions"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
-
 import { defaultCurrencyRateUpdateTime } from "../StellarFox/env"
 import { config } from "../../config"
 
@@ -140,7 +137,6 @@ export default connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AssetManagerAction.setState,
-        setExchangeRate,
     }, dispatch)
 )(AssetManager)
 

@@ -58,43 +58,8 @@ export const logOut = (state) => ({
 
 
 // ...
-export const enableAuthenticateButton = (state) => ({
-    type: "ENABLE_AUTHENTICATE_BUTTON",
-    payload: state,
-})
-
-
-// ...
-export const disableAuthenticateButton = (state) => ({
-    type: "DISABLE_AUTHENTICATE_BUTTON",
-    payload: state,
-})
-
-
-// ...
-export const setExchangeRate = (state) => ({
-    type: "SET_EXCHANGE_RATE",
-    payload: state,
-})
-
-
-// ...
-export const showAlert = (state) => ({
-    type: "SHOW_ALERT",
-    payload: state,
-})
-
-
-// ...
 export const hideAlert = (state) => ({
     type: "HIDE_ALERT",
-    payload: state,
-})
-
-
-// ...
-export const setCurrency = (state) => ({
-    type: "SET_CURRENCY",
     payload: state,
 })
 
@@ -114,52 +79,15 @@ export const setAccountTransactions = (state) => ({
 
 
 // ...
-export const setCurrencyPrecision = (state) => ({
-    type: "SET_CURRENCY_PRECISION",
-    payload: state,
-})
-
-
-// FIXME (merge streamers)
-// ...
 export const setStreamer = (streamer) => ({
     type: "SET_STREAMER",
     payload: streamer,
 })
 
 
-// FIXME (merge streamers)
-// ...
-export const setOptionsStreamer = (optionsStreamer) => ({
-    type: "SET_OPTIONS_STREAMER",
-    payload: optionsStreamer,
-})
-
-
-// ...
-export const setInvalidInputMessage = (state) => ({
-    type: "SET_INVALID_INPUT_MESSAGE",
-    payload: state,
-})
-
-
 // ...
 export const setAccountRegistered = (state) => ({
     type: "SET_ACCOUNT_REGISTERED",
-    payload: state,
-})
-
-
-// ...
-export const setAccountPath = (state) => ({
-    type: "SET_ACCOUNT_PATH",
-    payload: state,
-})
-
-
-// ...
-export const setLedgerSoftwareVersion = (state) => ({
-    type: "SET_LEDGER_SOFTWARE_VERSION",
     payload: state,
 })
 
@@ -200,11 +128,6 @@ export const togglePaymentCard = (cardState) => ({
     payload: cardState, // Object
 })
 
-// ...
-export const setHorizonEndPoint = (uri) => ({
-    type: "SET_HORIZON_END_POINT",
-    payload: uri,
-})
 
 // ...
 export const resetUiState = () => ({
