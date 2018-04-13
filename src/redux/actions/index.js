@@ -1,6 +1,8 @@
 import { ActionTypes } from "../reducers/mono-reducer"
 
 
+
+
 // ...
 export const setPublicKey = (state) => ({
     type: "SET_PUBKEY",
@@ -113,6 +115,23 @@ export const changeModalState = (modalState) => ({
     type: ActionTypes.CHANGE_MODAL_STATE,
     payload: modalState,
 })
+
+
+
+
+// Playground...
+export const alert = (text, title="Alert") => ({
+    type: ActionTypes.CHANGE_MODAL_STATE,
+    payload: {
+        alertWithDismiss: {
+            showing: true,
+            title,
+            content: text,
+        },
+    },
+})
+
+
 
 
 // ...
