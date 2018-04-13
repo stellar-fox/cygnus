@@ -83,5 +83,19 @@ export default () =>
 
 
 
+// dev. playground
+const sf = { appHistory, appStore, env, }
+
+// expose sf dev. namespace only in dev. environment
+if (
+    process.env.NODE_ENV !== "production"  &&  // eslint-disable-line
+    typeof window !== "undefined"
+) {
+    window.sf = { ...sf, process }  // eslint-disable-line
+}
+
+
+
+
 // ...
-export { env }
+export { env, sf }
