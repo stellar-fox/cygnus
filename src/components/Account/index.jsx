@@ -82,7 +82,7 @@ class Account extends Component {
         this.rr = resolvePath(this.props.match.path)
 
         // ...
-        this.validTabNames = ["Profile", "Settings", "Security", ]
+        this.validTabNames = ["Settings", "Profile", "Security", ]
 
         // static paths
         this.props.staticRouter.addPaths(
@@ -195,23 +195,23 @@ class Account extends Component {
                     onChange={this.handleTabSelect}
                     className="tabs-container"
                 >
+                    <Tab
+                        style={styles.tab}
+                        label={this.validTabNames[0]}
+                        value={this.validTabNames[0]}
+                    >
+                        <Settings />
+                    </Tab>
                     {
                         loginManager.isAuthenticated() ?
                             <Tab
                                 style={styles.tab}
-                                label={this.validTabNames[0]}
-                                value={this.validTabNames[0]}
+                                label={this.validTabNames[1]}
+                                value={this.validTabNames[1]}
                             >
                                 <Profile />
                             </Tab> : null
                     }
-                    <Tab
-                        style={styles.tab}
-                        label={this.validTabNames[1]}
-                        value={this.validTabNames[1]}
-                    >
-                        <Settings />
-                    </Tab>
                     {
                         loginManager.isAuthenticated() ?
                             <Tab
