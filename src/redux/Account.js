@@ -20,7 +20,7 @@ const initState = {
 
 // ...
 export const SET_STATE = "@Account/SET_STATE"
-
+export const RESET_STATE = "@Account/RESET_STATE"
 
 
 
@@ -31,6 +31,11 @@ export const action = {
     setState: (state) => ({
         type: SET_STATE,
         payload: state,
+    }),
+
+    // ...
+    resetState: () => ({
+        type: RESET_STATE,
     }),
 
 }
@@ -46,5 +51,9 @@ export const reducer = createReducer(initState)({
         ...state,
         ...action.payload,
     }),
+
+
+    // ...
+    [RESET_STATE]: () => initState,
 
 })

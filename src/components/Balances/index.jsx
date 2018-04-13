@@ -112,8 +112,16 @@ class Balances extends Component {
             }/${
                 this.props.appAuth.bip32Path
             }`
-        ).then((_response) => {
+        ).then((response) => {
             this.props.setAccountRegistered(true)
+            axios.get(`${config.api}/account/${response.data.user_id}`)
+                .then((r) => {
+                    this.props.setState({currency: r.data.data.currency,})
+                    this.props.assetManager.updateExchangeRate(r.data.data.currency)
+                })
+                .catch((_ex) => {
+                    // nothing
+                })
         }).catch((_error) => {
             // do nothing as this is only a check
         })

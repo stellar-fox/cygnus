@@ -9,6 +9,7 @@ import {
     resetUiState,
     ActionConstants,
 } from "../../redux/actions"
+import { action as AccountAction } from "../../redux/Account"
 import { action as BankAction } from "../../redux/Bank"
 
 import AppBar from "material-ui/AppBar"
@@ -45,6 +46,7 @@ export default connect(
     (dispatch) => bindActionCreators({
         changeLoginState,
         logOut,
+        resetAccountState: AccountAction.resetState,
         resetUiState,
         toggleDrawer: BankAction.toggleDrawer,
     }, dispatch)
@@ -71,6 +73,7 @@ export default connect(
                 token: null,
             })
             this.props.resetUiState()
+            this.props.resetAccountState()
             this.props.logOut()
             sessionStorage.clear()
         }
