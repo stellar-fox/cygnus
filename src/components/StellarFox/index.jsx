@@ -7,7 +7,7 @@ import {
 } from "redux"
 import thunk from "redux-thunk"
 import createHistory from "history/createBrowserHistory"
-import { composeWithDevTools } from "redux-devtools-extension"
+import { composeWithDevTools } from "redux-devtools-extension/developmentOnly"
 import throttle from "lodash/throttle"
 import {
     StellarRouter as Router,

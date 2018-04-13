@@ -1,6 +1,6 @@
 {
     "name": "cygnus",
-    "version": "0.1.36",
+    "version": "0.1.37",
     "description": "Stellar Fox (frontend)",
     "keywords": [
         "stellar",
@@ -32,11 +32,11 @@
     "dependencies": {
         "@ledgerhq/hw-app-str": "^4.0.0",
         "@ledgerhq/hw-transport-u2f": "^4.0.0",
-        "axios": "^0.17.1",
+        "axios": "^0.18.0",
         "bignumber.js": "^6.0.0",
         "history": "^4.7.2",
         "hoist-non-react-statics": "^2.5.0",
-        "lodash": "^4.17.4",
+        "lodash": "^4.17.5",
         "material-ui": "^0.20.0",
         "number-to-text": "^0.3.2",
         "prop-types": "^15.6.1",
@@ -47,7 +47,7 @@
         "react-router-dom": "^4.3.0-rc.2",
         "react-router-redux": "^5.0.0-alpha.9",
         "react-scripts": "1.1.4",
-        "redux": "^3.7.2",
+        "redux": "^4.0.0-rc.1",
         "redux-devtools-extension": "^2.13.2",
         "redux-thunk": "^2.2.0",
         "resolve-pathname": "^2.2.0",
