@@ -8,6 +8,7 @@ import PropTypes from "prop-types"
 import axios from "axios"
 import "number-to-text/converters/en-us"
 import { action as AccountAction } from "../../redux/Account"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as BalancesAction } from "../../redux/Balances"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
@@ -124,6 +125,8 @@ class Balances extends Component {
     _tmpQueryHorizon = async () => {
         try {
             const account = await loadAccount(this.props.appAuth.publicKey)
+            this.props.loadAccount(account)
+
             this.props.accountExistsOnLedger({ account, })
             this.props.setState({ exists: true, })
         } catch (error) {
@@ -369,6 +372,7 @@ export default compose(
         // match dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
+            loadAccount: StellarAccountAction.loadAccount,
             setStateForBalances: BalancesAction.setState,
             resetBalancesState: BalancesAction.resetState,
             accountExistsOnLedger,
