@@ -21,7 +21,7 @@ const initState = {
 // ...
 export const SET_STATE = "@Account/SET_STATE"
 export const LOAD_ACCOUNT = "@Account/LOAD_ACCOUNT"
-
+export const RESET_STATE = "@Account/RESET_STATE"
 
 
 
@@ -42,6 +42,12 @@ export const action = {
             account_id: account.account_id,
         },
     }),
+
+    // ...
+    resetState: () => ({
+        type: RESET_STATE,
+    }),
+
 }
 
 
@@ -56,9 +62,15 @@ export const reducer = createReducer(initState)({
         ...action.payload,
     }),
 
+
     // ...
     [LOAD_ACCOUNT]: (state, action) => ({
         ...state,
         stellar: action.payload,
     }),
+
+
+    // ...
+    [RESET_STATE]: () => initState,
+
 })
