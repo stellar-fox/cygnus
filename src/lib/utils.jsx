@@ -367,3 +367,12 @@ export const shallowEquals = (objA, objB) => {
             return false
     return true
 }
+
+
+
+
+// determine runtime environment
+// devEnv() -> true/false
+export const devEnv = () =>
+    // eslint-disable-next-line
+    process.env.NODE_ENV !== "production"
