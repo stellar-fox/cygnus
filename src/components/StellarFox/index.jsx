@@ -89,11 +89,29 @@ const sf = { env, history, store, React, }
 
 // expose sf dev. namespace only in dev. environment
 if (devEnv()  &&  typeof window !== "undefined") {
-    import("../../lib/utils")
-        .then((utils) => {
-            // eslint-disable-next-line
-            window.sf = { ...sf, process, utils, }
-        })
+    (async () => {
+        let [
+            axios, bignumber, ledger, lodash,
+            md5, redux, toml, utils,
+        ] = await Promise.all([
+            import("axios"),
+            import("bignumber.js"),
+            import("../../lib/ledger"),
+            import("lodash"),
+            import("../../lib/md5"),
+            import("redux"),
+            import("toml"),
+            import("../../lib/utils"),
+        ])
+        window.sf = { ...sf,
+            axios: axios.default,
+            BigNumber: bignumber.default,
+            ledger, lodash,
+            md5: md5.default,
+            process, // eslint-disable-line
+            redux, toml, utils,
+        }
+    })()
 }
 
 
