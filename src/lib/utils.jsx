@@ -257,28 +257,57 @@ export const capitalize = (str) =>
 
 
 // emojis!
-export const emojiString = {
+export const emojiDB = {
+    "beer": "🍺",
+    "bomb": "💣",
+    "boom": "💥",
+    "cancel": "❌",
+    "check": "✔️",
+    "crazy": "🤪",
+    "fire": "🔥",
+    "fist": "👊",
+    "fox": "🦊",
+    "ghost": "👻",
+    "glad": "😊",
+    "happy": "😃",
+    "lightning": "⚡️",
+    "love": "❤️",
+    "music": "🎶",
+    "nerd": "🤓",
+    "pizza": "🍕",
     "pencil": "✎",
     "rocket": "🚀",
-    "fire": "🔥",
-    "love": "❤️",
-    "fox": "🦊",
+    "rotfl": "😂",
+    "smile": "☺️",
     "star": "⭐️",
     "stars": "✨",
-    "lightning": "⚡️",
+    "strong": "💪",
+    "wink": "😉",
 }
 
 
 
 
-// emoji components (built on the 'emojiString' object base)
-export const emoji = Object.keys(emojiString).reduce(
+// emoji components (built on the 'emojiDB' object base)
+export const emoji = Object.keys(emojiDB).reduce(
     (acc, ek) => ({
         ...acc,
         [capitalize(ek)]: () =>
-            React.createElement(Fragment, null, emojiString[ek]),
+            React.createElement(Fragment, null, emojiDB[ek]),
     }), {}
 )
+
+
+
+
+// construct emoji string based on given emoji names
+export const emojis = (...args) => args.map((en) => emojiDB[en]).join("")
+
+
+
+
+// construct string with all emojis from emojiDB
+export const allEmojis = () => emojis(...Object.keys(emojiDB))
 
 
 
