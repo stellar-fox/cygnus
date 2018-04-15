@@ -376,3 +376,42 @@ export const shallowEquals = (objA, objB) => {
 export const devEnv = () =>
     // eslint-disable-next-line
     process.env.NODE_ENV !== "production"
+
+
+
+
+// setTimeout in promise/async skin
+// example usage:
+//
+// sf.utils.timeout(
+//     () => { console.log("Hey!"); return 42 }, 1000
+// )
+// .cancel(
+//     (c) => sf.utils.timeout(() => c("Cancelled!"), 800)
+// )
+// .then((x) => console.log("Success:", x))
+// .catch((c) => console.log("Error or cancel:", c))
+//
+export const timeout = (f, time) => {
+    let
+        handle = null, reject = null,
+        promise = new Promise((res, rej) => {
+            reject = rej
+            handle = setTimeout(() => {
+                try { res(f()) }
+                catch (ex) { rej(ex) }
+            }, time)
+        })
+    promise.cancel = (cancelCondition) => {
+        cancelCondition((reason) => {
+            clearTimeout(handle)
+            reject(reason)
+        })
+        return promise
+    }
+    return promise
+}
+
+
+// ...
+export const delay = (time) => timeout(() => time, time)
