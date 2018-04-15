@@ -446,7 +446,7 @@ export const delay = (time = 1000, cancel = (_reason) => null) =>
 
 
 
-//
+// asynchronously load libraries (used in dev. environment)
 export const dynamicImportLibs = async () => {
     let [
         bignumber, ledger, lodash,
@@ -472,7 +472,7 @@ export const dynamicImportLibs = async () => {
 
 
 
-// ...
+// asynchronously load reducers (used in dev. environment)
 export const dynamicImportReducers = async () => {
     let [
         Account, AssetManager, Balances, Bank,
