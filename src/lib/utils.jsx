@@ -462,3 +462,27 @@ export const dynamicImportReducers = async () => {
         LedgerHQ, Payments, StellarRouter,
     }
 }
+
+
+
+
+// TODO:
+// gradually remove unused imports
+// and finally remove this completely when there is no more legacy...
+export const dynamicImportLegacyStuff = async () => {
+    let [
+        actions, accountInfo, authentication,
+        loadingModal, mono, uiState,
+    ] = await Promise.all([
+        import("../redux/actions"),
+        import("../redux/reducers/account-info-reducer"),
+        import("../redux/reducers/authentication-reducer"),
+        import("../redux/reducers/loading-modal-reducer"),
+        import("../redux/reducers/mono-reducer"),
+        import("../redux/reducers/ui-state-reducer"),
+    ])
+    return {
+        actions, accountInfo, authentication,
+        loadingModal, mono, uiState,
+    }
+}
