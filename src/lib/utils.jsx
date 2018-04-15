@@ -410,6 +410,55 @@ export const timeout = (f, time = 1000, cancel = () => null) => {
 
 
 
-// ...
+// convenience shortcut of 'timeout'
 export const delay = (time = 1000, cancel = () => null) =>
     timeout(() => time, time, cancel)
+
+
+
+
+//
+export const dynamicImportLibs = async () => {
+    let [
+        bignumber, ledger, lodash,
+        md5, redux, utils,
+    ] = await Promise.all([
+        import("bignumber.js"),
+        import("./ledger"),
+        import("lodash"),
+        import("./md5"),
+        import("redux"),
+        import("./utils"),
+    ])
+    return {
+        axios,
+        BigNumber: bignumber.default,
+        ledger, lodash,
+        md5: md5.default,
+        redux, StellarSdk,
+        toml, utils,
+    }
+}
+
+
+
+
+// ...
+export const dynamicImportReducers = async () => {
+    let [
+        Account, AssetManager, Balances, Bank,
+        LedgerHQ, Payments, StellarRouter,
+    ] = await Promise.all([
+        import("../redux/Account"),
+        import("../redux/AssetManager"),
+        import("../redux/Balances"),
+        import("../redux/Bank"),
+        import("../redux/LedgerHQ"),
+        import("../redux/Payments"),
+        import("../redux/StellarRouter"),
+    ])
+    return {
+        Account, AssetManager, Balances, Bank,
+        LedgerHQ, Payments, StellarRouter,
+    }
+}

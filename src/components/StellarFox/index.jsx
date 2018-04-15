@@ -18,7 +18,11 @@ import {
     loadState,
     saveState,
 } from "../../lib/statePersistence"
-import { devEnv } from "../../lib/utils"
+import {
+    devEnv,
+    dynamicImportLibs,
+    dynamicImportReducers,
+} from "../../lib/utils"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import LoginManager from "../LoginManager"
 import AssetManager from "../AssetManager"
@@ -84,38 +88,18 @@ export default () =>
 
 
 
-// dev. playground
-const sf = { env, history, store, React, }
-
-// expose sf dev. namespace only in dev. environment
+// expose 'sf' dev. namespace only in dev. environment
 if (devEnv()  &&  typeof window !== "undefined") {
-    (async () => {
-        let [
-            axios, bignumber, ledger, lodash,
-            md5, redux, toml, utils,
-        ] = await Promise.all([
-            import("axios"),
-            import("bignumber.js"),
-            import("../../lib/ledger"),
-            import("lodash"),
-            import("../../lib/md5"),
-            import("redux"),
-            import("toml"),
-            import("../../lib/utils"),
-        ])
-        window.sf = { ...sf,
-            axios: axios.default,
-            BigNumber: bignumber.default,
-            ledger, lodash,
-            md5: md5.default,
-            process, // eslint-disable-line
-            redux, toml, utils,
-        }
-    })()
+    (async () => { window.sf = {
+        env, history, store, React,
+        ...await dynamicImportLibs(),
+        process, // eslint-disable-line
+        r: await dynamicImportReducers(),
+    }})()
 }
 
 
 
 
 // ...
-export { env, sf }
+export { env }
