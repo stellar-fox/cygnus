@@ -384,15 +384,13 @@ export const devEnv = () =>
 // example usage:
 //
 // sf.utils.timeout(
-//     () => { console.log("Hey!"); return 42 }, 1000
-// )
-// .cancel(
+//     () => { console.log("Hey!"); return 42 }, 1000,
 //     (c) => sf.utils.timeout(() => c("Cancelled!"), 800)
 // )
 // .then((x) => console.log("Success:", x))
 // .catch((c) => console.log("Error or cancel:", c))
 //
-export const timeout = (f, time) => {
+export const timeout = (f, time = 1000, cancel = () => null) => {
     let
         handle = null, reject = null,
         promise = new Promise((res, rej) => {
@@ -402,16 +400,16 @@ export const timeout = (f, time) => {
                 catch (ex) { rej(ex) }
             }, time)
         })
-    promise.cancel = (cancelCondition) => {
-        cancelCondition((reason) => {
-            clearTimeout(handle)
-            reject(reason)
-        })
-        return promise
-    }
+    cancel((reason) => {
+        clearTimeout(handle)
+        reject(reason)
+    })
     return promise
 }
 
 
+
+
 // ...
-export const delay = (time) => timeout(() => time, time)
+export const delay = (time = 1000, cancel = () => null) =>
+    timeout(() => time, time, cancel)
