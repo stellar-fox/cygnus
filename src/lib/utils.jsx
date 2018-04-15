@@ -419,7 +419,7 @@ export const devEnv = () =>
 // .then((x) => console.log("Success:", x))
 // .catch((c) => console.log("Error or cancel:", c))
 //
-export const timeout = (f, time = 1000, cancel = () => null) => {
+export const timeout = (f, time = 1000, cancel = (_reason) => null) => {
     let
         handle = null, reject = null,
         promise = new Promise((res, rej) => {
@@ -440,7 +440,7 @@ export const timeout = (f, time = 1000, cancel = () => null) => {
 
 
 // convenience shortcut of 'timeout'
-export const delay = (time = 1000, cancel = () => null) =>
+export const delay = (time = 1000, cancel = (_reason) => null) =>
     timeout(() => time, time, cancel)
 
 
