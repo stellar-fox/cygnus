@@ -1,10 +1,14 @@
 import React, { Component, Fragment } from "react"
+import PropTypes from "prop-types"
 import {
     bindActionCreators,
     compose,
 } from "redux"
 import { connect } from "react-redux"
-import PropTypes from "prop-types"
+import {
+    Redirect,
+    Route,
+} from "react-router-dom"
 import axios from "axios"
 import "number-to-text/converters/en-us"
 import { action as AccountAction } from "../../redux/Account"
@@ -22,6 +26,10 @@ import {
 import { config } from "../../config"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
+import {
+    ConnectedSwitch as Switch,
+    resolvePath,
+} from "../StellarRouter"
 import {
     accountExistsOnLedger,
     accountMissingOnLedger,
@@ -49,6 +57,7 @@ import {
     operationsStreamer,
     paymentsStreamer
 } from "../Streamers"
+
 import "./index.css"
 
 
@@ -68,6 +77,15 @@ class Balances extends Component {
         paymentsStreamer: null,
         operationsStreamer: null,
         modalButtonText: "CANCEL",
+    }
+
+
+    // ...
+    constructor (props) {
+        super(props)
+
+        // relative resolve
+        this.rr = resolvePath(this.props.match.path)
     }
 
 
@@ -117,7 +135,9 @@ class Balances extends Component {
             axios.get(`${config.api}/account/${response.data.user_id}`)
                 .then((r) => {
                     this.props.setState({currency: r.data.data.currency,})
-                    this.props.assetManager.updateExchangeRate(r.data.data.currency)
+                    this.props.assetManager.updateExchangeRate(
+                        r.data.data.currency
+                    )
                 })
                 .catch((_ex) => {
                     // nothing
@@ -280,84 +300,100 @@ class Balances extends Component {
 
 
     // ...
-    render = () => <Fragment>
+    render = () => (
+        ({appUi, appAuth, assetManager, accountInfo, loginManager, }) =>
+            <Switch>
+                <Route exact path={this.rr(".")}>
+                    <Fragment>
+                        <Modal
+                            open={appUi.modals.signup ?
+                                appUi.modals.signup.showing : false
+                            }
+                            title="Opening Your Bank - Register Account"
+                            actions={[
+                                <Button
+                                    label={this.state.modalButtonText}
+                                    onClick={this.hideSignupModal}
+                                    primary={true}
+                                />,
+                            ]}
+                        >
+                            <Signup onComplete={this.completeRegistration}
+                                config={{
+                                    useAsRegistrationForm: true,
+                                    publicKey: appAuth.publicKey,
+                                    bip32Path: appAuth.bip32Path,
+                                }}
+                            />
+                        </Modal>
 
-        <Modal
-            open={this.props.appUi.modals.signup ?
-                this.props.appUi.modals.signup.showing : false
-            }
-            title="Opening Your Bank - Register Account"
-            actions={[
-                <Button
-                    label={this.state.modalButtonText}
-                    onClick={this.hideSignupModal}
-                    primary={true}
-                />,
-            ]}
-        >
-            <Signup onComplete={this.completeRegistration}
-                config={{
-                    useAsRegistrationForm: true,
-                    publicKey: this.props.appAuth.publicKey,
-                    bip32Path: this.props.appAuth.bip32Path,
-                }}
-            />
-        </Modal>
+                        <Modal
+                            open={appUi.modals.txConfirmMsg ?
+                                appUi.modals.txConfirmMsg.showing : false
+                            }
+                            title="Confirm on Hardware Device"
+                        >
+                            <TxConfirmMsg />
+                        </Modal>
 
-        <Modal
-            open={this.props.appUi.modals.txConfirmMsg ?
-                this.props.appUi.modals.txConfirmMsg.showing : false
-            }
-            title="Confirm on Hardware Device"
-        >
-            <TxConfirmMsg />
-        </Modal>
+                        <Modal
+                            open={
+                                appUi.modals.txBroadcastMsg ?
+                                    appUi.modals.txBroadcastMsg.showing :
+                                    false
+                            }
+                            title="Transmiting ..."
+                        >
+                            <TxBroadcastMsg />
+                        </Modal>
 
-        <Modal
-            open={this.props.appUi.modals.txBroadcastMsg ?
-                this.props.appUi.modals.txBroadcastMsg.showing : false
-            }
-            title="Transmiting ..."
-        >
-            <TxBroadcastMsg />
-        </Modal>
+                        <Modal
+                            open={
+                                appUi.modals.txCompleteMsg ?
+                                    appUi.modals.txCompleteMsg.showing :
+                                    false
+                            }
+                            title="Transaction Complete"
+                            actions={[
+                                <Button
+                                    label="OK"
+                                    onClick={this.hideTxCompleteModal}
+                                    primary={true}
+                                />,
+                            ]}
+                        >
+                            <TxCompleteMsg
+                                assetManager={assetManager}
+                            />
+                        </Modal>
 
-        <Modal
-            open={this.props.appUi.modals.txCompleteMsg ?
-                this.props.appUi.modals.txCompleteMsg.showing : false
-            }
-            title="Transaction Complete"
-            actions={[
-                <Button
-                    label="OK"
-                    onClick={this.hideTxCompleteModal}
-                    primary={true}
-                />,
-            ]}
-        >
-            <TxCompleteMsg
-                assetManager={this.props.assetManager}
-            />
-        </Modal>
+                        {
+                            !accountInfo.registered  &&
+                            !loginManager.isExploreOnly() ?
+                                <RegisterCard /> : null
+                        }
 
+                        {
+                            accountInfo.exists ?
+                                <BalancesCard
+                                    notImplemented={this.handleOpen}
+                                /> :
+                                <NoAccountCard />
+                        }
 
-        {!this.props.accountInfo.registered &&
-            !this.props.loginManager.isExploreOnly() ?
-            <RegisterCard /> : null
-        }
+                        {
+                            appUi.cards.payment  &&
+                            appUi.cards.payment.opened ?
+                                <PaymentCard
+                                    onSignTransaction={this.sendPayment}
+                                /> : null
+                        }
+                    </Fragment>
+                </Route>
+                <Redirect to={this.rr(".")} />
+            </Switch>
+    )(this.props)
 
-        {this.props.accountInfo.exists ?
-            <BalancesCard notImplemented={this.handleOpen} /> :
-            <NoAccountCard />
-        }
-
-        {
-            this.props.appUi.cards.payment &&
-            this.props.appUi.cards.payment.opened &&
-            <PaymentCard onSignTransaction={this.sendPayment} />
-        }
-
-    </Fragment>
 }
 
 
