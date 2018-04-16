@@ -75,7 +75,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ style, }, getPath) =>
+            ({ style, }, { getPath, }) =>
                 <div style={style} className="bank-content">
                     <Switch>
                         <Redirect exact
@@ -94,7 +94,7 @@ export default compose(
                         <Redirect to={getPath("Balances")} />
                     </Switch>
                 </div>
-        )(this.state, this.props.staticRouter.getPath)
+        )(this.state, this.props.staticRouter)
 
     }
 )

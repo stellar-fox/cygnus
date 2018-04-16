@@ -12,7 +12,7 @@ import Footer from "../Layout/Footer"
 export default () =>
     <Fragment>
         <BankAppBar />
-        <BankDrawer />
         <BankContent />
+        <BankDrawer />
         <Footer />
     </Fragment>
