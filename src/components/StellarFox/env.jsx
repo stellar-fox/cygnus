@@ -167,6 +167,7 @@ export const minimumReserveMessage =
 
 // ...
 export const notImplementedText = [
+    "Pardon the mess.",
     "We are hard at work to bring you this feature very soon.",
     "Please check back in a while as our code is being frequently deployed.",
 ].join(" ")

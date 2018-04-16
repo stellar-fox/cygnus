@@ -6,7 +6,10 @@ import {
 } from "redux"
 import { connect } from "react-redux"
 import { withLoginManager } from "../LoginManager"
-import { Redirect } from "react-router-dom"
+import {
+    Redirect,
+    Route,
+} from "react-router-dom"
 import {
     ConnectedSwitch as Switch,
     ensureTrailingSlash,
@@ -37,6 +40,7 @@ import Settings from "./Settings"
 import Security from "./Security"
 
 import "./index.css"
+import { env } from "../StellarFox"
 
 
 
@@ -137,93 +141,100 @@ class Account extends Component {
         ({
             modal, appUi, appAuth,
             loginManager, currentView,
-            staticRouter, state,
+            staticRouter: { getPath, }, state,
         }) =>
-            <Fragment>
-                <Switch>
-                    <Redirect exact
-                        from={this.rr(".")}
-                        to={staticRouter.getPath(state.tabSelected)}
-                    />
-                </Switch>
+            <Switch>
+                <Redirect exact
+                    from={this.rr(".")}
+                    to={getPath(state.tabSelected)}
+                />
+                <Route exact path={getPath(state.tabSelected)}>
+                    <Fragment>
+                        <Dialog
+                            title="Not Yet Implemented"
+                            actions={[
+                                <Button
+                                    label="OK"
+                                    keyboardFocused={true}
+                                    onClick={this.handleClose}
+                                />,
+                            ]}
+                            modal={false}
+                            open={modal.isShowing}
+                            onRequestClose={this.handleClose}
+                            paperClassName="modal-body"
+                            titleClassName="modal-title"
+                        >
+                            { env.notImplementedText }
+                        </Dialog>
+                        <Modal
+                            open={
+                                appUi.modals.signup ?
+                                    appUi.modals.signup.showing : false
+                            }
+                            title="Opening Your Bank - Register Account"
+                            actions={[
+                                <Button
+                                    label={this.state.modalButtonText}
+                                    onClick={this.hideSignupModal}
+                                    primary={true}
+                                />,
+                            ]}
+                        >
+                            <Signup
+                                onComplete={this.completeRegistration}
+                                config={{
+                                    useAsRegistrationForm: true,
+                                    publicKey: appAuth.publicKey,
+                                    bip32Path: appAuth.bip32Path,
+                                }}
+                            />
+                        </Modal>
 
-                <Dialog
-                    title="Not Yet Implemented"
-                    actions={[
-                        <Button
-                            label="OK"
-                            keyboardFocused={true}
-                            onClick={this.handleClose}
-                        />,
-                    ]}
-                    modal={false}
-                    open={modal.isShowing}
-                    onRequestClose={this.handleClose}
-                    paperClassName="modal-body"
-                    titleClassName="modal-title"
-                >
-                    Pardon the mess. We are working hard to bring you this
-                    feature very soon. Please check back in a while as the
-                    feature implementation is being continuously deployed.
-                </Dialog>
-                <Modal
-                    open={appUi.modals.signup ?
-                        appUi.modals.signup.showing : false}
-                    title="Opening Your Bank - Register Account"
-                    actions={[
-                        <Button
-                            label={this.state.modalButtonText}
-                            onClick={this.hideSignupModal}
-                            primary={true}
-                        />,
-                    ]}
-                >
-                    <Signup onComplete={this.completeRegistration} config={{
-                        useAsRegistrationForm: true,
-                        publicKey: appAuth.publicKey,
-                        bip32Path: appAuth.bip32Path,
-                    }} />
-                </Modal>
-
-                <Tabs
-                    tabItemContainerStyle={styles.container}
-                    inkBarStyle={styles.inkBar}
-                    value={
-                        this.validTabNames.indexOf(currentView) !== -1 ?
-                            currentView : state.tabSelected
-                    }
-                    onChange={this.handleTabSelect}
-                    className="tabs-container"
-                >
-                    <Tab
-                        style={styles.tab}
-                        label={this.validTabNames[0]}
-                        value={this.validTabNames[0]}
-                    >
-                        <Settings />
-                    </Tab>
-                    {
-                        loginManager.isAuthenticated() ?
+                        <Tabs
+                            tabItemContainerStyle={styles.container}
+                            inkBarStyle={styles.inkBar}
+                            value={
+                                this.validTabNames
+                                    .indexOf(currentView) !== -1 ?
+                                    currentView :
+                                    state.tabSelected
+                            }
+                            onChange={this.handleTabSelect}
+                            className="tabs-container"
+                        >
                             <Tab
                                 style={styles.tab}
-                                label={this.validTabNames[1]}
-                                value={this.validTabNames[1]}
+                                label={this.validTabNames[0]}
+                                value={this.validTabNames[0]}
                             >
-                                <Profile />
-                            </Tab> : null
-                    }
-                    {
-                        loginManager.isAuthenticated() ?
-                            <Tab
-                                style={styles.tab}
-                                label={this.validTabNames[2]}
-                                value={this.validTabNames[2]}
-                            >
-                                <Security />
-                            </Tab> : null
-                    }
-                </Tabs>
-            </Fragment>
+                                <Settings />
+                            </Tab>
+                            {
+                                loginManager.isAuthenticated() ?
+                                    <Tab
+                                        style={styles.tab}
+                                        label={this.validTabNames[1]}
+                                        value={this.validTabNames[1]}
+                                    >
+                                        <Profile />
+                                    </Tab> : null
+                            }
+                            {
+                                loginManager.isAuthenticated() ?
+                                    <Tab
+                                        style={styles.tab}
+                                        label={this.validTabNames[2]}
+                                        value={this.validTabNames[2]}
+                                    >
+                                        <Security />
+                                    </Tab> : null
+                            }
+                        </Tabs>
+                    </Fragment>
+                </Route>
+                <Redirect exact to={getPath(state.tabSelected)} />
+            </Switch>
     )(this.props)
 
 }
