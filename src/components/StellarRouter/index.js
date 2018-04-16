@@ -12,7 +12,6 @@ import {
     ConnectedRouter as Router,
     push,
 } from "react-router-redux"
-import { intersection } from "lodash"
 import { action as StellarRouterAction } from "../../redux/StellarRouter"
 import resolvePathname from "resolve-pathname"
 import {
@@ -98,29 +97,7 @@ export const StaticRouter = connect(
         // whenever new set of static paths are added
         // a new path-to-view mapping is computed
         addPaths = (paths) => {
-            let
-                keysIntersection = intersection(
-                    Object.keys(this._staticPaths),
-                    Object.keys(paths)
-                ),
-                valsIntersection = intersection(
-                    Object.values(this._staticPaths),
-                    Object.values(paths)
-                ),
-                duplicates = findDuplicates(Object.values(paths))
-
-            if (keysIntersection.length) {
-                throw new Error(
-                    "You're trying to override a following views: " +
-                    keysIntersection.join(", ")
-                )
-            }
-            if (valsIntersection.length) {
-                throw new Error(
-                    "You're trying to override a following paths: " +
-                    valsIntersection.join(", ")
-                )
-            }
+            let duplicates = findDuplicates(Object.values(paths))
             if (duplicates.length) {
                 throw new Error(
                     "A following duplicates found: " +
