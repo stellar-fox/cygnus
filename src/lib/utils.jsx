@@ -1,6 +1,7 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
+import { countBy } from "lodash"
 import { StellarSdk, loadAccount } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 
@@ -396,6 +397,14 @@ export const shallowEquals = (objA, objB) => {
             return false
     return true
 }
+
+
+
+
+// find duplicaes in given array
+export const findDuplicates = (a) =>
+    Object.entries(countBy(a))
+        .reduce((acc, [k, v,]) => v > 1 ? acc.concat(k) : acc, [])
 
 
 
