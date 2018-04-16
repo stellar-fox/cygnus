@@ -69,6 +69,7 @@ class Balances extends Component {
     // ...
     static propTypes = {
         setState: PropTypes.func.isRequired,
+        match: PropTypes.object.isRequired,
     }
 
 
