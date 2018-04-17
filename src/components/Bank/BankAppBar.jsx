@@ -11,6 +11,7 @@ import {
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
 import { action as BankAction } from "../../redux/Bank"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 import AppBar from "material-ui/AppBar"
 import IconButton from "material-ui/IconButton"
@@ -47,6 +48,7 @@ export default connect(
         changeLoginState,
         logOut,
         resetAccountState: AccountAction.resetState,
+        resetStellarAccountState: StellarAccountAction.resetState,
         resetUiState,
         toggleDrawer: BankAction.toggleDrawer,
     }, dispatch)
@@ -74,6 +76,7 @@ export default connect(
             })
             this.props.resetUiState()
             this.props.resetAccountState()
+            this.props.resetStellarAccountState()
             this.props.logOut()
             sessionStorage.clear()
         }
