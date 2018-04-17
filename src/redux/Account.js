@@ -20,7 +20,6 @@ const initState = {
 
 // ...
 export const SET_STATE = "@Account/SET_STATE"
-export const LOAD_ACCOUNT = "@Account/LOAD_ACCOUNT"
 export const RESET_STATE = "@Account/RESET_STATE"
 
 
@@ -32,15 +31,6 @@ export const action = {
     setState: (state) => ({
         type: SET_STATE,
         payload: state,
-    }),
-
-    // ...
-    loadAccount: (account) => ({
-        type: LOAD_ACCOUNT,
-        payload: {
-            sequence: account.sequence,
-            account_id: account.account_id,
-        },
     }),
 
     // ...
@@ -61,14 +51,6 @@ export const reducer = createReducer(initState)({
         ...state,
         ...action.payload,
     }),
-
-
-    // ...
-    [LOAD_ACCOUNT]: (state, action) => ({
-        ...state,
-        stellar: action.payload,
-    }),
-
 
     // ...
     [RESET_STATE]: () => initState,
