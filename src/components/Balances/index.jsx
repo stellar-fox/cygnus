@@ -154,7 +154,7 @@ class Balances extends Component {
     _tmpQueryHorizon = async () => {
         try {
             const account = await loadAccount(this.props.appAuth.publicKey)
-            this.props.loadAccount(account)
+            this.props.updateAccountTree(account)
 
             this.props.accountExistsOnLedger({ account, })
             this.props.setState({ exists: true, })
@@ -417,7 +417,7 @@ export default compose(
         // match dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
-            loadAccount: StellarAccountAction.loadAccount,
+            updateAccountTree: StellarAccountAction.loadStellarAccount,
             setStateForBalances: BalancesAction.setState,
             resetBalancesState: BalancesAction.resetState,
             accountExistsOnLedger,

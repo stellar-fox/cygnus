@@ -462,8 +462,7 @@ class PaymentCard extends Component {
 
                     <div className="p-l nowrap fade-extreme">
                         <span className="bigger">
-                            𝕊𝕃{" "}{this.props.strAccount
-                                && this.props.strAccount.sequence}
+                            𝕊𝕃{" "}{this.props.StellarAccount.sequence}
                         </span>
                     </div>
                 }
@@ -506,10 +505,7 @@ export default compose(
             Account: state.Account,
             Assets: state.Assets,
             Balances: state.Balances,
-            strAccount:
-                state.accountInfo.account ?
-                    state.accountInfo.account.account :
-                    null,
+            StellarAccount: state.StellarAccount,
             appUi: state.appUi,
         }),
         // map dispatch to props.
