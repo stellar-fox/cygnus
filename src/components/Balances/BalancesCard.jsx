@@ -58,7 +58,7 @@ class BalancesCard extends Component {
     showPaymentCard = () =>
         this.props.togglePaymentCard({
             payment: {
-                opened: true,
+                opened: !this.props.appUi.cards.payment.opened,
             },
         })
 
