@@ -150,7 +150,7 @@ class LedgerAuthenticator extends Component {
                         }}
                         trackSwitchedStyle={{
                             backgroundColor: this.props.className.match(/reverse/) ?
-                                "rgba(15,46,83,0.75)" : "rgb(244,176,4)",
+                                "rgba(15,46,83,0.75)" : "rgba(244,176,4,0.75)",
                         }}
                     />
                     {this.state.pathEditable ? (
