@@ -57,15 +57,8 @@ class Transactions extends Component {
 
 
     // ...
-    noMoreTransactionsNotice = (state) => {
-        this.props.setState({
-            ...state,
-        })
-        this.props.changeSnackbarState({
-            open: true,
-            message: "No more transactions data.",
-        })
-    }
+    componentDidMount = () => this.props.getTransactions()
+
 
     // ...
     getNextTransactionsPage = () =>
@@ -129,7 +122,15 @@ class Transactions extends Component {
 
 
     // ...
-    componentDidMount = () => this.props.getTransactions()
+    noMoreTransactionsNotice = (state) => {
+        this.props.setState({
+            ...state,
+        })
+        this.props.changeSnackbarState({
+            open: true,
+            message: "No more transactions data.",
+        })
+    }
 
 
     // ...

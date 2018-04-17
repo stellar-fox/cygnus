@@ -19,6 +19,7 @@ import {
 
 import {
     emoji,
+    htmlEntities as he,
     pubKeyAbbr,
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
@@ -39,8 +40,8 @@ import {
 import { action as PaymentsAction } from "../../redux/Payments"
 
 import {
-    Tabs,
     Tab,
+    Tabs,
 } from "material-ui/Tabs"
 import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
@@ -97,16 +98,12 @@ class Payments extends Component {
                 [tn]: this.rr(ensureTrailingSlash(tn.toLowerCase())),
             }), {})
         )
+
+        // ...
+        this.stellarServer = new StellarSdk.Server(
+            this.props.accountInfo.horizon
+        )
     }
-
-
-    // ...
-    stellarServer = new StellarSdk.Server(this.props.accountInfo.horizon)
-
-
-    // ...
-    componentWillUnmount = () =>
-        this.props.accountInfo.streamer.call(this)
 
 
     // ...
@@ -152,12 +149,18 @@ class Payments extends Component {
 
                 Promise.all(gravatarLinkPromises).then((links) => {
                     links.forEach((link, index) => {
-                        paymentsResult.records[index].gravatar = link.link
-                        paymentsResult.records[index].firstName = link.firstName
-                        paymentsResult.records[index].lastName = link.lastName
-                        paymentsResult.records[index].email = link.email
-                        paymentsResult.records[index].alias = link.alias
-                        paymentsResult.records[index].domain = link.domain
+                        paymentsResult.records[index]
+                            .gravatar = link.link
+                        paymentsResult.records[index]
+                            .firstName = link.firstName
+                        paymentsResult.records[index]
+                            .lastName = link.lastName
+                        paymentsResult.records[index]
+                            .email = link.email
+                        paymentsResult.records[index]
+                            .alias = link.alias
+                        paymentsResult.records[index]
+                            .domain = link.domain
                     })
                     this.props.setAccountPayments(paymentsResult)
                     this.updateCursors(paymentsResult.records)
@@ -183,6 +186,37 @@ class Payments extends Component {
                 // eslint-disable-next-line no-console
                 console.log(err)
             })
+    }
+
+
+    // ...
+    componentWillUnmount = () =>
+        this.props.accountInfo.streamer.call(this)
+
+
+    // ...
+    getTransactions = () => {
+        if (
+            (this.props.state.txCursorLeft === null  &&
+            this.props.state.txCursorRight === null)  ||
+            !this.props.accountInfo.transactions
+        ) {
+            return this.stellarServer
+                .transactions()
+                .forAccount(this.props.appAuth.publicKey)
+                .order("desc")
+                .limit(5)
+                .call()
+                .then((transactionsResult) => {
+                    this.props.setAccountTransactions(transactionsResult)
+                    this.updateTransactionsCursors(transactionsResult.records)
+                })
+                .catch(function (err) {
+                    // eslint-disable-next-line no-console
+                    console.log(err)
+                })
+        }
+        return Promise.resolve()
     }
 
 
@@ -325,67 +359,52 @@ class Payments extends Component {
 
                             Promise.all(gravatarLinkPromises).then((links) => {
                                 links.forEach((link, index) => {
-                                    paymentsResult.records[index].gravatar = link.link
-                                    paymentsResult.records[index].firstName = link.firstName
-                                    paymentsResult.records[index].lastName = link.lastName
-                                    paymentsResult.records[index].email = link.email
-                                    paymentsResult.records[index].alias = link.alias
-                                    paymentsResult.records[index].domain = link.domain
+                                    paymentsResult.records[index]
+                                        .gravatar = link.link
+                                    paymentsResult.records[index]
+                                        .firstName = link.firstName
+                                    paymentsResult.records[index]
+                                        .lastName = link.lastName
+                                    paymentsResult.records[index]
+                                        .email = link.email
+                                    paymentsResult.records[index]
+                                        .alias = link.alias
+                                    paymentsResult.records[index]
+                                        .domain = link.domain
                                 })
                                 this.props.setAccountPayments(paymentsResult)
                                 this.updateCursors(paymentsResult.records)
-                                paymentsResult.records[0].effects().then((effects) => {
-                                    paymentsResult.records[0].transaction().then((tx) => {
-                                        this.props.setState({
-                                            paymentDetails: {
-                                                txid:
-                                                    paymentsResult
-                                                        .records[0].id,
-                                                created_at:
-                                                    paymentsResult
-                                                        .records[0].created_at,
-                                                effects: effects
-                                                    ._embedded.records,
-                                                memo: tx.memo,
-                                                selectedPaymentId:
-                                                    paymentsResult
-                                                        .records[0].id,
-                                            },
-                                        })
-                                        this.props.setModalLoaded()
+                                paymentsResult.records[0]
+                                    .effects().then((effects) => {
+                                        paymentsResult.records[0]
+                                            .transaction().then((tx) => {
+                                                this.props.setState({
+                                                    paymentDetails: {
+                                                        txid:
+                                                            paymentsResult
+                                                                .records[0].id,
+                                                        created_at:
+                                                            paymentsResult
+                                                                .records[0]
+                                                                .created_at,
+                                                        effects:
+                                                            effects
+                                                                ._embedded
+                                                                .records,
+                                                        memo: tx.memo,
+                                                        selectedPaymentId:
+                                                            paymentsResult
+                                                                .records[0].id,
+                                                    },
+                                                })
+                                                this.props.setModalLoaded()
+                                            })
                                     })
-                                })
                             })
                         })
                 },
                 (_e) => this.props.accountMissingOnLedger()
             )
-
-
-    // ...
-    getTransactions = () => {
-        if (
-            (this.props.state.txCursorLeft === null  &&
-            this.props.state.txCursorRight === null)  ||
-            !this.props.accountInfo.transactions
-        ) {
-            return this.stellarServer
-                .transactions()
-                .forAccount(this.props.appAuth.publicKey)
-                .order("desc")
-                .limit(5)
-                .call()
-                .then((transactionsResult) => {
-                    this.props.setAccountTransactions(transactionsResult)
-                    this.updateTransactionsCursors(transactionsResult.records)
-                })
-                .catch(function (err) {
-                    // eslint-disable-next-line no-console
-                    console.log(err)
-                })
-        }
-        return Promise.resolve()
-    }
 
 
     // ...
@@ -416,6 +435,22 @@ class Payments extends Component {
 
 
     // ...
+    updateCursors = (records) =>
+        this.props.setState({
+            cursorLeft: records[0].paging_token,
+            cursorRight: records[records.length - 1].paging_token,
+        })
+
+
+    // ...
+    updateTransactionsCursors = (records) =>
+        this.props.setState({
+            txCursorLeft: records[0].paging_token,
+            txCursorRight: records[records.length - 1].paging_token,
+        })
+
+
+    // ...
     decodeEffectType = (effect, index) => {
         let humanizedEffectType = ""
         const icon = `filter_${index + 1}`
@@ -429,27 +464,37 @@ class Payments extends Component {
                                 <i className="material-icons">{icon}</i>
                                 <span>New Acccount Created </span>
                                 <span className="account-direction">
-                                    {effect.account ===
-                                    this.props.appAuth.publicKey
-                                        ? "Yours"
-                                        : "Theirs"}
+                                    {
+                                        effect.account ===
+                                            this.props.appAuth.publicKey ?
+                                            "Yours" : "Theirs"
+                                    }
                                 </span>
                             </div>
                             <div className="f-e-col">
                                 <div>
                                     <span className="credit">
-                                        {" "}&#x0002B;{" "}
-                                        {this.props.assetManager.getAssetGlyph(
-                                            this.props.Account.currency
-                                        )}{" "}
-                                        {this.props.assetManager.convertToAsset(
-                                            effect.starting_balance)}
+                                        <he.Space /><he.Plus /><he.Space />
+                                        {
+                                            this.props.assetManager
+                                                .getAssetGlyph(
+                                                    this.props.Account
+                                                        .currency
+                                                )
+                                        }
+                                        <he.Space />
+                                        {
+                                            this.props
+                                                .assetManager.convertToAsset(
+                                                    effect.starting_balance
+                                                )
+                                        }
                                     </span>
                                 </div>
                                 <div className="fade-extreme">
                                     <span className="micro-font">
                                         {effect.starting_balance}
-                                    </span>{" "}
+                                    </span><he.Space />
                                     <span className="pico-font small-caps">
                                         XLM
                                     </span>
@@ -464,7 +509,7 @@ class Payments extends Component {
                                 <div className="payment-details-fieldset">
                                     <div className="payment-details-memo">
                                         <span className="smaller">Memo:</span>
-                                        {" "}
+                                        <he.Space />
                                         {this.props.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
@@ -505,7 +550,7 @@ class Payments extends Component {
                                     <div className="payment-details-memo">
                                         <span className="smaller">
                                             Account Closed:
-                                            {" "}
+                                            <he.Space />
                                             {pubKeyAbbr(effect.account)}
                                         </span>
                                     </div>
@@ -527,38 +572,61 @@ class Payments extends Component {
                                 <i className="material-icons">{icon}</i>
                                 <span>Acccount Credited </span>
                                 <span className="account-direction">
-                                    {effect.account ===
-                                    this.props.appAuth.publicKey
-                                        ? "Yours"
-                                        : "Theirs"}
+                                    {
+                                        effect.account ===
+                                            this.props.appAuth.publicKey ?
+                                            "Yours" : "Theirs"
+                                    }
                                 </span>
                             </div>
                             <div>
                                 <div className="f-e-col">
                                     <div>
-                                        {this.props.assetManager.getAssetCode(effect) === "XLM" ? (
-                                            <span className="credit">
-                                                {" "}&#x0002B;{" "}
-                                                {this.props.assetManager.getAssetGlyph(
-                                                    this.props.Account.currency
-                                                )}{" "}
-                                                {this.props.assetManager.convertToAsset(
-                                                    effect.amount)}
-                                            </span>
-                                        ) : (
-                                            <span className="credit">
-                                                {" "}&#x0002B;{" "}
-                                                {effect.amount}{" "}
-                                                <span className="smaller">
-                                                    {this.props.assetManager.getAssetCode(effect)}
+                                        {
+                                            this.props.assetManager
+                                                .getAssetCode(effect) ===
+                                                    "XLM" ?
+                                                <span className="credit">
+                                                    <he.Space />
+                                                    <he.Plus />
+                                                    <he.Space />
+                                                    {
+                                                        this.props.assetManager
+                                                            .getAssetGlyph(
+                                                                this.props
+                                                                    .Account
+                                                                    .currency
+                                                            )
+                                                    }<he.Space />
+                                                    {
+                                                        this.props
+                                                            .assetManager
+                                                            .convertToAsset(
+                                                                effect.amount
+                                                            )
+                                                    }
+                                                </span> :
+                                                <span className="credit">
+                                                    <he.Space />
+                                                    <he.Plus />
+                                                    <he.Space />
+                                                    {effect.amount}<he.Space />
+                                                    <span className="smaller">
+                                                        {
+                                                            this.props
+                                                                .assetManager
+                                                                .getAssetCode(
+                                                                    effect
+                                                                )
+                                                        }
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        )}
+                                        }
                                     </div>
                                     <div className="fade-extreme">
                                         <span className="micro-font">
                                             {effect.amount}
-                                        </span>{" "}
+                                        </span><he.Space />
                                         <span className="pico-font small-caps">
                                             XLM
                                         </span>
@@ -574,7 +642,7 @@ class Payments extends Component {
                                 <div className="payment-details-fieldset">
                                     <div className="payment-details-memo">
                                         <span className="smaller">Memo:</span>
-                                        {" "}
+                                        <he.Space />
                                         {this.props.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
@@ -604,30 +672,54 @@ class Payments extends Component {
                             <div>
                                 <div className="f-e-col">
                                     <div>
-                                        {this.props.assetManager.getAssetCode(effect) === "XLM" ? (
-                                            <span className="debit">
-                                                {" "}&#x02212;{" "}
-                                                {this.props.assetManager.getAssetGlyph(
-                                                    this.props.Account.currency
-                                                )}{" "}
-                                                {this.props.assetManager.convertToAsset(
-                                                    effect.amount)}
-                                            </span>
-                                        ) : (
-                                            <span className="debit">
-                                                {" "}&#x02212;{" "}
-                                                {effect.amount}{" "}
-                                                <span className="smaller">
-                                                    {this.props.assetManager.getAssetCode(effect)}
+                                        {
+                                            this.props.assetManager
+                                                .getAssetCode(effect) ===
+                                                "XLM" ?
+                                                <span className="debit">
+                                                    <he.Space />
+                                                    <he.Minus />
+                                                    <he.Space />
+                                                    {
+                                                        this.props
+                                                            .assetManager
+                                                            .getAssetGlyph(
+                                                                this.props
+                                                                    .Account
+                                                                    .currency
+                                                            )
+                                                    }<he.Space />
+                                                    {
+                                                        this.props
+                                                            .assetManager
+                                                            .convertToAsset(
+                                                                effect.amount
+                                                            )
+                                                    }
+                                                </span> :
+                                                <span className="debit">
+                                                    <he.Space />
+                                                    <he.Minus />
+                                                    <he.Space />
+                                                    {effect.amount}
+                                                    <he.Space />
+                                                    <span className="smaller">
+                                                        {
+                                                            this.props
+                                                                .assetManager
+                                                                .getAssetCode(
+                                                                    effect
+                                                                )
+                                                        }
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        )}
+                                        }
                                     </div>
                                     <div className="fade-extreme">
                                         <span className="micro-font">
                                             {effect.amount}
                                         </span>
-                                        {" "}
+                                        <he.Space />
                                         <span className="pico-font small-caps">
                                             XLM
                                         </span>
@@ -643,7 +735,7 @@ class Payments extends Component {
                                 <div className="payment-details-fieldset">
                                     <div className="payment-details-memo">
                                         <span className="smaller">Memo:</span>
-                                        {" "}
+                                        <he.Space />
                                         {this.props.state.paymentDetails.memo}
                                     </div>
                                     <div className="payment-details-id">
@@ -663,7 +755,7 @@ class Payments extends Component {
                             <div>
                                 <i className="material-icons">{icon}</i>
                                 <span>Signer Created <emoji.Pencil /></span>
-                                {" "}
+                                <he.Space />
                                 <span className="account-direction">
                                     {effect.public_key ===
                                     this.props.appAuth.publicKey
@@ -699,22 +791,6 @@ class Payments extends Component {
 
 
     // ...
-    updateCursors = (records) =>
-        this.props.setState({
-            cursorLeft: records[0].paging_token,
-            cursorRight: records[records.length - 1].paging_token,
-        })
-
-
-    // ...
-    updateTransactionsCursors = (records) =>
-        this.props.setState({
-            txCursorLeft: records[0].paging_token,
-            txCursorRight: records[records.length - 1].paging_token,
-        })
-
-
-    // ...
     render = () => (
         ({ currentView, staticRouter: { getPath, }, state, }) =>
             <Switch>
@@ -740,7 +816,9 @@ class Payments extends Component {
                             <div className="tab-content">
                                 <PaymentsHistory
                                     stellarServer={this.stellarServer}
-                                    handlePaymentClick={this.handlePaymentClick}
+                                    handlePaymentClick={
+                                        this.handlePaymentClick
+                                    }
                                     decodeEffectType={this.decodeEffectType}
                                     updateCursors={this.updateCursors}
                                 />

@@ -362,6 +362,10 @@ export const htmlEntities = {
     //     Fragment, null, String.fromCharCode(0x2713)
     // ),
     Check: () => <Fragment>&#10003;</Fragment>,
+
+    // ...
+    SL: () => <Fragment>𝕊𝕃</Fragment>,
+
 }
 
 

@@ -1,11 +1,16 @@
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
-import { List, ListItem } from "material-ui/List"
+import {
+    List,
+    ListItem,
+} from "material-ui/List"
 import {
     handleException,
     htmlEntities as he,
     pubKeyAbbr,
 } from "../../lib/utils"
+
+
 
 
 // ...
@@ -61,8 +66,10 @@ export default connect(
                     <ListItem
                         disabled={true}
                         primaryText="Memo"
-                        secondaryText={Balances.memoText === "" ?
-                            "Empty" : Balances.memoText}
+                        secondaryText={
+                            Balances.memoText === "" ?
+                                "Empty" : Balances.memoText
+                        }
                         leftIcon={
                             <i className="text-primary material-icons">
                                 speaker_notes

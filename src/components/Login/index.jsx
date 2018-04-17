@@ -94,37 +94,36 @@ class Login extends Component {
                 name="login-email"
                 type="email"
                 placeholder="Email"
-                onEnterPress={this.loginValidator.bind(this)}
+                onEnterPress={this.loginValidator}
                 ref={(self) => { this.email = self }}
             />
             <InputField
                 name="login-password"
                 type="password"
                 placeholder="Password"
-                onEnterPress={this.loginValidator.bind(this)}
+                onEnterPress={this.loginValidator}
                 ref={(self) => { this.password = self }}
             />
             <div className="p-t"></div>
-            <LinearProgress mode="indeterminate" style={{
-                marginBottom: "6px",
-                background: "rgb(15,46,83)",
-                height: "1px",
-                opacity: this.state.progressBarOpacity,
-            }} color="rgba(244,176,4,0.7)" />
+            <LinearProgress
+                mode="indeterminate"
+                style={{
+                    marginBottom: "6px",
+                    background: "rgb(15,46,83)",
+                    height: "1px",
+                    opacity: this.state.progressBarOpacity,
+                }}
+                color="rgba(244,176,4,0.7)"
+            />
             <Button
-                onClick={this.loginValidator.bind(this)}
+                onClick={this.loginValidator}
                 label="Login"
                 disabled={this.state.buttonDisabled}
-                fullWidth={true}
-                secondary={true}
+                fullWidth
+                secondary
                 className="m-t"
             />
         </div>
-
-
-
-
-
 
 }
 

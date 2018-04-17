@@ -75,10 +75,6 @@ class Account extends Component {
 
 
     // ...
-    state = { modalButtonText: "CANCEL", }
-
-
-    // ...
     constructor (props) {
         super(props)
 
@@ -96,6 +92,10 @@ class Account extends Component {
             }), {})
         )
     }
+
+
+    // ...
+    state = { modalButtonText: "CANCEL", }
 
 
     // ...

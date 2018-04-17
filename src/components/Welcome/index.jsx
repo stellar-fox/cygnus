@@ -23,17 +23,17 @@ export default withLoginManager(
 
 
         // ...
-        handleSignup = () =>
+        setModalButtonText = (text) =>
             this.setState({
-                modalButtonText: "CANCEL",
-                modalShown: true,
+                modalButtonText: text,
             })
 
 
         // ...
-        setModalButtonText = (text) =>
+        handleSignup = () =>
             this.setState({
-                modalButtonText: text,
+                modalButtonText: "CANCEL",
+                modalShown: true,
             })
 
 

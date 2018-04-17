@@ -13,35 +13,21 @@
         "ecmaVersion": 2017,
         "sourceType": "module"
     },
-    "plugins": [
-        "react"
-    ],
+    "settings": {
+        "react": {
+            "pragma": "React",
+            "version": "16.3"
+        }
+    },
+    "plugins": ["react"],
     "rules": {
         "strict": 0,
-        "indent": [
-            "error",
-            4,
-            { "SwitchCase": 1 }
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "double"
-        ],
-        "semi": [
-            "error",
-            "never"
-        ],
-        "space-before-function-paren": [
-            "error",
-            "always"
-        ],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "double"],
+        "semi": ["error", "never"],
+        "space-before-function-paren": ["error", "always"],
         "no-unused-vars": [2, {"args": "all", "argsIgnorePattern": "^_"}],
-        "react/jsx-uses-react": "error",
-        "react/jsx-uses-vars": "error",
         "comma-dangle": [
             "error",
             {
@@ -51,6 +37,31 @@
                 "exports": "ignore",
                 "functions": "ignore"
             }
-        ]
+        ],
+        "react/jsx-uses-react": 2,
+        "react/jsx-uses-vars": "error",
+        "react/jsx-closing-bracket-location": [2, "line-aligned"],
+        "react/jsx-indent-props": [2, 4],
+        "react/jsx-no-duplicate-props": [0, { "ignoreCase": false }],
+        "react/sort-prop-types": [0, {
+            "ignoreCase": false,
+            "callbacksLast": true,
+            "requiredFirst": true
+        }],
+        "react/no-deprecated": 1,
+        "react/no-direct-mutation-state": 0,
+        "react/react-in-jsx-scope": 2,
+        "react/jsx-space-before-closing": [2, "always"],
+        "react/sort-comp": [2, {
+            "order": [
+                "static-methods",
+                "lifecycle",
+                "/^on.+$/",
+                "/^(get|set)(?!(InitialState$|DefaultProps$)).+$/",
+                "everything-else",
+                "/^render.+$/",
+                "render"
+            ]
+        }]
     }
 }

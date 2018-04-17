@@ -22,59 +22,6 @@ const AssetManagerContext = React.createContext({})
 class AssetManager extends Component {
 
     // ...
-    rateStale = (currency) => (
-        !this.props.state[currency]  ||
-        this.props.state[currency].lastFetch +
-            defaultCurrencyRateUpdateTime < Date.now()
-    )
-
-
-    // ...
-    updateExchangeRate = (currency) => {
-        if (this.rateStale(currency)) {
-            Axios.get(`${config.api}/ticker/latest/${currency}`)
-                .then((response) => {
-                    this.props.setState({
-                        [currency]: {
-                            rate: response.data.data[`price_${currency}`],
-                            lastFetch: Date.now(),
-                        },
-                    })
-                })
-                .catch(function (error) {
-                    // eslint-disable-next-line no-console
-                    console.log(error.message)
-                })
-        }
-    }
-
-
-    // ...
-    getAccountNativeBalance = (account) =>
-        account.balances.find(obj => obj.asset_type === "native").balance
-
-
-    // ...
-    convertToNative = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
-        return this.props.state[this.props.Account.currency] && amount !== "" ?
-            new BigNumber(amount).dividedBy(
-                this.props.state[this.props.Account.currency].rate
-            ).toString() : "0.0000000"
-    }
-
-
-    // ...
-    convertToAsset = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
-        return this.props.state[this.props.Account.currency] && amount !== "" ?
-            new BigNumber(amount).multipliedBy(
-                this.props.state[this.props.Account.currency].rate
-            ).toFixed(2) : "0.00"
-    }
-
-
-    // ...
     getAssetCode = (asset) =>
         asset.asset_type === "native" ? "XLM" : asset.asset_code
 
@@ -116,6 +63,59 @@ class AssetManager extends Component {
         thb: "THAI BAHT บาท",
         pln: "ZŁOTYCH",
     })
+
+
+    // ...
+    getAccountNativeBalance = (account) =>
+        account.balances.find(obj => obj.asset_type === "native").balance
+
+
+    // ...
+    rateStale = (currency) => (
+        !this.props.state[currency]  ||
+        this.props.state[currency].lastFetch +
+            defaultCurrencyRateUpdateTime < Date.now()
+    )
+
+
+    // ...
+    updateExchangeRate = (currency) => {
+        if (this.rateStale(currency)) {
+            Axios.get(`${config.api}/ticker/latest/${currency}`)
+                .then((response) => {
+                    this.props.setState({
+                        [currency]: {
+                            rate: response.data.data[`price_${currency}`],
+                            lastFetch: Date.now(),
+                        },
+                    })
+                })
+                .catch(function (error) {
+                    // eslint-disable-next-line no-console
+                    console.log(error.message)
+                })
+        }
+    }
+
+
+    // ...
+    convertToNative = (amount) => {
+        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+        return this.props.state[this.props.Account.currency] && amount !== "" ?
+            new BigNumber(amount).dividedBy(
+                this.props.state[this.props.Account.currency].rate
+            ).toString() : "0.0000000"
+    }
+
+
+    // ...
+    convertToAsset = (amount) => {
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        return this.props.state[this.props.Account.currency] && amount !== "" ?
+            new BigNumber(amount).multipliedBy(
+                this.props.state[this.props.Account.currency].rate
+            ).toFixed(2) : "0.00"
+    }
 
 
     // ...

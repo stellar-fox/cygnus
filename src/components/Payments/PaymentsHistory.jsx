@@ -197,6 +197,7 @@ class PaymentsHistory extends Component {
         })
     }
 
+
     // ...
     determineLeftIcon = (payment) => (
         (iClassName) =>
@@ -301,7 +302,7 @@ class PaymentsHistory extends Component {
                                                                 this.props.loginManager.isAuthenticated() ?
                                                                     <div className="small fade">
                                                                         {payment.firstName ? payment.firstName : "Unknown"}
-                                                                        {" "}
+                                                                        <he.Space />
                                                                         {payment.lastName ? payment.lastName : "Payee"}
                                                                         {
                                                                             payment.alias && payment.domain ?
@@ -367,11 +368,16 @@ class PaymentsHistory extends Component {
                             <div className="flex-row">
                                 <div>
                                     Payment ID:
-                                    {" "}
+                                    <he.Space />
                                     {this.props.state.paymentDetails.txid}
                                 </div>
                                 <div>
-                                    {utcToLocaleDateTime(this.props.state.paymentDetails.created_at)}
+                                    {
+                                        utcToLocaleDateTime(
+                                            this.props.state
+                                                .paymentDetails.created_at
+                                        )
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -384,7 +390,12 @@ class PaymentsHistory extends Component {
                                             className="payment-details-item"
                                         >
                                             <span className="effect-title">
-                                                {this.props.decodeEffectType(effect, index)}
+                                                {
+                                                    this.props
+                                                        .decodeEffectType(
+                                                            effect, index
+                                                        )
+                                                }
                                             </span>
                                         </div>
                                 )

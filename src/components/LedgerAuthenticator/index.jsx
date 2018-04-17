@@ -31,6 +31,10 @@ class LedgerAuthenticator extends Component {
 
 
     // ...
+    componentDidMount = () => this.props.resetLedgerState()
+
+
+    // ...
     initQueryDevice = async () => {
         let bip32Path = this.formBip32Path()
         let softwareVersion = null
@@ -114,10 +118,6 @@ class LedgerAuthenticator extends Component {
 
 
     // ...
-    componentDidMount = () => this.props.resetLedgerState()
-
-
-    // ...
     render = () =>
         <Fragment>
             <div className="f-b">
@@ -127,36 +127,44 @@ class LedgerAuthenticator extends Component {
                         onToggle={this.handleCheckboxClick}
                         toggled={this.state.useDefaultAccount}
                         labelStyle={{
-                            color: this.props.className.match(/reverse/) ?
-                                "rgb(15,46,83)" : "rgb(244,176,4)",
+                            color:
+                                this.props.className.match(/reverse/) ?
+                                    "rgb(15,46,83)" :
+                                    "rgb(244,176,4)",
                         }}
                         thumbSwitchedStyle={{
-                            backgroundColor: this.props.className.match(/reverse/) ?
-                                "rgb(15,46,83)" : "rgb(244,176,4)",
+                            backgroundColor:
+                                this.props.className.match(/reverse/) ?
+                                    "rgb(15,46,83)" :
+                                    "rgb(244,176,4)",
                         }}
                         trackSwitchedStyle={{
-                            backgroundColor: this.props.className.match(/reverse/) ?
-                                "rgba(15,46,83,0.75)" : "rgba(244,176,4,0.75)",
+                            backgroundColor:
+                                this.props.className.match(/reverse/) ?
+                                    "rgba(15,46,83,0.75)" :
+                                    "rgba(244,176,4,0.75)",
                         }}
                     />
-                    {this.state.pathEditable ? (
-                        <Fragment>
-                            <div className="p-t" />
-                            <Input
-                                className={this.props.className}
-                                width="256px"
-                                label="Account Index"
-                                inputType="text"
-                                maxLength="5"
-                                autoComplete="off"
-                                value={this.state.derivationPath}
-                                handleChange={this.handlePathChange}
-                                subLabel={`Account Derivation Path: [${
-                                    bip32Prefix
-                                }${this.state.derivationPath}']`}
-                            />
-                        </Fragment>
-                    ) : <div style={{width: "256px",}}></div>}
+                    {
+                        this.state.pathEditable ?
+                            <Fragment>
+                                <div className="p-t" />
+                                <Input
+                                    className={this.props.className}
+                                    width="256px"
+                                    label="Account Index"
+                                    inputType="text"
+                                    maxLength="5"
+                                    autoComplete="off"
+                                    value={this.state.derivationPath}
+                                    handleChange={this.handlePathChange}
+                                    subLabel={`Account Derivation Path: [${
+                                        bip32Prefix
+                                    }${this.state.derivationPath}']`}
+                                />
+                            </Fragment> :
+                            <div style={{width: "256px",}}></div>
+                    }
                     <div className="p-t" />
                     <Button
                         disabled={this.state.buttonDisabled}

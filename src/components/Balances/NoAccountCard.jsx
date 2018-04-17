@@ -30,6 +30,7 @@ class NoAccountCard extends Component {
         },
     })
 
+
     // ...
     render = () => <Card className='account'>
         <CardHeader
@@ -60,9 +61,11 @@ class NoAccountCard extends Component {
                 <div>
                     <div className='balance'>
                         <span className="fade currency-glyph">
-                            {this.props.assetManager.getAssetGlyph(
-                                this.props.Account.currency
-                            )}
+                            {
+                                this.props.assetManager.getAssetGlyph(
+                                    this.props.Account.currency
+                                )
+                            }
                         </span> 0.00
                     </div>
                     <div className="fade-extreme micro">
@@ -78,7 +81,8 @@ class NoAccountCard extends Component {
                 onClick={this.showNotImplementedModal}
                 backgroundColor="rgb(15,46,83)"
                 labelColor="#228B22"
-                label="Fund" />
+                label="Fund"
+            />
             <Button
                 backgroundColor="rgb(15,46,83)"
                 labelColor="rgb(244,176,4)"
@@ -87,6 +91,7 @@ class NoAccountCard extends Component {
             />
         </CardActions>
     </Card>
+
 }
 
 

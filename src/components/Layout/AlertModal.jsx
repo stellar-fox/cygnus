@@ -24,7 +24,8 @@ const AlertWithDismiss =
                     keyboardFocused={true}
                     onClick={onDismiss}
                 />,
-            ]}>
+            ]}
+        >
             <div className="p-t">{ content }</div>
         </Modal>
 

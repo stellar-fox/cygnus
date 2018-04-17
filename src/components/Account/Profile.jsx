@@ -46,37 +46,6 @@ class Profile extends Component {
 
 
     // ...
-    changeFirstName = (event) =>
-        this.props.setState({ firstName: event.target.value, })
-
-
-    // ...
-    changeLastName = (event) =>
-        this.props.setState({ lastName: event.target.value, })
-
-
-    // ...
-    changeEmail = (event) => {
-        if (emailValid(event.target.value)) {
-            this.props.setState({
-                gravatarPath: this.setGravatarPath(event.target.value),
-            })
-        }
-        this.props.setState({ email: event.target.value, })
-    }
-
-
-    // ...
-    setGravatarPath = (email) =>
-        `${gravatar}${MD5(email)}${gravatarSize}`
-
-
-    // ...
-    changePaymentAddress = (event) =>
-        this.props.setState({paymentAddress: event.target.value,})
-
-
-    // ...
     getUserData = () => Axios
         .post(`${config.api}/user/`, {
             id: this.props.appAuth.userId,
@@ -109,6 +78,11 @@ class Profile extends Component {
         })
         // eslint-disable-next-line no-console
         .catch(error => console.log(error.message))
+
+
+    // ...
+    setGravatarPath = (email) =>
+        `${gravatar}${MD5(email)}${gravatarSize}`
 
 
     // ...
@@ -145,6 +119,32 @@ class Profile extends Component {
 
 
     // ...
+    changeFirstName = (event) =>
+        this.props.setState({ firstName: event.target.value, })
+
+
+    // ...
+    changeLastName = (event) =>
+        this.props.setState({ lastName: event.target.value, })
+
+
+    // ...
+    changePaymentAddress = (event) =>
+        this.props.setState({paymentAddress: event.target.value,})
+
+
+    // ...
+    changeEmail = (event) => {
+        if (emailValid(event.target.value)) {
+            this.props.setState({
+                gravatarPath: this.setGravatarPath(event.target.value),
+            })
+        }
+        this.props.setState({ email: event.target.value, })
+    }
+
+
+    // ...
     render = () =>
         <div className="tab-content">
             <div className="f-b space-between">
@@ -164,7 +164,9 @@ class Profile extends Component {
                     </div>
                 </div>
                 <figure style={{ marginRight: "0px", marginBottom: "0px",}}>
-                    <img className="image" src={this.props.state.gravatarPath}
+                    <img
+                        className="image"
+                        src={this.props.state.gravatarPath}
                         alt="Gravatar"
                     />
                 </figure>

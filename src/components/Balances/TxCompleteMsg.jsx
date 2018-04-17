@@ -20,7 +20,7 @@ import {
 // ...
 export default connect(
     // map state to props.
-    (state) => ({ balances: state.Balances, account: state.Account,  })
+    (state) => ({ balances: state.Balances, account: state.Account, })
 )(
     ({ balances, account, assetManager, }) =>
         <Fragment>
@@ -28,9 +28,12 @@ export default connect(
                 Funds have arrived to the destination account.
             </div>
 
-            <Table style={{
-                backgroundColor: "rgb(244,176,4)",
-            }} selectable={false}>
+            <Table
+                style={{
+                    backgroundColor: "rgb(244,176,4)",
+                }}
+                selectable={false}
+            >
                 <TableBody displayRowCheckbox={false}>
                     <TableRow className="table-row-primary">
                         <TableRowColumn className="text-normal text-primary">

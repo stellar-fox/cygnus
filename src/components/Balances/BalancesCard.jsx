@@ -33,37 +33,14 @@ class BalancesCard extends Component {
 
 
     // ...
-    showPaymentCard = () => {
-        this.props.togglePaymentCard({
-            payment: {
-                opened: true,
-            },
-        })
-    }
-
-
-    // ...
-    showNotImplementedModal = () => this.props.changeModalState({
-        alertWithDismiss: {
-            showing: true,
-            title: "Not Yet Implemented",
-            content: notImplementedText,
-        },
-    })
-
-
-    // ...
-    exchangeRateFetched = () => (
-        this.props.Assets[this.props.Account.currency]
-    )
-
-
-    // ...
     getOtherBalances = (account) =>
         account.balances.map((balance, index) => {
             if (balance.asset_type !== "native") {
                 return (
-                    <p className="other-assets" key={`${index}-${balance.asset_code}`}>
+                    <p
+                        className="other-assets"
+                        key={`${index}-${balance.asset_code}`}
+                    >
                         <span className="other-asset-balance">
                             {balance.balance}
                         </span>
@@ -78,91 +55,136 @@ class BalancesCard extends Component {
 
 
     // ...
-    render = () => <Card className="account">
-        <CardHeader
-            title={
-                <span>
-                    <span>Current Balance </span>
-                    <i className="material-icons">hearing</i>
-                </span>
-            }
-            subtitle={
-                <span>
+    showPaymentCard = () =>
+        this.props.togglePaymentCard({
+            payment: {
+                opened: true,
+            },
+        })
+
+
+    // ...
+    showNotImplementedModal = () =>
+        this.props.changeModalState({
+            alertWithDismiss: {
+                showing: true,
+                title: "Not Yet Implemented",
+                content: notImplementedText,
+            },
+        })
+
+
+    // ...
+    exchangeRateFetched = () => this.props.Assets[this.props.Account.currency]
+
+
+    // ...
+    render = () =>
+        <Card className="account">
+            <CardHeader
+                title={
                     <span>
-                        {this.props.assetManager.getAssetDescription(
-                            this.props.Account.currency)}
+                        <span>Current Balance </span>
+                        <i className="material-icons">hearing</i>
                     </span>
-                    <span className="fade currency-iso p-l-small">
-                        ({this.props.Account.currency.toUpperCase()})
+                }
+                subtitle={
+                    <span>
+                        <span>
+                            {
+                                this.props
+                                    .assetManager.getAssetDescription(
+                                        this.props.Account.currency
+                                    )
+                            }
+                        </span>
+                        <span className="fade currency-iso p-l-small">
+                            ({this.props.Account.currency.toUpperCase()})
+                        </span>
                     </span>
-                </span>
-            }
-            actAsExpander={true}
-            showExpandableButton={true}
-        />
+                }
+                actAsExpander={true}
+                showExpandableButton={true}
+            />
 
-        <CardText>
-            <div className="flex-row">
-                <div>
-                    <div className="balance">
-                        <span className="fade currency-glyph">
-                            {this.props.assetManager.getAssetGlyph(
-                                this.props.Account.currency)}
-                        </span>
-                        <span className="p-l-small">
-                            {this.props.assetManager.convertToAsset(
-                                this.props.assetManager.getAccountNativeBalance(
-                                    this.props.strAccount)
-                            )}
-                        </span>
+            <CardText>
+                <div className="flex-row">
+                    <div>
+                        <div className="balance">
+                            <span className="fade currency-glyph">
+                                {
+                                    this.props
+                                        .assetManager.getAssetGlyph(
+                                            this.props.Account.currency
+                                        )
+                                }
+                            </span>
+                            <span className="p-l-small">
+                                {
+                                    this.props
+                                        .assetManager.convertToAsset(
+                                            this.props.assetManager
+                                                .getAccountNativeBalance(
+                                                    this.props.strAccount
+                                                )
+                                        )
+                                }
+                            </span>
+                        </div>
+                        <div className="fade-extreme micro">
+                            {
+                                this.props.assetManager
+                                    .getAccountNativeBalance(
+                                        this.props.strAccount
+                                    )
+                            } XLM
+                        </div>
                     </div>
-                    <div className="fade-extreme micro">
-                        {this.props.assetManager.getAccountNativeBalance(
-                            this.props.strAccount)} XLM
-                    </div>
+                    <div></div>
                 </div>
-                <div></div>
-            </div>
-        </CardText>
+            </CardText>
 
-        <CardActions>
-            <Button
-                backgroundColor="rgb(15,46,83)"
-                labelColor="#228B22"
-                label="Fund"
-                onClick={this.showNotImplementedModal}
-            />
-            <Button
-                backgroundColor="rgb(15,46,83)"
-                labelColor="rgb(244,176,4)"
-                label="Request"
-                onClick={this.showNotImplementedModal}
-            />
-            {this.props.loginManager.isPayEnabled() ||
-                this.props.loginManager.isAuthenticated() ?
+            <CardActions>
                 <Button
                     backgroundColor="rgb(15,46,83)"
-                    labelColor="#d32f2f"
-                    label="Pay"
-                    onClick={this.showPaymentCard}
-                /> : null
-            }
-        </CardActions>
+                    labelColor="#228B22"
+                    label="Fund"
+                    onClick={this.showNotImplementedModal}
+                />
+                <Button
+                    backgroundColor="rgb(15,46,83)"
+                    labelColor="rgb(244,176,4)"
+                    label="Request"
+                    onClick={this.showNotImplementedModal}
+                />
+                {
+                    this.props.loginManager.isPayEnabled() ||
+                    this.props.loginManager.isAuthenticated() ?
+                        <Button
+                            backgroundColor="rgb(15,46,83)"
+                            labelColor="#d32f2f"
+                            label="Pay"
+                            onClick={this.showPaymentCard}
+                        /> : null
+                }
+            </CardActions>
 
-        <CardText expandable={true}>
-            <div>
-                <div>Other Assets</div>
+            <CardText expandable={true}>
                 <div>
-                    {this.otherBalances && this.otherBalances[0] ?
-                        this.otherBalances :
-                        <div className='faded'>
-                            You currently do not own any other assets.
-                        </div>
-                    }
+                    <div>Other Assets</div>
+                    <div>
+                        {
+                            this.otherBalances && this.otherBalances[0] ?
+                                this.otherBalances :
+                                <div className='faded'>
+                                    You currently do not own any other assets.
+                                </div>
+                        }
+                    </div>
                 </div>
-            </div>
-        </CardText>
-    </Card>
+            </CardText>
+        </Card>
+
 }
 
 

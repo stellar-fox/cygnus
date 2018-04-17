@@ -212,7 +212,8 @@ export default class Signup extends Component {
         <Stepper
             connector={null}
             orientation="vertical"
-            activeStep={this.state.stepIndex}>
+            activeStep={this.state.stepIndex}
+        >
             <Step>
                 <StepLabel
                     style={{
@@ -222,16 +223,19 @@ export default class Signup extends Component {
                     iconContainerStyle={{
                         transform: "scale(1.4)",
                         marginRight: "-10px",
-                    }}>
+                    }}
+                >
                     Set account access credentials.
                 </StepLabel>
-                <StepContent style={{
-                    borderLeft: "1px solid rgba(15,46,83,0.25)",
-                    fontSize: "1rem",
-                    color: "rgba(15,46,83,1)",
-                    marginLeft: "20px",
-                    marginBottom: "8px",
-                }}>
+                <StepContent
+                    style={{
+                        borderLeft: "1px solid rgba(15,46,83,0.25)",
+                        fontSize: "1rem",
+                        color: "rgba(15,46,83,1)",
+                        marginLeft: "20px",
+                        marginBottom: "8px",
+                    }}
+                >
                     <div className="f-b">
                         <div className="f-b-col">
                             <InputField
@@ -303,28 +307,35 @@ export default class Signup extends Component {
             </Step>
 
             <Step>
-                <StepLabel style={{
-                    fontSize: "1rem",
-                }}
-                icon={<i className="material-icons">verified_user</i>}
-                iconContainerStyle={{
-                    transform: "scale(1.4)",
-                    marginRight: "-10px",
-                }}>Authenticate with Ledger.</StepLabel>
-                <StepContent style={{
-                    fontSize: "1rem",
-                    color: "rgba(15,46,83,1)",
-                }}>
+                <StepLabel
+                    style={{ fontSize: "1rem", }}
+                    icon={<i className="material-icons">verified_user</i>}
+                    iconContainerStyle={{
+                        transform: "scale(1.4)",
+                        marginRight: "-10px",
+                    }}
+                >
+                    Authenticate with Ledger.
+                </StepLabel>
+                <StepContent
+                    style={{
+                        fontSize: "1rem",
+                        color: "rgba(15,46,83,1)",
+                    }}
+                >
                     <div className="f-b">
                         <div className="f-b-col bordered m-t">
                             {this.props.config &&
                              this.props.config.useAsRegistrationForm ?
                                 <Fragment>
                                     <div className="p-b">
-                                        <span style={{
-                                            display: "block",
-                                            marginBottom: "0.8rem",
-                                        }} className="badge-blue">
+                                        <span
+                                            style={{
+                                                display: "block",
+                                                marginBottom: "0.8rem",
+                                            }}
+                                            className="badge-blue"
+                                        >
                                             {this.state.email}
                                         </span>
                                         will be associated with account

@@ -18,7 +18,8 @@ export default () =>
                 <he.Nbsp /><he.Nbsp />
                 <he.Copy /><he.Nbsp /><he.Nbsp />
                 <a target="_blank"
-                    href={env.appLandingPageLink}>
+                    href={env.appLandingPageLink}
+                >
                     <span className="stellar-style">{env.appName}</span>
                 </a>
                 <he.Nbsp /><he.Nbsp />

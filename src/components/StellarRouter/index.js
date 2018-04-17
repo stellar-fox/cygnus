@@ -97,6 +97,21 @@ export const StaticRouter = connect(
         state = { initialized: false, }
 
 
+        // ...
+        componentDidMount = () => {
+            let { staticPaths, pathToView, } = this.props.getStatics()
+            this._staticPaths = { ...this._staticPaths, ...staticPaths, }
+            this._pathToViewMap = { ...this._pathToViewMap, ...pathToView, }
+        }
+
+
+        // takes view name and returns stored static path
+        getPath = (viewName, fallback = env.appBasePath) =>
+            viewName in this._staticPaths ?
+                this._staticPaths[viewName] :
+                fallback
+
+
         // following properties are meant to be mutable and
         // they are intentionally not obeying react's lifecycle rules
         // (thus they are not put into this.state or redux's store)
@@ -121,23 +136,8 @@ export const StaticRouter = connect(
         }
 
 
-        // takes view name and returns stored static path
-        getPath = (viewName, fallback = env.appBasePath) =>
-            viewName in this._staticPaths ?
-                this._staticPaths[viewName] :
-                fallback
-
-
         // convenience method
         pushByView = (viewName) => this.props.push(this.getPath(viewName))
-
-
-        // ...
-        componentDidMount = () => {
-            let { staticPaths, pathToView, } = this.props.getStatics()
-            this._staticPaths = { ...this._staticPaths, ...staticPaths, }
-            this._pathToViewMap = { ...this._pathToViewMap, ...pathToView, }
-        }
 
 
         // ...

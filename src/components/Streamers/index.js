@@ -7,7 +7,9 @@ import {
 
 
 // ...
-export const paymentsStreamer = (publicKey, changeSnackbarState, accountExistsOnLedger) =>
+export const paymentsStreamer = (
+    publicKey, changeSnackbarState, accountExistsOnLedger
+) =>
     payments().stream({
         onmessage: (message) => {
 
@@ -42,8 +44,12 @@ export const paymentsStreamer = (publicKey, changeSnackbarState, accountExistsOn
     })
 
 
+
+
 // ...
-export const operationsStreamer = (publicKey, changeSnackbarState, accountExistsOnLedger) =>
+export const operationsStreamer = (
+    publicKey, changeSnackbarState, accountExistsOnLedger
+) =>
     operations().stream({
         onmessage: (message) => {
             const HOME_DOMAIN_ADD = [

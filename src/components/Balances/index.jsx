@@ -69,16 +69,8 @@ class Balances extends Component {
 
     // ...
     static propTypes = {
-        setState: PropTypes.func.isRequired,
         match: PropTypes.object.isRequired,
-    }
-
-
-    // ...
-    state = {
-        paymentsStreamer: null,
-        operationsStreamer: null,
-        modalButtonText: "CANCEL",
+        setState: PropTypes.func.isRequired,
     }
 
 
@@ -88,6 +80,14 @@ class Balances extends Component {
 
         // relative resolve
         this.rr = resolvePath(this.props.match.path)
+    }
+
+
+    // ...
+    state = {
+        paymentsStreamer: null,
+        operationsStreamer: null,
+        modalButtonText: "CANCEL",
     }
 
 
@@ -310,8 +310,9 @@ class Balances extends Component {
                 <Route exact path={this.rr(".")}>
                     <Fragment>
                         <Modal
-                            open={appUi.modals.signup ?
-                                appUi.modals.signup.showing : false
+                            open={
+                                appUi.modals.signup ?
+                                    appUi.modals.signup.showing : false
                             }
                             title="Opening Your Bank - Register Account"
                             actions={[
@@ -332,8 +333,9 @@ class Balances extends Component {
                         </Modal>
 
                         <Modal
-                            open={appUi.modals.txConfirmMsg ?
-                                appUi.modals.txConfirmMsg.showing : false
+                            open={
+                                appUi.modals.txConfirmMsg ?
+                                    appUi.modals.txConfirmMsg.showing : false
                             }
                             title="Confirm on Hardware Device"
                         >

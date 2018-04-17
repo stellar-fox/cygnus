@@ -54,10 +54,6 @@ export default compose(
 
 
         // ...
-        state = {}
-
-
-        // ...
         constructor (props) {
             super(props)
 
@@ -71,6 +67,10 @@ export default compose(
                 "Account": this.rr("account/"),
             })
         }
+
+
+        // ...
+        state = {}
 
 
         // ...

@@ -48,10 +48,6 @@ export default compose(
 
 
         // ...
-        state = { Bank: Null, }
-
-
-        // ...
         constructor (props) {
             super(props)
 
@@ -67,6 +63,19 @@ export default compose(
 
 
         // ...
+        state = { Bank: Null, }
+
+
+        // ...
+        componentDidMount = () => raf(() =>
+            import("../Bank")
+                .then((B) => this.setState(
+                    () => ({ Bank: B.default, })
+                ))
+        )
+
+
+        // ...
         renderWelcome = (routeProps) =>
             !this.props.loggedIn ?
                 <Welcome {...routeProps} /> :
@@ -78,15 +87,6 @@ export default compose(
             this.props.loggedIn ?
                 <this.state.Bank {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Welcome")} />
-
-
-        // ...
-        componentDidMount = () => raf(() =>
-            import("../Bank")
-                .then((B) => this.setState(
-                    () => ({ Bank: B.default, })
-                ))
-        )
 
 
         // ...
