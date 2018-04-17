@@ -44,13 +44,12 @@ export const action = {
     // ...
     setState: (state) => ({
         type: SET_STATE,
-        payload: state,
+        state,
     }),
 
+
     // ...
-    resetState: () => ({
-        type: RESET_STATE,
-    }),
+    resetState: () => ({ type: RESET_STATE, }),
 
 }
 
@@ -63,7 +62,7 @@ export const reducer = createReducer(initState)({
     // ...
     [SET_STATE]: (state, action) => ({
         ...state,
-        ...action.payload,
+        ...action.state,
     }),
 
 

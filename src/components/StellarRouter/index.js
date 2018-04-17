@@ -75,6 +75,7 @@ export const StaticRouter = connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         addStaticPaths: StellarRouterAction.addStaticPaths,
+        getStatics: StellarRouterAction.getStatics,
         push,
     }, dispatch)
 )(
@@ -83,8 +84,17 @@ export const StaticRouter = connect(
         // ...
         static propTypes = {
             addStaticPaths: PropTypes.func.isRequired,
+            getStatics: PropTypes.func.isRequired,
             push: PropTypes.func.isRequired,
         }
+
+
+        // takes static path and returns associated view name
+        static getView = (path, map) => path in map ? map[path] : ""
+
+
+        // ...
+        state = { initialized: false, }
 
 
         // following properties are meant to be mutable and
@@ -122,8 +132,12 @@ export const StaticRouter = connect(
         pushByView = (viewName) => this.props.push(this.getPath(viewName))
 
 
-        // takes static path and returns associated view name
-        static getView = (path, map) => path in map ? map[path] : ""
+        // ...
+        componentDidMount = () => {
+            let { staticPaths, pathToView, } = this.props.getStatics()
+            this._staticPaths = { ...this._staticPaths, ...staticPaths, }
+            this._pathToViewMap = { ...this._pathToViewMap, ...pathToView, }
+        }
 
 
         // ...

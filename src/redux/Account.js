@@ -30,7 +30,7 @@ export const action = {
     // ...
     setState: (state) => ({
         type: SET_STATE,
-        payload: state,
+        state,
     }),
 
     // ...
@@ -49,7 +49,7 @@ export const reducer = createReducer(initState)({
     // ...
     [SET_STATE]: (state, action) => ({
         ...state,
-        ...action.payload,
+        ...action.state,
     }),
 
     // ...

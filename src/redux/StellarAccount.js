@@ -21,13 +21,12 @@ export const action = {
     // ...
     loadStellarAccount: (account) => ({
         type: LOAD_STELLAR_ACCOUNT,
-        payload: account,
+        account,
     }),
 
+
     // ...
-    resetState: () => ({
-        type: RESET_STATE,
-    }),
+    resetState: () => ({ type: RESET_STATE, }),
 
 }
 
@@ -40,11 +39,12 @@ export const reducer = createReducer(initState)({
     // ...
     [LOAD_STELLAR_ACCOUNT]: (state, action) => ({
         ...state,
-        sequence: action.payload.sequence,
-        accountId: action.payload.account_id,
-        balance: action.payload.balances.find((current) =>
-            (current.asset_type === "native")).balance ,
+        sequence: action.account.sequence,
+        accountId: action.account.account_id,
+        balance: action.account.balances.find((current) =>
+            (current.asset_type === "native")).balance,
     }),
+
 
     // ...
     [RESET_STATE]: () => initState,
