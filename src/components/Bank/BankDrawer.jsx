@@ -7,6 +7,7 @@ import {
     withDynamicRoutes,
     withStaticRouter
 } from "../StellarRouter"
+import { Null } from "../../lib/utils"
 import { bankDrawerWidth } from "../StellarFox/env"
 
 import Drawer from "material-ui/Drawer"
@@ -26,9 +27,7 @@ const NavLinkTemplate = compose(
             className="menu-item"
             onClick={(e) => {
                 e.preventDefault()
-                if (!currentPath.startsWith(getPath(to))) {
-                    pushByView(to)
-                }
+                if (!currentPath.startsWith(getPath(to))) { pushByView(to) }
             }}
             exact
             activeClassName="active"
@@ -51,7 +50,7 @@ const BalancesNavLink = () =>
 
 // <PaymentsNavLink> component
 const PaymentsNavLink = ({ show, }) =>
-    show ? <NavLinkTemplate to="Payments" icon="payment" /> : null
+    show ? <NavLinkTemplate to="Payments" icon="payment" /> : <Null />
 
 
 
