@@ -2,13 +2,17 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { compose } from "redux"
 import { connect } from "react-redux"
-import { Route } from "react-router-dom"
+import {
+    Redirect,
+    Route,
+} from "react-router-dom"
 import {
     bankDrawerWidth,
     contentPaneSeparation,
 } from "../StellarFox/env"
 import {
     ConnectedSwitch as Switch,
+    resolvePath,
     withStaticRouter,
 } from "../StellarRouter"
 
@@ -34,6 +38,7 @@ export default compose(
         // ...
         static propTypes = {
             drawerVisible: PropTypes.bool.isRequired,
+            match: PropTypes.object.isRequired,
             staticRouter: PropTypes.object.isRequired,
         }
 
@@ -53,10 +58,30 @@ export default compose(
 
 
         // ...
+        constructor (props) {
+            super(props)
+
+            // relative resolve
+            this.rr = resolvePath(this.props.match.path)
+
+            // static paths
+            this.props.staticRouter.addPaths({
+                "Balances": this.rr("balances/"),
+                "Payments": this.rr("payments/"),
+                "Account": this.rr("account/"),
+            })
+        }
+
+
+        // ...
         render = () => (
-            ({ style, }, getPath) =>
+            ({ style, }, { getPath, }) =>
                 <div style={style} className="bank-content">
                     <Switch>
+                        <Redirect exact
+                            from={this.rr(".")}
+                            to={getPath("Balances")}
+                        />
                         <Route path={getPath("Balances")}>
                             { (routeProps) => <Balances {...routeProps} /> }
                         </Route>
@@ -66,9 +91,10 @@ export default compose(
                         <Route path={getPath("Account")}>
                             { (routeProps) => <Account {...routeProps} /> }
                         </Route>
+                        <Redirect to={getPath("Balances")} />
                     </Switch>
                 </div>
-        )(this.state, this.props.staticRouter.getPath)
+        )(this.state, this.props.staticRouter)
 
     }
 )

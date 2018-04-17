@@ -1,11 +1,14 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
 import {
     bindActionCreators,
     compose,
 } from "redux"
 import { connect } from "react-redux"
-import { Redirect } from "react-router-dom"
+import {
+    Redirect,
+    Route,
+} from "react-router-dom"
 import {
     ConnectedSwitch as Switch,
     ensureTrailingSlash,
@@ -713,62 +716,55 @@ class Payments extends Component {
 
     // ...
     render = () => (
-        ({ currentView, staticRouter, state, }) =>
-            <Fragment>
-                <Switch>
-                    <Redirect exact
-                        from={this.rr(".")}
-                        to={staticRouter.getPath(state.tabSelected)}
-                    />
-                </Switch>
-
-                <Tabs
-                    tabItemContainerStyle={styles.container}
-                    inkBarStyle={styles.inkBar}
-                    value={
-                        this.validTabNames.indexOf(currentView) !== -1 ?
-                            currentView : state.tabSelected
-                    }
-                    onChange={this.handleTabSelect}
-                >
-
-                    <Tab
-                        style={styles.tab}
-                        label={this.validTabNames[0]}
-                        value={this.validTabNames[0]}
+        ({ currentView, staticRouter: { getPath, }, state, }) =>
+            <Switch>
+                <Redirect exact
+                    from={this.rr(".")}
+                    to={getPath(state.tabSelected)}
+                />
+                <Route exact path={getPath(state.tabSelected)}>
+                    <Tabs
+                        tabItemContainerStyle={styles.container}
+                        inkBarStyle={styles.inkBar}
+                        value={
+                            this.validTabNames.indexOf(currentView) !== -1 ?
+                                currentView : state.tabSelected
+                        }
+                        onChange={this.handleTabSelect}
                     >
-                        <div className="tab-content">
-
-                            <PaymentsHistory
-                                stellarServer={this.stellarServer}
-                                handlePaymentClick={this.handlePaymentClick}
-                                decodeEffectType={this.decodeEffectType}
-                                updateCursors={this.updateCursors}
-                            />
-
-                        </div>
-                    </Tab>
-
-                    <Tab
-                        style={styles.tab}
-                        label={this.validTabNames[1]}
-                        value={this.validTabNames[1]}
-                    >
-                        <div className="tab-content">
-
-                            <Transactions
-                                stellarServer={this.stellarServer}
-                                updateTransactionsCursors={
-                                    this.updateTransactionsCursors
-                                }
-                                getTransactions={this.getTransactions}
-                            />
-
-                        </div>
-                    </Tab>
-
-                </Tabs>
-            </Fragment>
+                        <Tab
+                            style={styles.tab}
+                            label={this.validTabNames[0]}
+                            value={this.validTabNames[0]}
+                        >
+                            <div className="tab-content">
+                                <PaymentsHistory
+                                    stellarServer={this.stellarServer}
+                                    handlePaymentClick={this.handlePaymentClick}
+                                    decodeEffectType={this.decodeEffectType}
+                                    updateCursors={this.updateCursors}
+                                />
+                            </div>
+                        </Tab>
+                        <Tab
+                            style={styles.tab}
+                            label={this.validTabNames[1]}
+                            value={this.validTabNames[1]}
+                        >
+                            <div className="tab-content">
+                                <Transactions
+                                    stellarServer={this.stellarServer}
+                                    updateTransactionsCursors={
+                                        this.updateTransactionsCursors
+                                    }
+                                    getTransactions={this.getTransactions}
+                                />
+                            </div>
+                        </Tab>
+                    </Tabs>
+                </Route>
+                <Redirect to={getPath(state.tabSelected)} />
+            </Switch>
     )(this.props)
 
 }

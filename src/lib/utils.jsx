@@ -1,6 +1,7 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
+import { countBy } from "lodash"
 import { StellarSdk, loadAccount } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 
@@ -257,28 +258,57 @@ export const capitalize = (str) =>
 
 
 // emojis!
-export const emojiString = {
+export const emojiDB = {
+    "beer": "🍺",
+    "bomb": "💣",
+    "boom": "💥",
+    "cancel": "❌",
+    "check": "✔️",
+    "crazy": "🤪",
+    "fire": "🔥",
+    "fist": "👊",
+    "fox": "🦊",
+    "ghost": "👻",
+    "glad": "😊",
+    "happy": "😃",
+    "lightning": "⚡️",
+    "love": "❤️",
+    "music": "🎶",
+    "nerd": "🤓",
+    "pizza": "🍕",
     "pencil": "✎",
     "rocket": "🚀",
-    "fire": "🔥",
-    "love": "❤️",
-    "fox": "🦊",
+    "rotfl": "😂",
+    "smile": "☺️",
     "star": "⭐️",
     "stars": "✨",
-    "lightning": "⚡️",
+    "strong": "💪",
+    "wink": "😉",
 }
 
 
 
 
-// emoji components (built on the 'emojiString' object base)
-export const emoji = Object.keys(emojiString).reduce(
+// emoji components (built on the 'emojiDB' object base)
+export const emoji = Object.keys(emojiDB).reduce(
     (acc, ek) => ({
         ...acc,
         [capitalize(ek)]: () =>
-            React.createElement(Fragment, null, emojiString[ek]),
+            React.createElement(Fragment, null, emojiDB[ek]),
     }), {}
 )
+
+
+
+
+// construct emoji string based on given emoji names
+export const emojis = (...args) => args.map((en) => emojiDB[en]).join("")
+
+
+
+
+// construct string with all emojis from emojiDB
+export const allEmojis = () => emojis(...Object.keys(emojiDB))
 
 
 
@@ -366,4 +396,131 @@ export const shallowEquals = (objA, objB) => {
         if (!(k in objB) || objA[k] !== objB[k])
             return false
     return true
+}
+
+
+
+
+// find duplicaes in given array
+export const findDuplicates = (a) =>
+    Object.entries(countBy(a))
+        .reduce((acc, [k, v,]) => v > 1 ? acc.concat(k) : acc, [])
+
+
+
+
+// determine runtime environment
+// devEnv() -> true/false
+export const devEnv = () =>
+    // eslint-disable-next-line
+    process.env.NODE_ENV !== "production"
+
+
+
+
+// setTimeout in promise/async skin
+// example usage:
+//
+// sf.utils.timeout(
+//     () => { console.log("Hey!"); return 42 }, 1000,
+//     (c) => sf.utils.timeout(() => c("Cancelled!"), 800)
+// )
+// .then((x) => console.log("Success:", x))
+// .catch((c) => console.log("Error or cancel:", c))
+//
+export const timeout = (f, time = 1000, cancel = (_reason) => null) => {
+    let
+        handle = null, reject = null,
+        promise = new Promise((res, rej) => {
+            reject = rej
+            handle = setTimeout(() => {
+                try { res(f()) }
+                catch (ex) { rej(ex) }
+            }, time)
+        })
+    cancel((reason) => {
+        clearTimeout(handle)
+        reject(reason)
+    })
+    return promise
+}
+
+
+
+
+// convenience shortcut of 'timeout'
+export const delay = (time = 1000, cancel = (_reason) => null) =>
+    timeout(() => time, time, cancel)
+
+
+
+
+// asynchronously load libraries (used in dev. environment)
+export const dynamicImportLibs = async () => {
+    let [
+        bignumber, ledger, lodash,
+        md5, redux, utils,
+    ] = await Promise.all([
+        import("bignumber.js"),
+        import("./ledger"),
+        import("lodash"),
+        import("./md5"),
+        import("redux"),
+        import("./utils"),
+    ])
+    return {
+        axios,
+        BigNumber: bignumber.default,
+        ledger, lodash,
+        md5: md5.default,
+        redux, StellarSdk,
+        toml, utils,
+    }
+}
+
+
+
+
+// asynchronously load reducers (used in dev. environment)
+export const dynamicImportReducers = async () => {
+    let [
+        Account, AssetManager, Balances, Bank,
+        LedgerHQ, Payments, StellarRouter,
+    ] = await Promise.all([
+        import("../redux/Account"),
+        import("../redux/AssetManager"),
+        import("../redux/Balances"),
+        import("../redux/Bank"),
+        import("../redux/LedgerHQ"),
+        import("../redux/Payments"),
+        import("../redux/StellarRouter"),
+    ])
+    return {
+        Account, AssetManager, Balances, Bank,
+        LedgerHQ, Payments, StellarRouter,
+    }
+}
+
+
+
+
+// TODO:
+// gradually remove unused imports
+// and finally remove this completely when there is no more legacy...
+export const dynamicImportLegacyStuff = async () => {
+    let [
+        actions, accountInfo, authentication,
+        loadingModal, mono, uiState,
+    ] = await Promise.all([
+        import("../redux/actions"),
+        import("../redux/reducers/account-info-reducer"),
+        import("../redux/reducers/authentication-reducer"),
+        import("../redux/reducers/loading-modal-reducer"),
+        import("../redux/reducers/mono-reducer"),
+        import("../redux/reducers/ui-state-reducer"),
+    ])
+    return {
+        actions, accountInfo, authentication,
+        loadingModal, mono, uiState,
+    }
 }

@@ -14,7 +14,10 @@ import {
 } from "react-router-redux"
 import { action as StellarRouterAction } from "../../redux/StellarRouter"
 import resolvePathname from "resolve-pathname"
-import { swap } from "../../lib/utils"
+import {
+    findDuplicates,
+    swap,
+} from "../../lib/utils"
 import { env } from "../StellarFox"
 
 
@@ -94,6 +97,13 @@ export const StaticRouter = connect(
         // whenever new set of static paths are added
         // a new path-to-view mapping is computed
         addPaths = (paths) => {
+            let duplicates = findDuplicates(Object.values(paths))
+            if (duplicates.length) {
+                throw new Error(
+                    "A following duplicates found: " +
+                    duplicates.join(", ")
+                )
+            }
             this._staticPaths = { ...this._staticPaths, ...paths, }
             this._pathToViewMap = swap(this._staticPaths)
             this.props.addStaticPaths(paths)

@@ -18,6 +18,12 @@ import {
     loadState,
     saveState,
 } from "../../lib/statePersistence"
+import {
+    devEnv,
+    dynamicImportLegacyStuff,
+    dynamicImportLibs,
+    dynamicImportReducers,
+} from "../../lib/utils"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import LoginManager from "../LoginManager"
 import AssetManager from "../AssetManager"
@@ -31,7 +37,7 @@ import "./index.css"
 
 
 // browser history
-export const appHistory = createHistory({
+export const history = createHistory({
     basename: env.appBasePath,
 })
 
@@ -39,7 +45,7 @@ export const appHistory = createHistory({
 
 
 // store with router-redux integration and redux-devtools-extension
-export const appStore = (() => {
+export const store = (() => {
     let s =
         createStore(
             combineReducers(reducers),
@@ -47,7 +53,7 @@ export const appStore = (() => {
             composeWithDevTools(
                 applyMiddleware(
                     thunk,
-                    routerMiddleware(appHistory)
+                    routerMiddleware(history)
                 )
             )
         )
@@ -68,8 +74,8 @@ export const appStore = (() => {
 
 // <StellarFox> component - application's root
 export default () =>
-    <Provider store={appStore}>
-        <Router history={appHistory}>
+    <Provider store={store}>
+        <Router history={history}>
             <MuiThemeProvider muiTheme={stellarTheme}>
                 <LoginManager>
                     <AssetManager>
@@ -83,19 +89,20 @@ export default () =>
 
 
 
-// dev. playground
-const sf = { appHistory, appStore, env, }
-
-// expose sf dev. namespace only in dev. environment
-if (
-    process.env.NODE_ENV !== "production"  &&  // eslint-disable-line
-    typeof window !== "undefined"
-) {
-    window.sf = { ...sf, process }  // eslint-disable-line
+// expose 'sf' dev. namespace only in dev. environment
+if (devEnv()  &&  typeof window !== "undefined") {
+    (async () => { window.sf = {
+        env, history, store, React,
+        dispatch: store.dispatch,
+        ...await dynamicImportLibs(),
+        process, // eslint-disable-line
+        ls: await dynamicImportLegacyStuff(),
+        r: await dynamicImportReducers(),
+    }})()
 }
 
 
 
 
 // ...
-export { env, sf }
+export { env }
