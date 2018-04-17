@@ -24,8 +24,10 @@ class PanelLedger extends Component {
 
     // ...
     logInViaLedger = (ledgerParams) => {
-        // TODO: fix this with Ledger API
-        if (ledgerParams.errorCode !== null) {
+
+        if (!ledgerParams.publicKey &&
+            !ledgerParams.softwareVersion &&
+            !ledgerParams.bip32Path) {
             return
         }
 

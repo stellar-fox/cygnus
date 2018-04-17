@@ -26,7 +26,6 @@ class LedgerAuthenticator extends Component {
         derivationPath: "0",
         pathEditable: false,
         useDefaultAccount: true,
-        errorCode: null,
         buttonDisabled: false,
     }
 
@@ -38,38 +37,25 @@ class LedgerAuthenticator extends Component {
         try {
             softwareVersion = await this.props.getSoftwareVersion()
             this.setState({
-                errorCode: null,
                 buttonDisabled: true,
             })
             const publicKey =
                 await getPublicKey(bip32Path)
-                    .catch((error) => {
-                        this.setState({
-                            // ledgerStatusMessage:
-                            //     this.errorCodeToUserMessage(
-                            //         error.statusCode
-                            //     ),
-                            errorCode: error.statusCode,
-                        })
-                    })
             this.props.setPublicKey(publicKey)
             this.props.onConnected.call(this, {
                 publicKey,
                 softwareVersion,
                 bip32Path,
-                errorCode: null,
                 errorMessage: null,
             })
         } catch (ex) {
             this.setState({
-                errorCode: ex.originalError.metaData.code,
                 buttonDisabled: false,
             })
             this.props.onConnected.call(this, {
                 publicKey: null,
                 softwareVersion: null,
                 bip32Path: null,
-                errorCode: ex.originalError.metaData.code,
                 errorMessage: ex.message,
             })
         }
