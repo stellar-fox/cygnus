@@ -43,8 +43,9 @@ export const action = {
     // ...
     setState: (state) => ({
         type: SET_STATE,
-        payload: state,
+        state,
     }),
+
 
     // ...
     addStaticPaths: (paths) => ({
@@ -52,11 +53,13 @@ export const action = {
         payload: paths,
     }),
 
+
     // ...
     setCurrentView: (viewName) => ({
         type: SET_CURRENT_VIEW,
         payload: viewName,
     }),
+
 
     // ...
     getStatics: () =>
@@ -76,7 +79,7 @@ export const reducer = createReducer(initState)({
     // ...
     [SET_STATE]: (state, action) => ({
         ...state,
-        ...action.payload,
+        ...action.state,
     }),
 
 
