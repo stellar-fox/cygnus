@@ -36,15 +36,17 @@ class LedgerAuthenticator extends Component {
 
     // ...
     initQueryDevice = async () => {
-        let bip32Path = this.formBip32Path()
-        let softwareVersion = null
+        let bip32Path = this.formBip32Path(),
+            softwareVersion = null,
+            publicKey = null
         try {
             softwareVersion = await this.props.getSoftwareVersion()
             this.setState({
                 buttonDisabled: true,
             })
-            const publicKey =
-                await getPublicKey(bip32Path)
+            publicKey = await getPublicKey(bip32Path)
+            this.props.setLedgerPublicKey(publicKey)
+            this.props.setLedgerBip32Path(this.state.derivationPath)
             this.props.setPublicKey(publicKey)
             this.props.onConnected.call(this, {
                 publicKey,
@@ -197,6 +199,8 @@ export default connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         getSoftwareVersion: LedgerHQAction.getSoftwareVersion,
+        setLedgerPublicKey: LedgerHQAction.setPublicKey,
+        setLedgerBip32Path: LedgerHQAction.setBip32Path,
         resetLedgerState: LedgerHQAction.resetState,
         logIn,
         setAccountRegistered,

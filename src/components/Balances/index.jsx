@@ -190,7 +190,7 @@ class Balances extends Component {
         try {
             let tx = null
             const paymentData = {
-                source: this.props.appAuth.publicKey,
+                source: this.props.publicKey,
                 destination: this.props.Balances.payee,
                 amount: this.props.assetManager.convertToNative(
                     this.props.Balances.amount),
@@ -213,8 +213,8 @@ class Balances extends Component {
             })
 
             const signedTx = await signTransaction(
-                insertPathIndex(this.props.appAuth.bip32Path),
-                this.props.appAuth.publicKey,
+                insertPathIndex(this.props.bip32Path),
+                this.props.publicKey,
                 tx
             )
 
@@ -295,8 +295,8 @@ class Balances extends Component {
         this.props.setAccountRegistered(true)
         this.props.changeLoginState({
             loginState: ActionConstants.LOGGED_IN,
-            publicKey: this.props.appAuth.publicKey,
-            bip32Path: this.props.appAuth.bip32Path,
+            publicKey: this.props.publicKey,
+            bip32Path: this.props.bip32Path,
             userId: loginObj.userId,
             token: loginObj.token,
         })
@@ -305,7 +305,7 @@ class Balances extends Component {
 
     // ...
     render = () => (
-        ({appUi, appAuth, assetManager, accountInfo, loginManager, }) =>
+        ({appUi, publicKey, bip32Path, assetManager, accountInfo, loginManager, }) =>
             <Switch>
                 <Route exact path={this.rr(".")}>
                     <Fragment>
@@ -326,8 +326,8 @@ class Balances extends Component {
                             <Signup onComplete={this.completeRegistration}
                                 config={{
                                     useAsRegistrationForm: true,
-                                    publicKey: appAuth.publicKey,
-                                    bip32Path: appAuth.bip32Path,
+                                    publicKey,
+                                    bip32Path,
                                 }}
                             />
                         </Modal>
@@ -410,6 +410,8 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
+            publicKey: state.LedgerHQ.publicKey,
+            bip32Path: state.LedgerHQ.bip32Path,
             Account: state.Account,
             Balances: state.Balances,
             accountInfo: state.accountInfo,

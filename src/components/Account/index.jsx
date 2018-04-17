@@ -104,8 +104,8 @@ class Account extends Component {
         this.props.setAccountRegistered(true)
         this.props.changeLoginState({
             loginState: ActionConstants.LOGGED_IN,
-            publicKey: this.props.appAuth.publicKey,
-            bip32Path: this.props.appAuth.bip32Path,
+            publicKey: this.props.publicKey,
+            bip32Path: this.props.bip32Path,
             userId: loginObj.userId,
             token: loginObj.token,
         })
@@ -139,7 +139,7 @@ class Account extends Component {
     // ...
     render = () => (
         ({
-            modal, appUi, appAuth,
+            modal, appUi, publicKey, bip32Path,
             loginManager, currentView,
             staticRouter: { getPath, }, state,
         }) =>
@@ -185,8 +185,8 @@ class Account extends Component {
                                 onComplete={this.completeRegistration}
                                 config={{
                                     useAsRegistrationForm: true,
-                                    publicKey: appAuth.publicKey,
-                                    bip32Path: appAuth.bip32Path,
+                                    publicKey,
+                                    bip32Path,
                                 }}
                             />
                         </Modal>
@@ -248,9 +248,10 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
+            publicKey: state.LedgerHQ.publicKey,
+            bip32Path: state.LedgerHQ.bip32Path,
             state: state.Account,
             modal: state.modal,
-            appAuth: state.appAuth,
             appUi: state.appUi,
         }),
         // map dispatch to props.

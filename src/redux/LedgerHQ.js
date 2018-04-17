@@ -9,6 +9,8 @@ const initState = {
     connected: false,
     version: "unknown",
     status: "",
+    publicKey: null,
+    bip32Path: null,
 }
 
 
@@ -18,6 +20,8 @@ const initState = {
 export const SET_STATE = "LedgerHQ/SET_STATE"
 export const RESET_STATE = "LedgerHQ/RESET_STATE"
 export const SET_SOFTWARE_VERSION = "LedgerHQ/SET_SOFTWARE_VERSION"
+export const SET_PUBLIC_KEY = "LedgerHQ/SET_PUBLIC_KEY"
+export const SET_BIP32_PATH = "LedgerHQ/SET_BIP32_PATH"
 export const SET_CONNECTED = "LedgerHQ/SET_CONNECTED"
 export const SET_STATUS = "LedgerHQ/SET_STATUS"
 
@@ -49,6 +53,20 @@ export const action = {
     setSoftwareVersion: (version="unknown") => ({
         type: SET_SOFTWARE_VERSION,
         version,
+    }),
+
+
+    // ...
+    setPublicKey: (publicKey) => ({
+        type: SET_PUBLIC_KEY,
+        publicKey,
+    }),
+
+
+    // ...
+    setBip32Path: (bip32Path) => ({
+        type: SET_BIP32_PATH,
+        bip32Path,
     }),
 
 
@@ -113,6 +131,20 @@ export const reducer = createReducer(initState)({
     }),
 
 
+    // ...
+    [SET_PUBLIC_KEY]: (state, action) => ({
+        ...state,
+        publicKey: action.publicKey,
+    }),
+
+
+    // ...
+    [SET_BIP32_PATH]: (state, action) => ({
+        ...state,
+        bip32Path: action.bip32Path,
+    }),
+
+    
     // ...
     [SET_STATUS]: (state, action) => ({
         ...state,
