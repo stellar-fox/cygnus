@@ -10,9 +10,9 @@ import "./BankAppBarTitle.css"
 // <BankAppBarTitle> component
 export default connect(
     // map state to props.
-    (state) => ({ ledgerVer: state.auth.ledgerSoftwareVersion, })
+    (state) => ({ ledgerConnected: state.LedgerHQ.connected, })
 )(
-    ({ ledgerVer, viewName, }) =>
+    ({ ledgerConnected, viewName, }) =>
         <div className="flex-start">
             <div className="app-bar-title">
                 <div className="bar-title">{appName}</div>
@@ -23,7 +23,7 @@ export default connect(
                 <div className="p-b-small" />
                 <div>
                     {
-                        ledgerVer ?
+                        ledgerConnected ?
                             <span className="ledger-nano-s"></span> :
                             <span>&nbsp;</span>
                     }
