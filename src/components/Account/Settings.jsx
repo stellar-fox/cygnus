@@ -54,8 +54,8 @@ class Settings extends Component {
             Axios
                 .post(
                     `${config.api}/account/update/`, {
-                        id: this.props.appAuth.userId,
-                        token: this.props.appAuth.token,
+                        id: this.props.userId,
+                        token: this.props.token,
                         currency,
                     }
                 )
@@ -78,8 +78,8 @@ class Settings extends Component {
             Axios
                 .post(
                     `${config.api}/account/update/`, {
-                        id: this.props.appAuth.userId,
-                        token: this.props.appAuth.token,
+                        id: this.props.userId,
+                        token: this.props.token,
                         visible: isInputChecked ? "true" : "false",
                     }
                 )
@@ -235,10 +235,11 @@ export default compose(
         // bind state to props.
         (state) => ({
             state: state.Account,
-            appAuth: state.appAuth,
             accountInfo: state.accountInfo,
             appUi: state.appUi,
             publicKey: state.LedgerHQ.publicKey,
+            token: state.LoginManager.token,
+            userId: state.LoginManager.userId,
         }),
         // bind dispatch to props.
         (dispatch) => bindActionCreators({

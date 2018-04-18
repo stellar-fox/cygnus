@@ -10,6 +10,7 @@ import {
     changeLoginState,
 } from "../../redux/actions"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
+import { action as LoginManagerAction } from "../../redux/LoginManager"
 
 
 
@@ -26,9 +27,13 @@ export default connect(
         appAuth: state.appAuth,
         publicKey: state.LedgerHQ.publicKey,
         bip32Path: state.LedgerHQ.bip32Path,
+        token: state.LoginManager.token,
+        userId: state.LoginManager.userId,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        setApiToken: LoginManagerAction.setApiToken,
+        setUserId: LoginManagerAction.setUserId,
         changeLoginState,
         setLedgerPublicKey: LedgerHQAction.setPublicKey,
         setLedgerBip32Path: LedgerHQAction.setBip32Path,
@@ -53,6 +58,8 @@ export default connect(
                 })
             } else {
                 // consolidate credentials into LedgerHQ
+                this.props.setApiToken(auth.token)
+                this.props.setUserId(auth.user_id)
                 this.props.setLedgerPublicKey(auth.pubkey)
                 this.props.setLedgerBip32Path(auth.bip32Path)
 
@@ -70,7 +77,7 @@ export default connect(
         // ...
         isAuthenticated = () => (
             this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
-            this.props.appAuth.token
+            this.props.token
         )
 
 

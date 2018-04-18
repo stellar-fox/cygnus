@@ -48,8 +48,8 @@ class Profile extends Component {
     // ...
     getUserData = () => Axios
         .post(`${config.api}/user/`, {
-            id: this.props.appAuth.userId,
-            token: this.props.appAuth.token,
+            id: this.props.userId,
+            token: this.props.token,
         })
         .then(({data: {data,},}) => {
             this.props.setState({
@@ -66,8 +66,8 @@ class Profile extends Component {
     // ...
     getAccountData = () => Axios
         .post(`${config.api}/account/`, {
-            id: this.props.appAuth.userId,
-            token: this.props.appAuth.token,
+            id: this.props.userId,
+            token: this.props.token,
         })
         .then(({data: {data,},}) => {
             this.props.setState({
@@ -89,8 +89,8 @@ class Profile extends Component {
     updateResource = async (resource, attr) => Axios
         .post(`${config.api}/${resource}/update/`, {
             ...attr,
-            id: this.props.appAuth.userId,
-            token: this.props.appAuth.token,
+            id: this.props.userId,
+            token: this.props.token,
         })
         // eslint-disable-next-line no-console
         .catch(error => console.log(error))
@@ -236,7 +236,8 @@ export default compose(
         // bind state to props.
         (state) => ({
             state: state.Account,
-            appAuth: state.appAuth,
+            token: state.LoginManager.token,
+            userId: state.LoginManager.userId,
         }),
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
