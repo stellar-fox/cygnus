@@ -11,6 +11,8 @@ import {
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
 import { action as BankAction } from "../../redux/Bank"
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
+import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as PaymentsAction } from "../../redux/Payments"
 
@@ -49,6 +51,8 @@ export default connect(
         changeLoginState,
         logOut,
         resetAccountState: AccountAction.resetState,
+        resetLedgerHQState: LedgerHQAction.resetState,
+        resetLoginManagerState: LoginManagerAction.resetState,
         resetStellarAccountState: StellarAccountAction.resetState,
         resetPaymentsState: PaymentsAction.resetState,
         resetUiState,
@@ -76,6 +80,8 @@ export default connect(
             })
             this.props.resetUiState()
             this.props.resetAccountState()
+            this.props.resetLedgerHQState()
+            this.props.resetLoginManagerState()
             this.props.resetPaymentsState()
             this.props.resetStellarAccountState()
             this.props.logOut()
