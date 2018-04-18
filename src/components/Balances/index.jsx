@@ -95,12 +95,12 @@ class Balances extends Component {
     componentDidMount = () => {
         this.setState({
             paymentsStreamer: paymentsStreamer(
-                this.props.appAuth.publicKey,
+                this.props.publicKey,
                 this.props.changeSnackbarState,
                 this.props.accountExistsOnLedger
             ),
             operationsStreamer: operationsStreamer(
-                this.props.appAuth.publicKey,
+                this.props.publicKey,
                 this.props.changeSnackbarState,
                 this.props.accountExistsOnLedger
             ),
@@ -128,9 +128,9 @@ class Balances extends Component {
     _tmpAccountExists = () => {
         axios.post(
             `${config.api}/user/ledgerauth/${
-                this.props.appAuth.publicKey
+                this.props.publicKey
             }/${
-                this.props.appAuth.bip32Path
+                this.props.bip32Path
             }`
         ).then((response) => {
             this.props.setAccountRegistered(true)
@@ -153,7 +153,7 @@ class Balances extends Component {
     // ...
     _tmpQueryHorizon = async () => {
         try {
-            const account = await loadAccount(this.props.appAuth.publicKey)
+            const account = await loadAccount(this.props.publicKey)
             this.props.updateAccountTree(account)
 
             this.props.accountExistsOnLedger({ account, })
@@ -415,7 +415,6 @@ export default compose(
             Account: state.Account,
             Balances: state.Balances,
             accountInfo: state.accountInfo,
-            appAuth: state.appAuth,
             appUi: state.appUi,
         }),
         // match dispatch to props.

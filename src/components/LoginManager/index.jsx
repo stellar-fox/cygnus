@@ -9,7 +9,7 @@ import {
     ActionConstants,
     changeLoginState,
 } from "../../redux/actions"
-
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 
 
 
@@ -22,10 +22,16 @@ const LoginManagerContext = React.createContext({})
 // <LoginManager> component
 export default connect(
     // map state to props.
-    (state) => ({ appAuth: state.appAuth, }),
+    (state) => ({
+        appAuth: state.appAuth,
+        publicKey: state.LedgerHQ.publicKey,
+        bip32Path: state.LedgerHQ.bip32Path,
+    }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         changeLoginState,
+        setLedgerPublicKey: LedgerHQAction.setPublicKey,
+        setLedgerBip32Path: LedgerHQAction.setBip32Path,
     }, dispatch)
 )(
     class extends Component {
@@ -50,6 +56,10 @@ export default connect(
                     token: null,
                 })
             } else {
+                // consolidate credentials into LedgerHQ
+                this.props.setLedgerPublicKey(auth.pubkey)
+                this.props.setLedgerBip32Path(auth.bip32Path)
+
                 this.props.changeLoginState({
                     loginState: ActionConstants.LOGGED_IN,
                     bip32Path: auth.bip32Path,
@@ -73,16 +83,16 @@ export default connect(
         // ...
         isExploreOnly = () => (
             this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
-            this.props.appAuth.publicKey  &&
-            !this.props.appAuth.bip32Path
+            this.props.publicKey  &&
+            !this.props.bip32Path
         )
 
 
         // ...
         isPayEnabled = () => (
             this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
-            this.props.appAuth.publicKey  &&
-            this.props.appAuth.bip32Path
+            this.props.publicKey  &&
+            this.props.bip32Path
         )
 
 

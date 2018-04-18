@@ -50,7 +50,6 @@ class PaymentsHistory extends Component {
         setState: PropTypes.func.isRequired,
         accountInfo: PropTypes.object.isRequired,
         loginManager: PropTypes.object.isRequired,
-        appAuth: PropTypes.object.isRequired,
         handlePaymentClick: PropTypes.func.isRequired,
         decodeEffectType: PropTypes.func.isRequired,
         setAccountPayments: PropTypes.func.isRequired,
@@ -62,7 +61,7 @@ class PaymentsHistory extends Component {
     getNextPaymentsPage = () =>
         this.props.stellarServer
             .payments()
-            .forAccount(this.props.appAuth.publicKey)
+            .forAccount(this.props.publicKey)
             .order("desc")
             .cursor(this.props.state.cursorRight)
             .limit(5)
@@ -75,7 +74,7 @@ class PaymentsHistory extends Component {
                             case "create_account":
                                 if (
                                     r.funder ===
-                                        this.props.appAuth.publicKey
+                                        this.props.publicKey
                                 ) {
                                     link = gravatarLink(r.account)
                                 } else {
@@ -85,7 +84,7 @@ class PaymentsHistory extends Component {
 
                             // payment
                             default:
-                                if (r.to === this.props.appAuth.publicKey) {
+                                if (r.to === this.props.publicKey) {
                                     link = gravatarLink(r.from)
                                 } else {
                                     link = gravatarLink(r.to)
@@ -125,7 +124,7 @@ class PaymentsHistory extends Component {
     getPrevPaymentsPage = () =>
         this.props.stellarServer
             .payments()
-            .forAccount(this.props.appAuth.publicKey)
+            .forAccount(this.props.publicKey)
             .order("asc")
             .cursor(this.props.state.cursorLeft)
             .limit(5)
@@ -138,7 +137,7 @@ class PaymentsHistory extends Component {
                             case "create_account":
                                 if (
                                     r.funder ===
-                                        this.props.appAuth.publicKey
+                                        this.props.publicKey
                                 ) {
                                     link = gravatarLink(r.account)
                                 } else {
@@ -148,7 +147,7 @@ class PaymentsHistory extends Component {
 
                             // payment
                             default:
-                                if (r.to === this.props.appAuth.publicKey) {
+                                if (r.to === this.props.publicKey) {
                                     link = gravatarLink(r.from)
                                 } else {
                                     link = gravatarLink(r.to)
@@ -205,14 +204,14 @@ class PaymentsHistory extends Component {
                 payment.type,
                 {
                     "create_account": () =>
-                        payment.funder === this.props.appAuth.publicKey ?
+                        payment.funder === this.props.publicKey ?
                             <i className={iClassName}>card_giftcard</i> :
                             <i className={iClassName}>account_balance</i>,
                     "account_merge": () =>
                         <i className={iClassName}>merge_type</i>,
                 },
                 () =>
-                    payment.to === this.props.appAuth.publicKey ?
+                    payment.to === this.props.publicKey ?
                         <i className={iClassName}>account_balance_wallet</i> :
                         <i className={iClassName}>payment</i>
             )
@@ -237,7 +236,7 @@ class PaymentsHistory extends Component {
                                     payment.starting_balance)}
                             </span>
                     )(
-                        payment.funder === this.props.appAuth.publicKey ?
+                        payment.funder === this.props.publicKey ?
                             he.Minus : he.Plus
                     ),
                     "account_merge": () => "Account Merged",
@@ -255,7 +254,7 @@ class PaymentsHistory extends Component {
                         </span>
                 )(
                     this.props.assetManager.getAssetCode(payment),
-                    payment.to === this.props.appAuth.publicKey ?
+                    payment.to === this.props.publicKey ?
                         he.Plus : he.Minus
                 )
             )
@@ -418,8 +417,8 @@ export default compose(
         (state) => ({
             state: state.Payments,
             accountInfo: state.accountInfo,
-            appAuth: state.appAuth,
             Account: state.Account,
+            publicKey: state.LedgerHQ.publicKey,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({

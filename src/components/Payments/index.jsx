@@ -116,7 +116,7 @@ class Payments extends Component {
 
         this.stellarServer
             .payments()
-            .forAccount(this.props.appAuth.publicKey)
+            .forAccount(this.props.publicKey)
             .order("desc")
             .limit(5)
             .call()
@@ -127,7 +127,7 @@ class Payments extends Component {
                         switch (r.type) {
                             case "create_account":
                                 if (
-                                    r.funder === this.props.appAuth.publicKey
+                                    r.funder === this.props.publicKey
                                 ) {
                                     link = gravatarLink(r.account)
                                 } else {
@@ -137,7 +137,7 @@ class Payments extends Component {
 
                             // payment
                             default:
-                                if(r.to === this.props.appAuth.publicKey) {
+                                if(r.to === this.props.publicKey) {
                                     link = gravatarLink(r.from)
                                 } else {
                                     link = gravatarLink(r.to)
@@ -203,7 +203,7 @@ class Payments extends Component {
         ) {
             return this.stellarServer
                 .transactions()
-                .forAccount(this.props.appAuth.publicKey)
+                .forAccount(this.props.publicKey)
                 .order("desc")
                 .limit(5)
                 .call()
@@ -233,7 +233,7 @@ class Payments extends Component {
                      */
                     if (
                         message.type === "create_account" &&
-                        message.source_account === this.props.appAuth.publicKey
+                        message.source_account === this.props.publicKey
                     ) {
                         this.updateAccount.call(this)
 
@@ -254,7 +254,7 @@ class Payments extends Component {
                      */
                     if (
                         message.type === "create_account" &&
-                        message.account === this.props.appAuth.publicKey
+                        message.account === this.props.publicKey
                     ) {
                         this.updateAccount.call(this)
 
@@ -273,7 +273,7 @@ class Payments extends Component {
                      */
                     if (
                         message.type === "payment" &&
-                        message.to === this.props.appAuth.publicKey
+                        message.to === this.props.publicKey
                     ) {
                         this.updateAccount.call(this)
 
@@ -292,7 +292,7 @@ class Payments extends Component {
                      */
                     if (
                         message.type === "payment" &&
-                        message.from === this.props.appAuth.publicKey
+                        message.from === this.props.publicKey
                     ) {
                         this.updateAccount.call(this)
 
@@ -311,7 +311,7 @@ class Payments extends Component {
 
     // ...
     updateAccount = () =>
-        loadAccount(this.props.appAuth.publicKey)
+        loadAccount(this.props.publicKey)
             .catch(StellarSdk.NotFoundError, function (_err) {
                 throw new Error("The destination account does not exist!")
             })
@@ -321,7 +321,7 @@ class Payments extends Component {
                     this.stellarServer
                         .payments()
                         .limit(5)
-                        .forAccount(this.props.appAuth.publicKey)
+                        .forAccount(this.props.publicKey)
                         .order("desc")
                         .call()
                         .then((paymentsResult) => {
@@ -332,8 +332,7 @@ class Payments extends Component {
                                         case "create_account":
                                             if (
                                                 r.funder ===
-                                                    this.props
-                                                        .appAuth.publicKey
+                                                    this.props.publicKey
                                             ) {
                                                 link = gravatarLink(r.account)
                                             } else {
@@ -345,8 +344,7 @@ class Payments extends Component {
                                         default:
                                             if (
                                                 r.to ===
-                                                    this.props
-                                                        .appAuth.publicKey
+                                                    this.props.publicKey
                                             ) {
                                                 link = gravatarLink(r.from)
                                             } else {
@@ -466,7 +464,7 @@ class Payments extends Component {
                                 <span className="account-direction">
                                     {
                                         effect.account ===
-                                            this.props.appAuth.publicKey ?
+                                            this.props.publicKey ?
                                             "Yours" : "Theirs"
                                     }
                                 </span>
@@ -533,7 +531,7 @@ class Payments extends Component {
                                     <span className="account-direction">
                                         {
                                             effect.account ===
-                                                this.props.appAuth.publicKey ?
+                                                this.props.publicKey ?
                                                 "Yours" :
                                                 "Theirs"
                                         }
@@ -574,7 +572,7 @@ class Payments extends Component {
                                 <span className="account-direction">
                                     {
                                         effect.account ===
-                                            this.props.appAuth.publicKey ?
+                                            this.props.publicKey ?
                                             "Yours" : "Theirs"
                                     }
                                 </span>
@@ -664,7 +662,7 @@ class Payments extends Component {
                                 <span>Acccount Debited </span>
                                 <span className="account-direction">
                                     {effect.account ===
-                                    this.props.appAuth.publicKey
+                                    this.props.publicKey
                                         ? "Yours"
                                         : "Theirs"}
                                 </span>
@@ -758,7 +756,7 @@ class Payments extends Component {
                                 <he.Space />
                                 <span className="account-direction">
                                     {effect.public_key ===
-                                    this.props.appAuth.publicKey
+                                    this.props.publicKey
                                         ? "You"
                                         : "They"}
                                 </span>
@@ -862,7 +860,7 @@ export default compose(
             accountInfo: state.accountInfo,
             loadingModal: state.loadingModal,
             ui: state.ui,
-            appAuth: state.appAuth,
+            publicKey: state.LedgerHQ.publicKey,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({

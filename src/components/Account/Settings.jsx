@@ -122,7 +122,7 @@ class Settings extends Component {
             </div>
             <div className="account-subtitle m-t-small">
                 <span className="bg-green">
-                    {this.props.appAuth.publicKey}
+                    {this.props.publicKey}
                 </span>
             </div>
             <div className="account-title p-t-large">
@@ -238,6 +238,7 @@ export default compose(
             appAuth: state.appAuth,
             accountInfo: state.accountInfo,
             appUi: state.appUi,
+            publicKey: state.LedgerHQ.publicKey,
         }),
         // bind dispatch to props.
         (dispatch) => bindActionCreators({

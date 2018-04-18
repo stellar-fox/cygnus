@@ -51,7 +51,6 @@ class Transactions extends Component {
         state: PropTypes.object.isRequired,
         setState: PropTypes.func.isRequired,
         accountInfo: PropTypes.object.isRequired,
-        appAuth: PropTypes.object.isRequired,
         updateTransactionsCursors: PropTypes.func.isRequired,
     }
 
@@ -64,7 +63,7 @@ class Transactions extends Component {
     getNextTransactionsPage = () =>
         this.props.stellarServer
             .transactions()
-            .forAccount(this.props.appAuth.publicKey)
+            .forAccount(this.props.publicKey)
             .order("desc")
             .cursor(this.props.state.txCursorRight)
             .limit(5)
@@ -94,7 +93,7 @@ class Transactions extends Component {
     getPrevTransactionsPage = () =>
         this.props.stellarServer
             .transactions()
-            .forAccount(this.props.appAuth.publicKey)
+            .forAccount(this.props.publicKey)
             .order("asc")
             .cursor(this.props.state.txCursorLeft)
             .limit(5)
@@ -255,7 +254,7 @@ export default connect(
     (state) => ({
         state: state.Payments,
         accountInfo: state.accountInfo,
-        appAuth: state.appAuth,
+        publicKey: state.LedgerHQ.publicKey,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({

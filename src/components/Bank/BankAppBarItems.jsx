@@ -20,13 +20,13 @@ export default connect(
         homeDomain:
             state.accountInfo.account  &&
             state.accountInfo.account.account.home_domain,
-        pubKey: state.appAuth.publicKey,
+        publicKey: state.LedgerHQ.publicKey,
     })
 )(
     ({
         accountExists,
         homeDomain,
-        pubKey,
+        publicKey,
     }) =>
         <div className="app-bar-items">
             <div className="app-bar-title">
@@ -42,7 +42,7 @@ export default connect(
                 <div className="bar-subtitle-account">
                     {
                         handleException(
-                            () => pubKeyAbbr(pubKey),
+                            () => pubKeyAbbr(publicKey),
                             () => unknownPubKeyAbbr
                         )
                     }
