@@ -375,7 +375,7 @@ export const htmlEntities = {
 // entries = [[k1,v1], ... [kn, vn]]
 // imitates Python's dict()
 export const dict = (entries) => entries.reduce(
-    (acc, [k, v,]) => Object.assign(acc, { [k]: v, }), {}
+    (acc, [k, v,]) => ({ ...acc, [k]: v, }), {}
 )
 
 
