@@ -862,7 +862,6 @@ export default compose(
             accountInfo: state.accountInfo,
             loadingModal: state.loadingModal,
             ui: state.ui,
-            isAuthenticated: state.auth.isAuthenticated,
             appAuth: state.appAuth,
         }),
         // map dispatch to props.

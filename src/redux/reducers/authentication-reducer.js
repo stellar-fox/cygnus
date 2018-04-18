@@ -1,8 +1,5 @@
 // ...
-const initState = {
-    isAuthenticated: false,
-    isReadOnly: true,
-}
+const initState = {}
 
 
 
@@ -14,7 +11,6 @@ export default function (state = initState, action) {
         case "LOG_IN":
             state = {
                 ...state,
-                isAuthenticated: true,
                 userId: action.payload.userId,
                 token: action.payload.token,
                 pubkey: action.payload.pubkey,
