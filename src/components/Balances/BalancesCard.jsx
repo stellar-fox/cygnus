@@ -55,10 +55,11 @@ class BalancesCard extends Component {
 
 
     // ...
-    showPaymentCard = () =>
+    togglePaymentCard = () =>
         this.props.togglePaymentCard({
             payment: {
-                opened: !this.props.appUi.cards.payment.opened,
+                opened: this.props.appUi.cards.payment &&
+                    this.props.appUi.cards.payment.opened ? false : true,
             },
         })
 
@@ -164,7 +165,7 @@ class BalancesCard extends Component {
                             backgroundColor="rgb(15,46,83)"
                             labelColor="#d32f2f"
                             label="Pay"
-                            onClick={this.showPaymentCard}
+                            onClick={this.togglePaymentCard}
                         /> : null
                 }
             </CardActions>
