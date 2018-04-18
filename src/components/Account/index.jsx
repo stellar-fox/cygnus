@@ -104,8 +104,6 @@ class Account extends Component {
         this.props.setAccountRegistered(true)
         this.props.changeLoginState({
             loginState: ActionConstants.LOGGED_IN,
-            publicKey: this.props.publicKey,
-            bip32Path: this.props.bip32Path,
             userId: loginObj.userId,
             token: loginObj.token,
         })

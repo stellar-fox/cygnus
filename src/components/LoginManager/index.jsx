@@ -40,8 +40,6 @@ export default connect(
         attemptLogin = async (email, password) => {
             this.props.changeLoginState({
                 loginState: ActionConstants.LOGGING_IN,
-                bip32Path: null,
-                publicKey: null,
                 userId: null,
                 token: null,
             })
@@ -50,8 +48,6 @@ export default connect(
             if (!auth.authenticated) {
                 this.props.changeLoginState({
                     loginState: ActionConstants.LOGGING_IN,
-                    bip32Path: null,
-                    publicKey: null,
                     userId: null,
                     token: null,
                 })
@@ -62,8 +58,6 @@ export default connect(
 
                 this.props.changeLoginState({
                     loginState: ActionConstants.LOGGED_IN,
-                    bip32Path: auth.bip32Path,
-                    publicKey: auth.pubkey,
                     userId: auth.user_id,
                     token: auth.token,
                 })

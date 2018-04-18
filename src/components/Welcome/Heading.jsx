@@ -61,8 +61,6 @@ class Heading extends Component {
         this.props.setAccountRegistered(true)
         this.props.changeLoginState({
             loginState: ActionConstants.LOGGED_IN,
-            publicKey: this.state.loginObj.publicKey,
-            bip32Path: this.state.loginObj.bip32Path,
             userId: this.state.loginObj.userId,
             token: this.state.loginObj.token,
         })
@@ -73,8 +71,6 @@ class Heading extends Component {
     cancelLogin = () => {
         this.props.changeLoginState({
             loginState: ActionConstants.LOGGED_OUT,
-            publicKey: null,
-            bip32Path: null,
             userId: null,
             token: null,
         })

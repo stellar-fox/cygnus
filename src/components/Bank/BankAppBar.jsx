@@ -71,8 +71,6 @@ export default connect(
         handleLogOutClick = () => {
             this.props.changeLoginState({
                 loginState: ActionConstants.LOGGED_OUT,
-                publicKey: null,
-                bip32Path: null,
                 userId: null,
                 token: null,
             })

@@ -43,8 +43,6 @@ class PanelLedger extends Component {
                 this.props.setAccountRegistered(true)
                 this.props.changeLoginState({
                     loginState: ActionConstants.LOGGED_IN,
-                    bip32Path: extractPathIndex(ledgerParams.bip32Path),
-                    publicKey: ledgerParams.publicKey,
                     userId: response.data.user_id,
                     token: response.data.token,
                 })
@@ -61,8 +59,6 @@ class PanelLedger extends Component {
                     this.props.setAccountRegistered(false)
                     this.props.changeLoginState({
                         loginState: ActionConstants.LOGGED_IN,
-                        publicKey: ledgerParams.publicKey,
-                        bip32Path: extractPathIndex(ledgerParams.bip32Path),
                         userId: null,
                         token: null,
                     })
@@ -117,8 +113,7 @@ class PanelLedger extends Component {
 // ...
 export default connect(
     // map state to props.
-    (state) => ({
-        appAuth: state.appAuth,
+    (_state) => ({
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({

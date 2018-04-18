@@ -76,8 +76,6 @@ class Login extends Component {
                 this.password.setState({ error: auth.error, })
                 this.props.changeLoginState({
                     loginState: ActionConstants.LOGGED_OUT,
-                    bip32Path: null,
-                    publicKey: null,
                     userId: null,
                     token: null,
                 })

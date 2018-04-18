@@ -10,6 +10,7 @@ import {
     setModalLoaded,
     updateLoadingMessage,
 } from "../../redux/actions/"
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 
 import {
     htmlEntities as he,
@@ -84,10 +85,11 @@ class PanelExplorer extends Component {
                                 textInputValue
                             }&type=name`)
                             .then((response) => {
+                                this.props.setLedgerPublicKey(
+                                    response.data.account_id
+                                )
                                 this.props.changeLoginState({
                                     loginState: ActionConstants.LOGGED_IN,
-                                    bip32Path: null,
-                                    publicKey: response.data.account_id,
                                     userId: null,
                                     token: null,
                                 })
@@ -122,11 +124,12 @@ class PanelExplorer extends Component {
                         error: error.message,
                     })
                 })
-        } else {
+        }
+        // Input is a valid Stellar public key
+        else {
+            this.props.setLedgerPublicKey(textInputValue)
             this.props.changeLoginState({
                 loginState: ActionConstants.LOGGED_IN,
-                bip32Path: null,
-                publicKey: textInputValue,
                 userId: null,
                 token: null,
             })
@@ -198,10 +201,10 @@ export default connect(
     // map state to props.
     (state) => ({
         accountInfo: state.accountInfo,
-        appAuth: state.appAuth,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        setLedgerPublicKey: LedgerHQAction.setPublicKey,
         changeLoginState,
         setModalLoading,
         setModalLoaded,
