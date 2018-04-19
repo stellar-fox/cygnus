@@ -69,27 +69,29 @@ class PaymentsHistory extends Component {
             .then((paymentsResult) => {
                 const gravatarLinkPromises =
                     paymentsResult.records.map((r) => {
-                        let link = ""
-                        switch (r.type) {
-                            case "create_account":
-                                if (
-                                    r.funder ===
-                                        this.props.publicKey
-                                ) {
-                                    link = gravatarLink(r.account)
-                                } else {
-                                    link = gravatarLink(r.funder)
-                                }
-                                break
+                        let link = "https://www.gravatar.com/avatar?d=mm&s=100"
+                        if (this.props.loginManager.isAuthenticated()) {
+                            switch (r.type) {
+                                case "create_account":
+                                    if (
+                                        r.funder ===
+                                            this.props.publicKey
+                                    ) {
+                                        link = gravatarLink(r.account)
+                                    } else {
+                                        link = gravatarLink(r.funder)
+                                    }
+                                    break
 
-                            // payment
-                            default:
-                                if (r.to === this.props.publicKey) {
-                                    link = gravatarLink(r.from)
-                                } else {
-                                    link = gravatarLink(r.to)
-                                }
-                                break
+                                // payment
+                                default:
+                                    if (r.to === this.props.publicKey) {
+                                        link = gravatarLink(r.from)
+                                    } else {
+                                        link = gravatarLink(r.to)
+                                    }
+                                    break
+                            }
                         }
                         return link
                     })
@@ -132,27 +134,29 @@ class PaymentsHistory extends Component {
             .then((paymentsResult) => {
                 const gravatarLinkPromises =
                     paymentsResult.records.map((r) => {
-                        let link = ""
-                        switch (r.type) {
-                            case "create_account":
-                                if (
-                                    r.funder ===
-                                        this.props.publicKey
-                                ) {
-                                    link = gravatarLink(r.account)
-                                } else {
-                                    link = gravatarLink(r.funder)
-                                }
-                                break
+                        let link = "https://www.gravatar.com/avatar?d=mm&s=100"
+                        if (this.props.loginManager.isAuthenticated()) {
+                            switch (r.type) {
+                                case "create_account":
+                                    if (
+                                        r.funder ===
+                                            this.props.publicKey
+                                    ) {
+                                        link = gravatarLink(r.account)
+                                    } else {
+                                        link = gravatarLink(r.funder)
+                                    }
+                                    break
 
-                            // payment
-                            default:
-                                if (r.to === this.props.publicKey) {
-                                    link = gravatarLink(r.from)
-                                } else {
-                                    link = gravatarLink(r.to)
-                                }
-                                break
+                                // payment
+                                default:
+                                    if (r.to === this.props.publicKey) {
+                                        link = gravatarLink(r.from)
+                                    } else {
+                                        link = gravatarLink(r.to)
+                                    }
+                                    break
+                            }
                         }
                         return link
                     })
