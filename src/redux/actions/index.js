@@ -4,13 +4,6 @@ import { ActionTypes } from "../reducers/mono-reducer"
 
 
 // ...
-export const setPublicKey = (state) => ({
-    type: "SET_PUBKEY",
-    payload: state,
-})
-
-
-// ...
 export const accountExistsOnLedger = (state) => ({
     type: "ACCOUNT_EXISTS_ON_LEDGER",
     payload: state,

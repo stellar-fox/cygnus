@@ -6,7 +6,6 @@ import { getPublicKey } from "../../lib/ledger"
 import {
     logIn,
     setAccountRegistered,
-    setPublicKey
 } from "../../redux/actions"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import Input from "../../lib/common/Input"
@@ -47,7 +46,6 @@ class LedgerAuthenticator extends Component {
             publicKey = await getPublicKey(bip32Path)
             this.props.setLedgerPublicKey(publicKey)
             this.props.setLedgerBip32Path(this.state.derivationPath)
-            this.props.setPublicKey(publicKey)
             this.props.onConnected.call(this, {
                 publicKey,
                 softwareVersion,
@@ -204,6 +202,5 @@ export default connect(
         resetLedgerState: LedgerHQAction.resetState,
         logIn,
         setAccountRegistered,
-        setPublicKey,
     }, dispatch)
 )(LedgerAuthenticator)
