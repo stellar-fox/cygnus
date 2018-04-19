@@ -24,7 +24,6 @@ const LoginManagerContext = React.createContext({})
 export default connect(
     // map state to props.
     (state) => ({
-        appAuth: state.appAuth,
         publicKey: state.LedgerHQ.publicKey,
         bip32Path: state.LedgerHQ.bip32Path,
         token: state.LoginManager.token,
@@ -61,7 +60,7 @@ export default connect(
                 this.props.setApiToken(auth.token)
                 this.props.setUserId(auth.user_id)
                 this.props.setLedgerPublicKey(auth.pubkey)
-                this.props.setLedgerBip32Path(auth.bip32Path)
+                this.props.setLedgerBip32Path((auth.bip32Path).toString(10))
 
                 this.props.changeLoginState({
                     loginState: ActionConstants.LOGGED_IN,
@@ -80,7 +79,7 @@ export default connect(
 
         // LEVEL 2 - transactions signing enabled
         isPayEnabled = () =>
-            this.isLoggedIn()  &&  typeof this.props.bip32Path === "number"
+            this.isLoggedIn()  &&  !!this.props.bip32Path
 
 
         // LEVEL 3 - allows for backend access and transaction signing
