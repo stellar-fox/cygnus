@@ -110,7 +110,9 @@ class Balances extends Component {
                 message: "Searching for account ...",
             })
             this._tmpQueryHorizon()
-            this._tmpAccountExists()
+            if (this.props.loginManager.isPayEnabled()) {
+                this._tmpAccountExists()
+            }
         }
     }
 
