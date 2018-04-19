@@ -4,7 +4,6 @@ import {
 import AccountInfoReducer from "./account-info-reducer"
 import LoadingModalReducer from "./loading-modal-reducer"
 import UiStateReducer from "./ui-state-reducer"
-import ModalReducer from "./modal-reducer"
 
 import { reducer as AccountReducer } from "../Account"
 import { reducer as AssetManagerReducer } from "../AssetManager"
@@ -24,8 +23,6 @@ export default {
     accountInfo: AccountInfoReducer,
     loadingModal: LoadingModalReducer,
     ui: UiStateReducer,
-    modal: ModalReducer,
-
     appUi: uiReducer,
 
     Account: AccountReducer,
