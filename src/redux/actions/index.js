@@ -95,15 +95,6 @@ export const setAccountRegistered = (state) => ({
 
 
 // ...
-export const ActionConstants = {
-    LOGGING_IN: "LOGGING_IN",
-    LOGGING_OUT: "LOGGING_OUT",
-    LOGGED_IN: "LOGGED_IN",
-    LOGGED_OUT: "LOGGED_OUT",
-}
-
-
-// ...
 export const changeLoginState = (loginState) => ({
     type: ActionTypes.CHANGE_LOGIN_STATE,
     payload: loginState,

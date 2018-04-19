@@ -6,7 +6,6 @@ import hoistStatics from "hoist-non-react-statics"
 import { authenticate } from "./api"
 
 import {
-    ActionConstants,
     changeLoginState,
 } from "../../redux/actions"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
@@ -42,16 +41,10 @@ export default connect(
 
         // ...
         attemptLogin = async (email, password) => {
-            this.props.changeLoginState({
-                loginState: ActionConstants.LOGGING_IN,
-                userId: null,
-                token: null,
-            })
             const auth = await authenticate(email, password)
 
             if (!auth.authenticated) {
                 this.props.changeLoginState({
-                    loginState: ActionConstants.LOGGING_IN,
                     userId: null,
                     token: null,
                 })
@@ -63,7 +56,6 @@ export default connect(
                 this.props.setLedgerBip32Path((auth.bip32Path).toString(10))
 
                 this.props.changeLoginState({
-                    loginState: ActionConstants.LOGGED_IN,
                     userId: auth.user_id,
                     token: auth.token,
                 })

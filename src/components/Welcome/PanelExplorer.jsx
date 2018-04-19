@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 import axios from "axios"
 
 import {
-    ActionConstants,
     changeLoginState,
     setModalLoading,
     setModalLoaded,
@@ -89,7 +88,6 @@ class PanelExplorer extends Component {
                                     response.data.account_id
                                 )
                                 this.props.changeLoginState({
-                                    loginState: ActionConstants.LOGGED_IN,
                                     userId: null,
                                     token: null,
                                 })
@@ -129,7 +127,6 @@ class PanelExplorer extends Component {
         else {
             this.props.setLedgerPublicKey(textInputValue)
             this.props.changeLoginState({
-                loginState: ActionConstants.LOGGED_IN,
                 userId: null,
                 token: null,
             })

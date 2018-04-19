@@ -22,7 +22,6 @@ import {
     hideAlert,
     changeModalState,
     setAccountRegistered,
-    ActionConstants,
     changeLoginState,
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
@@ -103,7 +102,6 @@ class Account extends Component {
         this.changeButtonText()
         this.props.setAccountRegistered(true)
         this.props.changeLoginState({
-            loginState: ActionConstants.LOGGED_IN,
             userId: loginObj.userId,
             token: loginObj.token,
         })

@@ -5,7 +5,6 @@ import { connect } from "react-redux"
 import { TopBarSecurityMessage } from "../StellarFox/env"
 
 import {
-    ActionConstants,
     changeLoginState,
     changeModalState,
     setAccountRegistered,
@@ -60,7 +59,6 @@ class Heading extends Component {
         this.hideSignupModal()
         this.props.setAccountRegistered(true)
         this.props.changeLoginState({
-            loginState: ActionConstants.LOGGED_IN,
             userId: this.state.loginObj.userId,
             token: this.state.loginObj.token,
         })
@@ -70,7 +68,6 @@ class Heading extends Component {
     // ...
     cancelLogin = () => {
         this.props.changeLoginState({
-            loginState: ActionConstants.LOGGED_OUT,
             userId: null,
             token: null,
         })

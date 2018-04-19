@@ -7,7 +7,6 @@ import {
     changeLoginState,
     logOut,
     resetUiState,
-    ActionConstants,
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
 import { action as BankAction } from "../../redux/Bank"
@@ -74,7 +73,6 @@ export default connect(
         // ...
         handleLogOutClick = () => {
             this.props.changeLoginState({
-                loginState: ActionConstants.LOGGED_OUT,
                 userId: null,
                 token: null,
             })

@@ -41,7 +41,6 @@ import {
     changeLoginState,
     changeModalState,
     changeSnackbarState,
-    ActionConstants,
     togglePaymentCard,
 } from "../../redux/actions"
 import Button from "../../lib/common/Button"
@@ -294,7 +293,6 @@ class Balances extends Component {
         this.changeButtonText()
         this.props.setAccountRegistered(true)
         this.props.changeLoginState({
-            loginState: ActionConstants.LOGGED_IN,
             userId: loginObj.userId,
             token: loginObj.token,
         })
@@ -430,7 +428,6 @@ export default compose(
             changeLoginState,
             changeModalState,
             changeSnackbarState,
-            ActionConstants,
             togglePaymentCard,
         }, dispatch)
     )

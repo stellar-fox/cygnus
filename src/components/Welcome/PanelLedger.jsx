@@ -8,7 +8,6 @@ import { ledgerSupportLink } from "../StellarFox/env"
 import { extractPathIndex } from "../../lib/utils"
 
 import {
-    ActionConstants,
     changeLoginState,
     setAccountRegistered,
 } from "../../redux/actions/"
@@ -42,7 +41,6 @@ class PanelLedger extends Component {
             .then((response) => {
                 this.props.setAccountRegistered(true)
                 this.props.changeLoginState({
-                    loginState: ActionConstants.LOGGED_IN,
                     userId: response.data.user_id,
                     token: response.data.token,
                 })
@@ -58,7 +56,6 @@ class PanelLedger extends Component {
                 if (error.response.status === 401) {
                     this.props.setAccountRegistered(false)
                     this.props.changeLoginState({
-                        loginState: ActionConstants.LOGGED_IN,
                         userId: null,
                         token: null,
                     })

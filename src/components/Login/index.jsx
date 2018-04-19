@@ -11,7 +11,6 @@ import {
     passwordIsValid,
 } from "./helper"
 import {
-    ActionConstants,
     changeLoginState,
 } from "../../redux/actions"
 
@@ -75,7 +74,6 @@ class Login extends Component {
                 this.email.setState({ error: auth.error, })
                 this.password.setState({ error: auth.error, })
                 this.props.changeLoginState({
-                    loginState: ActionConstants.LOGGED_OUT,
                     userId: null,
                     token: null,
                 })
