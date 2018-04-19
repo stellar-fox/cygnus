@@ -1,5 +1,4 @@
 import {
-    authReducer,
     uiReducer,
 } from "./mono-reducer"
 import AuthenticationReducer from "./authentication-reducer"
@@ -29,7 +28,6 @@ export default {
     ui: UiStateReducer,
     modal: ModalReducer,
 
-    appAuth: authReducer,
     appUi: uiReducer,
 
     Account: AccountReducer,
