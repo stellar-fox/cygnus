@@ -45,9 +45,11 @@ import {
 } from "material-ui/Tabs"
 import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
+import { config } from "../../config"
+import { StellarSdk, loadAccount } from "../../lib/stellar-tx"
 
 import "./index.css"
-import { StellarSdk, loadAccount } from "../../lib/stellar-tx"
+
 
 
 
@@ -100,9 +102,7 @@ class Payments extends Component {
         )
 
         // ...
-        this.stellarServer = new StellarSdk.Server(
-            this.props.accountInfo.horizon
-        )
+        this.stellarServer = new StellarSdk.Server(config.horizon)
     }
 
 
