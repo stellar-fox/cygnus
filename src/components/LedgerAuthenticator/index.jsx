@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 import { bip32Prefix } from "../StellarFox/env"
 import { getPublicKey } from "../../lib/ledger"
 import {
-    logIn,
     setAccountRegistered,
 } from "../../redux/actions"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
@@ -200,7 +199,6 @@ export default connect(
         setLedgerPublicKey: LedgerHQAction.setPublicKey,
         setLedgerBip32Path: LedgerHQAction.setBip32Path,
         resetLedgerState: LedgerHQAction.resetState,
-        logIn,
         setAccountRegistered,
     }, dispatch)
 )(LedgerAuthenticator)

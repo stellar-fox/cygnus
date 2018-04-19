@@ -39,13 +39,6 @@ export const updateLoadingMessage = (state) => ({
 
 
 // ...
-export const logIn = (state) => ({
-    type: "LOG_IN",
-    payload: state,
-})
-
-
-// ...
 export const logOut = (state) => ({
     type: "LOG_OUT",
     payload: state,
