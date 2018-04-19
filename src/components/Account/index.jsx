@@ -30,7 +30,6 @@ import {
     Tab,
     Tabs,
 } from "material-ui/Tabs"
-import Dialog from "material-ui/Dialog"
 import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
@@ -39,7 +38,6 @@ import Settings from "./Settings"
 import Security from "./Security"
 
 import "./index.css"
-import { env } from "../StellarFox"
 
 
 
@@ -135,7 +133,7 @@ class Account extends Component {
     // ...
     render = () => (
         ({
-            modal, appUi, publicKey, bip32Path,
+            appUi, publicKey, bip32Path,
             loginManager, currentView,
             staticRouter: { getPath, }, state,
         }) =>
@@ -146,23 +144,6 @@ class Account extends Component {
                 />
                 <Route exact path={getPath(state.tabSelected)}>
                     <Fragment>
-                        <Dialog
-                            title="Not Yet Implemented"
-                            actions={[
-                                <Button
-                                    label="OK"
-                                    keyboardFocused={true}
-                                    onClick={this.handleClose}
-                                />,
-                            ]}
-                            modal={false}
-                            open={modal.isShowing}
-                            onRequestClose={this.handleClose}
-                            paperClassName="modal-body"
-                            titleClassName="modal-title"
-                        >
-                            { env.notImplementedText }
-                        </Dialog>
                         <Modal
                             open={
                                 appUi.modals.signup ?
@@ -247,7 +228,6 @@ export default compose(
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
             state: state.Account,
-            modal: state.modal,
             appUi: state.appUi,
         }),
         // map dispatch to props.
