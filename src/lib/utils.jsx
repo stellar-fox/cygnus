@@ -1,7 +1,10 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
-import { countBy } from "lodash"
+import {
+    countBy,
+    capitalize,
+} from "lodash"
 import { StellarSdk, loadAccount } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 
@@ -246,13 +249,6 @@ export const createReducer = (initState = {}) =>
                 defaultAction,
                 [state, action,]
             )
-
-
-
-
-// makes first letter capital (e.g. "hello" -> "Hello")
-export const capitalize = (str) =>
-    str.substring(0, 1).toUpperCase() + str.substring(1)
 
 
 
