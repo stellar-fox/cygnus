@@ -14,7 +14,6 @@ import {
     withStaticRouter,
 } from "../StellarRouter"
 
-import { ActionConstants } from "../../redux/actions"
 import { Null } from "../../lib/utils"
 
 import AlertModal from "./AlertModal"
@@ -33,7 +32,7 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
-            loggedIn: state.appAuth.loginState === ActionConstants.LOGGED_IN,
+            loggedIn: !!state.LedgerHQ.publicKey,
         })
     )
 )(

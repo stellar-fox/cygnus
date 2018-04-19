@@ -74,27 +74,18 @@ export default connect(
         }
 
 
-        // ...
-        isAuthenticated = () => (
-            this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
-            this.props.token
-        )
+        // LEVEL 1 - public ledger browsing
+        isLoggedIn = () => !!this.props.publicKey
 
 
-        // ...
-        isExploreOnly = () => (
-            this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
-            this.props.publicKey  &&
-            !this.props.bip32Path
-        )
+        // LEVEL 2 - transactions signing enabled
+        isPayEnabled = () =>
+            this.isLoggedIn()  &&  typeof this.props.bip32Path === "number"
 
 
-        // ...
-        isPayEnabled = () => (
-            this.props.appAuth.loginState === ActionConstants.LOGGED_IN  &&
-            this.props.publicKey  &&
-            this.props.bip32Path
-        )
+        // LEVEL 3 - allows for backend access and transaction signing
+        isAuthenticated = () =>
+            !!this.props.token  &&  !!this.props.userId  &&  this.isPayEnabled()
 
 
         // ...

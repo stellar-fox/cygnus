@@ -159,8 +159,7 @@ class BalancesCard extends Component {
                     onClick={this.showNotImplementedModal}
                 />
                 {
-                    this.props.loginManager.isPayEnabled() ||
-                    this.props.loginManager.isAuthenticated() ?
+                    this.props.loginManager.isPayEnabled() ?
                         <Button
                             backgroundColor="rgb(15,46,83)"
                             labelColor="#d32f2f"

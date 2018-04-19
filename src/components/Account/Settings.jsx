@@ -182,7 +182,7 @@ class Settings extends Component {
             </RadioButtonGroup>
 
             {!this.props.accountInfo.registered &&
-                !this.props.loginManager.isExploreOnly() ?
+                !this.props.loginManager.isLoggedIn() ?
                 <div>
                     <div className="p-t p-b" />
                     <div className="account-title p-t">

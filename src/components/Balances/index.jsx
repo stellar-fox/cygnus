@@ -373,7 +373,7 @@ class Balances extends Component {
 
                         {
                             !accountInfo.registered  &&
-                            !loginManager.isExploreOnly() ?
+                            !loginManager.isLoggedIn() ?
                                 <RegisterCard /> : null
                         }
 
