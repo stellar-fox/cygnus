@@ -9,7 +9,7 @@ import {
 
 // ...
 export const paymentsStreamer = (
-    publicKey, changeSnackbarState, accountExistsOnLedger, updateAccountTree
+    publicKey, changeSnackbarState, updateAccountTree
 ) =>
     payments().stream({
         onmessage: (message) => {
@@ -32,20 +32,14 @@ export const paymentsStreamer = (
                 open: true,
                 message: "Payment received.",
             }) && loadAccount(publicKey).then(
-                account => {
-                    accountExistsOnLedger({ account, })
-                    updateAccountTree(account)
-                }
+                account => updateAccountTree(account)
             )
 
             SENT.some(el => el) && changeSnackbarState({
                 open: true,
                 message: "Payment sent.",
             }) && loadAccount(publicKey).then(
-                account => {
-                    accountExistsOnLedger({ account, })
-                    updateAccountTree(account)
-                }
+                account => updateAccountTree(account)
             )
         },
     })
@@ -55,7 +49,7 @@ export const paymentsStreamer = (
 
 // ...
 export const operationsStreamer = (
-    publicKey, changeSnackbarState, accountExistsOnLedger, updateAccountTree
+    publicKey, changeSnackbarState, updateAccountTree
 ) =>
     operations().stream({
         onmessage: (message) => {
@@ -77,20 +71,14 @@ export const operationsStreamer = (
                 open: true,
                 message: "Account domain updated.",
             }) && loadAccount(publicKey).then(
-                account => {
-                    accountExistsOnLedger({ account, })
-                    updateAccountTree(account)
-                }
+                account => updateAccountTree(account)
             )
 
             HOME_DOMAIN_REMOVE.some(el => el) && changeSnackbarState({
                 open: true,
                 message: "Account domain removed.",
             }) && loadAccount(publicKey).then(
-                account => {
-                    accountExistsOnLedger({ account, })
-                    updateAccountTree(account)
-                }
+                account => updateAccountTree(account)
             )
         },
     })

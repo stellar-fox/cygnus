@@ -32,8 +32,6 @@ import {
     resolvePath,
 } from "../StellarRouter"
 import {
-    accountExistsOnLedger,
-    accountMissingOnLedger,
     setAccountRegistered,
     setModalLoading,
     setModalLoaded,
@@ -96,13 +94,11 @@ class Balances extends Component {
             paymentsStreamer: paymentsStreamer(
                 this.props.publicKey,
                 this.props.changeSnackbarState,
-                this.props.accountExistsOnLedger,
                 this.props.updateAccountTree,
             ),
             operationsStreamer: operationsStreamer(
                 this.props.publicKey,
                 this.props.changeSnackbarState,
-                this.props.accountExistsOnLedger,
                 this.props.updateAccountTree,
             ),
         })
@@ -160,11 +156,8 @@ class Balances extends Component {
         try {
             const account = await loadAccount(this.props.publicKey)
             this.props.updateAccountTree(account)
-
-            this.props.accountExistsOnLedger({ account, })
             this.props.setState({ exists: true, })
         } catch (error) {
-            this.props.accountMissingOnLedger()
             this.props.setState({ exists: false, })
         } finally {
             this.props.setModalLoaded()
@@ -425,8 +418,6 @@ export default compose(
             updateAccountTree: StellarAccountAction.loadStellarAccount,
             setStateForBalances: BalancesAction.setState,
             resetBalancesState: BalancesAction.resetState,
-            accountExistsOnLedger,
-            accountMissingOnLedger,
             setAccountRegistered,
             setModalLoading,
             setModalLoaded,

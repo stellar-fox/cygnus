@@ -4,20 +4,6 @@ import { ActionTypes } from "../reducers/mono-reducer"
 
 
 // ...
-export const accountExistsOnLedger = (state) => ({
-    type: "ACCOUNT_EXISTS_ON_LEDGER",
-    payload: state,
-})
-
-
-// ...
-export const accountMissingOnLedger = (state) => ({
-    type: "ACCOUNT_MISSING_ON_LEDGER",
-    payload: state,
-})
-
-
-// ...
 export const setModalLoading = (state) => ({
     type: "SET_LOADING",
     payload: state,

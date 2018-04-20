@@ -27,8 +27,6 @@ import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 
 import {
-    accountExistsOnLedger,
-    accountMissingOnLedger,
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
@@ -310,8 +308,7 @@ class Payments extends Component {
                 throw new Error("The destination account does not exist!")
             })
             .then(
-                (account) => {
-                    this.props.accountExistsOnLedger({ account, })
+                (_account) => {
                     this.stellarServer
                         .payments()
                         .limit(5)
@@ -396,8 +393,7 @@ class Payments extends Component {
                                     })
                             })
                         })
-                },
-                (_e) => this.props.accountMissingOnLedger()
+                }
             )
 
 
@@ -863,8 +859,6 @@ export default compose(
             setState: PaymentsAction.setState,
             setTransactions: StellarAccountAction.setTransactions,
             setPayments: StellarAccountAction.setPayments,
-            accountExistsOnLedger,
-            accountMissingOnLedger,
             setModalLoading,
             setModalLoaded,
             updateLoadingMessage,
