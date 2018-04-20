@@ -24,14 +24,14 @@
 
 .balance { font-size: 2rem; }
 
-.other-assets { font-size: 1rem; }
+.assets { font-size: 1rem; }
 
-.other-asset-balance {
+.asset-balance {
     padding-right: 5px;
     font-size: larger;
 }
 
-.other-asset-code { font-size: smaller; }
+.asset-code { font-size: smaller; }
 
 .faded {
     font-size: 14px !important;

@@ -30,7 +30,7 @@
 }
 
 .badge-blue {
-    padding:2px 5px;
+    padding:2px 5px 1px 4px;
     background: rgba(15,46,83,0.8);
     border-radius: 3px;
     color: rgba(244,176,4,0.9);

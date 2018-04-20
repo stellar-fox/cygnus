@@ -43,6 +43,8 @@ export const reducer = createReducer(initState)({
         accountId: action.account.account_id,
         balance: action.account.balances.find((current) =>
             (current.asset_type === "native")).balance,
+        assets: action.account.balances.filter((current) =>
+            (current.asset_type !== "native")),
     }),
 
 

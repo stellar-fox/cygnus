@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import {
     bindActionCreators,
@@ -27,31 +27,22 @@ class BalancesCard extends Component {
 
     // ...
     componentDidMount = () => {
-        this.otherBalances = this.getOtherBalances(this.props.strAccount)
+        this.otherBalances = this.formatAssets(this.props.StellarAccount.assets)
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
 
 
     // ...
-    getOtherBalances = (account) =>
-        account.balances.map((balance, index) => {
-            if (balance.asset_type !== "native") {
-                return (
-                    <p
-                        className="other-assets"
-                        key={`${index}-${balance.asset_code}`}
-                    >
-                        <span className="other-asset-balance">
-                            {balance.balance}
-                        </span>
-                        <span className="other-asset-code">
-                            {balance.asset_code}
-                        </span>
-                    </p>
-                )
-            }
-            return null
-        })
+    formatAssets = (assets) => assets.map((asset, index) => {
+        return (<div className="small" key={index}>
+            <span className="asset-balance">
+                {asset.balance}
+            </span>
+            <span className="asset-code">
+                {asset.asset_code}
+            </span>
+        </div>)
+    })
 
 
     // ...
@@ -124,21 +115,13 @@ class BalancesCard extends Component {
                                 {
                                     this.props
                                         .assetManager.convertToAsset(
-                                            this.props.assetManager
-                                                .getAccountNativeBalance(
-                                                    this.props.strAccount
-                                                )
+                                            this.props.StellarAccount.balance
                                         )
                                 }
                             </span>
                         </div>
                         <div className="fade-extreme micro">
-                            {
-                                this.props.assetManager
-                                    .getAccountNativeBalance(
-                                        this.props.strAccount
-                                    )
-                            } XLM
+                            {this.props.StellarAccount.balance} XLM
                         </div>
                     </div>
                     <div></div>
@@ -170,18 +153,21 @@ class BalancesCard extends Component {
             </CardActions>
 
             <CardText expandable={true}>
-                <div>
-                    <div>Other Assets</div>
-                    <div>
-                        {
-                            this.otherBalances && this.otherBalances[0] ?
-                                this.otherBalances :
-                                <div className='faded'>
-                                    You currently do not own any other assets.
-                                </div>
-                        }
-                    </div>
-                </div>
+                <Fragment>
+                    {Array.isArray(this.props.StellarAccount.assets) && this.props.StellarAccount.assets.length > 0 ?
+                        <Fragment>
+                            <div className="assets p-b-small">Other Assets</div>
+                            <div className="badge-blue p-b-small">
+                                {this.formatAssets(this.props.StellarAccount.assets)}
+                            </div>
+                        </Fragment> : <Fragment>
+                            <div className="assets">Other Assets</div>
+                            <div className='faded'>
+                                You currently do not own any other assets.
+                            </div>
+                        </Fragment>
+                    }
+                </Fragment>
             </CardText>
         </Card>
 
@@ -197,7 +183,7 @@ export default compose(
         (state) => ({
             Account: state.Account,
             Assets: state.Assets,
-            strAccount: state.accountInfo.account.account,
+            StellarAccount: state.StellarAccount,
             appUi: state.appUi,
         }),
         // map dispatch to props.
