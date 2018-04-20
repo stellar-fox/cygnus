@@ -16,25 +16,21 @@ import "./BankAppBarItems.css"
 export default connect(
     // map state to props.
     (state) => ({
-        accountExists: state.accountInfo.exists,
-        homeDomain:
-            state.accountInfo.account  &&
-            state.accountInfo.account.account.home_domain,
+        StellarAccount: state.StellarAccount,
         publicKey: state.LedgerHQ.publicKey,
     })
 )(
     ({
-        accountExists,
-        homeDomain,
+        StellarAccount,
         publicKey,
     }) =>
         <div className="app-bar-items">
             <div className="app-bar-title">
                 <div className="bar-title-account">
                     {
-                        accountExists && homeDomain ?
+                        StellarAccount.accountId && StellarAccount.homeDomain ?
                             <div className="account-home-domain">
-                                {homeDomain}
+                                {StellarAccount.homeDomain}
                             </div> :
                             <div>Account Number</div>
                     }

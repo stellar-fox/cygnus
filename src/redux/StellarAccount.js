@@ -45,6 +45,8 @@ export const reducer = createReducer(initState)({
             (current.asset_type === "native")).balance,
         assets: action.account.balances.filter((current) =>
             (current.asset_type !== "native")),
+        homeDomain: action.account.home_domain ?
+            action.account.home_domain : null,
     }),
 
 
