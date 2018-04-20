@@ -60,20 +60,6 @@ export const setAccountPayments = (state) => ({
 
 
 // ...
-export const setAccountTransactions = (state) => ({
-    type: "SET_ACCOUNT_TRANSACTIONS",
-    payload: state,
-})
-
-
-// ...
-export const setStreamer = (streamer) => ({
-    type: "SET_STREAMER",
-    payload: streamer,
-})
-
-
-// ...
 export const setAccountRegistered = (state) => ({
     type: "SET_ACCOUNT_REGISTERED",
     payload: state,

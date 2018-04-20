@@ -28,8 +28,6 @@ import { withAssetManager } from "../AssetManager"
 
 import {
     setAccountPayments,
-    setAccountTransactions,
-    setStreamer,
     accountExistsOnLedger,
     accountMissingOnLedger,
     setModalLoading,
@@ -38,6 +36,7 @@ import {
     changeSnackbarState,
 } from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 import {
     Tab,
@@ -112,7 +111,6 @@ class Payments extends Component {
         this.props.updateLoadingMessage({
             message: "Loading payments data ...",
         })
-        this.props.setStreamer(this.paymentsStreamer.call(this))
 
         this.stellarServer
             .payments()
@@ -192,8 +190,8 @@ class Payments extends Component {
 
 
     // ...
-    componentWillUnmount = () =>
-        this.props.accountInfo.streamer.call(this)
+    // componentWillUnmount = () =>
+    //     this.props.accountInfo.streamer.call(this)
 
 
     // ...
@@ -201,7 +199,7 @@ class Payments extends Component {
         if (
             (this.props.state.txCursorLeft === null  &&
             this.props.state.txCursorRight === null)  ||
-            !this.props.accountInfo.transactions
+            !this.props.transactions
         ) {
             return this.stellarServer
                 .transactions()
@@ -210,7 +208,7 @@ class Payments extends Component {
                 .limit(5)
                 .call()
                 .then((transactionsResult) => {
-                    this.props.setAccountTransactions(transactionsResult)
+                    this.props.setStellarTransactions(transactionsResult.records)
                     this.updateTransactionsCursors(transactionsResult.records)
                 })
                 .catch(function (err) {
@@ -861,7 +859,7 @@ export default compose(
         (state) => ({
             state: state.Payments,
             Account: state.Account,
-            accountInfo: state.accountInfo,
+            transactions: state.StellarAccount.transactions,
             loadingModal: state.loadingModal,
             ui: state.ui,
             publicKey: state.LedgerHQ.publicKey,
@@ -869,9 +867,8 @@ export default compose(
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: PaymentsAction.setState,
+            setStellarTransactions: StellarAccountAction.setTransactions,
             setAccountPayments,
-            setAccountTransactions,
-            setStreamer,
             accountExistsOnLedger,
             accountMissingOnLedger,
             setModalLoading,
