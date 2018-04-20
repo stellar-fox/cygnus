@@ -11,7 +11,8 @@ const initState = {}
 
 // ...
 export const LOAD_STELLAR_ACCOUNT = "StellarAccount/LOAD_STELLAR_ACCOUNT"
-export const SET_STELLAR_TRANSACTIONS = "StellarAccount/SET_STELLAR_TRANSACTIONS"
+export const SET_PAYMENTS = "StellarAccount/SET_PAYMENTS"
+export const SET_TRANSACTIONS = "StellarAccount/SET_TRANSACTIONS"
 export const RESET_STATE = "@StellarAccount/RESET_STATE"
 
 
@@ -27,8 +28,15 @@ export const action = {
 
 
     // ...
+    setPayments: (payments) => ({
+        type: SET_PAYMENTS,
+        payments,
+    }),
+
+
+    // ...
     setTransactions: (transactions) => ({
-        type: SET_STELLAR_TRANSACTIONS,
+        type: SET_TRANSACTIONS,
         transactions,
     }),
 
@@ -59,7 +67,14 @@ export const reducer = createReducer(initState)({
 
 
     // ...
-    [SET_STELLAR_TRANSACTIONS]: (state, action) => ({
+    [SET_PAYMENTS]: (state, action) => ({
+        ...state,
+        payments: action.payments,
+    }),
+
+
+    // ...
+    [SET_TRANSACTIONS]: (state, action) => ({
         ...state,
         transactions: action.transactions,
     }),

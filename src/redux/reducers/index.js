@@ -1,7 +1,6 @@
 import {
     uiReducer,
 } from "./mono-reducer"
-import AccountInfoReducer from "./account-info-reducer"
 import LoadingModalReducer from "./loading-modal-reducer"
 import UiStateReducer from "./ui-state-reducer"
 
@@ -20,7 +19,6 @@ import { reducer as RouterReducer } from "../StellarRouter"
 
 // ...
 export default {
-    accountInfo: AccountInfoReducer,
     loadingModal: LoadingModalReducer,
     ui: UiStateReducer,
     appUi: uiReducer,

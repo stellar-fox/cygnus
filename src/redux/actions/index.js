@@ -53,13 +53,6 @@ export const hideAlert = (state) => ({
 
 
 // ...
-export const setAccountPayments = (state) => ({
-    type: "SET_ACCOUNT_PAYMENTS",
-    payload: state,
-})
-
-
-// ...
 export const setAccountRegistered = (state) => ({
     type: "SET_ACCOUNT_REGISTERED",
     payload: state,

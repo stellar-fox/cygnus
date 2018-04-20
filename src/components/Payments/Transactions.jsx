@@ -72,7 +72,7 @@ class Transactions extends Component {
                     this.props.setState({
                         txPrevDisabled: false,
                     })
-                    this.props.setStellarTransactions(transactionsResult.records)
+                    this.props.setTransactions(transactionsResult.records)
                     this.props.updateTransactionsCursors(
                         transactionsResult.records
                     )
@@ -103,7 +103,7 @@ class Transactions extends Component {
                         txNextDisabled: false,
                     })
                     transactionsResult.records.reverse()
-                    this.props.setStellarTransactions(transactionsResult.records)
+                    this.props.setTransactions(transactionsResult.records)
                     this.props.updateTransactionsCursors(
                         transactionsResult.records
                     )
@@ -257,7 +257,7 @@ export default connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: PaymentsAction.setState,
-        setStellarTransactions: StellarAccountAction.setTransactions,
+        setTransactions: StellarAccountAction.setTransactions,
         changeSnackbarState,
     }, dispatch)
 )(Transactions)

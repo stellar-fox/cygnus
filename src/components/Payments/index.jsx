@@ -27,7 +27,6 @@ import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 
 import {
-    setAccountPayments,
     accountExistsOnLedger,
     accountMissingOnLedger,
     setModalLoading,
@@ -162,7 +161,7 @@ class Payments extends Component {
                         paymentsResult.records[index]
                             .domain = link.domain
                     })
-                    this.props.setAccountPayments(paymentsResult)
+                    this.props.setPayments(paymentsResult.records)
                     this.updateCursors(paymentsResult.records)
                     paymentsResult.records[0].effects().then((effects) => {
                         paymentsResult.records[0].transaction().then((tx) => {
@@ -190,11 +189,6 @@ class Payments extends Component {
 
 
     // ...
-    // componentWillUnmount = () =>
-    //     this.props.accountInfo.streamer.call(this)
-
-
-    // ...
     getTransactions = () => {
         if (
             (this.props.state.txCursorLeft === null  &&
@@ -208,7 +202,7 @@ class Payments extends Component {
                 .limit(5)
                 .call()
                 .then((transactionsResult) => {
-                    this.props.setStellarTransactions(transactionsResult.records)
+                    this.props.setTransactions(transactionsResult.records)
                     this.updateTransactionsCursors(transactionsResult.records)
                 })
                 .catch(function (err) {
@@ -372,7 +366,7 @@ class Payments extends Component {
                                     paymentsResult.records[index]
                                         .domain = link.domain
                                 })
-                                this.props.setAccountPayments(paymentsResult)
+                                this.props.setPayments(paymentsResult.records)
                                 this.updateCursors(paymentsResult.records)
                                 paymentsResult.records[0]
                                     .effects().then((effects) => {
@@ -867,8 +861,8 @@ export default compose(
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: PaymentsAction.setState,
-            setStellarTransactions: StellarAccountAction.setTransactions,
-            setAccountPayments,
+            setTransactions: StellarAccountAction.setTransactions,
+            setPayments: StellarAccountAction.setPayments,
             accountExistsOnLedger,
             accountMissingOnLedger,
             setModalLoading,

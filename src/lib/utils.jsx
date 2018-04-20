@@ -509,17 +509,16 @@ export const dynamicImportReducers = async () => {
 // and finally remove this completely when there is no more legacy...
 export const dynamicImportLegacyStuff = async () => {
     let [
-        actions, accountInfo,
+        actions,
         loadingModal, mono, uiState,
     ] = await Promise.all([
         import("../redux/actions"),
-        import("../redux/reducers/account-info-reducer"),
         import("../redux/reducers/loading-modal-reducer"),
         import("../redux/reducers/mono-reducer"),
         import("../redux/reducers/ui-state-reducer"),
     ])
     return {
-        actions, accountInfo,
+        actions,
         loadingModal, mono, uiState,
     }
 }

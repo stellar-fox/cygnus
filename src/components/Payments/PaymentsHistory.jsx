@@ -17,9 +17,9 @@ import { gravatarLink } from "../../lib/deneb"
 
 import {
     changeSnackbarState,
-    setAccountPayments,
 } from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 import { ListItem } from "material-ui/List"
 import Avatar from "material-ui/Avatar"
@@ -48,11 +48,9 @@ class PaymentsHistory extends Component {
         stellarServer: PropTypes.object.isRequired,
         state: PropTypes.object.isRequired,
         setState: PropTypes.func.isRequired,
-        accountInfo: PropTypes.object.isRequired,
         loginManager: PropTypes.object.isRequired,
         handlePaymentClick: PropTypes.func.isRequired,
         decodeEffectType: PropTypes.func.isRequired,
-        setAccountPayments: PropTypes.func.isRequired,
         updateCursors: PropTypes.func.isRequired,
     }
 
@@ -109,7 +107,7 @@ class PaymentsHistory extends Component {
                         this.props.setState({
                             prevDisabled: false,
                         })
-                        this.props.setAccountPayments(paymentsResult)
+                        this.props.setPayments(paymentsResult.records)
                         this.props.updateCursors(paymentsResult.records)
                     } else {
                         this.noMorePayments({ nextDisabled: true, })
@@ -176,7 +174,7 @@ class PaymentsHistory extends Component {
                             nextDisabled: false,
                         })
                         paymentsResult.records.reverse()
-                        this.props.setAccountPayments(paymentsResult)
+                        this.props.setPayments(paymentsResult.records)
                         this.props.updateCursors(paymentsResult.records)
                     } else {
                         this.noMorePayments({ prevDisabled: true, })
@@ -273,10 +271,10 @@ class PaymentsHistory extends Component {
             <div className="flex-row-space-between">
                 <div className="flex-row-column">
                     {
-                        this.props.accountInfo.payments ?
+                        this.props.payments ?
                             <SelectableList defaultValue={1}>
                                 {
-                                    this.props.accountInfo.payments.records.map(
+                                    this.props.payments.map(
                                         (payment, index) =>
                                             <div
                                                 key={payment.id}
@@ -420,15 +418,15 @@ export default compose(
         // map state to props.
         (state) => ({
             state: state.Payments,
-            accountInfo: state.accountInfo,
+            payments: state.StellarAccount.payments,
             Account: state.Account,
             publicKey: state.LedgerHQ.publicKey,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: PaymentsAction.setState,
+            setPayments: StellarAccountAction.setPayments,
             changeSnackbarState,
-            setAccountPayments,
         }, dispatch)
     )
 )(PaymentsHistory)
