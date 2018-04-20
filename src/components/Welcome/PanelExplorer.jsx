@@ -196,9 +196,7 @@ class PanelExplorer extends Component {
 // ...
 export default connect(
     // map state to props.
-    (state) => ({
-        accountInfo: state.accountInfo,
-    }),
+    (_state) => ({}),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setLedgerPublicKey: LedgerHQAction.setPublicKey,
