@@ -60,13 +60,19 @@ export default connect(
         render = () => (
             ({ modals, }) =>
                 <AlertWithDismiss
-                    open={modals.alertWithDismiss ?
-                        modals.alertWithDismiss.showing : false}
+                    open={
+                        modals.alertWithDismiss ?
+                            modals.alertWithDismiss.showing : false
+                    }
                     onDismiss={this.onDismiss}
-                    title={modals.alertWithDismiss ?
-                        modals.alertWithDismiss.title : false}
-                    content={modals.alertWithDismiss ?
-                        modals.alertWithDismiss.content : false}
+                    title={
+                        modals.alertWithDismiss ?
+                            modals.alertWithDismiss.title : false
+                    }
+                    content={
+                        modals.alertWithDismiss ?
+                            modals.alertWithDismiss.content : false
+                    }
                 />
         )(this.props.appUi)
     }

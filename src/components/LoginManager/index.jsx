@@ -13,7 +13,8 @@ import { action as LoginManagerAction } from "../../redux/LoginManager"
 
 
 
-// react's LoginManager context
+
+// LoginManager context
 const LoginManagerContext = React.createContext({})
 
 
