@@ -96,12 +96,14 @@ class Balances extends Component {
             paymentsStreamer: paymentsStreamer(
                 this.props.publicKey,
                 this.props.changeSnackbarState,
-                this.props.accountExistsOnLedger
+                this.props.accountExistsOnLedger,
+                this.props.updateAccountTree,
             ),
             operationsStreamer: operationsStreamer(
                 this.props.publicKey,
                 this.props.changeSnackbarState,
-                this.props.accountExistsOnLedger
+                this.props.accountExistsOnLedger,
+                this.props.updateAccountTree,
             ),
         })
         if (!this.props.StellarAccount.accountId) {

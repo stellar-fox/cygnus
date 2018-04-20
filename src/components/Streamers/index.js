@@ -8,7 +8,7 @@ import {
 
 // ...
 export const paymentsStreamer = (
-    publicKey, changeSnackbarState, accountExistsOnLedger
+    publicKey, changeSnackbarState, accountExistsOnLedger, updateAccountTree
 ) =>
     payments().stream({
         onmessage: (message) => {
@@ -31,14 +31,20 @@ export const paymentsStreamer = (
                 open: true,
                 message: "Payment received.",
             }) && loadAccount(publicKey).then(
-                account => accountExistsOnLedger({ account, })
+                account => {
+                    accountExistsOnLedger({ account, })
+                    updateAccountTree(account)
+                }
             )
 
             SENT.some(el => el) && changeSnackbarState({
                 open: true,
                 message: "Payment sent.",
             }) && loadAccount(publicKey).then(
-                account => accountExistsOnLedger({ account, })
+                account => {
+                    accountExistsOnLedger({ account, })
+                    updateAccountTree(account)
+                }
             )
         },
     })
@@ -48,11 +54,11 @@ export const paymentsStreamer = (
 
 // ...
 export const operationsStreamer = (
-    publicKey, changeSnackbarState, accountExistsOnLedger
+    publicKey, changeSnackbarState, accountExistsOnLedger, updateAccountTree
 ) =>
     operations().stream({
         onmessage: (message) => {
-            const HOME_DOMAIN_ADD = [
+            const HOME_DOMAIN_UPDATE = [
                 (message.type === "set_options" &&
                     message.source_account === publicKey &&
                     message.home_domain
@@ -66,18 +72,24 @@ export const operationsStreamer = (
                 ),
             ]
 
-            HOME_DOMAIN_ADD.some(el => el) && changeSnackbarState({
+            HOME_DOMAIN_UPDATE.some(el => el) && changeSnackbarState({
                 open: true,
                 message: "Account domain updated.",
             }) && loadAccount(publicKey).then(
-                account => accountExistsOnLedger({ account, })
+                account => {
+                    accountExistsOnLedger({ account, })
+                    updateAccountTree(account)
+                }
             )
 
             HOME_DOMAIN_REMOVE.some(el => el) && changeSnackbarState({
                 open: true,
                 message: "Account domain removed.",
             }) && loadAccount(publicKey).then(
-                account => accountExistsOnLedger({ account, })
+                account => {
+                    accountExistsOnLedger({ account, })
+                    updateAccountTree(account)
+                }
             )
         },
     })
