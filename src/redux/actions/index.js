@@ -25,13 +25,6 @@ export const updateLoadingMessage = (state) => ({
 
 
 // ...
-export const logOut = (state) => ({
-    type: "LOG_OUT",
-    payload: state,
-})
-
-
-// ...
 export const hideAlert = (state) => ({
     type: "HIDE_ALERT",
     payload: state,
