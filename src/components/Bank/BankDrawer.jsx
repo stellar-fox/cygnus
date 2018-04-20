@@ -82,7 +82,7 @@ const bankDrawerStyle = {
 export default connect(
     // map state to props.
     (state) => ({
-        accountInfo: state.accountInfo,
+        accountExists: !!state.StellarAccount.accountId,
         drawerVisible: state.Bank.drawerVisible,
     })
 )(
@@ -90,20 +90,20 @@ export default connect(
 
         // ...
         static propTypes = {
-            accountInfo: PropTypes.object.isRequired,
+            accountExists: PropTypes.bool.isRequired,
             drawerVisible: PropTypes.bool.isRequired,
         }
 
 
         // ...
         render = () => (
-            ({ drawerVisible, accountInfo, }) =>
+            ({ drawerVisible, accountExists, }) =>
                 <Drawer
                     containerStyle={bankDrawerStyle}
                     open={drawerVisible}
                 >
                     <BalancesNavLink />
-                    <PaymentsNavLink show={accountInfo.exists} />
+                    <PaymentsNavLink show={accountExists} />
                     <AccountNavLink />
                 </Drawer>
         )(this.props)
