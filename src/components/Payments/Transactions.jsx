@@ -10,9 +10,9 @@ import {
 
 import {
     changeSnackbarState,
-    setAccountTransactions,
 } from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 import IconButton from "material-ui/IconButton"
 import {
@@ -50,7 +50,6 @@ class Transactions extends Component {
         stellarServer: PropTypes.object.isRequired,
         state: PropTypes.object.isRequired,
         setState: PropTypes.func.isRequired,
-        accountInfo: PropTypes.object.isRequired,
         updateTransactionsCursors: PropTypes.func.isRequired,
     }
 
@@ -73,7 +72,7 @@ class Transactions extends Component {
                     this.props.setState({
                         txPrevDisabled: false,
                     })
-                    this.props.setAccountTransactions(transactionsResult)
+                    this.props.setStellarTransactions(transactionsResult.records)
                     this.props.updateTransactionsCursors(
                         transactionsResult.records
                     )
@@ -104,7 +103,7 @@ class Transactions extends Component {
                         txNextDisabled: false,
                     })
                     transactionsResult.records.reverse()
-                    this.props.setAccountTransactions(transactionsResult)
+                    this.props.setStellarTransactions(transactionsResult.records)
                     this.props.updateTransactionsCursors(
                         transactionsResult.records
                     )
@@ -140,7 +139,7 @@ class Transactions extends Component {
                 <div className="account-subtitle">Newest transactions shown as first.</div>
                 <div className="p-t" />
                 {
-                    this.props.accountInfo.transactions ?
+                    this.props.transactions ?
                         <Table style={styles.table}>
                             <TableHeader
                                 className="tx-table-header"
@@ -173,7 +172,7 @@ class Transactions extends Component {
                             </TableHeader>
                             <TableBody displayRowCheckbox={false}>
                                 {
-                                    this.props.accountInfo.transactions.records.map(
+                                    this.props.transactions.map(
                                         (tx, index) => (
                                             <TableRow
                                                 selectable={false}
@@ -194,8 +193,7 @@ class Transactions extends Component {
                                                             tx.source_account ===
                                                                 this
                                                                     .props
-                                                                    .accountInfo
-                                                                    .pubKey ?
+                                                                    .publicKey ?
                                                                 "You" :
                                                                 "Them"
                                                         }
@@ -253,13 +251,13 @@ export default connect(
     // map state to props.
     (state) => ({
         state: state.Payments,
-        accountInfo: state.accountInfo,
+        transactions: state.StellarAccount.transactions,
         publicKey: state.LedgerHQ.publicKey,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: PaymentsAction.setState,
+        setStellarTransactions: StellarAccountAction.setTransactions,
         changeSnackbarState,
-        setAccountTransactions,
     }, dispatch)
 )(Transactions)
