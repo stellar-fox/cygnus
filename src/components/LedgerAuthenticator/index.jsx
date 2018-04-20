@@ -43,14 +43,16 @@ class LedgerAuthenticator extends Component {
                 buttonDisabled: true,
             })
             publicKey = await getPublicKey(bip32Path)
-            this.props.setLedgerPublicKey(publicKey)
             this.props.setLedgerBip32Path(this.state.derivationPath)
+            this.props.setLedgerPublicKey(publicKey)
+            
             this.props.onConnected.call(this, {
                 publicKey,
                 softwareVersion,
                 bip32Path,
                 errorMessage: null,
             })
+
         } catch (ex) {
             this.setState({
                 buttonDisabled: false,

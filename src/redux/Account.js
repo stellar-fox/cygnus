@@ -13,6 +13,7 @@ const initState = {
     currency: "eur",
     exists: false,
     tabSelected: "Settings",
+    needsRegistration: false,
 }
 
 

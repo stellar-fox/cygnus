@@ -135,6 +135,7 @@ class Balances extends Component {
             }`
         ).then((response) => {
             this.props.setAccountRegistered(true)
+            this.props.setState({ needsRegistration: false, })
             axios.get(`${config.api}/account/${response.data.user_id}`)
                 .then((r) => {
                     this.props.setState({currency: r.data.data.currency,})
@@ -146,6 +147,7 @@ class Balances extends Component {
                     // nothing
                 })
         }).catch((_error) => {
+            this.props.setState({ needsRegistration: true, })
             // do nothing as this is only a check
         })
     }
@@ -372,8 +374,8 @@ class Balances extends Component {
                         </Modal>
 
                         {
-                            !accountInfo.registered  &&
-                            !loginManager.isLoggedIn() ?
+                            this.props.Account.needsRegistration  &&
+                            loginManager.isPayEnabled() ?
                                 <RegisterCard /> : null
                         }
 

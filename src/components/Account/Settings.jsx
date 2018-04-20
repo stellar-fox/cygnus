@@ -181,8 +181,7 @@ class Settings extends Component {
                 />
             </RadioButtonGroup>
 
-            {!this.props.accountInfo.registered &&
-                !this.props.loginManager.isLoggedIn() ?
+            {this.props.state.needsRegistration ?
                 <div>
                     <div className="p-t p-b" />
                     <div className="account-title p-t">
@@ -235,7 +234,6 @@ export default compose(
         // bind state to props.
         (state) => ({
             state: state.Account,
-            accountInfo: state.accountInfo,
             appUi: state.appUi,
             publicKey: state.LedgerHQ.publicKey,
             token: state.LoginManager.token,
