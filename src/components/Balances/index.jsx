@@ -104,7 +104,7 @@ class Balances extends Component {
                 this.props.accountExistsOnLedger
             ),
         })
-        if (!this.props.accountInfo.account) {
+        if (!this.props.StellarAccount.accountId) {
             this.props.setModalLoading()
             this.props.updateLoadingMessage({
                 message: "Searching for account ...",
@@ -305,7 +305,7 @@ class Balances extends Component {
 
     // ...
     render = () => (
-        ({appUi, publicKey, bip32Path, assetManager, accountInfo, loginManager, }) =>
+        ({appUi, publicKey, bip32Path, assetManager, loginManager, }) =>
             <Switch>
                 <Route exact path={this.rr(".")}>
                     <Fragment>
@@ -380,7 +380,7 @@ class Balances extends Component {
                         }
 
                         {
-                            accountInfo.exists ?
+                            this.props.StellarAccount.accountId ?
                                 <BalancesCard
                                     notImplemented={this.handleOpen}
                                 /> :
@@ -413,8 +413,8 @@ export default compose(
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
             Account: state.Account,
+            StellarAccount: state.StellarAccount,
             Balances: state.Balances,
-            accountInfo: state.accountInfo,
             appUi: state.appUi,
         }),
         // match dispatch to props.
