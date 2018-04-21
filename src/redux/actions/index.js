@@ -32,13 +32,6 @@ export const hideAlert = (state) => ({
 
 
 // ...
-export const setAccountRegistered = (state) => ({
-    type: "SET_ACCOUNT_REGISTERED",
-    payload: state,
-})
-
-
-// ...
 export const changeLoginState = (loginState) => ({
     type: ActionTypes.CHANGE_LOGIN_STATE,
     payload: loginState,
