@@ -8,7 +8,6 @@ import {
 import {
     emailValid,
     passwordValid,
-    extractPathIndex,
 } from "../../lib/utils"
 import md5 from "../../lib/md5"
 import LedgerAuthenticator from "../LedgerAuthenticator"
@@ -80,49 +79,29 @@ export default class Signup extends Component {
 
     // ...
     createAccount = async (ledgerData) => {
+        if (ledgerData.errorMessage) {
+            return false
+        }
         if (!ledgerData.errorCode) {
             try {
-                const userId = await Axios
-                    .post(`${config.api}/user/create/`, {
+                const userResp = await Axios.post(`${config.api}/user/create/`,
+                    {
                         email: this.state.email,
                         password: this.state.password,
-                    })
-                    .then((response) => {
-                        return response.data.id
-                    })
-                    .catch((error) => {
-                        this.setState({
-                            error: error.message,
-                        })
-                    })
+                    }
+                )
 
                 await Axios
                     .post(
-                        `${config.api}/account/create/${
-                            userId
-                        }/${ledgerData.publicKey}?path=${
-                            this.props.config &&
-                            this.props.config.useAsRegistrationForm ?
-                                ledgerData.bip32Path :
-                                extractPathIndex(ledgerData.bip32Path)
+                        `${config.api}/account/create/${userResp.data.id
+                        }/${ledgerData.publicKey}?path=${ledgerData.bip32Path
                         }&md5=${md5(this.state.email)}`
                     )
-                    .then((response) => {
-                        return response.data.account_id
-                    })
-                    .catch((error) => {
-                        this.setState({
-                            error: error.message,
-                        })
-                    })
 
-                const token = await Axios
+                const authResp = await Axios
                     .post(`${config.api}/user/authenticate/`, {
                         email: this.state.email,
                         password: this.state.password,
-                    })
-                    .then((response) => {
-                        return response.data.token
                     })
 
                 this.setState({
@@ -130,11 +109,11 @@ export default class Signup extends Component {
                     buttonDisabled: true,
                 })
 
-                this.props.onComplete.call(this, {
+                this.props.onComplete({
                     publicKey: ledgerData.publicKey,
                     bip32Path: ledgerData.bip32Path,
-                    userId,
-                    token,
+                    userId: userResp.data.id,
+                    token: authResp.data.token,
                 })
             } catch (error) {
                 this.setState({
