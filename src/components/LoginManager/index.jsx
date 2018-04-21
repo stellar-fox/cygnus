@@ -4,10 +4,6 @@ import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import hoistStatics from "hoist-non-react-statics"
 import { authenticate } from "./api"
-
-import {
-    changeLoginState,
-} from "../../redux/actions"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 
@@ -33,7 +29,6 @@ export default connect(
     (dispatch) => bindActionCreators({
         setApiToken: LoginManagerAction.setApiToken,
         setUserId: LoginManagerAction.setUserId,
-        changeLoginState,
         setLedgerPublicKey: LedgerHQAction.setPublicKey,
         setLedgerBip32Path: LedgerHQAction.setBip32Path,
     }, dispatch)
@@ -43,25 +38,13 @@ export default connect(
         // ...
         attemptLogin = async (email, password) => {
             const auth = await authenticate(email, password)
-
-            if (!auth.authenticated) {
-                this.props.changeLoginState({
-                    userId: null,
-                    token: null,
-                })
-            } else {
+            if (auth.authenticated) {
                 // consolidate credentials into LedgerHQ
                 this.props.setApiToken(auth.token)
                 this.props.setUserId(auth.user_id)
                 this.props.setLedgerPublicKey(auth.pubkey)
                 this.props.setLedgerBip32Path((auth.bip32Path).toString(10))
-
-                this.props.changeLoginState({
-                    userId: auth.user_id,
-                    token: auth.token,
-                })
             }
-
             return auth
         }
 

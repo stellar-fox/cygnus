@@ -4,7 +4,6 @@ import { connect } from "react-redux"
 import axios from "axios"
 
 import {
-    changeLoginState,
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
@@ -87,10 +86,6 @@ class PanelExplorer extends Component {
                                 this.props.setLedgerPublicKey(
                                     response.data.account_id
                                 )
-                                this.props.changeLoginState({
-                                    userId: null,
-                                    token: null,
-                                })
                                 this.props.setModalLoading()
                                 this.props.updateLoadingMessage({
                                     message: "Searching for Account ...",
@@ -126,10 +121,6 @@ class PanelExplorer extends Component {
         // Input is a valid Stellar public key
         else {
             this.props.setLedgerPublicKey(textInputValue)
-            this.props.changeLoginState({
-                userId: null,
-                token: null,
-            })
         }
 
     }
@@ -200,7 +191,6 @@ export default connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setLedgerPublicKey: LedgerHQAction.setPublicKey,
-        changeLoginState,
         setModalLoading,
         setModalLoaded,
         updateLoadingMessage,

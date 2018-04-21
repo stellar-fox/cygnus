@@ -5,7 +5,6 @@ import { connect } from "react-redux"
 import { TopBarSecurityMessage } from "../StellarFox/env"
 
 import {
-    changeLoginState,
     changeModalState,
 } from "../../redux/actions"
 
@@ -70,10 +69,6 @@ class Heading extends Component {
 
     // ...
     cancelLogin = () => {
-        this.props.changeLoginState({
-            userId: null,
-            token: null,
-        })
         this.hideSignupModal()
     }
 
@@ -204,7 +199,6 @@ export default connect(
         setLedgerBip32Path: LedgerHQAction.setBip32Path,
         setApiToken: LoginManagerAction.setApiToken,
         setUserId: LoginManagerAction.setUserId,
-        changeLoginState,
         changeModalState,
     }, dispatch)
 )(Heading)

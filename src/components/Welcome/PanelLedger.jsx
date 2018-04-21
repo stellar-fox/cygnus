@@ -2,14 +2,8 @@ import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import axios from "axios"
-
 import { config } from "../../config"
 import { ledgerSupportLink } from "../StellarFox/env"
-
-import {
-    changeLoginState,
-} from "../../redux/actions/"
-
 import Panel from "../Panel"
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
@@ -39,10 +33,6 @@ class PanelLedger extends Component {
                     ledgerParams.bip32Path}`
             )
             .then((response) => {
-                this.props.changeLoginState({
-                    userId: response.data.user_id,
-                    token: response.data.token,
-                })
                 this.props.setApiToken(response.data.token)
                 this.props.setUserId(response.data.user_id)
             })
@@ -55,13 +45,7 @@ class PanelLedger extends Component {
                 }
                 // User not found
                 if (error.response.status === 401) {
-                    this.props.changeLoginState({
-                        userId: null,
-                        token: null,
-                    })
-                } else {
-                    // eslint-disable-next-line no-console
-                    console.log(error.response.statusText)
+                    // do nothing for now
                 }
             })
     }
@@ -118,6 +102,5 @@ export default connect(
         setLedgerBip32Path: LedgerHQAction.setBip32Path,
         setApiToken: LoginManagerAction.setApiToken,
         setUserId: LoginManagerAction.setUserId,
-        changeLoginState,
     }, dispatch)
 )(PanelLedger)

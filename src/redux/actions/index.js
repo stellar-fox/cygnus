@@ -32,13 +32,6 @@ export const hideAlert = (state) => ({
 
 
 // ...
-export const changeLoginState = (loginState) => ({
-    type: ActionTypes.CHANGE_LOGIN_STATE,
-    payload: loginState,
-})
-
-
-// ...
 export const changeModalState = (modalState) => ({
     type: ActionTypes.CHANGE_MODAL_STATE,
     payload: modalState,

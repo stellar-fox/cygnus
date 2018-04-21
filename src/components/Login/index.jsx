@@ -1,18 +1,12 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import {
-    bindActionCreators,
-    compose,
-} from "redux"
+import { compose } from "redux"
 
 import { withLoginManager } from "../LoginManager"
 import {
     emailIsValid,
     passwordIsValid,
 } from "./helper"
-import {
-    changeLoginState,
-} from "../../redux/actions"
 
 import LinearProgress from "material-ui/LinearProgress"
 import InputField from "../../lib/common/InputField"
@@ -73,10 +67,6 @@ class Login extends Component {
                 }))
                 this.email.setState({ error: auth.error, })
                 this.password.setState({ error: auth.error, })
-                this.props.changeLoginState({
-                    userId: null,
-                    token: null,
-                })
             }
         })
 
@@ -132,10 +122,5 @@ export default compose(
         (state) => ({
             auth: state.auth,
         }),
-
-        // map dispatch to props.
-        (dispatch) => bindActionCreators({
-            changeLoginState,
-        }, dispatch)
     )
 )(Login)

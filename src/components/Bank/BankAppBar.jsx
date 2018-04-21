@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
 import {
-    changeLoginState,
     resetUiState,
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
@@ -46,7 +45,6 @@ export default connect(
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        changeLoginState,
         resetAccountState: AccountAction.resetState,
         resetLedgerHQState: LedgerHQAction.resetState,
         resetLoginManagerState: LoginManagerAction.resetState,
@@ -61,7 +59,6 @@ export default connect(
         // ...
         static propTypes = {
             currentView: PropTypes.string.isRequired,
-            changeLoginState: PropTypes.func.isRequired,
             resetUiState: PropTypes.func.isRequired,
             toggleDrawer: PropTypes.func.isRequired,
         }
@@ -69,10 +66,6 @@ export default connect(
 
         // ...
         handleLogOutClick = () => {
-            this.props.changeLoginState({
-                userId: null,
-                token: null,
-            })
             this.props.resetUiState()
             this.props.resetAccountState()
             this.props.resetLedgerHQState()

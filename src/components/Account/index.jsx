@@ -21,7 +21,6 @@ import {
 import {
     hideAlert,
     changeModalState,
-    changeLoginState,
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
@@ -235,7 +234,6 @@ export default compose(
             setUserId: LoginManagerAction.setUserId,
             hideAlert,
             changeModalState,
-            changeLoginState,
         }, dispatch)
     )
 )(Account)
