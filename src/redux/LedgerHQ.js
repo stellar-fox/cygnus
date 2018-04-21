@@ -23,7 +23,6 @@ export const SET_SOFTWARE_VERSION = "LedgerHQ/SET_SOFTWARE_VERSION"
 export const SET_PUBLIC_KEY = "LedgerHQ/SET_PUBLIC_KEY"
 export const SET_BIP32_PATH = "LedgerHQ/SET_BIP32_PATH"
 export const SET_CONNECTED = "LedgerHQ/SET_CONNECTED"
-export const SET_STATUS = "LedgerHQ/SET_STATUS"
 
 
 
@@ -71,27 +70,17 @@ export const action = {
 
 
     // ...
-    setStatus: (status="") => ({
-        type: SET_STATUS,
-        status,
-    }),
-
-
-    // ...
     getSoftwareVersion: () =>
         async (dispatch, _getState) => {
             let version = null
             try {
-                dispatch(action.setStatus("Waiting for device ..."))
                 dispatch(action.setSoftwareVersion())
                 dispatch(action.setConnected(false))
                 version = await ledgerGetSoftwareVersion()
                 dispatch(action.setSoftwareVersion(version))
                 dispatch(action.setConnected(true))
-                dispatch(action.setStatus(`Connected. Version: ${version}`))
                 return version
             } catch (ex) {
-                dispatch(action.setStatus(`Error: ${ex.message}`))
                 dispatch(action.setSoftwareVersion())
                 dispatch(action.setConnected(false))
                 throw ex
@@ -144,11 +133,5 @@ export const reducer = createReducer(initState)({
         bip32Path: action.bip32Path,
     }),
 
-    
-    // ...
-    [SET_STATUS]: (state, action) => ({
-        ...state,
-        status: action.status,
-    }),
 
 })

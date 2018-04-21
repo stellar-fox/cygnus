@@ -22,6 +22,7 @@ class LedgerAuthenticator extends Component {
         pathEditable: false,
         useDefaultAccount: true,
         buttonDisabled: false,
+        status: "",
     }
 
 
@@ -34,13 +35,17 @@ class LedgerAuthenticator extends Component {
         let bip32Path = this.formBip32Path(),
             softwareVersion = null,
             publicKey = null
-        this.setState({ buttonDisabled: true, })
+        this.setState({
+            buttonDisabled: true,
+            status: "Waiting for device ...",
+        })
         try {
             softwareVersion = await this.props.getSoftwareVersion()    
             publicKey = await getPublicKey(bip32Path)
         } catch (ex) {
             this.setState({
                 buttonDisabled: false,
+                status: `${ex.message}`,
             })
             this.props.onConnected.call(this, {
                 publicKey: null,
@@ -50,7 +55,7 @@ class LedgerAuthenticator extends Component {
             })
             return false
         }
-        
+        this.setState({ status: `Connected. Version: ${softwareVersion}`, })
         this.props.onConnected.call(this, {
             publicKey,
             softwareVersion,
@@ -173,7 +178,7 @@ class LedgerAuthenticator extends Component {
 
             <div style={{marginTop: "2px",}} className="p-t-small">
                 <div className="tiny placeholder-tiny">
-                    {this.props.LedgerHQ.status}
+                    {this.state.status}
                 </div>
             </div>
         </Fragment>
