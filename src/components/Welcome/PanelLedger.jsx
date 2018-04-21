@@ -5,15 +5,15 @@ import axios from "axios"
 
 import { config } from "../../config"
 import { ledgerSupportLink } from "../StellarFox/env"
-import { extractPathIndex } from "../../lib/utils"
 
 import {
     changeLoginState,
-    setAccountRegistered,
 } from "../../redux/actions/"
 
 import Panel from "../Panel"
 import LedgerAuthenticator from "../LedgerAuthenticator"
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
+import { action as LoginManagerAction } from "../../redux/LoginManager"
 
 
 
@@ -30,20 +30,21 @@ class PanelLedger extends Component {
             return
         }
 
+        this.props.setLedgerBip32Path(ledgerParams.bip32Path)
+        this.props.setLedgerPublicKey(ledgerParams.publicKey)
+
         axios
             .post(
-                `${config.api}/user/ledgerauth/${
-                    ledgerParams.publicKey
-                }/${
-                    extractPathIndex(ledgerParams.bip32Path)
-                }`
+                `${config.api}/user/ledgerauth/${ledgerParams.publicKey}/${
+                    ledgerParams.bip32Path}`
             )
             .then((response) => {
-                this.props.setAccountRegistered(true)
                 this.props.changeLoginState({
                     userId: response.data.user_id,
                     token: response.data.token,
                 })
+                this.props.setApiToken(response.data.token)
+                this.props.setUserId(response.data.user_id)
             })
             .catch((error) => {
                 // This will happen when back-end is offline.
@@ -54,7 +55,6 @@ class PanelLedger extends Component {
                 }
                 // User not found
                 if (error.response.status === 401) {
-                    this.props.setAccountRegistered(false)
                     this.props.changeLoginState({
                         userId: null,
                         token: null,
@@ -114,7 +114,10 @@ export default connect(
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        setLedgerPublicKey: LedgerHQAction.setPublicKey,
+        setLedgerBip32Path: LedgerHQAction.setBip32Path,
+        setApiToken: LoginManagerAction.setApiToken,
+        setUserId: LoginManagerAction.setUserId,
         changeLoginState,
-        setAccountRegistered,
     }, dispatch)
 )(PanelLedger)
