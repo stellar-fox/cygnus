@@ -21,10 +21,10 @@ import {
 import {
     hideAlert,
     changeModalState,
-    setAccountRegistered,
     changeLoginState,
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
+import { action as LoginManagerAction } from "../../redux/LoginManager"
 
 import {
     Tab,
@@ -98,11 +98,9 @@ class Account extends Component {
     // ...
     completeRegistration = (loginObj) => {
         this.changeButtonText()
-        this.props.setAccountRegistered(true)
-        this.props.changeLoginState({
-            userId: loginObj.userId,
-            token: loginObj.token,
-        })
+        this.props.setState({ needsRegistration: false, })
+        this.props.setApiToken(loginObj.token)
+        this.props.setUserId(loginObj.userId)
     }
 
 
@@ -233,9 +231,10 @@ export default compose(
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
+            setApiToken: LoginManagerAction.setApiToken,
+            setUserId: LoginManagerAction.setUserId,
             hideAlert,
             changeModalState,
-            setAccountRegistered,
             changeLoginState,
         }, dispatch)
     )

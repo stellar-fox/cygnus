@@ -14,6 +14,7 @@ import "number-to-text/converters/en-us"
 import { action as AccountAction } from "../../redux/Account"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as BalancesAction } from "../../redux/Balances"
+import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
     insertPathIndex,
@@ -32,7 +33,6 @@ import {
     resolvePath,
 } from "../StellarRouter"
 import {
-    setAccountRegistered,
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
@@ -132,7 +132,6 @@ class Balances extends Component {
                 this.props.bip32Path
             }`
         ).then((response) => {
-            this.props.setAccountRegistered(true)
             this.props.setState({ needsRegistration: false, })
             axios.get(`${config.api}/account/${response.data.user_id}`)
                 .then((r) => {
@@ -290,17 +289,15 @@ class Balances extends Component {
     // ...
     completeRegistration = (loginObj) => {
         this.changeButtonText()
-        this.props.setAccountRegistered(true)
-        this.props.changeLoginState({
-            userId: loginObj.userId,
-            token: loginObj.token,
-        })
+        this.props.setState({ needsRegistration: false, })
+        this.props.setApiToken(loginObj.token)
+        this.props.setUserId(loginObj.userId)
     }
 
 
     // ...
     render = () => (
-        ({appUi, publicKey, bip32Path, assetManager, loginManager, }) =>
+        ({appUi, bip32Path, assetManager, loginManager, publicKey, }) =>
             <Switch>
                 <Route exact path={this.rr(".")}>
                     <Fragment>
@@ -418,7 +415,9 @@ export default compose(
             updateAccountTree: StellarAccountAction.loadStellarAccount,
             setStateForBalances: BalancesAction.setState,
             resetBalancesState: BalancesAction.resetState,
-            setAccountRegistered,
+            setApiToken: LoginManagerAction.setApiToken,
+            setUserId: LoginManagerAction.setUserId,
+
             setModalLoading,
             setModalLoaded,
             updateLoadingMessage,

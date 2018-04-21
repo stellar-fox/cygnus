@@ -7,12 +7,15 @@ import { TopBarSecurityMessage } from "../StellarFox/env"
 import {
     changeLoginState,
     changeModalState,
-    setAccountRegistered,
 } from "../../redux/actions"
 
 import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
+
+import { action as AccountAction } from "../../redux/Account"
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
+import { action as LoginManagerAction } from "../../redux/LoginManager"
 
 
 
@@ -57,11 +60,11 @@ class Heading extends Component {
     // ...
     login = () => {
         this.hideSignupModal()
-        this.props.setAccountRegistered(true)
-        this.props.changeLoginState({
-            userId: this.state.loginObj.userId,
-            token: this.state.loginObj.token,
-        })
+        this.props.setState({ needsRegistration: false, })
+        this.props.setLedgerBip32Path(this.state.loginObj.bip32Path)
+        this.props.setLedgerPublicKey(this.state.loginObj.publicKey)
+        this.props.setApiToken(this.state.loginObj.token)
+        this.props.setUserId(this.state.loginObj.userId) 
     }
 
 
@@ -196,8 +199,12 @@ export default connect(
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        setState: AccountAction.setState,
+        setLedgerPublicKey: LedgerHQAction.setPublicKey,
+        setLedgerBip32Path: LedgerHQAction.setBip32Path,
+        setApiToken: LoginManagerAction.setApiToken,
+        setUserId: LoginManagerAction.setUserId,
         changeLoginState,
         changeModalState,
-        setAccountRegistered,
     }, dispatch)
 )(Heading)
