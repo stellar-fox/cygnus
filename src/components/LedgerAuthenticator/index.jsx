@@ -3,9 +3,6 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { bip32Prefix } from "../StellarFox/env"
 import { getPublicKey } from "../../lib/ledger"
-import {
-    setAccountRegistered,
-} from "../../redux/actions"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import Input from "../../lib/common/Input"
 import Toggle from "../../lib/common/Toggle"
@@ -37,22 +34,10 @@ class LedgerAuthenticator extends Component {
         let bip32Path = this.formBip32Path(),
             softwareVersion = null,
             publicKey = null
+        this.setState({ buttonDisabled: true, })
         try {
-            softwareVersion = await this.props.getSoftwareVersion()
-            this.setState({
-                buttonDisabled: true,
-            })
+            softwareVersion = await this.props.getSoftwareVersion()    
             publicKey = await getPublicKey(bip32Path)
-            this.props.setLedgerBip32Path(this.state.derivationPath)
-            this.props.setLedgerPublicKey(publicKey)
-            
-            this.props.onConnected.call(this, {
-                publicKey,
-                softwareVersion,
-                bip32Path,
-                errorMessage: null,
-            })
-
         } catch (ex) {
             this.setState({
                 buttonDisabled: false,
@@ -63,7 +48,15 @@ class LedgerAuthenticator extends Component {
                 bip32Path: null,
                 errorMessage: ex.message,
             })
+            return false
         }
+        
+        this.props.onConnected.call(this, {
+            publicKey,
+            softwareVersion,
+            bip32Path: this.state.derivationPath,
+            errorMessage: null,
+        })
     }
 
 
@@ -170,7 +163,7 @@ class LedgerAuthenticator extends Component {
                     <Button
                         disabled={this.state.buttonDisabled}
                         onClick={this.initQueryDevice}
-                        primary={this.props.className.match(/reverse/)}
+                        primary={!!this.props.className.match(/reverse/)}
                         secondary={!this.props.className.match(/reverse/)}
                         fullWidth={true}
                         label="Authenticate"
@@ -192,15 +185,11 @@ class LedgerAuthenticator extends Component {
 export default connect(
     // map state to props.
     (state) => ({
-        auth: state.auth,
         LedgerHQ: state.LedgerHQ,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         getSoftwareVersion: LedgerHQAction.getSoftwareVersion,
-        setLedgerPublicKey: LedgerHQAction.setPublicKey,
-        setLedgerBip32Path: LedgerHQAction.setBip32Path,
         resetLedgerState: LedgerHQAction.resetState,
-        setAccountRegistered,
     }, dispatch)
 )(LedgerAuthenticator)
