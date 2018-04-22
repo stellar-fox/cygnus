@@ -2,7 +2,6 @@ import {
     uiReducer,
 } from "./mono-reducer"
 import LoadingModalReducer from "./loading-modal-reducer"
-import UiStateReducer from "./ui-state-reducer"
 
 import { reducer as AccountReducer } from "../Account"
 import { reducer as AssetManagerReducer } from "../AssetManager"
@@ -20,7 +19,6 @@ import { reducer as RouterReducer } from "../StellarRouter"
 // ...
 export default {
     loadingModal: LoadingModalReducer,
-    ui: UiStateReducer,
     appUi: uiReducer,
 
     Account: AccountReducer,

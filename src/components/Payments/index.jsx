@@ -851,7 +851,6 @@ export default compose(
             Account: state.Account,
             transactions: state.StellarAccount.transactions,
             loadingModal: state.loadingModal,
-            ui: state.ui,
             publicKey: state.LedgerHQ.publicKey,
         }),
         // map dispatch to props.
