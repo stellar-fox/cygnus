@@ -169,12 +169,7 @@ class Balances extends Component {
 
 
     // ...
-    hideTxCompleteModal = () =>
-        this.props.changeModalState({
-            txCompleteMsg: {
-                showing: false,
-            },
-        })
+    hideTxCompleteModal = () => this.props.hideModal("txComplete")
 
 
     // ...
@@ -200,9 +195,7 @@ class Balances extends Component {
                 })
             }
 
-            this.props.changeModalState({
-                txConfirmMsg: { showing: true, },
-            })
+            this.props.showModal("txConfirm")
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
@@ -210,9 +203,7 @@ class Balances extends Component {
                 tx
             )
 
-            this.props.changeModalState({
-                txBroadcastMsg: { showing: true, },
-            })
+            this.props.showModal("txBroadcast")
 
             const broadcast = await submitTransaction(signedTx)
 
@@ -225,9 +216,7 @@ class Balances extends Component {
                 transactionType: null,
             })
 
-            this.props.changeModalState({
-                txCompleteMsg: { showing: true, },
-            })
+            this.props.showModal("txComplete")
 
             this.props.togglePaymentCard({
                 payment: {
@@ -321,8 +310,8 @@ class Balances extends Component {
 
                         <Modal
                             open={
-                                appUi.modals.txConfirmMsg ?
-                                    appUi.modals.txConfirmMsg.showing : false
+                                this.props.Modal.modalId === "txConfirm" &&
+                                this.props.Modal.visible
                             }
                             title="Confirm on Hardware Device"
                         >
@@ -331,9 +320,8 @@ class Balances extends Component {
 
                         <Modal
                             open={
-                                appUi.modals.txBroadcastMsg ?
-                                    appUi.modals.txBroadcastMsg.showing :
-                                    false
+                                this.props.Modal.modalId === "txBroadcast" &&
+                                this.props.Modal.visible
                             }
                             title="Transmiting ..."
                         >
@@ -342,9 +330,8 @@ class Balances extends Component {
 
                         <Modal
                             open={
-                                appUi.modals.txCompleteMsg ?
-                                    appUi.modals.txCompleteMsg.showing :
-                                    false
+                                this.props.Modal.modalId === "txComplete" &&
+                                this.props.Modal.visible
                             }
                             title="Transaction Complete"
                             actions={[
@@ -415,6 +402,7 @@ export default compose(
             setUserId: LoginManagerAction.setUserId,
             popupSnackbar: SnackbarAction.popupSnackbar,
             hideModal: ModalAction.hideModal,
+            showModal: ModalAction.showModal,
 
             setModalLoading,
             setModalLoaded,
