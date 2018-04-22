@@ -13,11 +13,9 @@ import Toggle from "../../lib/common/Toggle"
 import { appName } from "../StellarFox/env"
 import { action as AccountAction } from "../../redux/Account"
 import { action as SnackbarAction } from "../../redux/Snackbar"
+import { action as ModalAction } from "../../redux/Modal"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
-import {
-    changeModalState,
-} from "../../redux/actions"
 
 
 
@@ -32,12 +30,7 @@ class Settings extends Component {
 
 
     // ...
-    showSignupModal = () =>
-        this.props.changeModalState({
-            signup: {
-                showing: true,
-            },
-        })
+    showSignupModal = () => this.props.showModal("signup")
 
 
     // ...
@@ -233,7 +226,6 @@ export default compose(
         // bind state to props.
         (state) => ({
             state: state.Account,
-            appUi: state.appUi,
             publicKey: state.LedgerHQ.publicKey,
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,
@@ -241,8 +233,8 @@ export default compose(
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
+            showModal: ModalAction.showModal,
             popupSnackbar: SnackbarAction.popupSnackbar,
-            changeModalState,
         }, dispatch)
     )
 )(Settings)

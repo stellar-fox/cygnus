@@ -16,6 +16,7 @@ import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as SnackbarAction } from "../../redux/Snackbar"
+import { action as ModalAction } from "../../redux/Modal"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
     insertPathIndex,
@@ -164,12 +165,7 @@ class Balances extends Component {
 
 
     // ...
-    hideSignupModal = () =>
-        this.props.changeModalState({
-            signup: {
-                showing: false,
-            },
-        })
+    hideSignupModal = () => this.props.hideModal("signup")
 
 
     // ...
@@ -302,8 +298,8 @@ class Balances extends Component {
                     <Fragment>
                         <Modal
                             open={
-                                appUi.modals.signup ?
-                                    appUi.modals.signup.showing : false
+                                this.props.Modal.modalId === "signup" &&
+                                this.props.Modal.visible
                             }
                             title="Opening Your Bank - Register Account"
                             actions={[
@@ -406,6 +402,7 @@ export default compose(
             Account: state.Account,
             StellarAccount: state.StellarAccount,
             Balances: state.Balances,
+            Modal: state.Modal,
             appUi: state.appUi,
         }),
         // match dispatch to props.
@@ -417,6 +414,7 @@ export default compose(
             setApiToken: LoginManagerAction.setApiToken,
             setUserId: LoginManagerAction.setUserId,
             popupSnackbar: SnackbarAction.popupSnackbar,
+            hideModal: ModalAction.hideModal,
 
             setModalLoading,
             setModalLoaded,

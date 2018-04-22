@@ -8,9 +8,7 @@ import {
 } from "material-ui/Card"
 import { htmlEntities as he } from "../../lib/utils"
 import Button from "../../lib/common/Button"
-import {
-    changeModalState,
-} from "../../redux/actions"
+import { action as ModalAction } from "../../redux/Modal"
 
 
 
@@ -19,12 +17,7 @@ import {
 class RegisterCard extends Component {
 
     // ...
-    showSignupModal = () =>
-        this.props.changeModalState({
-            signup: {
-                showing: true,
-            },
-        })
+    showSignupModal = () => this.props.showModal("signup")
 
 
     // ...
@@ -83,6 +76,6 @@ export default connect(
     (_state) => ({}),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        changeModalState,
+        showModal: ModalAction.showModal,
     }, dispatch)
 )(RegisterCard)

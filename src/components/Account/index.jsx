@@ -20,10 +20,10 @@ import {
 
 import {
     hideAlert,
-    changeModalState,
 } from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
+import { action as ModalAction } from "../../redux/Modal"
 
 import {
     Tab,
@@ -119,18 +119,13 @@ class Account extends Component {
 
 
     // ...
-    hideSignupModal = () =>
-        this.props.changeModalState({
-            signup: {
-                showing: false,
-            },
-        })
+    hideSignupModal = () => this.props.hideModal("signup")
 
 
     // ...
     render = () => (
         ({
-            appUi, publicKey, bip32Path,
+            publicKey, bip32Path,
             loginManager, currentView,
             staticRouter: { getPath, }, state,
         }) =>
@@ -143,8 +138,8 @@ class Account extends Component {
                     <Fragment>
                         <Modal
                             open={
-                                appUi.modals.signup ?
-                                    appUi.modals.signup.showing : false
+                                this.props.Modal.modalId === "signup" &&
+                                this.props.Modal.visible
                             }
                             title="Opening Your Bank - Register Account"
                             actions={[
@@ -225,15 +220,15 @@ export default compose(
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
             state: state.Account,
-            appUi: state.appUi,
+            Modal: state.Modal,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
             setApiToken: LoginManagerAction.setApiToken,
             setUserId: LoginManagerAction.setUserId,
+            hideModal: ModalAction.hideModal,
             hideAlert,
-            changeModalState,
         }, dispatch)
     )
 )(Account)

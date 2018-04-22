@@ -13,6 +13,7 @@ import { reducer as PaymentsReducer } from "../Payments"
 import { reducer as StellarAccountReducer } from "../StellarAccount"
 import { reducer as RouterReducer } from "../StellarRouter"
 import { reducer as SnackbarReducer } from "../Snackbar"
+import { reducer as ModalReducer } from "../Modal"
 
 
 
@@ -32,4 +33,5 @@ export default {
     Router: RouterReducer,
     StellarAccount: StellarAccountReducer,
     Snackbar: SnackbarReducer,
+    Modal: ModalReducer,
 }

@@ -4,10 +4,6 @@ import { connect } from "react-redux"
 
 import { TopBarSecurityMessage } from "../StellarFox/env"
 
-import {
-    changeModalState,
-} from "../../redux/actions"
-
 import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
@@ -15,6 +11,7 @@ import Signup from "../Account/Signup"
 import { action as AccountAction } from "../../redux/Account"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
+import { action as ModalAction } from "../../redux/Modal"
 
 
 
@@ -30,30 +27,21 @@ class Heading extends Component {
 
 
     // ...
-    showSignupModal = () =>
-        this.props.changeModalState({
-            signup: {
-                showing: true,
-            },
-        })
+    showSignupModal = () => {
+        this.props.showModal("signup")
+    }
 
 
     // ...
-    hideSignupModal = () =>
-        this.props.changeModalState({
-            signup: {
-                showing: false,
-            },
-        })
+    hideSignupModal = () => this.props.hideModal("signup")
 
 
     // ...
-    enableLogin = (loginObj) => {
+    enableLogin = (loginObj) =>
         this.setState({
             loginButtonDisabled: false,
             loginObj,
         })
-    }
 
 
     // ...
@@ -78,8 +66,8 @@ class Heading extends Component {
         <Fragment>
             <Modal
                 open={
-                    this.props.appUi.modals.signup ?
-                        this.props.appUi.modals.signup.showing : false
+                    this.props.Modal.modalId === "signup" &&
+                    this.props.Modal.visible
                 }
                 title="Opening Your Bank"
                 actions={[
@@ -191,6 +179,7 @@ export default connect(
     // map state to props.
     (state) => ({
         appUi: state.appUi,
+        Modal: state.Modal,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
@@ -199,6 +188,7 @@ export default connect(
         setLedgerBip32Path: LedgerHQAction.setBip32Path,
         setApiToken: LoginManagerAction.setApiToken,
         setUserId: LoginManagerAction.setUserId,
-        changeModalState,
+        showModal: ModalAction.showModal,
+        hideModal: ModalAction.hideModal,
     }, dispatch)
 )(Heading)
