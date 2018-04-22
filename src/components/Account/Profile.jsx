@@ -19,10 +19,8 @@ import {
     federationIsAliasOnly,
 } from "../../lib/utils"
 import { action as AccountAction } from "../../redux/Account"
+import { action as SnackbarAction } from "../../redux/Snackbar"
 import { withLoginManager } from "../LoginManager"
-import {
-    changeSnackbarState,
-} from "../../redux/actions"
 
 
 
@@ -110,11 +108,7 @@ class Profile extends Component {
         await this.updateResource("account", {
             alias,
         })
-
-        this.props.changeSnackbarState({
-            open: true,
-            message: "User profile has been updated.",
-        })
+        this.props.popupSnackbar("User profile has been updated.")
     }
 
 
@@ -242,7 +236,7 @@ export default compose(
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
-            changeSnackbarState,
+            popupSnackbar: SnackbarAction.popupSnackbar,
         }, dispatch)
     )
 )(Profile)

@@ -2,9 +2,7 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-
-import { changeSnackbarState } from "../../redux/actions"
-
+import { action as SnackbarAction } from "../../redux/Snackbar"
 import Snackbar from "../../lib/common/Snackbar"
 
 
@@ -13,35 +11,33 @@ import Snackbar from "../../lib/common/Snackbar"
 // <ConnectedSnackbar> component
 export default connect(
     // map state to props.
-    (state) => ({ appUi: state.appUi, }),
+    (state) => ({
+        visible: state.Snackbar.visible,
+        message: state.Snackbar.message,
+    }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        changeSnackbarState,
+        resetSnackbar: SnackbarAction.reset,
     }, dispatch)
 )(
     class extends Component {
 
         // ...
         static propTypes = {
-            appUi: PropTypes.object.isRequired,
-            changeSnackbarState: PropTypes.func.isRequired,
+            resetSnackbar: PropTypes.func.isRequired,
         }
 
 
         // ...
-        onDismiss = () => this.props.changeSnackbarState({
-            open: false, message: "",
-        })
+        onDismiss = () => this.props.resetSnackbar()
 
 
         // ...
-        render = () => (
-            ({ snackbar, }) =>
-                <Snackbar
-                    open={snackbar.open}
-                    onRequestClose={this.onDismiss}
-                    message={snackbar.message}
-                />
-        )(this.props.appUi)
+        render = () => 
+            <Snackbar
+                open={this.props.visible}
+                onRequestClose={this.onDismiss}
+                message={this.props.message}
+            />
     }
 )

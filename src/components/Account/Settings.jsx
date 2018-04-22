@@ -12,10 +12,10 @@ import Button from "../../lib/common/Button"
 import Toggle from "../../lib/common/Toggle"
 import { appName } from "../StellarFox/env"
 import { action as AccountAction } from "../../redux/Account"
+import { action as SnackbarAction } from "../../redux/Snackbar"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import {
-    changeSnackbarState,
     changeModalState,
 } from "../../redux/actions"
 
@@ -64,11 +64,11 @@ class Settings extends Component {
                     console.log(error.message)
                 })
         }
-
-        this.props.changeSnackbarState({
-            open: true,
-            message: `Currency has been changed to ${currency.toUpperCase()}.`,
-        })
+        
+        this.props.popupSnackbar(
+            `Currency has been changed to ${currency.toUpperCase()}`
+        )
+        
     }
 
 
@@ -85,12 +85,11 @@ class Settings extends Component {
                 )
                 .then((_) => {
                     this.props.setState({ discoverable: isInputChecked, })
-                    this.props.changeSnackbarState({
-                        open: true,
-                        message: isInputChecked ?
+                    this.props.popupSnackbar(
+                        isInputChecked ?
                             "Account is now discoverable." :
-                            "Account is now hidden from public search.",
-                    })
+                            "Account is now hidden from public search."
+                    )
                 })
                 .catch((error) => {
                     // eslint-disable-next-line no-console
@@ -242,7 +241,7 @@ export default compose(
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
-            changeSnackbarState,
+            popupSnackbar: SnackbarAction.popupSnackbar,
             changeModalState,
         }, dispatch)
     )

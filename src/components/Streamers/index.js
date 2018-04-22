@@ -9,7 +9,7 @@ import {
 
 // ...
 export const paymentsStreamer = (
-    publicKey, changeSnackbarState, updateAccountTree
+    publicKey, popupSnackbar, updateAccountTree
 ) =>
     payments().stream({
         onmessage: (message) => {
@@ -28,19 +28,15 @@ export const paymentsStreamer = (
                     message.from === publicKey),
             ]
 
-            RECEIVED.some(el => el) && changeSnackbarState({
-                open: true,
-                message: "Payment received.",
-            }) && loadAccount(publicKey).then(
-                account => updateAccountTree(account)
-            )
+            RECEIVED.some(el => el) && popupSnackbar("Payment received.") &&
+                loadAccount(publicKey).then(
+                    account => updateAccountTree(account)
+                )
 
-            SENT.some(el => el) && changeSnackbarState({
-                open: true,
-                message: "Payment sent.",
-            }) && loadAccount(publicKey).then(
-                account => updateAccountTree(account)
-            )
+            SENT.some(el => el) && popupSnackbar("Payment sent.") &&
+                loadAccount(publicKey).then(
+                    account => updateAccountTree(account)
+                )
         },
     })
 
@@ -49,7 +45,7 @@ export const paymentsStreamer = (
 
 // ...
 export const operationsStreamer = (
-    publicKey, changeSnackbarState, updateAccountTree
+    publicKey, popupSnackbar, updateAccountTree
 ) =>
     operations().stream({
         onmessage: (message) => {
@@ -67,17 +63,15 @@ export const operationsStreamer = (
                 ),
             ]
 
-            HOME_DOMAIN_UPDATE.some(el => el) && changeSnackbarState({
-                open: true,
-                message: "Account domain updated.",
-            }) && loadAccount(publicKey).then(
+            HOME_DOMAIN_UPDATE.some(el => el) &&
+            popupSnackbar("Account domain updated.") &&
+            loadAccount(publicKey).then(
                 account => updateAccountTree(account)
             )
 
-            HOME_DOMAIN_REMOVE.some(el => el) && changeSnackbarState({
-                open: true,
-                message: "Account domain removed.",
-            }) && loadAccount(publicKey).then(
+            HOME_DOMAIN_REMOVE.some(el => el) &&
+            popupSnackbar("Account domain removed.") &&
+            loadAccount(publicKey).then(
                 account => updateAccountTree(account)
             )
         },

@@ -38,8 +38,6 @@ export const changeModalState = (modalState) => ({
 })
 
 
-
-
 // Playground...
 export const alert = (text, title="Alert") => ({
     type: ActionTypes.CHANGE_MODAL_STATE,
@@ -50,15 +48,6 @@ export const alert = (text, title="Alert") => ({
             content: text,
         },
     },
-})
-
-
-
-
-// ...
-export const changeSnackbarState = (snackbarState) => ({
-    type: ActionTypes.CHANGE_SNACKBAR_STATE,
-    payload: snackbarState,
 })
 
 

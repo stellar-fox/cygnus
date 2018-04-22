@@ -30,9 +30,9 @@ import {
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
-    changeSnackbarState,
 } from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
+import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 import {
@@ -228,16 +228,13 @@ class Payments extends Component {
                         message.source_account === this.props.publicKey
                     ) {
                         this.updateAccount.call(this)
-
-                        this.props.changeSnackbarState({
-                            open: true,
-                            message: `Payment sent to new account [${
+                        this.props.popupSnackbar(
+                            `Payment sent to new account [${
                                 pubKeyAbbr(message.acount)}]: ${
                                 this.props.assetManager.convertToAsset(
                                     message.starting_balance)} ${
-                                this.props.Account.currency.toUpperCase()}`,
-                        })
-
+                                this.props.Account.currency.toUpperCase()}`
+                        )
                     }
 
 
@@ -249,15 +246,12 @@ class Payments extends Component {
                         message.account === this.props.publicKey
                     ) {
                         this.updateAccount.call(this)
-
-                        this.props.changeSnackbarState({
-                            open: true,
-                            message: `Account Funded: ${
+                        this.props.popupSnackbar(
+                            `Account Funded: ${
                                 this.props.assetManager.convertToAsset(
                                     message.starting_balance)} ${
-                                this.props.Account.currency.toUpperCase()}`,
-                        })
-
+                                this.props.Account.currency.toUpperCase()}`
+                        )
                     }
 
                     /*
@@ -268,15 +262,12 @@ class Payments extends Component {
                         message.to === this.props.publicKey
                     ) {
                         this.updateAccount.call(this)
-
-                        this.props.changeSnackbarState({
-                            open: true,
-                            message: `Payment Received: ${
+                        this.props.popupSnackbar(
+                            `Payment Received: ${
                                 this.props.assetManager.convertToAsset(
                                     message.amount)} ${
-                                this.props.Account.currency.toUpperCase()}`,
-                        })
-
+                                this.props.Account.currency.toUpperCase()}`
+                        )
                     }
 
                     /*
@@ -287,15 +278,12 @@ class Payments extends Component {
                         message.from === this.props.publicKey
                     ) {
                         this.updateAccount.call(this)
-
-                        this.props.changeSnackbarState({
-                            open: true,
-                            message: `Payment Sent: ${
+                        this.props.popupSnackbar(
+                            `Payment Sent: ${
                                 this.props.assetManager.convertToAsset(
                                     message.amount)} ${
-                                this.props.Account.currency.toUpperCase()}`,
-                        })
-
+                                this.props.Account.currency.toUpperCase()}`
+                        )
                     }
                 },
             })
@@ -858,10 +846,10 @@ export default compose(
             setState: PaymentsAction.setState,
             setTransactions: StellarAccountAction.setTransactions,
             setPayments: StellarAccountAction.setPayments,
+            popupSnackbar: SnackbarAction.popupSnackbar,
             setModalLoading,
             setModalLoaded,
             updateLoadingMessage,
-            changeSnackbarState,
         }, dispatch)
     ),
 )(Payments)

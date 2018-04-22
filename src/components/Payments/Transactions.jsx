@@ -8,10 +8,8 @@ import {
     utcToLocaleDateTime,
 } from "../../lib/utils"
 
-import {
-    changeSnackbarState,
-} from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
+import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 import IconButton from "material-ui/IconButton"
@@ -124,10 +122,7 @@ class Transactions extends Component {
         this.props.setState({
             ...state,
         })
-        this.props.changeSnackbarState({
-            open: true,
-            message: "No more transactions data.",
-        })
+        this.props.popupSnackbar("No more transactions data.")
     }
 
 
@@ -258,6 +253,6 @@ export default connect(
     (dispatch) => bindActionCreators({
         setState: PaymentsAction.setState,
         setTransactions: StellarAccountAction.setTransactions,
-        changeSnackbarState,
+        popupSnackbar: SnackbarAction.popupSnackbar,
     }, dispatch)
 )(Transactions)

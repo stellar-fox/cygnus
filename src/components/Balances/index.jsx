@@ -15,6 +15,7 @@ import { action as AccountAction } from "../../redux/Account"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
+import { action as SnackbarAction } from "../../redux/Snackbar"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
     insertPathIndex,
@@ -37,7 +38,6 @@ import {
     setModalLoaded,
     updateLoadingMessage,
     changeModalState,
-    changeSnackbarState,
     togglePaymentCard,
 } from "../../redux/actions"
 import Button from "../../lib/common/Button"
@@ -92,12 +92,12 @@ class Balances extends Component {
         this.setState({
             paymentsStreamer: paymentsStreamer(
                 this.props.publicKey,
-                this.props.changeSnackbarState,
+                this.props.popupSnackbar,
                 this.props.updateAccountTree,
             ),
             operationsStreamer: operationsStreamer(
                 this.props.publicKey,
-                this.props.changeSnackbarState,
+                this.props.popupSnackbar,
                 this.props.updateAccountTree,
             ),
         })
@@ -416,12 +416,12 @@ export default compose(
             resetBalancesState: BalancesAction.resetState,
             setApiToken: LoginManagerAction.setApiToken,
             setUserId: LoginManagerAction.setUserId,
+            popupSnackbar: SnackbarAction.popupSnackbar,
 
             setModalLoading,
             setModalLoaded,
             updateLoadingMessage,
             changeModalState,
-            changeSnackbarState,
             togglePaymentCard,
         }, dispatch)
     )

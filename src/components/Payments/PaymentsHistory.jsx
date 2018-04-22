@@ -15,10 +15,8 @@ import {
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
 
-import {
-    changeSnackbarState,
-} from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
+import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 import { ListItem } from "material-ui/List"
@@ -192,10 +190,7 @@ class PaymentsHistory extends Component {
         this.props.setState({
             ...state,
         })
-        this.props.changeSnackbarState({
-            open: true,
-            message: "No more payments data.",
-        })
+        this.props.popupSnackbar("No more payments data.")
     }
 
 
@@ -426,7 +421,7 @@ export default compose(
         (dispatch) => bindActionCreators({
             setState: PaymentsAction.setState,
             setPayments: StellarAccountAction.setPayments,
-            changeSnackbarState,
+            popupSnackbar: SnackbarAction.popupSnackbar,
         }, dispatch)
     )
 )(PaymentsHistory)
