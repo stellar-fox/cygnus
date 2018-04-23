@@ -1,13 +1,12 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import axios from "axios"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoadingModalAction } from "../../redux/LoadingModal"
 
 import {
     htmlEntities as he,
-    endpointLookup,
+    fedToPub,
     invalidPaymentAddressMessage,
 } from "../../lib/utils"
 import { stellarFoundationLink } from "../StellarFox/env"
@@ -47,14 +46,14 @@ class PanelExplorer extends Component {
 
     // ...
     compoundFederationValidator = () => (
-        (addressValidity) => addressValidity ?
+        (addressValidity) => addressValidity !== "" ?
             this.input.setState({error: addressValidity,}) :
             this.enterExplorer.call(this)
     )(invalidPaymentAddressMessage(this.input.state.value))
 
 
     // ...
-    enterExplorer = () => {
+    enterExplorer = async () => {
         const textInputValue = this.input.state.value
 
         /**
@@ -63,50 +62,16 @@ class PanelExplorer extends Component {
          * otherwise a public key
          */
         if (textInputValue.match(/\*/)) {
-            this.props.showLoadingModal("Looking up federation endpoint ...")
-            endpointLookup(textInputValue)
-                .then((federationEndpointObj) => {
-                    if (federationEndpointObj.ok) {
-                        axios
-                            .get(`${
-                                federationEndpointObj.endpoint
-                            }?q=${
-                                textInputValue
-                            }&type=name`)
-                            .then((response) => {
-                                this.props.setLedgerPublicKey(
-                                    response.data.account_id
-                                )
-                                this.props.showLoadingModal(
-                                    "Searching for Account ..."
-                                )
-                            })
-                            .catch((error) => {
-                                this.props.hideLoadingModal()
-                                if (error.response.status === 404) {
-                                    this.input.setState({
-                                        error: "Account not found.",
-                                    })
-                                    return false
-                                }
-                                if (error.response.data.detail) {
-                                    this.input.setState({
-                                        error: error.response.data.detail,
-                                    })
-                                } else {
-                                    this.input.setState({
-                                        error: error.response.data.message,
-                                    })
-                                }
-                            })
-                    }
+            try {
+                this.props.showLoadingModal("Looking up Payment Address ...")
+                this.props.setLedgerPublicKey(await fedToPub(textInputValue))
+                this.props.showLoadingModal("Searching for Account ...")
+            } catch (error) {
+                this.props.hideLoadingModal()
+                this.input.setState({
+                    error: error.message,
                 })
-                .catch((error) => {
-                    this.props.hideLoadingModal()
-                    this.input.setState({
-                        error: error.message,
-                    })
-                })
+            }
         }
         // Input is a valid Stellar public key
         else {
