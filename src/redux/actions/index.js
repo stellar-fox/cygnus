@@ -25,33 +25,6 @@ export const updateLoadingMessage = (state) => ({
 
 
 // ...
-export const hideAlert = (state) => ({
-    type: "HIDE_ALERT",
-    payload: state,
-})
-
-
-// ...
-export const changeModalState = (modalState) => ({
-    type: ActionTypes.CHANGE_MODAL_STATE,
-    payload: modalState,
-})
-
-
-// Playground...
-export const alert = (text, title="Alert") => ({
-    type: ActionTypes.CHANGE_MODAL_STATE,
-    payload: {
-        alertWithDismiss: {
-            showing: true,
-            title,
-            content: text,
-        },
-    },
-})
-
-
-// ...
 export const togglePaymentCard = (cardState) => ({
     type: ActionTypes.TOGGLE_PAYMENT_CARD,
     payload: cardState, // Object

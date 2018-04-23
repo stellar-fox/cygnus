@@ -33,10 +33,6 @@ class Heading extends Component {
 
 
     // ...
-    hideSignupModal = () => this.props.hideModal("signup")
-
-
-    // ...
     enableLogin = (loginObj) =>
         this.setState({
             loginButtonDisabled: false,
@@ -46,18 +42,12 @@ class Heading extends Component {
 
     // ...
     login = () => {
-        this.hideSignupModal()
+        this.props.hideModal()
         this.props.setState({ needsRegistration: false, })
         this.props.setLedgerBip32Path(this.state.loginObj.bip32Path)
         this.props.setLedgerPublicKey(this.state.loginObj.publicKey)
         this.props.setApiToken(this.state.loginObj.token)
         this.props.setUserId(this.state.loginObj.userId) 
-    }
-
-
-    // ...
-    cancelLogin = () => {
-        this.hideSignupModal()
     }
 
 
@@ -79,7 +69,7 @@ class Heading extends Component {
                     />,
                     <Button
                         label="Cancel"
-                        onClick={this.cancelLogin}
+                        onClick={this.props.hideModal}
                         primary={true}
                     />,
                 ]}

@@ -18,9 +18,6 @@ import {
     withStaticRouter,
 } from "../StellarRouter"
 
-import {
-    hideAlert,
-} from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as ModalAction } from "../../redux/Modal"
@@ -111,15 +108,7 @@ class Account extends Component {
 
 
     // ...
-    handleClose = () => this.props.hideAlert()
-
-
-    // ...
     changeButtonText = () => this.setState({ modalButtonText: "DONE", })
-
-
-    // ...
-    hideSignupModal = () => this.props.hideModal("signup")
 
 
     // ...
@@ -145,7 +134,7 @@ class Account extends Component {
                             actions={[
                                 <Button
                                     label={this.state.modalButtonText}
-                                    onClick={this.hideSignupModal}
+                                    onClick={this.props.hideModal}
                                     primary={true}
                                 />,
                             ]}
@@ -228,7 +217,6 @@ export default compose(
             setApiToken: LoginManagerAction.setApiToken,
             setUserId: LoginManagerAction.setUserId,
             hideModal: ModalAction.hideModal,
-            hideAlert,
         }, dispatch)
     )
 )(Account)

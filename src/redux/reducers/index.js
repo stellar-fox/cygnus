@@ -14,6 +14,7 @@ import { reducer as StellarAccountReducer } from "../StellarAccount"
 import { reducer as RouterReducer } from "../StellarRouter"
 import { reducer as SnackbarReducer } from "../Snackbar"
 import { reducer as ModalReducer } from "../Modal"
+import { reducer as AlertReducer } from "../Alert"
 
 
 
@@ -34,4 +35,5 @@ export default {
     StellarAccount: StellarAccountReducer,
     Snackbar: SnackbarReducer,
     Modal: ModalReducer,
+    Alert: AlertReducer,
 }

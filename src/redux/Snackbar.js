@@ -3,7 +3,7 @@ import { createReducer } from "../lib/utils"
 
 
 
-// <Bank> component state
+// <Snackbar> component state
 const initState = {
 
     visible: false,
@@ -33,7 +33,7 @@ export const action = {
     // reset snackbar state on auto dismiss
     reset: () => ({
         type: SNACKBAR_RESET,
-    })
+    }),
 
 }
 

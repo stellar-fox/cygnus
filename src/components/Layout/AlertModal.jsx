@@ -2,12 +2,9 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-
-import { changeModalState } from "../../redux/actions"
-
 import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"
-
+import { action as AlertAction } from "../../redux/Alert"
 
 
 
@@ -35,45 +32,34 @@ const AlertWithDismiss =
 // <AlertModal> component
 export default connect(
     // map state to props.
-    (state) => ({ appUi: state.appUi, }),
+    (state) => ({ Alert: state.Alert, }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
-        changeModalState,
+        showAlert: AlertAction.showAlert,
+        hideAlert: AlertAction.hideAlert,
     }, dispatch)
 )(
     class extends Component {
 
         // ...
         static propTypes = {
-            appUi: PropTypes.object.isRequired,
-            changeModalState: PropTypes.func.isRequired,
+            Alert: PropTypes.object.isRequired,
+            showAlert: PropTypes.func.isRequired,
+            hideAlert: PropTypes.func.isRequired,
         }
 
 
         // ...
-        onDismiss = () => this.props.changeModalState({
-            alertWithDismiss: { showing: false, content: "", },
-        })
+        onDismiss = () => this.props.hideAlert()
 
 
         // ...
-        render = () => (
-            ({ modals, }) =>
-                <AlertWithDismiss
-                    open={
-                        modals.alertWithDismiss ?
-                            modals.alertWithDismiss.showing : false
-                    }
-                    onDismiss={this.onDismiss}
-                    title={
-                        modals.alertWithDismiss ?
-                            modals.alertWithDismiss.title : false
-                    }
-                    content={
-                        modals.alertWithDismiss ?
-                            modals.alertWithDismiss.content : false
-                    }
-                />
-        )(this.props.appUi)
+        render = () =>
+            <AlertWithDismiss
+                open={this.props.Alert.visible}
+                onDismiss={this.onDismiss}
+                title={this.props.Alert.title}
+                content={this.props.Alert.text}
+            />
     }
 )

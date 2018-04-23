@@ -17,6 +17,7 @@ import { action as BalancesAction } from "../../redux/Balances"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as ModalAction } from "../../redux/Modal"
+import { action as AlertAction } from "../../redux/Alert"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
     insertPathIndex,
@@ -38,7 +39,6 @@ import {
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
-    changeModalState,
     togglePaymentCard,
 } from "../../redux/actions"
 import Button from "../../lib/common/Button"
@@ -165,14 +165,6 @@ class Balances extends Component {
 
 
     // ...
-    hideSignupModal = () => this.props.hideModal("signup")
-
-
-    // ...
-    hideTxCompleteModal = () => this.props.hideModal("txComplete")
-
-
-    // ...
     buildSendTransaction = async () => {
         try {
             let tx = null
@@ -235,25 +227,15 @@ class Balances extends Component {
 
     // ...
     showError = (message) => {
-        this.props.changeModalState({
-            alertWithDismiss: {
-                showing: true,
-                title: "Error",
-                content: message,
-            },
-        })
-        this.props.setStateForBalances({
-            sendIsDisabled: false,
-        })
+        this.props.hideModal()
+        this.props.showAlert(message, "Error")
+        this.props.setStateForBalances({ sendIsDisabled: false, })
     }
 
 
     // ...
     sendPayment = async () => {
-        this.props.setStateForBalances({
-            sendIsDisabled: true,
-        })
-
+        this.props.setStateForBalances({ sendIsDisabled: true, })
         try {
             await getSoftwareVersion()
             this.buildSendTransaction()
@@ -294,7 +276,7 @@ class Balances extends Component {
                             actions={[
                                 <Button
                                     label={this.state.modalButtonText}
-                                    onClick={this.hideSignupModal}
+                                    onClick={this.props.hideModal}
                                     primary={true}
                                 />,
                             ]}
@@ -337,7 +319,7 @@ class Balances extends Component {
                             actions={[
                                 <Button
                                     label="OK"
-                                    onClick={this.hideTxCompleteModal}
+                                    onClick={this.props.hideModal}
                                     primary={true}
                                 />,
                             ]}
@@ -403,11 +385,11 @@ export default compose(
             popupSnackbar: SnackbarAction.popupSnackbar,
             hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
+            showAlert: AlertAction.showAlert,
 
             setModalLoading,
             setModalLoaded,
             updateLoadingMessage,
-            changeModalState,
             togglePaymentCard,
         }, dispatch)
     )

@@ -15,10 +15,9 @@ import {
 } from "material-ui/Card"
 import Button from "../../lib/common/Button"
 import {
-    changeModalState,
     togglePaymentCard,
 } from "../../redux/actions"
-
+import { action as AlertAction } from "../../redux/Alert"
 
 
 
@@ -57,13 +56,7 @@ class BalancesCard extends Component {
 
     // ...
     showNotImplementedModal = () =>
-        this.props.changeModalState({
-            alertWithDismiss: {
-                showing: true,
-                title: "Not Yet Implemented",
-                content: notImplementedText,
-            },
-        })
+        this.props.showAlert(notImplementedText, "Not Yet Implemented")
 
 
     // ...
@@ -188,7 +181,7 @@ export default compose(
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
-            changeModalState,
+            showAlert: AlertAction.showAlert,
             togglePaymentCard,
         }, dispatch)
     )

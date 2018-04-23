@@ -3,7 +3,7 @@ import { createReducer } from "../lib/utils"
 
 
 
-// <Bank> component state
+// <Modal> component state
 const initState = {
 
     visible: false,
@@ -31,9 +31,8 @@ export const action = {
     }),
 
     // hide modal (see Modal component)
-    hideModal: (modalId) => ({
+    hideModal: () => ({
         type: MODAL_HIDE,
-        modalId,
     }),
 
 }

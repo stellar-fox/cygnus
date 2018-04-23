@@ -12,9 +12,8 @@ import {
     CardHeader,
     CardText,
 } from "material-ui/Card"
-import { changeModalState } from "../../redux/actions"
 import Button from "../../lib/common/Button"
-
+import { action as AlertAction } from "../../redux/Alert"
 
 
 
@@ -22,13 +21,8 @@ import Button from "../../lib/common/Button"
 class NoAccountCard extends Component {
 
     // ...
-    showNotImplementedModal = () => this.props.changeModalState({
-        alertWithDismiss: {
-            showing: true,
-            title: "Not Yet Implemented",
-            content: notImplementedText,
-        },
-    })
+    showNotImplementedModal = () =>
+        this.props.showAlert(notImplementedText, "Not Yet Implemented")
 
 
     // ...
@@ -103,7 +97,7 @@ export default compose(
         (state) => ({ Account: state.Account, }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
-            changeModalState,
+            showAlert: AlertAction.showAlert,
         }, dispatch)
     )
 )(NoAccountCard)
