@@ -13,7 +13,7 @@ import {
     StellarRouter as Router,
     routerMiddleware,
 } from "../StellarRouter"
-import reducers from "../../redux/reducers"
+import reducers from "../../redux"
 import {
     loadState,
     saveState,
