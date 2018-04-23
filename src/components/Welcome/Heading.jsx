@@ -168,7 +168,6 @@ class Heading extends Component {
 export default connect(
     // map state to props.
     (state) => ({
-        appUi: state.appUi,
         Modal: state.Modal,
     }),
     // map dispatch to props.

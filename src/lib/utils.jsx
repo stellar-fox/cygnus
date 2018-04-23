@@ -510,14 +510,13 @@ export const dynamicImportReducers = async () => {
 export const dynamicImportLegacyStuff = async () => {
     let [
         actions,
-        loadingModal, mono,
+        loadingModal,
     ] = await Promise.all([
         import("../redux/actions"),
         import("../redux/reducers/loading-modal-reducer"),
-        import("../redux/reducers/mono-reducer"),
     ])
     return {
         actions,
-        loadingModal, mono,
+        loadingModal,
     }
 }

@@ -3,9 +3,6 @@ import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
-import {
-    resetUiState,
-} from "../../redux/actions"
 import { action as AccountAction } from "../../redux/Account"
 import { action as BankAction } from "../../redux/Bank"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
@@ -50,7 +47,6 @@ export default connect(
         resetLoginManagerState: LoginManagerAction.resetState,
         resetStellarAccountState: StellarAccountAction.resetState,
         resetPaymentsState: PaymentsAction.resetState,
-        resetUiState,
         toggleDrawer: BankAction.toggleDrawer,
     }, dispatch)
 )(
@@ -59,14 +55,12 @@ export default connect(
         // ...
         static propTypes = {
             currentView: PropTypes.string.isRequired,
-            resetUiState: PropTypes.func.isRequired,
             toggleDrawer: PropTypes.func.isRequired,
         }
 
 
         // ...
         handleLogOutClick = () => {
-            this.props.resetUiState()
             this.props.resetAccountState()
             this.props.resetLedgerHQState()
             this.props.resetLoginManagerState()

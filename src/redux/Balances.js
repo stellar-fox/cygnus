@@ -5,7 +5,7 @@ import { createReducer } from "../lib/utils"
 
 // <Balances> component state
 const initState = ((now) => ({
-
+    payCardVisible: false,
     today: now,
     payDate: now,
     amount: "",

@@ -20,9 +20,6 @@ import RaisedButton from "material-ui/RaisedButton"
 import FlatButton from "material-ui/FlatButton"
 import InputField from "../../lib/common/InputField"
 import DatePicker from "material-ui/DatePicker"
-import {
-    togglePaymentCard,
-} from "../../redux/actions"
 import { action as BalancesAction } from "../../redux/Balances"
 import {
     federationAddressValid,
@@ -297,12 +294,9 @@ class PaymentCard extends Component {
 
 
     // ...
-    hidePaymentCard = () =>
-        this.props.togglePaymentCard({
-            payment: {
-                opened: false,
-            },
-        })
+    hidePaymentCard = () => this.props.setState({
+        payCardVisible: false,
+    })
 
 
     // ...
@@ -514,12 +508,10 @@ export default compose(
             Assets: state.Assets,
             Balances: state.Balances,
             StellarAccount: state.StellarAccount,
-            appUi: state.appUi,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: BalancesAction.setState,
-            togglePaymentCard,
         }, dispatch)
     )
 )(PaymentCard)

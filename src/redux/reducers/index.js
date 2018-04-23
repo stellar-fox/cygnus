@@ -1,6 +1,4 @@
-import {
-    uiReducer,
-} from "./mono-reducer"
+
 import LoadingModalReducer from "./loading-modal-reducer"
 
 import { reducer as AccountReducer } from "../Account"
@@ -22,7 +20,6 @@ import { reducer as AlertReducer } from "../Alert"
 // ...
 export default {
     loadingModal: LoadingModalReducer,
-    appUi: uiReducer,
 
     Account: AccountReducer,
     Assets: AssetManagerReducer,

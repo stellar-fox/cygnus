@@ -14,10 +14,8 @@ import {
     CardText,
 } from "material-ui/Card"
 import Button from "../../lib/common/Button"
-import {
-    togglePaymentCard,
-} from "../../redux/actions"
 import { action as AlertAction } from "../../redux/Alert"
+import { action as BalancesAction } from "../../redux/Balances"
 
 
 
@@ -46,11 +44,8 @@ class BalancesCard extends Component {
 
     // ...
     togglePaymentCard = () =>
-        this.props.togglePaymentCard({
-            payment: {
-                opened: !(this.props.appUi.cards.payment &&
-                    this.props.appUi.cards.payment.opened),
-            },
+        this.props.setState({
+            payCardVisible: !this.props.Balances.payCardVisible,
         })
 
 
@@ -174,15 +169,15 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
+            Balances: state.Balances,
             Account: state.Account,
             Assets: state.Assets,
             StellarAccount: state.StellarAccount,
-            appUi: state.appUi,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
+            setState: BalancesAction.setState,
             showAlert: AlertAction.showAlert,
-            togglePaymentCard,
         }, dispatch)
     )
 )(BalancesCard)

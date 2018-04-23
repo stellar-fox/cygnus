@@ -39,7 +39,6 @@ import {
     setModalLoading,
     setModalLoaded,
     updateLoadingMessage,
-    togglePaymentCard,
 } from "../../redux/actions"
 import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"
@@ -209,11 +208,8 @@ class Balances extends Component {
             })
 
             this.props.showModal("txComplete")
-
-            this.props.togglePaymentCard({
-                payment: {
-                    opened: false,
-                },
+            this.props.setBalancesState({
+                payCardVisible: false,
             })
         } catch (error) {
             if (error.name === "BadResponseError") {
@@ -263,7 +259,7 @@ class Balances extends Component {
 
     // ...
     render = () => (
-        ({appUi, bip32Path, assetManager, loginManager, publicKey, }) =>
+        ({Balances, bip32Path, assetManager, loginManager, publicKey, }) =>
             <Switch>
                 <Route exact path={this.rr(".")}>
                     <Fragment>
@@ -344,8 +340,7 @@ class Balances extends Component {
                         }
 
                         {
-                            appUi.cards.payment  &&
-                            appUi.cards.payment.opened ?
+                            Balances.payCardVisible ?
                                 <PaymentCard
                                     onSignTransaction={this.sendPayment}
                                 /> : null
@@ -372,11 +367,11 @@ export default compose(
             StellarAccount: state.StellarAccount,
             Balances: state.Balances,
             Modal: state.Modal,
-            appUi: state.appUi,
         }),
         // match dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
+            setBalancesState: BalancesAction.setState,
             updateAccountTree: StellarAccountAction.loadStellarAccount,
             setStateForBalances: BalancesAction.setState,
             resetBalancesState: BalancesAction.resetState,
@@ -390,7 +385,6 @@ export default compose(
             setModalLoading,
             setModalLoaded,
             updateLoadingMessage,
-            togglePaymentCard,
         }, dispatch)
     )
 )(Balances)
