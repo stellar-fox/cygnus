@@ -30,6 +30,7 @@ export const action = {
         text,
     }),
 
+
     // hide loading modal (see LoadingModal component)
     hideLoadingModal: () => ({
         type: LOADING_MODAL_HIDE,

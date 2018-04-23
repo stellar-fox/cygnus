@@ -30,6 +30,7 @@ export const action = {
         modalId,
     }),
 
+
     // hide modal (see Modal component)
     hideModal: () => ({
         type: MODAL_HIDE,

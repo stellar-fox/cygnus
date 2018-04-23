@@ -32,6 +32,7 @@ export const action = {
         text,
     }),
 
+
     // hide alert (see Modal component)
     hideAlert: () => ({
         type: ALERT_HIDE,

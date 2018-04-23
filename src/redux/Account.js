@@ -25,6 +25,7 @@ export const RESET_STATE = "@Account/RESET_STATE"
 
 
 
+
 // ...
 export const action = {
 
@@ -33,6 +34,7 @@ export const action = {
         type: SET_STATE,
         state,
     }),
+
 
     // ...
     resetState: () => ({
@@ -52,6 +54,7 @@ export const reducer = createReducer(initState)({
         ...state,
         ...action.state,
     }),
+
 
     // ...
     [RESET_STATE]: () => initState,
