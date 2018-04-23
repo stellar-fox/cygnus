@@ -83,6 +83,14 @@ export const publicKeyValid = (publicKey) =>
 
 // ...
 export const invalidPaymentAddressMessage = (address) => {
+    // Valid federation address. Return empty string for error message.
+    if (federationAddressValid(address)) {
+        return ""
+    }
+    // Valid public key. Return empty string for error message.
+    if (publicKeyValid(address)) {
+        return ""
+    }
     // Looks like something totally invalid for this field.
     if (!address.match(/\*/) && !address.match(/^G/)) {
         return "Invalid input."
@@ -93,8 +101,14 @@ export const invalidPaymentAddressMessage = (address) => {
     }
     // This must be an attempt at a Stellar public key format.
     if (!publicKeyValid(address)) {
-        return publicKeyMissingCharsMessage(address)
-    }
+        if (address.length < 56) {
+            return publicKeyMissingCharsMessage(address)
+        } else if (address.length === 56) {
+            return "Invlid checksum."
+        } else {
+            return "Invalid key."
+        }
+    }   
 }
 
 
