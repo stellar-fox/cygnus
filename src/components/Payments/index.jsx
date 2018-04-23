@@ -25,15 +25,10 @@ import {
 import { gravatarLink } from "../../lib/deneb"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
-
-import {
-    setModalLoading,
-    setModalLoaded,
-    updateLoadingMessage,
-} from "../../redux/actions"
 import { action as PaymentsAction } from "../../redux/Payments"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
+import { action as LoadingModalAction } from "../../redux/LoadingModal"
 
 import {
     Tab,
@@ -104,10 +99,7 @@ class Payments extends Component {
 
     // ...
     componentDidMount = () => {
-        this.props.setModalLoading()
-        this.props.updateLoadingMessage({
-            message: "Loading payments data ...",
-        })
+        this.props.showLoadingModal("Loading payments data ...")
 
         this.stellarServer
             .payments()
@@ -174,7 +166,7 @@ class Payments extends Component {
                                         paymentsResult.records[0].id,
                                 },
                             })
-                            this.props.setModalLoaded()
+                            this.props.hideLoadingModal()
                         })
                     })
                 })
@@ -376,7 +368,7 @@ class Payments extends Component {
                                                                 .records[0].id,
                                                     },
                                                 })
-                                                this.props.setModalLoaded()
+                                                this.props.hideLoadingModal()
                                             })
                                     })
                             })
@@ -838,7 +830,6 @@ export default compose(
             state: state.Payments,
             Account: state.Account,
             transactions: state.StellarAccount.transactions,
-            loadingModal: state.loadingModal,
             publicKey: state.LedgerHQ.publicKey,
         }),
         // map dispatch to props.
@@ -847,9 +838,8 @@ export default compose(
             setTransactions: StellarAccountAction.setTransactions,
             setPayments: StellarAccountAction.setPayments,
             popupSnackbar: SnackbarAction.popupSnackbar,
-            setModalLoading,
-            setModalLoaded,
-            updateLoadingMessage,
+            showLoadingModal: LoadingModalAction.showLoadingModal,
+            hideLoadingModal: LoadingModalAction.hideLoadingModal,
         }, dispatch)
     ),
 )(Payments)

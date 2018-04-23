@@ -20,7 +20,6 @@ import {
 } from "../../lib/statePersistence"
 import {
     devEnv,
-    dynamicImportLegacyStuff,
     dynamicImportLibs,
     dynamicImportReducers,
 } from "../../lib/utils"
@@ -96,7 +95,6 @@ if (devEnv()  &&  typeof window !== "undefined") {
         dispatch: store.dispatch,
         ...await dynamicImportLibs(),
         process, // eslint-disable-line
-        ls: await dynamicImportLegacyStuff(),
         r: await dynamicImportReducers(),
     }})()
 }

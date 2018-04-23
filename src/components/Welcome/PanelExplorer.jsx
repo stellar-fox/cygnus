@@ -2,13 +2,8 @@ import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import axios from "axios"
-
-import {
-    setModalLoading,
-    setModalLoaded,
-    updateLoadingMessage,
-} from "../../redux/actions/"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
+import { action as LoadingModalAction } from "../../redux/LoadingModal"
 
 import {
     htmlEntities as he,
@@ -62,17 +57,13 @@ class PanelExplorer extends Component {
     enterExplorer = () => {
         const textInputValue = this.input.state.value
 
-        this.props.setModalLoading()
-
         /**
          * textInputValue is either VALID federation or VALID pubkey
          * check for '*' character - if present then it is federation address
          * otherwise a public key
          */
         if (textInputValue.match(/\*/)) {
-            this.props.updateLoadingMessage({
-                message: "Looking up federation endpoint ...",
-            })
+            this.props.showLoadingModal("Looking up federation endpoint ...")
             endpointLookup(textInputValue)
                 .then((federationEndpointObj) => {
                     if (federationEndpointObj.ok) {
@@ -86,13 +77,12 @@ class PanelExplorer extends Component {
                                 this.props.setLedgerPublicKey(
                                     response.data.account_id
                                 )
-                                this.props.setModalLoading()
-                                this.props.updateLoadingMessage({
-                                    message: "Searching for Account ...",
-                                })
+                                this.props.showLoadingModal(
+                                    "Searching for Account ..."
+                                )
                             })
                             .catch((error) => {
-                                this.props.setModalLoaded()
+                                this.props.hideLoadingModal()
                                 if (error.response.status === 404) {
                                     this.input.setState({
                                         error: "Account not found.",
@@ -112,7 +102,7 @@ class PanelExplorer extends Component {
                     }
                 })
                 .catch((error) => {
-                    this.props.setModalLoaded()
+                    this.props.hideLoadingModal()
                     this.input.setState({
                         error: error.message,
                     })
@@ -191,8 +181,7 @@ export default connect(
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setLedgerPublicKey: LedgerHQAction.setPublicKey,
-        setModalLoading,
-        setModalLoaded,
-        updateLoadingMessage,
+        showLoadingModal: LoadingModalAction.showLoadingModal,
+        hideLoadingModal: LoadingModalAction.hideLoadingModal,
     }, dispatch)
 )(PanelExplorer)

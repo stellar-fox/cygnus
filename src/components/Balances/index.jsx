@@ -35,11 +35,7 @@ import {
     ConnectedSwitch as Switch,
     resolvePath,
 } from "../StellarRouter"
-import {
-    setModalLoading,
-    setModalLoaded,
-    updateLoadingMessage,
-} from "../../redux/actions"
+import { action as LoadingModalAction } from "../../redux/LoadingModal"
 import Button from "../../lib/common/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
@@ -102,10 +98,7 @@ class Balances extends Component {
             ),
         })
         if (!this.props.StellarAccount.accountId) {
-            this.props.setModalLoading()
-            this.props.updateLoadingMessage({
-                message: "Searching for account ...",
-            })
+            this.props.showLoadingModal("Searching for account ...")
             this._tmpQueryHorizon()
             if (this.props.loginManager.isPayEnabled()) {
                 this._tmpAccountExists()
@@ -158,7 +151,7 @@ class Balances extends Component {
         } catch (error) {
             this.props.setState({ exists: false, })
         } finally {
-            this.props.setModalLoaded()
+            this.props.hideLoadingModal()
         }
     }
 
@@ -381,10 +374,8 @@ export default compose(
             hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
             showAlert: AlertAction.showAlert,
-
-            setModalLoading,
-            setModalLoaded,
-            updateLoadingMessage,
+            showLoadingModal: LoadingModalAction.showLoadingModal,
+            hideLoadingModal: LoadingModalAction.hideLoadingModal,
         }, dispatch)
     )
 )(Balances)

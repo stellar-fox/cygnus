@@ -11,16 +11,16 @@ import "./index.css"
 export default connect(
     // map state to props.
     (state) => ({
-        loading: state.loadingModal.loading,
-        message: state.loadingModal.message,
+        visible: state.LoadingModal.visible,
+        text: state.LoadingModal.text,
     })
 )(
     // <LoadingModal> component
     ({
-        loading,
-        message,
+        visible,
+        text,
     }) =>
-        loading ?
+        visible ?
             <div>
                 <div className="loading-modal-background" />
                 <div className="loading-modal">
@@ -35,7 +35,7 @@ export default connect(
                         />
                     </div>
                     <div className="loading-modal-content">
-                        {message}
+                        {text}
                     </div>
                     <div className="loading-modal-content">
                         <i className="material-icons">search</i>
