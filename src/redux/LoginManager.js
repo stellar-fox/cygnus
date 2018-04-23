@@ -1,9 +1,17 @@
 import { createReducer } from "../lib/utils"
 
+
+
+
+// ...
 const initState = {
+
     token: null,
     userId: null,
+
 }
+
+
 
 
 // ...
@@ -33,7 +41,9 @@ export const action = {
 
     // ...
     resetState: () => ({ type: RESET_STATE, }),
+
 }
+
 
 
 
@@ -56,4 +66,5 @@ export const reducer = createReducer(initState) ({
 
     // ...
     [RESET_STATE]: () => initState,
+
 })

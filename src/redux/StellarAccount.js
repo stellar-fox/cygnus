@@ -17,6 +17,7 @@ export const RESET_STATE = "@StellarAccount/RESET_STATE"
 
 
 
+
 // ...
 export const action = {
 
@@ -79,7 +80,7 @@ export const reducer = createReducer(initState)({
         transactions: action.transactions,
     }),
 
-    
+
     // ...
     [RESET_STATE]: () => initState,
 

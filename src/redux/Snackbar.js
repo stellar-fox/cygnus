@@ -30,6 +30,7 @@ export const action = {
         message,
     }),
 
+
     // reset snackbar state on auto dismiss
     reset: () => ({
         type: SNACKBAR_RESET,
