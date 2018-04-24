@@ -4,6 +4,12 @@ import { StellarSdk } from "./stellar-tx"
 
 
 /**
+ * Statically check if a transport is supported on the user's platform/browser.
+ */
+export const isSupported = async () => Transport.isSupported()
+
+
+/**
  * Establishing connection to the Ledger device constitutes essentially
  * querrying for the current software version of the installed application.
  *
