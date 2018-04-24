@@ -111,6 +111,10 @@ export default class InputField extends Component {
                 this.props.inputStyle ||
                 InputFieldStyles.inputStyle
             }
+
+            maxLength={
+                this.props.maxLength
+            }
         />
 
 }
