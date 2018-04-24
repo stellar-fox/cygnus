@@ -104,11 +104,11 @@ export const invalidPaymentAddressMessage = (address) => {
         if (address.length < 56) {
             return publicKeyMissingCharsMessage(address)
         } else if (address.length === 56) {
-            return "Invlid checksum."
+            return "Invalid checksum."
         } else {
             return "Invalid key."
         }
-    }   
+    }
 }
 
 
