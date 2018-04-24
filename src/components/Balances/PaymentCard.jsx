@@ -446,6 +446,7 @@ class PaymentCard extends Component {
                                 validator={
                                     debounce(this.memoValidator, 500)
                                 }
+                                maxLength={28}
                             />
                         </span>
                     </div>
