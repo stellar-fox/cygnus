@@ -20,6 +20,7 @@ import { action as BalancesAction } from "../../redux/Balances"
 
 
 
+
 // <BalancesCard> component
 class BalancesCard extends Component {
 

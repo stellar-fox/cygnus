@@ -6,6 +6,7 @@ import { pubKeyAbbr } from "../../lib/utils"
 
 
 
+
 // <AssetList> component
 class AssetList extends Component {
 
@@ -31,13 +32,17 @@ class AssetList extends Component {
         )
     })
 
-    render = () => 
+
+    // ...
+    render = () =>
         <div className="badge-blue p-b-small">
             {this.formatAssets(this.props.assets)}
         </div>
-    
+
 }
 
+
+// ...
 export default compose (
     withAssetManager,
     connect(
