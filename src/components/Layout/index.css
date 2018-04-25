@@ -4,6 +4,8 @@
 
 .p-b-small { padding-bottom: 5px; }
 
+.p-b-nano { padding-bottom: 2px; }
+
 div.p-b-small-block {
     padding-bottom: 5px;
     display: inline-block;
@@ -17,6 +19,8 @@ div.p-b-small-block::after {
 .p-b-large { padding-bottom: 3rem; }
 
 .p-t { padding-top: 1rem; }
+
+.p-t-nano { padding-top: 2px; }
 
 .p-t-medium { padding-top: 2rem; }
 
@@ -46,6 +50,11 @@ div.p-b-small-block::after {
 .pico-font { font-size: 9px; }
 
 .small-caps { font-variant: small-caps; }
+
+.nano {
+    font-size: 9px;
+    font-weight: 100;
+}
 
 .tiny {
     font-size: 11px;

@@ -14,6 +14,7 @@ import {
     CardText,
 } from "material-ui/Card"
 import Button from "../../lib/common/Button"
+import AssetList from "./AssetList"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as BalancesAction } from "../../redux/Balances"
 
@@ -24,22 +25,8 @@ class BalancesCard extends Component {
 
     // ...
     componentDidMount = () => {
-        this.otherBalances = this.formatAssets(this.props.StellarAccount.assets)
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
-
-
-    // ...
-    formatAssets = (assets) => assets.map((asset, index) => {
-        return (<div className="small" key={index}>
-            <span className="asset-balance">
-                {asset.balance}
-            </span>
-            <span className="asset-code">
-                {asset.asset_code}
-            </span>
-        </div>)
-    })
 
 
     // ...
@@ -142,12 +129,11 @@ class BalancesCard extends Component {
 
             <CardText expandable={true}>
                 <Fragment>
-                    {Array.isArray(this.props.StellarAccount.assets) && this.props.StellarAccount.assets.length > 0 ?
+                    {Array.isArray(this.props.StellarAccount.assets)
+                        && this.props.StellarAccount.assets.length > 0 ?
                         <Fragment>
-                            <div className="assets p-b-small">Other Assets</div>
-                            <div className="badge-blue p-b-small">
-                                {this.formatAssets(this.props.StellarAccount.assets)}
-                            </div>
+                            <div className="assets p-b-small">Other Assets List:</div>
+                            <AssetList />
                         </Fragment> : <Fragment>
                             <div className="assets">Other Assets</div>
                             <div className='faded'>
