@@ -24,10 +24,12 @@ import {
     dynamicImportReducers,
 } from "../../lib/utils"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
+import { MuiThemeProvider as NewMuiThemeProvider } from "material-ui-next/styles"
 import LoginManager from "../LoginManager"
 import AssetManager from "../AssetManager"
 import Layout from "../Layout"
 import stellarTheme from "./theme"
+import sFoxTheme from "./sfox-theme"
 import * as env from "./env"
 
 import "./index.css"
@@ -75,13 +77,15 @@ export const store = (() => {
 export default () =>
     <Provider store={store}>
         <Router history={history}>
-            <MuiThemeProvider muiTheme={stellarTheme}>
-                <LoginManager>
-                    <AssetManager>
-                        <Layout />
-                    </AssetManager>
-                </LoginManager>
-            </MuiThemeProvider>
+            <NewMuiThemeProvider theme={sFoxTheme}>
+                <MuiThemeProvider muiTheme={stellarTheme}>
+                    <LoginManager>
+                        <AssetManager>
+                            <Layout />
+                        </AssetManager>
+                    </LoginManager>
+                </MuiThemeProvider>
+            </NewMuiThemeProvider>
         </Router>
     </Provider>
 
