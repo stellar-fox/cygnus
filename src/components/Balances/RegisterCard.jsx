@@ -7,7 +7,7 @@ import {
     CardText,
 } from "material-ui/Card"
 import { htmlEntities as he } from "../../lib/utils"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import { action as ModalAction } from "../../redux/Modal"
 
 
@@ -60,10 +60,8 @@ class RegisterCard extends Component {
             <CardActions>
                 <Button
                     onClick={this.showSignupModal}
-                    backgroundColor="rgb(15,46,83)"
-                    labelColor="rgb(244,176,4)"
-                    label="Register"
-                />
+                    color="primary"
+                >Register</Button>
             </CardActions>
         </Card>
 

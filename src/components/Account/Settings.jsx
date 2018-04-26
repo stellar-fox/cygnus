@@ -8,7 +8,7 @@ import { connect } from "react-redux"
 import Axios from "axios"
 import { config } from "../../config"
 import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import Toggle from "../../lib/common/Toggle"
 import { appName } from "../StellarFox/env"
 import { action as AccountAction } from "../../redux/Account"
@@ -185,10 +185,9 @@ class Settings extends Component {
                     </div>
                     <div className="p-b" />
                     <Button
-                        label="Register"
-                        secondary={true}
+                        color="secondary"
                         onClick={this.showSignupModal}
-                    />
+                    >Register</Button>
                 </div> : null}
 
             {this.props.loginManager.isAuthenticated() ? (

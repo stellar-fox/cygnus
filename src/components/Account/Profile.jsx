@@ -12,7 +12,7 @@ import {
     gravatarSize
 } from "../StellarFox/env"
 import Input from "../../lib/common/Input"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import MD5 from "../../lib/md5"
 import {
     emailValid,
@@ -216,9 +216,9 @@ class Profile extends Component {
                         }`
                 }
             />
-            <Button secondary={true} label="Update"
-                onClick={this.updateProfile}
-            />
+            <Button color="secondary" onClick={this.updateProfile}>
+                Update
+            </Button>
         </div>
 }
 
