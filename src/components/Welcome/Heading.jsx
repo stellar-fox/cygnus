@@ -4,8 +4,8 @@ import { connect } from "react-redux"
 
 import { TopBarSecurityMessage } from "../StellarFox/env"
 
-import Button from "../../lib/common/Button"
-import ButtonMui from "../../lib/mui.v1/Button"
+import LegacyButton from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 
@@ -48,7 +48,7 @@ class Heading extends Component {
         this.props.setLedgerBip32Path(this.state.loginObj.bip32Path)
         this.props.setLedgerPublicKey(this.state.loginObj.publicKey)
         this.props.setApiToken(this.state.loginObj.token)
-        this.props.setUserId(this.state.loginObj.userId) 
+        this.props.setUserId(this.state.loginObj.userId)
     }
 
 
@@ -62,13 +62,13 @@ class Heading extends Component {
                 }
                 title="Opening Your Bank"
                 actions={[
-                    <Button
+                    <LegacyButton
                         label="Login"
                         onClick={this.login}
                         primary={true}
                         disabled={this.state.loginButtonDisabled}
                     />,
-                    <Button
+                    <LegacyButton
                         label="Cancel"
                         onClick={this.props.hideModal}
                         primary={true}
@@ -91,7 +91,7 @@ class Heading extends Component {
                 </div>
 
                 <div className="flex-row-centered">
-                    <ButtonMui onClick={this.showSignupModal}>Enroll</ButtonMui>
+                    <Button onClick={this.showSignupModal}>Enroll</Button>
                 </div>
                 <div className="container">
                     <div className="columns">
@@ -164,9 +164,7 @@ class Heading extends Component {
 // ...
 export default connect(
     // map state to props.
-    (state) => ({
-        Modal: state.Modal,
-    }),
+    (state) => ({ Modal: state.Modal, }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
