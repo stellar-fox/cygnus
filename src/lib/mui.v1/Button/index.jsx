@@ -1,11 +1,14 @@
-import React from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
 import classNames from "classnames"
 import { withStyles } from "material-ui-next/styles"
 import Button from "material-ui-next/Button"
 
+
+
+
 // ...
-const styles = theme => ({
+const styles = (theme) => ({
     cssRoot: {
         color: theme.palette.getContrastText(theme.palette.secondaryColor),
         backgroundColor: theme.palette.secondaryColor,
@@ -16,22 +19,31 @@ const styles = theme => ({
     },
 })
 
-const CustomButton = (props) => {
-    const { classes, } = props
-    return (
-        <Button
-            variant="raised"
-            color="primary"
-            className={classNames(classes.cssRoot)}
-            onClick={props.onClick}
-        >
-            {props.children ? props.children : "Button"}
-        </Button>
-    )
-}
 
-CustomButton.propTypes = {
-    classes: PropTypes.object.isRequired,
-}
 
-export default withStyles(styles)(CustomButton)
+
+// <CustomButton> component...
+export default withStyles(styles)(
+    class extends Component {
+
+        // ...
+        static propTypes = {
+            classes: PropTypes.object.isRequired,
+        }
+
+
+        // ...
+        render = () => (
+            ({ classes: { cssRoot, }, onClick, children, }) =>
+                <Button
+                    variant="raised"
+                    color="primary"
+                    className={classNames(cssRoot)}
+                    onClick={onClick}
+                >
+                    { children ? children : "Button" }
+                </Button>
+        )(this.props)
+
+    }
+)
