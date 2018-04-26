@@ -36,7 +36,7 @@ import {
     resolvePath,
 } from "../StellarRouter"
 import { action as LoadingModalAction } from "../../redux/LoadingModal"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 import RegisterCard from "./RegisterCard"
@@ -264,10 +264,9 @@ class Balances extends Component {
                             title="Opening Your Bank - Register Account"
                             actions={[
                                 <Button
-                                    label={this.state.modalButtonText}
                                     onClick={this.props.hideModal}
-                                    primary={true}
-                                />,
+                                    color="primary"
+                                >{this.state.modalButtonText}</Button>,
                             ]}
                         >
                             <Signup onComplete={this.completeRegistration}
@@ -307,10 +306,9 @@ class Balances extends Component {
                             title="Transaction Complete"
                             actions={[
                                 <Button
-                                    label="OK"
                                     onClick={this.props.hideModal}
-                                    primary={true}
-                                />,
+                                    color="primary"
+                                >OK</Button>,
                             ]}
                         >
                             <TxCompleteMsg

@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import { action as AlertAction } from "../../redux/Alert"
 
@@ -16,11 +16,9 @@ const AlertWithDismiss =
             title={title}
             actions={[
                 <Button
-                    primary={true}
-                    label="Dismiss"
-                    keyboardFocused={true}
+                    color="primary"
                     onClick={onDismiss}
-                />,
+                >Dismiss</Button>,
             ]}
         >
             <div className="p-t">{ content }</div>

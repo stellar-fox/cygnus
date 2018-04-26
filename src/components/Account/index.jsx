@@ -26,7 +26,7 @@ import {
     Tab,
     Tabs,
 } from "material-ui/Tabs"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 import Profile from "./Profile"
@@ -133,10 +133,9 @@ class Account extends Component {
                             title="Opening Your Bank - Register Account"
                             actions={[
                                 <Button
-                                    label={this.state.modalButtonText}
                                     onClick={this.props.hideModal}
-                                    primary={true}
-                                />,
+                                    color="primary"
+                                >{this.state.modalButtonText}</Button>,
                             ]}
                         >
                             <Signup
