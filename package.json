@@ -1,6 +1,6 @@
 {
     "name": "cygnus",
-    "version": "0.1.38",
+    "version": "0.1.39",
     "description": "Stellar Fox (frontend)",
     "keywords": [
         "bank",
@@ -42,6 +42,7 @@
         "@ledgerhq/hw-transport-u2f": "^4.0.0",
         "axios": "^0.18.0",
         "bignumber.js": "^6.0.0",
+        "classnames": "^2.2.5",
         "history": "^4.7.2",
         "hoist-non-react-statics": "^2.5.0",
         "lodash": "^4.17.10",

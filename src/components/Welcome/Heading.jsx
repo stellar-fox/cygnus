@@ -47,7 +47,7 @@ class Heading extends Component {
         this.props.setLedgerBip32Path(this.state.loginObj.bip32Path)
         this.props.setLedgerPublicKey(this.state.loginObj.publicKey)
         this.props.setApiToken(this.state.loginObj.token)
-        this.props.setUserId(this.state.loginObj.userId) 
+        this.props.setUserId(this.state.loginObj.userId)
     }
 
 
@@ -163,9 +163,7 @@ class Heading extends Component {
 // ...
 export default connect(
     // map state to props.
-    (state) => ({
-        Modal: state.Modal,
-    }),
+    (state) => ({ Modal: state.Modal, }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
