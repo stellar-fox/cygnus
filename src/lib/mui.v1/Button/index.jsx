@@ -12,7 +12,7 @@ const styles = theme => ({
         "&:hover": {
             backgroundColor: theme.palette.secondaryHighlight,
         },
-        boxShadow: "0 3px 7px rgba(0, 0, 0, 0.5)",
+        boxShadow: "0 3px 7px rgba(0, 0, 0, 0.3)",
     },
 })
 
