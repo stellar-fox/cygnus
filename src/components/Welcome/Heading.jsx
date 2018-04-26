@@ -5,6 +5,7 @@ import { connect } from "react-redux"
 import { TopBarSecurityMessage } from "../StellarFox/env"
 
 import Button from "../../lib/common/Button"
+import ButtonMui from "../../lib/mui.v1/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 
@@ -90,11 +91,7 @@ class Heading extends Component {
                 </div>
 
                 <div className="flex-row-centered">
-                    <Button
-                        onClick={this.showSignupModal}
-                        label="Get Started"
-                        secondary={true}
-                    />
+                    <ButtonMui onClick={this.showSignupModal}>Enroll</ButtonMui>
                 </div>
                 <div className="container">
                     <div className="columns">
