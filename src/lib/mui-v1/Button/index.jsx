@@ -44,6 +44,7 @@ const CustomButton = (props) => {
             )}
             onClick={props.onClick}
             disabled={props.disabled}
+            fullWidth={props.fullWidth}
         >
             {props.children ? props.children : "Button"}
         </Button>

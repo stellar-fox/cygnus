@@ -6,7 +6,7 @@ import { getPublicKey } from "../../lib/ledger"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import Input from "../../lib/common/Input"
 import Toggle from "../../lib/common/Toggle"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 
 import "./index.css"
 
@@ -168,11 +168,9 @@ class LedgerAuthenticator extends Component {
                     <Button
                         disabled={this.state.buttonDisabled}
                         onClick={this.initQueryDevice}
-                        primary={!!this.props.className.match(/reverse/)}
-                        secondary={!this.props.className.match(/reverse/)}
+                        color={this.props.className.match(/reverse/) ? "primary" : "secondary"}
                         fullWidth={true}
-                        label="Authenticate"
-                    />
+                    >Authenticate</Button>
                 </div>
             </div>
 

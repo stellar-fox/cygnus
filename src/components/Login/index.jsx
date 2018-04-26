@@ -10,7 +10,7 @@ import {
 
 import LinearProgress from "material-ui/LinearProgress"
 import InputField from "../../lib/common/InputField"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 
 import "./index.css"
 
@@ -103,12 +103,11 @@ class Login extends Component {
             />
             <Button
                 onClick={this.loginValidator}
-                label="Login"
                 disabled={this.state.buttonDisabled}
-                fullWidth
-                secondary
+                fullWidth={true}
+                color="secondary"
                 className="m-t"
-            />
+            >Login</Button>
         </div>
 
 }

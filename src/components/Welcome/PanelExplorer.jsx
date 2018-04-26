@@ -13,7 +13,7 @@ import { stellarFoundationLink } from "../StellarFox/env"
 
 import Panel from "../Panel"
 import InputField from "../../lib/common/InputField"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 
 
 
@@ -120,11 +120,9 @@ class PanelExplorer extends Component {
                             <div className="p-t"></div>
                             <Button
                                 onClick={this.compoundFederationValidator}
-                                backgroundColor="rgb(244,176,4)"
-                                label="Check"
-                                secondary={true}
+                                color="secondary"
                                 fullWidth={true}
-                            />
+                            >Check</Button>
                         </div>
                     </div>
                     <div className="p-t micro-font fade-strong">

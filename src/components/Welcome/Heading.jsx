@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 
 import { TopBarSecurityMessage } from "../StellarFox/env"
 
-import Button from "../../lib/mui.v1/Button"
+import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 

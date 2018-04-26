@@ -12,7 +12,7 @@ import {
 import md5 from "../../lib/md5"
 import LedgerAuthenticator from "../LedgerAuthenticator"
 import InputField from "../../lib/common/InputField"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import Axios from "axios"
 import { config } from "../../config"
 
@@ -276,10 +276,9 @@ export default class Signup extends Component {
                                 style={{ marginBottom: "15px", }}
                             />
                             <Button
-                                label="Next"
-                                primary={true}
+                                color="primary"
                                 onClick={this.handleButtonAction.bind(this, "next")}
-                            />
+                            >Next</Button>
                         </div>
                     </div>
                 </StepContent>
@@ -327,11 +326,10 @@ export default class Signup extends Component {
                                             publicKey: this.props.config.publicKey,
                                             bip32Path: this.props.config.bip32Path,
                                         })}
-                                        primary={true}
+                                        color="primary"
                                         fullWidth={true}
-                                        label="Authenticate"
                                         disabled={this.state.buttonDisabled}
-                                    />
+                                    >Authenticate</Button>
                                 </Fragment> :
                                 <LedgerAuthenticator
                                     className="lcars-input-reverse"
