@@ -4,8 +4,7 @@ import { connect } from "react-redux"
 
 import { TopBarSecurityMessage } from "../StellarFox/env"
 
-import Button from "../../lib/common/Button"
-import ButtonMui from "../../lib/mui.v1/Button"
+import Button from "../../lib/mui.v1/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
 
@@ -63,16 +62,13 @@ class Heading extends Component {
                 title="Opening Your Bank"
                 actions={[
                     <Button
-                        label="Login"
                         onClick={this.login}
-                        primary={true}
                         disabled={this.state.loginButtonDisabled}
-                    />,
+                    >Login</Button>,
                     <Button
-                        label="Cancel"
                         onClick={this.props.hideModal}
-                        primary={true}
-                    />,
+                        color="primary"
+                    >Cancel</Button>,
                 ]}
             >
                 <Signup onComplete={this.enableLogin} />
@@ -91,7 +87,10 @@ class Heading extends Component {
                 </div>
 
                 <div className="flex-row-centered">
-                    <ButtonMui onClick={this.showSignupModal}>Enroll</ButtonMui>
+                    <Button
+                        color="secondary"
+                        onClick={this.showSignupModal}
+                    >Get Started</Button>
                 </div>
                 <div className="container">
                     <div className="columns">
