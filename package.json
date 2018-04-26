@@ -3,10 +3,10 @@
     "version": "0.1.38",
     "description": "Stellar Fox (frontend)",
     "keywords": [
-        "stellar",
-        "remittance",
         "bank",
-        "frontend"
+        "frontend",
+        "remittance",
+        "stellar"
     ],
     "homepage": "https://stellarfox.net/",
     "bugs": {
@@ -15,8 +15,16 @@
     "license": "Apache-2.0",
     "private": true,
     "contributors": [
-        "syntaxval",
-        "drmats"
+        {
+            "name": "syntaxval",
+            "email": "syntaxval@protonmail.com",
+            "url": "https://twitter.com/syntaxval/"
+        },
+        {
+            "name": "drmats",
+            "email": "xcmats@protonmail.com",
+            "url": "https://twitter.com/xcmats/"
+        }
     ],
     "repository": {
         "type": "git",
@@ -36,7 +44,7 @@
         "bignumber.js": "^6.0.0",
         "history": "^4.7.2",
         "hoist-non-react-statics": "^2.5.0",
-        "lodash": "^4.17.5",
+        "lodash": "^4.17.10",
         "material-ui": "^0.20.0",
         "material-ui-next": "^1.0.0-beta.42",
         "number-to-text": "^0.3.2",
@@ -54,7 +62,8 @@
         "resolve-pathname": "^2.2.0",
         "stellar-base": "^0.7.6",
         "stellar-sdk": "^0.8.0",
-        "toml": "^2.3.3"
+        "toml": "^2.3.3",
+        "typeface-roboto": "0.0.54"
     },
     "devDependencies": {
         "babel-eslint": "^8.2.2",

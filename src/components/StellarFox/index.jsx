@@ -32,6 +32,7 @@ import stellarTheme from "./theme"
 import sFoxTheme from "./sfox-theme"
 import * as env from "./env"
 
+import "typeface-roboto"
 import "./index.css"
 
 
