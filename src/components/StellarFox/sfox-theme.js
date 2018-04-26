@@ -4,6 +4,6 @@ export default createMuiTheme({
     palette: {
         primaryColor: "rgb(15,46,83)",
         secondaryColor: "rgb(244,176,4)",
-        secondaryHighlight: "#f6be31",
+        secondaryHighlight: "rgb(246,190,49)",
     },
 })
