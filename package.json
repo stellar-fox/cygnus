@@ -3,10 +3,10 @@
     "version": "0.1.38",
     "description": "Stellar Fox (frontend)",
     "keywords": [
-        "stellar",
-        "remittance",
         "bank",
-        "frontend"
+        "frontend",
+        "remittance",
+        "stellar"
     ],
     "homepage": "https://stellarfox.net/",
     "bugs": {
@@ -15,8 +15,16 @@
     "license": "Apache-2.0",
     "private": true,
     "contributors": [
-        "syntaxval",
-        "drmats"
+        {
+            "name": "syntaxval",
+            "email": "syntaxval@protonmail.com",
+            "url": "https://twitter.com/syntaxval/"
+        },
+        {
+            "name": "drmats",
+            "email": "xcmats@protonmail.com",
+            "url": "https://twitter.com/xcmats/"
+        }
     ],
     "repository": {
         "type": "git",
