@@ -61,7 +61,8 @@
         "resolve-pathname": "^2.2.0",
         "stellar-base": "^0.7.6",
         "stellar-sdk": "^0.8.0",
-        "toml": "^2.3.3"
+        "toml": "^2.3.3",
+        "typeface-roboto": "0.0.54"
     },
     "devDependencies": {
         "babel-eslint": "^8.2.2",

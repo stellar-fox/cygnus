@@ -30,6 +30,7 @@ import Layout from "../Layout"
 import stellarTheme from "./theme"
 import * as env from "./env"
 
+import "typeface-roboto"
 import "./index.css"
 
 
