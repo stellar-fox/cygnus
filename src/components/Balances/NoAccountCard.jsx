@@ -12,7 +12,7 @@ import {
     CardHeader,
     CardText,
 } from "material-ui/Card"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import { action as AlertAction } from "../../redux/Alert"
 
 
@@ -73,16 +73,12 @@ class NoAccountCard extends Component {
         <CardActions>
             <Button
                 onClick={this.showNotImplementedModal}
-                backgroundColor="rgb(15,46,83)"
-                labelColor="#228B22"
-                label="Fund"
-            />
+                color="success"
+            >Fund</Button>
             <Button
-                backgroundColor="rgb(15,46,83)"
-                labelColor="rgb(244,176,4)"
-                label="Request"
                 onClick={this.showNotImplementedModal}
-            />
+                color="warning"
+            >Request</Button>
         </CardActions>
     </Card>
 
