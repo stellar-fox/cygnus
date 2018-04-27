@@ -218,13 +218,21 @@ class Balances extends Component {
     showError = (message) => {
         this.props.hideModal()
         this.props.showAlert(message, "Error")
-        this.props.setStateForBalances({ sendIsDisabled: false, })
+        this.props.setStateForBalances({
+            sendEnabled: true,
+            cancelEnabled: true,
+            message: null,
+        })
     }
 
 
     // ...
     sendPayment = async () => {
-        this.props.setStateForBalances({ sendIsDisabled: true, })
+        this.props.setStateForBalances({
+            sendEnabled: false,
+            cancelEnabled: false,
+            message: "Waiting for device ...",
+        })
         try {
             await getSoftwareVersion()
             this.buildSendTransaction()

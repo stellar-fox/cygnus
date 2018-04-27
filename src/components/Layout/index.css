@@ -22,6 +22,8 @@ div.p-b-small-block::after {
 
 .p-t-nano { padding-top: 2px; }
 
+.p-t-small { padding-top: 5px; }
+
 .p-t-medium { padding-top: 2rem; }
 
 .p-t-large { padding-top: 3rem; }

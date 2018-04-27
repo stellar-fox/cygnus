@@ -5,28 +5,28 @@ import { createReducer } from "../lib/utils"
 
 // <Balances> component state
 const initState = ((now) => ({
-
-    payCardVisible: false,
-    today: now,
-    payDate: now,
     amount: "",
     amountNative: "",
     amountText: "",
     amountIsValid: false,
-    payee: null,
-    payeeAddress: "",
-    newAccount: false,
-    memoRequired: false,
-    memoText: "",
-    minimumReserveMessage: "",
-    sendEnabled: false,
+    cancelEnabled: true,
+    error: "",
     indicatorMessage: "XXXXXXXXXXXX",
     indicatorStyle: "fade-extreme",
-    transactionType: null,
-    paymentId: null,
     ledgerId: null,
-    error: "",
-
+    memoRequired: false,
+    memoText: "",
+    message: null,
+    minimumReserveMessage: "",
+    newAccount: false,
+    payCardVisible: false,
+    payDate: now,
+    payee: null,
+    payeeAddress: "",
+    paymentId: null,
+    sendEnabled: false,
+    today: now,
+    transactionType: null,
 }))(new Date())
 
 

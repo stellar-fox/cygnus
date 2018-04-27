@@ -16,8 +16,7 @@ import {
     CardActions,
     CardText,
 } from "material-ui/Card"
-import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
+import Button from "../../lib/mui-v1/Button"
 import InputField from "../../lib/common/InputField"
 import DatePicker from "material-ui/DatePicker"
 import { action as BalancesAction } from "../../redux/Balances"
@@ -35,7 +34,7 @@ import {
 
 // <PaymentCard> component
 class PaymentCard extends Component {
-
+    
     // ...
     static propTypes = {
         setState: PropTypes.func.isRequired,
@@ -58,6 +57,8 @@ class PaymentCard extends Component {
             memoText: "",
             minimumReserveMessage: "",
             sendEnabled: false,
+            cancelEnabled: true,
+            message: null,
             indicatorMessage: "XXXXXXXXXXXX",
             indicatorStyle: "fade-extreme",
             error: "",
@@ -472,27 +473,23 @@ class PaymentCard extends Component {
                     }
 
                     <div>
-                        <span className="p-r">
-                            <RaisedButton
-                                onClick={this.props.onSignTransaction}
-                                backgroundColor="rgb(15,46,83)"
-                                labelColor="rgb(244,176,4)"
-                                label="SIGN"
-                                disabledBackgroundColor="rgba(15,46,83,0.3)"
-                                disabledLabelColor="#cfd8dc"
-                                disabled={!this.props.Balances.sendEnabled}
-                            />
-                        </span>
-                        <FlatButton
-                            label="CANCEL"
-                            disableTouchRipple={true}
-                            disableFocusRipple={true}
+                        <Button
+                            onClick={this.props.onSignTransaction}
+                            color="danger"
+                            disabled={!this.props.Balances.sendEnabled}
+                        >Sign</Button>
+                        <Button
                             onClick={this.hidePaymentCard}
-                        />
-                    </div>
+                            color="primary"
+                            disabled={!this.props.Balances.cancelEnabled}
+                        >Cancel</Button>
+                    </div>                    
                 </div>
-                <div className="p-b"></div>
+                
             </CardActions>
+            <div className="f-e p-b-small tiny">{
+                this.props.Balances.message ? this.props.Balances.message : "..."
+            }</div>
         </Card>
 
 }
