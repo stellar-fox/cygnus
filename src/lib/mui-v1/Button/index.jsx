@@ -26,7 +26,35 @@ const styles = (theme) => ({
         },
     },
 
+    success: {
+        color: theme.palette.success,
+        backgroundColor: theme.palette.primaryColor,
+        "&:hover": {
+            backgroundColor: theme.palette.successHighlight,
+            textShadow: `0px 0px 20px ${theme.palette.success}`,
+        },
+    },
+
+    warning: {
+        color: theme.palette.warning,
+        backgroundColor: theme.palette.primaryColor,
+        "&:hover": {
+            backgroundColor: theme.palette.warningHighlight,
+            textShadow: `0px 0px 40px ${theme.palette.warning}`,
+        },
+    },
+
+    danger: {
+        color: theme.palette.danger,
+        backgroundColor: theme.palette.primaryColor,
+        "&:hover": {
+            backgroundColor: theme.palette.dangerHighlight,
+            textShadow: `0px 0px 20px ${theme.palette.danger}`,
+        },
+    },
+
     common: {
+        transition: "text-shadow 350ms ease-out, background-color 350ms ease",
         boxShadow: "0 3px 7px rgba(0, 0, 0, 0.3)",
         marginRight: "0.5rem",
         "&:last-child": {
@@ -36,8 +64,8 @@ const styles = (theme) => ({
     },
 
     disabled: {
-        color: "rgb(244,176,4) !important",
-        backgroundColor: "rgb(209,151,4) !important",
+        color: `${theme.palette.disabledColor} !important`,
+        backgroundColor: `${theme.palette.disabledBackgroundColor} !important`,
     },
 
 })
@@ -69,6 +97,7 @@ export default withStyles(styles)(
                     onClick={onClick}
                     disabled={disabled}
                     fullWidth={fullWidth}
+                    
                 >
                     { children ? children : "Button" }
                 </Button>

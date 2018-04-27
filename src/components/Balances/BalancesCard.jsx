@@ -13,7 +13,7 @@ import {
     CardHeader,
     CardText,
 } from "material-ui/Card"
-import Button from "../../lib/common/Button"
+import Button from "../../lib/mui-v1/Button"
 import AssetList from "./AssetList"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as BalancesAction } from "../../redux/Balances"
@@ -106,25 +106,19 @@ class BalancesCard extends Component {
 
             <CardActions>
                 <Button
-                    backgroundColor="rgb(15,46,83)"
-                    labelColor="#228B22"
-                    label="Fund"
+                    color="success"
                     onClick={this.showNotImplementedModal}
-                />
+                >Fund</Button>
                 <Button
-                    backgroundColor="rgb(15,46,83)"
-                    labelColor="rgb(244,176,4)"
-                    label="Request"
+                    color="warning"
                     onClick={this.showNotImplementedModal}
-                />
+                >Request</Button>
                 {
                     this.props.loginManager.isPayEnabled() ?
                         <Button
-                            backgroundColor="rgb(15,46,83)"
-                            labelColor="#d32f2f"
-                            label="Pay"
+                            color="danger"
                             onClick={this.togglePaymentCard}
-                        /> : null
+                        >Pay</Button> : null
                 }
             </CardActions>
 
