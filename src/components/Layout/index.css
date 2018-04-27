@@ -54,12 +54,12 @@ div.p-b-small-block::after {
 .small-caps { font-variant: small-caps; }
 
 .nano {
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 100;
 }
 
 .tiny {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 100;
 }
 
