@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import { action as SnackbarAction } from "../../redux/Snackbar"
-import Snackbar from "../../lib/common/Snackbar"
+import Snackbar from "../../lib/mui-v1/Snackbar"
 
 
 
@@ -36,8 +36,9 @@ export default connect(
         render = () => 
             <Snackbar
                 open={this.props.visible}
-                onRequestClose={this.onDismiss}
                 message={this.props.message}
+                onClose={this.onDismiss}
+                color="secondary"
             />
     }
 )
