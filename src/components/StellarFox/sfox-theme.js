@@ -20,6 +20,12 @@ export default createMuiTheme({
         disabledColor: "rgba(200,145,4,0.8)",
         disabledBackgroundColor: "rgba(200,145,4,0.3)",
         disabledSwitchColor: "rgb(110,80,3)",
+
+        background: {
+            default: "rgb(15,46,83)",
+        },
     },
+
+
 
 })

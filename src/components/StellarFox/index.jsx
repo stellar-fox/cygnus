@@ -35,7 +35,7 @@ import * as env from "./env"
 import "typeface-roboto"
 import "./index.css"
 
-
+import CssBaseline from "material-ui-next/CssBaseline"
 
 
 // browser history
@@ -82,6 +82,7 @@ export default () =>
                 <MuiThemeProvider muiTheme={stellarTheme}>
                     <LoginManager>
                         <AssetManager>
+                            <CssBaseline />
                             <Layout />
                         </AssetManager>
                     </LoginManager>
