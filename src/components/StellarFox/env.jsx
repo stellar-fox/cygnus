@@ -112,7 +112,8 @@ export const TopBarSecurityMessage = () =>
         &nbsp;&nbsp;
         <span>please read this <a target="_blank"
             rel="noopener noreferrer"
-            href={securityGuideLink}>
+            href={securityGuideLink}
+        >
             <strong>short guide</strong>
         </a> to keep your finances secure.</span>
     </div>
@@ -171,3 +172,7 @@ export const notImplementedText = [
     "We are hard at work to bring you this feature very soon.",
     "Please check back in a while as our code is being frequently deployed.",
 ].join(" ")
+
+
+// ...
+export const maximumTrustLimit = "922337203685.4775807"
