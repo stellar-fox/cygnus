@@ -3,6 +3,8 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { withAssetManager } from "../AssetManager"
 import { pubKeyAbbr } from "../../lib/utils"
+import { BigNumber } from "bignumber.js"
+import { maximumTrustLimit } from "../StellarFox/env"
 
 
 
@@ -13,11 +15,11 @@ class AssetList extends Component {
     // ...
     formatAssets = (assets) => assets.map((asset, index) => {
         return (
-            <Fragment>
+            <Fragment key={index}>
                 <div className="nano p-b-nano fade-strong">
                     {pubKeyAbbr(asset.asset_issuer)}
                 </div>
-                <div className="small" key={index}>
+                <div className="small">
                     <span className="asset-balance">
                         {asset.balance}
                     </span>
@@ -26,7 +28,11 @@ class AssetList extends Component {
                     </span>
                 </div>
                 <div className="nano p-t-nano fade-strong">
-                    Limit: {asset.limit}
+                    Trust Limit: {
+                        new BigNumber(asset.limit)
+                            .isLessThan(maximumTrustLimit) ?
+                            asset.limit : "None"
+                    }
                 </div>
             </Fragment>
         )
