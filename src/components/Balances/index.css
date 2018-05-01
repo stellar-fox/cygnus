@@ -133,7 +133,7 @@
     background-clip: padding-box;
     border-radius: 3px;
     font-weight: bold;
-    margin: 5px 10px;
+    margin: 5px 0px;
 }
 
 .header-icon > span { font-size: 2rem; }

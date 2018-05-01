@@ -7,7 +7,7 @@ import {
 import { connect } from "react-redux"
 import Axios from "axios"
 import { config } from "../../config"
-import { RadioButton, RadioButtonGroup } from "material-ui/RadioButton"
+import RadioButtonGroup from "../../lib/mui-v1/RadioButtonGroup"
 import Button from "../../lib/mui-v1/Button"
 import Toggle from "../../lib/common/Toggle"
 import { appName } from "../StellarFox/env"
@@ -125,54 +125,28 @@ class Settings extends Component {
                 account.
             </div>
             <RadioButtonGroup
-                onChange={this.changeCurrency}
-                className="account-radio-group m-t"
                 name="currencySelect"
-                defaultSelected={this.props.state.currency}
+                value={this.props.state.currency}
+                onChange={this.changeCurrency}
+                children={[
+                    { value: "eur", label: "Euro [EUR]", color:"secondary", },
+                    { value: "usd", label: "U.S. Dollar [USD]", color: "secondary", },
+                    { value: "aud", label: "Australian Dollar [AUD]", color: "secondary", },
+                ]}
             >
-                <RadioButton
-                    className="p-b-small"
-                    value="eur"
-                    label="Euro [EUR]"
-                    labelStyle={{ color: "rgba(244,176,4,0.9)", }}
-                    iconStyle={{ fill: "rgba(244,176,4,1)", }}
-                />
-                <RadioButton
-                    className="p-b-small"
-                    value="usd"
-                    label="U.S. Dollar [USD]"
-                    labelStyle={{ color: "rgba(244,176,4,0.9)", }}
-                    iconStyle={{ fill: "rgba(244,176,4,1)", }}
-                />
-                <RadioButton
-                    className="p-b-small"
-                    value="aud"
-                    label="Australian Dollar [AUD]"
-                    labelStyle={{ color: "rgba(244,176,4,0.9)", }}
-                    iconStyle={{ fill: "rgba(244,176,4,1)", }}
-                />
-                <RadioButton
-                    className="p-b-small"
-                    value="nzd"
-                    label="New Zealand Dollar [NZD]"
-                    labelStyle={{ color: "rgba(244,176,4,0.9)", }}
-                    iconStyle={{ fill: "rgba(244,176,4,1)", }}
-                />
-                <RadioButton
-                    className="p-b-small"
-                    value="pln"
-                    label="Polish Złoty [PLN]"
-                    labelStyle={{ color: "rgba(244,176,4,0.9)", }}
-                    iconStyle={{ fill: "rgba(244,176,4,1)", }}
-                />
-                <RadioButton
-                    value="thb"
-                    label="Thai Baht [THB]"
-                    labelStyle={{ color: "rgba(244,176,4,0.9)", }}
-                    iconStyle={{ fill: "rgba(244,176,4,1)", }}
-                />
             </RadioButtonGroup>
-
+            
+            <RadioButtonGroup
+                name="currencySelect"
+                value={this.props.state.currency}
+                onChange={this.changeCurrency}
+                children={[
+                    { value: "nzd", label: "New Zealand Dollar [NZD]", color: "secondary", },
+                    { value: "pln", label: "Polish Złoty [PLN]", color: "secondary", },
+                    { value: "thb", label: "Thai Baht [THB]", color: "secondary", },
+                ]}
+            >
+            </RadioButtonGroup>
             {this.props.state.needsRegistration ?
                 <div>
                     <div className="p-t p-b" />
