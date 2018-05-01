@@ -19,6 +19,7 @@ export default createMuiTheme({
         dangerHighlight: "rgb(58,13,13)",
         disabledColor: "rgba(200,145,4,0.8)",
         disabledBackgroundColor: "rgba(200,145,4,0.3)",
+        disabledSwitchColor: "rgb(110,80,3)",
     },
 
 })

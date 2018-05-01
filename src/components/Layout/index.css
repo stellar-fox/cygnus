@@ -94,7 +94,6 @@ div.p-b-small-block::after {
 
 .text-normal { font-size: 1rem !important; }
 
-.text-primary { color: rgb(15,46,83) !important; }
 
 /* --------- fonts / sizes --------- */
 
@@ -135,6 +134,9 @@ strong { color: rgb(212,228,188); }
 .fade-extreme { opacity: 0.3; }
 
 .transparent { opacity: 0; }
+
+.text-primary { color: rgb(15,46,83) !important; }
+.text-secondary { color: rgb(244,176,4) !important; }
 
 /* --------- links / colors --------- */
 
