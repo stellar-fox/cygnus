@@ -81,6 +81,7 @@ class PanelLedger extends Component {
                             Ledger Support
                         </a>
                     </div>
+                    <div className="m-t"></div>
                     <LedgerAuthenticator
                         onConnected={this.logInViaLedger}
                         className="lcars-input"
