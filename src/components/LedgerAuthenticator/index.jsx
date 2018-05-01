@@ -5,8 +5,8 @@ import { bip32Prefix } from "../StellarFox/env"
 import { getPublicKey } from "../../lib/ledger"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import Input from "../../lib/common/Input"
-import Toggle from "../../lib/common/Toggle"
 import Button from "../../lib/mui-v1/Button"
+import Switch from "../../lib/mui-v1/Switch"
 
 import "./index.css"
 
@@ -119,31 +119,30 @@ class LedgerAuthenticator extends Component {
     // ...
     render = () =>
         <Fragment>
+            <div className="m-t f-b space-between">
+                <div>
+                    <div className="account-title">
+                        Use default account
+                    </div>
+                    <div className={(this.props.className.match(/reverse/) ?
+                        "text-primary" : "text-secondary") + " account-subtitle"}
+                    >
+                        You can specify an account index to
+                        transact from that account.
+                    </div>
+                </div>
+                <div>
+                    <Switch
+                        checked={this.state.useDefaultAccount}
+                        onChange={this.handleCheckboxClick}
+                        color={this.props.className.match(/reverse/) ?
+                            "primary" : "secondary"}
+                    />
+                </div>
+            </div>
+
             <div className="f-b">
                 <div className="f-e-col">
-                    <Toggle
-                        label="Use default account"
-                        onToggle={this.handleCheckboxClick}
-                        toggled={this.state.useDefaultAccount}
-                        labelStyle={{
-                            color:
-                                this.props.className.match(/reverse/) ?
-                                    "rgb(15,46,83)" :
-                                    "rgb(244,176,4)",
-                        }}
-                        thumbSwitchedStyle={{
-                            backgroundColor:
-                                this.props.className.match(/reverse/) ?
-                                    "rgb(15,46,83)" :
-                                    "rgb(244,176,4)",
-                        }}
-                        trackSwitchedStyle={{
-                            backgroundColor:
-                                this.props.className.match(/reverse/) ?
-                                    "rgba(15,46,83,0.75)" :
-                                    "rgba(244,176,4,0.75)",
-                        }}
-                    />
                     {
                         this.state.pathEditable ?
                             <Fragment>
@@ -168,7 +167,8 @@ class LedgerAuthenticator extends Component {
                     <Button
                         disabled={this.state.buttonDisabled}
                         onClick={this.initQueryDevice}
-                        color={this.props.className.match(/reverse/) ? "primary" : "secondary"}
+                        color={this.props.className.match(/reverse/) ?
+                            "primary" : "secondary"}
                         fullWidth={true}
                     >Authenticate</Button>
                 </div>

@@ -1,6 +1,6 @@
 import React from "react"
 import { NotImplementedBadge } from "../StellarFox/env"
-import Toggle from "../../lib/common/Toggle"
+import Switch from "../../lib/mui-v1/Switch"
 
 
 
@@ -33,9 +33,11 @@ export default  () =>
                 <NotImplementedBadge />
             </div>
             <div>
-                <Toggle
-                    toggled={false}
-                    onToggle={null}
+                <Switch
+                    checked={false}
+                    onChange={null}
+                    color="secondary"
+                    disabled
                 />
             </div>
         </div>
@@ -53,9 +55,11 @@ export default  () =>
                 <NotImplementedBadge />
             </div>
             <div>
-                <Toggle
-                    toggled={false}
-                    onToggle={null}
+                <Switch
+                    checked={false}
+                    onChange={null}
+                    color="secondary"
+                    disabled
                 />
             </div>
         </div>

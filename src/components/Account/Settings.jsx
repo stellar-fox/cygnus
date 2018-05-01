@@ -9,7 +9,7 @@ import Axios from "axios"
 import { config } from "../../config"
 import RadioButtonGroup from "../../lib/mui-v1/RadioButtonGroup"
 import Button from "../../lib/mui-v1/Button"
-import Toggle from "../../lib/common/Toggle"
+import Switch from "../../lib/mui-v1/Switch"
 import { appName } from "../StellarFox/env"
 import { action as AccountAction } from "../../redux/Account"
 import { action as SnackbarAction } from "../../redux/Snackbar"
@@ -179,9 +179,10 @@ class Settings extends Component {
                         </div>
                     </div>
                     <div>
-                        <Toggle
-                            toggled={this.props.state.discoverable}
-                            onToggle={this.changeAccountDiscoverability}
+                        <Switch
+                            checked={this.props.state.discoverable}
+                            onChange={this.changeAccountDiscoverability}
+                            color="secondary"
                         />
                     </div>
                 </div>
