@@ -23,3 +23,18 @@ div.badge {
     padding: 3px 5px 3px 5px;
     border-radius: 3px;
 }
+
+
+div.badge-error {
+    background-color: rgb(211,47,47);
+    color: rgb(244,176,4);
+    padding: 3px 5px 3px 5px;
+    border-radius: 3px;
+}
+
+div.badge-success {
+    background-color: rgb(27,94,32);
+    color: rgb(244,176,4);
+    padding: 3px 5px 3px 5px;
+    border-radius: 3px;
+}

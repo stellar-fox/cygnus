@@ -1,6 +1,7 @@
 /* --------- paddings / margins --------- */
 
 .p-b { padding-bottom: 1rem; }
+.p-b:last-child { padding-bottom: 0rem; }
 
 .p-b-small { padding-bottom: 5px; }
 
@@ -19,6 +20,7 @@ div.p-b-small-block::after {
 .p-b-large { padding-bottom: 3rem; }
 
 .p-t { padding-top: 1rem; }
+.p-t:last-child { padding-top: 0rem; }
 
 .p-t-nano { padding-top: 2px; }
 
@@ -119,13 +121,13 @@ a.active {
 
 strong { color: rgb(212,228,188); }
 
-.error { color: rgba(178,34,34,1); }
+.error { color: rgb(178,34,34); }
 
-.success { color: rgba(46,125,50,1); }
+.success { color: rgb(46,125,50); }
 
-.green { color: #1b5e20; }
+.green { color: rgb(27,94,32); }
 
-.red { color: #d32f2f; }
+.red { color: rgb(211,47,47); }
 
 .fade { opacity: 0.8; }
 
