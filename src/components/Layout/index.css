@@ -20,7 +20,6 @@ div.p-b-small-block::after {
 .p-b-large { padding-bottom: 3rem; }
 
 .p-t { padding-top: 1rem; }
-.p-t:last-child { padding-top: 0rem; }
 
 .p-t-nano { padding-top: 2px; }
 
