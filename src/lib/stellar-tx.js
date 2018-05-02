@@ -1,4 +1,8 @@
-import { liveNet, testNet } from "../components/StellarFox/env"
+import {
+    liveNetAddr,
+    testNetAddr,
+} from "../components/StellarFox/env"
+
 
 
 
@@ -10,12 +14,12 @@ export const StellarSdk = window.StellarSdk
 
 // ...
 export const server = (network) => {
-    if (network === liveNet) {
+    if (network === liveNetAddr) {
         StellarSdk.Network.usePublicNetwork()
-        return new StellarSdk.Server(liveNet)
+        return new StellarSdk.Server(liveNetAddr)
     }
     StellarSdk.Network.useTestNetwork()
-    return new StellarSdk.Server(testNet)
+    return new StellarSdk.Server(testNetAddr)
 }
 
 

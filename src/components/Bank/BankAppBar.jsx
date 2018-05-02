@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 
 import { action as AccountAction } from "../../redux/Account"
@@ -10,51 +13,72 @@ import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as PaymentsAction } from "../../redux/Payments"
 
-import AppBar from "material-ui/AppBar"
-import IconButton from "material-ui/IconButton"
+import { withStyles } from "material-ui-next/styles"
+import AppBar from "material-ui-next/AppBar"
+import IconButton from "material-ui-next/IconButton"
+import MenuIcon from "@material-ui/icons/Menu"
+import PowerIcon from "@material-ui/icons/PowerSettingsNew"
+import Toolbar from "material-ui-next/Toolbar"
+import Typography from "material-ui-next/Typography"
+
 import BankAppBarTitle from "./BankAppBarTitle"
 import BankAppBarItems from "./BankAppBarItems"
 
 
 
 
-// ...
-const style = {
-    appBar : {
-        position: "fixed",
-        left: 0,
-        top: 0,
-        zIndex: 10001,
-    },
-    icon : {
-        color: "rgba(15, 46, 83, 0.45)",
-    },
-}
-
-
-
-
 // <BankAppBar> component
-export default connect(
-    // map state to props.
-    (state) => ({
-        currentView: state.Router.currentView,
+export default compose(
+    withStyles({
+
+        appbar: {
+            backgroundColor: "#F4B004",
+            "@global h1": { color: "#0F2E53", },
+            "@global svg": {
+                fill: ["rgba(15, 46, 83, 0.45)", "!important",],
+            },
+        },
+
+        flex: { flex: 1, },
+
+        logoutButton: {
+            marginLeft: 20,
+            marginRight: -12,
+        },
+
+        menuButton: {
+            marginLeft: -12,
+            marginRight: 20,
+        },
+
     }),
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        resetAccountState: AccountAction.resetState,
-        resetLedgerHQState: LedgerHQAction.resetState,
-        resetLoginManagerState: LoginManagerAction.resetState,
-        resetStellarAccountState: StellarAccountAction.resetState,
-        resetPaymentsState: PaymentsAction.resetState,
-        toggleDrawer: BankAction.toggleDrawer,
-    }, dispatch)
+    connect(
+        // map state to props.
+        (state) => ({
+            currentView: state.Router.currentView,
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            resetAccountState: AccountAction.resetState,
+            resetLedgerHQState: LedgerHQAction.resetState,
+            resetLoginManagerState: LoginManagerAction.resetState,
+            resetPaymentsState: PaymentsAction.resetState,
+            resetStellarAccountState: StellarAccountAction.resetState,
+            toggleDrawer: BankAction.toggleDrawer,
+        }, dispatch)
+    )
 )(
     class extends Component {
 
         // ...
         static propTypes = {
+            classes: PropTypes.object.isRequired,
             currentView: PropTypes.string.isRequired,
+            resetAccountState: PropTypes.func.isRequired,
+            resetLedgerHQState: PropTypes.func.isRequired,
+            resetLoginManagerState: PropTypes.func.isRequired,
+            resetPaymentsState: PropTypes.func.isRequired,
+            resetStellarAccountState: PropTypes.func.isRequired,
             toggleDrawer: PropTypes.func.isRequired,
         }
 
@@ -71,28 +95,37 @@ export default connect(
 
         // ...
         render = () => (
-            ({ currentView, toggleDrawer, }) =>
-                <AppBar
-                    title={
-                        <div className="flex-row">
-                            <BankAppBarTitle viewName={currentView} />
-                            <BankAppBarItems />
-                        </div>
-                    }
-                    className="navbar"
-                    style={style.appBar}
-                    onLeftIconButtonClick={toggleDrawer}
-                    iconElementRight={
+            ({ classes, currentView, toggleDrawer, }) =>
+                <AppBar className={classes.appbar}>
+                    <Toolbar>
                         <IconButton
-                            iconStyle={style.icon}
+                            className={classes.menuButton}
+                            color="inherit"
+                            aria-label="Menu"
+                            onClick={toggleDrawer}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography
+                            variant="title"
+                            color="inherit"
+                            className={classes.flex}
+                        >
+                            <div className="flex-row">
+                                <BankAppBarTitle viewName={currentView} />
+                                <BankAppBarItems />
+                            </div>
+                        </Typography>
+                        <IconButton
+                            className={classes.logoutButton}
+                            color="inherit"
+                            aria-label="Logout"
                             onClick={this.handleLogOutClick}
                         >
-                            <i className="material-icons">
-                                power_settings_new
-                            </i>
+                            <PowerIcon />
                         </IconButton>
-                    }
-                />
+                    </Toolbar>
+                </AppBar>
         )(this.props)
 
     }

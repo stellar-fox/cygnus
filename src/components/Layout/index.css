@@ -249,13 +249,6 @@ strong { color: rgb(212,228,188); }
 
 /* --------- misc --------- */
 
-div.indicator-set-col {
-    line-height: 15px;
-    padding: 10px 0px;
-    margin-left: 10px;
-    font-size: 14px;
-}
-
 span.red-badge {
     display: inline-block;
     font-size: 0.7rem;

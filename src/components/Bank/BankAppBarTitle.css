@@ -1,11 +1,13 @@
 div.app-bar-title {
     display: flex;
     flex-direction: column;
-    color: rgb(15,46,83);
+    color: rgb(15, 46, 83);
+    font-weight: normal;
 }
 
 div.bar-title {
     line-height: 45px;
+    font-size: 1.1em;
 }
 
 div.bar-subtitle {
@@ -17,24 +19,34 @@ div.bar-subtitle-account {
     text-align: end;
 }
 
+div.indicator-set-col {
+    line-height: 15px;
+    padding: 10px 0px;
+    margin-left: 16px;
+    font-size: 14px;
+}
+
 div.badge {
-    background-color: rgba(15,46,83,0.9);
+    background-color: rgba(15, 46, 83, 0.9);
     color: rgb(244,176,4);
     padding: 3px 5px 3px 5px;
     border-radius: 3px;
 }
 
-
-div.badge-error {
-    background-color: rgb(211,47,47);
-    color: rgb(244,176,4);
+div.badge-error, div.badge-success {
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    background-clip: padding-box;
+    color: rgba(255, 255, 255, 0.8);
     padding: 3px 5px 3px 5px;
     border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: bold;
 }
 
-div.badge-success {
-    background-color: rgb(27,94,32);
-    color: rgb(244,176,4);
-    padding: 3px 5px 3px 5px;
-    border-radius: 3px;
-}
+div.badge-error { background-color: rgba(178, 34, 34, 1.0); }
+
+div.badge-success { background-color: rgba(27, 94, 32, 1.0); }

@@ -1,22 +1,26 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoadingModalAction } from "../../redux/LoadingModal"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 import {
-    htmlEntities as he,
     fedToPub,
+    htmlEntities as he,
     invalidPaymentAddressMessage,
 } from "../../lib/utils"
-import { stellarFoundationLink } from "../StellarFox/env"
+import {
+    liveNetAddr,
+    testNetAddr,
+    stellarFoundationLink,
+} from "../StellarFox/env"
 
 import Panel from "../Panel"
 import InputField from "../../lib/common/InputField"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
-import { liveNet, testNet } from "../StellarFox/env"
 
 
 
@@ -49,7 +53,9 @@ class PanelExplorer extends Component {
 
     // ...
     setNetwork = (_event, value) => (
-        value ? this.props.setHorizon(liveNet) : this.props.setHorizon(testNet)
+        value ?
+            this.props.setHorizon(liveNetAddr) :
+            this.props.setHorizon(testNetAddr)
     )
 
 
@@ -65,11 +71,9 @@ class PanelExplorer extends Component {
     enterExplorer = async () => {
         const textInputValue = this.input.state.value
 
-        /**
-         * textInputValue is either VALID federation or VALID pubkey
-         * check for '*' character - if present then it is federation address
-         * otherwise a public key
-         */
+        // textInputValue is either VALID federation or VALID pubkey
+        // check for '*' character - if present then it is federation address
+        // otherwise a public key
         if (textInputValue.match(/\*/)) {
             try {
                 this.props.showLoadingModal("Looking up Payment Address ...")
@@ -81,9 +85,9 @@ class PanelExplorer extends Component {
                     error: error.message,
                 })
             }
-        }
+
         // Input is a valid Stellar public key
-        else {
+        } else {
             this.props.setLedgerPublicKey(textInputValue)
         }
 
@@ -124,7 +128,7 @@ class PanelExplorer extends Component {
                         </div>
                         <div>
                             <Switch
-                                checked={this.props.horizon === liveNet ? true : false}
+                                checked={this.props.horizon === liveNetAddr}
                                 onChange={this.setNetwork}
                                 color="secondary"
                             />
@@ -138,19 +142,20 @@ class PanelExplorer extends Component {
                                 type="text"
                                 placeholder="Payment Address"
                                 styles={styles}
-                                ref={(self) => {
-                                    this.input = self
-                                }}
+                                ref={(self) => { this.input = self }}
                             />
-                            <div className="p-t"></div>
+                            <div>&nbsp;</div>
                             <Button
                                 onClick={this.compoundFederationValidator}
                                 color="secondary"
                                 fullWidth={true}
-                            >Check</Button>
+                            >
+                                Check
+                            </Button>
                         </div>
                     </div>
-                    <div className="p-t micro-font fade-strong">
+                    <div>&nbsp;</div>
+                    <div className="micro-font fade-strong">
                         “Stellar” is a trademark of the<he.Nbsp />
                         <a href={stellarFoundationLink} target="_blank">
                             Stellar Development Foundation

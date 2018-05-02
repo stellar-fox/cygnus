@@ -40,6 +40,7 @@
     "dependencies": {
         "@ledgerhq/hw-app-str": "^4.0.0",
         "@ledgerhq/hw-transport-u2f": "^4.0.0",
+        "@material-ui/icons": "^1.0.0-beta.43",
         "axios": "^0.18.0",
         "bignumber.js": "^6.0.0",
         "classnames": "^2.2.5",
@@ -47,7 +48,7 @@
         "hoist-non-react-statics": "^2.5.0",
         "lodash": "^4.17.10",
         "material-ui": "^0.20.0",
-        "material-ui-next": "^1.0.0-beta.42",
+        "material-ui-next": "^1.0.0-beta.44",
         "number-to-text": "^0.3.2",
         "prop-types": "^15.6.1",
         "raf": "^3.4.0",
