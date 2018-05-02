@@ -16,23 +16,26 @@ class AssetList extends Component {
     formatAssets = (assets) => assets.map((asset, index) => {
         return (
             <Fragment key={index}>
-                <div className="nano p-b-nano fade-strong">
-                    {pubKeyAbbr(asset.asset_issuer)}
-                </div>
-                <div className="small">
-                    <span className="asset-balance">
-                        {asset.balance}
-                    </span>
-                    <span className="asset-code">
-                        {asset.asset_code}
-                    </span>
-                </div>
-                <div className="nano p-t-nano fade-strong">
-                    Trust Limit: {
-                        new BigNumber(asset.limit)
-                            .isLessThan(maximumTrustLimit) ?
-                            asset.limit : "None"
-                    }
+                <div className="p-t"></div>
+                <div className="badge-blue p-b-small">
+                    <div className="nano p-b-nano fade-strong">
+                        {pubKeyAbbr(asset.asset_issuer)}
+                    </div>
+                    <div className="small">
+                        <span className="asset-balance">
+                            {asset.balance}
+                        </span>
+                        <span className="asset-code">
+                            {asset.asset_code}
+                        </span>
+                    </div>
+                    <div className="nano p-t-nano fade-strong">
+                        Trust Limit: {
+                            new BigNumber(asset.limit)
+                                .isLessThan(maximumTrustLimit) ?
+                                asset.limit : "None"
+                        }
+                    </div>
                 </div>
             </Fragment>
         )
@@ -40,8 +43,8 @@ class AssetList extends Component {
 
 
     // ...
-    render = () =>
-        <div className="badge-blue p-b-small">
+    render = () => 
+        <div className="f-b-col">
             {this.formatAssets(this.props.assets)}
         </div>
 
