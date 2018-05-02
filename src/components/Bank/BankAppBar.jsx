@@ -45,8 +45,8 @@ export default connect(
         resetAccountState: AccountAction.resetState,
         resetLedgerHQState: LedgerHQAction.resetState,
         resetLoginManagerState: LoginManagerAction.resetState,
-        resetStellarAccountState: StellarAccountAction.resetState,
         resetPaymentsState: PaymentsAction.resetState,
+        resetStellarAccountState: StellarAccountAction.resetState,
         toggleDrawer: BankAction.toggleDrawer,
     }, dispatch)
 )(
@@ -55,6 +55,11 @@ export default connect(
         // ...
         static propTypes = {
             currentView: PropTypes.string.isRequired,
+            resetAccountState: PropTypes.func.isRequired,
+            resetLedgerHQState: PropTypes.func.isRequired,
+            resetLoginManagerState: PropTypes.func.isRequired,
+            resetPaymentsState: PropTypes.func.isRequired,
+            resetStellarAccountState: PropTypes.func.isRequired,
             toggleDrawer: PropTypes.func.isRequired,
         }
 
