@@ -150,9 +150,9 @@ export const endpointLookup = (federationAddress) => (
 
 
 // ...
-export const publicKeyExists = async (publicKey) => {
+export const publicKeyExists = async (publicKey, network) => {
     try {
-        await loadAccount(publicKey)
+        await loadAccount(publicKey, network)
         return true
     } catch (ex) {
         if (ex.message  &&  ex.message.status === 404) {

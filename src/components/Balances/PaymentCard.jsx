@@ -107,7 +107,7 @@ class PaymentCard extends Component {
         if (publicKey) {
             // check if this public key already exists on Stellar network
             // and based on the outcome set appropriate transaction type
-            if (await publicKeyExists(publicKey)) {
+            if (await publicKeyExists(publicKey, this.props.StellarAccount.horizon)) {
 
                 this.setTransactionType("EXISTING_ACCOUNT")
                 this.updateIndicatorMessage("Recipient Verified", "green")

@@ -127,8 +127,7 @@ class LedgerAuthenticator extends Component {
                     <div className={(this.props.className.match(/reverse/) ?
                         "text-primary" : "text-secondary") + " account-subtitle"}
                     >
-                        You can specify an account index to
-                        transact from that account.
+                        You can specify an account index for transactions.
                     </div>
                 </div>
                 <div>

@@ -1,4 +1,4 @@
-import { config } from "../config"
+import { liveNet, testNet } from "../components/StellarFox/env"
 
 
 
@@ -7,29 +7,37 @@ export const StellarSdk = window.StellarSdk
 
 
 
-StellarSdk.Network.useTestNetwork()
-const server = new StellarSdk.Server(config.horizon)
+
+// ...
+export const server = (network) => {
+    if (network === liveNet) {
+        StellarSdk.Network.usePublicNetwork()
+        return new StellarSdk.Server(liveNet)
+    }
+    StellarSdk.Network.useTestNetwork()
+    return new StellarSdk.Server(testNet)
+}
 
 
 
 
 // ...
-export const loadAccount = async (publicKey) =>
-    await server.loadAccount(publicKey)
+export const loadAccount = async (publicKey, network) =>
+    await server(network).loadAccount(publicKey)
 
 
 
 
 // ...
-export const payments = () =>
-    server.payments().cursor("now")
+export const payments = (network) =>
+    server(network).payments().cursor("now")
 
 
 
 
 // ...
-export const operations = () =>
-    server.operations().cursor("now")
+export const operations = (network) =>
+    server(network).operations().cursor("now")
 
 
 
@@ -37,7 +45,7 @@ export const operations = () =>
 // ...
 export const buildCreateAccountTx = async (txData) =>
     new StellarSdk.TransactionBuilder(
-        await loadAccount(txData.source)
+        await loadAccount(txData.source, txData.network)
     ).addOperation(StellarSdk.Operation.createAccount({
         destination: txData.destination,
         startingBalance: txData.amount,
@@ -49,7 +57,7 @@ export const buildCreateAccountTx = async (txData) =>
 // ...
 export const buildPaymentTx = async (txData) =>
     new StellarSdk.TransactionBuilder(
-        await loadAccount(txData.source)
+        await loadAccount(txData.source, txData.network)
     ).addOperation(StellarSdk.Operation.payment({
         destination: txData.destination,
         asset: StellarSdk.Asset.native(),
@@ -60,5 +68,5 @@ export const buildPaymentTx = async (txData) =>
 
 
 // ...
-export const submitTransaction = async (signedTx) =>
-    server.submitTransaction(signedTx)
+export const submitTransaction = async (signedTx, network) =>
+    server(network).submitTransaction(signedTx)

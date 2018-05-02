@@ -9,9 +9,9 @@ import {
 
 // ...
 export const paymentsStreamer = (
-    publicKey, popupSnackbar, updateAccountTree
+    publicKey, network, popupSnackbar, updateAccountTree
 ) =>
-    payments().stream({
+    payments(network).stream({
         onmessage: (message) => {
 
             const RECEIVED = [
@@ -29,12 +29,12 @@ export const paymentsStreamer = (
             ]
 
             RECEIVED.some(el => el) && popupSnackbar("Payment received.") &&
-                loadAccount(publicKey).then(
+                loadAccount(publicKey, network).then(
                     account => updateAccountTree(account)
                 )
 
             SENT.some(el => el) && popupSnackbar("Payment sent.") &&
-                loadAccount(publicKey).then(
+                loadAccount(publicKey, network).then(
                     account => updateAccountTree(account)
                 )
         },
@@ -45,9 +45,9 @@ export const paymentsStreamer = (
 
 // ...
 export const operationsStreamer = (
-    publicKey, popupSnackbar, updateAccountTree
+    publicKey, network, popupSnackbar, updateAccountTree
 ) =>
-    operations().stream({
+    operations(network).stream({
         onmessage: (message) => {
             const HOME_DOMAIN_UPDATE = [
                 (message.type === "set_options" &&
@@ -65,13 +65,13 @@ export const operationsStreamer = (
 
             HOME_DOMAIN_UPDATE.some(el => el) &&
             popupSnackbar("Account domain updated.") &&
-            loadAccount(publicKey).then(
+            loadAccount(publicKey, network).then(
                 account => updateAccountTree(account)
             )
 
             HOME_DOMAIN_REMOVE.some(el => el) &&
             popupSnackbar("Account domain removed.") &&
-            loadAccount(publicKey).then(
+            loadAccount(publicKey, network).then(
                 account => updateAccountTree(account)
             )
         },

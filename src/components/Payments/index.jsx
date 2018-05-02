@@ -36,7 +36,6 @@ import {
 } from "material-ui/Tabs"
 import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
-import { config } from "../../config"
 import { StellarSdk, loadAccount } from "../../lib/stellar-tx"
 
 import "./index.css"
@@ -93,7 +92,7 @@ class Payments extends Component {
         )
 
         // ...
-        this.stellarServer = new StellarSdk.Server(config.horizon)
+        this.stellarServer = new StellarSdk.Server(this.props.horizon)
     }
 
 
@@ -102,7 +101,7 @@ class Payments extends Component {
         this.props.showLoadingModal("Loading payments data ...")
 
         this.stellarServer
-            .payments()
+            .payments(this.props.horizon)
             .forAccount(this.props.publicKey)
             .order("desc")
             .limit(5)
@@ -207,7 +206,7 @@ class Payments extends Component {
     // ...
     paymentsStreamer = () =>
         this.stellarServer
-            .payments()
+            .payments(this.props.horizon)
             .cursor("now")
             .stream({
                 onmessage: (message) => {
@@ -283,14 +282,14 @@ class Payments extends Component {
 
     // ...
     updateAccount = () =>
-        loadAccount(this.props.publicKey)
+        loadAccount(this.props.publicKey, this.props.horizon)
             .catch(StellarSdk.NotFoundError, function (_err) {
                 throw new Error("The destination account does not exist!")
             })
             .then(
                 (_account) => {
                     this.stellarServer
-                        .payments()
+                        .payments(this.props.horizon)
                         .limit(5)
                         .forAccount(this.props.publicKey)
                         .order("desc")
@@ -831,6 +830,7 @@ export default compose(
             Account: state.Account,
             transactions: state.StellarAccount.transactions,
             publicKey: state.LedgerHQ.publicKey,
+            horizon: state.StellarAccount.horizon,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({

@@ -1,10 +1,13 @@
 import { createReducer } from "../lib/utils"
+import { config } from "../../src/config"
 
 
 
 
 // StellarAccount state
-const initState = {}
+const initState = {
+    horizon: config.horizon,
+}
 
 
 
@@ -14,6 +17,7 @@ export const LOAD_STELLAR_ACCOUNT = "StellarAccount/LOAD_STELLAR_ACCOUNT"
 export const SET_PAYMENTS = "StellarAccount/SET_PAYMENTS"
 export const SET_TRANSACTIONS = "StellarAccount/SET_TRANSACTIONS"
 export const RESET_STATE = "@StellarAccount/RESET_STATE"
+export const SET_HORIZON = "StellarAccount/SET_HORIZON"
 
 
 
@@ -39,6 +43,13 @@ export const action = {
     setTransactions: (transactions) => ({
         type: SET_TRANSACTIONS,
         transactions,
+    }),
+
+
+    // ...
+    setHorizon: (horizon) => ({
+        type: SET_HORIZON,
+        horizon,
     }),
 
 
@@ -78,6 +89,13 @@ export const reducer = createReducer(initState)({
     [SET_TRANSACTIONS]: (state, action) => ({
         ...state,
         transactions: action.transactions,
+    }),
+
+
+    // ...
+    [SET_HORIZON]: (state, action) => ({
+        ...state,
+        horizon: action.horizon,
     }),
 
 

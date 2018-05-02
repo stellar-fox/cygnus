@@ -56,7 +56,7 @@ class PaymentsHistory extends Component {
     // ...
     getNextPaymentsPage = () =>
         this.props.stellarServer
-            .payments()
+            .payments(this.props.horizon)
             .forAccount(this.props.publicKey)
             .order("desc")
             .cursor(this.props.state.cursorRight)
@@ -121,7 +121,7 @@ class PaymentsHistory extends Component {
     // ...
     getPrevPaymentsPage = () =>
         this.props.stellarServer
-            .payments()
+            .payments(this.props.horizon)
             .forAccount(this.props.publicKey)
             .order("asc")
             .cursor(this.props.state.cursorLeft)
@@ -416,6 +416,7 @@ export default compose(
             payments: state.StellarAccount.payments,
             Account: state.Account,
             publicKey: state.LedgerHQ.publicKey,
+            horizon: state.StellarAccount.horizon,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({

@@ -3,6 +3,7 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoadingModalAction } from "../../redux/LoadingModal"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 import {
     htmlEntities as he,
@@ -14,6 +15,8 @@ import { stellarFoundationLink } from "../StellarFox/env"
 import Panel from "../Panel"
 import InputField from "../../lib/common/InputField"
 import Button from "../../lib/mui-v1/Button"
+import Switch from "../../lib/mui-v1/Switch"
+import { liveNet, testNet } from "../StellarFox/env"
 
 
 
@@ -42,6 +45,12 @@ const styles = {
 
 // <PanelExplorer> component
 class PanelExplorer extends Component {
+
+
+    // ...
+    setNetwork = (_event, value) => (
+        value ? this.props.setHorizon(liveNet) : this.props.setHorizon(testNet)
+    )
 
 
     // ...
@@ -100,12 +109,28 @@ class PanelExplorer extends Component {
                     </div>
                     <div className="title-small p-t p-b">
                         Your account operations are
-                        publicly accessible on the
-                        global ledger. Anyone who
-                        knows your account number or
-                        payment address can view
-                        your public transactions.
+                        publicly visible on the
+                        global ledger.
                     </div>
+
+                    <div className="m-t f-b space-between">
+                        <div>
+                            <div className="account-title">
+                                Use live network
+                            </div>
+                            <div className="text-secondary account-subtitle">
+                                Explore transactions conducted on live network.
+                            </div>
+                        </div>
+                        <div>
+                            <Switch
+                                checked={this.props.horizon === liveNet ? true : false}
+                                onChange={this.setNetwork}
+                                color="secondary"
+                            />
+                        </div>
+                    </div>
+
                     <div className="f-b">
                         <div className="f-e-col">
                             <InputField
@@ -140,11 +165,14 @@ class PanelExplorer extends Component {
 // ...
 export default connect(
     // map state to props.
-    (_state) => ({}),
+    (state) => ({
+        horizon: state.StellarAccount.horizon,
+    }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setLedgerPublicKey: LedgerHQAction.setPublicKey,
         showLoadingModal: LoadingModalAction.showLoadingModal,
         hideLoadingModal: LoadingModalAction.hideLoadingModal,
+        setHorizon: StellarAccountAction.setHorizon,
     }, dispatch)
 )(PanelExplorer)

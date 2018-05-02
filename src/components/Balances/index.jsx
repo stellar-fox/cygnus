@@ -145,7 +145,9 @@ class Balances extends Component {
     // ...
     _tmpQueryHorizon = async () => {
         try {
-            const account = await loadAccount(this.props.publicKey)
+            const account = await loadAccount(
+                this.props.publicKey, this.props.StellarAccount.horizon
+            )
             this.props.updateAccountTree(account)
             this.props.setState({ exists: true, })
         } catch (error) {
@@ -166,6 +168,7 @@ class Balances extends Component {
                 amount: this.props.assetManager.convertToNative(
                     this.props.Balances.amount),
                 memo: this.props.Balances.memoText,
+                network: this.props.StellarAccount.horizon,
             }
             if (this.props.Balances.newAccount) {
                 tx = await buildCreateAccountTx(paymentData)
@@ -189,7 +192,9 @@ class Balances extends Component {
 
             this.props.showModal("txBroadcast")
 
-            const broadcast = await submitTransaction(signedTx)
+            const broadcast = await submitTransaction(
+                signedTx, this.props.StellarAccount.horizon
+            )
 
             this.props.setStateForBalances({
                 paymentId: broadcast.hash,
