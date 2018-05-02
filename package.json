@@ -40,6 +40,7 @@
     "dependencies": {
         "@ledgerhq/hw-app-str": "^4.0.0",
         "@ledgerhq/hw-transport-u2f": "^4.0.0",
+        "@material-ui/icons": "^1.0.0-beta.43",
         "axios": "^0.18.0",
         "bignumber.js": "^6.0.0",
         "classnames": "^2.2.5",
