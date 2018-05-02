@@ -26,6 +26,8 @@ export default createMuiTheme({
         },
     },
 
-
+    zIndex: {
+        appBar: 10001,
+    },
 
 })

@@ -1,11 +1,13 @@
 div.app-bar-title {
     display: flex;
     flex-direction: column;
-    color: rgb(15,46,83);
+    color: rgb(15, 46, 83);
+    font-weight: normal;
 }
 
 div.bar-title {
     line-height: 45px;
+    font-size: 1.1em;
 }
 
 div.bar-subtitle {
@@ -25,7 +27,7 @@ div.indicator-set-col {
 }
 
 div.badge {
-    background-color: rgba(15,46,83,0.9);
+    background-color: rgba(15, 46, 83, 0.9);
     color: rgb(244,176,4);
     padding: 3px 5px 3px 5px;
     border-radius: 3px;
