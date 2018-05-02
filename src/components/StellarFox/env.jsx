@@ -174,13 +174,19 @@ export const notImplementedText = [
 ].join(" ")
 
 
+
+
 // ...
 export const maximumTrustLimit = "922337203685.4775807"
 
 
-// ...
-export const testNet = "https://horizon-testnet.stellar.org"
 
 
 // ...
-export const liveNet = "https://horizon.stellar.org"
+export const testNetAddr = "https://horizon-testnet.stellar.org/"
+
+
+
+
+// ...
+export const liveNetAddr = "https://horizon.stellar.org/"

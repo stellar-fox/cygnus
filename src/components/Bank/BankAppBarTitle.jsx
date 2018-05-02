@@ -1,6 +1,9 @@
 import React from "react"
 import { connect } from "react-redux"
-import { appName, liveNet, } from "../StellarFox/env"
+import {
+    appName,
+    liveNetAddr,
+} from "../StellarFox/env"
 
 import "./BankAppBarTitle.css"
 
@@ -22,8 +25,14 @@ export default connect(
                 <div className="bar-subtitle">{viewName}</div>
             </div>
             <div className="indicator-set-col">
-                <div className={horizon === liveNet ? "badge-success" : "badge-error"}>
-                    {horizon === liveNet ? "Public Net" : "Test Net"}
+                <div
+                    className={
+                        horizon === liveNetAddr ?
+                            "badge-success" :
+                            "badge-error"
+                    }
+                >
+                    { horizon === liveNetAddr ? "Public Net" : "Test Net" }
                 </div>
                 <div className="p-b-small" />
                 <div>
