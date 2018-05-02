@@ -40,10 +40,10 @@ export default connect(
             const auth = await authenticate(email, password)
             if (auth.authenticated) {
                 // consolidate credentials into LedgerHQ
+                this.props.setLedgerBip32Path((auth.bip32Path).toString(10))
                 this.props.setApiToken(auth.token)
                 this.props.setUserId(auth.user_id)
                 this.props.setLedgerPublicKey(auth.pubkey)
-                this.props.setLedgerBip32Path((auth.bip32Path).toString(10))
             }
             return auth
         }

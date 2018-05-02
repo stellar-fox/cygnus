@@ -7,6 +7,7 @@ import {
 } from "lodash"
 import { StellarSdk, loadAccount } from "./stellar-tx"
 import { env } from "../components/StellarFox"
+import { config } from "../config"
 
 
 
@@ -15,6 +16,30 @@ import { env } from "../components/StellarFox"
 const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 
+
+
+// ...
+export const getRegisteredUser = async (publicKey, bip32Path) => {
+    try {
+        return (await axios.post(
+            `${config.api}/user/ledgerauth/${publicKey}/${bip32Path}`)
+        )
+    } catch (error) {
+        return null
+    }
+}
+
+
+
+
+// ...
+export const getRegisteredAccount = async (userId) => {
+    try {
+        return (await axios.get(`${config.api}/account/${userId}`))
+    } catch (error) {
+        return null
+    }
+}
 
 
 // ...

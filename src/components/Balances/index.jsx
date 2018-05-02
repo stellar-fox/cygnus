@@ -9,7 +9,6 @@ import {
     Redirect,
     Route,
 } from "react-router-dom"
-import axios from "axios"
 import "number-to-text/converters/en-us"
 import { action as AccountAction } from "../../redux/Account"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
@@ -21,6 +20,8 @@ import { action as AlertAction } from "../../redux/Alert"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
     insertPathIndex,
+    getRegisteredUser,
+    getRegisteredAccount,
 } from "../../lib/utils"
 import {
     loadAccount,
@@ -28,7 +29,6 @@ import {
     buildPaymentTx,
     submitTransaction,
 } from "../../lib/stellar-tx"
-import { config } from "../../config"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import {
@@ -88,21 +88,33 @@ class Balances extends Component {
         this.setState({
             paymentsStreamer: paymentsStreamer(
                 this.props.publicKey,
+                this.props.horizon,
                 this.props.popupSnackbar,
                 this.props.updateAccountTree,
             ),
             operationsStreamer: operationsStreamer(
                 this.props.publicKey,
+                this.props.horizon,
                 this.props.popupSnackbar,
                 this.props.updateAccountTree,
             ),
         })
+        
+        /**
+         * Query Horizon and check if the account exists on Stellar Ledger.
+         */
         if (!this.props.StellarAccount.accountId) {
             this.props.showLoadingModal("Searching for account ...")
             this._tmpQueryHorizon()
-            if (this.props.loginManager.isPayEnabled()) {
-                this._tmpAccountExists()
-            }
+            /**
+             * Query backend to check if the account with given publicKey and
+             * bip32Path has been registered before. TODO: this needs password
+             * as additional authentication since publicKey can be obtained
+             * and bip32Path is usually 0 or can be brut-forced.
+             */
+            this.checkForRegisteredAccount(
+                this.props.publicKey, this.props.bip32Path
+            )
         }
     }
 
@@ -116,30 +128,23 @@ class Balances extends Component {
 
 
     // ...
-    _tmpAccountExists = () => {
-        axios.post(
-            `${config.api}/user/ledgerauth/${
-                this.props.publicKey
-            }/${
-                this.props.bip32Path
-            }`
-        ).then((response) => {
-            this.props.setState({ needsRegistration: false, })
-            axios.get(`${config.api}/account/${response.data.user_id}`)
-                .then((r) => {
-                    this.props.setState({currency: r.data.data.currency,})
-                    this.props.assetManager.updateExchangeRate(
-                        r.data.data.currency
-                    )
-                })
-                .catch((_ex) => {
-                    // nothing
-                })
-        }).catch((_error) => {
+    checkForRegisteredAccount = async (publicKey, bip32Path) => {
+        try {
+            const auth = await getRegisteredUser(publicKey, bip32Path)
+            const account = await getRegisteredAccount(auth.data.user_id)
+            this.props.setState({
+                currency: account.data.data.currency,
+                needsRegistration: false,
+            })
+            this.props.assetManager.updateExchangeRate(
+                account.data.data.currency
+            )
+        } catch (error) {
             this.props.setState({ needsRegistration: true, })
-            // do nothing as this is only a check
-        })
+        }
     }
+
+
 
 
     // ...
