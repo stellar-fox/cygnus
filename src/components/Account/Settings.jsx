@@ -147,7 +147,8 @@ class Settings extends Component {
                 ]}
             >
             </RadioButtonGroup>
-            {this.props.state.needsRegistration ?
+            {this.props.state.needsRegistration
+                && this.props.loginManager.isPayEnabled() ?
                 <div>
                     <div className="p-t p-b" />
                     <div className="account-title p-t">
