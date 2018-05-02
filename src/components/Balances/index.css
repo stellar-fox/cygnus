@@ -118,24 +118,6 @@
 
 .date-picker { border-bottom: 1px solid rgba(15,46,83,0.4); }
 
-.bg-green {
-    display: inline-block;
-    background-color: rgba(34,139,34,0.55);
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 0.8rem;
-    line-height: 1rem;
-    padding: 2px 6px;
-    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding-box;
-    background-clip: padding-box;
-    border-radius: 3px;
-    font-weight: bold;
-    margin: 5px 0px;
-}
-
 .header-icon > span { font-size: 2rem; }
 
 .header-icon > i { font-size: 2rem !important; }
