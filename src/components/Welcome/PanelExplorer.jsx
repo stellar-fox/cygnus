@@ -22,6 +22,8 @@ import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoadingModalAction } from "../../redux/LoadingModal"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
+import stellarlogo from "../StellarFox/static/stellarlogo.svg"
+
 
 
 
@@ -102,7 +104,7 @@ class PanelExplorer extends Component {
             content={
                 <div>
                     <img
-                        src="/img/stellar.svg"
+                        src={stellarlogo}
                         width="120px"
                         alt="Stellar"
                     />
