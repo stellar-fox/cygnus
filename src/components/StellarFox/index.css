@@ -19,12 +19,9 @@
 }
 
 html, body {
-    margin: 0;
-    padding: 0;
     font-family: "Roboto", sans-serif;
-    background-color: rgb(15,46,83);
-    color: rgb(244,176,4);
-    height: 100%;
+    background-color: rgb(15, 46, 83);
+    color: rgb(244, 176, 4);
 }
 
 .material-icons {
