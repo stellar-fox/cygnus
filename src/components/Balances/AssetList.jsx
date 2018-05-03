@@ -13,13 +13,16 @@ import { maximumTrustLimit } from "../StellarFox/env"
 class AssetList extends Component {
 
     // ...
-    formatAssets = (assets) => assets.map((asset, index) => {
+    formatAssets = (assets, publicKey) => assets.map((asset, index) => {
         return (
             <Fragment key={index}>
                 <div className="p-t"></div>
-                <div className="badge-blue p-b-small">
+                <div className={
+                    `${publicKey === asset.asset_issuer ?
+                        "badge-success" : "badge-primary"} p-b-small cursor-pointer`}
+                >
                     <div className="nano p-b-nano fade-strong">
-                        {pubKeyAbbr(asset.asset_issuer)}
+                        Guarantor: {pubKeyAbbr(asset.asset_issuer)}
                     </div>
                     <div className="small">
                         <span className="asset-balance">
@@ -58,6 +61,7 @@ export default compose (
         // map state to props
         (state) => ({
             assets: state.StellarAccount.assets,
+            publicKey: state.StellarAccount.publicKey,
         })
     )
 )(AssetList)
