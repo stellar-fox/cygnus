@@ -26,16 +26,6 @@
     border-radius: 3px;
 }
 
-.badge-blue {
-    padding:2px 5px 1px 4px;
-    background: rgba(15,46,83,0.8);
-    border-radius: 3px;
-    color: rgba(244,176,4,0.9);
-    margin: 0px 5px;
-    display: inline-block;
-    text-align: center;
-}
-
 .tab-content-headline {
     font-size: 1.5rem;
     font-weight: 400;

@@ -249,6 +249,10 @@ strong { color: rgb(212,228,188); }
 
 /* --------- misc --------- */
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 span.red-badge {
     display: inline-block;
     font-size: 0.7rem;
