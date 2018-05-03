@@ -9,6 +9,11 @@ import thunk from "redux-thunk"
 import createHistory from "history/createBrowserHistory"
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly"
 import throttle from "lodash/throttle"
+
+import LegacyMuiThemeProvider from "material-ui/styles/MuiThemeProvider"
+import { MuiThemeProvider } from "material-ui-next/styles"
+import CssBaseline from "material-ui-next/CssBaseline"
+
 import {
     StellarRouter as Router,
     routerMiddleware,
@@ -23,19 +28,19 @@ import {
     dynamicImportLibs,
     dynamicImportReducers,
 } from "../../lib/utils"
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
-import { MuiThemeProvider as NewMuiThemeProvider } from "material-ui-next/styles"
+import * as env from "./env"
+
 import LoginManager from "../LoginManager"
 import AssetManager from "../AssetManager"
 import Layout from "../Layout"
-import stellarTheme from "./theme"
+
+import legacySFoxTheme from "./theme"
 import sFoxTheme from "./sfox-theme"
-import * as env from "./env"
 
 import "typeface-roboto"
 import "./index.css"
 
-import CssBaseline from "material-ui-next/CssBaseline"
+
 
 
 // browser history
@@ -78,16 +83,16 @@ export const store = (() => {
 export default () =>
     <Provider store={store}>
         <Router history={history}>
-            <NewMuiThemeProvider theme={sFoxTheme}>
-                <MuiThemeProvider muiTheme={stellarTheme}>
+            <MuiThemeProvider theme={sFoxTheme}>
+                <LegacyMuiThemeProvider muiTheme={legacySFoxTheme}>
                     <LoginManager>
                         <AssetManager>
                             <CssBaseline />
                             <Layout />
                         </AssetManager>
                     </LoginManager>
-                </MuiThemeProvider>
-            </NewMuiThemeProvider>
+                </LegacyMuiThemeProvider>
+            </MuiThemeProvider>
         </Router>
     </Provider>
 
