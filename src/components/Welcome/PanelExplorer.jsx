@@ -2,10 +2,6 @@ import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
-import { action as LedgerHQAction } from "../../redux/LedgerHQ"
-import { action as LoadingModalAction } from "../../redux/LoadingModal"
-import { action as StellarAccountAction } from "../../redux/StellarAccount"
-
 import {
     fedToPub,
     htmlEntities as he,
@@ -21,6 +17,10 @@ import Panel from "../Panel"
 import InputField from "../../lib/common/InputField"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
+
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
+import { action as LoadingModalAction } from "../../redux/LoadingModal"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 
 

@@ -64,11 +64,15 @@ class Heading extends Component {
                     <Button
                         onClick={this.login}
                         disabled={this.state.loginButtonDisabled}
-                    >Login</Button>,
+                    >
+                        Login
+                    </Button>,
                     <Button
                         onClick={this.props.hideModal}
                         color="primary"
-                    >Cancel</Button>,
+                    >
+                        Cancel
+                    </Button>,
                 ]}
             >
                 <Signup onComplete={this.enableLogin} />
@@ -90,7 +94,9 @@ class Heading extends Component {
                     <Button
                         color="secondary"
                         onClick={this.showSignupModal}
-                    >Get Started</Button>
+                    >
+                        Get Started
+                    </Button>
                 </div>
                 <div className="container">
                     <div className="columns">
