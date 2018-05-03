@@ -2,7 +2,9 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
+
 import { action as SnackbarAction } from "../../redux/Snackbar"
+
 import Snackbar from "../../lib/mui-v1/Snackbar"
 
 
@@ -33,7 +35,7 @@ export default connect(
 
 
         // ...
-        render = () => 
+        render = () =>
             <Snackbar
                 open={this.props.visible}
                 message={this.props.message}

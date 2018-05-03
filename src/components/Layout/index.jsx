@@ -13,12 +13,11 @@ import {
     resolvePath,
     withStaticRouter,
 } from "../StellarRouter"
-
 import { Null } from "../../lib/utils"
 
 import AlertModal from "./AlertModal"
-import LoadingModal from "../LoadingModal"
 import ConnectedSnackbar from "./ConnectedSnackbar"
+import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 
 import "./index.css"

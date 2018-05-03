@@ -20,7 +20,7 @@ export default () =>
                 <a target="_blank"
                     href={env.appLandingPageLink}
                 >
-                    <span className="stellar-style">{env.appName}</span>
+                    <span className="bold">{env.appName}</span>
                 </a>
                 <he.Nbsp /><he.Nbsp />
                 <emoji.Fox />
@@ -29,7 +29,7 @@ export default () =>
             </div>
             <div>
                 ver.<he.Nbsp />
-                <span className="stellar-style">{env.appVersion}</span>
+                <span className="bold">{env.appVersion}</span>
                 <he.Nbsp /><he.Nbsp />
                 <emoji.Rocket />
                 <he.Nbsp /><he.Nbsp />
