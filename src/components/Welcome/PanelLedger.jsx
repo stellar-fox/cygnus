@@ -2,10 +2,13 @@ import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import axios from "axios"
+
 import { config } from "../../config"
 import { ledgerSupportLink } from "../StellarFox/env"
+
 import Panel from "../Panel"
 import LedgerAuthenticator from "../LedgerAuthenticator"
+
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 
@@ -95,8 +98,7 @@ class PanelLedger extends Component {
 // ...
 export default connect(
     // map state to props.
-    (_state) => ({
-    }),
+    null,
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setLedgerPublicKey: LedgerHQAction.setPublicKey,

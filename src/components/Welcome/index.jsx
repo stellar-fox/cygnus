@@ -39,12 +39,10 @@ export default class extends Component {
     render = () =>
         <div className="welcome-content">
             <Heading />
-            <div>
-                <div className="flex-row-space-between">
-                    <PanelLedger />
-                    <PanelLogin />
-                    <PanelExplorer />
-                </div>
+            <div className="flex-row-space-between">
+                <PanelLedger />
+                <PanelLogin />
+                <PanelExplorer />
             </div>
             <Footer />
         </div>

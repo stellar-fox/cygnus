@@ -6,20 +6,16 @@ import {
     compose,
 } from "redux"
 import numberToText from "number-to-text"
-import { withLoginManager } from "../LoginManager"
-import { withAssetManager } from "../AssetManager"
 import debounce from "lodash/debounce"
-import { appName } from "../StellarFox/env"
 import { BigNumber } from "bignumber.js"
+
 import {
     Card,
     CardActions,
     CardText,
 } from "material-ui/Card"
-import Button from "../../lib/mui-v1/Button"
-import InputField from "../../lib/common/InputField"
 import DatePicker from "material-ui/DatePicker"
-import { action as BalancesAction } from "../../redux/Balances"
+
 import {
     federationAddressValid,
     fedToPub,
@@ -28,13 +24,24 @@ import {
     publicKeyValid,
     publicKeyExists,
 } from "../../lib/utils"
+import { appName } from "../StellarFox/env"
+
+import Button from "../../lib/mui-v1/Button"
+import InputField from "../../lib/common/InputField"
+
+import { withLoginManager } from "../LoginManager"
+import { withAssetManager } from "../AssetManager"
+
+import { action as BalancesAction } from "../../redux/Balances"
+
+import sflogo from "../StellarFox/static/sflogo.svg"
 
 
 
 
 // <PaymentCard> component
 class PaymentCard extends Component {
-    
+
     // ...
     static propTypes = {
         setState: PropTypes.func.isRequired,
@@ -309,7 +316,7 @@ class PaymentCard extends Component {
                         <div>
                             <img
                                 style={{ opacity: "0.2", }}
-                                src="/img/sf.svg"
+                                src={sflogo}
                                 width="140px"
                                 alt={appName}
                             />
@@ -483,9 +490,9 @@ class PaymentCard extends Component {
                             color="primary"
                             disabled={!this.props.Balances.cancelEnabled}
                         >Cancel</Button>
-                    </div>                    
+                    </div>
                 </div>
-                
+
             </CardActions>
             <div className="f-e p-b-small tiny">{
                 this.props.Balances.message ? this.props.Balances.message : "..."

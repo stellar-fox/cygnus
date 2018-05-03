@@ -76,17 +76,17 @@ div.p-b-small-block::after {
 
 .micro {
     font-size: 11px;
-    color: rgba(15,46,83,0.7);
+    color: rgba(15, 46, 83, 0.7);
 }
 
 .emphasize {
-    color: rgb(15,46,83);
+    color: rgb(15, 46, 83);
     font-size: 1rem;
 }
 
 .bigger-emphasize {
     font-size: 1.4rem;
-    color: rgb(15,46,83);
+    color: rgb(15, 46, 83);
 }
 
 .bigger { font-size: 1.3rem !important; }
@@ -95,6 +95,7 @@ div.p-b-small-block::after {
 
 .text-normal { font-size: 1rem !important; }
 
+span.bold { font-weight: bold; }
 
 /* --------- fonts / sizes --------- */
 
@@ -105,28 +106,28 @@ div.p-b-small-block::after {
 
 a {
     text-decoration: none;
-    color: rgba(255,255,255,0.7);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 a.active {
-    color: rgba(244,176,4,0.9);
+    color: rgba(244, 176, 4, 0.9);
     font-weight: bold;
 }
 
 .link {
-    color: rgba(255,255,255,0.7);
+    color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
 }
 
-strong { color: rgb(212,228,188); }
+strong { color: rgb(212, 228, 188); }
 
-.error { color: rgb(178,34,34); }
+.error { color: rgb(178, 34, 34); }
 
-.success { color: rgb(46,125,50); }
+.success { color: rgb(46, 125, 50); }
 
-.green { color: rgb(27,94,32); }
+.green { color: rgb(27, 94, 32); }
 
-.red { color: rgb(211,47,47); }
+.red { color: rgb(211, 47, 47); }
 
 .fade { opacity: 0.8; }
 
@@ -136,8 +137,8 @@ strong { color: rgb(212,228,188); }
 
 .transparent { opacity: 0; }
 
-.text-primary { color: rgb(15,46,83) !important; }
-.text-secondary { color: rgb(244,176,4) !important; }
+.text-primary { color: rgb(15, 46, 83) !important; }
+.text-secondary { color: rgb(244, 176, 4) !important; }
 
 /* --------- links / colors --------- */
 
@@ -258,8 +259,8 @@ span.red-badge {
     font-size: 0.7rem;
     line-height: 1rem;
     vertical-align: 0.1rem;
-    background-color: rgba(178,34,34,0.8);
-    color: rgba(244,176,4,1);
+    background-color: rgba(178, 34, 34, 0.8);
+    color: rgba(244, 176, 4, 1);
     padding: 2px 6px;
     border-radius: 3px;
     -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
@@ -273,7 +274,7 @@ span.red-badge {
 }
 
 .outline {
-    border: 1px solid rgba(244,176,4,0.75);
+    border: 1px solid rgba(244, 176, 4, 0.75);
     border-radius: 3px;
     padding: 10px;
 }
@@ -302,8 +303,8 @@ span.red-badge {
     padding: 4px;
     font-size: 1.3rem;
     font-variant: small-caps;
-    background: rgba(178,34,34,0.8);
-    color: rgba(244,176,4,1);
+    background: rgba(178, 34, 34, 0.8);
+    color: rgba(244, 176, 4, 1);
     text-align: center;
 }
 
