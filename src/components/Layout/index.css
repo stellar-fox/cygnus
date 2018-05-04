@@ -300,11 +300,11 @@ span.red-badge {
 }
 
 .alert-message {
-    padding: 4px;
-    font-size: 1.3rem;
+    padding: 2px 0px 2px 0px;
+    font-size: 1.2rem;
     font-variant: small-caps;
     background: rgba(178, 34, 34, 0.8);
-    color: rgba(244, 176, 4, 1);
+    color: rgba(244, 176, 4, 1.0);
     text-align: center;
 }
 

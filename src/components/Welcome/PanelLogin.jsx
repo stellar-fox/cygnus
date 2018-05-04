@@ -25,7 +25,7 @@ export default () =>
         </div>
         <div className="panel-title">
             Manage your account<br />
-            with ease.
+            <em>with ease</em>.
         </div>
         <div className="title-small p-t">
             Once you have opened your

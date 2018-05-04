@@ -110,12 +110,14 @@ export const TopBarSecurityMessage = () =>
     <div className="alert-message">
         <span>we will <u>never</u> ask you for your secret key.</span>
         &nbsp;&nbsp;
-        <span>please read this <a target="_blank"
-            rel="noopener noreferrer"
-            href={securityGuideLink}
-        >
-            <strong>short guide</strong>
-        </a> to keep your finances secure.</span>
+        <span>
+            please read this <a target="_blank"
+                rel="noopener noreferrer"
+                href={securityGuideLink}
+            >
+                <strong>short guide</strong>
+            </a> to keep your finances secure.
+        </span>
     </div>
 
 

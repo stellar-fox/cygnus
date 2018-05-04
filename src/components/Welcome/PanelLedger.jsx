@@ -72,7 +72,7 @@ class PanelLedger extends Component {
             </div>
             <div className="panel-title">
                 Sign-in by authenticating<br />
-                with your Ledger device.
+                with your <em>Ledger device</em>.
             </div>
             <div className="title-small p-t p-b">
                 Connect your Ledger Nano S

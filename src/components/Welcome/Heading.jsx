@@ -79,20 +79,21 @@ class Heading extends Component {
             </Modal>
 
             <TopBarSecurityMessage />
+
             <div className="faded-image cash">
                 <div className="hero">
                     <div className="title">
                         Welcome to the money revolution.
                     </div>
                     <div className="subtitle">
-                        Open your own <b>lifetime bank</b> today and
+                        Open your <b>own lifetime bank</b> today and
                         reserve personalized payment address.
                     </div>
                 </div>
 
                 <div className="flex-row-centered">
                     <Button
-                        color="secondary"
+                        color="awesome"
                         onClick={this.showSignupModal}
                     >
                         Get Started

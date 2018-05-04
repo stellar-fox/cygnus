@@ -43,6 +43,8 @@
     text-shadow: 0px 0px 5px rgb(15, 46, 83);
 }
 
+.hero .title { font-size: 2.5rem; }
+
 .mui-text-input { margin-top: -0.8rem; }
 
 .panel-title {

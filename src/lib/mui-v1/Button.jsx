@@ -11,6 +11,14 @@ import Button from "material-ui-next/Button"
 // ...
 const styles = (theme) => ({
 
+    awesome: {
+        color: "white",
+        background: "linear-gradient(30deg, rgb(178, 34, 34) 10%, rgb(244, 176, 4) 100%)",
+        "&:hover": {
+            backgroundColor: theme.palette.primaryHighlight,
+        },
+    },
+
     primary: {
         color: theme.palette.secondaryColor,
         backgroundColor: theme.palette.primaryColor,
