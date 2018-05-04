@@ -13,7 +13,7 @@ import {
     stellarFoundationLink,
 } from "../StellarFox/env"
 
-import Panel from "../Panel"
+import Panel from "../../lib/mui-v1/Panel"
 import InputField from "../../lib/common/InputField"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"

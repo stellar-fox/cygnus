@@ -3,7 +3,7 @@ import React, { Fragment } from "react"
 import { appName } from "../StellarFox/env"
 
 import Login from "../Login"
-import Panel from "../Panel"
+import Panel from "../../lib/mui-v1/Panel"
 
 import sflogo from "../StellarFox/static/sflogo.svg"
 

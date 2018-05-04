@@ -7,7 +7,7 @@ import { config } from "../../config"
 import { htmlEntities as he } from "../../lib/utils"
 import { ledgerSupportLink } from "../StellarFox/env"
 
-import Panel from "../Panel"
+import Panel from "../../lib/mui-v1/Panel"
 import LedgerAuthenticator from "../LedgerAuthenticator"
 
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
