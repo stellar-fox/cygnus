@@ -23,7 +23,10 @@ export default withStyles({
 
     noScrollBarFix: { padding: 16, },
 
-    paper: { height: "100%", },
+    paper: {
+        background: "linear-gradient(45deg, #091b31 0%, rgb(15, 46, 83) 50%)",
+        height: "100%",
+    },
 
 })(
     class extends Component {

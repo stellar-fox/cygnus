@@ -91,7 +91,7 @@ class PanelLedger extends Component {
             <div className="m-t"></div>
             <LedgerAuthenticator
                 onConnected={this.logInViaLedger}
-                className="lcars-input"
+                className="welcome-lcars-input"
             />
         </Panel>
 }
