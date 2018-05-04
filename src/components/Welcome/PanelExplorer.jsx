@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
@@ -102,8 +102,9 @@ class PanelExplorer extends Component {
             className="welcome-panel-right"
             title="Explore"
             content={
-                <div>
+                <Fragment>
                     <img
+                        className="panel-logo"
                         src={stellarlogo}
                         width="120px"
                         alt="Stellar"
@@ -163,7 +164,7 @@ class PanelExplorer extends Component {
                             Stellar Development Foundation
                         </a>.
                     </div>
-                </div>
+                </Fragment>
             }
         />
 }

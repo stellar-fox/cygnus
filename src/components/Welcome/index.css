@@ -78,11 +78,7 @@
     padding-bottom: 0.2rem;
 }
 
-.svg { width: 100px; }
-
-.svg-logo-ledger { fill: rgba(244,176,4,1); }
-
-.svg-logo-stellar { fill: rgb(77,186,232); }
+.panel-logo { margin-bottom: 20px; }
 
 .navy {
     color: rgb(15,46,83);

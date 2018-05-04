@@ -64,6 +64,7 @@ class PanelLedger extends Component {
             content={
                 <Fragment>
                     <img
+                        className="panel-logo"
                         src={ledgerhqlogo}
                         width="120px"
                         alt="LedgerHQ"

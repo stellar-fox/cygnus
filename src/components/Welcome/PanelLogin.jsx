@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Fragment } from "react"
 
 import { appName } from "../StellarFox/env"
 
@@ -16,9 +16,9 @@ export default () =>
         className="welcome-panel-center"
         title="Customize"
         content={
-            <div>
+            <Fragment>
                 <img
-                    style={{ marginBottom: "4px", }}
+                    className="panel-logo"
                     src={sflogo}
                     width="140px"
                     alt={appName}
@@ -34,6 +34,6 @@ export default () =>
                 <div className="f-b">
                     <Login />
                 </div>
-            </div>
+            </Fragment>
         }
     />
