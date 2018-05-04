@@ -1,8 +1,8 @@
 .faded-image.cash {
     position: relative;
     overflow: hidden;
-    border-top: 1px solid rgba(244, 176, 4, 0.2);
-    border-bottom: 1px solid rgba(244, 176, 4, 0.2);
+    border-top: 1px solid rgba(212, 228, 188, 0.4);
+    border-bottom: 1px solid rgba(212, 228, 188, 0.4);
     background-color: rgba(244, 176, 4, 0.2);
     opacity: 1;
     padding-top: 4px;
