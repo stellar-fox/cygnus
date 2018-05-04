@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import axios from "axios"
 
 import { config } from "../../config"
+import { htmlEntities as he } from "../../lib/utils"
 import { ledgerSupportLink } from "../StellarFox/env"
 
 import Panel from "../Panel"
@@ -59,7 +60,6 @@ class PanelLedger extends Component {
     // ...
     render = () =>
         <Panel
-            className="welcome-panel-left"
             title="Transact"
             content={
                 <Fragment>
@@ -78,7 +78,7 @@ class PanelLedger extends Component {
                         device. Make sure Stellar
                         application is selected and
                         browser support enabled. For
-                        more information visit{" "}
+                        more information visit<he.Nbsp />
                         <a
                             target="_blank"
                             rel="noopener noreferrer"

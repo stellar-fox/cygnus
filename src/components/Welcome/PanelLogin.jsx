@@ -13,7 +13,6 @@ import sflogo from "../StellarFox/static/sflogo.svg"
 // <PanelLogin> component
 export default () =>
     <Panel
-        className="welcome-panel-center"
         title="Customize"
         content={
             <Fragment>

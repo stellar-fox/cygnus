@@ -99,7 +99,6 @@ class PanelExplorer extends Component {
     // ...
     render = () =>
         <Panel
-            className="welcome-panel-right"
             title="Explore"
             content={
                 <Fragment>

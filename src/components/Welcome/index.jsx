@@ -1,4 +1,10 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+
+import { withStyles } from "material-ui-next/styles"
+import Grid from "material-ui-next/Grid"
+import Paper from "material-ui-next/Paper"
+
 import Heading from "./Heading"
 import PanelLedger from "./PanelLedger"
 import PanelLogin from "./PanelLogin"
@@ -11,40 +17,70 @@ import "./index.css"
 
 
 // <Welcome> component
-export default class extends Component {
+export default withStyles({
 
-    // ...
-    state = {
-        modalShown: false,
-        modalButtonText: "CANCEL",
-    }
+    considerFooter: { paddingBottom: 32, },
+
+    noScrollBarFix: { padding: 16, },
+
+    paper: { height: "100%", },
+
+})(
+    class extends Component {
+
+        // ...
+        static propTypes = {
+            classes: PropTypes.object.isRequired,
+        }
 
 
-    // ...
-    setModalButtonText = (text) =>
-        this.setState({
-            modalButtonText: text,
-        })
-
-
-    // ...
-    handleSignup = () =>
-        this.setState({
+        // ...
+        state = {
+            modalShown: false,
             modalButtonText: "CANCEL",
-            modalShown: true,
-        })
+        }
 
 
-    // ...
-    render = () =>
-        <Fragment>
-            <Heading />
-            <div className="flex-row-space-between">
-                <PanelLedger />
-                <PanelLogin />
-                <PanelExplorer />
-            </div>
-            <Footer />
-        </Fragment>
+        // ...
+        setModalButtonText = (text) =>
+            this.setState({ modalButtonText: text, })
 
-}
+
+        // ...
+        handleSignup = () =>
+            this.setState({
+                modalButtonText: "CANCEL",
+                modalShown: true,
+            })
+
+
+        // ...
+        render = () => (
+            ({ classes, }) =>
+                <div className={classes.considerFooter}>
+                    <Heading />
+                    <div className={classes.noScrollBarFix}>
+                        <Grid container spacing={16}>
+                            <Grid item xs>
+                                <Paper className={classes.paper}>
+                                    <PanelLedger />
+                                </Paper>
+                            </Grid>
+                            <Grid item xs>
+                                <Paper className={classes.paper}>
+                                    <PanelLogin />
+                                </Paper>
+                            </Grid>
+                            <Grid item xs>
+                                <Paper className={classes.paper}>
+                                    <PanelExplorer />
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </div>
+                    <Footer />
+                </div>
+        )(this.props)
+
+    }
+)
