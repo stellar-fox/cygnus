@@ -1,8 +1,9 @@
 article.message {
-    border: 1px solid rgba(244, 176, 4, 1.0);
-    border-radius: 3px;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    border: 1px solid rgba(244, 176, 4, 1.0);
+    border-radius: 3px;
 }
 
 div.message-header {
