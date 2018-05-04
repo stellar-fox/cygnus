@@ -9,6 +9,7 @@ const initState = {
     lastName: "",
     email: "",
     paymentAddress: "",
+    memo: "",
     discoverable: true,
     currency: "eur",
     exists: false,

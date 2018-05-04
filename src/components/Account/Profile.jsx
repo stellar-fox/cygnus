@@ -13,6 +13,7 @@ import {
 } from "../StellarFox/env"
 import Input from "../../lib/common/Input"
 import Button from "../../lib/mui-v1/Button"
+import Divider from "../../lib/mui-v1/Divider"
 import MD5 from "../../lib/md5"
 import {
     emailValid,
@@ -72,6 +73,7 @@ class Profile extends Component {
                 paymentAddress: (data.alias  &&  data.domain) ?
                     `${data.alias}*${data.domain}` : "",
                 discoverable: data.visible,
+                memo: data.memo,
             })
         })
         // eslint-disable-next-line no-console
@@ -96,9 +98,14 @@ class Profile extends Component {
 
     // ...
     updateProfile = async () => {
-        const alias = this.props.state.paymentAddress.match(/\*/) ?
-            (this.props.state.paymentAddress) :
-            (`${this.props.state.paymentAddress}*stellarfox.net`)
+        const
+            alias = this.props.state.paymentAddress.match(/\*/) ?
+                (this.props.state.paymentAddress) :
+                (`${this.props.state.paymentAddress}*stellarfox.net`),
+
+            memo_type = this.props.state.memo.length > 0 ? "text" : null,
+
+            memo = this.props.state.memo
 
         await this.updateResource("user",{
             first_name: this.props.state.firstName,
@@ -107,6 +114,8 @@ class Profile extends Component {
 
         await this.updateResource("account", {
             alias,
+            memo_type,
+            memo,
         })
         this.props.popupSnackbar("User profile has been updated.")
     }
@@ -125,6 +134,11 @@ class Profile extends Component {
     // ...
     changePaymentAddress = (event) =>
         this.props.setState({paymentAddress: event.target.value,})
+    
+    
+    // ...
+    changeMemo = (event) =>
+        this.props.setState({memo: event.target.value,})
 
 
     // ...
@@ -150,11 +164,10 @@ class Profile extends Component {
                         Manage your profile details.
                     </div>
                     <div className="account-subtitle">
-                        Your payment address is visible
-                        to the public by default.
                         The details of your account profile are
                         confidential and contribute to KYC/AML
-                        compliance.
+                        compliance. Any changes to the following fields
+                        will require your digital signature.
                     </div>
                 </div>
                 <figure style={{ marginRight: "0px", marginBottom: "0px",}}>
@@ -187,7 +200,7 @@ class Profile extends Component {
                 subLabel={`Last Name: ${this.props.state.lastName}`}
             />
             <Input
-                className="lcars-input p-b p-t"
+                className="lcars-input p-b-large p-t"
                 value={this.props.state.email}
                 label="Email"
                 inputType="text"
@@ -196,8 +209,24 @@ class Profile extends Component {
                 handleChange={this.changeEmail}
                 subLabel={`Email: ${this.props.state.email}`}
             />
+            <Divider color="secondary" />
+            <div className="f-b space-between">
+                <div>
+                    <h2 className="tab-content-headline">
+                        Payment Address
+                    </h2>
+                    <div className="account-title">
+                        Manage your payment address details.
+                    </div>
+                    <div className="account-subtitle">
+                        Your payment address is visible
+                        to the public by default. Any changes to the following
+                        settings will require your digital signature.
+                    </div>
+                </div>
+            </div>
             <Input
-                className="lcars-input p-t p-b-large"
+                className="lcars-input p-t-large p-b"
                 value={this.props.state.paymentAddress}
                 label="Payment Address Alias"
                 inputType="text"
@@ -215,6 +244,16 @@ class Profile extends Component {
                                 .paymentAddress
                         }`
                 }
+            />
+            <Input
+                className="lcars-input p-t p-b-large"
+                value={this.props.state.memo}
+                label="Memo"
+                inputType="text"
+                maxLength="28"
+                autoComplete="off"
+                handleChange={this.changeMemo}
+                subLabel={`Memo: ${this.props.state.memo}`}
             />
             <Button color="secondary" onClick={this.updateProfile}>
                 Update
