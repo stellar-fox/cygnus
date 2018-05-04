@@ -1,38 +1,58 @@
 import React from "react"
+
+import { withStyles } from "material-ui-next/styles"
+
 import { env } from "../StellarFox"
 import {
     emoji,
     htmlEntities as he,
 } from "../../lib/utils"
 
-import "./Footer.css"
-
 
 
 
 // <Footer> component
-export default () =>
-    <div className="footer">
-        <div className="flex-row-space-between">
-            <div>
-                <he.Nbsp /><he.Nbsp />
-                <he.Copy /><he.Nbsp /><he.Nbsp />
-                <a target="_blank"
-                    href={env.appLandingPageLink}
-                >
-                    <span className="bold">{env.appName}</span>
-                </a>
-                <he.Nbsp /><he.Nbsp />
-                <emoji.Fox />
-                <he.Nbsp /><he.Nbsp />
-                {env.appCopyDates}.
-            </div>
-            <div>
-                ver.<he.Nbsp />
-                <span className="bold">{env.appVersion}</span>
-                <he.Nbsp /><he.Nbsp />
-                <emoji.Rocket />
-                <he.Nbsp /><he.Nbsp />
+export default withStyles({
+
+    emoji: { color: "white", },
+
+    footer: {
+        backgroundColor: "rgba(0, 0, 0, 0.4)",
+        borderTop: "1px solid rgba(212, 228, 188, 0.4)",
+        padding: 5,
+        fontSize: "0.8em",
+        color: "rgba(212, 228, 188, 0.6)",
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10,
+    },
+
+})(
+    ({ classes, }) =>
+        <div className={classes.footer}>
+            <div className="flex-row-space-between">
+                <div>
+                    <he.Nbsp /><he.Nbsp />
+                    <he.Copy /><he.Nbsp /><he.Nbsp />
+                    <a target="_blank"
+                        href={env.appLandingPageLink}
+                    >
+                        <b>{env.appName}</b>
+                    </a>
+                    <he.Nbsp /><he.Nbsp />
+                    <span className={classes.emoji}><emoji.Fox /></span>
+                    <he.Nbsp /><he.Nbsp />
+                    {env.appCopyDates}.
+                </div>
+                <div>
+                    ver.<he.Nbsp />
+                    <b>{env.appVersion}</b>
+                    <he.Nbsp /><he.Nbsp />
+                    <span className={classes.emoji}><emoji.Rocket /></span>
+                    <he.Nbsp /><he.Nbsp />
+                </div>
             </div>
         </div>
-    </div>
+)

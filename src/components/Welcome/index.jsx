@@ -19,7 +19,7 @@ import "./index.css"
 // <Welcome> component
 export default withStyles({
 
-    considerFooter: { paddingBottom: 32, },
+    considerFooter: { paddingBottom: 26, },
 
     noScrollBarFix: { padding: 16, },
 
