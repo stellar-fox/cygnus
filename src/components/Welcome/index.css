@@ -50,6 +50,14 @@
     text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.8);
 }
 
+.hero .subtitle {
+    padding-top: 5px;
+    padding-bottom: 1rem;
+    color: rgb(212, 228, 188);
+    font-size: 1.1rem;
+    text-shadow: 0px 0px 30px rgba(212, 228, 188, 0.6);
+}
+
 .mui-text-input { margin-top: -0.8rem; }
 
 .panel-title {
@@ -57,17 +65,11 @@
     color: rgb(212, 228, 188);
     text-align: center;
     margin-bottom: 16px;
+    text-shadow: 0px 0px 60px rgba(212, 228, 188, 0.8);
 }
 
 .title-small {
     margin-bottom: 16px;
-}
-
-.subtitle {
-    padding-top: 5px;
-    padding-bottom: 1rem;
-    color: rgb(212, 228, 188);
-    font-size: 1.1rem;
 }
 
 .columns {
@@ -95,6 +97,7 @@
     text-align: left;
     line-height: 2rem;
     vertical-align: middle;
+    text-shadow: 0px 0px 30px rgba(212, 228, 188, 0.6);
 }
 
 .panel-logo-container {
