@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { compose } from "redux"
 
@@ -75,8 +75,9 @@ class Login extends Component {
 
     // ...
     render = () =>
-        <div className="f-e-col">
+        <Fragment>
             <InputField
+                style={{ display: "block", margin: "0 auto", }}
                 name="login-email"
                 type="email"
                 placeholder="Email"
@@ -84,6 +85,7 @@ class Login extends Component {
                 ref={(self) => { this.email = self }}
             />
             <InputField
+                style={{ display: "block", margin: "0 auto", }}
                 name="login-password"
                 type="password"
                 placeholder="Password"
@@ -91,24 +93,27 @@ class Login extends Component {
                 ref={(self) => { this.password = self }}
             />
             <div className="p-t"></div>
-            <LinearProgress
-                mode="indeterminate"
-                style={{
-                    marginBottom: "6px",
-                    background: "rgb(15,46,83)",
-                    height: "1px",
-                    opacity: this.state.progressBarOpacity,
-                }}
-                color="rgba(244,176,4,0.7)"
-            />
-            <Button
-                onClick={this.loginValidator}
-                disabled={this.state.buttonDisabled}
-                fullWidth={true}
-                color="secondary"
-                className="m-t"
-            >Login</Button>
-        </div>
+            <div className="blockcenter" style={{ width: 200, }}>
+                <LinearProgress
+                    mode="indeterminate"
+                    style={{
+                        marginBottom: "6px",
+                        background: "rgb(15,46,83)",
+                        height: "1px",
+                        opacity: this.state.progressBarOpacity,
+                    }}
+                    color="rgba(244,176,4,0.7)"
+                />
+                <Button
+                    onClick={this.loginValidator}
+                    disabled={this.state.buttonDisabled}
+                    fullWidth={true}
+                    color="secondary"
+                >
+                    Login
+                </Button>
+            </div>
+        </Fragment>
 
 }
 

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 
@@ -98,74 +98,74 @@ class PanelExplorer extends Component {
 
     // ...
     render = () =>
-        <Panel
-            title="Explore"
-            content={
-                <Fragment>
+        <Panel title="Explore">
+            <div className="panel-logo-container">
+                <div className="panel-logo">
                     <img
-                        className="panel-logo"
+                        className="img-logo"
                         src={stellarlogo}
                         width="120px"
                         alt="Stellar"
                     />
-                    <div className="title">
-                        To access global ledger
-                        explorer enter your{" "}
-                        <em>Payment Address</em>.
-                    </div>
-                    <div className="title-small p-t p-b">
-                        Your account operations are
-                        publicly visible on the
-                        global ledger.
-                    </div>
+                </div>
+            </div>
+            <div className="panel-title">
+                To access ledger explorer<br />
+                enter your<he.Nbsp />
+                <em>Payment Address</em>.
+            </div>
+            <div className="title-small p-t p-b">
+                Your account operations are
+                publicly visible on the
+                global ledger.
+            </div>
 
-                    <div className="m-t f-b space-between">
-                        <div>
-                            <div className="account-title">
-                                Use live network
-                            </div>
-                            <div className="text-secondary account-subtitle">
-                                Explore transactions conducted on live network.
-                            </div>
-                        </div>
-                        <div>
-                            <Switch
-                                checked={this.props.horizon === liveNetAddr}
-                                onChange={this.setNetwork}
-                                color="secondary"
-                            />
-                        </div>
+            <div className="m-t f-b space-between">
+                <div>
+                    <div className="account-title">
+                        Use live network
                     </div>
+                    <div className="text-secondary account-subtitle">
+                        Explore transactions conducted on live network.
+                    </div>
+                </div>
+                <div>
+                    <Switch
+                        checked={this.props.horizon === liveNetAddr}
+                        onChange={this.setNetwork}
+                        color="secondary"
+                    />
+                </div>
+            </div>
 
-                    <div className="f-b">
-                        <div className="f-e-col">
-                            <InputField
-                                name="payment-address-input"
-                                type="text"
-                                placeholder="Payment Address"
-                                styles={styles}
-                                ref={(self) => { this.input = self }}
-                            />
-                            <div>&nbsp;</div>
-                            <Button
-                                onClick={this.compoundFederationValidator}
-                                color="secondary"
-                                fullWidth={true}
-                            >
-                                Check
-                            </Button>
-                        </div>
-                    </div>
+            <div className="f-b">
+                <div className="f-e-col">
+                    <InputField
+                        name="payment-address-input"
+                        type="text"
+                        placeholder="Payment Address"
+                        styles={styles}
+                        ref={(self) => { this.input = self }}
+                    />
                     <div>&nbsp;</div>
-                    <div className="micro-font fade-strong">
-                        “Stellar” is a trademark of the<he.Nbsp />
-                        <a href={stellarFoundationLink} target="_blank">
-                            Stellar Development Foundation
-                        </a>.
-                    </div>
-                </Fragment>
-            }
-        />
+                    <Button
+                        onClick={this.compoundFederationValidator}
+                        color="secondary"
+                        fullWidth={true}
+                    >
+                        Check
+                    </Button>
+                </div>
+            </div>
+            <div>&nbsp;</div>
+            <div className="micro-font fade-strong">
+                “Stellar” is a trademark of the<he.Nbsp />
+                <a href={stellarFoundationLink} target="_blank">
+                    Stellar Development Foundation
+                </a>.
+            </div>
+        </Panel>
+
 }
 
 

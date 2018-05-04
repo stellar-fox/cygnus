@@ -23,7 +23,7 @@ export default withStyles({
     title: {
         margin: "3px 5px 3px 15px",
         color: "rgba(15, 46, 83, 1.0)",
-        fontSize: "1.1rem",
+        fontSize: "1.2em",
     },
 
     body: {

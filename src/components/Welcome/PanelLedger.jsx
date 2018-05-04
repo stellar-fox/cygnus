@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import axios from "axios"
@@ -59,42 +59,41 @@ class PanelLedger extends Component {
 
     // ...
     render = () =>
-        <Panel
-            title="Transact"
-            content={
-                <Fragment>
+        <Panel title="Transact">
+            <div className="panel-logo-container">
+                <div className="panel-logo">
                     <img
-                        className="panel-logo"
+                        className="img-logo"
                         src={ledgerhqlogo}
                         width="120px"
                         alt="LedgerHQ"
                     />
-                    <div className="title">
-                        Sign-in by authenticating
-                        with your Ledger device.
-                    </div>
-                    <div className="title-small p-t p-b">
-                        Connect your Ledger Nano S
-                        device. Make sure Stellar
-                        application is selected and
-                        browser support enabled. For
-                        more information visit<he.Nbsp />
-                        <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={ledgerSupportLink}
-                        >
-                            Ledger Support
-                        </a>
-                    </div>
-                    <div className="m-t"></div>
-                    <LedgerAuthenticator
-                        onConnected={this.logInViaLedger}
-                        className="lcars-input"
-                    />
-                </Fragment>
-            }
-        />
+                </div>
+            </div>
+            <div className="panel-title">
+                Sign-in by authenticating<br />
+                with your Ledger device.
+            </div>
+            <div className="title-small p-t p-b">
+                Connect your Ledger Nano S
+                device. Make sure Stellar
+                application is selected and
+                browser support enabled. For
+                more information visit<he.Nbsp />
+                <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={ledgerSupportLink}
+                >
+                    Ledger Support
+                </a>
+            </div>
+            <div className="m-t"></div>
+            <LedgerAuthenticator
+                onConnected={this.logInViaLedger}
+                className="lcars-input"
+            />
+        </Panel>
 }
 
 

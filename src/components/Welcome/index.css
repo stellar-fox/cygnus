@@ -45,7 +45,16 @@
 
 .mui-text-input { margin-top: -0.8rem; }
 
-.title-small { font-size: 0.8rem; }
+.panel-title {
+    font-size: 1.2em;
+    color: rgb(212, 228, 188);
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.title-small {
+    margin-bottom: 16px;
+}
 
 .subtitle {
     padding-top: 5px;
@@ -78,7 +87,20 @@
     padding-bottom: 0.2rem;
 }
 
-.panel-logo { margin-bottom: 20px; }
+.panel-logo-container {
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.panel-logo {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.img-logo { display: block; }
 
 .navy {
     color: rgb(15, 46, 83);
