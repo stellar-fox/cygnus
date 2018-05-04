@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import axios from "axios"
@@ -11,6 +11,8 @@ import LedgerAuthenticator from "../LedgerAuthenticator"
 
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
+
+import ledgerhqlogo from "./static/ledgerhqlogo.svg"
 
 
 
@@ -60,11 +62,11 @@ class PanelLedger extends Component {
             className="welcome-panel-left"
             title="Transact"
             content={
-                <div>
+                <Fragment>
                     <img
-                        src="/img/ledger.svg"
+                        src={ledgerhqlogo}
                         width="120px"
-                        alt="Ledger"
+                        alt="LedgerHQ"
                     />
                     <div className="title">
                         Sign-in by authenticating
@@ -89,7 +91,7 @@ class PanelLedger extends Component {
                         onConnected={this.logInViaLedger}
                         className="lcars-input"
                     />
-                </div>
+                </Fragment>
             }
         />
 }
