@@ -1,13 +1,41 @@
 import React from "react"
-
-import "./index.css"
+import { withStyles } from "material-ui-next/styles"
 
 
 
 
 // <Panel> component
-export default ({ title, content, }) =>
-    <article className="message">
-        <div className="message-header"><p>{title}</p></div>
-        <div className="message-body">{content}</div>
-    </article>
+export default withStyles({
+
+    root: {
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        border: "1px solid rgba(244, 176, 4, 1.0)",
+        borderRadius: "3px",
+    },
+
+    header: {
+        backgroundColor: "rgba(244, 176, 4, 1.0)",
+    },
+
+    title: {
+        margin: "3px 5px 3px 15px",
+        color: "rgba(15, 46, 83, 1.0)",
+        fontSize: "1.1rem",
+    },
+
+    body: {
+        margin: "1.5rem",
+        textAlign: "left",
+    },
+
+})(
+    ({ classes, content, title, }) =>
+        <article className={classes.root}>
+            <div className={classes.header}>
+                <p className={classes.title}>{ title }</p>
+            </div>
+            <div className={classes.body}>{ content }</div>
+        </article>
+)
