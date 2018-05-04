@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+
 import { withStyles } from "material-ui-next/styles"
 import { FormControl, FormHelperText } from "material-ui-next/Form"
 import Input, { InputLabel } from "material-ui-next/Input"
@@ -9,6 +10,7 @@ import Input, { InputLabel } from "material-ui-next/Input"
 
 // ...
 const styles = (theme) => ({
+
     secondary: {
         color: theme.palette.secondaryColor,
         "&:hover:not($disabled):before": {
@@ -18,13 +20,18 @@ const styles = (theme) => ({
         "&:before": { backgroundColor: theme.palette.secondaryColor, },
         "&:after": { backgroundColor: theme.palette.secondaryColor, },
     },
+
     root: { color: "rgba(212,228,188,0.4)", },
+
     focused: {
         "&$root": {
             color: "rgba(212,228,188,0.2)",
         },
     },
+
 })
+
+
 
 
 // ...
@@ -39,7 +46,10 @@ export default withStyles(styles)(
 
         // ...
         render = () => (
-            ({ classes, id, color, error, errorMessage, label, type, onChange, fullWidth, }) =>
+            ({
+                classes, id, color, error, errorMessage,
+                label, type, onChange, fullWidth,
+            }) =>
                 <FormControl
                     error={error}
                     fullWidth={fullWidth}

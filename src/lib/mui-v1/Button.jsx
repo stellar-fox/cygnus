@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import classNames from "classnames"
+
 import { withStyles } from "material-ui-next/styles"
 import Button from "material-ui-next/Button"
 
@@ -73,7 +74,7 @@ const styles = (theme) => ({
 
 
 
-// <CustomButton> component...
+// <CustomButton> component
 export default withStyles(styles)(
     class extends Component {
 
@@ -97,7 +98,7 @@ export default withStyles(styles)(
                     onClick={onClick}
                     disabled={disabled}
                     fullWidth={fullWidth}
-                    
+
                 >
                     { children ? children : "Button" }
                 </Button>

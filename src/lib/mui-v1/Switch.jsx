@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+
 import { withStyles } from "material-ui-next/styles"
 import Switch from "material-ui-next/Switch"
 
@@ -8,8 +9,11 @@ import Switch from "material-ui-next/Switch"
 
 // ...
 const styles = (theme) => ({
+
     bar: {},
+
     checked: {},
+
     primary: {
         color: theme.palette.primaryColor,
         "&$checked": {
@@ -19,6 +23,7 @@ const styles = (theme) => ({
             },
         },
     },
+
     secondary: {
         color: theme.palette.secondaryColor,
         "&$checked": {
@@ -28,13 +33,17 @@ const styles = (theme) => ({
             },
         },
     },
+
     disabled: {
         color: `${theme.palette.disabledSwitchColor} !important`,
     },
+
 })
 
 
-// ...
+
+
+// <Switch> component
 export default withStyles(styles)(
     class extends Component {
 
@@ -46,7 +55,7 @@ export default withStyles(styles)(
 
         // ...
         render = () => (
-            ({ classes, checked, onChange, value, color, disabled,}) =>
+            ({ classes, checked, onChange, value, color, disabled, }) =>
                 <Switch
                     checked={checked}
                     onChange={onChange}
