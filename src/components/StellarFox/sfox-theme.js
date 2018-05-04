@@ -11,6 +11,9 @@ export default createMuiTheme({
         secondaryColor: "rgb(244,176,4)",
         primaryHighlight: "rgb(36,65,98)",
         secondaryHighlight: "rgb(246,190,49)",
+        primaryLightFade: "rgba(15,46,83,0.8)",
+        secondaryLightFade: "rgba(244,176,4,0.6)",
+        
         success: "rgb(34,139,34)",
         successHighlight: "rgb(10,38,10)",
         warning: "rgb(244,176,4)",
@@ -23,6 +26,10 @@ export default createMuiTheme({
 
         background: {
             default: "rgb(15,46,83)",
+        },
+
+        spacing: {
+            unit: "1rem",
         },
     },
 
