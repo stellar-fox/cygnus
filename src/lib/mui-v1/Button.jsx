@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import classNames from "classnames"
+
 import { withStyles } from "material-ui-next/styles"
 import Button from "material-ui-next/Button"
 
@@ -9,6 +10,14 @@ import Button from "material-ui-next/Button"
 
 // ...
 const styles = (theme) => ({
+
+    awesome: {
+        color: "white",
+        background: "linear-gradient(30deg, rgb(178, 34, 34) 10%, rgb(244, 176, 4) 100%)",
+        "&:hover": {
+            backgroundColor: theme.palette.primaryHighlight,
+        },
+    },
 
     primary: {
         color: theme.palette.secondaryColor,
@@ -73,7 +82,7 @@ const styles = (theme) => ({
 
 
 
-// <CustomButton> component...
+// <CustomButton> component
 export default withStyles(styles)(
     class extends Component {
 
@@ -97,7 +106,7 @@ export default withStyles(styles)(
                     onClick={onClick}
                     disabled={disabled}
                     fullWidth={fullWidth}
-                    
+
                 >
                     { children ? children : "Button" }
                 </Button>

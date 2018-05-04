@@ -1,6 +1,7 @@
 /* --------- paddings / margins --------- */
 
 .p-b { padding-bottom: 1rem; }
+
 .p-b:last-child { padding-bottom: 0rem; }
 
 .p-b-small { padding-bottom: 5px; }
@@ -95,8 +96,6 @@ div.p-b-small-block::after {
 
 .text-normal { font-size: 1rem !important; }
 
-span.bold { font-weight: bold; }
-
 /* --------- fonts / sizes --------- */
 
 
@@ -138,6 +137,7 @@ strong { color: rgb(212, 228, 188); }
 .transparent { opacity: 0; }
 
 .text-primary { color: rgb(15, 46, 83) !important; }
+
 .text-secondary { color: rgb(244, 176, 4) !important; }
 
 /* --------- links / colors --------- */
@@ -237,6 +237,8 @@ strong { color: rgb(212, 228, 188); }
 
 .center { justify-content: center; }
 
+.blockcenter { margin: 0 auto; }
+
 .space-between { justify-content: space-between; }
 
 .space-around { justify-content: space-around; }
@@ -250,9 +252,7 @@ strong { color: rgb(212, 228, 188); }
 
 /* --------- misc --------- */
 
-.cursor-pointer {
-    cursor: pointer;
-}
+.cursor-pointer { cursor: pointer; }
 
 span.red-badge {
     display: inline-block;
@@ -300,11 +300,11 @@ span.red-badge {
 }
 
 .alert-message {
-    padding: 4px;
-    font-size: 1.3rem;
+    padding: 2px 0px 2px 0px;
+    font-size: 1.2rem;
     font-variant: small-caps;
     background: rgba(178, 34, 34, 0.8);
-    color: rgba(244, 176, 4, 1);
+    color: rgba(244, 176, 4, 1.0);
     text-align: center;
 }
 

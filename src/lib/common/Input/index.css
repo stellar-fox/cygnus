@@ -87,6 +87,7 @@
 
 /* ========================================================================= */
 
+
 .lcars-input ul {
     list-style: none;
     padding: 0;
@@ -171,4 +172,96 @@
     font-size: 11px;
     border-top: 1px solid rgba(244,176,4,0.3);
     background: rgba(244,176,4,0.75);
+}
+
+
+/* ==================== ugly duplication below, FIXME ====================== */
+
+
+.welcome-lcars-input { box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3); }
+
+.welcome-lcars-input ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.welcome-lcars-input li {
+    display: block;
+    padding: 9px;
+    border-radius: 3px;
+    border: 1px solid rgba(244,176,4,1.0);
+}
+
+.welcome-lcars-input li > label {
+    display: block;
+    float: left;
+    height: 18px;
+    padding: 2px 0px 2px 0px;
+    margin-top: -6px;
+    margin-bottom: 6px;
+    color: rgba(212, 228, 188, 0.4);
+    font-size: 0.75em;
+    overflow: hidden;
+}
+
+.welcome-lcars-input input[type="text"],
+.welcome-lcars-input input[type="date"],
+.welcome-lcars-input input[type="datetime"],
+.welcome-lcars-input input[type="email"],
+.welcome-lcars-input input[type="number"],
+.welcome-lcars-input input[type="search"],
+.welcome-lcars-input input[type="time"],
+.welcome-lcars-input input[type="url"],
+.welcome-lcars-input input[type="password"],
+.welcome-lcars-input textarea,
+.welcome-lcars-input select {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    transition: all 0.30s ease-in-out;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: 100%;
+    display: block;
+    outline: none;
+    border: 1px solid rgba(244,176,4,0.75);
+    border-radius: 3px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 16px;
+    color: rgba(244,176,4,1.0);
+    margin-top: 3px;
+    padding-left: 5px;
+    margin-bottom: 8px;
+    background-color: rgba(244,176,4,0.15);
+}
+
+.welcome-lcars-input input[type="text"]:focus,
+.welcome-lcars-input input[type="date"]:focus,
+.welcome-lcars-input input[type="datetime"]:focus,
+.welcome-lcars-input input[type="email"]:focus,
+.welcome-lcars-input input[type="number"]:focus,
+.welcome-lcars-input input[type="search"]:focus,
+.welcome-lcars-input input[type="time"]:focus,
+.welcome-lcars-input input[type="url"]:focus,
+.welcome-lcars-input input[type="password"]:focus,
+.welcome-lcars-input textarea:focus,
+.welcome-lcars-input select:focus {
+    border-color: rgba(244,176,4,1.0);
+}
+
+.welcome-lcars-input li > span {
+    background: rgb(15,46,83);
+    display: block;
+    padding: 3px;
+    margin: 0 -9px -9px -9px;
+    text-align: center;
+    color: rgb(15,46,83);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    border-top: 1px solid rgba(244,176,4,1.0);
+    background: rgba(244,176,4,1.0);
 }

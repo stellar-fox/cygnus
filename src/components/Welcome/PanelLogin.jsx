@@ -3,7 +3,7 @@ import React from "react"
 import { appName } from "../StellarFox/env"
 
 import Login from "../Login"
-import Panel from "../Panel"
+import Panel from "../../lib/mui-v1/Panel"
 
 import sflogo from "../StellarFox/static/sflogo.svg"
 
@@ -12,28 +12,25 @@ import sflogo from "../StellarFox/static/sflogo.svg"
 
 // <PanelLogin> component
 export default () =>
-    <Panel
-        className="welcome-panel-center"
-        title="Customize"
-        content={
-            <div>
+    <Panel title="Customize">
+        <div className="panel-logo-container">
+            <div className="panel-logo">
                 <img
-                    style={{ marginBottom: "4px", }}
+                    className="img-logo"
                     src={sflogo}
-                    width="140px"
+                    width="160px"
                     alt={appName}
                 />
-                <div className="title">
-                    Manage your account with ease.
-                </div>
-                <div className="title-small p-t">
-                    Once you have opened your
-                    account you can log in here
-                    to your banking terminal.
-                </div>
-                <div className="f-b">
-                    <Login />
-                </div>
             </div>
-        }
-    />
+        </div>
+        <div className="panel-title">
+            Manage your account<br />
+            <em>with ease</em>.
+        </div>
+        <div className="title-small p-t">
+            Once you have opened your
+            account you can log in here
+            to your banking terminal.
+        </div>
+        <Login />
+    </Panel>
