@@ -32,7 +32,5 @@ export default () =>
             account you can log in here
             to your banking terminal.
         </div>
-        <div className="blockcenter">
-            <Login />
-        </div>
+        <Login />
     </Panel>
