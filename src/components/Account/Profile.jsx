@@ -73,7 +73,7 @@ class Profile extends Component {
                 paymentAddress: (data.alias  &&  data.domain) ?
                     `${data.alias}*${data.domain}` : "",
                 discoverable: data.visible,
-                memo: data.memo,
+                memo: data.memo ? data.memo : "",
             })
         })
         // eslint-disable-next-line no-console
