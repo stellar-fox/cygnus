@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import Heading from "./Heading"
 import PanelLedger from "./PanelLedger"
 import PanelLogin from "./PanelLogin"
@@ -37,7 +37,7 @@ export default class extends Component {
 
     // ...
     render = () =>
-        <div className="welcome-content">
+        <Fragment>
             <Heading />
             <div className="flex-row-space-between">
                 <PanelLedger />
@@ -45,6 +45,6 @@ export default class extends Component {
                 <PanelExplorer />
             </div>
             <Footer />
-        </div>
+        </Fragment>
 
 }
