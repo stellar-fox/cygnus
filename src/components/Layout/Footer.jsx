@@ -17,7 +17,7 @@ export default withStyles({
     emoji: { color: "white", },
 
     footer: {
-        backgroundColor: "rgba(0, 0, 0, 0.4)",
+        backgroundColor: "#091b31",
         borderTop: "1px solid rgba(212, 228, 188, 0.4)",
         padding: 5,
         fontSize: "0.8em",
