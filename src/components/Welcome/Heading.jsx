@@ -4,6 +4,16 @@ import { connect } from "react-redux"
 
 import { TopBarSecurityMessage } from "../StellarFox/env"
 
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance"
+import AlarmOnIcon from "@material-ui/icons/AlarmOn"
+import EmailIcon from "@material-ui/icons/Email"
+import FingerprintIcon from "@material-ui/icons/Fingerprint"
+import LanguageIcon from "@material-ui/icons/Language"
+import LocationOffIcon from "@material-ui/icons/LocationOff"
+import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar"
+import ReplayIcon from "@material-ui/icons/Replay"
+import SettingsEthernetIcon from "@material-ui/icons/SettingsEthernet"
+
 import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
@@ -99,43 +109,38 @@ class Heading extends Component {
                         Get Started
                     </Button>
                 </div>
+
                 <div className="container">
                     <div className="columns">
                         <div className="column">
                             <div className="col-header">True Freedom</div>
                             <div className="col-item">
-                                <i className="material-icons">alarm_on</i>
+                                <AlarmOnIcon className="heading-svg-icon" />
                                 Transaction settlement in seconds.
                             </div>
                             <div className="col-item">
-                                <i className="material-icons">
-                                    location_off
-                                </i>
+                                <LocationOffIcon className="heading-svg-icon" />
                                 Location independent.
                             </div>
                             <div className="col-item">
-                                <i className="material-icons">language</i>
+                                <LanguageIcon className="heading-svg-icon" />
                                 Global, permissionless transacting.
                             </div>
                         </div>
                         <div className="column">
                             <div className="col-header">
-                                Easy, Secure Transactions
+                                Easy and Secure Transactions
                             </div>
                             <div className="col-item">
-                                <i className="material-icons">
-                                    fingerprint
-                                </i>
+                                <FingerprintIcon className="heading-svg-icon" />
                                 Security by design.
                             </div>
                             <div className="col-item">
-                                <i className="material-icons">
-                                    perm_contact_calendar
-                                </i>
+                                <PermContactCalendarIcon className="heading-svg-icon" />
                                 Pay to address book contacts.
                             </div>
                             <div className="col-item">
-                                <i className="material-icons">email</i>
+                                <EmailIcon className="heading-svg-icon" />
                                 Use email as payment address.
                             </div>
                         </div>
@@ -144,19 +149,15 @@ class Heading extends Component {
                                 Fractional Cost
                             </div>
                             <div className="col-item">
-                                <i className="material-icons">
-                                    account_balance
-                                </i>
+                                <AccountBalanceIcon className="heading-svg-icon" />
                                 Account activation fee 0.50$.
                             </div>
                             <div className="col-item">
-                                <i className="material-icons">
-                                    settings_ethernet
-                                </i>
+                                <SettingsEthernetIcon className="heading-svg-icon" />
                                 End-to-end transfer fee 0.99$.
                             </div>
                             <div className="col-item">
-                                <i className="material-icons">replay</i>
+                                <ReplayIcon className="heading-svg-icon" />
                                 Free recurring payments.
                             </div>
                         </div>
