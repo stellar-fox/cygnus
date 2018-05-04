@@ -495,7 +495,8 @@ class PaymentCard extends Component {
 
             </CardActions>
             <div className="f-e p-b-small tiny">{
-                this.props.Balances.message ? this.props.Balances.message : "..."
+                this.props.Balances.message ?
+                    this.props.Balances.message : <he.Nbsp />
             }</div>
         </Card>
 
