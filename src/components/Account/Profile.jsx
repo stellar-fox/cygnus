@@ -17,6 +17,8 @@ import Divider from "../../lib/mui-v1/Divider"
 import Modal from "../../lib/common/Modal"
 import MD5 from "../../lib/md5"
 import TxConfirmProfile from "./TxConfirmProfile"
+import TxConfirmPay from "./TxConfirmPay"
+import TxBroadcast from "./TxBroadcast"
 import {
     dataDigest,
     emailValid,
@@ -131,15 +133,16 @@ class Profile extends Component {
     updateProfile = async () => {
         try {
             
-
             this.updateUserDataFingerprint()
 
             this.props.setState({
                 messageUserData: "Waiting for device ...",
             })
+
             await getSoftwareVersion()
+            
             this.props.setState({
-                messageUserData: "",
+                messageUserData: "Preparing transaction ...",
             })
 
             const tx = await this.buildTransaction(
@@ -149,12 +152,18 @@ class Profile extends Component {
 
             this.props.showModal("txConfirmProfile")
 
+            this.props.setState({
+                messageUserData: "",
+            })
+
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
                 this.props.publicKey,
                 tx
             )
-            // TODO: show broadcasting modal
+            
+            this.props.showModal("txBroadcast")
+
             await submitTransaction(
                 signedTx, this.props.network
             )
@@ -165,7 +174,9 @@ class Profile extends Component {
                 first_name: this.props.state.firstName,
                 last_name: this.props.state.lastName,
             })
+
             this.props.popupSnackbar("User data has been updated.")
+
         } catch (error) {
             this.props.setState({
                 messageUserData: "",
@@ -179,7 +190,9 @@ class Profile extends Component {
     // ...
     updatePaymentData = async () => {
         try {
+            
             this.updatePaymentDataFingerprint()
+            
             const
                 alias = this.props.state.paymentAddress.match(/\*/) ?
                     (this.props.state.paymentAddress) :
@@ -196,7 +209,7 @@ class Profile extends Component {
             await getSoftwareVersion()
             
             this.props.setState({
-                messagePaymentData: "",
+                messagePaymentData: "Preparing transaction ...",
             })
             
             const tx = await this.buildTransaction(
@@ -204,25 +217,34 @@ class Profile extends Component {
                 this.props.state.fingerprintPaymentData
             )
 
-            this.props.showModal("txConfirmProfile")
+            this.props.showModal("txConfirmPay")
+
+            this.props.setState({
+                messagePaymentData: "",
+            })
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
                 this.props.publicKey,
                 tx
             )
-            // TODO: show broadcasting modal
+            
+            this.props.showModal("txBroadcast")
+
             await submitTransaction(
                 signedTx, this.props.network
             )
 
             this.props.hideModal()
+
             await this.updateResource("account", {
                 alias,
                 memo_type,
                 memo,
             })
+
             this.props.popupSnackbar("Payment data has been updated.")
+
         } catch (error) {
             this.props.setState({
                 messagePaymentData: "",
@@ -293,6 +315,27 @@ class Profile extends Component {
                 title="Confirm on Hardware Device"
             >
                 <TxConfirmProfile />
+            </Modal>
+
+            <Modal
+                open={
+                    this.props.Modal.modalId === "txConfirmPay" &&
+                    this.props.Modal.visible
+                }
+                title="Confirm on Hardware Device"
+            >
+                <TxConfirmPay />
+            </Modal>
+
+
+            <Modal
+                open={
+                    this.props.Modal.modalId === "txBroadcast" &&
+                    this.props.Modal.visible
+                }
+                title="Updating ..."
+            >
+                <TxBroadcast />
             </Modal>
 
             <div className="tab-content">

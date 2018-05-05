@@ -16,29 +16,29 @@ import {
 export default connect(
     // map state to props.
     (state) => ({
-        fingerprintUserData: state.Account.fingerprintUserData,
+        fingerprintPaymentData: state.Account.fingerprintPaymentData,
     })
 )(
-    ({ fingerprintUserData, }) =>
+    ({ fingerprintPaymentData, }) =>
         <Fragment>
             <div className="p-t centered">
                 The following data fingerprint will be lodged to your account:
             </div>
             <div className="p-t centered">
                 <span className="bg-green">
-                    {btoa(fingerprintUserData)}
+                    {btoa(fingerprintPaymentData)}
                 </span>
             </div>
             <Divider />
             <div className="p-t centered">
-                You should see the following info on your
+                Please confirm that the following info is the same on your
                 device<he.Apos />s screen:
             </div>
             <div className="f-b space-around">
                 <List>
                     <ListItem
                         disabled={true}
-                        primaryText="No Details Available"
+                        primaryText="No Data Available"
                         leftIcon={
                             <i className="text-primary material-icons">
                                 style
