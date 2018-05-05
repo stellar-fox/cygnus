@@ -16,17 +16,28 @@ import {
     withStaticRouter,
 } from "../StellarRouter"
 
+import { withStyles } from "material-ui-next/styles"
+
+import Account from "../Account"
 import Balances from "../Balances"
 import Payments from "../Payments"
-import Account from "../Account"
-
-import "./BankContent.css"
 
 
 
 
 // <BankContent> component
 export default compose(
+    withStyles({
+
+        bankContent: {
+            paddingTop: 84,
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingBottom: 50,
+            transition: "all 450ms cubic-bezier(0.23, 1, 0.32, 1)",
+        },
+
+    }),
     withStaticRouter,
     connect(
         // map state to props.
@@ -37,6 +48,7 @@ export default compose(
 
         // ...
         static propTypes = {
+            classes: PropTypes.object.isRequired,
             drawerVisible: PropTypes.bool.isRequired,
             match: PropTypes.object.isRequired,
             staticRouter: PropTypes.object.isRequired,
@@ -75,8 +87,8 @@ export default compose(
 
         // ...
         render = () => (
-            ({ style, }, { getPath, }) =>
-                <div style={style} className="bank-content">
+            ({ style, }, { classes, staticRouter: { getPath, }, }) =>
+                <div style={style} className={classes.bankContent}>
                     <Switch>
                         <Redirect exact
                             from={this.rr(".")}
@@ -94,7 +106,7 @@ export default compose(
                         <Redirect to={getPath("Balances")} />
                     </Switch>
                 </div>
-        )(this.state, this.props.staticRouter)
+        )(this.state, this.props)
 
     }
 )
