@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import {
     bindActionCreators,
@@ -14,12 +14,21 @@ import {
 import Input from "../../lib/common/Input"
 import Button from "../../lib/mui-v1/Button"
 import Divider from "../../lib/mui-v1/Divider"
+import Modal from "../../lib/common/Modal"
 import MD5 from "../../lib/md5"
+import TxConfirmProfile from "./TxConfirmProfile"
 import {
+    dataDigest,
     emailValid,
     federationIsAliasOnly,
+    insertPathIndex,
+    htmlEntities as he,
 } from "../../lib/utils"
+import { buildSetDataTx, submitTransaction } from "../../lib/stellar-tx"
+import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { action as AccountAction } from "../../redux/Account"
+import { action as AlertAction } from "../../redux/Alert"
+import { action as ModalAction } from "../../redux/Modal"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { withLoginManager } from "../LoginManager"
 
@@ -86,6 +95,28 @@ class Profile extends Component {
 
 
     // ...
+    buildTransaction = async (name, value) => {
+        const txData = {
+            source: this.props.accountId,
+            network: this.props.network,
+            name,
+            value,
+        }
+        return await buildSetDataTx(txData)
+    }
+
+
+    // ...
+    showError = (message) => {
+        this.props.hideModal()
+        this.props.showAlert(message, "Error")
+        this.props.setState({
+            message: "",
+        })
+    }
+
+
+    // ...
     updateResource = async (resource, attr) => Axios
         .post(`${config.api}/${resource}/update/`, {
             ...attr,
@@ -98,26 +129,107 @@ class Profile extends Component {
 
     // ...
     updateProfile = async () => {
-        const
-            alias = this.props.state.paymentAddress.match(/\*/) ?
-                (this.props.state.paymentAddress) :
-                (`${this.props.state.paymentAddress}*stellarfox.net`),
+        try {
+            
 
-            memo_type = this.props.state.memo.length > 0 ? "text" : null,
+            this.updateUserDataFingerprint()
 
-            memo = this.props.state.memo
+            this.props.setState({
+                messageUserData: "Waiting for device ...",
+            })
+            await getSoftwareVersion()
+            this.props.setState({
+                messageUserData: "",
+            })
 
-        await this.updateResource("user",{
-            first_name: this.props.state.firstName,
-            last_name: this.props.state.lastName,
-        })
+            const tx = await this.buildTransaction(
+                "idSig",
+                this.props.state.fingerprintUserData
+            )
 
-        await this.updateResource("account", {
-            alias,
-            memo_type,
-            memo,
-        })
-        this.props.popupSnackbar("User profile has been updated.")
+            this.props.showModal("txConfirmProfile")
+
+            const signedTx = await signTransaction(
+                insertPathIndex(this.props.bip32Path),
+                this.props.publicKey,
+                tx
+            )
+            // TODO: show broadcasting modal
+            await submitTransaction(
+                signedTx, this.props.network
+            )
+
+            this.props.hideModal()
+
+            await this.updateResource("user",{
+                first_name: this.props.state.firstName,
+                last_name: this.props.state.lastName,
+            })
+            this.props.popupSnackbar("User data has been updated.")
+        } catch (error) {
+            this.props.setState({
+                messageUserData: "",
+            })
+            this.props.hideModal()
+            this.props.showAlert(error.message, "Error")
+        }
+    }
+
+
+    // ...
+    updatePaymentData = async () => {
+        try {
+            this.updatePaymentDataFingerprint()
+            const
+                alias = this.props.state.paymentAddress.match(/\*/) ?
+                    (this.props.state.paymentAddress) :
+                    (`${this.props.state.paymentAddress}*stellarfox.net`),
+
+                memo_type = this.props.state.memo.length > 0 ? "text" : null,
+
+                memo = this.props.state.memo
+            
+            this.props.setState({
+                messagePaymentData: "Waiting for device ...",
+            })
+            
+            await getSoftwareVersion()
+            
+            this.props.setState({
+                messagePaymentData: "",
+            })
+            
+            const tx = await this.buildTransaction(
+                "paySig",
+                this.props.state.fingerprintPaymentData
+            )
+
+            this.props.showModal("txConfirmProfile")
+
+            const signedTx = await signTransaction(
+                insertPathIndex(this.props.bip32Path),
+                this.props.publicKey,
+                tx
+            )
+            // TODO: show broadcasting modal
+            await submitTransaction(
+                signedTx, this.props.network
+            )
+
+            this.props.hideModal()
+            await this.updateResource("account", {
+                alias,
+                memo_type,
+                memo,
+            })
+            this.props.popupSnackbar("Payment data has been updated.")
+        } catch (error) {
+            this.props.setState({
+                messagePaymentData: "",
+            })
+            this.props.hideModal()
+            this.props.showAlert(error.message, "Error")
+        }
     }
 
 
@@ -138,7 +250,7 @@ class Profile extends Component {
     
     // ...
     changeMemo = (event) =>
-        this.props.setState({memo: event.target.value,})
+        this.props.setState({ memo: event.target.value, })
 
 
     // ...
@@ -153,112 +265,156 @@ class Profile extends Component {
 
 
     // ...
+    updateUserDataFingerprint = () => this.props.setState({
+        fingerprintUserData: dataDigest({
+            firstName: this.props.state.firstName,
+            lastName: this.props.state.lastName,
+            email: this.props.state.email,
+        }),
+    })
+
+
+    // ...
+    updatePaymentDataFingerprint = () => this.props.setState({
+        fingerprintPaymentData: dataDigest({
+            paymentAddress: this.props.state.paymentAddress,
+            memo: this.props.state.memo,
+        }),
+    })
+
+    // ...
     render = () =>
-        <div className="tab-content">
-            <div className="f-b space-between">
-                <div>
-                    <h2 className="tab-content-headline">
-                        Account Profile
-                    </h2>
-                    <div className="account-title">
-                        Manage your profile details.
-                    </div>
-                    <div className="account-subtitle">
-                        The details of your account profile are
-                        confidential and contribute to KYC/AML
-                        compliance. Any changes to the following fields
-                        will require your digital signature.
-                    </div>
-                </div>
-                <figure style={{ marginRight: "0px", marginBottom: "0px",}}>
-                    <img
-                        className="image"
-                        src={this.props.state.gravatarPath}
-                        alt="Gravatar"
-                    />
-                </figure>
-            </div>
-            <Input
-                width="100%"
-                className="lcars-input p-b p-t-large"
-                value={this.props.state.firstName}
-                label="First Name"
-                inputType="text"
-                maxLength="100"
-                autoComplete="off"
-                handleChange={this.changeFirstName}
-                subLabel={`First Name: ${this.props.state.firstName}`}
-            />
-            <Input
-                className="lcars-input p-b p-t"
-                value={this.props.state.lastName}
-                label="Last Name"
-                inputType="text"
-                maxLength="100"
-                autoComplete="off"
-                handleChange={this.changeLastName}
-                subLabel={`Last Name: ${this.props.state.lastName}`}
-            />
-            <Input
-                className="lcars-input p-b-large p-t"
-                value={this.props.state.email}
-                label="Email"
-                inputType="text"
-                maxLength="100"
-                autoComplete="off"
-                handleChange={this.changeEmail}
-                subLabel={`Email: ${this.props.state.email}`}
-            />
-            <Divider color="secondary" />
-            <div className="f-b space-between">
-                <div>
-                    <h2 className="tab-content-headline">
-                        Payment Address
-                    </h2>
-                    <div className="account-title">
-                        Manage your payment address details.
-                    </div>
-                    <div className="account-subtitle">
-                        Your payment address is visible
-                        to the public by default. Any changes to the following
-                        settings will require your digital signature.
-                    </div>
-                </div>
-            </div>
-            <Input
-                className="lcars-input p-t-large p-b"
-                value={this.props.state.paymentAddress}
-                label="Payment Address Alias"
-                inputType="text"
-                maxLength="100"
-                autoComplete="off"
-                handleChange={this.changePaymentAddress}
-                subLabel={
-                    federationIsAliasOnly(this.props.state.paymentAddress)
-                        ? `Payment Address: ${
-                            this.props.state
-                                .paymentAddress
-                        }*stellarfox.net`
-                        : `Payment Address: ${
-                            this.props.state
-                                .paymentAddress
-                        }`
+        <Fragment>
+            <Modal
+                open={
+                    this.props.Modal.modalId === "txConfirmProfile" &&
+                    this.props.Modal.visible
                 }
-            />
-            <Input
-                className="lcars-input p-t p-b-large"
-                value={this.props.state.memo}
-                label="Memo"
-                inputType="text"
-                maxLength="28"
-                autoComplete="off"
-                handleChange={this.changeMemo}
-                subLabel={`Memo: ${this.props.state.memo}`}
-            />
-            <Button color="secondary" onClick={this.updateProfile}>
-                Update
-            </Button>
-        </div>
+                title="Confirm on Hardware Device"
+            >
+                <TxConfirmProfile />
+            </Modal>
+
+            <div className="tab-content">
+                <div className="f-b space-between">
+                    <div>
+                        <h2 className="tab-content-headline">
+                            Account Profile
+                        </h2>
+                        <div className="account-title">
+                            Manage your profile details.
+                        </div>
+                        <div className="account-subtitle">
+                            The details of your account profile are
+                            confidential and contribute to KYC/AML
+                            compliance. Any changes to the following fields
+                            will require your digital signature.
+                        </div>
+                    </div>
+                    <figure style={{ marginRight: "0px", marginBottom: "0px",}}>
+                        <img
+                            className="image"
+                            src={this.props.state.gravatarPath}
+                            alt="Gravatar"
+                        />
+                    </figure>
+                </div>
+                <Input
+                    width="100%"
+                    className="lcars-input p-b p-t-large"
+                    value={this.props.state.firstName}
+                    label="First Name"
+                    inputType="text"
+                    maxLength="100"
+                    autoComplete="off"
+                    handleChange={this.changeFirstName}
+                    subLabel={`First Name: ${this.props.state.firstName}`}
+                />
+                <Input
+                    className="lcars-input p-b p-t"
+                    value={this.props.state.lastName}
+                    label="Last Name"
+                    inputType="text"
+                    maxLength="100"
+                    autoComplete="off"
+                    handleChange={this.changeLastName}
+                    subLabel={`Last Name: ${this.props.state.lastName}`}
+                />
+                <Input
+                    className="lcars-input p-b-large p-t"
+                    value={this.props.state.email}
+                    label="Email"
+                    inputType="text"
+                    maxLength="100"
+                    autoComplete="off"
+                    handleChange={this.changeEmail}
+                    subLabel={`Email: ${this.props.state.email}`}
+                />
+                <Button
+                    color="secondary"
+                    onClick={this.updateProfile}
+                >Update User Data</Button>
+                <div className="f-b p-t-small tiny">{
+                    this.props.state.messageUserData.length > 0 ?
+                        this.props.state.messageUserData : <he.Nbsp />
+                }</div>
+                <Divider color="secondary" />
+                
+                <div className="f-b space-between">
+                    <div>
+                        <h2 className="tab-content-headline">
+                            Payment Address
+                        </h2>
+                        <div className="account-title">
+                            Manage your payment address details.
+                        </div>
+                        <div className="account-subtitle">
+                            Your payment address is visible
+                            to the public by default. Any changes to the
+                            following settings will require your digital
+                            signature.
+                        </div>
+                    </div>
+                </div>
+                <Input
+                    className="lcars-input p-t-large p-b"
+                    value={this.props.state.paymentAddress}
+                    label="Payment Address Alias"
+                    inputType="text"
+                    maxLength="100"
+                    autoComplete="off"
+                    handleChange={this.changePaymentAddress}
+                    subLabel={
+                        federationIsAliasOnly(this.props.state.paymentAddress)
+                            ? `Payment Address: ${
+                                this.props.state
+                                    .paymentAddress
+                            }*stellarfox.net`
+                            : `Payment Address: ${
+                                this.props.state
+                                    .paymentAddress
+                            }`
+                    }
+                />
+                <Input
+                    className="lcars-input p-b-large p-t"
+                    value={this.props.state.memo}
+                    label="Memo"
+                    inputType="text"
+                    maxLength="28"
+                    autoComplete="off"
+                    handleChange={this.changeMemo}
+                    subLabel={`Memo: ${this.props.state.memo}`}
+                />
+                <Button color="secondary" onClick={this.updatePaymentData}>
+                    Update Payment Data
+                </Button>
+                <div className="f-b p-t-small tiny">{
+                    this.props.state.messagePaymentData.length > 0 ?
+                        this.props.state.messagePaymentData : <he.Nbsp />
+                }</div>
+            </div>
+        </Fragment>
 }
 
 
@@ -271,11 +427,19 @@ export default compose(
             state: state.Account,
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,
+            accountId: state.StellarAccount.accountId,
+            network: state.StellarAccount.horizon,
+            publicKey: state.LedgerHQ.publicKey,
+            bip32Path: state.LedgerHQ.bip32Path,
+            Modal: state.Modal,
         }),
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
             popupSnackbar: SnackbarAction.popupSnackbar,
+            showAlert: AlertAction.showAlert,
+            hideModal: ModalAction.hideModal,
+            showModal: ModalAction.showModal,
         }, dispatch)
     )
 )(Profile)
