@@ -15,6 +15,10 @@ const initState = {
     exists: false,
     tabSelected: "Settings",
     needsRegistration: false,
+    messageUserData: "",
+    messagePaymentData: "",
+    fingerprintUserData: "",
+    fingerprintPaymentData: "",
 }
 
 
