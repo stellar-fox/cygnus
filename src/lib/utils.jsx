@@ -8,7 +8,7 @@ import {
 import { StellarSdk, loadAccount } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
-
+import md5 from "./md5.js"
 
 
 
@@ -547,3 +547,8 @@ export const dynamicImportReducers = async () => {
         Snackbar, StellarAccount, StellarRouter,
     }
 }
+
+
+// ...
+export const dataDigest = (dataObj) =>
+    md5(Object.keys(dataObj).map((k) => md5(dataObj[k])).join())
