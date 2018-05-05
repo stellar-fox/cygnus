@@ -44,7 +44,14 @@ export const operations = (network) =>
     server(network).operations().cursor("now")
 
 
-
+// ...
+export const buildSetDataTx = async (txData) =>
+    new StellarSdk.TransactionBuilder(
+        await loadAccount(txData.source, txData.network)
+    ).addOperation(StellarSdk.Operation.manageData({
+        name: txData.name,
+        value: txData.value,
+    })).build()
 
 // ...
 export const buildCreateAccountTx = async (txData) =>
