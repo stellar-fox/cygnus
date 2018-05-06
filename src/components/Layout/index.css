@@ -250,9 +250,27 @@ strong { color: rgb(212, 228, 188); }
 
 
 
-/* --------- misc --------- */
+/* --------- badges --------- */
 
-.cursor-pointer { cursor: pointer; }
+div.badge-error, div.badge-success, div.badge-primary {
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    background-clip: padding-box;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 3px 5px 3px 5px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+div.badge-error { background-color: rgba(178, 34, 34, 1.0); }
+
+div.badge-success { background-color: rgba(27, 94, 32, 1.0); }
+
+div.badge-primary { background-color: rgba(15, 46, 83, 0.75); }
 
 span.red-badge {
     display: inline-block;
@@ -272,6 +290,15 @@ span.red-badge {
     margin-top: 10px;
     font-weight: bold;
 }
+
+/* --------- badges --------- */
+
+
+
+
+/* --------- misc --------- */
+
+.cursor-pointer { cursor: pointer; }
 
 .outline {
     border: 1px solid rgba(244, 176, 4, 0.75);
