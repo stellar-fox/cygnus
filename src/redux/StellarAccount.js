@@ -75,6 +75,7 @@ export const reducer = createReducer(initState)({
             (current.asset_type !== "native")),
         homeDomain: action.account.home_domain ?
             action.account.home_domain : null,
+        data: action.account.data_attr ? action.account.data_attr : null,
     }),
 
 
