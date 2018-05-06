@@ -40,7 +40,7 @@ class LedgerAuthenticator extends Component {
             status: "Waiting for device ...",
         })
         try {
-            softwareVersion = await this.props.getSoftwareVersion()    
+            softwareVersion = await this.props.getSoftwareVersion()
             publicKey = await getPublicKey(bip32Path)
         } catch (ex) {
             this.setState({
@@ -141,7 +141,7 @@ class LedgerAuthenticator extends Component {
             </div>
 
             <div className="f-b">
-                <div className="f-e-col">
+                <div className="blockcenter">
                     {
                         this.state.pathEditable ?
                             <Fragment>
@@ -169,7 +169,9 @@ class LedgerAuthenticator extends Component {
                         color={this.props.className.match(/reverse/) ?
                             "primary" : "secondary"}
                         fullWidth={true}
-                    >Authenticate</Button>
+                    >
+                        Authenticate
+                    </Button>
                 </div>
             </div>
 

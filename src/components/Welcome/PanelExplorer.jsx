@@ -139,7 +139,7 @@ class PanelExplorer extends Component {
             </div>
 
             <div className="f-b">
-                <div className="f-e-col">
+                <div className="blockcenter">
                     <InputField
                         name="payment-address-input"
                         type="text"
