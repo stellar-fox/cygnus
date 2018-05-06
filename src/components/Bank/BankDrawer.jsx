@@ -10,21 +10,40 @@ import {
 import { Null } from "../../lib/utils"
 import { bankDrawerWidth } from "../StellarFox/env"
 
+import { withStyles } from "material-ui-next/styles"
 import Drawer from "material-ui/Drawer"
-
-import "./BankDrawer.css"
 
 
 
 
 // <NavLinkTemplate> component
 const NavLinkTemplate = compose(
+    withStyles({
+
+        menuItem: {
+            display: "block",
+            lineHeight: "48px",
+            minHeight: "48px",
+            whiteSpace: "nowrap",
+            paddingLeft: "10px",
+            color: "rgba(244, 176, 4, 0.5)",
+            "&:hover": {
+                backgroundColor: "rgba(244, 176, 4, 0.15)",
+            },
+        },
+
+    }),
     withStaticRouter,
     withDynamicRoutes
 )(
-    ({ currentPath, staticRouter: { pushByView, getPath, }, to, icon, }) =>
+    ({
+        classes,
+        currentPath,
+        staticRouter: { pushByView, getPath, },
+        to, icon,
+    }) =>
         <NavLink
-            className="menu-item"
+            className={classes.menuItem}
             onClick={(e) => {
                 e.preventDefault()
                 if (!currentPath.startsWith(getPath(to))) { pushByView(to) }
