@@ -1,35 +1,65 @@
 import React from "react"
 import { connect } from "react-redux"
+import { compose } from "redux"
+
+import { withStyles } from "material-ui-next/styles"
+
 import {
     appName,
     liveNetAddr,
 } from "../StellarFox/env"
 
-import "./BankAppBarTitle.css"
-
 
 
 
 // <BankAppBarTitle> component
-export default connect(
-    // map state to props.
-    (state) => ({
-        ledgerConnected: state.LedgerHQ.connected,
-        horizon: state.StellarAccount.horizon,
-    })
+export default compose(
+    withStyles({
+
+        appBarTitle: {
+            float: "left",
+            color: "rgb(15, 46, 83)",
+            fontWeight: "normal",
+        },
+
+        barTitle: {
+            lineHeight: "45px",
+            fontSize: "1.1em",
+        },
+
+        barSubtitle: {
+            lineHeight: "5px",
+            fontSize: "15px",
+        },
+
+        indicatorSetCol: {
+            float: "left",
+            lineHeight: "15px",
+            padding: "10px 0px",
+            marginLeft: "16px",
+            fontSize: "14px",
+        },
+
+    }),
+    connect(
+        // map state to props.
+        (state) => ({
+            ledgerConnected: state.LedgerHQ.connected,
+            horizon: state.StellarAccount.horizon,
+        })
+    )
 )(
-    ({ ledgerConnected, viewName, horizon,}) =>
-        <div className="flex-start">
-            <div className="app-bar-title">
-                <div className="bar-title">{appName}</div>
-                <div className="bar-subtitle">{viewName}</div>
+    ({ classes, horizon, ledgerConnected, viewName, }) =>
+        <div>
+            <div className={classes.appBarTitle}>
+                <div className={classes.barTitle}>{appName}</div>
+                <div className={classes.barSubtitle}>{viewName}</div>
             </div>
-            <div className="indicator-set-col">
+            <div className={classes.indicatorSetCol}>
                 <div
                     className={
                         horizon === liveNetAddr ?
-                            "badge-success" :
-                            "badge-error"
+                            "badge-success" : "badge-error"
                     }
                 >
                     { horizon === liveNetAddr ? "Public Net" : "Test Net" }
