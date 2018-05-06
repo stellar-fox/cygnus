@@ -19,8 +19,12 @@ import MD5 from "../../lib/md5"
 import TxConfirmProfile from "./TxConfirmProfile"
 import TxConfirmPay from "./TxConfirmPay"
 import TxBroadcast from "./TxBroadcast"
+import MsgBadgeError from "./MsgBadgeError"
+import MsgBadgeSuccess from "./MsgBadgeSuccess"
+import MsgBadgeWarning from "./MsgBadgeWarning"
 import {
     dataDigest,
+    signatureValid,
     emailValid,
     federationIsAliasOnly,
     insertPathIndex,
@@ -384,7 +388,7 @@ class Profile extends Component {
                     subLabel={`Last Name: ${this.props.state.lastName}`}
                 />
                 <Input
-                    className="lcars-input p-b-large p-t"
+                    className="lcars-input p-t p-b"
                     value={this.props.state.email}
                     label="Email"
                     inputType="text"
@@ -393,6 +397,18 @@ class Profile extends Component {
                     handleChange={this.changeEmail}
                     subLabel={`Email: ${this.props.state.email}`}
                 />
+                
+                {this.props.idSig ?
+                    (signatureValid({
+                        firstName: this.props.state.firstName,
+                        lastName: this.props.state.lastName,
+                        email: this.props.state.email,
+                    }, this.props.idSig) ?
+                        <MsgBadgeSuccess /> :
+                        <MsgBadgeError />) :
+                    <MsgBadgeWarning />
+                }
+
                 <Button
                     color="secondary"
                     onClick={this.updateProfile}
@@ -440,7 +456,7 @@ class Profile extends Component {
                     }
                 />
                 <Input
-                    className="lcars-input p-b-large p-t"
+                    className="lcars-input p-t p-b"
                     value={this.props.state.memo}
                     label="Memo"
                     inputType="text"
@@ -449,6 +465,17 @@ class Profile extends Component {
                     handleChange={this.changeMemo}
                     subLabel={`Memo: ${this.props.state.memo}`}
                 />
+                
+                {this.props.paySig ?
+                    (signatureValid({
+                        paymentAddress: this.props.state.paymentAddress,
+                        memo: this.props.state.memo,
+                    }, this.props.paySig) ?
+                        <MsgBadgeSuccess /> :
+                        <MsgBadgeError />) :
+                    <MsgBadgeWarning />
+                }
+
                 <Button color="secondary" onClick={this.updatePaymentData}>
                     Update Payment Data
                 </Button>
@@ -475,6 +502,12 @@ export default compose(
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
             Modal: state.Modal,
+            paySig: state.StellarAccount.data ?
+                (state.StellarAccount.data.paySig ?
+                    state.StellarAccount.data.paySig : null) : null,
+            idSig: state.StellarAccount.data ?
+                (state.StellarAccount.data.idSig ?
+                    state.StellarAccount.data.idSig : null) : null,
         }),
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
