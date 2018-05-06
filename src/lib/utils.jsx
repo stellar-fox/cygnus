@@ -552,3 +552,9 @@ export const dynamicImportReducers = async () => {
 // ...
 export const dataDigest = (dataObj) =>
     md5(Object.keys(dataObj).map((k) => md5(dataObj[k])).join())
+
+
+// ...
+export const signatureValid = (dataObj, signature) => {
+    return dataDigest(dataObj) === atob(signature) ? true : false
+}
