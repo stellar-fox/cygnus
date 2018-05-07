@@ -118,7 +118,6 @@ export default class InputField extends Component {
                 this.props.maxLength
             }
 
-            value={this.props.value}
         />
 
 }
