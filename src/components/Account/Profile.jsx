@@ -27,6 +27,7 @@ import {
     signatureValid,
     emailValid,
     federationIsAliasOnly,
+    getRegisteredAccount,
     insertPathIndex,
     htmlEntities as he,
 } from "../../lib/utils"
@@ -78,22 +79,19 @@ class Profile extends Component {
 
 
     // ...
-    getAccountData = () => Axios
-        .post(`${config.api}/account/`, {
-            id: this.props.userId,
-            token: this.props.token,
-        })
-        .then(({data: {data,},}) => {
+    getAccountData = async () => {
+        const account = await getRegisteredAccount(
+            this.props.userId, this.props.token
+        )
+        if (account) {
             this.props.setState({
-                paymentAddress: (data.alias  &&  data.domain) ?
-                    `${data.alias}*${data.domain}` : "",
-                discoverable: data.visible,
-                memo: data.memo ? data.memo : "",
+                paymentAddress: (account.alias && account.domain) ?
+                    `${account.alias}*${account.domain}` : "",
+                discoverable: account.visible,
+                memo: account.memo ? account.memo : "",
             })
-        })
-        // eslint-disable-next-line no-console
-        .catch(error => console.log(error.message))
-
+        }
+    }
 
     // ...
     setGravatarPath = (email) =>
