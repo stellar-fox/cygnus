@@ -25,7 +25,7 @@ export const appCopyDates = "2017-2018"
 
 
 
-// application landgin page link (taken from package.json)
+// application landing page link (taken from package.json)
 export const appLandingPageLink = homepage
 
 
