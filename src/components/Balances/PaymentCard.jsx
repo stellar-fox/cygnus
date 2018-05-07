@@ -19,14 +19,14 @@ import DatePicker from "material-ui/DatePicker"
 import {
     federationAddressValid,
     fedToPub,
-    getRegisteredAccount,
+    // getRegisteredAccount,
     htmlEntities as he,
     invalidPaymentAddressMessage,
     publicKeyValid,
-    signatureValid,
+    // signatureValid,
 } from "../../lib/utils"
 import { appName, securityMsgPlaceholder, } from "../StellarFox/env"
-import { loadAccount } from "../../lib/stellar-tx"
+// import { loadAccount } from "../../lib/stellar-tx"
 
 import Button from "../../lib/mui-v1/Button"
 import InputField from "../../lib/common/InputField"
@@ -120,82 +120,79 @@ class PaymentCard extends Component {
 
             // check if this public key already exists on Stellar network
             // and based on the outcome set appropriate transaction type
-            try {
-                const payeeStellarAccount = await loadAccount(
-                    publicKey, this.props.StellarAccount.horizon
-                )
-                this.props.setState({
-                    payeeStellarAccount: {
-                        accountId: payeeStellarAccount.account_id,
-                        data: payeeStellarAccount.data_attr ?
-                            payeeStellarAccount.data_attr : null,
-                    },
-                })
+            // try {
+            //     const payeeStellarAccount = await loadAccount(
+            //         publicKey, this.props.StellarAccount.horizon
+            //     )
+            //     this.props.setState({
+            //         payeeStellarAccount: {
+            //             accountId: payeeStellarAccount.account_id,
+            //             data: payeeStellarAccount.data_attr ?
+            //                 payeeStellarAccount.data_attr : null,
+            //         },
+            //     })
                 
-                /**
-                 * The following is a verification procedure for making sure
-                 * that the recipient's info (the mapping of federation address
-                 * to Stellar public key) is authentic.
-                 */
-                const registeredAccount = await getRegisteredAccount(
-                    this.props.userId, this.props.token
-                )
+            //     /**
+            //      * The following is a verification procedure for making sure
+            //      * that the recipient's info (the mapping of federation address
+            //      * to Stellar public key) is authentic.
+            //      */
+            //     const registeredAccount = await getRegisteredAccount(
+            //         this.props.userId, this.props.token
+            //     )
 
-                const paySig = payeeStellarAccount.data_attr ?
-                    (payeeStellarAccount.data_attr.paySig ?
-                        payeeStellarAccount.data_attr.paySig : null) : null
+            //     const paySig = payeeStellarAccount.data_attr ?
+            //         (payeeStellarAccount.data_attr.paySig ?
+            //             payeeStellarAccount.data_attr.paySig : null) : null
 
-                const paymentAddress = `${
-                    registeredAccount.alias}*${registeredAccount.domain}`
+            //     const paymentAddress = `${
+            //         registeredAccount.alias}*${registeredAccount.domain}`
 
-                if (paySig) {
-                    if (signatureValid({
-                        paymentAddress,
-                        memo: registeredAccount.memo,
-                    }, paySig)) {
-                        this.setTransactionType("EXISTING_ACCOUNT")
-                        this.updateIndicatorMessage(
-                            "Payee Verified", "green"
-                        )
-                        registeredAccount.memo.length > 0 &&
-                            this.props.setState({
-                                memoRequired: true,
-                                payeeMemoText: registeredAccount.memo,
-                                memoDisabled: true,
-                            })
-                    } else {
-                        this.setTransactionType("EXISTING_ACCOUNT")
-                        this.updateIndicatorMessage(
-                            "Wrong Signature", "red"
-                        )
-                        this.props.setState({
-                            memoRequired: false,
-                            payeeMemoText: "",
-                            memoDisabled: false,
-                        })
-                    }    
-                } else {
-                    this.setTransactionType("EXISTING_ACCOUNT")
-                    this.updateIndicatorMessage("Payee Unverified", "yellow")
-                    this.props.setState({
-                        memoRequired: false,
-                        payeeMemoText: "",
-                        memoDisabled: false,
-                    })
-                }
-
-                
-                               
-            } catch (error) {
-                this.props.setState({
-                    payeeStellarAccount: null,
-                    memoRequired: false,
-                    payeeMemoText: "",
-                    memoDisabled: false,
-                })
-                this.setTransactionType("NEW_ACCOUNT")
-                this.updateIndicatorMessage("New Account", "yellow")
-            }
+            //     if (paySig) {
+            //         if (signatureValid({
+            //             paymentAddress,
+            //             memo: registeredAccount.memo,
+            //         }, paySig)) {
+            //             this.setTransactionType("EXISTING_ACCOUNT")
+            //             this.updateIndicatorMessage(
+            //                 "Payee Verified", "green"
+            //             )
+            //             registeredAccount.memo.length > 0 &&
+            //                 this.props.setState({
+            //                     memoRequired: true,
+            //                     payeeMemoText: registeredAccount.memo,
+            //                     memoDisabled: true,
+            //                 })
+            //         } else {
+            //             this.setTransactionType("EXISTING_ACCOUNT")
+            //             this.updateIndicatorMessage(
+            //                 "Wrong Signature", "red"
+            //             )
+            //             this.props.setState({
+            //                 memoRequired: false,
+            //                 payeeMemoText: "",
+            //                 memoDisabled: false,
+            //             })
+            //         }    
+            //     } else {
+            //         this.setTransactionType("EXISTING_ACCOUNT")
+            //         this.updateIndicatorMessage("Payee Unverified", "yellow")
+            //         this.props.setState({
+            //             memoRequired: false,
+            //             payeeMemoText: "",
+            //             memoDisabled: false,
+            //         })
+            //     }                    
+            // } catch (error) {
+            //     this.props.setState({
+            //         payeeStellarAccount: null,
+            //         memoRequired: false,
+            //         payeeMemoText: "",
+            //         memoDisabled: false,
+            //     })
+            //     this.setTransactionType("NEW_ACCOUNT")
+            //     this.updateIndicatorMessage("New Account", "yellow")
+            // }
 
             this.setPaymentDestination(publicKey, input)
 
@@ -512,52 +509,29 @@ class PaymentCard extends Component {
                     <div>
                         <span className="payment-header">
                             <span className="p-r">For:</span>
-                            {this.props.Balances.payeeMemoText.length > 0 ?
-                                <InputField
-                                    name="paycheck-memo"
-                                    type="text"
-                                    placeholder="Memo"
-                                    underlineStyle={{
-                                        borderColor: "rgba(15, 46, 83, 0.5)",
-                                    }}
-                                    underlineFocusStyle={{
-                                        borderColor: "rgba(15, 46, 83, 0.8)",
-                                    }}
-                                    inputStyle={{
-                                        color: "rgba(15, 46, 83, 0.8)",
-                                    }}
-                                    ref={(self) => {
-                                        this.textInputFieldMemo = self
-                                    }}
-                                    validator={
-                                        debounce(this.memoValidator, 500)
-                                    }
-                                    maxLength={28}
-                                    value={this.props.Balances.payeeMemoText}
-                                    disabled={this.props.Balances.memoDisabled}
-                                /> : 
-                                <InputField
-                                    name="paycheck-memo"
-                                    type="text"
-                                    placeholder="Memo"
-                                    underlineStyle={{
-                                        borderColor: "rgba(15, 46, 83, 0.5)",
-                                    }}
-                                    underlineFocusStyle={{
-                                        borderColor: "rgba(15, 46, 83, 0.8)",
-                                    }}
-                                    inputStyle={{
-                                        color: "rgba(15, 46, 83, 0.8)",
-                                    }}
-                                    ref={(self) => {
-                                        this.textInputFieldMemo = self
-                                    }}
-                                    validator={
-                                        debounce(this.memoValidator, 500)
-                                    }
-                                    maxLength={28}
-                                />
-                            }
+                             
+                            <InputField
+                                name="paycheck-memo"
+                                type="text"
+                                placeholder="Memo"
+                                underlineStyle={{
+                                    borderColor: "rgba(15, 46, 83, 0.5)",
+                                }}
+                                underlineFocusStyle={{
+                                    borderColor: "rgba(15, 46, 83, 0.8)",
+                                }}
+                                inputStyle={{
+                                    color: "rgba(15, 46, 83, 0.8)",
+                                }}
+                                ref={(self) => {
+                                    this.textInputFieldMemo = self
+                                }}
+                                validator={
+                                    debounce(this.memoValidator, 500)
+                                }
+                                maxLength={28}
+                            />
+                            
                         </span>
                     </div>
                 </div>
