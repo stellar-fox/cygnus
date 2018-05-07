@@ -14,8 +14,6 @@ import { LinearProgress } from "material-ui-next"
 import InputField from "../../lib/common/InputField"
 import Button from "../../lib/mui-v1/Button"
 
-import "./index.css"
-
 
 
 
