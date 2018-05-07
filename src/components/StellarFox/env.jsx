@@ -192,3 +192,9 @@ export const testNetAddr = "https://horizon-testnet.stellar.org/"
 
 // ...
 export const liveNetAddr = "https://horizon.stellar.org/"
+
+
+
+
+// ...
+export const securityMsgPlaceholder = "▨▨▨▨▨▨▨▨▨"
