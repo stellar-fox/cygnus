@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+
 import { bip32Prefix } from "../StellarFox/env"
 import { getPublicKey } from "../../lib/ledger"
-import { action as LedgerHQAction } from "../../redux/LedgerHQ"
+
 import Input from "../../lib/common/Input"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
 
-import "./index.css"
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 
 
 
@@ -40,7 +41,7 @@ class LedgerAuthenticator extends Component {
             status: "Waiting for device ...",
         })
         try {
-            softwareVersion = await this.props.getSoftwareVersion()    
+            softwareVersion = await this.props.getSoftwareVersion()
             publicKey = await getPublicKey(bip32Path)
         } catch (ex) {
             this.setState({
@@ -75,7 +76,8 @@ class LedgerAuthenticator extends Component {
                 break
             case "U2F_5":
                 message =
-                    "Ledger sign in timeout. Device turned off or disconnected."
+                    "Ledger sign in timeout. " +
+                    "Device turned off or disconnected."
                 break
             default:
                 break
@@ -124,8 +126,13 @@ class LedgerAuthenticator extends Component {
                     <div className="account-title">
                         Use default account
                     </div>
-                    <div className={(this.props.className.match(/reverse/) ?
-                        "text-primary" : "text-secondary") + " account-subtitle"}
+                    <div
+                        className={
+                            (
+                                this.props.className.match(/reverse/) ?
+                                    "text-primary" : "text-secondary"
+                            ) + " account-subtitle"
+                        }
                     >
                         You can specify an account index for transactions.
                     </div>
@@ -134,14 +141,16 @@ class LedgerAuthenticator extends Component {
                     <Switch
                         checked={this.state.useDefaultAccount}
                         onChange={this.handleCheckboxClick}
-                        color={this.props.className.match(/reverse/) ?
-                            "primary" : "secondary"}
+                        color={
+                            this.props.className.match(/reverse/) ?
+                                "primary" : "secondary"
+                        }
                     />
                 </div>
             </div>
 
             <div className="f-b">
-                <div className="f-e-col">
+                <div className="blockcenter">
                     {
                         this.state.pathEditable ?
                             <Fragment>
@@ -166,16 +175,20 @@ class LedgerAuthenticator extends Component {
                     <Button
                         disabled={this.state.buttonDisabled}
                         onClick={this.initQueryDevice}
-                        color={this.props.className.match(/reverse/) ?
-                            "primary" : "secondary"}
+                        color={
+                            this.props.className.match(/reverse/) ?
+                                "primary" : "secondary"
+                        }
                         fullWidth={true}
-                    >Authenticate</Button>
+                    >
+                        Authenticate
+                    </Button>
                 </div>
             </div>
 
-            <div style={{marginTop: "2px",}} className="p-t-small">
+            <div style={{ marginTop: "2px", }} className="p-t-small">
                 <div className="tiny placeholder-tiny">
-                    {this.state.status}
+                    { this.state.status }
                 </div>
             </div>
         </Fragment>

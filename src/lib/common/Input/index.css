@@ -8,18 +8,18 @@
     display: block;
     padding: 9px;
     border-radius: 3px;
-    border: 1px solid rgba(15,46,83,0.55);
+    border: 1px solid rgba(15, 46, 83, 1.0);
 }
 
 .lcars-input-reverse li > label {
     display: block;
     float: left;
-    margin-top: -22px;
-    background: rgb(244,176,4);
-    height: 14px;
-    padding: 2px 5px 2px 5px;
-    color: rgba(15,46,83,0.75);
-    font-size: 14px;
+    height: 18px;
+    padding: 2px 0px 2px 0px;
+    margin-top: -6px;
+    margin-bottom: 6px;
+    color: rgba(15, 46, 83, 1.0);
+    font-size: 0.75em;
     overflow: hidden;
 }
 
@@ -45,16 +45,16 @@
     width: 100%;
     display: block;
     outline: none;
-    border: 1px solid rgba(15,46,83,0.35);
+    border: 1px solid rgba(15, 46, 83, 0.75);
     border-radius: 3px;
     height: 25px;
     line-height: 25px;
     font-size: 16px;
-    color: rgba(15,46,83,0.75);
+    color: rgba(15, 46, 83, 1.0);
     margin-top: 3px;
     padding-left: 5px;
     margin-bottom: 8px;
-    background-color: rgba(15,46,83,0.15);
+    background-color: rgba(15, 46, 83, 0.15);
 }
 
 .lcars-input-reverse input[type="text"]:focus,
@@ -68,20 +68,20 @@
 .lcars-input-reverse input[type="password"]:focus,
 .lcars-input-reverse textarea:focus,
 .lcars-input-reverse select:focus {
-    border-color: rgba(15,46,83,0.55);
+    border-color: rgba(15, 46, 83, 1.0);
 }
 
 .lcars-input-reverse li > span {
-    background: rgb(244,176,4);
+    background: rgb(244, 176, 4);
     display: block;
     padding: 3px;
     margin: 0 -9px -9px -9px;
     text-align: center;
-    color: rgb(244,176,4);
+    color: rgb(244, 176, 4);
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
-    border-top: 1px solid rgba(15,46,83,0.35);
-    background: rgba(15,46,83,0.55);
+    border-top: 1px solid rgba(15, 46, 83, 1.0);
+    background: rgba(15, 46, 83, 1.0);
 }
 
 
@@ -98,17 +98,17 @@
     display: block;
     padding: 9px;
     border-radius: 3px;
-    border: 1px solid rgba(244,176,4,0.75);
+    border: 1px solid rgba(244, 176, 4, 0.75);
 }
 
 .lcars-input li > label {
     display: block;
     float: left;
     margin-top: -22px;
-    background: rgb(15,46,83);
+    background: rgb(15, 46, 83);
     height: 18px;
     padding: 2px 5px 2px 5px;
-    color: rgba(244,176,4,0.75);
+    color: rgba(244, 176, 4, 0.75);
     font-size: 14px;
     overflow: hidden;
 }
@@ -135,16 +135,16 @@
     width: 100%;
     display: block;
     outline: none;
-    border: 1px solid rgba(244,176,4,0.3);
+    border: 1px solid rgba(244, 176, 4, 0.3);
     border-radius: 3px;
     height: 25px;
     line-height: 25px;
     font-size: 16px;
-    color: rgba(244,176,4,0.75);
+    color: rgba(244, 176, 4, 0.75);
     margin-top: 3px;
     padding-left: 5px;
     margin-bottom: 8px;
-    background-color: rgba(244,176,4,0.15);
+    background-color: rgba(244, 176, 4, 0.15);
 }
 
 .lcars-input input[type="text"]:focus,
@@ -158,20 +158,20 @@
 .lcars-input input[type="password"]:focus,
 .lcars-input textarea:focus,
 .lcars-input select:focus {
-    border-color: rgba(244,176,4,0.5);
+    border-color: rgba(244, 176, 4, 0.5);
 }
 
 .lcars-input li > span {
-    background: rgb(15,46,83);
+    background: rgb(15, 46, 83);
     display: block;
     padding: 3px;
     margin: 0 -9px -9px -9px;
     text-align: center;
-    color: rgb(15,46,83);
+    color: rgb(15, 46, 83);
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
-    border-top: 1px solid rgba(244,176,4,0.3);
-    background: rgba(244,176,4,0.75);
+    border-top: 1px solid rgba(244, 176, 4, 0.3);
+    background: rgba(244, 176, 4, 0.75);
 }
 
 
@@ -190,7 +190,7 @@
     display: block;
     padding: 9px;
     border-radius: 3px;
-    border: 1px solid rgba(244,176,4,1.0);
+    border: 1px solid rgba(244, 176, 4, 1.0);
 }
 
 .welcome-lcars-input li > label {
@@ -227,16 +227,16 @@
     width: 100%;
     display: block;
     outline: none;
-    border: 1px solid rgba(244,176,4,0.75);
+    border: 1px solid rgba(244, 176, 4, 0.75);
     border-radius: 3px;
     height: 25px;
     line-height: 25px;
     font-size: 16px;
-    color: rgba(244,176,4,1.0);
+    color: rgba(244, 176, 4, 1.0);
     margin-top: 3px;
     padding-left: 5px;
     margin-bottom: 8px;
-    background-color: rgba(244,176,4,0.15);
+    background-color: rgba(244, 176, 4, 0.15);
 }
 
 .welcome-lcars-input input[type="text"]:focus,
@@ -250,18 +250,18 @@
 .welcome-lcars-input input[type="password"]:focus,
 .welcome-lcars-input textarea:focus,
 .welcome-lcars-input select:focus {
-    border-color: rgba(244,176,4,1.0);
+    border-color: rgba(244, 176, 4, 1.0);
 }
 
 .welcome-lcars-input li > span {
-    background: rgb(15,46,83);
+    background: rgb(15, 46, 83);
     display: block;
     padding: 3px;
     margin: 0 -9px -9px -9px;
     text-align: center;
-    color: rgb(15,46,83);
+    color: rgb(15, 46, 83);
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
-    border-top: 1px solid rgba(244,176,4,1.0);
-    background: rgba(244,176,4,1.0);
+    border-top: 1px solid rgba(244, 176, 4, 1.0);
+    background: rgba(244, 176, 4, 1.0);
 }
