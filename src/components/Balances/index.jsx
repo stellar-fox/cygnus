@@ -131,13 +131,15 @@ class Balances extends Component {
     checkForRegisteredAccount = async (publicKey, bip32Path) => {
         try {
             const auth = await getRegisteredUser(publicKey, bip32Path)
-            const account = await getRegisteredAccount(auth.data.user_id)
+            const account = await getRegisteredAccount(
+                auth.data.user_id, auth.data.token
+            )
             this.props.setState({
-                currency: account.data.data.currency,
+                currency: account.currency,
                 needsRegistration: false,
             })
             this.props.assetManager.updateExchangeRate(
-                account.data.data.currency
+                account.currency
             )
         } catch (error) {
             this.props.setState({ needsRegistration: true, })
