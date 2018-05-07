@@ -205,7 +205,7 @@ export const insertPathIndex = (index) => `${env.bip32Prefix}${index}'`
 
 
 
-// ...
+// helper - handle exceptions in expressions
 export const handleException = (fn, handler) => {
     try { return fn() }
     catch (ex) { return typeof handler === "function" ? handler(ex) : ex }
@@ -220,7 +220,8 @@ export const nullToUndefined = (val) => val === null ? undefined : val
 
 
 
-// ...
+// simple array flattener
+// [[1, 2,], ..., [3, 4,],]  ->  [1, 2, ..., 3, 4,
 export const flatten = (arr) => arr.reduce((acc, el) => acc.concat(el), [])
 
 
@@ -264,7 +265,7 @@ export const Provide = ({ children, ...rest }) =>
 
 
 
-// functional replacement of 'switch' statement
+// functional replacement of a "switch" statement
 export const choose = (
     key,
     actions = {},
@@ -278,7 +279,7 @@ export const choose = (
 
 
 
-// ...
+// create clean and readable reducers for redux
 export const createReducer = (initState = {}) =>
     (actions, defaultAction = (s, _a) => s) =>
         (state = initState, action) =>
@@ -440,7 +441,7 @@ export const shallowEquals = (objA, objB) => {
 
 
 
-// find duplicaes in given array
+// find duplicates in a given array
 export const findDuplicates = (a) =>
     Object.entries(countBy(a))
         .reduce((acc, [k, v,]) => v > 1 ? acc.concat(k) : acc, [])
@@ -487,7 +488,7 @@ export const timeout = (f, time = 1000, cancel = (_reason) => null) => {
 
 
 
-// convenience shortcut of 'timeout'
+// convenience shortcut of "timeout"
 export const delay = (time = 1000, cancel = (_reason) => null) =>
     timeout(() => time, time, cancel)
 
