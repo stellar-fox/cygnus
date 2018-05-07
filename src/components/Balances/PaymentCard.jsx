@@ -19,12 +19,14 @@ import DatePicker from "material-ui/DatePicker"
 import {
     federationAddressValid,
     fedToPub,
+    getRegisteredAccount,
     htmlEntities as he,
     invalidPaymentAddressMessage,
     publicKeyValid,
-    publicKeyExists,
+    signatureValid,
 } from "../../lib/utils"
-import { appName } from "../StellarFox/env"
+import { appName, securityMsgPlaceholder, } from "../StellarFox/env"
+import { loadAccount } from "../../lib/stellar-tx"
 
 import Button from "../../lib/mui-v1/Button"
 import InputField from "../../lib/common/InputField"
@@ -32,6 +34,7 @@ import InputField from "../../lib/common/InputField"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 
+import { action as AccountAction } from "../../redux/Account"
 import { action as BalancesAction } from "../../redux/Balances"
 
 import sflogo from "../StellarFox/static/sflogo.svg"
@@ -61,12 +64,14 @@ class PaymentCard extends Component {
             payee: null,
             newAccount: false,
             memoRequired: false,
+            memoDisabled: false,
             memoText: "",
+            payeeMemoText: "",
             minimumReserveMessage: "",
             sendEnabled: false,
             cancelEnabled: true,
             message: null,
-            indicatorMessage: "XXXXXXXXXXXX",
+            indicatorMessage: securityMsgPlaceholder,
             indicatorStyle: "fade-extreme",
             error: "",
         })
@@ -112,18 +117,84 @@ class PaymentCard extends Component {
         // at this point we have a valid public key that we can set as
         // payment destination address
         if (publicKey) {
+
             // check if this public key already exists on Stellar network
             // and based on the outcome set appropriate transaction type
-            if (await publicKeyExists(publicKey, this.props.StellarAccount.horizon)) {
+            try {
+                const payeeStellarAccount = await loadAccount(
+                    publicKey, this.props.StellarAccount.horizon
+                )
+                this.props.setState({
+                    payeeStellarAccount: {
+                        accountId: payeeStellarAccount.account_id,
+                        data: payeeStellarAccount.data_attr ?
+                            payeeStellarAccount.data_attr : null,
+                    },
+                })
+                
+                /**
+                 * The following is a verification procedure for making sure
+                 * that the recipient's info (the mapping of federation address
+                 * to Stellar public key) is authentic.
+                 */
+                const registeredAccount = await getRegisteredAccount(
+                    this.props.userId, this.props.token
+                )
 
-                this.setTransactionType("EXISTING_ACCOUNT")
-                this.updateIndicatorMessage("Recipient Verified", "green")
+                const paySig = payeeStellarAccount.data_attr ?
+                    (payeeStellarAccount.data_attr.paySig ?
+                        payeeStellarAccount.data_attr.paySig : null) : null
 
-            } else {
+                const paymentAddress = `${
+                    registeredAccount.alias}*${registeredAccount.domain}`
 
+                if (paySig) {
+                    if (signatureValid({
+                        paymentAddress,
+                        memo: registeredAccount.memo,
+                    }, paySig)) {
+                        this.setTransactionType("EXISTING_ACCOUNT")
+                        this.updateIndicatorMessage(
+                            "Payee Verified", "green"
+                        )
+                        registeredAccount.memo.length > 0 &&
+                            this.props.setState({
+                                memoRequired: true,
+                                payeeMemoText: registeredAccount.memo,
+                                memoDisabled: true,
+                            })
+                    } else {
+                        this.setTransactionType("EXISTING_ACCOUNT")
+                        this.updateIndicatorMessage(
+                            "Wrong Signature", "red"
+                        )
+                        this.props.setState({
+                            memoRequired: false,
+                            payeeMemoText: "",
+                            memoDisabled: false,
+                        })
+                    }    
+                } else {
+                    this.setTransactionType("EXISTING_ACCOUNT")
+                    this.updateIndicatorMessage("Payee Unverified", "yellow")
+                    this.props.setState({
+                        memoRequired: false,
+                        payeeMemoText: "",
+                        memoDisabled: false,
+                    })
+                }
+
+                
+                               
+            } catch (error) {
+                this.props.setState({
+                    payeeStellarAccount: null,
+                    memoRequired: false,
+                    payeeMemoText: "",
+                    memoDisabled: false,
+                })
                 this.setTransactionType("NEW_ACCOUNT")
-                this.updateIndicatorMessage("New Account", "red")
-
+                this.updateIndicatorMessage("New Account", "yellow")
             }
 
             this.setPaymentDestination(publicKey, input)
@@ -152,8 +223,12 @@ class PaymentCard extends Component {
     setInvalidPaymentAddressMessage = (errorMessage) => {
         this.textInputFieldPaymentAddress.setState({ error: errorMessage, })
         this.props.setState({
-            indicatorMessage: "XXXXXXXXXXXX",
+            indicatorMessage: securityMsgPlaceholder,
             indicatorStyle: "fade-extreme",
+            memoText: "",
+            payeeMemoText: "",
+            memoRequired: false,
+            memoDisabled: false,
         })
     }
 
@@ -283,7 +358,7 @@ class PaymentCard extends Component {
     // ...
     memoValid = () => {
         if (this.props.Balances.memoRequired &&
-            this.textInputFieldMemo.state.value === "") {
+            this.props.Balances.memoText === "") {
             return false
         }
         return true
@@ -293,9 +368,9 @@ class PaymentCard extends Component {
     // ...
     memoValidator = () => {
         this.props.setState({
-            memoText: this.textInputFieldMemo.state.value,
-            error: this.memoValid() ?
-                "" : "Memo is required for this payee.",
+            memoText: this.props.Balances.payeeMemoText.length > 0 ?
+                this.props.Balances.payeeMemoText : 
+                this.textInputFieldMemo.state.value,
         })
         this.toggleSignButton()
     }
@@ -421,64 +496,80 @@ class PaymentCard extends Component {
                     <div>
                         <i className="material-icons">lock</i>
                     </div>
-                    <div className="micro nowrap">
-                        <span>Security Features</span><br />
-                        <span className={this.props.Balances.indicatorStyle}>
-                            {this.props.Balances.indicatorMessage}
-                        </span>
-
+                    <div className="f-b-col center">
+                        <div className="micro nowrap p-r-small">
+                            Security Features
+                        </div>
+                        <div className="micro nowrap">
+                            <span className={this.props.Balances.indicatorStyle}>
+                                {this.props.Balances.indicatorMessage}
+                            </span>
+                        </div>
                     </div>
-
                 </div>
                 <div className="p-b"></div>
                 <div className="f-s space-between">
                     <div>
                         <span className="payment-header">
                             <span className="p-r">For:</span>
-                            <InputField
-                                name="paycheck-memo"
-                                type="text"
-                                placeholder="Memo"
-                                underlineStyle={{
-                                    borderColor: "rgba(15, 46, 83, 0.5)",
-                                }}
-                                underlineFocusStyle={{
-                                    borderColor: "rgba(15, 46, 83, 0.8)",
-                                }}
-                                inputStyle={{
-                                    color: "rgba(15, 46, 83, 0.8)",
-                                }}
-                                ref={(self) => {
-                                    this.textInputFieldMemo = self
-                                }}
-                                validator={
-                                    debounce(this.memoValidator, 500)
-                                }
-                                maxLength={28}
-                            />
+                            {this.props.Balances.payeeMemoText.length > 0 ?
+                                <InputField
+                                    name="paycheck-memo"
+                                    type="text"
+                                    placeholder="Memo"
+                                    underlineStyle={{
+                                        borderColor: "rgba(15, 46, 83, 0.5)",
+                                    }}
+                                    underlineFocusStyle={{
+                                        borderColor: "rgba(15, 46, 83, 0.8)",
+                                    }}
+                                    inputStyle={{
+                                        color: "rgba(15, 46, 83, 0.8)",
+                                    }}
+                                    ref={(self) => {
+                                        this.textInputFieldMemo = self
+                                    }}
+                                    validator={
+                                        debounce(this.memoValidator, 500)
+                                    }
+                                    maxLength={28}
+                                    value={this.props.Balances.payeeMemoText}
+                                    disabled={this.props.Balances.memoDisabled}
+                                /> : 
+                                <InputField
+                                    name="paycheck-memo"
+                                    type="text"
+                                    placeholder="Memo"
+                                    underlineStyle={{
+                                        borderColor: "rgba(15, 46, 83, 0.5)",
+                                    }}
+                                    underlineFocusStyle={{
+                                        borderColor: "rgba(15, 46, 83, 0.8)",
+                                    }}
+                                    inputStyle={{
+                                        color: "rgba(15, 46, 83, 0.8)",
+                                    }}
+                                    ref={(self) => {
+                                        this.textInputFieldMemo = self
+                                    }}
+                                    validator={
+                                        debounce(this.memoValidator, 500)
+                                    }
+                                    maxLength={28}
+                                />
+                            }
                         </span>
                     </div>
                 </div>
             </CardText>
             <CardActions>
                 <div className="f-e space-between">
-
-                    {
-                        this.props.Balances.error ?
-                            <div className="p-l nowrap red">
-                                <i className="material-icons md-icon-small">
-                                    warning
-                                </i>
-                                {this.props.Balances.error}
-                            </div> :
-                            <div className="p-l nowrap fade-extreme">
-                                <span className="bigger">
-                                    <he.SL /><he.Space />
-                                    {this.props.StellarAccount.sequence}
-                                </span>
-                            </div>
-                    }
-
+                    <div className="p-l nowrap fade-extreme">
+                        <span className="bigger">
+                            <he.SL /><he.Space />
+                            {this.props.StellarAccount.sequence}
+                        </span>
+                    </div>
                     <div>
                         <Button
                             onClick={this.props.onSignTransaction}
@@ -492,7 +583,7 @@ class PaymentCard extends Component {
                         >Cancel</Button>
                     </div>
                 </div>
-
+                
             </CardActions>
             <div className="f-e p-b-small tiny">{
                 this.props.Balances.message ?
@@ -514,10 +605,13 @@ export default compose(
             Assets: state.Assets,
             Balances: state.Balances,
             StellarAccount: state.StellarAccount,
+            token: state.LoginManager.token,
+            userId: state.LoginManager.userId,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: BalancesAction.setState,
+            setStateForAccount: AccountAction.setState,
         }, dispatch)
     )
 )(PaymentCard)
