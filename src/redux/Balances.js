@@ -1,5 +1,5 @@
 import { createReducer } from "../lib/utils"
-
+import { securityMsgPlaceholder, } from "../../src/components/StellarFox/env"
 
 
 
@@ -11,17 +11,20 @@ const initState = ((now) => ({
     amountIsValid: false,
     cancelEnabled: true,
     error: "",
-    indicatorMessage: "XXXXXXXXXXXX",
-    indicatorStyle: "fade-extreme",
+    indicatorMessage: securityMsgPlaceholder,
+    indicatorStyle: "fade",
     ledgerId: null,
     memoRequired: false,
     memoText: "",
+    memoDisabled: false,
+    payeeMemoText: "",
     message: null,
     minimumReserveMessage: "",
     newAccount: false,
     payCardVisible: false,
     payDate: now,
     payee: null,
+    payeeStellarAccount: null,
     payeeAddress: "",
     paymentId: null,
     sendEnabled: false,
