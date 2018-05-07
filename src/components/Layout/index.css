@@ -36,6 +36,8 @@ div.p-b-small-block::after {
 
 .p-r { padding-right: 1rem; }
 
+.p-r-small { padding-right: 0.5rem; }
+
 .m-t { margin-top: 1rem; }
 
 .m-t-small { padding-top: 3px; }
@@ -127,6 +129,8 @@ strong { color: rgb(212, 228, 188); }
 .green { color: rgb(27, 94, 32); }
 
 .red { color: rgb(211, 47, 47); }
+
+.yellow { color: #c89104; }
 
 .fade { opacity: 0.8; }
 
