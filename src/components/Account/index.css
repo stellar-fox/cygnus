@@ -48,3 +48,9 @@
     font-weight: bold;
     margin: 5px 0px;
 }
+
+.bordered {
+    border: 1px solid rgb(15,46,83);
+    border-radius: 3px;
+    padding: 1rem;
+}
