@@ -1,19 +1,23 @@
 import React, { Component, Fragment } from "react"
+import Axios from "axios"
+
+import md5 from "../../lib/md5"
+import {
+    emailValid,
+    passwordValid,
+} from "../../lib/utils"
+
 import {
     Stepper,
     Step,
     StepLabel,
     StepContent
 } from "material-ui/Stepper"
-import {
-    emailValid,
-    passwordValid,
-} from "../../lib/utils"
-import md5 from "../../lib/md5"
-import LedgerAuthenticator from "../LedgerAuthenticator"
-import InputField from "../../lib/common/InputField"
+
 import Button from "../../lib/mui-v1/Button"
-import Axios from "axios"
+import InputField from "../../lib/common/InputField"
+import LedgerAuthenticator from "../LedgerAuthenticator"
+
 import { config } from "../../config"
 
 
@@ -21,27 +25,21 @@ import { config } from "../../config"
 
 // ...
 const signupStyles = {
-    stepLabel: {
-        fontSize: "1rem",
-    },
-    errorStyle: {
-        color: "#912d35",
-    },
-    underlineStyle: {
-        borderColor: "rgba(15,46,83,0.9)",
-    },
-    underlineFocusStyle: {
-        borderColor: "rgba(15,46,83,0.7)",
-    },
-    floatingLabelStyle: {
-        color: "rgba(15,46,83,0.7)",
-    },
-    floatingLabelFocusStyle: {
-        color: "rgba(15,46,83,0.4)",
-    },
-    inputStyle: {
-        color: "rgb(15,46,83)",
-    },
+
+    stepLabel: { fontSize: "1rem", },
+
+    errorStyle: { color: "#912d35", },
+
+    underlineStyle: { borderColor: "rgba(15, 46, 83, 0.9)", },
+
+    underlineFocusStyle: { borderColor: "rgba(15, 46, 83, 0.7)", },
+
+    floatingLabelStyle: { color: "rgba(15, 46, 83, 0.7)", },
+
+    floatingLabelFocusStyle: { color: "rgba(15, 46, 83, 0.4)", },
+
+    inputStyle: { color: "rgb(15, 46, 83)", },
+
 }
 
 
