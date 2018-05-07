@@ -5,7 +5,7 @@ import {
     countBy,
     capitalize,
 } from "lodash"
-import { StellarSdk, loadAccount } from "./stellar-tx"
+import { StellarSdk } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
 import md5 from "./md5.js"
@@ -30,12 +30,13 @@ export const getRegisteredUser = async (publicKey, bip32Path) => {
 }
 
 
-
-
 // ...
-export const getRegisteredAccount = async (userId) => {
+export const getRegisteredAccount = async (userId, token) => {
     try {
-        return (await axios.get(`${config.api}/account/${userId}`))
+        return (await axios.post(`${config.api}/account/`, {
+            id: userId,
+            token,
+        })).data.data
     } catch (error) {
         return null
     }
@@ -170,22 +171,6 @@ export const endpointLookup = (federationAddress) => (
         throw new Error("Wrong address format.")
     }
 )(federationAddress.match(domainRegex))
-
-
-
-
-// ...
-export const publicKeyExists = async (publicKey, network) => {
-    try {
-        await loadAccount(publicKey, network)
-        return true
-    } catch (ex) {
-        if (ex.message  &&  ex.message.status === 404) {
-            return false
-        }
-        throw ex
-    }
-}
 
 
 
