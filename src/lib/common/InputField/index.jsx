@@ -68,8 +68,6 @@ export default class InputField extends Component {
     // ...
     render = () =>
         <TextField
-            disabled={this.props.disabled}
-
             style={this.props.style}
 
             name={this.props.name}
@@ -117,7 +115,6 @@ export default class InputField extends Component {
             maxLength={
                 this.props.maxLength
             }
-
         />
 
 }
