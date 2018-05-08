@@ -1,7 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { unregister } from "./lib/caching-service-worker"
+
 import StellarFox, { env } from "./components/StellarFox"
-import { unregister } from "./lib/registerServiceWorker"
 
 
 

@@ -19,7 +19,7 @@ import {
 import {
     loadState,
     saveState,
-} from "../../lib/statePersistence"
+} from "../../lib/state-persistence"
 import reducers from "../../redux"
 import {
     devEnv,
