@@ -16,7 +16,6 @@ const initState = ((now) => ({
     ledgerId: null,
     memoRequired: false,
     memoText: "",
-    memoDisabled: false,
     payeeMemoText: "",
     message: null,
     minimumReserveMessage: "",

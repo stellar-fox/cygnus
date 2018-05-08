@@ -63,7 +63,6 @@ class PaymentCard extends Component {
             payee: null,
             newAccount: false,
             memoRequired: false,
-            memoDisabled: false,
             memoText: "",
             payeeMemoText: "",
             minimumReserveMessage: "",
@@ -131,7 +130,6 @@ class PaymentCard extends Component {
                             this.props.setState({
                                 memoRequired: true,
                                 payeeMemoText: memo,
-                                memoDisabled: true,
                             })
                     } else {
                         this.setTransactionType("EXISTING_ACCOUNT")
@@ -141,7 +139,6 @@ class PaymentCard extends Component {
                         this.props.setState({
                             memoRequired: false,
                             payeeMemoText: "",
-                            memoDisabled: false,
                         })
                     }
                 } else {
@@ -150,7 +147,6 @@ class PaymentCard extends Component {
                     this.props.setState({
                         memoRequired: false,
                         payeeMemoText: "",
-                        memoDisabled: false,
                     })
                 }
 
@@ -228,7 +224,6 @@ class PaymentCard extends Component {
             memoText: "",
             payeeMemoText: "",
             memoRequired: false,
-            memoDisabled: false,
         })
     }
 
