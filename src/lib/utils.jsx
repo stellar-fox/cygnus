@@ -155,6 +155,11 @@ export const fedToPub = async (fedAddress) =>
     }?q=${fedAddress}&type=name`)).data.account_id
 
 
+// ...
+export const getFederationRecord = async (fedAddress) =>
+    (await axios.get(`${
+        await endpointLookup(fedAddress)
+    }?q=${fedAddress}&type=name`)).data
 
 
 // Based on given 'federationAddress' (name*domain)
