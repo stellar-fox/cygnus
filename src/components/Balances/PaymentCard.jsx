@@ -18,15 +18,14 @@ import DatePicker from "material-ui/DatePicker"
 
 import {
     federationAddressValid,
-    fedToPub,
-    // getRegisteredAccount,
+    getFederationRecord,
     htmlEntities as he,
     invalidPaymentAddressMessage,
     publicKeyValid,
-    // signatureValid,
+    signatureValid,
 } from "../../lib/utils"
 import { appName, securityMsgPlaceholder, } from "../StellarFox/env"
-// import { loadAccount } from "../../lib/stellar-tx"
+import { loadAccount } from "../../lib/stellar-tx"
 
 import Button from "../../lib/mui-v1/Button"
 import InputField from "../../lib/common/InputField"
@@ -91,7 +90,72 @@ class PaymentCard extends Component {
             // user has entered a valid federation address so convert it
             // to public key so it can be used as payment destination
             try {
-                publicKey = await fedToPub(input)
+                
+                /**
+                 * public key returned by federation service that allegedly
+                 * maps to the given federation address
+                 */
+                const federationRecord = await getFederationRecord(input)
+                
+                const memo = federationRecord.memo ? federationRecord.memo : ""
+
+                /**
+                 * stellar account corresponding to the public key that is
+                 * currently mapped in to the federation address input
+                 */
+                const payeeStellarAccount = await loadAccount(
+                    federationRecord.account_id,
+                    this.props.StellarAccount.horizon
+                )
+
+                /**
+                 * The following is a verification procedure for making sure
+                 * that the recipient's info (the mapping of federation address
+                 * to Stellar public key) is authentic.
+                 */
+                const paySig = payeeStellarAccount.data_attr ?
+                    (payeeStellarAccount.data_attr.paySig ?
+                        payeeStellarAccount.data_attr.paySig : null) : null
+
+                
+                if (paySig) {
+                    if (signatureValid({
+                        paymentAddress: federationRecord.stellar_address,
+                        memo,
+                    }, paySig)) {
+                        this.setTransactionType("EXISTING_ACCOUNT")
+                        this.updateIndicatorMessage(
+                            "Payee Verified", "green"
+                        )
+                        memo.length > 0 &&
+                            this.props.setState({
+                                memoRequired: true,
+                                payeeMemoText: memo,
+                                memoDisabled: true,
+                            })
+                    } else {
+                        this.setTransactionType("EXISTING_ACCOUNT")
+                        this.updateIndicatorMessage(
+                            "Wrong Signature", "red"
+                        )
+                        this.props.setState({
+                            memoRequired: false,
+                            payeeMemoText: "",
+                            memoDisabled: false,
+                        })
+                    }    
+                } else {
+                    this.setTransactionType("EXISTING_ACCOUNT")
+                    this.updateIndicatorMessage("Payee Unverified", "yellow")
+                    this.props.setState({
+                        memoRequired: false,
+                        payeeMemoText: "",
+                        memoDisabled: false,
+                    })
+                }
+
+                publicKey = federationRecord.account_id
+
             } catch (ex) {
                 if (!ex.response) {
                     this.textInputFieldPaymentAddress.setState({
@@ -112,92 +176,31 @@ class PaymentCard extends Component {
         // a valid public key at this time
         } else if (publicKeyValid(input)) {
             publicKey = input
+            try {
+                const payeeStellarAccount = await loadAccount(
+                    publicKey,
+                    this.props.StellarAccount.horizon
+                )
+                if (payeeStellarAccount.account_id === publicKey) {
+                    this.setTransactionType("EXISTING_ACCOUNT")
+                    this.updateIndicatorMessage("Existing Account", "green")
+                }
+
+            } catch (error) {
+                if (error.name === "NotFoundError") {
+                    this.setTransactionType("NEW_ACCOUNT")
+                    this.updateIndicatorMessage("New Account", "yellow")
+                }
+            }
         }
 
-        // at this point we have a valid public key that we can set as
-        // payment destination address
+        /**
+         * At this point we have a valid and verified Stellar public key
+         * that we can set as payment destination.
+         */
         if (publicKey) {
-
-            // check if this public key already exists on Stellar network
-            // and based on the outcome set appropriate transaction type
-            // try {
-            //     const payeeStellarAccount = await loadAccount(
-            //         publicKey, this.props.StellarAccount.horizon
-            //     )
-            //     this.props.setState({
-            //         payeeStellarAccount: {
-            //             accountId: payeeStellarAccount.account_id,
-            //             data: payeeStellarAccount.data_attr ?
-            //                 payeeStellarAccount.data_attr : null,
-            //         },
-            //     })
-                
-            //     /**
-            //      * The following is a verification procedure for making sure
-            //      * that the recipient's info (the mapping of federation address
-            //      * to Stellar public key) is authentic.
-            //      */
-            //     const registeredAccount = await getRegisteredAccount(
-            //         this.props.userId, this.props.token
-            //     )
-
-            //     const paySig = payeeStellarAccount.data_attr ?
-            //         (payeeStellarAccount.data_attr.paySig ?
-            //             payeeStellarAccount.data_attr.paySig : null) : null
-
-            //     const paymentAddress = `${
-            //         registeredAccount.alias}*${registeredAccount.domain}`
-
-            //     if (paySig) {
-            //         if (signatureValid({
-            //             paymentAddress,
-            //             memo: registeredAccount.memo,
-            //         }, paySig)) {
-            //             this.setTransactionType("EXISTING_ACCOUNT")
-            //             this.updateIndicatorMessage(
-            //                 "Payee Verified", "green"
-            //             )
-            //             registeredAccount.memo.length > 0 &&
-            //                 this.props.setState({
-            //                     memoRequired: true,
-            //                     payeeMemoText: registeredAccount.memo,
-            //                     memoDisabled: true,
-            //                 })
-            //         } else {
-            //             this.setTransactionType("EXISTING_ACCOUNT")
-            //             this.updateIndicatorMessage(
-            //                 "Wrong Signature", "red"
-            //             )
-            //             this.props.setState({
-            //                 memoRequired: false,
-            //                 payeeMemoText: "",
-            //                 memoDisabled: false,
-            //             })
-            //         }    
-            //     } else {
-            //         this.setTransactionType("EXISTING_ACCOUNT")
-            //         this.updateIndicatorMessage("Payee Unverified", "yellow")
-            //         this.props.setState({
-            //             memoRequired: false,
-            //             payeeMemoText: "",
-            //             memoDisabled: false,
-            //         })
-            //     }                    
-            // } catch (error) {
-            //     this.props.setState({
-            //         payeeStellarAccount: null,
-            //         memoRequired: false,
-            //         payeeMemoText: "",
-            //         memoDisabled: false,
-            //     })
-            //     this.setTransactionType("NEW_ACCOUNT")
-            //     this.updateIndicatorMessage("New Account", "yellow")
-            // }
-
             this.setPaymentDestination(publicKey, input)
-
             this.memoValidator()
-
             this.toggleSignButton()
         }
     }
@@ -504,12 +507,10 @@ class PaymentCard extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="p-b"></div>
-                <div className="f-s space-between">
+                <div className="p-t f-b space-between">
                     <div>
                         <span className="payment-header">
                             <span className="p-r">For:</span>
-                             
                             <InputField
                                 name="paycheck-memo"
                                 type="text"
@@ -530,6 +531,7 @@ class PaymentCard extends Component {
                                     debounce(this.memoValidator, 500)
                                 }
                                 maxLength={28}
+                                disabled={this.props.Balances.memoDisabled}
                             />
                             
                         </span>
