@@ -197,4 +197,4 @@ export const liveNetAddr = "https://horizon.stellar.org/"
 
 
 // ...
-export const securityMsgPlaceholder = "xxxxxxxxxxxxxxxxxx"
+export const securityMsgPlaceholder = "⅏⅏⅏⅏⅏⅏⅏⅏"
