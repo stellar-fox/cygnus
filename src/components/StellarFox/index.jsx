@@ -34,8 +34,9 @@ import LoginManager from "../LoginManager"
 import AssetManager from "../AssetManager"
 import Layout from "../Layout"
 
-import legacySFoxTheme from "./theme"
-import sFoxTheme from "./sfox-theme"
+import sFoxTheme from "../../lib/sfox-mui-theme"
+import legacySFoxTheme from "../../lib/sfox-mui-theme.legacy"
+
 
 import "typeface-roboto"
 import "./index.css"
