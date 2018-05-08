@@ -9,8 +9,8 @@ import Snackbar from "material-ui-next/Snackbar"
 
 
 
-// ...
-const styles = (theme) => ({
+// <Snackbar> component
+export default withStyles((theme) => ({
 
     primary: {
         backgroundColor: theme.palette.primaryColor,
@@ -22,13 +22,7 @@ const styles = (theme) => ({
         color: theme.palette.primaryColor,
     },
 
-})
-
-
-
-
-// <Snackbar> component
-export default withStyles(styles)(
+}))(
     class extends Component {
 
         // ...
@@ -44,9 +38,9 @@ export default withStyles(styles)(
                     open={open}
                     autoHideDuration={env.snackbarAutoHideDuration}
                     onClose={onClose}
-                    SnackbarContentProps={{
+                    ContentProps={{
                         "aria-describedby": "message-id",
-                        classes: {root: classes[color],},
+                        classes: { root: classes[color], },
                     }}
                     message={<span id="message-id">{message}</span>}
                     transitionDuration={{ enter: 300, exit: 200, }}

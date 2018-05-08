@@ -118,7 +118,7 @@ export default compose(
                     ref={(self) => { this.password = self }}
                 />
                 <div className="p-t"></div>
-                <div className="blockcenter" style={{ width: 200, }}>
+                <div className="blockcenter" style={{ width: 256, }}>
                     <LinearProgress
                         variant="indeterminate"
                         classes={{
