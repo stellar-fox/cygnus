@@ -36,7 +36,7 @@ import { withAssetManager } from "../AssetManager"
 import { action as AccountAction } from "../../redux/Account"
 import { action as BalancesAction } from "../../redux/Balances"
 
-import sflogo from "../StellarFox/static/sflogo.svg"
+import sflogo from "../StellarFox/static/sf-logo.svg"
 
 
 
@@ -90,13 +90,13 @@ class PaymentCard extends Component {
             // user has entered a valid federation address so convert it
             // to public key so it can be used as payment destination
             try {
-                
+
                 /**
                  * public key returned by federation service that allegedly
                  * maps to the given federation address
                  */
                 const federationRecord = await getFederationRecord(input)
-                
+
                 const memo = federationRecord.memo ? federationRecord.memo : ""
 
                 /**
@@ -117,7 +117,7 @@ class PaymentCard extends Component {
                     (payeeStellarAccount.data_attr.paySig ?
                         payeeStellarAccount.data_attr.paySig : null) : null
 
-                
+
                 if (paySig) {
                     if (signatureValid({
                         paymentAddress: federationRecord.stellar_address,
@@ -143,7 +143,7 @@ class PaymentCard extends Component {
                             payeeMemoText: "",
                             memoDisabled: false,
                         })
-                    }    
+                    }
                 } else {
                     this.setTransactionType("EXISTING_ACCOUNT")
                     this.updateIndicatorMessage("Payee Unverified", "yellow")
@@ -369,7 +369,7 @@ class PaymentCard extends Component {
     memoValidator = () => {
         this.props.setState({
             memoText: this.props.Balances.payeeMemoText.length > 0 ?
-                this.props.Balances.payeeMemoText : 
+                this.props.Balances.payeeMemoText :
                 this.textInputFieldMemo.state.value,
         })
         this.toggleSignButton()
@@ -533,7 +533,7 @@ class PaymentCard extends Component {
                                 maxLength={28}
                                 disabled={this.props.Balances.memoDisabled}
                             />
-                            
+
                         </span>
                     </div>
                 </div>
@@ -559,7 +559,7 @@ class PaymentCard extends Component {
                         >Cancel</Button>
                     </div>
                 </div>
-                
+
             </CardActions>
             <div className="f-e p-b-small tiny">{
                 this.props.Balances.message ?

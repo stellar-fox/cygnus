@@ -5,7 +5,7 @@ import { appName } from "../StellarFox/env"
 import Login from "../Login"
 import Panel from "../../lib/mui-v1/Panel"
 
-import sflogo from "../StellarFox/static/sflogo.svg"
+import sflogo from "../StellarFox/static/sf-logo.svg"
 
 
 

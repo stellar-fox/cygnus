@@ -22,7 +22,7 @@ import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoadingModalAction } from "../../redux/LoadingModal"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
-import stellarlogo from "../StellarFox/static/stellarlogo.svg"
+import stellarlogo from "../StellarFox/static/stellar-logo.svg"
 
 
 
