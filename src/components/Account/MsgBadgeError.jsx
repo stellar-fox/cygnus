@@ -11,6 +11,6 @@ export default () =>
             className="svg-margin svg-error svg-tiny"
         />
         <span className="small">
-            Data integrity signature not valid. Do not trust!
+            Data integrity signature changed. Please update your data.
         </span>
     </div>
