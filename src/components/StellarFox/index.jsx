@@ -1,4 +1,5 @@
 import React from "react"
+
 import { Provider } from "react-redux"
 import {
     applyMiddleware,
@@ -6,23 +7,20 @@ import {
     combineReducers,
 } from "redux"
 import thunk from "redux-thunk"
-import createHistory from "history/createBrowserHistory"
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly"
+
 import throttle from "lodash/throttle"
-
-import LegacyMuiThemeProvider from "material-ui/styles/MuiThemeProvider"
-import { MuiThemeProvider } from "material-ui-next/styles"
-import CssBaseline from "material-ui-next/CssBaseline"
-
+import createHistory from "history/createBrowserHistory"
 import {
     StellarRouter as Router,
     routerMiddleware,
 } from "../StellarRouter"
-import reducers from "../../redux"
+
 import {
     loadState,
     saveState,
 } from "../../lib/statePersistence"
+import reducers from "../../redux"
 import {
     devEnv,
     dynamicImportLibs,
@@ -30,13 +28,15 @@ import {
 } from "../../lib/utils"
 import * as env from "./env"
 
-import LoginManager from "../LoginManager"
-import AssetManager from "../AssetManager"
-import Layout from "../Layout"
-
 import sFoxTheme from "../../lib/sfox-mui-theme"
-import legacySFoxTheme from "../../lib/sfox-mui-theme.legacy"
+import { MuiThemeProvider } from "material-ui-next/styles"
+import sFoxThemeLegacy from "../../lib/sfox-mui-theme.legacy"
+import LegacyMuiThemeProvider from "material-ui/styles/MuiThemeProvider"
+import CssBaseline from "material-ui-next/CssBaseline"
 
+import AssetManager from "../AssetManager"
+import LoginManager from "../LoginManager"
+import Layout from "../Layout"
 
 import "typeface-roboto"
 import "./index.css"
@@ -85,7 +85,7 @@ export default () =>
     <Provider store={store}>
         <Router history={history}>
             <MuiThemeProvider theme={sFoxTheme}>
-                <LegacyMuiThemeProvider muiTheme={legacySFoxTheme}>
+                <LegacyMuiThemeProvider muiTheme={sFoxThemeLegacy}>
                     <LoginManager>
                         <AssetManager>
                             <CssBaseline />
