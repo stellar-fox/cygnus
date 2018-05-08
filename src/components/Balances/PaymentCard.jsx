@@ -508,34 +508,56 @@ class PaymentCard extends Component {
                     </div>
                 </div>
                 <div className="p-t f-b space-between">
-                    <div>
-                        <span className="payment-header">
-                            <span className="p-r">For:</span>
-                            <InputField
-                                name="paycheck-memo"
-                                type="text"
-                                placeholder="Memo"
-                                underlineStyle={{
-                                    borderColor: "rgba(15, 46, 83, 0.5)",
+                    {this.props.Balances.payeeMemoText.length === 0 ?
+                        <div>
+                            <span className="payment-header">
+                                <span className="p-r">For:</span>
+                                <InputField
+                                    name="paycheck-memo"
+                                    type="text"
+                                    placeholder="Memo"
+                                    underlineStyle={{
+                                        borderColor: "rgba(15, 46, 83, 0.5)",
+                                    }}
+                                    underlineFocusStyle={{
+                                        borderColor: "rgba(15, 46, 83, 0.8)",
+                                    }}
+                                    inputStyle={{
+                                        color: "rgba(15, 46, 83, 0.8)",
+                                    }}
+                                    ref={(self) => {
+                                        this.textInputFieldMemo = self
+                                    }}
+                                    validator={
+                                        debounce(this.memoValidator, 500)
+                                    }
+                                    maxLength={28}
+                                />
+                            </span>
+                        </div> :
+                        <div
+                            style={{
+                                paddingTop: "41px",
+                                fontSize: "1rem",
+                                paddingBottom: "12px",
+                            }}
+                        >
+                            <span className="p-r">For: </span>
+                            <span
+                                style={{
+                                    color: "rgba(15,46,83,0.4)",
+                                    paddingBottom: "4px",
+                                    borderBottom: "1px solid rgba(15,46,83,0.4)",
                                 }}
-                                underlineFocusStyle={{
-                                    borderColor: "rgba(15, 46, 83, 0.8)",
-                                }}
-                                inputStyle={{
-                                    color: "rgba(15, 46, 83, 0.8)",
-                                }}
-                                ref={(self) => {
-                                    this.textInputFieldMemo = self
-                                }}
-                                validator={
-                                    debounce(this.memoValidator, 500)
-                                }
-                                maxLength={28}
-                                disabled={this.props.Balances.memoDisabled}
-                            />
-
-                        </span>
-                    </div>
+                            >
+                                {this.props.Balances.payeeMemoText}
+                                <he.Nbsp />
+                                <span className="micro text-primary fade-extreme">
+                                    (payee custom defined memo)
+                                </span>
+                            </span>
+                        </div>
+                    }
                 </div>
             </CardText>
             <CardActions>
