@@ -31,12 +31,17 @@ import {
     insertPathIndex,
     htmlEntities as he,
 } from "../../lib/utils"
-import { buildSetDataTx, submitTransaction } from "../../lib/stellar-tx"
+import {
+    buildSetDataTx,
+    loadAccount,
+    submitTransaction,
+} from "../../lib/stellar-tx"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { action as AccountAction } from "../../redux/Account"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as SnackbarAction } from "../../redux/Snackbar"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { withLoginManager } from "../LoginManager"
 
 
@@ -176,7 +181,9 @@ class Profile extends Component {
                 first_name: this.props.state.firstName,
                 last_name: this.props.state.lastName,
             })
-
+            this.props.updateAccountTree(await loadAccount(
+                this.props.publicKey, this.props.network
+            ))
             this.props.popupSnackbar("User data has been updated.")
 
         } catch (error) {
@@ -244,7 +251,9 @@ class Profile extends Component {
                 memo_type,
                 memo,
             })
-
+            this.props.updateAccountTree(await loadAccount(
+                this.props.publicKey, this.props.network
+            ))
             this.props.popupSnackbar("Payment data has been updated.")
 
         } catch (error) {
@@ -514,6 +523,7 @@ export default compose(
             showAlert: AlertAction.showAlert,
             hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
+            updateAccountTree: StellarAccountAction.loadStellarAccount,
         }, dispatch)
     )
 )(Profile)
