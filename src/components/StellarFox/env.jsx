@@ -68,7 +68,7 @@ export const bip32Prefix = "44'/148'/"
 
 
 // ...
-export const snackbarAutoHideDuration = 1100
+export const snackbarAutoHideDuration = 3100
 
 
 
