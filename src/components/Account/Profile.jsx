@@ -132,22 +132,49 @@ class Profile extends Component {
             id: this.props.userId,
             token: this.props.token,
         })
-        // eslint-disable-next-line no-console
-        .catch(error => console.log(error))
 
 
     // ...
     updateProfile = async () => {
+
+        /**
+         * Update backend with user info data.
+         */
         try {
-            
+            this.props.setState({
+                messageUserData: "Preparing data ...",
+            })
+
             this.updateUserDataFingerprint()
+
+            await this.updateResource("user",{
+                first_name: this.props.state.firstName,
+                last_name: this.props.state.lastName,
+            })
+
+            this.props.updateAccountTree(await loadAccount(
+                this.props.publicKey, this.props.network
+            ))
+
+        } catch (error) {
+
+            this.props.showAlert(error.message, "Error")
+            return
+
+        }
+
+
+        /**
+         * Update Stellar Ledger with user info digest hash.
+         */
+        try {
 
             this.props.setState({
                 messageUserData: "Waiting for device ...",
             })
 
             await getSoftwareVersion()
-            
+
             this.props.setState({
                 messageUserData: "Preparing transaction ...",
             })
@@ -168,7 +195,7 @@ class Profile extends Component {
                 this.props.publicKey,
                 tx
             )
-            
+
             this.props.showModal("txBroadcast")
 
             await submitTransaction(
@@ -177,31 +204,40 @@ class Profile extends Component {
 
             this.props.hideModal()
 
-            await this.updateResource("user",{
-                first_name: this.props.state.firstName,
-                last_name: this.props.state.lastName,
-            })
             this.props.updateAccountTree(await loadAccount(
                 this.props.publicKey, this.props.network
             ))
+
             this.props.popupSnackbar("User data has been updated.")
 
         } catch (error) {
+            
             this.props.setState({
                 messageUserData: "",
             })
+
             this.props.hideModal()
+
             this.props.showAlert(error.message, "Error")
+
         }
     }
 
 
     // ...
     updatePaymentData = async () => {
+
+        /**
+         * Update backend with user payment data.
+         */
         try {
-            
+
+            this.props.setState({
+                messagePaymentData: "Preparing data ...",
+            })
+
             this.updatePaymentDataFingerprint()
-            
+
             const
                 alias = this.props.state.paymentAddress.match(/\*/) ?
                     (this.props.state.paymentAddress) :
@@ -211,16 +247,35 @@ class Profile extends Component {
 
                 memo = this.props.state.memo
             
+            await this.updateResource("account", {
+                alias,
+                memo_type,
+                memo,
+            })
+
+        } catch (error) {
+
+            this.props.showAlert(error.message, "Error")
+            return
+
+        }
+
+
+        /**
+         * Update Stellar Ledger with user payment data digest hash.
+         */
+        try {
+
             this.props.setState({
                 messagePaymentData: "Waiting for device ...",
             })
-            
+
             await getSoftwareVersion()
-            
+
             this.props.setState({
                 messagePaymentData: "Preparing transaction ...",
             })
-            
+
             const tx = await this.buildTransaction(
                 "paySig",
                 this.props.state.fingerprintPaymentData
@@ -237,7 +292,7 @@ class Profile extends Component {
                 this.props.publicKey,
                 tx
             )
-            
+
             this.props.showModal("txBroadcast")
 
             await submitTransaction(
@@ -246,22 +301,22 @@ class Profile extends Component {
 
             this.props.hideModal()
 
-            await this.updateResource("account", {
-                alias,
-                memo_type,
-                memo,
-            })
             this.props.updateAccountTree(await loadAccount(
                 this.props.publicKey, this.props.network
             ))
+
             this.props.popupSnackbar("Payment data has been updated.")
 
         } catch (error) {
+            
             this.props.setState({
                 messagePaymentData: "",
             })
+
             this.props.hideModal()
+
             this.props.showAlert(error.message, "Error")
+
         }
     }
 
