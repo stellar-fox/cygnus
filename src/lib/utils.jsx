@@ -8,7 +8,7 @@ import {
 import { StellarSdk } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
-import md5 from "./md5.js"
+import shajs from "sha.js"
 
 
 
@@ -542,7 +542,8 @@ export const dynamicImportReducers = async () => {
 
 // ...
 export const dataDigest = (dataObj) =>
-    md5(Object.keys(dataObj).map((k) => md5(dataObj[k])).join())
+    shajs("sha256").update(Object.keys(dataObj).map((k) =>
+        shajs("sha256").update(dataObj[k]).digest("hex")).join()).digest("hex")
 
 
 // ...
