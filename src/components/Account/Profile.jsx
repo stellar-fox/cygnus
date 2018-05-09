@@ -315,6 +315,7 @@ class Profile extends Component {
         }),
     })
 
+
     // ...
     render = () =>
         <Fragment>
@@ -337,7 +338,6 @@ class Profile extends Component {
             >
                 <TxConfirmPay />
             </Modal>
-
 
             <Modal
                 open={
