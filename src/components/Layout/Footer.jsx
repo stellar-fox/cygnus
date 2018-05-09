@@ -45,6 +45,14 @@ export default withStyles({
                     <span className={classes.emoji}><emoji.Fox /></span>
                     <he.Nbsp /><he.Nbsp />
                     {env.appCopyDates}.
+                    <he.Nbsp />
+                    <span className="tiny">
+                        <a target="_blank" href={env.tos}>TOS</a>
+                    </span>
+                    <he.Nbsp />/<he.Nbsp />
+                    <span className="tiny">
+                        <a target="_blank" href={env.privacy}>Privacy</a>
+                    </span>
                 </div>
                 <div>
                     ver.<he.Nbsp />
