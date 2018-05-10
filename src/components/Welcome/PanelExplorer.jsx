@@ -14,7 +14,7 @@ import {
 } from "../StellarFox/env"
 
 import Panel from "../../lib/mui-v1/Panel"
-import InputField from "../../lib/common/InputField"
+import InputFieldNext from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
 
@@ -27,36 +27,19 @@ import stellarlogo from "../StellarFox/static/stellar-logo.svg"
 
 
 
-// ...
-const styles = {
-    errorStyle: {
-        color: "#912d35",
-    },
-    underlineStyle: {
-        borderColor: "#FFC107",
-    },
-    floatingLabelStyle: {
-        color: "rgba(212,228,188,0.4)",
-    },
-    floatingLabelFocusStyle: {
-        color: "rgba(212,228,188,0.2)",
-    },
-    inputStyle: {
-        color: "rgb(244,176,4)",
-    },
-}
-
-
-
-
 // <PanelExplorer> component
 class PanelExplorer extends Component {
+
+    state = {
+        error: false,
+        errorMessage: "",
+        inputValue: "",
+    }
 
 
     // ...
     setNetwork = (_event, value) => (
-        value ?
-            this.props.setHorizon(liveNetAddr) :
+        value ? this.props.setHorizon(liveNetAddr) :
             this.props.setHorizon(testNetAddr)
     )
 
@@ -64,14 +47,28 @@ class PanelExplorer extends Component {
     // ...
     compoundFederationValidator = () => (
         (addressValidity) => addressValidity !== "" ?
-            this.input.setState({error: addressValidity,}) :
-            this.enterExplorer.call(this)
-    )(invalidPaymentAddressMessage(this.input.state.value))
+            this.setState({
+                errorMessage: addressValidity,
+                error: true,
+            }) : 
+            this.setState({
+                errorMessage: "",
+                error: false,
+            }, () => {
+                this.enterExplorer()
+            })
+    )(invalidPaymentAddressMessage(this.state.inputValue))
+
+
+    // ...
+    updateInputValue = (event) => this.setState({
+        inputValue: event.target.value,
+    })
 
 
     // ...
     enterExplorer = async () => {
-        const textInputValue = this.input.state.value
+        const textInputValue = this.state.inputValue
 
         // textInputValue is either VALID federation or VALID pubkey
         // check for '*' character - if present then it is federation address
@@ -140,14 +137,15 @@ class PanelExplorer extends Component {
 
             <div className="f-b">
                 <div className="blockcenter">
-                    <InputField
-                        name="payment-address-input"
+                    <InputFieldNext
+                        id="payment-address-input-next"
                         type="text"
-                        placeholder="Payment Address"
-                        styles={styles}
-                        ref={(self) => { this.input = self }}
+                        label="Payment Address"
+                        color="secondary"
+                        error={this.state.error}
+                        errorMessage={this.state.errorMessage}
+                        onChange={this.updateInputValue}
                     />
-                    <div>&nbsp;</div>
                     <Button
                         onClick={this.compoundFederationValidator}
                         color="secondary"
