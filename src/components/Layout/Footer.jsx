@@ -21,12 +21,20 @@ export default withStyles({
         borderTop: "1px solid rgba(212, 228, 188, 0.4)",
         padding: 5,
         fontSize: "0.8em",
+        lineHeight: "1.2em",
         color: "rgba(212, 228, 188, 0.6)",
         position: "fixed",
         bottom: 0,
         left: 0,
         right: 0,
         zIndex: 10,
+    },
+
+    tiny: {
+        fontSize: "0.8em",
+        lineHeight: "1.2em",
+        verticalAlign: "middle",
+        color: "rgba(255, 255, 255, 0.5)",
     },
 
 })(
@@ -45,14 +53,23 @@ export default withStyles({
                     <span className={classes.emoji}><emoji.Fox /></span>
                     <he.Nbsp /><he.Nbsp />
                     {env.appCopyDates}.
-                    <he.Nbsp />
-                    <span className="tiny">
-                        <a target="_blank" href={env.tos}>TOS</a>
-                    </span>
-                    <he.Nbsp />/<he.Nbsp />
-                    <span className="tiny">
-                        <a target="_blank" href={env.privacy}>Privacy</a>
-                    </span>
+                    <he.Nbsp /><he.Nbsp /><he.Nbsp /><he.Nbsp />
+                    <he.Nbsp /><he.Nbsp /><he.Nbsp /><he.Nbsp />
+                    <a
+                        className={classes.tiny}
+                        target="_blank"
+                        href={env.tos}
+                    >
+                        <b>Terms Of Service</b>
+                    </a>
+                    <he.Nbsp /><he.Nbsp /><b>|</b><he.Nbsp /><he.Nbsp />
+                    <a
+                        className={classes.tiny}
+                        target="_blank"
+                        href={env.privacy}
+                    >
+                        <b>Privacy</b>
+                    </a>
                 </div>
                 <div>
                     ver.<he.Nbsp />
