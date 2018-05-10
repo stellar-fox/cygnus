@@ -13,7 +13,7 @@ const styles = (theme) => ({
 
     secondary: {
         color: theme.palette.secondaryColor,
-        "&:hover:not($disabled):before": {
+        "&:hover:before": {
             backgroundColor: `${theme.palette.secondaryColor} !important`,
             height: "1px !important",
         },
@@ -52,8 +52,9 @@ export default withStyles(styles)(
             }) =>
                 <FormControl
                     error={error}
-                    fullWidth={fullWidth}
+                    fullWidth={fullWidth || true}
                     className={classes.formControl}
+                    margin="dense"
                 >
                     <InputLabel
                         FormLabelClasses={{
