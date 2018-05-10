@@ -21,11 +21,11 @@ const styles = (theme) => ({
         "&:after": { backgroundColor: theme.palette.secondaryColor, },
     },
 
-    root: { color: "rgba(212,228,188,0.4)", },
+    root: { color: "rgba(212,228,188,0.6)", },
 
     focused: {
         "&$root": {
-            color: "rgba(212,228,188,0.2)",
+            color: "rgba(212,228,188,0.4)",
         },
     },
 
@@ -48,7 +48,7 @@ export default withStyles(styles)(
         render = () => (
             ({
                 classes, id, color, error, errorMessage,
-                label, type, onChange, fullWidth,
+                label, type, onChange, fullWidth, autoComplete,
             }) =>
                 <FormControl
                     error={error}
@@ -66,6 +66,7 @@ export default withStyles(styles)(
                     </InputLabel>
                     <Input
                         id={id}
+                        autoComplete={autoComplete}
                         classes={{
                             underline: classes[color],
                             input: classes[color],
