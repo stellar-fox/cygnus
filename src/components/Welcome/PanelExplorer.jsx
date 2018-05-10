@@ -14,7 +14,7 @@ import {
 } from "../StellarFox/env"
 
 import Panel from "../../lib/mui-v1/Panel"
-import InputFieldNext from "../../lib/mui-v1/InputField"
+import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
 
@@ -80,8 +80,9 @@ class PanelExplorer extends Component {
                 this.props.showLoadingModal("Searching for Account ...")
             } catch (error) {
                 this.props.hideLoadingModal()
-                this.input.setState({
-                    error: error.message,
+                this.setState({
+                    error: true,
+                    errorMessage: error.message,
                 })
             }
 
@@ -137,8 +138,8 @@ class PanelExplorer extends Component {
 
             <div className="f-b">
                 <div className="blockcenter">
-                    <InputFieldNext
-                        id="payment-address-input-next"
+                    <InputField
+                        id="payment-address-input"
                         type="text"
                         label="Payment Address"
                         color="secondary"
