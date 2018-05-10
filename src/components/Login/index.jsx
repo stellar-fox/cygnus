@@ -11,7 +11,7 @@ import {
 import { withStyles } from "material-ui-next/styles"
 
 import { LinearProgress } from "material-ui-next"
-import InputField from "../../lib/common/InputField"
+import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
 
 
@@ -49,27 +49,60 @@ export default compose(
         state = {
             buttonDisabled: false,
             progressBarOpacity: 0,
-            error: "",
+            emailInputValue: "",
+            emailInputError: false,
+            emailInputErrorTextValue: "",
+            passwordInputValue: "",
+            passwordInputError: false,
+            passwordInputErrorTextValue: "",
         }
+
+
+        // ...
+        updateEmailInputValue = (event) => this.setState({
+            emailInputValue: event.target.value,
+            emailInputErrorTextValue: "",
+            emailInputError: false,
+        })
+
+
+        // ...
+        updatePasswordInputValue = (event) => this.setState({
+            passwordInputValue: event.target.value,
+            passwordInputErrorTextValue: "",
+            passwordInputError: false,
+        })
 
 
         // ...
         loginValidator = async () => {
 
             // INVALID EMAIL FORMAT
-            if (!emailIsValid(this.email.state.value)) {
-                this.email.setState({ error: "Invalid email format.", })
+            if (!emailIsValid(this.state.emailInputValue)) {
+                this.setState({
+                    emailInputError: true,
+                    emailInputErrorTextValue: "Invalid email format.",
+                })
                 return
             } else {
-                this.email.setState({ error: "", })
+                this.setState({
+                    emailInputError: false,
+                    emailInputErrorTextValue: "",
+                })
             }
 
             // INVALID PASSWORD LENGTH
-            if (!passwordIsValid(this.password.state.value)) {
-                this.password.setState({ error: "Invalid password length.", })
+            if (!passwordIsValid(this.state.passwordInputValue)) {
+                this.setState({
+                    passwordInputError: true,
+                    passwordInputErrorTextValue: "Invalid password length.",
+                })
                 return
             } else {
-                this.password.setState({ error: "", })
+                this.setState({
+                    passwordInputError: false,
+                    passwordInputErrorTextValue: "",
+                })
             }
 
             // PROCEED WITH REQUEST
@@ -79,19 +112,22 @@ export default compose(
             }))
 
             this.props.loginManager.attemptLogin(
-                this.email.state.value,
-                this.password.state.value
-            ).catch((error) => {
-                // eslint-disable-next-line no-console
-                console.log("Unknown Error: ", error)
-            }).then((auth) => {
+                this.state.emailInputValue,
+                this.state.passwordInputValue
+            ).then((auth) => {
                 if (!auth.authenticated) {
                     this.setState(() => ({
                         buttonDisabled: false,
                         progressBarOpacity: 0,
                     }))
-                    this.email.setState({ error: auth.error, })
-                    this.password.setState({ error: auth.error, })
+                    this.setState({
+                        emailInputError: true,
+                        emailInputErrorTextValue: auth.error,
+                    })
+                    this.setState({
+                        passwordInputError: true,
+                        passwordInputErrorTextValue: auth.error,
+                    })
                 }
             })
 
@@ -101,24 +137,25 @@ export default compose(
         // ...
         render = () =>
             <Fragment>
-                <InputField
-                    style={{ display: "block", margin: "0 auto", }}
-                    name="login-email"
-                    type="email"
-                    placeholder="Email"
-                    onEnterPress={this.loginValidator}
-                    ref={(self) => { this.email = self }}
-                />
-                <InputField
-                    style={{ display: "block", margin: "0 auto", }}
-                    name="login-password"
-                    type="password"
-                    placeholder="Password"
-                    onEnterPress={this.loginValidator}
-                    ref={(self) => { this.password = self }}
-                />
-                <div className="p-t"></div>
                 <div className="blockcenter" style={{ width: 256, }}>
+                    <InputField
+                        id="email-input"
+                        type="email"
+                        label="Email"
+                        color="secondary"
+                        error={this.state.emailInputError}
+                        errorMessage={this.state.emailInputErrorTextValue}
+                        onChange={this.updateEmailInputValue}
+                    />
+                    <InputField
+                        id="password-input"
+                        type="password"
+                        label="Password"
+                        color="secondary"
+                        error={this.state.passwordInputError}
+                        errorMessage={this.state.passwordInputErrorTextValue}
+                        onChange={this.updatePasswordInputValue}
+                    />
                     <LinearProgress
                         variant="indeterminate"
                         classes={{
@@ -133,9 +170,7 @@ export default compose(
                         disabled={this.state.buttonDisabled}
                         fullWidth={true}
                         color="secondary"
-                    >
-                        Login
-                    </Button>
+                    >Login</Button>
                 </div>
             </Fragment>
 
