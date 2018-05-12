@@ -12,6 +12,7 @@ import shajs from "sha.js"
 
 
 
+
 // ...
 const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
@@ -30,6 +31,8 @@ export const getRegisteredUser = async (publicKey, bip32Path) => {
 }
 
 
+
+
 // ...
 export const getRegisteredAccount = async (userId, token) => {
     try {
@@ -41,6 +44,8 @@ export const getRegisteredAccount = async (userId, token) => {
         return null
     }
 }
+
+
 
 
 // ...
@@ -155,11 +160,15 @@ export const fedToPub = async (fedAddress) =>
     }?q=${fedAddress}&type=name`)).data.account_id
 
 
+
+
 // ...
 export const getFederationRecord = async (fedAddress) =>
     (await axios.get(`${
         await endpointLookup(fedAddress)
     }?q=${fedAddress}&type=name`)).data
+
+
 
 
 // Based on given 'federationAddress' (name*domain)
@@ -540,10 +549,14 @@ export const dynamicImportReducers = async () => {
 }
 
 
+
+
 // ...
 export const dataDigest = (dataObj) =>
     shajs("sha256").update(Object.keys(dataObj).map((k) =>
         shajs("sha256").update(dataObj[k]).digest("hex")).join()).digest("hex")
+
+
 
 
 // ...
