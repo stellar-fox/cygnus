@@ -58,6 +58,15 @@ export const pubKeyAbbr = (pubKey) => handleException(
 
 
 // ...
+export const pubKeyAbbrLedgerHQ = (pubKey) => handleException(
+    () => `${pubKey.slice(0, 12)}-${pubKey.slice(44)}`,
+    (_) => { throw new Error("Malformed key.") }
+)
+
+
+
+
+// ...
 export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
     (date) =>
         includeTime ?
