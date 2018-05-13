@@ -2,7 +2,7 @@ import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { appName } from "../StellarFox/env"
 import {
-    htmlEntities as he,
+    htmlEntities as he, pubKeyAbbrLedgerHQ,
 } from "../../lib/utils"
 import {
     Table,
@@ -10,9 +10,6 @@ import {
     TableRow,
     TableRowColumn,
 } from "material-ui/Table"
-import {
-    pubKeyAbbr,
-} from "../../lib/utils"
 
 
 
@@ -64,7 +61,7 @@ export default connect(
                             Payee Account:
                         </TableRowColumn>
                         <TableRowColumn className="text-normal fade">
-                            {pubKeyAbbr(balances.payee)}
+                            {pubKeyAbbrLedgerHQ(balances.payee)}
                         </TableRowColumn>
                     </TableRow>
                     <TableRow className="table-row-primary">

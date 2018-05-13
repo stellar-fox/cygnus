@@ -7,7 +7,7 @@ import {
 import {
     handleException,
     htmlEntities as he,
-    pubKeyAbbr,
+    pubKeyAbbrLedgerHQ,
 } from "../../lib/utils"
 
 
@@ -28,7 +28,7 @@ export default connect(
                 <List>
                     <ListItem
                         disabled={true}
-                        primaryText="Type"
+                        primaryText="Operation Type"
                         secondaryText={Balances.transactionType}
                         leftIcon={
                             <i className="text-primary material-icons">
@@ -51,7 +51,7 @@ export default connect(
                         primaryText="Destination"
                         secondaryText={
                             handleException(
-                                () => pubKeyAbbr(Balances.payee),
+                                () => pubKeyAbbrLedgerHQ(Balances.payee),
                                 () => "Not Available"
                             )
                         }
