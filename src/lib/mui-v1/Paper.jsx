@@ -8,7 +8,7 @@ const styles = theme => ({
         paddingTop: 5,
         paddingBottom: 5,
         paddingLeft: "5px !important",
-        paddingRight: "5px !important",
+        paddingRight: "15px !important",
         margin: theme.spacing.unit,
         minWidth: "180px !important",
         borderRadius: "3px",
