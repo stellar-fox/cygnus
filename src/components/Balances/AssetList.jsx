@@ -22,7 +22,7 @@ class AssetList extends Component {
             <Paper color="primary">
                 <div className="f-b space-between cursor-pointer">
                     <Avatar src={`https://www.gravatar.com/avatar/${
-                        MD5(asset.asset_issuer)}?s=42&d=robohash`}
+                        MD5(asset.asset_issuer)}?d=robohash`}
                     />
                     <div className="p-l-small">
                         <div className="nano p-b-nano fade-strong">
