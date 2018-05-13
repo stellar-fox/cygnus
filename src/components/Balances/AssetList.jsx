@@ -4,7 +4,10 @@ import { compose } from "redux"
 import { withAssetManager } from "../AssetManager"
 import { pubKeyAbbr } from "../../lib/utils"
 import { BigNumber } from "bignumber.js"
+import MD5 from "../../lib/md5"
 import { maximumTrustLimit } from "../StellarFox/env"
+import Paper from "../../lib/mui-v1/Paper"
+import Avatar from "../../lib/mui-v1/Avatar"
 
 
 
@@ -13,40 +16,43 @@ import { maximumTrustLimit } from "../StellarFox/env"
 class AssetList extends Component {
 
     // ...
-    formatAssets = (assets, publicKey) => assets.map((asset, index) => {
+    formatAssets = (assets) => assets.map((asset, index) => {
         return (
             <Fragment key={index}>
-                <div className="p-t"></div>
-                <div className={
-                    `${publicKey === asset.asset_issuer ?
-                        "badge-success" : "badge-primary"} p-b-small cursor-pointer`}
-                >
-                    <div className="nano p-b-nano fade-strong">
-                        Guarantor: {pubKeyAbbr(asset.asset_issuer)}
+                <Paper color="primary">
+                    <div className="f-b space-between cursor-pointer">
+                        <Avatar src={`https://www.gravatar.com/avatar/${
+                            MD5(asset.asset_issuer)}?s=42&d=robohash`}
+                        />
+                        <div className="p-l-small">
+                            <div className="nano p-b-nano fade-strong">
+                                Issuer: {pubKeyAbbr(asset.asset_issuer)}
+                            </div>
+                            <div className="">
+                                <span className="asset-balance">
+                                    {asset.balance}
+                                </span>
+                                <span className="asset-code">
+                                    {asset.asset_code}
+                                </span>
+                            </div>
+                            <div className="nano p-t-nano fade-strong">
+                                Trust Limit: {
+                                    new BigNumber(asset.limit)
+                                        .isLessThan(maximumTrustLimit) ?
+                                        asset.limit : "None"
+                                }
+                            </div>
+                        </div>
                     </div>
-                    <div className="small">
-                        <span className="asset-balance">
-                            {asset.balance}
-                        </span>
-                        <span className="asset-code">
-                            {asset.asset_code}
-                        </span>
-                    </div>
-                    <div className="nano p-t-nano fade-strong">
-                        Trust Limit: {
-                            new BigNumber(asset.limit)
-                                .isLessThan(maximumTrustLimit) ?
-                                asset.limit : "None"
-                        }
-                    </div>
-                </div>
+                </Paper>
             </Fragment>
         )
     })
 
 
     // ...
-    render = () => 
+    render = () =>
         <div className="f-b-col">
             {this.formatAssets(this.props.assets)}
         </div>
