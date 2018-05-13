@@ -57,11 +57,11 @@ class Settings extends Component {
                     console.log(error.message)
                 })
         }
-        
+
         this.props.popupSnackbar(
             `Currency has been changed to ${currency.toUpperCase()}`
         )
-        
+
     }
 
 
@@ -110,7 +110,7 @@ class Settings extends Component {
             </div>
 
             <div className="account-title p-t-large">
-                Extended Account Number:
+                Extended Account Identifier:
             </div>
             <div className="account-subtitle m-t-small">
                 <span className="bg-green">
@@ -135,7 +135,7 @@ class Settings extends Component {
                 ]}
             >
             </RadioButtonGroup>
-            
+
             <RadioButtonGroup
                 name="currencySelect"
                 value={this.props.state.currency}
