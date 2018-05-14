@@ -29,10 +29,10 @@ import {
 import * as env from "./env"
 
 import sFoxTheme from "../../lib/sfox-mui-theme"
-import { MuiThemeProvider } from "material-ui-next/styles"
+import { MuiThemeProvider } from "@material-ui/core/styles"
 import sFoxThemeLegacy from "../../lib/sfox-mui-theme.legacy"
 import LegacyMuiThemeProvider from "material-ui/styles/MuiThemeProvider"
-import CssBaseline from "material-ui-next/CssBaseline"
+import { CssBaseline } from "@material-ui/core"
 
 import AssetManager from "../AssetManager"
 import LoginManager from "../LoginManager"

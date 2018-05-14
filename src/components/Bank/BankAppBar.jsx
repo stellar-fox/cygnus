@@ -13,13 +13,15 @@ import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as PaymentsAction } from "../../redux/Payments"
 
-import { withStyles } from "material-ui-next/styles"
-import AppBar from "material-ui-next/AppBar"
-import IconButton from "material-ui-next/IconButton"
+import { withStyles } from "@material-ui/core/styles"
+import {
+    AppBar,
+    IconButton,
+    Toolbar,
+    Typography,
+} from "@material-ui/core"
 import MenuIcon from "@material-ui/icons/Menu"
 import PowerIcon from "@material-ui/icons/PowerSettingsNew"
-import Toolbar from "material-ui-next/Toolbar"
-import Typography from "material-ui-next/Typography"
 
 import BankAppBarTitle from "./BankAppBarTitle"
 import BankAppBarItems from "./BankAppBarItems"

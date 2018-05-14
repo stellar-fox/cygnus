@@ -1,15 +1,19 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 
-import { withStyles } from "material-ui-next/styles"
-import Radio, { RadioGroup } from "material-ui-next/Radio"
-import { FormControl, FormControlLabel, } from "material-ui-next/Form"
+import { withStyles } from "@material-ui/core/styles"
+import {
+    FormControl,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+} from "@material-ui/core"
 
 
 
 
-// ...
-const styles = (theme) => ({
+// <RadioButtonGroup> component
+export default withStyles((theme) => ({
 
     group: {
         margin: `0 ${theme.spacing.unit}px 0 0`,
@@ -31,13 +35,7 @@ const styles = (theme) => ({
 
     checked: {},
 
-})
-
-
-
-
-// <RadioButtonGroup> component
-export default withStyles(styles)(
+}))(
     class extends Component {
 
         // ...
@@ -64,7 +62,7 @@ export default withStyles(styles)(
 
         // ...
         render = () => (
-            ({name, onChange, value, children, classes,}) =>
+            ({ name, onChange, value, children, classes, }) =>
                 <FormControl component="fieldset" required>
                     <RadioGroup
                         name={name}
@@ -74,7 +72,9 @@ export default withStyles(styles)(
                     >
                         {
                             children.map((c) =>
-                                this.button(c.value, c.label, c.color, classes)
+                                this.button(
+                                    c.value, c.label, c.color, classes
+                                )
                             )
                         }
                     </RadioGroup>

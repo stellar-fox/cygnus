@@ -50,7 +50,7 @@ class PanelExplorer extends Component {
             this.setState({
                 errorMessage: addressValidity,
                 error: true,
-            }) : 
+            }) :
             this.setState({
                 errorMessage: "",
                 error: false,

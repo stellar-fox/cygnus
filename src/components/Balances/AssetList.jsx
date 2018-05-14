@@ -1,14 +1,17 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { compose } from "redux"
-import { withAssetManager } from "../AssetManager"
-import { pubKeyAbbr } from "../../lib/utils"
 import { BigNumber } from "bignumber.js"
-import MD5 from "../../lib/md5"
+
+import { withAssetManager } from "../AssetManager"
+
+import { pubKeyAbbr } from "../../lib/utils"
 import { maximumTrustLimit } from "../StellarFox/env"
+import MD5 from "../../lib/md5"
+
 import Paper from "../../lib/mui-v1/Paper"
 import Avatar from "../../lib/mui-v1/Avatar"
-import Grid from "material-ui-next/Grid"
+import { Grid } from "@material-ui/core"
 
 
 
@@ -52,15 +55,20 @@ class AssetList extends Component {
 
     // ...
     render = () =>
-        <Grid container alignContent="flex-start" alignItems="center" spacing={0}>
-            {this.formatAssets(this.props.assets)}
+        <Grid
+            container
+            alignContent="flex-start"
+            alignItems="center"
+            spacing={0}
+        >
+            { this.formatAssets(this.props.assets) }
         </Grid>
 
 }
 
 
 // ...
-export default compose (
+export default compose(
     withAssetManager,
     connect(
         // map state to props

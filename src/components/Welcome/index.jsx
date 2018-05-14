@@ -1,9 +1,11 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 
-import { withStyles } from "material-ui-next/styles"
-import Grid from "material-ui-next/Grid"
-import Paper from "material-ui-next/Paper"
+import { withStyles } from "@material-ui/core/styles"
+import {
+    Grid,
+    Paper,
+} from "@material-ui/core"
 
 import Heading from "./Heading"
 import PanelLedger from "./PanelLedger"

@@ -2,14 +2,14 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import classNames from "classnames"
 
-import { withStyles } from "material-ui-next/styles"
-import Button from "material-ui-next/Button"
+import { withStyles } from "@material-ui/core/styles"
+import { Button } from "@material-ui/core"
 
 
 
 
-// ...
-const styles = (theme) => ({
+// <CustomButton> component
+export default withStyles((theme) => ({
 
     awesome: {
         color: "white",
@@ -77,13 +77,7 @@ const styles = (theme) => ({
         backgroundColor: `${theme.palette.disabledBackgroundColor} !important`,
     },
 
-})
-
-
-
-
-// <CustomButton> component
-export default withStyles(styles)(
+}))(
     class extends Component {
 
         // ...

@@ -3,13 +3,13 @@ import PropTypes from "prop-types"
 
 import { env } from "../../components/StellarFox"
 
-import { withStyles } from "material-ui-next/styles"
-import Snackbar from "material-ui-next/Snackbar"
+import { withStyles } from "@material-ui/core/styles"
+import { Snackbar } from "@material-ui/core"
 
 
 
 
-// <Snackbar> component
+// <CustomSnackbar> component
 export default withStyles((theme) => ({
 
     primary: {

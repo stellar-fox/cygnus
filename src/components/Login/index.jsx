@@ -8,9 +8,9 @@ import {
     passwordIsValid,
 } from "./helper"
 
-import { withStyles } from "material-ui-next/styles"
+import { withStyles } from "@material-ui/core/styles"
 
-import { LinearProgress } from "material-ui-next"
+import { LinearProgress } from "@material-ui/core"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
 

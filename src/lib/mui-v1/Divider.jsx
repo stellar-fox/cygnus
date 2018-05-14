@@ -2,13 +2,13 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import classNames from "classnames"
 
-import { withStyles } from "material-ui-next/styles"
-import Divider from "material-ui-next/Divider"
+import { withStyles } from "@material-ui/core/styles"
+import { Divider } from "@material-ui/core"
 
 
 
 
-// <Divider> component
+// <CustomDivider> component
 export default withStyles((theme) => ({
 
     primary: {

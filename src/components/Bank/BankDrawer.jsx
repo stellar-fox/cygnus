@@ -10,7 +10,7 @@ import {
 import { Null } from "../../lib/utils"
 import { bankDrawerWidth } from "../StellarFox/env"
 
-import { withStyles } from "material-ui-next/styles"
+import { withStyles } from "@material-ui/core/styles"
 import Drawer from "material-ui/Drawer"
 
 

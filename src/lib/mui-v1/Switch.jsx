@@ -1,14 +1,14 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 
-import { withStyles } from "material-ui-next/styles"
-import Switch from "material-ui-next/Switch"
+import { withStyles } from "@material-ui/core/styles"
+import { Switch } from "@material-ui/core"
 
 
 
 
-// ...
-const styles = (theme) => ({
+// <CustomSwitch> component
+export default withStyles((theme) => ({
 
     bar: {},
 
@@ -38,13 +38,7 @@ const styles = (theme) => ({
         color: `${theme.palette.disabledSwitchColor} !important`,
     },
 
-})
-
-
-
-
-// <Switch> component
-export default withStyles(styles)(
+}))(
     class extends Component {
 
         // ...

@@ -1,9 +1,15 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { withStyles } from "material-ui-next/styles"
-import Paper from "material-ui-next/Paper"
 
-const styles = theme => ({
+import { withStyles } from "@material-ui/core/styles"
+import { Paper } from "@material-ui/core"
+
+
+
+
+// <CustomPaper> component
+export default withStyles((theme) => ({
+
     root: theme.mixins.gutters({
         paddingTop: 5,
         paddingBottom: 5,
@@ -18,10 +24,8 @@ const styles = theme => ({
         backgroundColor: theme.palette.primaryColor,
         color: theme.palette.secondaryColor,
     },
-})
 
-
-export default withStyles(styles)(
+}))(
     class extends Component {
 
         // ...
@@ -29,6 +33,7 @@ export default withStyles(styles)(
             classes: PropTypes.object.isRequired,
         }
 
+        // ...
         render = () => (
             ({ children, classes, color, }) =>
                 <Paper
@@ -37,7 +42,9 @@ export default withStyles(styles)(
                     }}
                     className={classes.root}
                     elevation={3}
-                >{children}</Paper>
+                >
+                    { children }
+                </Paper>
         )(this.props)
     }
 )

@@ -1,24 +1,28 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 
-import { withStyles } from "material-ui-next/styles"
-import { FormControl, FormHelperText } from "material-ui-next/Form"
-import Input, { InputLabel } from "material-ui-next/Input"
+import { withStyles } from "@material-ui/core/styles"
+import {
+    Input,
+    InputLabel,
+    FormControl,
+    FormHelperText,
+} from "@material-ui/core"
 
 
 
 
-// ...
-const styles = (theme) => ({
+// <InputField> component
+export default withStyles((theme) => ({
 
     secondary: {
         color: theme.palette.secondaryColor,
         "&:hover:before": {
-            backgroundColor: `${theme.palette.secondaryColor} !important`,
+            borderBottomColor: `${theme.palette.secondaryColor} !important`,
             height: "1px !important",
         },
-        "&:before": { backgroundColor: theme.palette.secondaryColor, },
-        "&:after": { backgroundColor: theme.palette.secondaryColor, },
+        "&:before": { borderBottomColor: theme.palette.secondaryColor, },
+        "&:after": { borderBottomColor: theme.palette.secondaryColor, },
     },
 
     root: { color: "rgba(212,228,188,0.6)", },
@@ -29,13 +33,7 @@ const styles = (theme) => ({
         },
     },
 
-})
-
-
-
-
-// ...
-export default withStyles(styles)(
+}))(
     class extends Component {
 
         // ...
@@ -62,7 +60,7 @@ export default withStyles(styles)(
                             focused: classes.focused,
                         }}
                     >
-                        {label}
+                        { label }
                     </InputLabel>
                     <Input
                         id={id}
@@ -76,7 +74,7 @@ export default withStyles(styles)(
                         fullWidth={fullWidth}
                     />
                     <FormHelperText id="name-error-text">
-                        {errorMessage}
+                        { errorMessage }
                     </FormHelperText>
                 </FormControl>
         )(this.props)

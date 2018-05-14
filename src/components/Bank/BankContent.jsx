@@ -16,7 +16,7 @@ import {
     withStaticRouter,
 } from "../StellarRouter"
 
-import { withStyles } from "material-ui-next/styles"
+import { withStyles } from "@material-ui/core/styles"
 
 import Account from "../Account"
 import Balances from "../Balances"
