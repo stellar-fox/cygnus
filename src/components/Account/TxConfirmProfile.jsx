@@ -31,14 +31,15 @@ export default connect(
             </div>
             <Divider />
             <div className="p-t centered">
-                You should see the following info on your
+                Please confirm that the following info is the same on your
                 device<he.Apos />s screen:
             </div>
             <div className="f-b space-around">
                 <List>
                     <ListItem
                         disabled={true}
-                        primaryText="No Details Available"
+                        primaryText="Operation Type"
+                        secondaryText="Manage Data"
                         leftIcon={
                             <i className="text-primary material-icons">
                                 style
@@ -47,10 +48,53 @@ export default connect(
                     />
                     <ListItem
                         disabled={true}
-                        primaryText="Hash"
+                        primaryText="Name"
+                        secondaryText="idSig"
                         leftIcon={
                             <i className="text-primary material-icons">
-                                account_balance_wallet
+                                event_note
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Value"
+                        secondaryText="<binary data>"
+                        leftIcon={
+                            <i className="text-primary material-icons">
+                                font_download
+                            </i>
+                        }
+                    />
+                </List>
+                <List>
+                    <ListItem
+                        disabled={true}
+                        primaryText="Memo"
+                        secondaryText="[none]"
+                        leftIcon={
+                            <i className="text-primary material-icons">
+                                message
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Fee"
+                        secondaryText="0.000001 XLM"
+                        leftIcon={
+                            <i className="text-primary material-icons">
+                                credit_card
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Network"
+                        secondaryText="Test"
+                        leftIcon={
+                            <i className="text-primary material-icons">
+                                public
                             </i>
                         }
                     />

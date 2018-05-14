@@ -38,7 +38,8 @@ export default connect(
                 <List>
                     <ListItem
                         disabled={true}
-                        primaryText="No Data Available"
+                        primaryText="Operation Type"
+                        secondaryText="Manage Data"
                         leftIcon={
                             <i className="text-primary material-icons">
                                 style
@@ -47,10 +48,53 @@ export default connect(
                     />
                     <ListItem
                         disabled={true}
-                        primaryText="Hash"
+                        primaryText="Name"
+                        secondaryText="paySig"
                         leftIcon={
                             <i className="text-primary material-icons">
-                                account_balance_wallet
+                                event_note
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Value"
+                        secondaryText="<binary data>"
+                        leftIcon={
+                            <i className="text-primary material-icons">
+                                font_download
+                            </i>
+                        }
+                    />
+                </List>
+                <List>
+                    <ListItem
+                        disabled={true}
+                        primaryText="Memo"
+                        secondaryText="[none]"
+                        leftIcon={
+                            <i className="text-primary material-icons">
+                                message
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Fee"
+                        secondaryText="0.000001 XLM"
+                        leftIcon={
+                            <i className="text-primary material-icons">
+                                credit_card
+                            </i>
+                        }
+                    />
+                    <ListItem
+                        disabled={true}
+                        primaryText="Network"
+                        secondaryText="Test"
+                        leftIcon={
+                            <i className="text-primary material-icons">
+                                public
                             </i>
                         }
                     />
