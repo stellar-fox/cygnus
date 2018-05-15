@@ -19,7 +19,7 @@ export default withStyles((theme) => ({
         color: theme.palette.secondaryColor,
         "&:hover:before": {
             borderBottomColor: `${theme.palette.secondaryColor} !important`,
-            height: "1px !important",
+            borderBottomWidth: "1px !important",
         },
         "&:before": { borderBottomColor: theme.palette.secondaryColor, },
         "&:after": { borderBottomColor: theme.palette.secondaryColor, },
