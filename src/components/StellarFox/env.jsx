@@ -203,10 +203,10 @@ export const securityMsgPlaceholder = "₪₪₪₪₪₪₪₪₪₪"
 
 
 // ...
-export const tos = "tos.txt"
+export const tos = appBasePath + "tos.txt"
 
 
 
 
 // ...
-export const privacy = "privacy.txt"
+export const privacy = appBasePath + "privacy.txt"
