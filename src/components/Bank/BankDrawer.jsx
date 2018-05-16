@@ -84,7 +84,7 @@ const AccountNavLink = () =>
 // ...
 const bankDrawerStyle = {
     width: bankDrawerWidth,
-    height: "calc(100% - 100px)",
+    height: "calc(100% - 94px)",
     top: 65,
     borderTop: "1px solid #052f5f",
     borderBottom: "1px solid #052f5f",
