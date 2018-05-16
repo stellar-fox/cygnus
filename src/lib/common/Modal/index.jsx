@@ -8,7 +8,7 @@ import "./index.css"
 
 // <Modal> component
 export default ({
-    title, actions, open, hideModal, children,
+    title, actions, open, hideModal, children, repositionOnUpdate,
 }) =>
     <Dialog
         paperClassName="paper-modal"
@@ -20,7 +20,7 @@ export default ({
         open={open}
         onRequestClose={hideModal}
         autoScrollBodyContent={false}
-        repositionOnUpdate={true}
+        repositionOnUpdate={repositionOnUpdate || false}
     >
         {children}
     </Dialog>
