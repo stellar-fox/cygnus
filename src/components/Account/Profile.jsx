@@ -245,6 +245,7 @@ class Profile extends Component {
             this.updatePaymentDataFingerprint()
 
             const
+
                 alias = this.props.state.paymentAddress.match(/\*/) ?
                     (this.props.state.paymentAddress) :
                     (`${this.props.state.paymentAddress}*stellarfox.net`),
@@ -257,6 +258,12 @@ class Profile extends Component {
                 alias,
                 memo_type,
                 memo,
+            })
+
+            this.props.setState({
+                paymentAddress: federationIsAliasOnly(this.props.state.paymentAddress) ?
+                    `${this.props.state.paymentAddress}*stellarfox.net` :
+                    this.props.state.paymentAddress,
             })
 
         } catch (error) {
@@ -382,7 +389,9 @@ class Profile extends Component {
     // ...
     updatePaymentDataFingerprint = () => this.props.setState({
         fingerprintPaymentData: dataDigest({
-            paymentAddress: this.props.state.paymentAddress,
+            paymentAddress: federationIsAliasOnly(this.props.state.paymentAddress) ?
+                `${this.props.state.paymentAddress}*stellarfox.net` :
+                this.props.state.paymentAddress,
             memo: this.props.state.memo,
         }),
     })
@@ -547,7 +556,9 @@ class Profile extends Component {
 
                 {this.props.paySig ?
                     (signatureValid({
-                        paymentAddress: this.props.state.paymentAddress,
+                        paymentAddress: federationIsAliasOnly(this.props.state.paymentAddress) ?
+                            `${this.props.state.paymentAddress}*stellarfox.net` :
+                            this.props.state.paymentAddress,
                         memo: this.props.state.memo,
                     }, this.props.paySig) ?
                         <MsgBadgeSuccess /> :
