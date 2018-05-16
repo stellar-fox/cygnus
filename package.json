@@ -1,19 +1,7 @@
 {
-    "name": "cygnus",
-    "version": "0.1.39",
-    "description": "Stellar Fox (frontend)",
-    "keywords": [
-        "bank",
-        "frontend",
-        "remittance",
-        "stellar"
-    ],
-    "homepage": "https://stellarfox.net/",
     "bugs": {
         "url": "https://github.com/stellar-fox/cygnus/issues"
     },
-    "license": "Apache-2.0",
-    "private": true,
     "contributors": [
         {
             "name": "syntaxval",
@@ -26,20 +14,6 @@
             "url": "https://twitter.com/xcmats/"
         }
     ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/stellar-fox/cygnus.git"
-    },
-    "main": "src/index.js",
-    "scripts": {
-        "build": "react-scripts build",
-        "clean": "rimraf build",
-        "clean_modules": "rimraf node_modules",
-        "eject": "react-scripts eject",
-        "lint": "eslint ./src/",
-        "start": "react-scripts start",
-        "test": "react-scripts test --env=jsdom"
-    },
     "dependencies": {
         "@ledgerhq/hw-app-str": "^4.0.0",
         "@ledgerhq/hw-transport-u2f": "^4.0.0",
@@ -76,11 +50,37 @@
         "toml": "^2.3.3",
         "typeface-roboto": "0.0.54"
     },
+    "description": "Stellar Fox (frontend)",
     "devDependencies": {
         "babel-eslint": "^8.2.2",
         "eslint": "^4.19.1",
         "eslint-config-react-app": "^2.1.0",
         "eslint-plugin-react": "^7.7.0",
         "rimraf": "^2.6.2"
-    }
+    },
+    "homepage": "https://stellarfox.net/",
+    "keywords": [
+        "bank",
+        "frontend",
+        "remittance",
+        "stellar"
+    ],
+    "license": "Apache-2.0",
+    "main": "src/index.js",
+    "name": "cygnus",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/stellar-fox/cygnus.git"
+    },
+    "scripts": {
+        "build": "react-scripts build",
+        "clean": "rimraf build",
+        "clean_modules": "rimraf node_modules",
+        "eject": "react-scripts eject",
+        "lint": "eslint ./src/",
+        "start": "react-scripts start",
+        "test": "react-scripts test --env=jsdom"
+    },
+    "version": "0.1.39"
 }
