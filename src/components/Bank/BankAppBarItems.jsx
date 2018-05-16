@@ -4,10 +4,8 @@ import { compose } from "redux"
 
 import { withStyles } from "@material-ui/core/styles"
 
-import {
-    pubKeyAbbr,
-    handleException,
-} from "../../lib/utils"
+import { handleException } from "@xcmats/js-toolbox"
+import { pubKeyAbbr } from "../../lib/utils"
 import { unknownPubKeyAbbr } from "../StellarFox/env"
 
 

@@ -4,8 +4,8 @@ import {
     List,
     ListItem,
 } from "material-ui/List"
+import { handleException } from "@xcmats/js-toolbox"
 import {
-    handleException,
     htmlEntities as he,
     pubKeyAbbrLedgerHQ,
 } from "../../lib/utils"

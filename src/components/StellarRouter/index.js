@@ -7,17 +7,17 @@ import {
     Route,
 } from "react-router-dom"
 import hoistStatics from "hoist-non-react-statics"
+import resolvePathname from "resolve-pathname"
+import { swap } from "@xcmats/js-toolbox"
+
 import {
     CALL_HISTORY_METHOD,
     ConnectedRouter as Router,
     push,
 } from "react-router-redux"
 import { action as StellarRouterAction } from "../../redux/StellarRouter"
-import resolvePathname from "resolve-pathname"
-import {
-    findDuplicates,
-    swap,
-} from "../../lib/utils"
+
+import { findDuplicates } from "../../lib/utils"
 import { env } from "../StellarFox"
 
 

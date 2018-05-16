@@ -1,4 +1,5 @@
-import { createReducer } from "../lib/utils"
+import { createReducer } from "@xcmats/js-toolbox"
+
 import { getSoftwareVersion as ledgerGetSoftwareVersion } from "../lib/ledger"
 
 

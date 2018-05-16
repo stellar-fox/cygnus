@@ -1,7 +1,8 @@
 import {
     createReducer,
     swap,
-} from "../lib/utils"
+} from "@xcmats/js-toolbox"
+
 import {
     LOCATION_CHANGE,
     routerReducer,

@@ -8,8 +8,8 @@ import { connect } from "react-redux"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 
+import { choose } from "@xcmats/js-toolbox"
 import {
-    choose,
     htmlEntities as he,
     utcToLocaleDateTime,
 } from "../../lib/utils"

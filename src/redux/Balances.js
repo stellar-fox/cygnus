@@ -1,5 +1,7 @@
-import { createReducer } from "../lib/utils"
-import { securityMsgPlaceholder, } from "../../src/components/StellarFox/env"
+import { createReducer } from "@xcmats/js-toolbox"
+
+import { securityMsgPlaceholder } from "../../src/components/StellarFox/env"
+
 
 
 
