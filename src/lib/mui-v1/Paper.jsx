@@ -20,9 +20,10 @@ export default withStyles((theme) => ({
         borderRadius: "3px",
     }),
 
-    primary: {
+    primaryMaxWidth: {
         backgroundColor: theme.palette.primaryColor,
         color: theme.palette.secondaryColor,
+        maxWidth: "300px",
     },
 
 }))(
