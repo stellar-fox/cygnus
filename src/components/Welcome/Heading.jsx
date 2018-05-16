@@ -74,6 +74,7 @@ class Heading extends Component {
                     <Button
                         onClick={this.login}
                         disabled={this.state.loginButtonDisabled}
+                        color="primary"
                     >
                         Login
                     </Button>,
