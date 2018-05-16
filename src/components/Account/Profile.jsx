@@ -245,7 +245,6 @@ class Profile extends Component {
             this.updatePaymentDataFingerprint()
 
             const
-
                 alias = this.props.state.paymentAddress.match(/\*/) ?
                     (this.props.state.paymentAddress) :
                     (`${this.props.state.paymentAddress}*stellarfox.net`),
