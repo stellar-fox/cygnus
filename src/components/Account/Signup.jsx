@@ -304,20 +304,24 @@ export default class Signup extends Component {
                             {this.props.config &&
                              this.props.config.useAsRegistrationForm ?
                                 <Fragment>
-                                    <div className="p-b">
-                                        <span
-                                            style={{
-                                                display: "block",
-                                                marginBottom: "0.8rem",
-                                            }}
-                                            className="badge-blue"
-                                        >
-                                            {this.state.email}
-                                        </span>
-                                        will be associated with account
-                                        <span className="badge-blue">
-                                            {this.props.config.bip32Path}
-                                        </span>
+
+                                    <div className="p-b tiny fade-strong">
+                                        The following info will be lodged into our
+                                        database to assiciate your email address with
+                                        the chosen account sequence number:
+                                    </div>
+                                    <div className="f-b">
+                                        <div className="p-r fade-strong">Email Address:</div>
+                                        <div className="m-b">{this.state.email}</div>
+                                    </div>
+                                    <div className="f-b">
+                                        <div className="p-r fade-strong">Account Sequence Index:</div>
+                                        <div className="m-b">{this.props.config.bip32Path}</div>
+                                    </div>
+                                    <div className="p-b tiny fade-strong">
+                                        Make sure your device is connected and Stellar
+                                        Wallet application is selected. Click "Authenticate"
+                                        button below to proceed further.
                                     </div>
                                     <Button
                                         onClick={this.createAccount.bind(this, {

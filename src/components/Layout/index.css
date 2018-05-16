@@ -44,6 +44,10 @@ div.p-b-small-block::after {
 
 .m-t-large { margin-top: 3rem; }
 
+.m-b { margin-bottom: 1rem; }
+
+.m-b-small { margin-bottom: 3px; }
+
 /* --------- paddings / margins --------- */
 
 
