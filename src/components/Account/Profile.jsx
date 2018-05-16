@@ -152,10 +152,6 @@ class Profile extends Component {
                 last_name: this.props.state.lastName,
             })
 
-            this.props.updateAccountTree(await loadAccount(
-                this.props.publicKey, this.props.network
-            ))
-
         } catch (error) {
 
             this.props.showAlert(error.message, "Error")
@@ -163,6 +159,17 @@ class Profile extends Component {
 
         }
 
+        /**
+         * User's account is not on Stellar Ledger so there is no place to
+         * lodge the signature, hence, return from the function at this point.
+         */
+        if (!this.props.accountId) {
+            this.props.popupSnackbar("User data updated without signature.")
+            this.props.setState({
+                messageUserData: "",
+            })
+            return
+        }
 
         /**
          * Update Stellar Ledger with user info digest hash.
@@ -211,7 +218,7 @@ class Profile extends Component {
             this.props.popupSnackbar("User data has been updated.")
 
         } catch (error) {
-            
+
             this.props.setState({
                 messageUserData: "",
             })
@@ -231,7 +238,6 @@ class Profile extends Component {
          * Update backend with user payment data.
          */
         try {
-
             this.props.setState({
                 messagePaymentData: "Preparing data ...",
             })
@@ -246,7 +252,7 @@ class Profile extends Component {
                 memo_type = this.props.state.memo.length > 0 ? "text" : null,
 
                 memo = this.props.state.memo
-            
+
             await this.updateResource("account", {
                 alias,
                 memo_type,
@@ -260,6 +266,17 @@ class Profile extends Component {
 
         }
 
+        /**
+         * User's account is not on Stellar Ledger so there is no place to
+         * lodge the signature, hence, return from the function at this point.
+         */
+        if (!this.props.accountId) {
+            this.props.popupSnackbar("Payment data updated without signature.")
+            this.props.setState({
+                messagePaymentData: "",
+            })
+            return
+        }
 
         /**
          * Update Stellar Ledger with user payment data digest hash.
@@ -308,7 +325,7 @@ class Profile extends Component {
             this.props.popupSnackbar("Payment data has been updated.")
 
         } catch (error) {
-            
+
             this.props.setState({
                 messagePaymentData: "",
             })
@@ -334,8 +351,8 @@ class Profile extends Component {
     // ...
     changePaymentAddress = (event) =>
         this.props.setState({paymentAddress: event.target.value,})
-    
-    
+
+
     // ...
     changeMemo = (event) =>
         this.props.setState({ memo: event.target.value, })
@@ -459,7 +476,7 @@ class Profile extends Component {
                     handleChange={this.changeEmail}
                     subLabel={`Email: ${this.props.state.email}`}
                 />
-                
+
                 {this.props.idSig ?
                     (signatureValid({
                         firstName: this.props.state.firstName,
@@ -480,7 +497,7 @@ class Profile extends Component {
                         this.props.state.messageUserData : <he.Nbsp />
                 }</div>
                 <Divider color="secondary" />
-                
+
                 <div className="f-b space-between">
                     <div>
                         <h2 className="tab-content-headline">
@@ -527,7 +544,7 @@ class Profile extends Component {
                     handleChange={this.changeMemo}
                     subLabel={`Memo: ${this.props.state.memo}`}
                 />
-                
+
                 {this.props.paySig ?
                     (signatureValid({
                         paymentAddress: this.props.state.paymentAddress,
