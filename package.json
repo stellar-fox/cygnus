@@ -19,7 +19,7 @@
         "@ledgerhq/hw-transport-u2f": "^4.0.0",
         "@material-ui/core": "^1.0.0-rc.0",
         "@material-ui/icons": "^1.0.0-rc.0",
-        "@xcmats/js-toolbox": "^0.1.1",
+        "@xcmats/js-toolbox": "^0.1.2",
         "axios": "^0.18.0",
         "bignumber.js": "^6.0.0",
         "classnames": "^2.2.5",
@@ -45,8 +45,8 @@
         "redux-thunk": "^2.2.0",
         "resolve-pathname": "^2.2.0",
         "sha.js": "^2.4.11",
-        "stellar-base": "^0.7.6",
-        "stellar-sdk": "^0.8.0",
+        "stellar-base": "^0.7.7",
+        "stellar-sdk": "^0.8.1",
         "toml": "^2.3.3",
         "typeface-roboto": "0.0.54"
     },
@@ -82,5 +82,5 @@
         "start": "react-scripts start",
         "test": "react-scripts test --env=jsdom"
     },
-    "version": "0.1.40"
+    "version": "0.1.41"
 }
