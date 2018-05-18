@@ -28,7 +28,7 @@ html, body {
     font-family: "Material Icons";
     font-weight: normal;
     font-style: normal;
-    font-size: 21px !important;
+    font-size: 21px;
     display: inline-block;
     line-height: 1;
     text-transform: none;

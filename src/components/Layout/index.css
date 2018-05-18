@@ -194,8 +194,7 @@ strong { color: rgb(212, 228, 188); }
 .f-e-col {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-end;
+    justify-content: flex-start;
 }
 
 .f-e {
