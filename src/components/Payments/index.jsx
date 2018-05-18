@@ -159,14 +159,20 @@ class Payments extends Component {
                                     txid: paymentsResult.records[0].id,
                                     created_at:
                                         paymentsResult.records[0].created_at,
-                                    effects: effects._embedded.records,
+                                    effects: effects.records,
                                     memo: tx.memo,
                                     selectedPaymentId:
                                         paymentsResult.records[0].id,
                                 },
                             })
                             this.props.hideLoadingModal()
+                        }).catch((err) => {
+                            // eslint-disable-next-line no-console
+                            console.log(err)
                         })
+                    }).catch((err) => {
+                        // eslint-disable-next-line no-console
+                        console.log(err)
                     })
                 })
             })
@@ -359,7 +365,6 @@ class Payments extends Component {
                                                                 .created_at,
                                                         effects:
                                                             effects
-                                                                ._embedded
                                                                 .records,
                                                         memo: tx.memo,
                                                         selectedPaymentId:
@@ -394,7 +399,7 @@ class Payments extends Component {
                     paymentDetails: {
                         txid: payment.id,
                         created_at: payment.created_at,
-                        effects: effects._embedded.records,
+                        effects: effects.records,
                         memo: tx.memo,
                         selectedPaymentId: paymentId,
                     },
