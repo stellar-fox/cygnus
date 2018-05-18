@@ -137,6 +137,11 @@ export const gravatar = "https://www.gravatar.com/avatar/"
 
 
 // ...
+export const gravatarSize48 = "s=48"
+
+
+
+// ...
 export const gravatarSize = "s=96"
 
 
