@@ -12,6 +12,7 @@ import { bankDrawerWidth } from "../StellarFox/env"
 
 import { withStyles } from "@material-ui/core/styles"
 import Drawer from "material-ui/Drawer"
+import Divider from "../../lib/mui-v1/Divider"
 
 
 
@@ -81,6 +82,13 @@ const AccountNavLink = () =>
 
 
 
+// <ContactsLink> component
+const ContactsNavLink = ({ show, }) =>
+    show ? <NavLinkTemplate to="Contacts" icon="contacts" /> : <Null />
+
+
+
+
 // ...
 const bankDrawerStyle = {
     width: bankDrawerWidth,
@@ -124,6 +132,8 @@ export default connect(
                     <BalancesNavLink />
                     <PaymentsNavLink show={accountExists} />
                     <AccountNavLink />
+                    <Divider />
+                    <ContactsNavLink show={true} />
                 </Drawer>
         )(this.props)
 

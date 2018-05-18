@@ -21,6 +21,7 @@ import { withStyles } from "@material-ui/core/styles"
 import Account from "../Account"
 import Balances from "../Balances"
 import Payments from "../Payments"
+import Contacts from "../Contacts"
 
 
 
@@ -77,6 +78,7 @@ export default compose(
                 "Balances": this.rr("balances/"),
                 "Payments": this.rr("payments/"),
                 "Account": this.rr("account/"),
+                "Contacts": this.rr("contacts/"),
             })
         }
 
@@ -102,6 +104,9 @@ export default compose(
                         </Route>
                         <Route path={getPath("Account")}>
                             { (routeProps) => <Account {...routeProps} /> }
+                        </Route>
+                        <Route path={getPath("Contacts")}>
+                            { (routeProps) => <Contacts {...routeProps} /> }
                         </Route>
                         <Redirect to={getPath("Balances")} />
                     </Switch>
