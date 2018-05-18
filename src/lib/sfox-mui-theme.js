@@ -7,6 +7,10 @@ import { createMuiTheme } from "@material-ui/core/styles"
 export default createMuiTheme({
 
     palette: {
+        primary: {
+            main: "rgb(15, 46, 83)",
+        },
+
         primaryColor: "rgb(15, 46, 83)",
         secondaryColor: "rgb(244, 176, 4)",
         primaryHighlight: "rgb(36, 65, 98)",
@@ -25,7 +29,7 @@ export default createMuiTheme({
         disabledSwitchColor: "rgb(110, 80, 3)",
 
         background: {
-            paper: "rgb(15, 46, 83)",
+            paper: "rgb(244, 176, 4)",
             default: "rgb(15, 46, 83)",
         },
 
