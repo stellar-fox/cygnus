@@ -133,7 +133,7 @@ export default connect(
                     <PaymentsNavLink show={accountExists} />
                     <AccountNavLink />
                     <Divider />
-                    <ContactsNavLink show={true} />
+                    <ContactsNavLink show={accountExists} />
                 </Drawer>
         )(this.props)
 
