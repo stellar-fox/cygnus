@@ -1,11 +1,11 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
+import { countBy } from "lodash"
 import {
-    countBy,
     capitalize,
-} from "lodash"
-import { handleException } from "@xcmats/js-toolbox"
+    handleException
+} from "@xcmats/js-toolbox"
 
 import { StellarSdk } from "./stellar-tx"
 import { env } from "../components/StellarFox"
