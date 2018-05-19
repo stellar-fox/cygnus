@@ -146,6 +146,7 @@ export default compose(
                         error={this.state.emailInputError}
                         errorMessage={this.state.emailInputErrorTextValue}
                         onChange={this.updateEmailInputValue}
+                        fullWidth
                     />
                     <InputField
                         id="password-input"
@@ -155,6 +156,7 @@ export default compose(
                         error={this.state.passwordInputError}
                         errorMessage={this.state.passwordInputErrorTextValue}
                         onChange={this.updatePasswordInputValue}
+                        fullWidth
                     />
                     <LinearProgress
                         variant="indeterminate"

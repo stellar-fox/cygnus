@@ -146,6 +146,7 @@ class PanelExplorer extends Component {
                         error={this.state.error}
                         errorMessage={this.state.errorMessage}
                         onChange={this.updateInputValue}
+                        fullWidth
                     />
                     <Button
                         onClick={this.compoundFederationValidator}

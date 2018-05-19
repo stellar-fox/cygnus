@@ -45,14 +45,14 @@ export default withStyles((theme) => ({
         // ...
         render = () => (
             ({
-                classes, id, color, error, errorMessage,
+                classes, id, color, error, errorMessage, margin,
                 label, type, onChange, fullWidth, autoComplete,
             }) =>
                 <FormControl
                     error={error}
-                    fullWidth={fullWidth || true}
+                    fullWidth={fullWidth}
                     className={classes.formControl}
-                    margin="dense"
+                    margin={margin || "dense"}
                 >
                     <InputLabel
                         FormLabelClasses={{
