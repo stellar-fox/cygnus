@@ -9,6 +9,12 @@ export default createMuiTheme({
     palette: {
         primary: {
             main: "rgb(15, 46, 83)",
+            light: "rgb(36, 65, 98)",
+        },
+
+        secondary: {
+            main: "rgb(244, 176, 4)",
+            light: "rgb(246, 190, 49)",
         },
 
         primaryColor: "rgb(15, 46, 83)",
@@ -35,6 +41,12 @@ export default createMuiTheme({
 
         spacing: {
             unit: "1rem",
+        },
+    },
+
+    typography: {
+        caption: {
+            fontSize: "0.6rem",
         },
     },
 
