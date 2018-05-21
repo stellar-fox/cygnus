@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
 import Avatar from "@material-ui/core/Avatar"
 import Paper from "@material-ui/core/Paper"
-import { gravatarLink } from "../../lib/deneb"
+import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
 import { pubKeyAbbr } from "../../lib/utils"
 
@@ -23,7 +23,7 @@ export default withStyles((theme) => ({
         borderRadius: 3,
         width: 48,
         height: 48,
-        border: `1px solid ${theme.palette.primary.main}`,
+        border: `1px solid ${theme.palette.primary.light}`,
     },
 
 }))(
@@ -34,16 +34,6 @@ export default withStyles((theme) => ({
             classes: PropTypes.object.isRequired,
         }
 
-        state = {
-            link: `${gravatar}?${gravatarSize48}`,
-        }
-
-        // ...
-        componentDidMount = () => {
-            gravatarLink(this.props.data.publicKey).then((response) => this.setState({
-                link: response.link,
-            }))
-        }
 
         // ...
         render = () => (
@@ -51,20 +41,23 @@ export default withStyles((theme) => ({
                 <Paper elevation={3} className={classes.root}>
                     <div className="f-b space-between">
                         <Avatar className={classes.avatar}
-                            src={this.state.link}
+                            src={`${gravatar}${data.md5}?${
+                                gravatarSize48}&d=wavatar`}
                         />
                         <div className="f-e-col space-between">
-                            <div>
-                                <div>
+                            <div className="f-e-col">
+                                <Typography align="right" noWrap>
                                     {data.lastName}, {data.firstName}
-                                </div>
-                                <div className="small fade">
+                                </Typography>
+                                <Typography variant="caption" align="right"
+                                    noWrap
+                                >
                                     {data.paymentAddress}
-                                </div>
+                                </Typography>
                             </div>
-                            <div className="tiny fade-strong">
+                            <Typography variant="caption" align="right" noWrap>
                                 {pubKeyAbbr(data.publicKey)}
-                            </div>
+                            </Typography>
                         </div>
                     </div>
                 </Paper>
