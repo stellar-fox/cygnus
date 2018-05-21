@@ -15,6 +15,7 @@ export default createMuiTheme({
         secondary: {
             main: "rgb(244, 176, 4)",
             light: "rgb(246, 190, 49)",
+            dark: "rgb(156, 113, 3)",
         },
 
         primaryColor: "rgb(15, 46, 83)",
