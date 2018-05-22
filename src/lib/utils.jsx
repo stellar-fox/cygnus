@@ -51,6 +51,21 @@ export const getRegisteredAccount = async (userId, token) => {
 
 
 // ...
+export const getUserContacts = async (userId, token) => {
+    try {
+        return (await axios.post(`${config.api}/contacts/`, {
+            id: userId,
+            token,
+        })).data.data
+    } catch (error) {
+        return null
+    }
+}
+
+
+
+
+// ...
 export const pubKeyAbbr = (pubKey) => handleException(
     () => `${pubKey.slice(0, 6)}-${pubKey.slice(50)}`,
     (_) => { throw new Error("Malformed key.") }
