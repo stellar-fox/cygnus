@@ -3,6 +3,7 @@ import { reducer as AlertReducer } from "./Alert"
 import { reducer as AssetManagerReducer } from "./AssetManager"
 import { reducer as BalancesReducer } from "./Balances"
 import { reducer as BankReducer } from "./Bank"
+import { reducer as ContactsReducer } from "./Contacts"
 import { reducer as LedgerHQReducer } from "./LedgerHQ"
 import { reducer as LoadingModalReducer } from "./LoadingModal"
 import { reducer as LoginMangerReducer } from "./LoginManager"
@@ -22,6 +23,7 @@ export default {
     Assets: AssetManagerReducer,
     Balances: BalancesReducer,
     Bank: BankReducer,
+    Contacts: ContactsReducer,
     LedgerHQ: LedgerHQReducer,
     LoadingModal: LoadingModalReducer,
     LoginManager: LoginMangerReducer,
