@@ -41,22 +41,24 @@ export default withStyles((theme) => ({
                 <Paper elevation={3} className={classes.root}>
                     <div className="f-b space-between">
                         <Avatar className={classes.avatar}
-                            src={`${gravatar}${data.md5}?${
+                            src={`${gravatar}${data.email_md5}?${
                                 gravatarSize48}&d=wavatar`}
                         />
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
-                                <Typography align="right" noWrap>
-                                    {data.lastName}, {data.firstName}
+                                <Typography align="right" noWrap="true">
+                                    {data.last_name}, {data.first_name}
                                 </Typography>
                                 <Typography variant="caption" align="right"
-                                    noWrap
+                                    noWrap="true"
                                 >
-                                    {data.paymentAddress}
+                                    {data.alias}*{data.domain}
                                 </Typography>
                             </div>
-                            <Typography variant="caption" align="right" noWrap>
-                                {pubKeyAbbr(data.publicKey)}
+                            <Typography variant="caption" align="right"
+                                noWrap="true"
+                            >
+                                {pubKeyAbbr(data.pubkey)}
                             </Typography>
                         </div>
                     </div>

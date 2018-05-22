@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from "react"
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
 import ContactCard from "../ContactCard"
@@ -9,6 +11,10 @@ import Fuse from "fuse.js"
 import Icon from "@material-ui/core/Icon"
 import Button from "@material-ui/core/Button"
 import Modal from "@material-ui/core/Modal"
+
+import { action as ContactsAction } from "../../redux/Contacts"
+import { action as ModalAction } from "../../redux/Modal"
+import { getUserContacts } from "../../lib/utils"
 
 const styles = (theme) => ({
 
@@ -72,7 +78,7 @@ const AddContactButton = withStyles(styles)(
             <Icon style={{ marginRight: "3px", }}>
                 add_box
             </Icon>
-            <Typography nowrap variant="caption" color="inherit">
+            <Typography nowrap="true" variant="caption" color="inherit">
                 Add New
             </Typography>
         </Button>
@@ -81,18 +87,16 @@ const AddContactButton = withStyles(styles)(
 const NoCards = withStyles(styles)(
     ({ classes, title, subtitle, }) =>
         <div className={classes.nocards}>
-            <Typography nowrap variant="body2" color="inherit">
+            <Typography nowrap="true" variant="body2" color="inherit">
                 {title}
             </Typography>
-            <Typography nowrap variant="caption" color="inherit">
+            <Typography nowrap="true" variant="caption" color="inherit">
                 {subtitle}
             </Typography>
         </div>
 )
 
 
-// ...
-const testData = []
 
 
 // ...
@@ -108,42 +112,56 @@ class Contacts extends Component {
 
 
     // ...
-    showAllCards = () => 
-        testData.length === 0 ?
+    componentDidMount = () => {
+        getUserContacts(this.props.userId, this.props.token)
+            .then((results) => {
+                results.data.status === "success" && this.props.setState({
+                    internal: results.data.data,
+                })
+            })
+    }
+
+
+    // ...
+    showAllCards = () =>
+        this.props.contactsInternal.length === 0 ?
             <NoCards title="No contacts yet."
                 subtitle="Adding contacts enables easier and safer transfers."
             /> :
-            testData.map((contact, index) =>
+            this.props.contactsInternal.map((contact, index) =>
                 <Grid item key={index + 1} xs>
                     <ContactCard data={contact} />
                 </Grid>
             )
-    
+
 
     // ...
     showFilteredCards = () => {
 
-        let results = new Fuse(testData, {
-            keys: ["firstName", "lastName",],
+        let results = new Fuse(this.props.contactsInternal, {
+            keys: ["first_name", "last_name",],
         }).search(this.state.search)
-        
+
         return results.length === 0 ? <NoCards title="No contacts found."
             subtitle="There are no contacts in your book that match this search."
-        /> : results.map((contact, index) => 
+        /> : results.map((contact, index) =>
             <Grid item key={index} xs>
                 <ContactCard data={contact} />
             </Grid>
         )
     }
-    
+
+
     // ...
     updateSearchFilter = (event) =>
         this.setState({ search: event.target.value, })
 
 
+    // ...
     showModal = () => this.setState({ open: true, })
 
 
+    // ...
     hideModal = () => this.setState({ open: false, })
 
 
@@ -191,4 +209,17 @@ class Contacts extends Component {
 
 
 // ...
-export default Contacts
+export default connect(
+    // map state to props
+    (state) => ({
+        token: state.LoginManager.token,
+        userId: state.LoginManager.userId,
+        Modal: state.Modal,
+        contactsInternal: state.Contacts.internal,
+    }),
+    (dispatch) => bindActionCreators({
+        setState: ContactsAction.setState,
+        hideModal: ModalAction.hideModal,
+        showModal: ModalAction.showModal,
+    }, dispatch)
+)(Contacts)
