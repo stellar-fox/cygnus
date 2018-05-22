@@ -4,18 +4,21 @@ import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
 import ContactCard from "../ContactCard"
+import AddContactForm from "./AddContactForm"
 import InputField from "../../lib/mui-v1/InputField"
 import Typography from "@material-ui/core/Typography"
 import Fuse from "fuse.js"
-
 import Icon from "@material-ui/core/Icon"
 import Button from "@material-ui/core/Button"
 import Modal from "@material-ui/core/Modal"
-
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
 import { getUserContacts } from "../../lib/utils"
 
+
+
+
+// ...
 const styles = (theme) => ({
 
     nocards: {
@@ -48,6 +51,7 @@ const styles = (theme) => ({
 
 })
 
+
 // ...
 const AddContactModal = withStyles(styles)(
     ({ classes, open, onClose, }) =>
@@ -58,12 +62,12 @@ const AddContactModal = withStyles(styles)(
             onClose={onClose}
         >
             <div className={classes.paper}>
-                <Typography variant="subheading" id="modal-title">
+                <Typography variant="subheading" color="primary"
+                    id="modal-title"
+                >
                     Add New Contact
                 </Typography>
-                <Typography variant="caption" id="modal-description">
-                    Contacts ensure proper funds transfers.
-                </Typography>
+                <AddContactForm />
             </div>
         </Modal>
 )
@@ -84,6 +88,8 @@ const AddContactButton = withStyles(styles)(
         </Button>
 )
 
+
+// ...
 const NoCards = withStyles(styles)(
     ({ classes, title, subtitle, }) =>
         <div className={classes.nocards}>
