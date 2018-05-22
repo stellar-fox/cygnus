@@ -1,3 +1,8 @@
+import { emptyString } from "@xcmats/js-toolbox"
+
+
+
+
 /**
  * Holds regular expression used to check the validity of the domain format.
  */
@@ -16,7 +21,7 @@ export const emailIsValid = (email) => !!(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))/,
         /@/,
         regexpDomainFormat,
-    ].map(r => r.source).join(""))
+    ].map(r => r.source).join(emptyString()))
 ).test(email)
 
 
