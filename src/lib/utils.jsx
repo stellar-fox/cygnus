@@ -4,7 +4,10 @@ import toml from "toml"
 import { countBy } from "lodash"
 import {
     capitalize,
-    handleException
+    emptyString,
+    handleException,
+    head,
+    objectMap,
 } from "@xcmats/js-toolbox"
 
 import { StellarSdk } from "./stellar-tx"
@@ -142,11 +145,11 @@ export const publicKeyValid = (publicKey) =>
 export const invalidPaymentAddressMessage = (address) => {
     // Valid federation address. Return empty string for error message.
     if (federationAddressValid(address)) {
-        return ""
+        return emptyString()
     }
     // Valid public key. Return empty string for error message.
     if (publicKeyValid(address)) {
-        return ""
+        return emptyString()
     }
     // Looks like something totally invalid for this field.
     if (!address.match(/\*/) && !address.match(/^G/)) {
@@ -204,7 +207,7 @@ export const endpointLookup = (federationAddress) => (
         if (domain) {
             return toml.parse(
                 (await axios.get(
-                    env.federationEndpoint(domain[0]))
+                    env.federationEndpoint(head(domain)))
                 ).data
             ).FEDERATION_SERVER
         }
@@ -226,12 +229,6 @@ export const extractPathIndex = (path) => handleException(
 
 // inserts path index substituting Z in "XX'/YYY'/Z'"
 export const insertPathIndex = (index) => `${env.bip32Prefix}${index}'`
-
-
-
-
-// ...
-export const nullToUndefined = (val) => val === null ? undefined : val
 
 
 
@@ -307,12 +304,11 @@ export const emojiDB = {
 
 
 // emoji components (built on the 'emojiDB' object base)
-export const emoji = Object.keys(emojiDB).reduce(
-    (acc, ek) => ({
-        ...acc,
-        [capitalize(ek)]: () =>
-            React.createElement(Fragment, null, emojiDB[ek]),
-    }), {}
+export const emoji = objectMap(emojiDB,
+    ([k, v,]) => [
+        capitalize(k),
+        () => React.createElement(Fragment, null, v),
+    ]
 )
 
 

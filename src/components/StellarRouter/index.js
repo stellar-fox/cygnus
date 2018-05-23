@@ -8,7 +8,10 @@ import {
 } from "react-router-dom"
 import hoistStatics from "hoist-non-react-statics"
 import resolvePathname from "resolve-pathname"
-import { swap } from "@xcmats/js-toolbox"
+import {
+    emptyString,
+    swap,
+} from "@xcmats/js-toolbox"
 
 import {
     CALL_HISTORY_METHOD,
@@ -90,7 +93,7 @@ export const StaticRouter = connect(
 
 
         // takes static path and returns associated view name
-        static getView = (path, map) => path in map ? map[path] : ""
+        static getView = (path, map) => path in map ? map[path] : emptyString()
 
 
         // ...
