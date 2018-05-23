@@ -46,17 +46,17 @@ export default withStyles((theme) => ({
                         />
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
-                                <Typography align="right" noWrap="true">
+                                <Typography align="right" noWrap>
                                     {data.last_name}, {data.first_name}
                                 </Typography>
                                 <Typography variant="caption" align="right"
-                                    noWrap="true"
+                                    noWrap
                                 >
                                     {data.alias}*{data.domain}
                                 </Typography>
                             </div>
                             <Typography variant="caption" align="right"
-                                noWrap="true"
+                                noWrap
                             >
                                 {pubKeyAbbr(data.pubkey)}
                             </Typography>
