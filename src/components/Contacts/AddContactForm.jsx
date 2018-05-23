@@ -140,6 +140,7 @@ class AddContactForm extends Component {
         showProgress: false,
         showRequestSent: false,
         value: 0,
+        buttonDisabled: false,
     }
 
 
@@ -153,6 +154,7 @@ class AddContactForm extends Component {
         this.setState({
             showProgress: true,
             showRequestSent: false,
+            buttonDisabled: true,
         })
 
         setTimeout(() => {
@@ -166,6 +168,7 @@ class AddContactForm extends Component {
         this.setState({
             showProgress: false,
             showRequestSent: true,
+            buttonDisabled: false,
         })
 
 
@@ -192,7 +195,7 @@ class AddContactForm extends Component {
             </div>
             <div className="f-b center p-t">
                 <Typography noWrap variant="body2" color="primary">
-                    Search by:
+                    Search for contact using the following categories.
                 </Typography>
             </div>
             <div className="f-b center p-t">
@@ -220,8 +223,9 @@ class AddContactForm extends Component {
                     }}
                     >
                         <SearchInput label="Email Address" />
-                        <SearchButton buttonText="Search" color="primary"
+                        <SearchButton buttonText="Request" color="primary"
                             onClick={this.requestContact}
+                            disabled={this.state.buttonDisabled}
                         />
                     </div>
                 </TabContainer>
@@ -240,8 +244,9 @@ class AddContactForm extends Component {
                     }}
                     >
                         <SearchInput label="Payment Address" />
-                        <SearchButton buttonText="Search" color="primary"
+                        <SearchButton buttonText="Request" color="primary"
                             onClick={this.requestContact}
+                            disabled={this.state.buttonDisabled}
                         />
                     </div>
                 </TabContainer>
@@ -261,8 +266,9 @@ class AddContactForm extends Component {
                         }}
                         >
                             <SearchInput label="Extended Account Number." />
-                            <SearchButton buttonText="Search" color="primary"
+                            <SearchButton buttonText="Request" color="primary"
                                 onClick={this.requestContact}
+                                disabled={this.state.buttonDisabled}
                             />
                         </div>
                     </Fragment>
