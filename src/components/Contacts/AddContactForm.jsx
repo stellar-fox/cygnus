@@ -1,22 +1,23 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import Typography from "@material-ui/core/Typography"
-import { withStyles } from "@material-ui/core/styles"
-import Button from "@material-ui/core/Button"
-import TextField from "@material-ui/core/TextField"
-import CircularProgress from "@material-ui/core/CircularProgress"
-import classNames from "classnames"
 import { htmlEntities as he } from "../../lib/utils"
 import { action as ModalAction } from "../../redux/Modal"
-
-import Tabs from "@material-ui/core/Tabs"
-import Tab from "@material-ui/core/Tab"
+import { withStyles } from "@material-ui/core/styles"
+import classNames from "classnames"
 import SwipeableViews from "react-swipeable-views"
 
+import Button from "@material-ui/core/Button"
+import CircularProgress from "@material-ui/core/CircularProgress"
+import Tab from "@material-ui/core/Tab"
+import Tabs from "@material-ui/core/Tabs"
+import TextField from "@material-ui/core/TextField"
+import Typography from "@material-ui/core/Typography"
 
 
 
+
+// ...
 const styles = (theme) => ({
     button: {
         margin: theme.spacing.unit,
@@ -67,6 +68,7 @@ const RequestProgress = withStyles(styles)(
 )
 
 
+// ...
 const SearchButton = withStyles(styles)(
     ({ classes, buttonText, color, disabled, onClick, }) =>
         <Button variant="raised" disabled={disabled}
@@ -78,6 +80,7 @@ const SearchButton = withStyles(styles)(
 )
 
 
+// ...
 const DoneButton = withStyles(styles)(
     ({ classes, onClick, }) =>
         <Button variant="raised" color="primary" onClick={onClick}
@@ -87,6 +90,8 @@ const DoneButton = withStyles(styles)(
         </Button>
 )
 
+
+// ...
 const SearchInput = withStyles(styles)(
     ({ classes, label, }) => <TextField
         id="seach-by"
@@ -111,6 +116,7 @@ const SearchInput = withStyles(styles)(
 )
 
 
+// ...
 const ChoiceTabs = withStyles(styles)(
     ({ onChange, value, }) => <Tabs
         value={ value }
@@ -126,6 +132,7 @@ const ChoiceTabs = withStyles(styles)(
 )
 
 
+// ...
 const TabContainer = withStyles(styles)(
     ({ children, dir, }) =>
         <Typography component="div" dir={dir} style={{ paddingTop: "2rem", }}>
@@ -134,6 +141,7 @@ const TabContainer = withStyles(styles)(
 )
 
 
+// ...
 class AddContactForm extends Component {
 
     state = {
