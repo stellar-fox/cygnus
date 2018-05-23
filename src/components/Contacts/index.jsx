@@ -54,11 +54,11 @@ const styles = (theme) => ({
 
 // ...
 const AddContactModal = withStyles(styles)(
-    ({ classes, open, onClose, }) =>
+    ({ classes, onClose, modalId, visible, }) =>
         <Modal
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
-            open={open}
+            open={ modalId === "addContact" && visible }
             onClose={onClose}
         >
             <div className={classes.paper}>
@@ -82,7 +82,7 @@ const AddContactButton = withStyles(styles)(
             <Icon style={{ marginRight: "3px", }}>
                 add_box
             </Icon>
-            <Typography nowrap="true" variant="caption" color="inherit">
+            <Typography noWrap  variant="caption" color="inherit">
                 Add New
             </Typography>
         </Button>
@@ -93,10 +93,10 @@ const AddContactButton = withStyles(styles)(
 const NoCards = withStyles(styles)(
     ({ classes, title, subtitle, }) =>
         <div className={classes.nocards}>
-            <Typography nowrap="true" variant="body2" color="inherit">
+            <Typography noWrap  variant="body2" color="inherit">
                 {title}
             </Typography>
-            <Typography nowrap="true" variant="caption" color="inherit">
+            <Typography noWrap  variant="caption" color="inherit">
                 {subtitle}
             </Typography>
         </div>
@@ -113,7 +113,6 @@ class Contacts extends Component {
         search: "",
         error: false,
         errorMessage: "",
-        open: false,
     }
 
 
@@ -121,7 +120,7 @@ class Contacts extends Component {
     componentDidMount = () => {
         getUserContacts(this.props.userId, this.props.token)
             .then((results) => {
-                results.data.status === "success" && this.props.setState({
+                results && this.props.setState({
                     internal: results.data.data,
                 })
             })
@@ -164,17 +163,15 @@ class Contacts extends Component {
 
 
     // ...
-    showModal = () => this.setState({ open: true, })
-
-
-    // ...
-    hideModal = () => this.setState({ open: false, })
+    showModal = () => this.props.showModal("addContact")
 
 
     // ...
     render = () =>
         <Fragment>
-            <AddContactModal open={this.state.open} onClose={this.hideModal} />
+            <AddContactModal modalId={this.props.Modal.modalId}
+                visible={this.props.Modal.visible} onClose={this.hideModal}
+            />
             <div className="f-b space-between">
                 <div className="f-b-col">
                     <Typography variant="title" color="inherit">
