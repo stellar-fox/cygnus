@@ -120,8 +120,10 @@ class Contacts extends Component {
     componentDidMount = () => {
         getUserContacts(this.props.userId, this.props.token)
             .then((results) => {
-                results && this.props.setState({
-                    internal: results.data.data,
+                results ? this.props.setState({
+                    internal: results,
+                }) : this.props.setState({
+                    internal: [],
                 })
             })
     }
