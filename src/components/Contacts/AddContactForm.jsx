@@ -93,12 +93,14 @@ const DoneButton = withStyles(styles)(
 
 // ...
 const SearchInput = withStyles(styles)(
-    ({ classes, label, }) => <TextField
+    ({ classes, label, onChange, value, }) => <TextField
         id="seach-by"
         label={label}
+        value={value}
         type="search"
         className={classes.textField}
         margin="normal"
+        onChange={onChange}
         autoFocus
         InputProps={{
             classes: {
@@ -149,11 +151,14 @@ class AddContactForm extends Component {
         showRequestSent: false,
         value: 0,
         buttonDisabled: false,
+        input: "",
+        lastInput: "",
     }
 
 
     // ...
-    onTabChange = (_event, value) => this.setState({ value, })
+    onTabChange = (_event, value) =>
+        this.setState({ value, showRequestSent: false, })
 
 
     // ...
@@ -163,6 +168,7 @@ class AddContactForm extends Component {
             showProgress: true,
             showRequestSent: false,
             buttonDisabled: true,
+            lastInput: this.state.input,
         })
 
         setTimeout(() => {
@@ -177,33 +183,36 @@ class AddContactForm extends Component {
             showProgress: false,
             showRequestSent: true,
             buttonDisabled: false,
+            input: "",
         })
 
 
     // ...
     hideModal = () => {
+        this.setState({
+            showProgress: false,
+            showRequestSent: false,
+            buttonDisabled: false,
+            input: "",
+            lastInput: "",
+        })
         this.props.hideModal()
     }
 
 
     // ...
+    handleInputChange = (event) =>
+        this.setState({
+            input: event.target.value,
+        })
+
+
+    // ...
     render = () =>
         <Fragment>
-            <div className="f-b center p-t">
-                <Typography noWrap variant="body1" color="primary">
-                    Choose how you would like to find your contact.
-                </Typography>
-            </div>
-            <div className="f-b center">
-                <Typography noWrap variant="caption" color="primary">
-                    Contacts enable easy and secure way to transfer funds.
-                    Send funds just like email. Every contact needs to be
-                    requested and approved.
-                </Typography>
-            </div>
-            <div className="f-b center p-t">
+            <div className="f-b center p-t-medium">
                 <Typography noWrap variant="body2" color="primary">
-                    Search for contact using the following categories.
+                    Request contact using the following categories:
                 </Typography>
             </div>
             <div className="f-b center p-t">
@@ -230,7 +239,10 @@ class AddContactForm extends Component {
                         justifyContent: "center",
                     }}
                     >
-                        <SearchInput label="Email Address" />
+                        <SearchInput label="Email Address"
+                            onChange={this.handleInputChange}
+                            value={this.state.input}
+                        />
                         <SearchButton buttonText="Request" color="primary"
                             onClick={this.requestContact}
                             disabled={this.state.buttonDisabled}
@@ -241,7 +253,7 @@ class AddContactForm extends Component {
                     <Typography align="center" noWrap variant="body1"
                         color="primary"
                     >
-                        Ener the payment address of the person you want to add
+                        Enter the payment address of the person you want to add
                         to your contact book.
                     </Typography>
                     <div className="m-b" style={{
@@ -251,7 +263,10 @@ class AddContactForm extends Component {
                         justifyContent: "center",
                     }}
                     >
-                        <SearchInput label="Payment Address" />
+                        <SearchInput label="Payment Address"
+                            onChange={this.handleInputChange}
+                            value={this.state.input}
+                        />
                         <SearchButton buttonText="Request" color="primary"
                             onClick={this.requestContact}
                             disabled={this.state.buttonDisabled}
@@ -273,7 +288,10 @@ class AddContactForm extends Component {
                             justifyContent: "center",
                         }}
                         >
-                            <SearchInput label="Extended Account Number." />
+                            <SearchInput label="Extended Account Number."
+                                onChange={this.handleInputChange}
+                                value={this.state.input}
+                            />
                             <SearchButton buttonText="Request" color="primary"
                                 onClick={this.requestContact}
                                 disabled={this.state.buttonDisabled}
@@ -285,14 +303,40 @@ class AddContactForm extends Component {
 
 
             {!this.state.showProgress && !this.state.showRequestSent &&
-                <div style={{ height: "50px", }}>
-                    <he.Nbsp />
+                <div className="p-t"
+                    style={{ height: "150px", paddingLeft: "20px", }}
+                >
+                    <div className="f-b center">
+                        <Typography noWrap variant="body1" color="primary">
+                            Fine Print:
+                        </Typography>
+                    </div>
+                    <div className="f-b p-t">
+                        <Typography noWrap variant="caption" color="primary">
+                            <he.Minus /> Adding new contact by payment address
+                            or account number is only possible if this contact
+                            already has an account with Stellar Fox.
+                        </Typography>
+                    </div>
+                    <div className="f-b">
+                        <Typography noWrap variant="caption" color="primary">
+                            <he.Minus /> When the contact accepts the request,
+                            it will appear in your contact list.
+                        </Typography>
+                    </div>
+                    <div className="f-b">
+                        <Typography noWrap variant="caption" color="primary">
+                            <he.Minus /> Adding contact with payment address
+                            other than hosted by Stellar Fox will have limited
+                            security features.
+                        </Typography>
+                    </div>
                 </div>
             }
 
 
             {this.state.showProgress &&
-                <div className="f-b center" style={{ height: "50px", }}>
+                <div className="f-b center p-t" style={{ height: "150px", }}>
                     <RequestProgress />
                     <Typography noWrap variant="body2" color="primary">
                         Sending request ...
@@ -302,17 +346,24 @@ class AddContactForm extends Component {
 
 
             {this.state.showRequestSent &&
-                <div style={{ height: "50px", }}>
+                <div className="p-t" style={{ height: "150px", }}>
                     <div className="f-b center">
                         <Typography noWrap variant="body1" color="primary">
-                            Request sent to foo@bar.com.
-                            Go ahead, send another!
+                            Request sent to:
                         </Typography>
                     </div>
                     <div className="f-b center">
-                        <Typography noWrap variant="caption" color="primary">
-                            When the owner of this email address accepts this
-                            request, it will be listed in your contacts list.
+                        <div className="tag-success">
+                            <Typography noWrap variant="body2"
+                                color="secondary"
+                            >
+                                {this.state.lastInput}
+                            </Typography>
+                        </div>
+                    </div>
+                    <div className="f-b center p-t">
+                        <Typography noWrap variant="body1" color="primary">
+                            Go ahead, send another!
                         </Typography>
                     </div>
                 </div>
