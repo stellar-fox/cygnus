@@ -84,6 +84,10 @@ const styles = (theme) => ({
         margin: "0px",
     },
 
+    inputLabel: {
+        color: theme.palette.secondary.main,
+    },
+
 })
 
 
@@ -157,7 +161,6 @@ const SearchField = withStyles(styles)(
             classes: {
                 root: classes.textFieldInput,
                 marginDense: classes.inputMargin,
-                shrink: classes.shrink,
             },
         }}
     />
@@ -168,7 +171,9 @@ const SearchField = withStyles(styles)(
 const SelectView = withStyles(styles)(
     ({ classes, value, onChange, }) =>
         <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="select-view">Select Contact View</InputLabel>
+            <InputLabel classes={{shrink: classes.inputLabel,}}
+                htmlFor="select-view"
+            >Select Contact View</InputLabel>
             <Select
                 MenuProps={{
                     PopoverClasses: {
