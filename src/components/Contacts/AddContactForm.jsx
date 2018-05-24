@@ -1,7 +1,12 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { htmlEntities as he } from "../../lib/utils"
+import {
+    htmlEntities as he,
+    emailValid,
+    federationAddressValid,
+    publicKeyValid
+} from "../../lib/utils"
 import { action as ModalAction } from "../../redux/Modal"
 import { withStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
@@ -93,10 +98,11 @@ const DoneButton = withStyles(styles)(
 
 // ...
 const SearchInput = withStyles(styles)(
-    ({ classes, label, onChange, value, }) => <TextField
+    ({ classes, label, onChange, value, error, errorMessage, }) => <TextField
         id="seach-by"
-        label={label}
+        label={errorMessage || label}
         value={value}
+        error={error}
         type="search"
         className={classes.textField}
         margin="normal"
@@ -149,22 +155,65 @@ class AddContactForm extends Component {
     state = {
         showProgress: false,
         showRequestSent: false,
-        value: 0,
+        tabSelected: 0,
         buttonDisabled: false,
         input: "",
         lastInput: "",
+        error: false,
+        errorMessage: "",
     }
 
 
     // ...
     onTabChange = (_event, value) =>
-        this.setState({ value, showRequestSent: false, })
+        this.setState({
+            tabSelected: value,
+            input: "",
+            lastInput: "",
+            showRequestSent: false,
+            error: false,
+            errorMessage: "",
+        })
 
 
     // ...
     requestContact = () => {
 
+        // check email address validity
+        if (!emailValid(this.state.input) && this.state.tabSelected === 0) {
+            this.setState({
+                error: true,
+                errorMessage: "Invalid email address.",
+            })
+            return
+        }
+
+        // check payment address validity
+        if (!federationAddressValid(this.state.input) &&
+            this.state.tabSelected === 1) {
+            this.setState({
+                error: true,
+                errorMessage: "Invalid payment address.",
+            })
+            return
+        }
+
+        // check account number validity
+        if (!publicKeyValid(this.state.input) &&
+            this.state.tabSelected === 2) {
+            this.setState({
+                error: true,
+                errorMessage: "Invalid account number.",
+            })
+            return
+        }
+
+
+        // input is valid at this point
+
         this.setState({
+            error: false,
+            errorMessage: "",
             showProgress: true,
             showRequestSent: false,
             buttonDisabled: true,
@@ -190,6 +239,8 @@ class AddContactForm extends Component {
     // ...
     hideModal = () => {
         this.setState({
+            error: false,
+            errorMessage: "",
             showProgress: false,
             showRequestSent: false,
             buttonDisabled: false,
@@ -204,6 +255,8 @@ class AddContactForm extends Component {
     handleInputChange = (event) =>
         this.setState({
             input: event.target.value,
+            error: false,
+            errorMessage: "",
         })
 
 
@@ -217,12 +270,12 @@ class AddContactForm extends Component {
             </div>
             <div className="f-b center p-t">
                 <ChoiceTabs onChange={this.onTabChange}
-                    value={this.state.value}
+                    value={this.state.tabSelected}
                 />
             </div>
             <SwipeableViews
                 axis={this.props.theme.direction === "rtl" ? "x-reverse" : "x"}
-                index={this.state.value}
+                index={this.state.tabSelected}
                 onChangeIndex={this.handleChangeIndex}
             >
                 <TabContainer dir={this.props.theme.direction}>
@@ -242,6 +295,8 @@ class AddContactForm extends Component {
                         <SearchInput label="Email Address"
                             onChange={this.handleInputChange}
                             value={this.state.input}
+                            error={this.state.error}
+                            errorMessage={this.state.errorMessage}
                         />
                         <SearchButton buttonText="Request" color="primary"
                             onClick={this.requestContact}
@@ -266,6 +321,8 @@ class AddContactForm extends Component {
                         <SearchInput label="Payment Address"
                             onChange={this.handleInputChange}
                             value={this.state.input}
+                            error={this.state.error}
+                            errorMessage={this.state.errorMessage}
                         />
                         <SearchButton buttonText="Request" color="primary"
                             onClick={this.requestContact}
@@ -291,6 +348,8 @@ class AddContactForm extends Component {
                             <SearchInput label="Extended Account Number."
                                 onChange={this.handleInputChange}
                                 value={this.state.input}
+                                error={this.state.error}
+                                errorMessage={this.state.errorMessage}
                             />
                             <SearchButton buttonText="Request" color="primary"
                                 onClick={this.requestContact}
