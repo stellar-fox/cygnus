@@ -49,6 +49,21 @@
     margin: 5px 0px;
 }
 
+.tag-success {
+    display: inline-block;
+    background-color: rgba(34,139,34,0.55);
+    padding: 2px 6px;
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35);
+    -moz-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    background-clip: padding-box;
+    border-radius: 3px;
+    font-weight: bold;
+    margin: 5px 0px;
+}
+
 .bordered {
     border: 1px solid rgb(15,46,83);
     border-radius: 3px;
