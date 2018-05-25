@@ -54,11 +54,12 @@ export const getRegisteredAccount = async (userId, token) => {
 
 
 // ...
-export const getUserContacts = async (userId, token) => {
+export const getUserContacts = async (userId, token, status) => {
     try {
         return (await axios.post(`${config.api}/contacts/`, {
             user_id: userId,
             token,
+            status,
         })).data.data
     } catch (error) {
         return null
