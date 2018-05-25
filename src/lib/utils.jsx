@@ -54,12 +54,26 @@ export const getRegisteredAccount = async (userId, token) => {
 
 
 // ...
-export const getUserContacts = async (userId, token, status) => {
+export const getUserContacts = async (userId, token) => {
     try {
         return (await axios.post(`${config.api}/contacts/`, {
             user_id: userId,
             token,
-            status,
+        })).data.data
+    } catch (error) {
+        return null
+    }
+}
+
+
+
+
+// ...
+export const getUserExternalContacts = async (userId, token) => {
+    try {
+        return (await axios.post(`${config.api}/contacts/external/`, {
+            user_id: userId,
+            token,
         })).data.data
     } catch (error) {
         return null
