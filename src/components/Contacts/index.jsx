@@ -5,6 +5,8 @@ import { withStyles } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
 import ContactCard from "../ContactCard"
 import AddContactForm from "./AddContactForm"
+import AppBar from "@material-ui/core/AppBar"
+import Toolbar from "@material-ui/core/Toolbar"
 import TextField from "@material-ui/core/TextField"
 import Typography from "@material-ui/core/Typography"
 import Fuse from "fuse.js"
@@ -47,9 +49,14 @@ const styles = (theme) => ({
         },
     },
 
-    outlined: {
+    raised: {
+        color: theme.palette.secondaryColor,
+        "&:hover": {
+            backgroundColor: theme.palette.primaryHighlight,
+        },
         borderRadius: "3px",
-        border: `1px solid ${theme.palette.secondary.dark}`,
+        transition: "text-shadow 350ms ease-out, background-color 350ms ease",
+        marginLeft: "1.5rem",
     },
 
     formControl: {
@@ -63,21 +70,21 @@ const styles = (theme) => ({
     },
 
     input: {
-        color: theme.palette.secondary.main,
-        borderBottom: `1px solid ${theme.palette.secondary.main}`,
+        color: theme.palette.primary.main,
+        borderBottom: `1px solid ${theme.palette.primary.main}`,
         "&:focus": {
-            color: theme.palette.secondary.main,
+            color: theme.palette.primary.main,
         },
     },
 
     textFieldInput: {
-        color: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
         "&:hover:before": {
-            borderBottomColor: `${theme.palette.secondary.main} !important`,
+            borderBottomColor: `${theme.palette.primary.main} !important`,
             borderBottomWidth: "1px !important",
         },
-        "&:before": { borderBottomColor: theme.palette.secondary.main, },
-        "&:after": { borderBottomColor: theme.palette.secondary.main, },
+        "&:before": { borderBottomColor: theme.palette.primary.main, },
+        "&:after": { borderBottomColor: theme.palette.primary.main, },
     },
 
     inputMargin: {
@@ -115,13 +122,13 @@ const AddContactModal = withStyles(styles)(
 // ...
 const AddContactButton = withStyles(styles)(
     ({ classes, onClick, }) =>
-        <Button onClick={onClick} variant="outlined"
-            color="secondary" size="small" className={classes.outlined}
+        <Button onClick={onClick} variant="raised"
+            color="primary" size="small" className={classes.raised}
         >
             <Icon style={{ marginRight: "3px", }}>
                 add_box
             </Icon>
-            <Typography noWrap  variant="caption" color="inherit">
+            <Typography noWrap variant="caption" color="inherit">
                 Add New
             </Typography>
         </Button>
@@ -212,7 +219,14 @@ class Contacts extends Component {
 
     // ...
     componentDidMount = () => {
-        getUserContacts(this.props.userId, this.props.token)
+        this.userContacts(this.state.selectedView)
+    }
+
+
+    // ...
+    userContacts = () => {
+        getUserContacts(this.props.userId, this.props.token,
+            this.state.selectedView)
             .then((results) => {
                 results ? this.props.setState({
                     internal: results,
@@ -264,39 +278,51 @@ class Contacts extends Component {
 
     // ...
     changeView = (event) => {
-        this.setState({
-            selectedView: event.target.value,
+        this.setState({ selectedView: event.target.value, }, () => {
+            this.userContacts()
         })
     }
 
     // ...
     render = () =>
         <Fragment>
+
+            <AppBar position="static" color="inherit">
+                <Toolbar>
+
+                    <div style={{flex: 1,}} className="f-b-col m-r">
+                        <Typography noWrap variant="title" color="primary">
+                            Contact Book
+                        </Typography>
+                        <Typography noWrap variant="body1" color="primary">
+                                Your financial contacts.
+                        </Typography>
+                    </div>
+
+
+                    <AddContactButton onClick={this.showModal} />
+
+
+                    <div style={{ marginLeft: "2rem", }}>
+                        <div className="f-e space-between">
+                            <SearchField label="Search Contact Book"
+                                onChange={this.updateSearchFilter}
+                            />
+                            <SelectView value={this.state.selectedView}
+                                onChange={this.changeView}
+                            />
+                        </div>
+                    </div>
+
+                </Toolbar>
+
+            </AppBar>
+
             <AddContactModal modalId={this.props.Modal.modalId}
                 visible={this.props.Modal.visible} onClose={this.hideModal}
             />
-            <div className="f-b m-b space-between" style={{ alignItems: "flex-end", }}>
-                <div className="f-b-col" style={{ marginBottom: "5px", }}>
-                    <Typography variant="title" color="inherit">
-                        Contact Book
-                    </Typography>
-                    <Typography variant="body1" color="inherit">
-                        Manage your financial contacts.
-                    </Typography>
-                </div>
-                <div style={{ width: "100px", marginBottom: "8px", }}>
-                    <AddContactButton onClick={this.showModal} />
-                </div>
-                <div style={{ marginBottom: "4px", }}>
-                    <SearchField label="Search Contact Book"
-                        onChange={this.updateSearchFilter}
-                    />
-                </div>
 
-                <SelectView value={this.state.selectedView}
-                    onChange={this.changeView}
-                />
-            </div>
+            <div className="m-t-medium"></div>
 
             <Grid
                 container
