@@ -274,9 +274,11 @@ class Contacts extends Component {
     // ...
     showAllInternalCards = () =>
         this.props.contactsInternal.length === 0 ?
-            <NoCards title="No contacts yet."
-                subtitle="Adding contacts enables easier and safer transfers."
-            /> :
+            <Grid item key={0} xs>
+                <NoCards title="You have no internal contacts at the moment."
+                    subtitle="Internal contacts enable safer money transfers and are signed with digital identity."
+                />
+            </Grid> :
             this.props.contactsInternal.map((contact, index) =>
                 <Grid item key={index + 1} xs>
                     <ContactCard data={contact} />
@@ -287,9 +289,11 @@ class Contacts extends Component {
     // ...
     showAllExternalCards = () =>
         this.props.contactsExternal.length === 0 ?
-            <NoCards title="No contacts yet."
-                subtitle="Adding contacts enables easier and safer transfers."
-            /> :
+            <Grid item key={0} xs>
+                <NoCards title="You have no external contacts at the moment."
+                    subtitle="Send money to anyone with a payment address. These contacts are registered with other payment providers."
+                />
+            </Grid> :
             this.props.contactsExternal.map((contact, index) =>
                 <Grid item key={index + 1} xs>
                     <ContactCard data={contact} external />
