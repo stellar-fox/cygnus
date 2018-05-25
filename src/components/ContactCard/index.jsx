@@ -42,7 +42,7 @@ export default withStyles((theme) => ({
                     <div className="f-b space-between">
                         <Avatar className={classes.avatar}
                             src={`${gravatar}${data.email_md5}?${
-                                gravatarSize48}&d=wavatar`}
+                                gravatarSize48}&d=robohash`}
                         />
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
