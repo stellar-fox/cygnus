@@ -275,7 +275,7 @@ class Contacts extends Component {
 
 
     // ...
-    showAllCards = () =>
+    showAllInternalCards = () =>
         this.props.contactsInternal.length === 0 ?
             <NoCards title="No contacts yet."
                 subtitle="Adding contacts enables easier and safer transfers."
@@ -288,9 +288,39 @@ class Contacts extends Component {
 
 
     // ...
-    showFilteredCards = () => {
+    showAllExternalCards = () =>
+        this.props.contactsExternal.length === 0 ?
+            <NoCards title="No contacts yet."
+                subtitle="Adding contacts enables easier and safer transfers."
+            /> :
+            this.props.contactsExternal.map((contact, index) =>
+                <Grid item key={index + 1} xs>
+                    <ContactCard data={contact} />
+                </Grid>
+            )
+
+
+    // ...
+    showFilteredInternalCards = () => {
 
         let results = new Fuse(this.props.contactsInternal, {
+            keys: ["first_name", "last_name",],
+        }).search(this.state.search)
+
+        return results.length === 0 ? <NoCards title="No contacts found."
+            subtitle="There are no contacts in your book that match this search."
+        /> : results.map((contact, index) =>
+            <Grid item key={index} xs>
+                <ContactCard data={contact} />
+            </Grid>
+        )
+    }
+
+
+    // ...
+    showFilteredExternalCards = () => {
+
+        let results = new Fuse(this.props.contactsExternal, {
             keys: ["first_name", "last_name",],
         }).search(this.state.search)
 
@@ -359,18 +389,69 @@ class Contacts extends Component {
                 visible={this.props.Modal.visible} onClose={this.hideModal}
             />
 
-            <div className="m-t-medium"></div>
+            {this.state.selectedView === 0 &&
+                <Fragment>
+                    <div className="m-t-medium"></div>
+                    <Grid
+                        container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={16}
+                    >
+                        {this.state.search.length > 0 ?
+                            this.showFilteredInternalCards() :
+                            this.showAllInternalCards()
+                        }
+                    </Grid>
+                    <div className="m-t-medium"></div>
+                    <Grid
+                        container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={16}
+                    >
+                        {this.state.search.length > 0 ?
+                            this.showFilteredExternalCards() :
+                            this.showAllExternalCards()
+                        }
+                    </Grid>
+                </Fragment>
+            }
 
-            <Grid
-                container
-                alignContent="flex-start"
-                alignItems="center"
-                spacing={16}
-            >
-                {this.state.search.length > 0 ?
-                    this.showFilteredCards() : this.showAllCards()
-                }
-            </Grid>
+            {this.state.selectedView === 1 &&
+                <Fragment>
+                    <div className="m-t-medium"></div>
+                    <Grid
+                        container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={16}
+                    >
+                        {this.state.search.length > 0 ?
+                            this.showFilteredInternalCards() :
+                            this.showAllInternalCards()
+                        }
+                    </Grid>
+                </Fragment>
+            }
+
+            {this.state.selectedView === 2 &&
+                <Fragment>
+                    <div className="m-t-medium"></div>
+                    <Grid
+                        container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={16}
+                    >
+                        {this.state.search.length > 0 ?
+                            this.showFilteredExternalCards() :
+                            this.showAllExternalCards()
+                        }
+                    </Grid>
+                </Fragment>
+            }
+
         </Fragment>
 }
 
@@ -384,6 +465,7 @@ export default connect(
         userId: state.LoginManager.userId,
         Modal: state.Modal,
         contactsInternal: state.Contacts.internal,
+        contactsExternal: state.Contacts.external,
     }),
     (dispatch) => bindActionCreators({
         setState: ContactsAction.setState,
