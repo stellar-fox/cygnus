@@ -1,12 +1,15 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import Axios from "axios"
+import { config } from "../../config"
 import {
     htmlEntities as he,
     emailValid,
     federationAddressValid,
     publicKeyValid
 } from "../../lib/utils"
+import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
 import { withStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
@@ -155,6 +158,7 @@ class AddContactForm extends Component {
     state = {
         showProgress: false,
         showRequestSent: false,
+        showRequestError: false,
         tabSelected: 0,
         buttonDisabled: false,
         input: "",
@@ -220,9 +224,24 @@ class AddContactForm extends Component {
             lastInput: this.state.input,
         })
 
-        setTimeout(() => {
-            this.requestComplete()
-        }, 1000)
+        // try adding a contact based on payment address
+        if (this.state.tabSelected === 1) {
+
+            let [alias, domain,] = this.state.input.split("*")
+
+            Axios.post(`${config.api}/contact/request`, {
+                user_id: this.props.userId,
+                token: this.props.token,
+                alias: alias,
+                domain: domain,
+                requested_by: this.props.userId,
+            }).then((_result) => {
+                this.requestComplete()
+            }).catch((error) => {
+                this.requestFailed(error)
+            })
+
+        }
     }
 
 
@@ -234,6 +253,25 @@ class AddContactForm extends Component {
             buttonDisabled: false,
             input: "",
         })
+
+
+    // ...
+    requestFailed = (error) => {
+        this.setState({
+            showProgress: false,
+            buttonDisabled: false,
+        })
+
+        error.response.status === 409 ?
+            this.props.showAlert(
+                "You have already sent a contact request to this person.",
+                "Notice"
+            ) :
+            this.props.showAlert(
+                `[${error.response.status}] ${error.response.statusText}`,
+                "Error"
+            )
+    }
 
 
     // ...
@@ -442,8 +480,11 @@ export default connect(
     (state, theme) => ({
         Modal: state.Modal,
         theme,
+        userId: state.LoginManager.userId,
+        token: state.LoginManager.token,
     }),
     (dispatch) => bindActionCreators({
         hideModal: ModalAction.hideModal,
+        showAlert: AlertAction.showAlert,
     }, dispatch)
 )(AddContactForm)
