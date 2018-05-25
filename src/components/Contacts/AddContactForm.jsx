@@ -158,7 +158,6 @@ class AddContactForm extends Component {
     state = {
         showProgress: false,
         showRequestSent: false,
-        showRequestError: false,
         tabSelected: 0,
         buttonDisabled: false,
         input: "",
