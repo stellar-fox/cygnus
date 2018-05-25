@@ -8,6 +8,7 @@ import {
 } from "redux"
 import thunk from "redux-thunk"
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly"
+import { isObject } from "@xcmats/js-toolbox"
 
 import throttle from "lodash/throttle"
 import createHistory from "history/createBrowserHistory"
@@ -28,11 +29,11 @@ import {
 } from "../../lib/utils"
 import * as env from "./env"
 
-import sFoxTheme from "../../lib/sfox-mui-theme"
 import { MuiThemeProvider } from "@material-ui/core/styles"
-import sFoxThemeLegacy from "../../lib/sfox-mui-theme.legacy"
-import LegacyMuiThemeProvider from "material-ui/styles/MuiThemeProvider"
+import sFoxTheme from "../../lib/sfox-mui-theme"
 import { CssBaseline } from "@material-ui/core"
+import LegacyMuiThemeProvider from "material-ui/styles/MuiThemeProvider"
+import sFoxThemeLegacy from "../../lib/sfox-mui-theme.legacy"
 
 import AssetManager from "../AssetManager"
 import LoginManager from "../LoginManager"
@@ -101,7 +102,7 @@ export default () =>
 
 
 // expose 'sf' dev. namespace only in dev. environment
-if (devEnv()  &&  typeof window !== "undefined") {
+if (devEnv()  &&  isObject(window)) {
     (async () => { window.sf = {
         env, history, store, React,
         dispatch: store.dispatch,
