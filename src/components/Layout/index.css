@@ -40,6 +40,8 @@ div.p-b-small-block::after {
 
 .m-t { margin-top: 1rem; }
 
+.m-t-medium { margin-top: 2rem; }
+
 .m-t-small { padding-top: 3px; }
 
 .m-t-large { margin-top: 3rem; }
