@@ -20,6 +20,7 @@ import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
 import Select from "@material-ui/core/Select"
 import MenuItem from "@material-ui/core/MenuItem"
+import Divider from "../../lib/mui-v1/Divider"
 
 
 
@@ -27,11 +28,7 @@ import MenuItem from "@material-ui/core/MenuItem"
 const styles = (theme) => ({
 
     nocards: {
-        position: "absolute",
-        width: theme.spacing.unit * 80,
         color: theme.palette.secondary.dark,
-        top: "50%",
-        left: "50%",
     },
 
     paper: {
@@ -114,7 +111,7 @@ const AddContactModal = withStyles(styles)(
                 <Typography variant="subheading" color="primary"
                     id="modal-title"
                 >
-                    Add New Contact
+                    Request New Contact
                 </Typography>
                 <AddContactForm />
             </div>
@@ -132,7 +129,7 @@ const AddContactButton = withStyles(styles)(
                 add_box
             </Icon>
             <Typography noWrap variant="caption" color="inherit">
-                Add New
+                Request New Contact
             </Typography>
         </Button>
 )
@@ -295,7 +292,7 @@ class Contacts extends Component {
             /> :
             this.props.contactsExternal.map((contact, index) =>
                 <Grid item key={index + 1} xs>
-                    <ContactCard data={contact} />
+                    <ContactCard data={contact} external />
                 </Grid>
             )
 
@@ -307,13 +304,16 @@ class Contacts extends Component {
             keys: ["first_name", "last_name",],
         }).search(this.state.search)
 
-        return results.length === 0 ? <NoCards title="No contacts found."
-            subtitle="There are no contacts in your book that match this search."
-        /> : results.map((contact, index) =>
-            <Grid item key={index} xs>
-                <ContactCard data={contact} />
-            </Grid>
-        )
+        return results.length === 0 ?
+            <Grid item key={0} xs>
+                <NoCards title="No contacts found."
+                    subtitle="No internal contacts were found matching this search."
+                />
+            </Grid> : results.map((contact, index) =>
+                <Grid item key={index} xs>
+                    <ContactCard data={contact} />
+                </Grid>
+            )
     }
 
 
@@ -324,13 +324,17 @@ class Contacts extends Component {
             keys: ["first_name", "last_name",],
         }).search(this.state.search)
 
-        return results.length === 0 ? <NoCards title="No contacts found."
-            subtitle="There are no contacts in your book that match this search."
-        /> : results.map((contact, index) =>
-            <Grid item key={index} xs>
-                <ContactCard data={contact} />
-            </Grid>
-        )
+        return results.length === 0 ?
+            <Grid item key={0} xs>
+                <NoCards title="No contacts found."
+                    subtitle="No external contacts were found matching this search."
+                />
+            </Grid> : results.map((contact, index) =>
+                <Grid item key={index} xs>
+                    <ContactCard data={contact} external />
+                </Grid>
+            )
+
     }
 
 
@@ -391,7 +395,14 @@ class Contacts extends Component {
 
             {this.state.selectedView === 0 &&
                 <Fragment>
-                    <div className="m-t-medium"></div>
+                    <div className="m-t-medium">
+                        <Typography noWrap align="center" variant="body2"
+                            color="secondary"
+                        >
+                            Internal Contacts
+                        </Typography>
+                        <Divider color="secondary" />
+                    </div>
                     <Grid
                         container
                         alignContent="flex-start"
@@ -403,7 +414,14 @@ class Contacts extends Component {
                             this.showAllInternalCards()
                         }
                     </Grid>
-                    <div className="m-t-medium"></div>
+                    <div className="m-t-medium">
+                        <Typography noWrap align="center" variant="body2"
+                            color="secondary"
+                        >
+                            External Contacts
+                        </Typography>
+                        <Divider color="secondary" />
+                    </div>
                     <Grid
                         container
                         alignContent="flex-start"
@@ -420,7 +438,14 @@ class Contacts extends Component {
 
             {this.state.selectedView === 1 &&
                 <Fragment>
-                    <div className="m-t-medium"></div>
+                    <div className="m-t-medium">
+                        <Typography noWrap align="center" variant="body2"
+                            color="secondary"
+                        >
+                            Internal Contacts
+                        </Typography>
+                        <Divider color="secondary" />
+                    </div>
                     <Grid
                         container
                         alignContent="flex-start"
@@ -437,7 +462,14 @@ class Contacts extends Component {
 
             {this.state.selectedView === 2 &&
                 <Fragment>
-                    <div className="m-t-medium"></div>
+                    <div className="m-t-medium">
+                        <Typography noWrap align="center" variant="body2"
+                            color="secondary"
+                        >
+                            External Contacts
+                        </Typography>
+                        <Divider color="secondary" />
+                    </div>
                     <Grid
                         container
                         alignContent="flex-start"
