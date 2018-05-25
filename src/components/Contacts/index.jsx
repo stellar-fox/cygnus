@@ -15,7 +15,7 @@ import Button from "@material-ui/core/Button"
 import Modal from "@material-ui/core/Modal"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
-import { getUserContacts } from "../../lib/utils"
+import { getUserContacts, getUserExternalContacts } from "../../lib/utils"
 import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
 import Select from "@material-ui/core/Select"
@@ -92,7 +92,10 @@ const styles = (theme) => ({
     },
 
     inputLabel: {
-        color: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
+        "&:focus": {
+            color: theme.palette.primary.main,
+        },
     },
 
 })
@@ -195,10 +198,9 @@ const SelectView = withStyles(styles)(
                     className: classes.input,
                 }}
             >
-                <MenuItem value={2}>Current</MenuItem>
-                <MenuItem value={1}>Pending</MenuItem>
-                <MenuItem value={3}>Declined</MenuItem>
-                <MenuItem value={4}>Blocked</MenuItem>
+                <MenuItem value={0}>All</MenuItem>
+                <MenuItem value={1}>Internal</MenuItem>
+                <MenuItem value={2}>External</MenuItem>
             </Select>
         </FormControl>
 )
@@ -213,7 +215,7 @@ class Contacts extends Component {
         search: "",
         error: false,
         errorMessage: "",
-        selectedView: 2,
+        selectedView: 0,
     }
 
 
@@ -225,15 +227,50 @@ class Contacts extends Component {
 
     // ...
     userContacts = () => {
-        getUserContacts(this.props.userId, this.props.token,
-            this.state.selectedView)
-            .then((results) => {
-                results ? this.props.setState({
-                    internal: results,
-                }) : this.props.setState({
-                    internal: [],
+
+        // list all user contacts
+        this.state.selectedView === 0 &&
+            getUserContacts(this.props.userId, this.props.token)
+                .then((results) => {
+                    results ? this.props.setState({
+                        internal: results,
+                    }) : this.props.setState({
+                        internal: [],
+                    })
+                }) &&
+
+            getUserExternalContacts(this.props.userId, this.props.token)
+                .then((results) => {
+                    results ? this.props.setState({
+                        external: results,
+                    }) : this.props.setState({
+                        external: [],
+                    })
                 })
-            })
+
+
+        // list internal contacts only
+        this.state.selectedView === 1 &&
+            getUserContacts(this.props.userId, this.props.token)
+                .then((results) => {
+                    results ? this.props.setState({
+                        internal: results,
+                    }) : this.props.setState({
+                        internal: [],
+                    })
+                })
+
+        // list external contacts only
+        this.state.selectedView === 2 &&
+            getUserExternalContacts(this.props.userId, this.props.token)
+                .then((results) => {
+                    results ? this.props.setState({
+                        external: results,
+                    }) : this.props.setState({
+                        external: [],
+                    })
+                })
+
     }
 
 
