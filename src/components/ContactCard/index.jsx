@@ -15,7 +15,13 @@ export default withStyles((theme) => ({
     root: theme.mixins.gutters({
         paddingTop: 16,
         paddingBottom: 16,
-        color: theme.palette.primary.main,
+        minWidth: 250,
+    }),
+
+    rootAlt: theme.mixins.gutters({
+        paddingTop: 16,
+        paddingBottom: 16,
+        backgroundColor: theme.palette.secondary.light,
         minWidth: 250,
     }),
 
@@ -37,8 +43,10 @@ export default withStyles((theme) => ({
 
         // ...
         render = () => (
-            ({ classes, data, }) =>
-                <Paper elevation={3} className={classes.root}>
+            ({ classes, data, external, }) =>
+                <Paper elevation={3}
+                    className={external ? classes.rootAlt : classes.root}
+                >
                     <div className="f-b space-between">
                         <Avatar className={classes.avatar}
                             src={`${gravatar}${data.email_md5}?${
