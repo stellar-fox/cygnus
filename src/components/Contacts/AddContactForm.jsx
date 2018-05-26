@@ -261,11 +261,19 @@ class AddContactForm extends Component {
             buttonDisabled: false,
         })
 
-        error.response.status === 409 ?
+        error.response.status === 409 &&
             this.props.showAlert(
                 "You have already sent a contact request to this person.",
                 "Notice"
-            ) :
+            )
+
+        error.response.status === 404 &&
+            this.props.showAlert(
+                "We could not find this payment address in our database.",
+                "Notice"
+            )
+
+        error.response.status >= 500 &&
             this.props.showAlert(
                 `[${error.response.status}] ${error.response.statusText}`,
                 "Error"
