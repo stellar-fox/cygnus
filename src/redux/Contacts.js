@@ -4,6 +4,7 @@ import { createReducer } from "@xcmats/js-toolbox"
 const initState = {
     internal: [],
     external: [],
+    requests: [],
 }
 
 
