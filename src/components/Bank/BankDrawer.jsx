@@ -11,10 +11,36 @@ import { Null } from "../../lib/utils"
 import { bankDrawerWidth } from "../StellarFox/env"
 
 import { withStyles } from "@material-ui/core/styles"
+import Badge from "@material-ui/core/Badge"
 import Drawer from "material-ui/Drawer"
 import Divider from "../../lib/mui-v1/Divider"
 
 
+
+const NavBadge = compose(
+    withStyles((theme) => ({
+
+        badge: {
+            borderRadius: "3px",
+            position: "relative",
+            top: 0,
+            left: "-5px",
+            height: "16px",
+            width: "16px",
+            background: theme.palette.secondary.main,
+            padding: "2px",
+            color: theme.palette.primary.main,
+            fontWeight: 600,
+        },
+    }))
+)(
+    ({ classes, children, badgeContent, }) =>
+        <Badge classes={{badge: classes.badge, }} color="secondary"
+            badgeContent={badgeContent}
+        >
+            {children}
+        </Badge>
+)
 
 
 // <NavLinkTemplate> component
@@ -27,9 +53,10 @@ const NavLinkTemplate = compose(
             minHeight: "48px",
             whiteSpace: "nowrap",
             paddingLeft: "10px",
+            paddingRight: "10px",
             color: "rgba(244, 176, 4, 0.5)",
             "&:hover": {
-                backgroundColor: "rgba(244, 176, 4, 0.15)",
+                color: "rgba(244, 176, 4, 1)",
             },
         },
 
@@ -83,8 +110,13 @@ const AccountNavLink = () =>
 
 
 // <ContactsLink> component
-const ContactsNavLink = ({ show, }) =>
-    show ? <NavLinkTemplate to="Contacts" icon="contacts" /> : <Null />
+const ContactsNavLink = ({ show, showBadge, badgeContent, }) =>
+    show ?
+        showBadge ?
+            <NavBadge badgeContent={badgeContent}>
+                <NavLinkTemplate to="Contacts" icon="contacts" />
+            </NavBadge> : <NavLinkTemplate to="Contacts" icon="contacts" />
+        : <Null />
 
 
 
@@ -111,6 +143,7 @@ export default connect(
     (state) => ({
         accountExists: !!state.StellarAccount.accountId,
         drawerVisible: state.Bank.drawerVisible,
+        contactRequests: state.Contacts.requests,
     })
 )(
     class extends Component {
@@ -124,7 +157,7 @@ export default connect(
 
         // ...
         render = () => (
-            ({ drawerVisible, accountExists, }) =>
+            ({ drawerVisible, accountExists, contactRequests, }) =>
                 <Drawer
                     containerStyle={bankDrawerStyle}
                     open={drawerVisible}
@@ -133,7 +166,10 @@ export default connect(
                     <PaymentsNavLink show={accountExists} />
                     <AccountNavLink />
                     <Divider />
-                    <ContactsNavLink show={accountExists} />
+                    <ContactsNavLink show={accountExists}
+                        showBadge={contactRequests.length > 0}
+                        badgeContent={contactRequests.length}
+                    />
                 </Drawer>
         )(this.props)
 
