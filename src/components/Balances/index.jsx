@@ -11,6 +11,7 @@ import {
 } from "react-router-dom"
 import "number-to-text/converters/en-us"
 import { action as AccountAction } from "../../redux/Account"
+import { action as ContactsAction } from "../../redux/Contacts"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
@@ -22,6 +23,7 @@ import {
     insertPathIndex,
     getRegisteredUser,
     getRegisteredAccount,
+    getContactRequests,
 } from "../../lib/utils"
 import {
     loadAccount,
@@ -99,7 +101,7 @@ class Balances extends Component {
                 this.props.updateAccountTree,
             ),
         })
-        
+
         /**
          * Query Horizon and check if the account exists on Stellar Ledger.
          */
@@ -116,6 +118,13 @@ class Balances extends Component {
                 this.props.publicKey, this.props.bip32Path
             )
         }
+
+        /**
+         * When user authenticates check for new contact requests so the badge
+         * indicator can be activated upon new requests.
+         */
+        this.props.loginManager.isAuthenticated() &&
+            this.checkForContactRequests()
     }
 
 
@@ -124,6 +133,17 @@ class Balances extends Component {
         this.state.paymentsStreamer.call(this)
         this.state.operationsStreamer.call(this)
         this.props.resetBalancesState()
+    }
+
+
+    // ...
+    checkForContactRequests = () => {
+        getContactRequests(this.props.userId, this.props.token)
+            .then((requests) => {
+                this.props.setContactsState({
+                    requests,
+                })
+            })
     }
 
 
@@ -145,8 +165,6 @@ class Balances extends Component {
             this.props.setState({ needsRegistration: true, })
         }
     }
-
-
 
 
     // ...
@@ -378,11 +396,14 @@ export default compose(
             StellarAccount: state.StellarAccount,
             Balances: state.Balances,
             Modal: state.Modal,
+            userId: state.LoginManager.userId,
+            token: state.LoginManager.token,
         }),
         // match dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
             setBalancesState: BalancesAction.setState,
+            setContactsState: ContactsAction.setState,
             updateAccountTree: StellarAccountAction.loadStellarAccount,
             setStateForBalances: BalancesAction.setState,
             resetBalancesState: BalancesAction.resetState,
