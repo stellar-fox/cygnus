@@ -84,6 +84,20 @@ export const getUserExternalContacts = async (userId, token) => {
 
 
 // ...
+export const getContactRequests = async (userId, token) => {
+    try {
+        return (await axios.post(`${config.api}/contact/reqlist/`, {
+            user_id: userId,
+            token,
+        })).data.data
+    } catch (error) {
+        return null
+    }
+}
+
+
+
+// ...
 export const pubKeyAbbr = (pubKey) => handleException(
     () => `${pubKey.slice(0, 6)}-${pubKey.slice(50)}`,
     (_) => { throw new Error("Malformed key.") }
