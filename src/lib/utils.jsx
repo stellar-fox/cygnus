@@ -97,6 +97,25 @@ export const getContactRequests = async (userId, token) => {
 
 
 
+
+// ...
+export const changeContactStatus = async (userId, token, status, contact_id, requested_by) => {
+    try {
+        return (await axios.post(`${config.api}/contact/update/`, {
+            user_id: userId,
+            token,
+            status,
+            contact_id,
+            requested_by,
+        }))
+    } catch (error) {
+        return null
+    }
+}
+
+
+
+
 // ...
 export const pubKeyAbbr = (pubKey) => handleException(
     () => `${pubKey.slice(0, 6)}-${pubKey.slice(50)}`,
