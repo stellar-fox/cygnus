@@ -43,6 +43,15 @@ const styles = (theme) => ({
     input: {
         width: "300px",
         color: theme.palette.primary.main,
+        "&:hover:before": {
+            borderBottomColor: `${theme.palette.primary.main} !important`,
+            borderBottomWidth: "1px !important",
+        },
+        "&:before": { borderBottomColor: theme.palette.primary.main, },
+        "&:after": { borderBottomColor: theme.palette.primary.main, },
+    },
+    error: {
+        color: theme.palette.error.dark,
     },
 })
 
@@ -50,16 +59,22 @@ const styles = (theme) => ({
 
 // ...
 const renderInput = (inputProps) => {
-    const { classes, ref, ...other } = inputProps
-
+    const { classes, helperText, ref, ...other } = inputProps
     return (
         <TextField
             InputProps={{
                 inputRef: ref,
                 classes: {
                     input: classes.input,
+                    underline: classes.input,
                 },
                 ...other,
+            }}
+            helperText={helperText}
+            FormHelperTextProps={{
+                classes: {
+                    root: classes.error,
+                },
             }}
         />
     )
@@ -150,6 +165,8 @@ class ContactSuggester extends Component {
     state = {
         value: "",
         suggestions: [],
+        error: false,
+        errorText: "",
     }
 
 
@@ -226,6 +243,8 @@ class ContactSuggester extends Component {
                     classes,
                     value: this.state.value,
                     onChange: this.handleChange,
+                    error: this.state.error,
+                    helperText: this.state.errorText,
                 }}
             />
         )
