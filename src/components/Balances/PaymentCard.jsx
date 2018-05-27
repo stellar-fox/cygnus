@@ -37,6 +37,7 @@ import { action as AccountAction } from "../../redux/Account"
 import { action as BalancesAction } from "../../redux/Balances"
 
 import sflogo from "../StellarFox/static/sf-logo.svg"
+import ContactSuggester from "./ContactSuggester"
 
 
 
@@ -274,6 +275,7 @@ class PaymentCard extends Component {
         if (errorMessage) {
             this.setInvalidPaymentAddressMessage(errorMessage)
             this.resetPayee()
+            return
         }
 
         this.textInputFieldPaymentAddress.setState({ error: "", })
@@ -408,7 +410,7 @@ class PaymentCard extends Component {
                             Pay to the order of:
                         </div>
                         <div className="p-r">
-                            <InputField
+                            {/* <InputField
                                 name="paycheck-payment-address"
                                 type="text"
                                 placeholder="Payment Address"
@@ -430,8 +432,10 @@ class PaymentCard extends Component {
                                 ref={(self) => {
                                     this.textInputFieldPaymentAddress = self
                                 }}
-                            />
+                            /> */}
+                            <ContactSuggester />
                         </div>
+
                     </div>
                     <div className="payment-header f-s">
                         <div
