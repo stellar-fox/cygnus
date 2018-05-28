@@ -23,6 +23,8 @@ import {
     insertPathIndex,
     getRegisteredUser,
     getRegisteredAccount,
+    getUserContacts,
+    getUserExternalContacts,
     getContactRequests,
 } from "../../lib/utils"
 import {
@@ -124,7 +126,7 @@ class Balances extends Component {
          * indicator can be activated upon new requests.
          */
         this.props.loginManager.isAuthenticated() &&
-            this.checkForContactRequests()
+            this.updateContacts()
     }
 
 
@@ -137,11 +139,32 @@ class Balances extends Component {
 
 
     // ...
-    checkForContactRequests = () => {
+    updateContacts = () => {
+
+        getUserContacts(this.props.userId, this.props.token)
+            .then((results) => {
+                results ? this.props.setContactsState({
+                    internal: results,
+                }) : this.props.setContactsState({
+                    internal: [],
+                })
+            }) &&
+
+        getUserExternalContacts(this.props.userId, this.props.token)
+            .then((results) => {
+                results ? this.props.setContactsState({
+                    external: results,
+                }) : this.props.setContactsState({
+                    external: [],
+                })
+            })
+
         getContactRequests(this.props.userId, this.props.token)
-            .then((requests) => {
-                this.props.setContactsState({
-                    requests,
+            .then((results) => {
+                results ? this.props.setContactsState({
+                    requests: results,
+                }) : this.props.setContactsState({
+                    requests: [],
                 })
             })
     }
