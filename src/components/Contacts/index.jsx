@@ -245,6 +245,15 @@ class Contacts extends Component {
                     }) : this.props.setState({
                         external: [],
                     })
+                }) &&
+
+            getContactRequests(this.props.userId, this.props.token)
+                .then((results) => {
+                    results ? this.props.setState({
+                        requests: results,
+                    }) : this.props.setState({
+                        requests: [],
+                    })
                 })
 
 
