@@ -410,29 +410,6 @@ class PaymentCard extends Component {
                             Pay to the order of:
                         </div>
                         <div className="p-r">
-                            {/* <InputField
-                                name="paycheck-payment-address"
-                                type="text"
-                                placeholder="Payment Address"
-                                underlineStyle={{
-                                    borderColor: "rgba(15, 46, 83, 0.5)",
-                                }}
-                                underlineFocusStyle={{
-                                    borderColor: "rgba(15, 46, 83, 0.8)",
-                                }}
-                                inputStyle={{
-                                    color: "rgba(15, 46, 83, 0.8)",
-                                }}
-                                validator={
-                                    debounce(
-                                        this.paymentAddressValidator,
-                                        1000
-                                    )
-                                }
-                                ref={(self) => {
-                                    this.textInputFieldPaymentAddress = self
-                                }}
-                            /> */}
                             <ContactSuggester />
                         </div>
 
