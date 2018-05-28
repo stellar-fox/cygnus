@@ -10,12 +10,15 @@ export default createMuiTheme({
         primary: {
             main: "rgb(15, 46, 83)",
             light: "rgb(36, 65, 98)",
+            dark: "rgb(10, 30, 53)",
+            fade: "rgba(15, 46, 83, 0.8)",
         },
 
         secondary: {
             main: "rgb(244, 176, 4)",
             light: "rgb(246, 190, 49)",
             dark: "rgb(156, 113, 3)",
+            fade: "rgba(244, 176, 4, 0.6)",
         },
 
         primaryColor: "rgb(15, 46, 83)",
