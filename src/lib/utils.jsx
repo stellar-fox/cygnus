@@ -465,13 +465,15 @@ export const devEnv = () =>
 // asynchronously load libraries (used in dev. environment)
 export const dynamicImportLibs = async () => {
     let [
-        bignumber, toolbox, ledger, lodash,
-        md5, redux, utils,
+        bignumber, toolbox, ledger, jss,
+        lodash, mui, md5, redux, utils,
     ] = await Promise.all([
         import("bignumber.js"),
         import("@xcmats/js-toolbox"),
         import("./ledger"),
+        import("jss"),
         import("lodash"),
+        import("@material-ui/core"),
         import("./md5"),
         import("redux"),
         import("./utils"),
@@ -479,7 +481,7 @@ export const dynamicImportLibs = async () => {
     return {
         axios,
         BigNumber: bignumber.default,
-        toolbox, ledger, lodash,
+        toolbox, ledger, jss, lodash, mui,
         md5: md5.default,
         redux, StellarSdk,
         toml, utils,
