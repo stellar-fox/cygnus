@@ -24,9 +24,11 @@ import parse from "autosuggest-highlight/parse"
 import Avatar from "@material-ui/core/Avatar"
 import Chip from "@material-ui/core/Chip"
 import { Divider } from "@material-ui/core"
+import CheckCircle from "@material-ui/icons/CheckCircle"
 import InputAdornment from "@material-ui/core/InputAdornment"
 import MenuItem from "@material-ui/core/MenuItem"
 import Paper from "@material-ui/core/Paper"
+import HighlightOff from "@material-ui/icons/HighlightOff"
 import TextField from "@material-ui/core/TextField"
 
 
@@ -66,6 +68,10 @@ const styles = (theme) => ({
         "&:before": { borderBottomColor: theme.palette.primary.main, },
         "&:after": { borderBottomColor: theme.palette.primary.main, },
     },
+    inputDisabled: {
+        width: "400px",
+        color: theme.palette.primary.fade,
+    },
     error: {
         color: theme.palette.error.dark,
     },
@@ -75,6 +81,26 @@ const styles = (theme) => ({
         color: theme.palette.primary.light,
         marginBottom: "8px",
         boxShadow: theme.shadows[1],
+        fontWeight: 600,
+        fontSize: "0.85rem",
+        "&:focus" : {
+            backgroundColor: theme.palette.secondary.light,
+        },
+    },
+    chipDisabled: {
+        backgroundColor: theme.palette.grey[300],
+        border: `1px solid ${theme.palette.grey[400]}`,
+        color: theme.palette.primary.fade,
+        marginBottom: "8px",
+        boxShadow: theme.shadows[0],
+        fontWeight: 600,
+        fontSize: "0.85rem",
+        "&:focus": {
+            backgroundColor: theme.palette.grey[300],
+        },
+    },
+    avatarDisabled: {
+        opacity: "0.6",
     },
 })
 
@@ -82,14 +108,17 @@ const styles = (theme) => ({
 
 // ...
 const renderInput = (inputProps) => {
-    const { classes, helperText, endAdornment, ref, ...other } = inputProps
+    const {
+        classes, helperText, endAdornment, disabled, ref, ...other
+    } = inputProps
+
     return (
         <TextField
             InputProps={{
                 inputRef: ref,
                 classes: {
-                    input: classes.input,
-                    underline: classes.input,
+                    input: disabled ? classes.inputDisabled : classes.input,
+                    underline: disabled ? classes.inputDisabled : classes.input,
                 },
                 endAdornment,
                 ...other,
@@ -100,6 +129,7 @@ const renderInput = (inputProps) => {
                     root: classes.error,
                 },
             }}
+            disabled={disabled}
         />
     )
 }
@@ -455,10 +485,32 @@ class ContactSuggester extends Component {
             this.props.setBalancesState({
                 memoText: memo ? memo : "",
             })
-        }
 
+        }
+        this.toggleSignButton()
     }
 
+    // ...
+    paymentValid = () =>
+        this.props.payee &&
+        this.props.amountIsValid
+
+
+    // ...
+    toggleSignButton = () => {
+        return this.paymentValid() ?
+            this.enableSignButton() : this.disableSignButton()
+    }
+
+
+    // ...
+    enableSignButton = () =>
+        this.props.setBalancesState({ sendEnabled: true, })
+
+
+    // ...
+    disableSignButton = () =>
+        this.props.setBalancesState({ sendEnabled: false, })
 
     // ...
     deletePayee = () => {
@@ -467,6 +519,7 @@ class ContactSuggester extends Component {
             payeeAddress: null,
             indicatorMessage: securityMsgPlaceholder,
             indicatorStyle: "fade-extreme",
+            sendEnabled: false,
         })
         this.setState({
             label: "",
@@ -475,6 +528,10 @@ class ContactSuggester extends Component {
             value: "",
         })
     }
+
+
+    // this is due to the specificity of the Chip component
+    doNothing = () => false
 
 
     // ...
@@ -508,18 +565,26 @@ class ContactSuggester extends Component {
                     onChange: this.handleChange,
                     error: this.state.error,
                     helperText: this.state.errorMessage,
+                    disabled: this.props.cancelEnabled ? false: true,
                     endAdornment: <InputAdornment position="end"
                         children={
                             this.props.payee ?
                                 <Chip
-                                    avatar={<Avatar className={classes.avatar}
+                                    avatar={<Avatar
+                                        className={this.props.cancelEnabled ?
+                                            classes.avatar :
+                                            classes.avatarDisabled}
                                         src={`${gravatar}${
                                             this.state.emailMD5}?${
                                             gravatarSize48}&d=robohash`}
                                     />}
                                     label={this.state.label}
-                                    onDelete={this.deletePayee}
-                                    classes={{ root: classes.chip, }}
+                                    onDelete={this.props.cancelEnabled ?
+                                        this.deletePayee : this.doNothing}
+                                    deleteIcon={this.props.cancelEnabled ?
+                                        <HighlightOff /> : <CheckCircle />}
+                                    classes={{ root: this.props.cancelEnabled ?
+                                        classes.chip : classes.chipDisabled, }}
                                 /> : <he.Nbsp />
                         }
                     />,
@@ -538,6 +603,8 @@ export default compose(
         (state) => ({
             contacts: state.Contacts,
             payee: state.Balances.payee,
+            amountIsValid: state.Balances.amountIsValid,
+            cancelEnabled: state.Balances.cancelEnabled,
             StellarAccount: state.StellarAccount,
             Contacts: state.Contacts,
         }),
