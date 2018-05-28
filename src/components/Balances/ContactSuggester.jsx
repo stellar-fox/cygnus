@@ -217,6 +217,7 @@ class ContactSuggester extends Component {
         paymentAddress: "",
         label: "",
         emailMD5: "",
+        loading: false,
     }
 
 
@@ -313,7 +314,6 @@ class ContactSuggester extends Component {
     validatePaymentDestination = async (input) => {
         let errorMessage = invalidPaymentAddressMessage(input),
             publicKey = null,
-            federationAddress = null,
             memo = null
 
         if (errorMessage) {
@@ -329,6 +329,8 @@ class ContactSuggester extends Component {
             this.props.setBalancesState({ payee: null, })
             return
         }
+
+        this.setState({ loading: true, })
 
         /**
          * Differentiate between a valid federation address or a valid
@@ -410,12 +412,11 @@ class ContactSuggester extends Component {
                 }
 
                 publicKey = federationRecord.account_id
-                federationAddress = input
 
-                const contact = this.searchForContact(
-                    publicKey, federationAddress
-                )
-
+                /**
+                 * Map any possible contact to the Chip label
+                 */
+                const contact = this.searchForContact(publicKey)
 
                 this.setState({
                     error: false,
@@ -427,6 +428,8 @@ class ContactSuggester extends Component {
                 })
 
             } catch (ex) {
+                this.setState({ loading: false, })
+
                 if (!ex.response) {
                     this.setState({
                         error: true,
@@ -449,11 +452,6 @@ class ContactSuggester extends Component {
         } else if (publicKeyValid(input)) {
             publicKey = input
 
-            this.setState({
-                error: false,
-                errorMessage: "",
-            })
-
             try {
                 const payeeStellarAccount = await loadAccount(
                     publicKey,
@@ -471,6 +469,22 @@ class ContactSuggester extends Component {
                 }
             }
         }
+
+        /**
+         * Map a matching contact to the public key entered and display Chip.
+         */
+        const contact = this.searchForContact(publicKey)
+
+        this.setState({
+            loading: false,
+            error: false,
+            errorMessage: "",
+            emailMD5: contact ? contact.email_md5 : "",
+            label: contact ?
+                [contact.first_name, contact.last_name,].join(" ") :
+                pubKeyAbbr(publicKey),
+        })
+
 
         /**
          * At this point we have a valid and verified Stellar public key
@@ -585,7 +599,10 @@ class ContactSuggester extends Component {
                                         <HighlightOff /> : <CheckCircle />}
                                     classes={{ root: this.props.cancelEnabled ?
                                         classes.chip : classes.chipDisabled, }}
-                                /> : <he.Nbsp />
+                                /> : this.state.loading ?
+                                    <div className="small text-primary fade">
+                                        Loading...
+                                    </div> : <he.Nbsp />
                         }
                     />,
                 }}
