@@ -7,8 +7,10 @@ import {
     htmlEntities as he,
     emailValid,
     federationAddressValid,
+    getFederationRecord,
     publicKeyValid
 } from "../../lib/utils"
+import { stellarFoxDomain } from "../StellarFox/env"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
 import { withStyles } from "@material-ui/core/styles"
@@ -228,17 +230,37 @@ class AddContactForm extends Component {
 
             let [alias, domain,] = this.state.input.split("*")
 
-            Axios.post(`${config.api}/contact/request`, {
-                user_id: this.props.userId,
-                token: this.props.token,
-                alias: alias,
-                domain: domain,
-                requested_by: this.props.userId,
-            }).then((_result) => {
-                this.requestComplete()
-            }).catch((error) => {
-                this.requestFailed(error)
-            })
+            domain === stellarFoxDomain ?
+                Axios.post(`${config.api}/contact/request`, {
+                    user_id: this.props.userId,
+                    token: this.props.token,
+                    alias: alias,
+                    domain: domain,
+                    requested_by: this.props.userId,
+                }).then((_result) => {
+                    this.requestComplete()
+                }).catch((error) => {
+                    this.requestFailed(error)
+                }) :
+                /**
+                 * Search for contact with other federation providers.
+                 */
+                getFederationRecord(this.state.input).then((result) => {
+                    Axios.post(`${config.api}/contact/addext`, {
+                        user_id: this.props.userId,
+                        token: this.props.token,
+                        pubkey: result.account_id,
+                        alias: alias,
+                        domain: domain,
+                        added_by: this.props.userId,
+                    }).then((_result) => {
+                        this.requestComplete()
+                    }).catch((error) => {
+                        this.requestFailed(error)
+                    })
+                }).catch((error) => {
+                    this.requestFailed(error)
+                })
 
         }
     }
@@ -269,7 +291,7 @@ class AddContactForm extends Component {
 
         error.response.status === 404 &&
             this.props.showAlert(
-                "We could not find this payment address in our database.",
+                "The address you entered does not exist.",
                 "Notice"
             )
 
