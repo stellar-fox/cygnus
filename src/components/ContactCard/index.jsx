@@ -5,7 +5,7 @@ import Avatar from "@material-ui/core/Avatar"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
-import { pubKeyAbbr } from "../../lib/utils"
+import { htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
 
 
 
@@ -55,12 +55,20 @@ export default withStyles((theme) => ({
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
                                 <Typography align="right" noWrap>
-                                    {data.last_name}, {data.first_name}
+                                    {data.first_name && data.last_name ?
+                                        `${data.first_name} ${data.last_name}`:
+                                        data.first_name ? data.first_name :
+                                            data.last_name ? data.last_name :
+                                                "No Name"
+                                    }
                                 </Typography>
                                 <Typography variant="caption" align="right"
                                     noWrap
                                 >
-                                    {data.alias}*{data.domain}
+                                    {data.alias && data.domain ?
+                                        `${data.alias}*${data.domain}`:
+                                        <he.Minus />
+                                    }
                                 </Typography>
                             </div>
                             <Typography variant="caption" align="right"
