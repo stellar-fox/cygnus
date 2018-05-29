@@ -18,6 +18,7 @@ import {
 import { loadAccount } from "../../lib/stellar-tx"
 
 import Autosuggest from "react-autosuggest"
+import Fuse from "fuse.js"
 import match from "autosuggest-highlight/match"
 import parse from "autosuggest-highlight/parse"
 
@@ -81,7 +82,7 @@ const styles = (theme) => ({
         color: theme.palette.primary.light,
         marginBottom: "8px",
         boxShadow: theme.shadows[1],
-        fontWeight: 600,
+        fontWeight: 400,
         fontSize: "0.85rem",
         "&:focus" : {
             backgroundColor: theme.palette.secondary.light,
@@ -90,10 +91,10 @@ const styles = (theme) => ({
     chipDisabled: {
         backgroundColor: theme.palette.grey[300],
         border: `1px solid ${theme.palette.grey[400]}`,
-        color: theme.palette.primary.fade,
+        color: theme.palette.grey[600],
         marginBottom: "8px",
         boxShadow: theme.shadows[0],
-        fontWeight: 600,
+        fontWeight: 400,
         fontSize: "0.85rem",
         "&:focus": {
             backgroundColor: theme.palette.grey[300],
@@ -185,27 +186,6 @@ const renderSuggestionsContainer = (options) => {
 
 
 // ...
-const getSuggestions = (value, suggestions, ) => {
-    const inputValue = value.trim().toLowerCase()
-    const inputLength = inputValue.length
-    let count = 0
-
-    return inputLength === 0 ? [] :
-        suggestions.filter(suggestion => {
-
-            const keep = count < 5 && suggestion.label.toLowerCase().slice(
-                0, inputLength) === inputValue
-
-            if (keep) {
-                count += 1
-            }
-
-            return keep
-        })
-}
-
-
-// ...
 class ContactSuggester extends Component {
 
 
@@ -241,31 +221,24 @@ class ContactSuggester extends Component {
         this.props.setBalancesState({ newAccount: tt === "NEW_ACCOUNT", })
 
 
-    // ...
-    combineContacts = () => {
-        const internal = this.props.contacts.internal.map((c) => ({
+    fuzzySearchForContact = (value) => {
+        let results = new Fuse(this.props.Contacts.internal.concat(this.props.Contacts.external), {
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+        }).search(value)
+
+        return results.map((c) => ({
             label: [c.first_name, c.last_name,].join(" "),
             publicKey: c.pubkey,
             paymentAddress: [c.alias, c.domain,].join("*"),
             emailMD5: c.email_md5,
         }))
-
-        const external = this.props.contacts.external.map((c) => ({
-            label: [c.first_name, c.last_name,].join(" "),
-            publicKey: c.pubkey,
-            paymentAddress: [c.alias, c.domain,].join("*"),
-            emailMD5: c.email_md5,
-        }))
-
-        return internal.concat(external)
-
     }
 
 
     // ...
     handleSuggestionsFetchRequested = ({ value, }) => {
         this.setState({
-            suggestions: getSuggestions(value, this.combineContacts()),
+            suggestions: this.fuzzySearchForContact(value),
         })
     }
 
