@@ -254,6 +254,7 @@ class ContactSuggester extends Component {
             label: [c.first_name, c.last_name,].join(" "),
             publicKey: c.pubkey,
             paymentAddress: [c.alias, c.domain,].join("*"),
+            emailMD5: c.email_md5,
         }))
 
         return internal.concat(external)
@@ -298,6 +299,12 @@ class ContactSuggester extends Component {
 
     // ...
     searchForContact = (publicKey) => this.props.Contacts.internal.find(
+        (c) => c.pubkey === publicKey
+    )
+
+
+    // ...
+    searchForExtContact = (publicKey) => this.props.Contacts.external.find(
         (c) => c.pubkey === publicKey
     )
 
@@ -416,7 +423,10 @@ class ContactSuggester extends Component {
                 /**
                  * Map any possible contact to the Chip label
                  */
-                const contact = this.searchForContact(publicKey)
+                let contact = this.searchForContact(publicKey)
+                if (!contact) {
+                    contact = this.searchForExtContact(publicKey)
+                }
 
                 this.setState({
                     error: false,
@@ -473,7 +483,10 @@ class ContactSuggester extends Component {
         /**
          * Map a matching contact to the public key entered and display Chip.
          */
-        const contact = this.searchForContact(publicKey)
+        let contact = this.searchForContact(publicKey)
+        if (!contact) {
+            contact = this.searchForExtContact(publicKey)
+        }
 
         this.setState({
             loading: false,
