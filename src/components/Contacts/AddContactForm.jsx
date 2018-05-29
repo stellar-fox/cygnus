@@ -236,7 +236,6 @@ class AddContactForm extends Component {
                     token: this.props.token,
                     alias: alias,
                     domain: domain,
-                    requested_by: this.props.userId,
                 }).then((_result) => {
                     this.requestComplete()
                 }).catch((error) => {
@@ -252,7 +251,6 @@ class AddContactForm extends Component {
                         pubkey: result.account_id,
                         alias: alias,
                         domain: domain,
-                        added_by: this.props.userId,
                     }).then((_result) => {
                         this.requestComplete()
                     }).catch((error) => {
@@ -261,8 +259,22 @@ class AddContactForm extends Component {
                 }).catch((error) => {
                     this.requestFailed(error)
                 })
-
         }
+
+        // try adding a contact based on account number
+        else if (this.state.tabSelected === 2) {
+            Axios.post(`${config.api}/contact/reqbyacct`, {
+                user_id: this.props.userId,
+                token: this.props.token,
+                pubkey: this.state.input,
+            }).then((_result) => {
+                this.requestComplete()
+            }).catch((error) => {
+                this.requestFailed(error)
+            })
+        }
+
+
     }
 
 
