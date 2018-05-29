@@ -162,8 +162,11 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
                             )
                         })}
                     </div>
-                    <div className="micro text-primary fade-strong">
-                        {suggestion.paymentAddress}
+                    <div className="f-b micro text-primary fade-strong">
+                        {suggestion.alias && suggestion.domain ?
+                            `${suggestion.alias}*${suggestion.domain}` :
+                            pubKeyAbbr(suggestion.publicKey)
+                        }
                     </div>
                 </div>
             </MenuItem>
@@ -203,16 +206,8 @@ class ContactSuggester extends Component {
 
     // ...
     getSuggestionValue = (suggestion) => {
-
-        this.validatePaymentDestination(suggestion.paymentAddress)
-
-        this.setState({
-            label: suggestion.label,
-            paymentAddress: suggestion.paymentAddress,
-            emailMD5: suggestion.emailMD5,
-        })
-
-        return suggestion.paymentAddress
+        return `${suggestion.alias}*${suggestion.domain}` === "*" ?
+            suggestion.publicKey : `${suggestion.alias}*${suggestion.domain}`
     }
 
 
@@ -231,7 +226,8 @@ class ContactSuggester extends Component {
         return results.map((c) => ({
             label: [c.first_name, c.last_name,].join(" "),
             publicKey: c.pubkey,
-            paymentAddress: [c.alias, c.domain,].join("*"),
+            alias: c.alias,
+            domain: c.domain,
             emailMD5: c.email_md5,
         }))
     }
@@ -309,7 +305,7 @@ class ContactSuggester extends Component {
             })
 
             this.props.setBalancesState({ payee: null, })
-            return
+            return false
         }
 
         this.setState({ loading: true, })
@@ -431,6 +427,7 @@ class ContactSuggester extends Component {
                         errorMessage: ex.message,
                     })
                 }
+                return false
             }
         // user did not enter a valid federation address but we also accept
         // a valid public key at this time
@@ -463,13 +460,15 @@ class ContactSuggester extends Component {
             contact = this.searchForExtContact(publicKey)
         }
 
+        let displayName = [contact.first_name, contact.last_name,].join(" ")
+
         this.setState({
             loading: false,
             error: false,
             errorMessage: "",
             emailMD5: contact ? contact.email_md5 : "",
             label: contact ?
-                [contact.first_name, contact.last_name,].join(" ") :
+                displayName === " " ? "No Name" : displayName :
                 pubKeyAbbr(publicKey),
         })
 
@@ -490,6 +489,7 @@ class ContactSuggester extends Component {
 
         }
         this.toggleSignButton()
+        return true
     }
 
     // ...
@@ -522,6 +522,9 @@ class ContactSuggester extends Component {
             indicatorMessage: securityMsgPlaceholder,
             indicatorStyle: "fade-extreme",
             sendEnabled: false,
+            memoRequired: false,
+            memoText: "",
+            payeeMemoText: "",
         })
         this.setState({
             label: "",
