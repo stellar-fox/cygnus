@@ -96,9 +96,9 @@ export default compose(
 
 
         // ...
-        acceptContact = (contactId, requestedBy) => {
+        acceptContact = (requestedBy) => {
             changeContactStatus(
-                this.props.userId, this.props.token, 2, contactId, requestedBy
+                this.props.userId, this.props.token, 2, requestedBy
             ).then((_response) => {
                 getUserContacts(this.props.userId, this.props.token)
                     .then((results) => {
@@ -129,9 +129,9 @@ export default compose(
 
 
         // ...
-        rejectContact = (contactId, requestedBy) => {
+        rejectContact = (requestedBy) => {
             changeContactStatus(
-                this.props.userId, this.props.token, 3, contactId, requestedBy
+                this.props.userId, this.props.token, 3, requestedBy
             ).then((_response) => {
                 getContactRequests(this.props.userId, this.props.token)
                     .then((results) => {
@@ -176,13 +176,21 @@ export default compose(
                                 </Typography>
                             </div>
                             <div className="f-e space-between">
-                                <ActionButton onClick={this.acceptContact.bind(this, data.contact_id, data.requested_by)}
+                                <ActionButton
+                                    onClick={this.acceptContact.bind(
+                                        this,
+                                        data.requested_by
+                                    )}
                                     variant="raised"
                                     color="success" size="small"
                                     label="Accept"
                                 />
 
-                                <ActionButton onClick={this.rejectContact.bind(this, data.contact_id, data.requested_by)}
+                                <ActionButton
+                                    onClick={this.rejectContact.bind(
+                                        this,
+                                        data.requested_by
+                                    )}
                                     variant="raised"
                                     color="danger" size="small"
                                     label="Reject"
