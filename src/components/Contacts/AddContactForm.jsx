@@ -309,7 +309,7 @@ class AddContactForm extends Component {
 
         error.response.status >= 500 &&
             this.props.showAlert(
-                `[${error.response.status}] ${error.response.statusText}`,
+                "The contact you requested could not be processed.",
                 "Error"
             )
     }
