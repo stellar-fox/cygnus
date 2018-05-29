@@ -221,10 +221,12 @@ class ContactSuggester extends Component {
         this.props.setBalancesState({ newAccount: tt === "NEW_ACCOUNT", })
 
 
+    // ...
     fuzzySearchForContact = (value) => {
-        let results = new Fuse(this.props.Contacts.internal.concat(this.props.Contacts.external), {
-            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
-        }).search(value)
+        let results = new Fuse(
+            this.props.Contacts.internal.concat(this.props.Contacts.external), {
+                keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+            }).search(value)
 
         return results.map((c) => ({
             label: [c.first_name, c.last_name,].join(" "),
