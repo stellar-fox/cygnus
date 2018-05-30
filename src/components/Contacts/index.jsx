@@ -134,7 +134,7 @@ const EditContactModal = withStyles(styles)(
                 <Typography variant="subheading" color="primary"
                     id="modal-title"
                 >
-                    Edit Contact
+                    Contact Details
                 </Typography>
                 <EditContactForm />
             </div>
@@ -367,7 +367,7 @@ class Contacts extends Component {
     showFilteredInternalCards = () => {
 
         let results = new Fuse(this.props.contactsInternal, {
-            keys: ["first_name", "last_name",],
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
         }).search(this.state.search)
 
         return results.length === 0 ?
@@ -387,7 +387,7 @@ class Contacts extends Component {
     showFilteredExternalCards = () => {
 
         let results = new Fuse(this.props.contactsExternal, {
-            keys: ["first_name", "last_name",],
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
         }).search(this.state.search)
 
         return results.length === 0 ?
@@ -409,7 +409,7 @@ class Contacts extends Component {
     showFilteredContactRequests = () => {
 
         let results = new Fuse(this.props.contactRequests, {
-            keys: ["first_name", "last_name",],
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
         }).search(this.state.search)
 
         return results.length === 0 ?
