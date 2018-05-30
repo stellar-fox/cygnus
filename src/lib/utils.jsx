@@ -25,6 +25,27 @@ const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-
 
 
 // ...
+export const formatFullName = (firstName, lastName) => (
+    firstName && lastName ?
+        `${firstName} ${lastName}`  :
+        firstName ? firstName   :
+            lastName ? lastName : "No Name"
+)
+
+
+
+
+// ...
+export const formatPaymentAddress = (alias, domain) => (
+    alias && domain ?
+        `${alias}*${domain}` :
+        htmlEntities.Minus()
+)
+
+
+
+
+// ...
 export const getRegisteredUser = async (publicKey, bip32Path) => {
     try {
         return (await axios.post(
