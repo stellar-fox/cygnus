@@ -1,5 +1,9 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
+import { bindActionCreators, compose } from "redux"
 import PropTypes from "prop-types"
+import { action as ContactsAction } from "../../redux/Contacts"
+import { action as ModalAction } from "../../redux/Modal"
 import { withStyles } from "@material-ui/core/styles"
 import Avatar from "@material-ui/core/Avatar"
 import Paper from "@material-ui/core/Paper"
@@ -11,28 +15,41 @@ import { htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
 
 
 // ...
-export default withStyles((theme) => ({
-    root: theme.mixins.gutters({
-        paddingTop: 16,
-        paddingBottom: 16,
-        minWidth: 250,
-    }),
+export default compose(
+    connect (
+        (_state) => ({
 
-    rootAlt: theme.mixins.gutters({
-        paddingTop: 16,
-        paddingBottom: 16,
-        backgroundColor: theme.palette.secondary.light,
-        minWidth: 250,
-    }),
+        }),
+        (dispatch) => bindActionCreators({
+            setState: ContactsAction.setState,
+            showModal: ModalAction.showModal,
+        }, dispatch),
+    ),
+    withStyles((theme) => ({
+        root: theme.mixins.gutters({
+            cursor: "pointer",
+            paddingTop: 16,
+            paddingBottom: 16,
+            minWidth: 250,
+        }),
 
-    avatar: {
-        borderRadius: 3,
-        width: 48,
-        height: 48,
-        border: `1px solid ${theme.palette.primary.light}`,
-    },
+        rootAlt: theme.mixins.gutters({
+            cursor: "pointer",
+            paddingTop: 16,
+            paddingBottom: 16,
+            backgroundColor: theme.palette.secondary.light,
+            minWidth: 250,
+        }),
 
-}))(
+        avatar: {
+            borderRadius: 3,
+            width: 48,
+            height: 48,
+            border: `1px solid ${theme.palette.primary.light}`,
+        },
+
+    }))
+)(
     class extends Component {
 
         // ...
@@ -42,9 +59,26 @@ export default withStyles((theme) => ({
 
 
         // ...
+        showContactDetails = (data, _event) => {
+            this.props.setState({
+                details: data,
+            })
+            this.showModal()
+        }
+
+
+        // ...
+        showModal = () => this.props.showModal("editContact")
+
+
+        // ...
         render = () => (
             ({ classes, data, external, }) =>
-                <Paper elevation={3}
+                <Paper
+                    onClick={this.showContactDetails.bind(
+                        this, {contact: data, external,})
+                    }
+                    elevation={3}
                     className={external ? classes.rootAlt : classes.root}
                 >
                     <div className="f-b space-between">

@@ -6,6 +6,7 @@ import { Grid } from "@material-ui/core"
 import ContactCard from "../ContactCard"
 import ContactRequestCard from "../ContactCard/requestCard"
 import AddContactForm from "./AddContactForm"
+import EditContactForm from "./EditContactForm"
 import AppBar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import TextField from "@material-ui/core/TextField"
@@ -115,6 +116,27 @@ const AddContactModal = withStyles(styles)(
                     Request New Contact
                 </Typography>
                 <AddContactForm />
+            </div>
+        </Modal>
+)
+
+
+// ...
+const EditContactModal = withStyles(styles)(
+    ({ classes, onClose, modalId, visible, }) =>
+        <Modal
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+            open={modalId === "editContact" && visible}
+            onClose={onClose}
+        >
+            <div className={classes.paper}>
+                <Typography variant="subheading" color="primary"
+                    id="modal-title"
+                >
+                    Edit Contact
+                </Typography>
+                <EditContactForm />
             </div>
         </Modal>
 )
@@ -304,7 +326,7 @@ class Contacts extends Component {
             </Grid> :
             this.props.contactsInternal.map((contact, index) =>
                 <Grid item key={index + 1} xs>
-                    <ContactCard data={contact} />
+                    <ContactCard data={contact} external={false} />
                 </Grid>
             )
 
@@ -320,7 +342,7 @@ class Contacts extends Component {
             </Grid> :
             this.props.contactsExternal.map((contact, index) =>
                 <Grid item key={index + 1} xs>
-                    <ContactCard data={contact} external />
+                    <ContactCard data={contact} external={true} />
                 </Grid>
             )
 
@@ -355,7 +377,7 @@ class Contacts extends Component {
                 />
             </Grid> : results.map((contact, index) =>
                 <Grid item key={index} xs>
-                    <ContactCard data={contact} />
+                    <ContactCard data={contact} external={false} />
                 </Grid>
             )
     }
@@ -376,7 +398,7 @@ class Contacts extends Component {
                 />
             </Grid> : results.map((contact, index) =>
                 <Grid item key={index} xs>
-                    <ContactCard data={contact} external />
+                    <ContactCard data={contact} external={true} />
                 </Grid>
             )
 
@@ -457,6 +479,10 @@ class Contacts extends Component {
             </AppBar>
 
             <AddContactModal modalId={this.props.Modal.modalId}
+                visible={this.props.Modal.visible} onClose={this.hideModal}
+            />
+
+            <EditContactModal modalId={this.props.Modal.modalId}
                 visible={this.props.Modal.visible} onClose={this.hideModal}
             />
 
