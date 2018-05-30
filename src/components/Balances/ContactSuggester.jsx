@@ -206,7 +206,7 @@ class ContactSuggester extends Component {
 
     // ...
     getSuggestionValue = (suggestion) => {
-        return `${suggestion.alias}*${suggestion.domain}` === "*" ?
+        return (!suggestion.alias || !suggestion.domain) ?
             suggestion.publicKey : `${suggestion.alias}*${suggestion.domain}`
     }
 
