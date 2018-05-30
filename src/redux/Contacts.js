@@ -5,6 +5,10 @@ const initState = {
     internal: [],
     external: [],
     requests: [],
+    details: {
+        external: false,
+        contact: null,
+    },
 }
 
 

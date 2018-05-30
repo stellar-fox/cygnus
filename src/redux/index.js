@@ -1,4 +1,5 @@
 import { reducer as AccountReducer } from "./Account"
+import { reducer as AlertChoiceReducer } from "./AlertChoice"
 import { reducer as AlertReducer } from "./Alert"
 import { reducer as AssetManagerReducer } from "./AssetManager"
 import { reducer as BalancesReducer } from "./Balances"
@@ -19,6 +20,7 @@ import { reducer as SnackbarReducer } from "./Snackbar"
 // ...
 export default {
     Account: AccountReducer,
+    AlertChoice: AlertChoiceReducer,
     Alert: AlertReducer,
     Assets: AssetManagerReducer,
     Balances: BalancesReducer,
