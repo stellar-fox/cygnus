@@ -9,7 +9,9 @@ import Avatar from "@material-ui/core/Avatar"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
-import { htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
+import {
+    formatFullName, formatPaymentAddress, pubKeyAbbr
+} from "../../lib/utils"
 
 
 
@@ -89,20 +91,16 @@ export default compose(
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
                                 <Typography align="right" noWrap>
-                                    {data.first_name && data.last_name ?
-                                        `${data.first_name} ${data.last_name}`:
-                                        data.first_name ? data.first_name :
-                                            data.last_name ? data.last_name :
-                                                "No Name"
-                                    }
+                                    {formatFullName(
+                                        data.first_name, data.last_name
+                                    )}
                                 </Typography>
                                 <Typography variant="caption" align="right"
                                     noWrap
                                 >
-                                    {data.alias && data.domain ?
-                                        `${data.alias}*${data.domain}`:
-                                        <he.Minus />
-                                    }
+                                    {formatPaymentAddress(
+                                        data.alias, data.domain
+                                    )}
                                 </Typography>
                             </div>
                             <Typography variant="caption" align="right"

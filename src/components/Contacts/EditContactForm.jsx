@@ -4,6 +4,8 @@ import { connect } from "react-redux"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize } from "../StellarFox/env"
 import {
+    formatFullName,
+    formatPaymentAddress,
     pubKeyAbbr
 } from "../../lib/utils"
 import AlertChoiceModal from "../Layout/AlertChoiceModal"
@@ -147,9 +149,9 @@ const ContactDetails = withStyles(styles)(
             </div>
             <div className="f-b-col">
                 <Typography variant="title" noWrap color="primary">
-                    {`${
-                        details.contact.first_name
-                    } ${details.contact.last_name}`}
+                    {formatFullName(
+                        details.contact.first_name, details.contact.last_name
+                    )}
                 </Typography>
                 <Typography classes={{ root: classNames(classes.padded), }}
                     variant="subheading" noWrap color="primary"
@@ -157,9 +159,9 @@ const ContactDetails = withStyles(styles)(
                     <Typography variant="caption" noWrap color="primary">
                         <span className="fade-strong">Payment Address:</span>
                     </Typography>
-                    {`${
-                        details.contact.alias
-                    }*${details.contact.domain}`}
+                    {formatPaymentAddress(
+                        details.contact.alias, details.contact.domain
+                    )}
                 </Typography>
                 <Typography variant="body1" noWrap color="primary">
                     <Typography variant="caption" noWrap color="primary">
