@@ -4,6 +4,9 @@ import { connect } from "react-redux"
 import Axios from "axios"
 import { config } from "../../config"
 import {
+    getUserContacts,
+    getUserExternalContacts,
+    getContactRequests,
     htmlEntities as he,
     emailValid,
     federationAddressValid,
@@ -12,6 +15,7 @@ import {
 } from "../../lib/utils"
 import { stellarFoxDomain } from "../StellarFox/env"
 import { action as AlertAction } from "../../redux/Alert"
+import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
 import { withStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
@@ -279,13 +283,15 @@ class AddContactForm extends Component {
 
 
     // ...
-    requestComplete = () =>
+    requestComplete = () => {
         this.setState({
             showProgress: false,
             showRequestSent: true,
             buttonDisabled: false,
             input: "",
         })
+        this.updateContacts()
+    }
 
 
     // ...
@@ -312,6 +318,38 @@ class AddContactForm extends Component {
                 "The contact you requested could not be processed.",
                 "Error"
             )
+    }
+
+
+    // ...
+    updateContacts = () => {
+
+        getUserContacts(this.props.userId, this.props.token)
+            .then((results) => {
+                results ? this.props.setState({
+                    internal: results,
+                }) : this.props.setContactsState({
+                    internal: [],
+                })
+            }) &&
+
+            getUserExternalContacts(this.props.userId, this.props.token)
+                .then((results) => {
+                    results ? this.props.setState({
+                        external: results,
+                    }) : this.props.setState({
+                        external: [],
+                    })
+                })
+
+        getContactRequests(this.props.userId, this.props.token)
+            .then((results) => {
+                results ? this.props.setState({
+                    requests: results,
+                }) : this.props.setState({
+                    requests: [],
+                })
+            })
     }
 
 
@@ -523,8 +561,10 @@ export default connect(
         theme,
         userId: state.LoginManager.userId,
         token: state.LoginManager.token,
+
     }),
     (dispatch) => bindActionCreators({
+        setState: ContactsAction.setState,
         hideModal: ModalAction.hideModal,
         showAlert: AlertAction.showAlert,
     }, dispatch)

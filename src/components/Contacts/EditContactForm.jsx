@@ -3,7 +3,11 @@ import { bindActionCreators, compose, } from "redux"
 import { connect } from "react-redux"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize } from "../StellarFox/env"
+import { config } from "../../config"
 import {
+    getUserContacts,
+    getUserExternalContacts,
+    getContactRequests,
     formatFullName,
     formatPaymentAddress,
     pubKeyAbbr
@@ -20,6 +24,7 @@ import Avatar from "@material-ui/core/Avatar"
 import Badge from "@material-ui/core/Badge"
 import Button from "@material-ui/core/Button"
 import Typography from "@material-ui/core/Typography"
+import Axios from "axios"
 
 
 
@@ -87,15 +92,14 @@ const styles = (theme) => ({
 
     badge: {
         position: "relative",
-        top: "-5px",
+        top: "5px",
         left: "3px",
         height: "26px",
         width: "26px",
-        background: theme.palette.primary.light,
-        paddingRight: "2px",
-        color: theme.palette.secondary.main,
+        background: theme.palette.secondary.main,
+        color: theme.palette.primary.light,
         fontWeight: 600,
-        fontSize: "1.15rem",
+        fontSize: "1.35rem",
     },
 })
 
@@ -182,30 +186,71 @@ class EditContactForm extends Component {
     // ...
     deleteContactConfirm = () => {
         this.props.showChoiceAlert(
-            "Delete contact from your contact book? \
-            You will also be removed from this contact's list.",
+            "Delete contact from your contact book?",
             "Warning"
         )
     }
 
 
     // ...
-    deleteContact = () => {
+    deleteContact = async () => {
+
+        this.props.hideModal()
+
+        if (this.props.details.external) {
+            // do nothing yet
+        } else {
+            await Axios.post(`${config.api}/contact/delete`, {
+                user_id: this.props.userId,
+                token: this.props.token,
+                contact_id: this.props.details.contact.contact_id,
+                requested_by: this.props.details.contact.requested_by,
+            })
+            this.props.setState({
+                details: {
+                    external: false,
+                    contact: null,
+                },
+            })
+        }
+
         this.props.hideChoiceAlert()
-        this.hideModal()
+
         this.props.showAlert("Contact has been deleted.", "Notice")
+
+        this.updateContacts()
     }
 
 
     // ...
-    hideModal = () => {
-        this.props.setState({
-            details: {
-                external: false,
-                contact: null,
-            },
-        })
-        this.props.hideModal()
+    updateContacts = () => {
+
+        getUserContacts(this.props.userId, this.props.token)
+            .then((results) => {
+                results ? this.props.setState({
+                    internal: results,
+                }) : this.props.setContactsState({
+                    internal: [],
+                })
+            }) &&
+
+            getUserExternalContacts(this.props.userId, this.props.token)
+                .then((results) => {
+                    results ? this.props.setState({
+                        external: results,
+                    }) : this.props.setState({
+                        external: [],
+                    })
+                })
+
+        getContactRequests(this.props.userId, this.props.token)
+            .then((results) => {
+                results ? this.props.setState({
+                    requests: results,
+                }) : this.props.setState({
+                    requests: [],
+                })
+            })
     }
 
 
@@ -221,7 +266,7 @@ class EditContactForm extends Component {
                     />
                 }
                 <div className="f-e">
-                    <DoneButton onClick={this.hideModal} />
+                    <DoneButton onClick={this.props.hideModal} />
                 </div>
             </Fragment>
     )(this.props)
@@ -235,6 +280,8 @@ export default compose(
         (state, theme) => ({
             theme,
             details: state.Contacts.details,
+            userId: state.LoginManager.userId,
+            token: state.LoginManager.token,
         }),
         (dispatch) => bindActionCreators({
             setState: ContactsAction.setState,
