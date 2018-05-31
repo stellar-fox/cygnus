@@ -475,7 +475,10 @@ class ContactSuggester extends Component {
                  * memo field on the pay check.
                  */
 
-                // TODO
+                this.props.setBalancesState({
+                    memoRequired: true,
+                    payeeMemoText: extContact.memo,
+                })
 
             })() :
             /**
