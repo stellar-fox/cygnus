@@ -7,8 +7,9 @@ import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
 
 import {
-    federationAddressValid, getFederationRecord, htmlEntities as he,
-    invalidPaymentAddressMessage, pubKeyAbbr, publicKeyValid, signatureValid,
+    federationAddressValid, formatFullName, getFederationRecord,
+    htmlEntities as he, invalidPaymentAddressMessage, pubKeyAbbr,
+    publicKeyValid, signatureValid,
 } from "../../lib/utils"
 
 import {
@@ -455,21 +456,29 @@ class ContactSuggester extends Component {
         /**
          * Map a matching contact to the public key entered and display Chip.
          */
-        let contact = this.searchForContact(publicKey)
-        if (!contact) {
-            contact = this.searchForExtContact(publicKey)
-        }
+        let contact = this.searchForContact(publicKey),
+            displayName = null
 
-        let displayName = [contact.first_name, contact.last_name,].join(" ")
+        contact ?
+            (displayName = formatFullName(
+                contact.first_name, contact.last_name
+            )) : (
+                contact = this.searchForExtContact(publicKey)
+            )
+
+        contact ?
+            (displayName = formatFullName(
+                contact.first_name, contact.last_name
+            )) : (
+                displayName = pubKeyAbbr(publicKey)
+            )
 
         this.setState({
             loading: false,
             error: false,
             errorMessage: "",
             emailMD5: contact ? contact.email_md5 : "",
-            label: contact ?
-                displayName === " " ? "No Name" : displayName :
-                pubKeyAbbr(publicKey),
+            label: displayName,
         })
 
 
