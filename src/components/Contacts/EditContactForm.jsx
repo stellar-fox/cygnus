@@ -130,6 +130,69 @@ const DeleteContactButton = withStyles(styles)(
 
 
 // ...
+const ExtContactDetails = withStyles(styles)(
+    ({ classes, details, assetManager, deleteAction, }) =>
+        <div className="f-b space-around p-t-large p-b-large">
+            <div className="f-b-col">
+                <Avatar className={classes.avatar}
+                    src={`${gravatar}${details.contact.email_md5}?${
+                        gravatarSize}&d=robohash`}
+                />
+                <Badge
+                    badgeContent={
+                        assetManager.getAssetGlyph(details.contact.currency)
+                    } classes={{ badge: classes.badge, }}
+                >
+                    <Typography classes={{ root: classes.padded, }}
+                        variant="body2" noWrap color="primary"
+                    >
+                        <Typography variant="caption" noWrap color="primary">
+                            <span className="fade-strong">
+                                Set Default Currency:
+                            </span>
+                        </Typography>
+                        {assetManager.getAssetDescription(
+                            details.contact.currency
+                        )}
+                    </Typography>
+                </Badge>
+                <Typography variant="body1" noWrap color="primary">
+                    <Typography variant="caption" noWrap color="primary">
+                        <span className="fade-strong">Contact Memo:</span>
+                    </Typography>
+                    {formatMemo(
+                        details.contact.memo_type, details.contact.memo
+                    )}
+                </Typography>
+            </div>
+            <div className="f-b-col">
+                <Typography variant="title" noWrap color="primary">
+                    {formatFullName(
+                        details.contact.first_name, details.contact.last_name
+                    )}
+                </Typography>
+                <Typography classes={{ root: classNames(classes.padded), }}
+                    variant="subheading" noWrap color="primary"
+                >
+                    <Typography variant="caption" noWrap color="primary">
+                        <span className="fade-strong">Payment Address:</span>
+                    </Typography>
+                    {formatPaymentAddress(
+                        details.contact.alias, details.contact.domain
+                    )}
+                </Typography>
+                <Typography variant="body1" noWrap color="primary">
+                    <Typography variant="caption" noWrap color="primary">
+                        <span className="fade-strong">Account Number:</span>
+                    </Typography>
+                    {pubKeyAbbr(details.contact.pubkey)}
+                </Typography>
+                <DeleteContactButton onClick={deleteAction} />
+            </div>
+        </div>
+)
+
+// ...
 const ContactDetails = withStyles(styles)(
     ({ classes, details, assetManager, deleteAction, }) =>
         <div className="f-b space-around p-t-large p-b-large">
@@ -294,11 +357,16 @@ class EditContactForm extends Component {
             <Fragment>
                 <AlertChoiceModal onYes={this.deleteContact} />
 
-                <ContactDetails details={details}
-                    assetManager={assetManager}
-                    deleteAction={this.deleteContactConfirm}
-                />
-
+                {details.external ?
+                    <ExtContactDetails details={details}
+                        assetManager={assetManager}
+                        deleteAction={this.deleteContactConfirm}
+                    /> :
+                    <ContactDetails details={details}
+                        assetManager={assetManager}
+                        deleteAction={this.deleteContactConfirm}
+                    />
+                }
                 <div className="f-e">
                     <DoneButton onClick={this.hideDetails} />
                 </div>
