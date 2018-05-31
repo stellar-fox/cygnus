@@ -9,6 +9,7 @@ import {
     getUserExternalContacts,
     getContactRequests,
     formatFullName,
+    formatMemo,
     formatPaymentAddress,
     pubKeyAbbr
 } from "../../lib/utils"
@@ -92,7 +93,7 @@ const styles = (theme) => ({
 
     badge: {
         position: "relative",
-        top: "5px",
+        top: "18px",
         left: "3px",
         height: "26px",
         width: "26px",
@@ -137,6 +138,7 @@ const ContactDetails = withStyles(styles)(
                     src={`${gravatar}${details.contact.email_md5}?${
                         gravatarSize}&d=robohash`}
                 />
+
                 <Badge
                     badgeContent={
                         assetManager.getAssetGlyph(details.contact.currency)
@@ -145,11 +147,24 @@ const ContactDetails = withStyles(styles)(
                     <Typography classes={{ root: classes.padded, }}
                         variant="body2" noWrap color="primary"
                     >
+                        <Typography variant="caption" noWrap color="primary">
+                            <span className="fade-strong">
+                                Default Currency:
+                            </span>
+                        </Typography>
                         {assetManager.getAssetDescription(
                             details.contact.currency
                         )}
                     </Typography>
                 </Badge>
+                <Typography variant="body1" noWrap color="primary">
+                    <Typography variant="caption" noWrap color="primary">
+                        <span className="fade-strong">Contact Memo:</span>
+                    </Typography>
+                    {formatMemo(
+                        details.contact.memo_type, details.contact.memo
+                    )}
+                </Typography>
             </div>
             <div className="f-b-col">
                 <Typography variant="title" noWrap color="primary">
@@ -230,6 +245,18 @@ class EditContactForm extends Component {
 
 
     // ...
+    hideDetails = () => {
+        this.props.hideModal()
+        this.props.setState({
+            details: {
+                external: false,
+                contact: null,
+            },
+        })
+    }
+
+
+    // ...
     updateContacts = () => {
 
         getUserContacts(this.props.userId, this.props.token)
@@ -273,7 +300,7 @@ class EditContactForm extends Component {
                 />
 
                 <div className="f-e">
-                    <DoneButton onClick={this.props.hideModal} />
+                    <DoneButton onClick={this.hideDetails} />
                 </div>
             </Fragment>
     )(this.props)
