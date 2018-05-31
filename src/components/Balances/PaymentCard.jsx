@@ -16,24 +16,14 @@ import {
 } from "material-ui/Card"
 import DatePicker from "material-ui/DatePicker"
 
-import {
-    federationAddressValid,
-    getFederationRecord,
-    htmlEntities as he,
-    invalidPaymentAddressMessage,
-    publicKeyValid,
-    signatureValid,
-} from "../../lib/utils"
+import { htmlEntities as he } from "../../lib/utils"
 import { appName, securityMsgPlaceholder, } from "../StellarFox/env"
-import { loadAccount } from "../../lib/stellar-tx"
 
 import Button from "../../lib/mui-v1/Button"
 import InputField from "../../lib/common/InputField"
 
-import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 
-import { action as AccountAction } from "../../redux/Account"
 import { action as BalancesAction } from "../../redux/Balances"
 
 import sflogo from "../StellarFox/static/sf-logo.svg"
@@ -78,167 +68,7 @@ class PaymentCard extends Component {
 
 
     // ...
-    setRecipient = async () => {
-        // read user entered input from payment address field
-        // set initial public key to null
-        let
-            input = this.textInputFieldPaymentAddress.state.value,
-            publicKey = null
-
-        // check user's input for valid federation address format
-        if (federationAddressValid(input)) {
-            // user has entered a valid federation address so convert it
-            // to public key so it can be used as payment destination
-            try {
-
-                /**
-                 * public key returned by federation service that allegedly
-                 * maps to the given federation address
-                 */
-                const federationRecord = await getFederationRecord(input)
-
-                const memo = federationRecord.memo ? federationRecord.memo : ""
-
-                /**
-                 * stellar account corresponding to the public key that is
-                 * currently mapped in to the federation address input
-                 */
-                const payeeStellarAccount = await loadAccount(
-                    federationRecord.account_id,
-                    this.props.StellarAccount.horizon
-                )
-
-                /**
-                 * The following is a verification procedure for making sure
-                 * that the recipient's info (the mapping of federation address
-                 * to Stellar public key) is authentic.
-                 */
-                const paySig = payeeStellarAccount.data_attr ?
-                    (payeeStellarAccount.data_attr.paySig ?
-                        payeeStellarAccount.data_attr.paySig : null) : null
-
-
-                if (paySig) {
-                    if (signatureValid({
-                        paymentAddress: federationRecord.stellar_address,
-                        memo,
-                    }, paySig)) {
-                        this.setTransactionType("EXISTING_ACCOUNT")
-                        this.updateIndicatorMessage(
-                            "Payee Verified", "green"
-                        )
-                        memo.length > 0 &&
-                            this.props.setState({
-                                memoRequired: true,
-                                payeeMemoText: memo,
-                            })
-                    } else {
-                        this.setTransactionType("EXISTING_ACCOUNT")
-                        this.updateIndicatorMessage(
-                            "Wrong Signature", "red"
-                        )
-                        this.props.setState({
-                            memoRequired: false,
-                            payeeMemoText: "",
-                        })
-                    }
-                } else {
-                    this.setTransactionType("EXISTING_ACCOUNT")
-                    this.updateIndicatorMessage("Payee Unverified", "yellow")
-                    this.props.setState({
-                        memoRequired: false,
-                        payeeMemoText: "",
-                    })
-                }
-
-                publicKey = federationRecord.account_id
-
-            } catch (ex) {
-                if (!ex.response) {
-                    this.textInputFieldPaymentAddress.setState({
-                        error: "Service not found at this domain.",
-                    })
-                } else if (ex.response.status === 404) {
-                    this.textInputFieldPaymentAddress.setState({
-                        error: "Recipient not found.",
-                    })
-                } else {
-                    this.textInputFieldPaymentAddress.setState({
-                        error: ex.message,
-                    })
-                }
-            }
-
-        // user did not enter a valid federation address but we also accept
-        // a valid public key at this time
-        } else if (publicKeyValid(input)) {
-            publicKey = input
-            try {
-                const payeeStellarAccount = await loadAccount(
-                    publicKey,
-                    this.props.StellarAccount.horizon
-                )
-                if (payeeStellarAccount.account_id === publicKey) {
-                    this.setTransactionType("EXISTING_ACCOUNT")
-                    this.updateIndicatorMessage("Existing Account", "green")
-                }
-
-            } catch (error) {
-                if (error.name === "NotFoundError") {
-                    this.setTransactionType("NEW_ACCOUNT")
-                    this.updateIndicatorMessage("New Account", "yellow")
-                }
-            }
-        }
-
-        /**
-         * At this point we have a valid and verified Stellar public key
-         * that we can set as payment destination.
-         */
-        if (publicKey) {
-            this.setPaymentDestination(publicKey, input)
-            this.memoValidator()
-            this.toggleSignButton()
-        }
-    }
-
-
-    // ...
-    setTransactionType = (tt) =>
-        this.props.setState({ newAccount: tt === "NEW_ACCOUNT", })
-
-
-    // ...
-    setPaymentDestination = (pk, input) =>
-        this.props.setState({
-            payee: pk,
-            payeeAddress: input,
-        })
-
-
-    // ...
-    setInvalidPaymentAddressMessage = (errorMessage) => {
-        this.textInputFieldPaymentAddress.setState({ error: errorMessage, })
-        this.props.setState({
-            indicatorMessage: securityMsgPlaceholder,
-            indicatorStyle: "fade-extreme",
-            memoText: "",
-            payeeMemoText: "",
-            memoRequired: false,
-        })
-    }
-
-
-    // ...
     resetPayee = () => this.props.setState({ payee: null, })
-
-
-    // ...
-    updateIndicatorMessage = (message, style) =>
-        this.props.setState({
-            indicatorMessage: message,
-            indicatorStyle: style,
-        })
 
 
     // ...
@@ -264,23 +94,6 @@ class PaymentCard extends Component {
 
     // ...
     disableSignButton = () => this.props.setState({ sendEnabled: false, })
-
-
-    // ...
-    paymentAddressValidator = () => {
-        let errorMessage = invalidPaymentAddressMessage(
-            this.textInputFieldPaymentAddress.state.value
-        )
-
-        if (errorMessage) {
-            this.setInvalidPaymentAddressMessage(errorMessage)
-            this.resetPayee()
-            return
-        }
-
-        this.textInputFieldPaymentAddress.setState({ error: "", })
-        this.setRecipient()
-    }
 
 
     // ...
@@ -418,11 +231,9 @@ class PaymentCard extends Component {
                         <div
                             className="p-r leading-label-align payment-currency"
                         >
-                            {
-                                this.props.assetManager.getAssetGlyph(
-                                    this.props.Account.currency
-                                )
-                            }
+                            {this.props.assetManager.getAssetGlyph(
+                                this.props.Account.currency
+                            )}
                         </div>
                         <div>
                             <InputField
@@ -570,13 +381,11 @@ class PaymentCard extends Component {
 
 // ...
 export default compose(
-    withLoginManager,
     withAssetManager,
     connect(
         // map state to props.
         (state) => ({
             Account: state.Account,
-            Assets: state.Assets,
             Balances: state.Balances,
             StellarAccount: state.StellarAccount,
             token: state.LoginManager.token,
@@ -585,7 +394,6 @@ export default compose(
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: BalancesAction.setState,
-            setStateForAccount: AccountAction.setState,
         }, dispatch)
     )
 )(PaymentCard)
