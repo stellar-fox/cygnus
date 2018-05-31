@@ -7,9 +7,9 @@ import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
 
 import {
-    federationAddressValid, formatFullName, getFederationRecord,
-    htmlEntities as he, invalidPaymentAddressMessage, pubKeyAbbr,
-    publicKeyValid, signatureValid,
+    federationAddressValid, formatFullName, formatPaymentAddress,
+    getFederationRecord, htmlEntities as he, invalidPaymentAddressMessage,
+    pubKeyAbbr, publicKeyValid, signatureValid,
 } from "../../lib/utils"
 
 import {
@@ -436,16 +436,22 @@ class ContactSuggester extends Component {
 
         let contact = this.searchForContact(publicKey),
             extContact = null,
-            displayName = null
+            displayName = null,
+            displayPaymentAddress = null
 
         /**
          * If interal contact was found above then show contact's full name in
          * "Pay to the order of" <Chip/> component.
          */
         contact ?
-            (displayName = formatFullName(
-                contact.first_name, contact.last_name
-            )) : (
+            (() => {
+                displayName = formatFullName(
+                    contact.first_name, contact.last_name
+                )
+                displayPaymentAddress = formatPaymentAddress(
+                    contact.alias, contact.domain
+                )
+            })() : (
                 extContact = this.searchForExtContact(publicKey)
             )
 
@@ -460,10 +466,9 @@ class ContactSuggester extends Component {
                 displayName = formatFullName(
                     extContact.first_name, extContact.last_name
                 )
-                /**
-                 * If external contact defined its payment address add it to
-                 * <Chip/> component content.
-                 */
+                displayPaymentAddress = formatPaymentAddress(
+                    extContact.alias, extContact.domain
+                )
 
                 /**
                  * If external contact has custom memo then fill it into the
@@ -478,7 +483,8 @@ class ContactSuggester extends Component {
              * enter most meaningful available info into the <Chip/> component.
              */
             !contact && ((content) => {
-                displayName = content
+                displayName = formatFullName(null, null)
+                displayPaymentAddress = content
             }
             )(pubKeyAbbr(publicKey))
 
@@ -505,7 +511,9 @@ class ContactSuggester extends Component {
             errorMessage: "",
             emailMD5: contact ? contact.email_md5 : "",
             label: displayName,
-            paymentAddress: publicKeyValid(input) ? pubKeyAbbr(input) : input,
+            paymentAddress: displayPaymentAddress.props &&
+                displayPaymentAddress.props.children === "−" ?
+                pubKeyAbbr(input) : displayPaymentAddress,
         })
 
         this.toggleSignButton()
