@@ -46,6 +46,14 @@ export const formatPaymentAddress = (alias, domain) => (
 
 
 // ...
+export const formatMemo = (memoType, memo) => (
+    memoType && memo ? memo : htmlEntities.Minus()
+)
+
+
+
+
+// ...
 export const getRegisteredUser = async (publicKey, bip32Path) => {
     try {
         return (await axios.post(
