@@ -25,13 +25,14 @@ import parse from "autosuggest-highlight/parse"
 
 import Avatar from "@material-ui/core/Avatar"
 import Chip from "@material-ui/core/Chip"
-import { Divider } from "@material-ui/core"
 import CheckCircle from "@material-ui/icons/CheckCircle"
+import { Divider } from "@material-ui/core"
+import HighlightOff from "@material-ui/icons/HighlightOff"
 import InputAdornment from "@material-ui/core/InputAdornment"
 import MenuItem from "@material-ui/core/MenuItem"
 import Paper from "@material-ui/core/Paper"
-import HighlightOff from "@material-ui/icons/HighlightOff"
 import TextField from "@material-ui/core/TextField"
+import Typography from "@material-ui/core/Typography"
 
 
 
@@ -82,9 +83,7 @@ const styles = (theme) => ({
         border: `1px solid ${theme.palette.secondary.fade}`,
         color: theme.palette.primary.light,
         marginBottom: "8px",
-        boxShadow: theme.shadows[1],
-        fontWeight: 400,
-        fontSize: "0.85rem",
+        boxShadow: theme.shadows[4],
         "&:focus" : {
             backgroundColor: theme.palette.secondary.light,
         },
@@ -95,8 +94,6 @@ const styles = (theme) => ({
         color: theme.palette.grey[600],
         marginBottom: "8px",
         boxShadow: theme.shadows[0],
-        fontWeight: 400,
-        fontSize: "0.85rem",
         "&:focus": {
             backgroundColor: theme.palette.grey[300],
         },
@@ -392,23 +389,6 @@ class ContactSuggester extends Component {
 
                 publicKey = federationRecord.account_id
 
-                /**
-                 * Map any possible contact to the Chip label
-                 */
-                let contact = this.searchForContact(publicKey)
-                if (!contact) {
-                    contact = this.searchForExtContact(publicKey)
-                }
-
-                this.setState({
-                    error: false,
-                    errorMessage: "",
-                    emailMD5: contact ? contact.email_md5 : "",
-                    label: contact ?
-                        [contact.first_name, contact.last_name,].join(" ") :
-                        pubKeyAbbr(publicKey),
-                })
-
             } catch (ex) {
                 this.setState({ loading: false, })
 
@@ -453,33 +433,54 @@ class ContactSuggester extends Component {
             }
         }
 
-        /**
-         * Map a matching contact to the public key entered and display Chip.
-         */
+
         let contact = this.searchForContact(publicKey),
+            extContact = null,
             displayName = null
 
+        /**
+         * If interal contact was found above then show contact's full name in
+         * "Pay to the order of" <Chip/> component.
+         */
         contact ?
             (displayName = formatFullName(
                 contact.first_name, contact.last_name
             )) : (
-                contact = this.searchForExtContact(publicKey)
+                extContact = this.searchForExtContact(publicKey)
             )
 
-        contact ?
-            (displayName = formatFullName(
-                contact.first_name, contact.last_name
-            )) : (
-                displayName = pubKeyAbbr(publicKey)
-            )
 
-        this.setState({
-            loading: false,
-            error: false,
-            errorMessage: "",
-            emailMD5: contact ? contact.email_md5 : "",
-            label: displayName,
-        })
+        /**
+         * After the search for internal contact yielded no results, we try to
+         * search for external contact and decided what should be shown in
+         * <Chip/> component.
+         */
+        extContact ?
+            (() => {
+                displayName = formatFullName(
+                    extContact.first_name, extContact.last_name
+                )
+                /**
+                 * If external contact defined its payment address add it to
+                 * <Chip/> component content.
+                 */
+
+                /**
+                 * If external contact has custom memo then fill it into the
+                 * memo field on the pay check.
+                 */
+
+                // TODO
+
+            })() :
+            /**
+             * No matching internal or external contact was found so try to
+             * enter most meaningful available info into the <Chip/> component.
+             */
+            !contact && ((content) => {
+                displayName = content
+            }
+            )(pubKeyAbbr(publicKey))
 
 
         /**
@@ -497,6 +498,16 @@ class ContactSuggester extends Component {
             })
 
         }
+
+        this.setState({
+            loading: false,
+            error: false,
+            errorMessage: "",
+            emailMD5: contact ? contact.email_md5 : "",
+            label: displayName,
+            paymentAddress: publicKeyValid(input) ? pubKeyAbbr(input) : input,
+        })
+
         this.toggleSignButton()
         return true
     }
@@ -523,6 +534,7 @@ class ContactSuggester extends Component {
     disableSignButton = () =>
         this.props.setBalancesState({ sendEnabled: false, })
 
+
     // ...
     deletePayee = () => {
         this.props.setBalancesState({
@@ -534,6 +546,7 @@ class ContactSuggester extends Component {
             memoRequired: false,
             memoText: "",
             payeeMemoText: "",
+            payeeStellarAccount: null,
         })
         this.setState({
             label: "",
@@ -592,7 +605,18 @@ class ContactSuggester extends Component {
                                             this.state.emailMD5}?${
                                             gravatarSize48}&d=robohash`}
                                     />}
-                                    label={this.state.label}
+                                    label={
+                                        <Typography variant="body1" noWrap>
+                                            <span className="text-primary p-t-small">
+                                                {this.state.label}
+                                            </span>
+                                            <Typography variant="caption" noWrap>
+                                                <span className="text-primary fade-strong">
+                                                    {this.state.paymentAddress}
+                                                </span>
+                                            </Typography>
+                                        </Typography>
+                                    }
                                     onDelete={this.props.cancelEnabled ?
                                         this.deletePayee : this.doNothing}
                                     deleteIcon={this.props.cancelEnabled ?
