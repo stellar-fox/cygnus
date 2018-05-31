@@ -198,21 +198,28 @@ class EditContactForm extends Component {
         this.props.hideModal()
 
         if (this.props.details.external) {
-            // do nothing yet
+            await Axios.post(`${config.api}/contact/extdelete`, {
+                user_id: this.props.userId,
+                token: this.props.token,
+                id: this.props.details.contact.id,
+                added_by: this.props.userId,
+            })
+
         } else {
             await Axios.post(`${config.api}/contact/delete`, {
                 user_id: this.props.userId,
                 token: this.props.token,
                 contact_id: this.props.details.contact.contact_id,
-                requested_by: this.props.details.contact.requested_by,
-            })
-            this.props.setState({
-                details: {
-                    external: false,
-                    contact: null,
-                },
+                requested_by: this.props.userId,
             })
         }
+
+        this.props.setState({
+            details: {
+                external: false,
+                contact: null,
+            },
+        })
 
         this.props.hideChoiceAlert()
 
@@ -259,12 +266,12 @@ class EditContactForm extends Component {
         ({ details, assetManager, }) =>
             <Fragment>
                 <AlertChoiceModal onYes={this.deleteContact} />
-                {details.external ? null :
-                    <ContactDetails details={details}
-                        assetManager={assetManager}
-                        deleteAction={this.deleteContactConfirm}
-                    />
-                }
+
+                <ContactDetails details={details}
+                    assetManager={assetManager}
+                    deleteAction={this.deleteContactConfirm}
+                />
+
                 <div className="f-e">
                     <DoneButton onClick={this.props.hideModal} />
                 </div>
