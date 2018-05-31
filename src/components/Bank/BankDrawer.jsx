@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { compose } from "redux"
 import { connect } from "react-redux"
+import { withLoginManager } from "../LoginManager"
 import { NavLink } from "react-router-dom"
 import {
     withDynamicRoutes,
@@ -138,13 +139,16 @@ const bankDrawerStyle = {
 
 
 // <BankDrawer> component
-export default connect(
-    // map state to props.
-    (state) => ({
-        accountExists: !!state.StellarAccount.accountId,
-        drawerVisible: state.Bank.drawerVisible,
-        contactRequests: state.Contacts.requests,
-    })
+export default compose(
+    withLoginManager,
+    connect(
+        // map state to props.
+        (state) => ({
+            accountExists: !!state.StellarAccount.accountId,
+            drawerVisible: state.Bank.drawerVisible,
+            contactRequests: state.Contacts.requests,
+        })
+    )
 )(
     class extends Component {
 
@@ -166,7 +170,8 @@ export default connect(
                     <PaymentsNavLink show={accountExists} />
                     <AccountNavLink />
                     <Divider />
-                    <ContactsNavLink show={accountExists}
+                    <ContactsNavLink
+                        show={this.props.loginManager.isAuthenticated()}
                         showBadge={contactRequests.length > 0}
                         badgeContent={contactRequests.length}
                     />
