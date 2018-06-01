@@ -14,6 +14,7 @@ import {
     pubKeyAbbr
 } from "../../lib/utils"
 import AlertChoiceModal from "../Layout/AlertChoiceModal"
+import CurrencyPicker from "../../lib/shared/CurrencyPicker"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 import { action as ContactsAction } from "../../redux/Contacts"
@@ -131,7 +132,7 @@ const DeleteContactButton = withStyles(styles)(
 
 // ...
 const ExtContactDetails = withStyles(styles)(
-    ({ classes, details, assetManager, deleteAction, }) =>
+    ({ classes, details, assetManager, deleteAction, setCurrency, }) =>
         <div className="f-b space-around p-t-large p-b-large">
             <div className="f-b-col">
                 <Avatar className={classes.avatar}
@@ -148,7 +149,7 @@ const ExtContactDetails = withStyles(styles)(
                     >
                         <Typography variant="caption" noWrap color="primary">
                             <span className="fade-strong">
-                                Set Default Currency:
+                                Default Currency:
                             </span>
                         </Typography>
                         {assetManager.getAssetDescription(
@@ -156,6 +157,11 @@ const ExtContactDetails = withStyles(styles)(
                         )}
                     </Typography>
                 </Badge>
+
+                <CurrencyPicker defaultCurrency={details.contact.currency}
+                    onChange={setCurrency}
+                />
+
                 <Typography variant="body1" noWrap color="primary">
                     <Typography variant="caption" noWrap color="primary">
                         <span className="fade-strong">Contact Memo:</span>
@@ -262,6 +268,43 @@ class EditContactForm extends Component {
 
 
     // ...
+    setExtContactDefaultCurrency = async (currency) => {
+        try {
+            await Axios.post(`${config.api}/contact/extupdate`, {
+                user_id: this.props.userId,
+                token: this.props.token,
+                id: this.props.details.contact.id,
+                currency,
+            })
+
+            const results = await getUserExternalContacts(
+                this.props.userId, this.props.token
+            )
+
+            results ? this.props.setState({
+                details: Object.assign(this.props.details, {
+                    contact: Object.assign(this.props.details.contact,
+                        {currency,}
+                    ),
+                }),
+            }) : this.props.setState({
+                details: [],
+            })
+
+            results ? this.props.setState({
+                external: results,
+            }) : this.props.setState({
+                external: [],
+            })
+
+
+        } catch (error) {
+            this.props.showAlert("Unable to update currency.", "Error")
+        }
+    }
+
+
+    // ...
     deleteContactConfirm = () => {
         this.props.showChoiceAlert(
             "Delete contact from your contact book?",
@@ -361,6 +404,7 @@ class EditContactForm extends Component {
                     <ExtContactDetails details={details}
                         assetManager={assetManager}
                         deleteAction={this.deleteContactConfirm}
+                        setCurrency={this.setExtContactDefaultCurrency}
                     /> :
                     <ContactDetails details={details}
                         assetManager={assetManager}
