@@ -11,6 +11,7 @@ import {
     emailValid,
     federationAddressValid,
     getFederationRecord,
+    toAliasAndDomain,
     publicKeyValid
 } from "../../lib/utils"
 import { stellarFoxDomain } from "../StellarFox/env"
@@ -229,10 +230,24 @@ class AddContactForm extends Component {
             lastInput: this.state.input,
         })
 
-        // try adding a contact based on payment address
-        if (this.state.tabSelected === 1) {
+        // try adding a contact based on email address
+        if (this.state.tabSelected === 0) {
+            this.setState({
+                showProgress: false,
+                showRequestSent: false,
+                buttonDisabled: false,
+                input: "",
+            })
+            this.props.showAlert(
+                "Not yet implemented. Please, check back soon.",
+                "Notice"
+            )
+        }
 
-            let [alias, domain,] = this.state.input.split("*")
+        // try adding a contact based on payment address
+        else if (this.state.tabSelected === 1) {
+
+            let [alias, domain,] = toAliasAndDomain(this.state.input)
 
             domain === stellarFoxDomain ?
                 Axios.post(`${config.api}/contact/request`, {
@@ -296,28 +311,44 @@ class AddContactForm extends Component {
 
     // ...
     requestFailed = (error) => {
+
         this.setState({
             showProgress: false,
             buttonDisabled: false,
         })
 
-        error.response.status === 409 &&
+        if (error.response && error.response.status === 409) {
             this.props.showAlert(
                 "You have already sent a contact request to this person.",
                 "Notice"
             )
+            return false
+        }
 
-        error.response.status === 404 &&
+
+        if (error.response && error.response.status === 404) {
             this.props.showAlert(
                 "The address you entered does not exist.",
                 "Notice"
             )
+            return false
+        }
 
-        error.response.status >= 500 &&
+        if (error.response && error.response.status >= 500) {
             this.props.showAlert(
                 "The contact you requested could not be processed.",
                 "Error"
             )
+            return false
+        }
+
+        /**
+         * Did not match any error code above so show actual error message.
+         */
+        this.props.showAlert(
+            error.message,
+            "Error"
+        )
     }
 
 
