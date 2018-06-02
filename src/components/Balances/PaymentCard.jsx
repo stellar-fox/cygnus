@@ -168,7 +168,8 @@ class PaymentCard extends Component {
     // ...
     memoValid = () => {
         if (this.props.Balances.memoRequired &&
-            this.props.Balances.memoText === "") {
+            !this.props.Balances.memoText &&
+            !this.props.Balances.payeeMemoText) {
             return false
         }
         return true
