@@ -218,7 +218,7 @@ export const federationAddressValid = (federationAddress) => !!(
 
 // ...
 export const paymentAddress = (alias, domain) => (
-    federationAddressValid(`${alias}*${domain}`) ? `${alias}*${domain}` : null
+    federationAddressValid(`${alias}*${domain}`) ? `${alias}*${domain}` : ""
 )
 
 
@@ -266,6 +266,22 @@ export const invalidPaymentAddressMessage = (address) => {
             return "Invalid key."
         }
     }
+}
+
+
+
+
+// ...
+export const invalidFederationAddressMessage = (address) => {
+    // Looks like something totally invalid for this field.
+    if (address && !address.match(/\*/)) {
+        return "Invalid input."
+    }
+    // Looks like user is entering Federation Address format.
+    if (address && address.match(/\*/) && !federationAddressValid(address)) {
+        return "Invalid payment address."
+    }
+    return emptyString()
 }
 
 
