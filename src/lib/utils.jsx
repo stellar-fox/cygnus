@@ -25,6 +25,12 @@ const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-
 
 
 // ...
+export const ntoes = (input) => ( input !== null ? input : "")
+
+
+
+
+// ...
 export const formatFullName = (firstName, lastName) => (
     firstName && lastName ?
         `${firstName} ${lastName}`  :
@@ -206,6 +212,20 @@ export const federationAddressValid = (federationAddress) => !!(
         domainRegex,
     ].map(r => r.source).join(""))
 ).test(federationAddress)
+
+
+
+
+// ...
+export const paymentAddress = (alias, domain) => (
+    federationAddressValid(`${alias}*${domain}`) ? `${alias}*${domain}` : null
+)
+
+
+
+
+// ...
+export const toAliasAndDomain = (paymentAddress) => paymentAddress.split("*")
 
 
 
