@@ -8,10 +8,14 @@ import {
     getUserContacts,
     getUserExternalContacts,
     getContactRequests,
+    federationAddressValid,
     formatFullName,
     formatMemo,
     formatPaymentAddress,
-    pubKeyAbbr
+    ntoes,
+    paymentAddress,
+    pubKeyAbbr,
+    toAliasAndDomain,
 } from "../../lib/utils"
 import AlertChoiceModal from "../Layout/AlertChoiceModal"
 import CurrencyPicker from "../../lib/shared/CurrencyPicker"
@@ -21,10 +25,12 @@ import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
 import { withStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
+import TextField from "@material-ui/core/TextField"
 
 import Avatar from "@material-ui/core/Avatar"
 import Badge from "@material-ui/core/Badge"
 import Button from "@material-ui/core/Button"
+import CircularProgress from "@material-ui/core/CircularProgress"
 import Typography from "@material-ui/core/Typography"
 import Axios from "axios"
 
@@ -57,11 +63,7 @@ const styles = (theme) => ({
         },
     },
 
-    textField: {
-        width: 300,
-    },
-
-    input: {
+    textFieldInput: {
         color: theme.palette.primary.main,
         "&:hover:before": {
             borderBottomColor: `${theme.palette.primary.main} !important`,
@@ -103,18 +105,51 @@ const styles = (theme) => ({
         fontWeight: 600,
         fontSize: "1.35rem",
     },
+
 })
 
-
+// ...
+const EditContactInfoTextField = withStyles(styles)(
+    ({ classes, label, id, onChange, value, }) => <TextField
+        id={id}
+        label={label}
+        value={value}
+        type="text"
+        margin="dense"
+        onChange={onChange}
+        InputProps={{
+            classes: {
+                input: classes.textFieldInput,
+                underline: classes.textFieldInput,
+            },
+        }}
+        InputLabelProps={{
+            classes: {
+                root: classes.textFieldInput,
+                marginDense: classes.inputMargin,
+            },
+        }}
+    />
+)
 
 
 // ...
-const DoneButton = withStyles(styles)(
-    ({ classes, onClick, }) =>
+const RequestProgress = withStyles(styles)(
+    ({ classes, }) =>
+        <CircularProgress color="primary" className={classes.progress}
+            thickness={3} size={25}
+        />
+)
+
+
+// ...
+const ModalButton = withStyles(styles)(
+    ({ classes, onClick, label, style, }) =>
         <Button variant="raised" color="primary" onClick={onClick}
+            style={style}
             className={classNames(classes.buttonDone, classes.primaryRaised)}
         >
-            Done
+            {label}
         </Button>
 )
 
@@ -132,7 +167,10 @@ const DeleteContactButton = withStyles(styles)(
 
 // ...
 const ExtContactDetails = withStyles(styles)(
-    ({ classes, details, assetManager, deleteAction, setCurrency, }) =>
+    ({ classes, details, assetManager, deleteAction, setCurrency, updateMemo,
+        memoFieldValue, updateFirstName, firstNameFieldValue, updateLastName,
+        lastNameFieldValue, updatePaymentAddress,
+        paymentAddressFieldValue, currentCurrency, }) =>
         <div className="f-b space-around p-t-large p-b-large">
             <div className="f-b-col">
                 <Avatar className={classes.avatar}
@@ -141,7 +179,7 @@ const ExtContactDetails = withStyles(styles)(
                 />
                 <Badge
                     badgeContent={
-                        assetManager.getAssetGlyph(details.contact.currency)
+                        assetManager.getAssetGlyph(currentCurrency)
                     } classes={{ badge: classes.badge, }}
                 >
                     <Typography classes={{ root: classes.padded, }}
@@ -153,7 +191,7 @@ const ExtContactDetails = withStyles(styles)(
                             </span>
                         </Typography>
                         {assetManager.getAssetDescription(
-                            details.contact.currency
+                            currentCurrency
                         )}
                     </Typography>
                 </Badge>
@@ -162,31 +200,29 @@ const ExtContactDetails = withStyles(styles)(
                     onChange={setCurrency}
                 />
 
-                <Typography variant="body1" noWrap color="primary">
-                    <Typography variant="caption" noWrap color="primary">
-                        <span className="fade-strong">Contact Memo:</span>
-                    </Typography>
-                    {formatMemo(
-                        details.contact.memo_type, details.contact.memo
-                    )}
-                </Typography>
+                <EditContactInfoTextField id="edit-memo"
+                    label="Contact Memo"
+                    onChange={updateMemo} value={memoFieldValue}
+                />
+
             </div>
             <div className="f-b-col">
-                <Typography variant="title" noWrap color="primary">
-                    {formatFullName(
-                        details.contact.first_name, details.contact.last_name
-                    )}
-                </Typography>
-                <Typography classes={{ root: classNames(classes.padded), }}
-                    variant="subheading" noWrap color="primary"
-                >
-                    <Typography variant="caption" noWrap color="primary">
-                        <span className="fade-strong">Payment Address:</span>
-                    </Typography>
-                    {formatPaymentAddress(
-                        details.contact.alias, details.contact.domain
-                    )}
-                </Typography>
+                <EditContactInfoTextField id="edit-first-name"
+                    label="Contact First Name"
+                    onChange={updateFirstName} value={firstNameFieldValue}
+                />
+                <EditContactInfoTextField id="edit-last-name"
+                    label="Contact Last Name"
+                    onChange={updateLastName} value={lastNameFieldValue}
+                />
+                <EditContactInfoTextField id="edit-payment-address"
+                    label="Contact Payment Address"
+                    onChange={updatePaymentAddress}
+                    value={paymentAddressFieldValue}
+                />
+
+                <div className="p-t"></div>
+
                 <Typography variant="body1" noWrap color="primary">
                     <Typography variant="caption" noWrap color="primary">
                         <span className="fade-strong">Account Number:</span>
@@ -266,41 +302,38 @@ const ContactDetails = withStyles(styles)(
 // ...
 class EditContactForm extends Component {
 
+    state = {
+        memo: "",
+        firstName: "",
+        lastName: "",
+        alias: "",
+        domain: "",
+        paymentAddress: "",
+        defaultCurrency: "eur",
+        inProgress: false,
+    }
+
 
     // ...
-    setExtContactDefaultCurrency = async (currency) => {
-        try {
-            await Axios.post(`${config.api}/contact/extupdate`, {
-                user_id: this.props.userId,
-                token: this.props.token,
-                id: this.props.details.contact.id,
-                currency,
-            })
-
-            const results = await getUserExternalContacts(
-                this.props.userId, this.props.token
-            )
-
-            results ? this.props.setState({
-                details: Object.assign(this.props.details, {
-                    contact: Object.assign(this.props.details.contact,
-                        {currency,}
-                    ),
-                }),
-            }) : this.props.setState({
-                details: [],
-            })
-
-            results ? this.props.setState({
-                external: results,
-            }) : this.props.setState({
-                external: [],
-            })
+    componentDidMount = () => {
+        this.setState({
+            memo: ntoes(this.props.details.contact.memo),
+            firstName: ntoes(this.props.details.contact.first_name),
+            lastName: ntoes(this.props.details.contact.last_name),
+            alias: ntoes(this.props.details.contact.alias),
+            domain: ntoes(this.props.details.contact.domain),
+            paymentAddress: paymentAddress(
+                this.props.details.contact.alias,
+                this.props.details.contact.domain
+            ),
+            defaultCurrency: this.props.details.contact.currency,
+        })
+    }
 
 
-        } catch (error) {
-            this.props.showAlert("Unable to update currency.", "Error")
-        }
+    // ...
+    setExtContactDefaultCurrency = (currency) => {
+        this.setState({ defaultCurrency: currency, })
     }
 
 
@@ -361,6 +394,50 @@ class EditContactForm extends Component {
         })
     }
 
+    // ...
+    updateContactInfo = async () => {
+        await this.setState({ inProgress: true, })
+        try {
+            await Axios.post(`${config.api}/contact/extupdate`, {
+                user_id: this.props.userId,
+                token: this.props.token,
+                id: this.props.details.contact.id,
+                currency: this.state.defaultCurrency,
+                memo: this.state.memo,
+                first_name: this.state.firstName,
+                last_name: this.state.lastName,
+                alias: this.state.alias,
+                domain: this.state.domain,
+            })
+
+            const results = await getUserExternalContacts(
+                this.props.userId, this.props.token
+            )
+
+            results ? this.props.setState({
+                details: Object.assign(this.props.details, {
+                    contact: Object.assign(this.props.details.contact,
+                        {currency: this.state.defaultCurrency,}
+                    ),
+                }),
+            }) : this.props.setState({
+                details: [],
+            })
+
+            results ? this.props.setState({
+                external: results,
+            }) : this.props.setState({
+                external: [],
+            })
+
+            this.updateContacts()
+            await this.setState({ inProgress: false, })
+            this.hideDetails()
+
+        } catch (error) {
+            this.props.showAlert("Unable to update currency.", "Error")
+        }
+    }
 
     // ...
     updateContacts = () => {
@@ -395,6 +472,40 @@ class EditContactForm extends Component {
 
 
     // ...
+    updateFirstName = (event) =>
+        this.setState({ firstName: event.target.value, })
+
+
+    // ...
+    updateLastName = (event) =>
+        this.setState({ lastName: event.target.value, })
+
+
+    // ...
+    updateMemo = (event) =>
+        this.setState({ memo: event.target.value, })
+
+
+    // ...
+    updatePaymentAddress = (event) => {
+        if (federationAddressValid(event.target.value)) {
+            let [alias, domain,] = toAliasAndDomain(event.target.value)
+            this.setState({
+                alias,
+                domain,
+                paymentAddress: event.target.value,
+            })
+        } else {
+            this.setState({
+                alias: "",
+                domain: "",
+                paymentAddress: event.target.value,
+            })
+        }
+    }
+
+
+    // ...
     render = () => (
         ({ details, assetManager, }) =>
             <Fragment>
@@ -405,6 +516,15 @@ class EditContactForm extends Component {
                         assetManager={assetManager}
                         deleteAction={this.deleteContactConfirm}
                         setCurrency={this.setExtContactDefaultCurrency}
+                        updateMemo={this.updateMemo}
+                        memoFieldValue={this.state.memo}
+                        updateFirstName={this.updateFirstName}
+                        firstNameFieldValue={this.state.firstName}
+                        updateLastName={this.updateLastName}
+                        lastNameFieldValue={this.state.lastName}
+                        updatePaymentAddress={this.updatePaymentAddress}
+                        paymentAddressFieldValue={this.state.paymentAddress}
+                        currentCurrency={this.state.defaultCurrency}
                     /> :
                     <ContactDetails details={details}
                         assetManager={assetManager}
@@ -412,7 +532,11 @@ class EditContactForm extends Component {
                     />
                 }
                 <div className="f-e">
-                    <DoneButton onClick={this.hideDetails} />
+                    { this.state.inProgress ? <RequestProgress /> : null }
+                    <ModalButton style={{ marginRight: "0.5rem", }}
+                        onClick={this.updateContactInfo} label="Update"
+                    />
+                    <ModalButton onClick={this.hideDetails} label="Cancel" />
                 </div>
             </Fragment>
     )(this.props)
