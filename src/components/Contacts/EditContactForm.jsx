@@ -16,6 +16,8 @@ import {
     paymentAddress,
     pubKeyAbbr,
     toAliasAndDomain,
+    getFederationRecord,
+    invalidFederationAddressMessage
 } from "../../lib/utils"
 import AlertChoiceModal from "../Layout/AlertChoiceModal"
 import CurrencyPicker from "../../lib/shared/CurrencyPicker"
@@ -110,26 +112,29 @@ const styles = (theme) => ({
 
 // ...
 const EditContactInfoTextField = withStyles(styles)(
-    ({ classes, label, id, onChange, value, }) => <TextField
-        id={id}
-        label={label}
-        value={value}
-        type="text"
-        margin="dense"
-        onChange={onChange}
-        InputProps={{
-            classes: {
-                input: classes.textFieldInput,
-                underline: classes.textFieldInput,
-            },
-        }}
-        InputLabelProps={{
-            classes: {
-                root: classes.textFieldInput,
-                marginDense: classes.inputMargin,
-            },
-        }}
-    />
+    ({ classes, label, id, onChange, value, error, helperText, }) =>
+        <TextField
+            id={id}
+            label={label}
+            value={value}
+            error={error}
+            helperText={helperText}
+            type="text"
+            margin="dense"
+            onChange={onChange}
+            InputProps={{
+                classes: {
+                    input: classes.textFieldInput,
+                    underline: classes.textFieldInput,
+                },
+            }}
+            InputLabelProps={{
+                classes: {
+                    root: classes.textFieldInput,
+                    marginDense: classes.inputMargin,
+                },
+            }}
+        />
 )
 
 
@@ -170,7 +175,7 @@ const ExtContactDetails = withStyles(styles)(
     ({ classes, details, assetManager, deleteAction, setCurrency, updateMemo,
         memoFieldValue, updateFirstName, firstNameFieldValue, updateLastName,
         lastNameFieldValue, updatePaymentAddress,
-        paymentAddressFieldValue, currentCurrency, }) =>
+        paymentAddressFieldValue, currentCurrency, error, errorMessage, }) =>
         <div className="f-b space-around p-t-large p-b-large">
             <div className="f-b-col">
                 <Avatar className={classes.avatar}
@@ -219,6 +224,7 @@ const ExtContactDetails = withStyles(styles)(
                     label="Contact Payment Address"
                     onChange={updatePaymentAddress}
                     value={paymentAddressFieldValue}
+                    error={error} helperText={errorMessage}
                 />
 
                 <div className="p-t"></div>
@@ -311,6 +317,8 @@ class EditContactForm extends Component {
         paymentAddress: "",
         defaultCurrency: "eur",
         inProgress: false,
+        error: false,
+        errorMessage: "",
     }
 
 
@@ -396,7 +404,63 @@ class EditContactForm extends Component {
 
     // ...
     updateContactInfo = async () => {
-        await this.setState({ inProgress: true, })
+
+        await this.setState({
+            error: false,
+            errorMessage: "",
+            inProgress: true,
+        })
+
+        /**
+         * When saving payment address, we need to make sure the address is
+         * indeed valid and maps to THE SAME account number!
+         */
+
+        if (this.state.paymentAddress) {
+            const federationAddress = paymentAddress(
+                this.state.alias, this.state.domain
+            )
+
+            const errorMessage = invalidFederationAddressMessage(
+                federationAddress
+            )
+
+            if (errorMessage) {
+                await this.setState({
+                    error: true,
+                    errorMessage,
+                    inProgress: false,
+                })
+                return false
+            }
+            try {
+                const fedRecord = await getFederationRecord(federationAddress)
+                if (fedRecord.account_id !== this.props.details.contact.pubkey) {
+                    await this.setState({
+                        error: true,
+                        errorMessage: "No address match.",
+                        inProgress: false,
+                    })
+                    return false
+                }
+            } catch (error) {
+                await this.setState({
+                    error: true,
+                    errorMessage: error.response &&
+                        error.response.status === 404 ?
+                        "Address not found." : error.message,
+                    inProgress: false,
+                })
+                return false
+            }
+
+            await this.setState({
+                error: false,
+                errorMessage: "",
+                inProgress: true,
+            })
+        }
+
         try {
             await Axios.post(`${config.api}/contact/extupdate`, {
                 user_id: this.props.userId,
@@ -525,6 +589,8 @@ class EditContactForm extends Component {
                         updatePaymentAddress={this.updatePaymentAddress}
                         paymentAddressFieldValue={this.state.paymentAddress}
                         currentCurrency={this.state.defaultCurrency}
+                        error={this.state.error}
+                        errorMessage={this.state.errorMessage}
                     /> :
                     <ContactDetails details={details}
                         assetManager={assetManager}
