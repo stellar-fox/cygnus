@@ -20,6 +20,7 @@ const initState = ((now) => ({
     memoText: "",
     payeeMemoText: "",
     payeeCurrency: "eur",
+    payeeCurrencyAmount: "",
     message: null,
     minimumReserveMessage: "",
     newAccount: false,
