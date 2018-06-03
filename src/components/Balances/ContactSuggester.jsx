@@ -33,6 +33,7 @@ import MenuItem from "@material-ui/core/MenuItem"
 import Paper from "@material-ui/core/Paper"
 import TextField from "@material-ui/core/TextField"
 import Typography from "@material-ui/core/Typography"
+import { withAssetManager } from "../AssetManager"
 
 
 
@@ -100,6 +101,9 @@ const styles = (theme) => ({
     },
     avatarDisabled: {
         opacity: "0.6",
+    },
+    label: {
+        color: theme.palette.primary.main,
     },
 })
 
@@ -525,6 +529,22 @@ class ContactSuggester extends Component {
                 pubKeyAbbr(input) : displayPaymentAddress,
         })
 
+        /**
+         * In case the selected contact has a different currency than then
+         * sender, update the receiver currency and display appropriate rate.
+         */
+        if (this.props.currency !== this.props.payeeCurrency) {
+            this.props.assetManager.updateExchangeRate(
+                this.props.payeeCurrency
+            ).then(() => {
+                this.props.setBalancesState({
+                    payeeCurrencyAmount: this.props.assetManager.convertToPayeeCurrency(
+                        this.props.amountNative
+                    ),
+                })
+            })
+        }
+
         this.toggleSignButton()
         return true
     }
@@ -563,6 +583,7 @@ class ContactSuggester extends Component {
             memoRequired: false,
             memoText: "",
             payeeCurrency: "eur",
+            payeeCurrencyAmount: "",
             payeeMemoText: "",
             payeeStellarAccount: null,
         })
@@ -625,14 +646,12 @@ class ContactSuggester extends Component {
                                     />}
                                     label={
                                         <Typography variant="body1" noWrap>
-                                            <span className="text-primary p-t-small">
+                                            <span>
                                                 {this.state.label}
-                                            </span>
-                                            <Typography variant="caption" noWrap>
-                                                <span className="text-primary fade-strong">
-                                                    {this.state.paymentAddress}
-                                                </span>
-                                            </Typography>
+                                            </span><he.Nbsp /><he.Nbsp /><he.Nbsp />
+                                            <span className="tiny fade-strong">
+                                                {this.state.paymentAddress}
+                                            </span><he.Nbsp /><he.Nbsp />
                                         </Typography>
                                     }
                                     onDelete={this.props.cancelEnabled ?
@@ -640,7 +659,7 @@ class ContactSuggester extends Component {
                                     deleteIcon={this.props.cancelEnabled ?
                                         <HighlightOff /> : <CheckCircle />}
                                     classes={{ root: this.props.cancelEnabled ?
-                                        classes.chip : classes.chipDisabled, }}
+                                        classes.chip : classes.chipDisabled, label: classes.label, }}
                                 /> : this.state.loading ?
                                     <div className="small text-primary fade">
                                         Loading...
@@ -657,9 +676,12 @@ class ContactSuggester extends Component {
 
 // ...
 export default compose(
+    withAssetManager,
     connect(
         // map state to props.
         (state) => ({
+            currency: state.Account.currency,
+            amountNative: state.Balances.amountNative,
             contacts: state.Contacts,
             payee: state.Balances.payee,
             payeeCurrency: state.Balances.payeeCurrency,
