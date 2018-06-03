@@ -79,21 +79,20 @@ class AssetManager extends Component {
 
 
     // ...
-    updateExchangeRate = (currency) => {
+    updateExchangeRate = async (currency) => {
         if (this.rateStale(currency)) {
-            Axios.get(`${config.api}/ticker/latest/${currency}`)
-                .then((response) => {
-                    this.props.setState({
-                        [currency]: {
-                            rate: response.data.data[`price_${currency}`],
-                            lastFetch: Date.now(),
-                        },
-                    })
-                })
-                .catch(function (error) {
-                    // eslint-disable-next-line no-console
-                    console.log(error.message)
-                })
+            const rate = await Axios.get(
+                `${config.api}/ticker/latest/${currency}`
+            )
+            this.props.setState({
+                [currency]: {
+                    rate: rate.data.data[`price_${currency}`],
+                    lastFetch: Date.now(),
+                },
+            })
+            return rate.data.data[`price_${currency}`]
+        } else {
+            return this.props.state[currency].rate
         }
     }
 
@@ -119,6 +118,16 @@ class AssetManager extends Component {
 
 
     // ...
+    convertToPayeeCurrency = (amount) => {
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        return this.props.state[this.props.payeeCurrency] && amount !== "" ?
+            new BigNumber(amount).multipliedBy(
+                this.props.state[this.props.payeeCurrency].rate
+            ).toFixed(2) : "0.00"
+    }
+
+
+    // ...
     render = () =>
         <AssetManagerContext.Provider value={this}>
             { this.props.children }
@@ -133,6 +142,7 @@ export default connect(
     (state) => ({
         state: state.Assets,
         Account: state.Account,
+        payeeCurrency: state.Balances.payeeCurrency,
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
