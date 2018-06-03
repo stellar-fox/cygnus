@@ -96,9 +96,9 @@ export default compose(
 
 
         // ...
-        acceptContact = () => {
+        acceptContact = (requested_by) => {
             changeContactStatus(
-                this.props.userId, this.props.token, 2, this.props.userId
+                this.props.userId, this.props.token, 2, requested_by
             ).then((_response) => {
                 getUserContacts(this.props.userId, this.props.token)
                     .then((results) => {
@@ -129,9 +129,9 @@ export default compose(
 
 
         // ...
-        rejectContact = () => {
+        rejectContact = (requested_by) => {
             changeContactStatus(
-                this.props.userId, this.props.token, 3, this.props.userId
+                this.props.userId, this.props.token, 3, requested_by
             ).then((_response) => {
                 getContactRequests(this.props.userId, this.props.token)
                     .then((results) => {
