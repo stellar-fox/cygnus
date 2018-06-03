@@ -9,7 +9,7 @@ import { action as ContactsAction } from "../../redux/Contacts"
 import {
     federationAddressValid, formatFullName, formatPaymentAddress,
     getFederationRecord, htmlEntities as he, invalidPaymentAddressMessage,
-    pubKeyAbbr, publicKeyValid, signatureValid,
+    paymentAddress, pubKeyAbbr, publicKeyValid, signatureValid,
 } from "../../lib/utils"
 
 import {
@@ -162,8 +162,9 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
                     </div>
                     <div className="f-b micro text-primary fade-strong">
                         {suggestion.alias && suggestion.domain ?
-                            `${suggestion.alias}*${suggestion.domain}` :
-                            pubKeyAbbr(suggestion.publicKey)
+                            paymentAddress(
+                                suggestion.alias, suggestion.domain
+                            ) : pubKeyAbbr(suggestion.publicKey)
                         }
                     </div>
                 </div>
@@ -205,7 +206,8 @@ class ContactSuggester extends Component {
     // ...
     getSuggestionValue = (suggestion) => {
         return (!suggestion.alias || !suggestion.domain) ?
-            suggestion.publicKey : `${suggestion.alias}*${suggestion.domain}`
+            suggestion.publicKey :
+            paymentAddress(suggestion.alias, suggestion.domain)
     }
 
 
@@ -381,10 +383,6 @@ class ContactSuggester extends Component {
                 } else {
                     this.setTransactionType("EXISTING_ACCOUNT")
                     this.updateIndicatorMessage("Payee Unverified", "yellow")
-                    this.props.setBalancesState({
-                        memoRequired: false,
-                        payeeMemoText: "",
-                    })
                 }
 
                 publicKey = federationRecord.account_id
@@ -474,7 +472,6 @@ class ContactSuggester extends Component {
                  * If external contact has custom memo then fill it into the
                  * memo field on the pay check.
                  */
-
                 this.props.setBalancesState({
                     memoRequired: true,
                     payeeMemoText: extContact.memo,
@@ -502,8 +499,14 @@ class ContactSuggester extends Component {
                 payeeAddress: input,
             })
 
+            /**
+             * Either use original memo (returned by federation service) or
+             * contact defined memo (in case of external contacts) or leave it
+             * blank.
+             */
             this.props.setBalancesState({
-                memoText: memo ? memo : "",
+                memoText: memo ? memo : this.props.payeeMemoText ?
+                    this.props.payeeMemoText : "",
             })
 
         }
@@ -655,6 +658,7 @@ export default compose(
         (state) => ({
             contacts: state.Contacts,
             payee: state.Balances.payee,
+            payeeMemoText: state.Balances.payeeMemoText,
             amountIsValid: state.Balances.amountIsValid,
             cancelEnabled: state.Balances.cancelEnabled,
             StellarAccount: state.StellarAccount,
