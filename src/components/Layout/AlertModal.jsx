@@ -21,7 +21,7 @@ const AlertWithDismiss =
                 <Button
                     color="primary"
                     onClick={onDismiss}
-                >Dismiss</Button>,
+                >OK</Button>,
             ]}
         >
             <div className="p-t">{ content }</div>
