@@ -1,33 +1,21 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import { bindActionCreators, compose } from "redux"
 import PropTypes from "prop-types"
-import {
-    bindActionCreators,
-    compose,
-} from "redux"
 import numberToText from "number-to-text"
 import debounce from "lodash/debounce"
 import { BigNumber } from "bignumber.js"
-
-import {
-    Card,
-    CardActions,
-    CardText,
-} from "material-ui/Card"
+import { Card, CardActions, CardText } from "material-ui/Card"
 import DatePicker from "material-ui/DatePicker"
-
 import { htmlEntities as he } from "../../lib/utils"
 import { appName, securityMsgPlaceholder, } from "../StellarFox/env"
-
 import Button from "../../lib/mui-v1/Button"
 import InputField from "../../lib/common/InputField"
-
 import { withAssetManager } from "../AssetManager"
-
 import { action as BalancesAction } from "../../redux/Balances"
-
 import sflogo from "../StellarFox/static/sf-logo.svg"
 import ContactSuggester from "./ContactSuggester"
+import { Typography } from "@material-ui/core"
 
 
 
@@ -56,6 +44,8 @@ class PaymentCard extends Component {
             memoRequired: false,
             memoText: "",
             payeeMemoText: "",
+            payeeCurrency: "eur",
+            payeeCurrencyAmount: "",
             minimumReserveMessage: "",
             sendEnabled: false,
             cancelEnabled: true,
@@ -133,6 +123,23 @@ class PaymentCard extends Component {
             return false
         }
 
+        /**
+         * In case the selected contact has a different currency than then
+         * sender, update the receiver currency and display appropriate rate
+         * every time the amount is updated.
+         */
+        if (this.props.Account.currency !== this.props.Balances.payeeCurrency) {
+            this.props.assetManager.updateExchangeRate(
+                this.props.Balances.payeeCurrency
+            ).then(() => {
+                this.props.setState({
+                    payeeCurrencyAmount: this.props.assetManager.convertToPayeeCurrency(
+                        this.props.Balances.amountNative
+                    ),
+                })
+            })
+        }
+
         // amount is a valid positive number with fixed precision of 2 decimals
         this.props.setState({
             amount,
@@ -163,6 +170,17 @@ class PaymentCard extends Component {
             return numberToText.convertToText(grouped[1])
         }
     }
+
+
+    // ...
+    displayPayeeAmount = () =>
+        this.props.Balances.amount ? (() => {
+            return `${this.props.Balances.payeeCurrencyAmount ?
+                this.props.Balances.payeeCurrencyAmount : "0.00"
+            } ${this.props.assetManager.getAssetDescription(
+                this.props.Balances.payeeCurrency
+            )}`
+        })() : null
 
 
     // ...
@@ -267,16 +285,25 @@ class PaymentCard extends Component {
                             this.props.Balances.amount  &&
                             this.props.Balances.amountText ?
                                 this.props.Balances.amount  &&
-                                this.props.Balances.amountText :
-                                <span className="transparent">NOTHING</span>
+                                this.props.Balances.amountText : <he.Nbsp />
                         }
                     </div>
                     <div>
-                        {
-                            this.props.assetManager.getAssetDenomination(
+
+                        <Typography variant="body1" align="right"
+                            noWrap
+                        >
+                            {this.props.assetManager.getAssetDenomination(
                                 this.props.Account.currency
-                            )
-                        }
+                            )}
+                            <he.Nbsp /><he.Nbsp />
+                            <span className="tiny text-primary fade-strong">
+                                {this.props.Account.currency !==
+                                this.props.Balances.payeeCurrency &&
+                                    this.displayPayeeAmount()
+                                }
+                            </span>
+                        </Typography>
                     </div>
                 </div>
                 <div className="p-t"></div>
