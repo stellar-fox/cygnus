@@ -7,6 +7,7 @@ import {
 import { connect } from "react-redux"
 
 import { action as AccountAction } from "../../redux/Account"
+import { action as AssetsAction } from "../../redux/AssetManager"
 import { action as BankAction } from "../../redux/Bank"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
@@ -64,6 +65,7 @@ export default compose(
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             resetAccountState: AccountAction.resetState,
+            resetAssetsState: AssetsAction.resetState,
             resetBalancesState: BalancesAction.resetState,
             resetContactsState: ContactsAction.resetState,
             resetLedgerHQState: LedgerHQAction.resetState,
@@ -81,6 +83,9 @@ export default compose(
             classes: PropTypes.object.isRequired,
             currentView: PropTypes.string.isRequired,
             resetAccountState: PropTypes.func.isRequired,
+            resetAssetsState: PropTypes.func.isRequired,
+            resetBalancesState: PropTypes.func.isRequired,
+            resetContactsState: PropTypes.func.isRequired,
             resetLedgerHQState: PropTypes.func.isRequired,
             resetLoginManagerState: PropTypes.func.isRequired,
             resetPaymentsState: PropTypes.func.isRequired,
@@ -92,6 +97,7 @@ export default compose(
         // ...
         handleLogOutClick = () => {
             this.props.resetAccountState()
+            this.props.resetAssetsState()
             this.props.resetBalancesState()
             this.props.resetContactsState()
             this.props.resetLedgerHQState()

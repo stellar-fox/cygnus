@@ -11,6 +11,7 @@ const initState = {}
 
 // ...
 export const SET_STATE = "@AssetManager/SET_STATE"
+export const RESET_STATE = "@AssetManager/RESET_STATE"
 
 
 
@@ -23,6 +24,10 @@ export const action = {
         type: SET_STATE,
         state,
     }),
+
+
+    // ...
+    resetState: () => ({ type: RESET_STATE, }),
 
 }
 
@@ -37,5 +42,9 @@ export const reducer = createReducer(initState)({
         ...state,
         ...action.state,
     }),
+
+
+    // ...
+    [RESET_STATE]: () => initState,
 
 })
