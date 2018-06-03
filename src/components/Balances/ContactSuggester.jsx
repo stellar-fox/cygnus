@@ -507,6 +507,9 @@ class ContactSuggester extends Component {
             this.props.setBalancesState({
                 memoText: memo ? memo : this.props.payeeMemoText ?
                     this.props.payeeMemoText : "",
+                payeeCurrency: contact ?
+                    contact.currency : extContact ?
+                        extContact.currency : this.props.payeeCurrency,
             })
 
         }
@@ -559,6 +562,7 @@ class ContactSuggester extends Component {
             sendEnabled: false,
             memoRequired: false,
             memoText: "",
+            payeeCurrency: "eur",
             payeeMemoText: "",
             payeeStellarAccount: null,
         })
@@ -658,6 +662,7 @@ export default compose(
         (state) => ({
             contacts: state.Contacts,
             payee: state.Balances.payee,
+            payeeCurrency: state.Balances.payeeCurrency,
             payeeMemoText: state.Balances.payeeMemoText,
             amountIsValid: state.Balances.amountIsValid,
             cancelEnabled: state.Balances.cancelEnabled,
