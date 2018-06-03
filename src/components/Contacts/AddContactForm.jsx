@@ -493,7 +493,7 @@ class AddContactForm extends Component {
                             justifyContent: "center",
                         }}
                         >
-                            <SearchInput label="Extended Account Number."
+                            <SearchInput label="Extended Account Number"
                                 onChange={this.handleInputChange}
                                 value={this.state.input}
                                 error={this.state.error}
