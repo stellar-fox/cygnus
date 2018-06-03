@@ -120,13 +120,6 @@ class Balances extends Component {
                 this.props.publicKey, this.props.bip32Path
             )
         }
-
-        /**
-         * When user authenticates check for new contact requests so the badge
-         * indicator can be activated upon new requests.
-         */
-        this.props.loginManager.isAuthenticated() &&
-            this.updateContacts()
     }
 
 
@@ -177,6 +170,13 @@ class Balances extends Component {
             const account = await getRegisteredAccount(
                 auth.data.user_id, auth.data.token
             )
+            /**
+             * When user authenticates check for new contact requests so the badge
+             * indicator can be activated upon new requests.
+             */
+            this.props.loginManager.isAuthenticated() &&
+                this.updateContacts()
+
             this.props.setState({
                 currency: account.currency,
                 needsRegistration: false,
@@ -221,7 +221,7 @@ class Balances extends Component {
             if (this.props.Balances.newAccount) {
                 tx = await buildCreateAccountTx(paymentData)
                 this.props.setStateForBalances({
-                    transactionType: "Create Acc",
+                    transactionType: "Create Account",
                 })
             } else {
                 tx = await buildPaymentTx(paymentData)
