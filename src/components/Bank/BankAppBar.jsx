@@ -8,6 +8,8 @@ import { connect } from "react-redux"
 
 import { action as AccountAction } from "../../redux/Account"
 import { action as BankAction } from "../../redux/Bank"
+import { action as BalancesAction } from "../../redux/Balances"
+import { action as ContactsAction } from "../../redux/Contacts"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
@@ -62,6 +64,8 @@ export default compose(
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             resetAccountState: AccountAction.resetState,
+            resetBalancesState: BalancesAction.resetState,
+            resetContactsState: ContactsAction.resetState,
             resetLedgerHQState: LedgerHQAction.resetState,
             resetLoginManagerState: LoginManagerAction.resetState,
             resetPaymentsState: PaymentsAction.resetState,
@@ -88,6 +92,8 @@ export default compose(
         // ...
         handleLogOutClick = () => {
             this.props.resetAccountState()
+            this.props.resetBalancesState()
+            this.props.resetContactsState()
             this.props.resetLedgerHQState()
             this.props.resetLoginManagerState()
             this.props.resetPaymentsState()
