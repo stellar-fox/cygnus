@@ -599,9 +599,11 @@ class EditContactForm extends Component {
                 }
                 <div className="f-e">
                     { this.state.inProgress ? <RequestProgress /> : null }
-                    <ModalButton style={{ marginRight: "0.5rem", }}
-                        onClick={this.updateContactInfo} label="Update"
-                    />
+                    { details.external &&
+                        <ModalButton style={{ marginRight: "0.5rem", }}
+                            onClick={this.updateContactInfo} label="Update"
+                        />
+                    }
                     <ModalButton onClick={this.hideDetails} label="Cancel" />
                 </div>
             </Fragment>
