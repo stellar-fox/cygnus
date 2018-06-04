@@ -37,6 +37,7 @@ class PaymentCard extends Component {
             today: now,
             payDate: now,
             amount: "",
+            amountNative: "",
             amountText: "",
             amountIsValid: false,
             payee: null,
@@ -98,6 +99,7 @@ class PaymentCard extends Component {
             })
             this.props.setState({
                 amount: "",
+                amountNative: "",
                 amountIsValid: false,
                 amountText: "",
             })
@@ -116,6 +118,7 @@ class PaymentCard extends Component {
             })
             this.props.setState({
                 amount: "",
+                amountNative: "",
                 amountIsValid: false,
                 amountText: "",
             })
