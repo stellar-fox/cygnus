@@ -72,6 +72,23 @@ const styles = (theme) => ({
         "&:before": { borderBottomColor: theme.palette.primary.main, },
         "&:after": { borderBottomColor: theme.palette.primary.main, },
     },
+    inputTag: {
+        marginTop: "-8px",
+        width: "400px",
+        color: theme.palette.secondary.main,
+        "&:hover:before": {
+            borderBottomColor: `${theme.palette.secondary.main} !important`,
+            borderBottomWidth: "0px !important",
+        },
+        "&:before": {
+            borderBottomColor: theme.palette.secondary.main,
+            borderBottomWidth: "0px !important",
+        },
+        "&:after": {
+            borderBottomColor: theme.palette.secondary.main,
+            borderBottomWidth: "0px !important",
+        },
+    },
     inputDisabled: {
         width: "400px",
         color: theme.palette.primary.fade,
@@ -208,6 +225,23 @@ class ContactSuggester extends Component {
 
 
     // ...
+    onSuggestionSelected = (_event, suggestion) => {
+        this.validatePaymentDestination(suggestion.suggestionValue)
+        this.setState({
+            value: suggestion.suggestionValue,
+        })
+
+        suggestion && this.setState({
+            label: "",
+            paymentAddress: "",
+            emailMD5: "",
+            error: false,
+            errorMessage: "",
+        })
+    }
+
+
+    // ...
     getSuggestionValue = (suggestion) => {
         return (!suggestion.alias || !suggestion.domain) ?
             suggestion.publicKey :
@@ -254,22 +288,8 @@ class ContactSuggester extends Component {
 
 
     // ...
-    handleChange = (_event, { newValue, }) => {
-
-        this.validatePaymentDestination(newValue)
-        this.setState({
-            value: newValue,
-        })
-
-        newValue && this.setState({
-            label: "",
-            paymentAddress: "",
-            emailMD5: "",
-            error: false,
-            errorMessage: "",
-        })
-
-    }
+    handleChange = (_event, { newValue, }) =>
+        this.setState({ value: newValue, })
 
 
     // ...
@@ -410,6 +430,7 @@ class ContactSuggester extends Component {
                         errorMessage: ex.message,
                     })
                 }
+                this.deletePayee()
                 return false
             }
         // user did not enter a valid federation address but we also accept
@@ -596,6 +617,10 @@ class ContactSuggester extends Component {
     }
 
 
+    // ...
+    shouldRenderSuggestions = () => this.state.value.length >= 1 ? true : false
+
+
     // this is due to the specificity of the Chip component
     doNothing = () => false
 
@@ -607,67 +632,85 @@ class ContactSuggester extends Component {
 
 
         return (
-            <Autosuggest
-                theme={{
-                    container: classes.container,
-                    suggestionsContainerOpen: classes.suggestionsContainerOpen,
-                    suggestionsList: classes.suggestionsList,
-                    suggestion: classes.suggestion,
-                }}
-                renderInputComponent={renderInput}
-                suggestions={this.state.suggestions}
-                onSuggestionsFetchRequested={
-                    debounce(this.handleSuggestionsFetchRequested, 300)
-                }
-                onSuggestionsClearRequested={
-                    debounce(this.handleSuggestionsClearRequested, 200)
-                }
-                renderSuggestionsContainer={renderSuggestionsContainer}
-                getSuggestionValue={this.getSuggestionValue}
-                renderSuggestion={renderSuggestion}
-                inputProps={{
-                    classes,
-                    value: this.state.value,
-                    onChange: this.handleChange,
-                    error: this.state.error,
-                    helperText: this.state.errorMessage,
-                    disabled: this.props.cancelEnabled ? false: true,
-                    endAdornment: <InputAdornment position="end"
-                        children={
-                            this.props.payee ?
-                                <Chip
-                                    avatar={<Avatar
-                                        className={this.props.cancelEnabled ?
-                                            classes.avatar :
-                                            classes.avatarDisabled}
-                                        src={`${gravatar}${
-                                            this.state.emailMD5}?${
-                                            gravatarSize48}&d=robohash`}
-                                    />}
-                                    label={
-                                        <Typography variant="body1" noWrap>
-                                            <span>
-                                                {this.state.label}
-                                            </span><he.Nbsp /><he.Nbsp /><he.Nbsp />
-                                            <span className="tiny fade-strong">
-                                                {this.state.paymentAddress}
-                                            </span><he.Nbsp /><he.Nbsp />
-                                        </Typography>
-                                    }
-                                    onDelete={this.props.cancelEnabled ?
-                                        this.deletePayee : this.doNothing}
-                                    deleteIcon={this.props.cancelEnabled ?
-                                        <HighlightOff /> : <CheckCircle />}
-                                    classes={{ root: this.props.cancelEnabled ?
-                                        classes.chip : classes.chipDisabled, label: classes.label, }}
-                                /> : this.state.loading ?
-                                    <div className="small text-primary fade">
-                                        Loading...
-                                    </div> : <he.Nbsp />
-                        }
-                    />,
-                }}
-            />
+            <div className="f-b-col">
+                <Autosuggest
+                    theme={{
+                        container: classes.container,
+                        suggestionsContainerOpen: classes.suggestionsContainerOpen,
+                        suggestionsList: classes.suggestionsList,
+                        suggestion: classes.suggestion,
+                    }}
+                    renderInputComponent={renderInput}
+                    suggestions={this.state.suggestions}
+                    onSuggestionsFetchRequested={
+                        debounce(this.handleSuggestionsFetchRequested, 300)
+                    }
+                    onSuggestionsClearRequested={
+                        debounce(this.handleSuggestionsClearRequested, 200)
+                    }
+                    renderSuggestionsContainer={renderSuggestionsContainer}
+                    getSuggestionValue={this.getSuggestionValue}
+                    renderSuggestion={renderSuggestion}
+                    inputProps={{
+                        classes,
+                        value: this.state.value,
+                        onChange: this.handleChange,
+                        error: this.state.error,
+                        helperText: this.state.errorMessage,
+                        disabled: this.props.cancelEnabled ? false: true,
+                    }}
+                    shouldRenderSuggestions={this.shouldRenderSuggestions}
+                    focusInputOnSuggestionClick={false}
+                    onSuggestionSelected={this.onSuggestionSelected}
+                />
+                <he.Nbsp />
+                <TextField
+                    InputProps={{
+                        disabled: true,
+                        classes: {
+                            input: classes.inputTag,
+                            underline: classes.inputTag,
+                        },
+                        startAdornment: <InputAdornment position="start"
+                            children={
+                                this.props.payee ?
+                                    <Chip
+                                        avatar={<Avatar
+                                            className={this.props.cancelEnabled ?
+                                                classes.avatar :
+                                                classes.avatarDisabled}
+                                            src={`${gravatar}${
+                                                this.state.emailMD5}?${
+                                                gravatarSize48}&d=robohash`}
+                                        />}
+                                        label={
+                                            <Typography variant="body1" noWrap>
+                                                <span>
+                                                    {this.state.label}
+                                                </span><he.Nbsp /><he.Nbsp /><he.Nbsp />
+                                                <span className="tiny fade-strong">
+                                                    {this.state.paymentAddress}
+                                                </span><he.Nbsp /><he.Nbsp />
+                                            </Typography>
+                                        }
+                                        onDelete={this.props.cancelEnabled ?
+                                            this.deletePayee : this.doNothing}
+                                        deleteIcon={this.props.cancelEnabled ?
+                                            <HighlightOff /> : <CheckCircle />}
+                                        classes={{
+                                            root: this.props.cancelEnabled ?
+                                                classes.chip : classes.chipDisabled,
+                                            label: classes.label,
+                                        }}
+                                    /> : this.state.loading ?
+                                        <div className="small text-primary fade">
+                                            Loading...
+                                        </div> : <he.Nbsp />
+                            }
+                        />,
+                    }}
+                />
+            </div>
         )
     }
 
