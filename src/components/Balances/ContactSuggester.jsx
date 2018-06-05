@@ -568,9 +568,10 @@ class ContactSuggester extends Component {
                 this.props.payeeCurrency
             ).then(() => {
                 this.props.setBalancesState({
-                    payeeCurrencyAmount: this.props.assetManager.convertToPayeeCurrency(
-                        this.props.amountNative
-                    ),
+                    payeeCurrencyAmount:
+                        this.props.assetManager.convertToPayeeCurrency(
+                            this.props.amountNative
+                        ),
                 })
             })
         }
