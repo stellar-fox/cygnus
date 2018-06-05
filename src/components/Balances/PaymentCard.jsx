@@ -136,9 +136,10 @@ class PaymentCard extends Component {
                 this.props.Balances.payeeCurrency
             ).then(() => {
                 this.props.setState({
-                    payeeCurrencyAmount: this.props.assetManager.convertToPayeeCurrency(
-                        this.props.Balances.amountNative
-                    ),
+                    payeeCurrencyAmount:
+                        this.props.assetManager.convertToPayeeCurrency(
+                            this.props.Balances.amountNative
+                        ),
                 })
             })
         }
