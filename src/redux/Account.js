@@ -8,6 +8,7 @@ const initState = {
     firstName: "",
     lastName: "",
     email: "",
+    gravatar: "",
     paymentAddress: "",
     memo: "",
     discoverable: true,

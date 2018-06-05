@@ -15,7 +15,6 @@ import Input from "../../lib/common/Input"
 import Button from "../../lib/mui-v1/Button"
 import Divider from "../../lib/mui-v1/Divider"
 import Modal from "../../lib/common/Modal"
-import MD5 from "../../lib/md5"
 import TxConfirmProfile from "./TxConfirmProfile"
 import TxConfirmPay from "./TxConfirmPay"
 import TxBroadcast from "./TxBroadcast"
@@ -27,8 +26,6 @@ import {
     signatureValid,
     emailValid,
     federationIsAliasOnly,
-    getRegisteredAccount,
-    getUserData,
     insertPathIndex,
     htmlEntities as he,
 } from "../../lib/utils"
@@ -55,43 +52,6 @@ class Profile extends Component {
     static propTypes = {
         setState: PropTypes.func.isRequired,
     }
-
-
-    // ...
-    componentDidMount = () => {
-        if (this.props.loginManager.isAuthenticated()) {
-            getUserData(this.props.userId, this.props.token).then((data) => {
-                this.props.setState({
-                    firstName: data.first_name || "",
-                    lastName: data.last_name || "",
-                    email: data.email,
-                    gravatarPath: this.setGravatarPath(data.email),
-                })
-            })
-            this.getAccountData()
-        }
-    }
-
-
-    // ...
-    getAccountData = async () => {
-        const account = await getRegisteredAccount(
-            this.props.userId, this.props.token
-        )
-        if (account) {
-            this.props.setState({
-                paymentAddress: (account.alias && account.domain) ?
-                    `${account.alias}*${account.domain}` : "",
-                discoverable: account.visible,
-                memo: account.memo ? account.memo : "",
-            })
-        }
-    }
-
-
-    // ...
-    setGravatarPath = (email) =>
-        `${gravatar}${MD5(email)}${gravatarSize}`
 
 
     // ...
@@ -439,7 +399,9 @@ class Profile extends Component {
                     <figure style={{ marginRight: "0px", marginBottom: "0px",}}>
                         <img
                             className="image"
-                            src={this.props.state.gravatarPath}
+                            src={`${gravatar}${this.props.state.gravatar}?${
+                                gravatarSize}&d=robohash`
+                            }
                             alt="Gravatar"
                         />
                     </figure>
