@@ -28,6 +28,7 @@ import {
     emailValid,
     federationIsAliasOnly,
     getRegisteredAccount,
+    getUserData,
     insertPathIndex,
     htmlEntities as he,
 } from "../../lib/utils"
@@ -59,28 +60,17 @@ class Profile extends Component {
     // ...
     componentDidMount = () => {
         if (this.props.loginManager.isAuthenticated()) {
-            this.getUserData()
+            getUserData(this.props.userId, this.props.token).then((data) => {
+                this.props.setState({
+                    firstName: data.first_name || "",
+                    lastName: data.last_name || "",
+                    email: data.email,
+                    gravatarPath: this.setGravatarPath(data.email),
+                })
+            })
             this.getAccountData()
         }
     }
-
-
-    // ...
-    getUserData = () => Axios
-        .post(`${config.api}/user/`, {
-            id: this.props.userId,
-            token: this.props.token,
-        })
-        .then(({data: {data,},}) => {
-            this.props.setState({
-                firstName: data.first_name || "",
-                lastName: data.last_name || "",
-                email: data.email,
-                gravatarPath: this.setGravatarPath(data.email),
-            })
-        })
-        // eslint-disable-next-line no-console
-        .catch(error => console.log(error.message))
 
 
     // ...
@@ -97,6 +87,7 @@ class Profile extends Component {
             })
         }
     }
+
 
     // ...
     setGravatarPath = (email) =>

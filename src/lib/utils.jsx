@@ -152,6 +152,28 @@ export const changeContactStatus = async (userId, token, status, requested_by) =
 
 
 // ...
+export const findContact = (contacts, id, external=false) => {
+    return contacts.find((c) => external ? id === c.id : id === c.contact_id)
+}
+
+
+
+
+// ...
+export const getUserData = async (id, token) => {
+    try {
+        return (
+            await axios.post(`${config.api}/user/`, { id, token, })
+        ).data.data
+    } catch (error) {
+        return null
+    }
+}
+
+
+
+
+// ...
 export const pubKeyAbbr = (pubKey) => handleException(
     () => `${pubKey.slice(0, 6)}-${pubKey.slice(50)}`,
     (_) => { throw new Error("Malformed key.") }
