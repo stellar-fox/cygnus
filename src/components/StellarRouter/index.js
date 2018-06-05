@@ -92,10 +92,6 @@ export const StaticRouter = connect(
         }
 
 
-        // takes static path and returns associated view name
-        static getView = (path, map) => path in map ? map[path] : emptyString()
-
-
         // ...
         state = { initialized: false, }
 
@@ -106,6 +102,10 @@ export const StaticRouter = connect(
             this._staticPaths = { ...this._staticPaths, ...staticPaths, }
             this._pathToViewMap = { ...this._pathToViewMap, ...pathToView, }
         }
+
+
+        // takes static path and returns associated view name
+        static getView = (path, map) => path in map ? map[path] : emptyString()
 
 
         // takes view name and returns stored static path
