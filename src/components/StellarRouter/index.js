@@ -10,6 +10,7 @@ import hoistStatics from "hoist-non-react-statics"
 import resolvePathname from "resolve-pathname"
 import {
     emptyString,
+    findDuplicates,
     swap,
 } from "@xcmats/js-toolbox"
 
@@ -20,7 +21,6 @@ import {
 } from "react-router-redux"
 import { action as StellarRouterAction } from "../../redux/StellarRouter"
 
-import { findDuplicates } from "../../lib/utils"
 import { env } from "../StellarFox"
 
 

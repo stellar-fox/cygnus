@@ -1,7 +1,6 @@
 import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
-import { countBy } from "lodash"
 import {
     capitalize,
     emptyString,
@@ -530,14 +529,6 @@ export const shallowEquals = (objA, objB) => {
 
 
 
-// find duplicates in a given array
-export const findDuplicates = (a) =>
-    Object.entries(countBy(a))
-        .reduce((acc, [k, v,]) => v > 1 ? acc.concat(k) : acc, [])
-
-
-
-
 // determine runtime environment
 // devEnv() -> true/false
 export const devEnv = () =>
@@ -609,13 +600,15 @@ export const dynamicImportReducers = async () => {
 
 // ...
 export const dataDigest = (dataObj) =>
-    shajs("sha256").update(Object.keys(dataObj).map((k) =>
-        shajs("sha256").update(dataObj[k]).digest("hex")).join()).digest("hex")
+    shajs("sha256").update(
+        Object.keys(dataObj).map(
+            (k) => shajs("sha256").update(dataObj[k]).digest("hex")
+        ).join()
+    ).digest("hex")
 
 
 
 
 // ...
-export const signatureValid = (dataObj, signature) => {
-    return dataDigest(dataObj) === atob(signature) ? true : false
-}
+export const signatureValid = (dataObj, signature) =>
+    dataDigest(dataObj) === atob(signature)
