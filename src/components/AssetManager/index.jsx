@@ -128,6 +128,15 @@ class AssetManager extends Component {
 
 
     // ...
+    exchangeRate = (amount, assetCode) => {
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        return new BigNumber(this.convertToNative(amount)).multipliedBy(
+            this.props.state[assetCode].rate
+        ).toFixed(2)
+    }
+
+
+    // ...
     render = () =>
         <AssetManagerContext.Provider value={this}>
             { this.props.children }
