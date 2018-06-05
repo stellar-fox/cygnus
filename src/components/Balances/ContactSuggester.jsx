@@ -468,6 +468,10 @@ class ContactSuggester extends Component {
          */
         contact ?
             (() => {
+                this.props.setBalancesState({
+                    contactType: "internal",
+                    contactId: contact.contact_id,
+                })
                 displayName = formatFullName(
                     contact.first_name, contact.last_name
                 )
@@ -486,6 +490,10 @@ class ContactSuggester extends Component {
          */
         extContact ?
             (() => {
+                this.props.setBalancesState({
+                    contactType: "external",
+                    contactId: extContact.id,
+                })
                 displayName = formatFullName(
                     extContact.first_name, extContact.last_name
                 )
@@ -498,6 +506,7 @@ class ContactSuggester extends Component {
                  * memo field on the pay check.
                  */
                 this.props.setBalancesState({
+                    contactType: "external",
                     memoRequired: true,
                     payeeMemoText: extContact.memo,
                 })
