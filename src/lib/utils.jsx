@@ -602,13 +602,15 @@ export const dynamicImportReducers = async () => {
 
 // ...
 export const dataDigest = (dataObj) =>
-    shajs("sha256").update(Object.keys(dataObj).map((k) =>
-        shajs("sha256").update(dataObj[k]).digest("hex")).join()).digest("hex")
+    shajs("sha256").update(
+        Object.keys(dataObj).map(
+            (k) => shajs("sha256").update(dataObj[k]).digest("hex")
+        ).join()
+    ).digest("hex")
 
 
 
 
 // ...
-export const signatureValid = (dataObj, signature) => {
-    return dataDigest(dataObj) === atob(signature) ? true : false
-}
+export const signatureValid = (dataObj, signature) =>
+    dataDigest(dataObj) === atob(signature)
