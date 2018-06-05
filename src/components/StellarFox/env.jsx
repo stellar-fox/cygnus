@@ -226,7 +226,7 @@ export const stellarFoxDomain = "stellarfox.net"
 
 
 // ...
-export const serviceFee = 0.00
+export const serviceFee = "0.00"
 
 
 

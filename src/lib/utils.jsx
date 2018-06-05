@@ -152,10 +152,8 @@ export const changeContactStatus = async (userId, token, status, requested_by) =
 
 
 // ...
-export const findContact = (contacts, id, external=false) => {
-    return contacts.find((c) => external ? id === c.id : id === c.contact_id)
-}
-
+export const findContact = (contacts, id, external=false) =>
+    contacts.find((c) => external ? id === c.id : id === c.contact_id)
 
 
 

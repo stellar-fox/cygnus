@@ -51,61 +51,56 @@ class TxConfirmMsg extends Component {
 
     // ...
     componentDidMount = () => {
+        const found = findContact(
+            this.props.Contacts[this.props.Balances.contactType] || [],
+            this.props.Balances.contactId,
+            this.props.Balances.contactType === "external" ?
+                true : false
+        )
         this.setState({
-            contact: findContact(
-                this.props.Contacts[this.props.Balances.contactType],
-                this.props.Balances.contactId,
-                this.props.Balances.contactType === "external" ?
-                    true : false
-            ),
+            contact: found ? found : {},
         })
     }
 
 
     // ...
     sendAmount = () =>
-        this.state.contact.currency ?
-            this.state.contact.currency !== this.props.Account.currency ?
-                `${this.props.assetManager.exchangeRate(
-                    this.props.Balances.amount, this.props.Account.currency
-                )
-                } ${this.props.Account.currency.toUpperCase()}` : `${
-                    this.props.Balances.amount} ${
-                    this.props.Account.currency.toUpperCase()}` : ""
+        `${this.props.Balances.amount} ${
+            this.props.Account.currency.toUpperCase()}`
 
 
     // ...
     receiveAmount = () =>
-        this.state.contact.currency ?
+        this.state.contact.currency &&
             this.state.contact.currency !== this.props.Account.currency ?
-                `${this.props.assetManager.exchangeRate(
-                    this.props.Balances.amount, this.state.contact.currency
-                )
-                } ${this.state.contact.currency.toUpperCase()}` : `${
-                    this.props.Balances.amount} ${
-                    this.props.contact.currency.toUpperCase()}` : ""
+            `${this.props.assetManager.exchangeRate(
+                this.props.Balances.amount, this.state.contact.currency
+            )
+            } ${this.state.contact.currency.toUpperCase()}` : `${
+                this.props.Balances.amount} ${
+                this.props.Account.currency.toUpperCase()}`
 
 
     // ...
     exchangeRate = () =>
-        this.state.contact.currency ?
+        this.state.contact.currency &&
             this.state.contact.currency !== this.props.Account.currency ?
-                `1.00 ${this.props.Account.currency.toUpperCase()} ≈ ${
-                    this.props.assetManager.exchangeRate(1.00,
-                        this.state.contact.currency
-                    )} ${this.state.contact.currency.toUpperCase()}` :
-                "N/A" : ""
+            `1.00 ${this.props.Account.currency.toUpperCase()} ≈ ${
+                this.props.assetManager.exchangeRate(1.00,
+                    this.state.contact.currency
+                )} ${this.state.contact.currency.toUpperCase()}` :
+            "N/A"
 
 
     // ...
     serviceFee = () =>
-        this.state.contact.currency ?
+        this.state.contact.currency &&
             this.state.contact.currency !== this.props.Account.currency ?
-                `${serviceFee} ${serviceFeeCurrency.toUpperCase()} ≈ ${
-                    this.props.assetManager.exchangeRate(
-                        serviceFee, this.state.contact.currency
-                    )} ${this.state.contact.currency.toUpperCase()}` :
-                `${serviceFee} ${serviceFeeCurrency.toUpperCase()}` : ""
+            `${serviceFee} ${serviceFeeCurrency.toUpperCase()} ≈ ${
+                this.props.assetManager.exchangeRate(
+                    serviceFee, this.state.contact.currency
+                )} ${this.state.contact.currency.toUpperCase()}` :
+            `${serviceFee} ${serviceFeeCurrency.toUpperCase()}`
 
 
     // ...
