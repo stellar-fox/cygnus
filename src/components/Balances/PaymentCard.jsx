@@ -245,10 +245,10 @@ class PaymentCard extends Component {
                         <div className="p-r leading-label-align nowrap">
                             Pay to the order of:
                         </div>
-                        <div className="p-r">
+                        <div className="p-r m-b-large">
                             <ContactSuggester />
                         </div>
-
+                        <div style={{ marginBottom: "7.5rem",}}></div>
                     </div>
                     <div className="payment-header f-s">
                         <div
@@ -282,7 +282,7 @@ class PaymentCard extends Component {
                         </div>
                     </div>
                 </div>
-
+                <div className="p-t"></div>
                 <div className="f-s space-between verbatim-underlined">
                     <div>
                         {

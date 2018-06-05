@@ -288,8 +288,13 @@ class ContactSuggester extends Component {
 
 
     // ...
-    handleChange = (_event, { newValue, }) =>
-        this.setState({ value: newValue, })
+    handleChange = (_event, { newValue, }) => {
+        this.setState({ value: newValue, }, () => {
+            if (!invalidPaymentAddressMessage(newValue)) {
+                this.validatePaymentDestination(newValue)
+            }
+        })
+    }
 
 
     // ...
@@ -430,7 +435,24 @@ class ContactSuggester extends Component {
                         errorMessage: ex.message,
                     })
                 }
-                this.deletePayee()
+                this.props.setBalancesState({
+                    payee: null,
+                    payeeAddress: null,
+                    indicatorMessage: securityMsgPlaceholder,
+                    indicatorStyle: "fade-extreme",
+                    sendEnabled: false,
+                    memoRequired: false,
+                    memoText: "",
+                    payeeCurrency: "eur",
+                    payeeCurrencyAmount: "",
+                    payeeMemoText: "",
+                    payeeStellarAccount: null,
+                })
+                this.setState({
+                    label: "",
+                    paymentAddress: "",
+                    emailMD5: "",
+                })
                 return false
             }
         // user did not enter a valid federation address but we also accept

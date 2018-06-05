@@ -246,6 +246,10 @@ class Balances extends Component {
                 })
             }
 
+            this.props.setStateForBalances({
+                message: "",
+            })
+
             this.props.showModal("txConfirm")
 
             const signedTx = await signTransaction(
