@@ -20,12 +20,14 @@ import { action as ModalAction } from "../../redux/Modal"
 import { action as AlertAction } from "../../redux/Alert"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
-    insertPathIndex,
+    getContactRequests,
     getRegisteredUser,
     getRegisteredAccount,
     getUserContacts,
+    getUserData,
     getUserExternalContacts,
-    getContactRequests,
+    insertPathIndex,
+    paymentAddress,
 } from "../../lib/utils"
 import {
     loadAccount,
@@ -170,6 +172,20 @@ class Balances extends Component {
             const account = await getRegisteredAccount(
                 auth.data.user_id, auth.data.token
             )
+
+            getUserData(this.props.userId, this.props.token).then((data) => {
+                this.props.setState({
+                    firstName: data.first_name,
+                    lastName: data.last_name,
+                    email: data.email,
+                    gravatar: data.email_md5,
+                    paymentAddress: paymentAddress(data.alias, data.domain),
+                    memo: data.memo,
+                    discoverable: data.visible,
+                    currency: data.currency,
+                })
+            })
+
             /**
              * When user authenticates check for new contact requests so the badge
              * indicator can be activated upon new requests.
@@ -346,7 +362,7 @@ class Balances extends Component {
                             }
                             title="Confirm on Hardware Device"
                         >
-                            <TxConfirmMsg />
+                            <TxConfirmMsg assetManager={assetManager} />
                         </Modal>
 
                         <Modal
