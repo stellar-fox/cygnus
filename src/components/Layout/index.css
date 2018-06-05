@@ -231,6 +231,14 @@ strong { color: rgb(212, 228, 188); }
     align-items: flex-start;
 }
 
+
+.f-b-col-c {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
 .nowrap {
     white-space: nowrap;
     overflow: hidden;
