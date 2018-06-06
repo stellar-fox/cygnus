@@ -127,7 +127,9 @@ class BalancesCard extends Component {
                     {Array.isArray(this.props.StellarAccount.assets)
                         && this.props.StellarAccount.assets.length > 0 ?
                         <Fragment>
-                            <div className="assets p-b-small">Other Assets List:</div>
+                            <div className="assets p-b-small">
+                                Other Assets List:
+                            </div>
                             <AssetList />
                         </Fragment> : <Fragment>
                             <div className="assets">Other Assets</div>

@@ -325,7 +325,7 @@ class Contacts extends Component {
                 />
             </Grid> :
             this.props.contactsInternal.map((contact, index) =>
-                <Grid item key={index + 1} xs>
+                <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3} xl={2}>
                     <ContactCard data={contact} external={false} />
                 </Grid>
             )
@@ -341,7 +341,7 @@ class Contacts extends Component {
                 />
             </Grid> :
             this.props.contactsExternal.map((contact, index) =>
-                <Grid item key={index + 1} xs>
+                <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3} xl={2}>
                     <ContactCard data={contact} external={true} />
                 </Grid>
             )
@@ -350,14 +350,14 @@ class Contacts extends Component {
     // ...
     showAllContactRequests = () =>
         this.props.contactRequests.length === 0 ?
-            <Grid item key={0} xs>
+            <Grid item key={0} xs={12} sm={12} md={4} lg={3} xl={2}>
                 <NoCards title="You have no contact requests at the moment."
                     subtitle="When someone requests you as a contact, it will
                     be listed here."
                 />
             </Grid> :
             this.props.contactRequests.map((request, index) =>
-                <Grid item key={index + 1} xs>
+                <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3} xl={2}>
                     <ContactRequestCard data={request} />
                 </Grid>
             )
@@ -376,7 +376,7 @@ class Contacts extends Component {
                     subtitle="No internal contacts were found matching this search."
                 />
             </Grid> : results.map((contact, index) =>
-                <Grid item key={index} xs>
+                <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
                     <ContactCard data={contact} external={false} />
                 </Grid>
             )
@@ -397,7 +397,7 @@ class Contacts extends Component {
                     search."
                 />
             </Grid> : results.map((contact, index) =>
-                <Grid item key={index} xs>
+                <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
                     <ContactCard data={contact} external={true} />
                 </Grid>
             )
@@ -419,7 +419,7 @@ class Contacts extends Component {
                     search."
                 />
             </Grid> : results.map((contact, index) =>
-                <Grid item key={index} xs>
+                <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
                     <ContactRequestCard data={contact} />
                 </Grid>
             )

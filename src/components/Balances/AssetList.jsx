@@ -33,7 +33,7 @@ export default compose(
 
         // ...
         formatAssets = (assets) => assets.map((asset, index) =>
-            <Grid item key={index} xs>
+            <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
                 <Paper color="primaryMaxWidth">
                     <div className="f-b space-between cursor-pointer">
                         <Avatar src={`https://www.gravatar.com/avatar/${
