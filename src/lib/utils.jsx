@@ -6,6 +6,7 @@ import {
     emptyString,
     handleException,
     head,
+    isString,
     objectMap,
 } from "@xcmats/js-toolbox"
 
@@ -24,7 +25,7 @@ const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-
 
 
 // ...
-export const ntoes = (input) => ( input !== null ? input : "")
+export const ntoes = (input) => isString(input)  ?  input  :  ""
 
 
 
@@ -601,8 +602,11 @@ export const dynamicImportReducers = async () => {
 // ...
 export const dataDigest = (dataObj) =>
     shajs("sha256").update(
-        Object.keys(dataObj).map(
-            (k) => shajs("sha256").update(dataObj[k]).digest("hex")
+        Object.values(dataObj).map(
+            (v) =>
+                shajs("sha256")
+                    .update(ntoes(v))
+                    .digest("hex")
         ).join()
     ).digest("hex")
 
