@@ -1,18 +1,20 @@
-import React from "react"
+import React  from "react"
 import { connect } from "react-redux"
 import { compose } from "redux"
 
 import { withStyles } from "@material-ui/core/styles"
-
+import { Typography } from "@material-ui/core"
 import { handleException } from "@xcmats/js-toolbox"
-import { pubKeyAbbr } from "../../lib/utils"
+import { formatFullName, pubKeyAbbr } from "../../lib/utils"
 import { unknownPubKeyAbbr } from "../StellarFox/env"
+import { withLoginManager } from "../LoginManager"
 
 
 
 
 // <BankAppBarItems> component
 export default compose(
+    withLoginManager,
     withStyles({
 
         accountHomeDomain: { fontVariant: "small-caps", },
@@ -35,6 +37,7 @@ export default compose(
         },
 
         barTitleAccount: {
+            marginTop: "5px",
             fontSize: "1rem",
         },
 
@@ -49,29 +52,44 @@ export default compose(
         (state) => ({
             StellarAccount: state.StellarAccount,
             publicKey: state.LedgerHQ.publicKey,
+            firstName: state.Account.firstName,
+            lastName: state.Account.lastName,
         })
     )
 )(
     ({
-        classes, publicKey, StellarAccount,
+        classes, publicKey, StellarAccount, firstName, lastName, loginManager,
     }) =>
         <div className={classes.appBarItems}>
             <div className={classes.appBarTitle}>
                 <div className={classes.barTitleAccount}>
-                    {
-                        StellarAccount.accountId && StellarAccount.homeDomain ?
-                            <div className={classes.accountHomeDomain}>
-                                { StellarAccount.homeDomain }
-                            </div> :
-                            <div>Account Number</div>
+                    {loginManager.isAuthenticated() ?
+                        <Typography align="center" variant="body2"
+                            noWrap color="primary"
+                        >
+                            {formatFullName(firstName, lastName)}
+                        </Typography> : <Typography align="center"
+                            variant="body2"
+                            noWrap color="primary"
+                        >
+                            Account
+                        </Typography>
                     }
                 </div>
                 <div className={classes.barSubtitleAccount}>
                     {
-                        handleException(
-                            () => pubKeyAbbr(publicKey),
-                            () => unknownPubKeyAbbr
-                        )
+                        StellarAccount.accountId && StellarAccount.homeDomain ?
+                            <div className={classes.accountHomeDomain}>
+                                {StellarAccount.homeDomain}
+                            </div> :
+                            <div>
+                                {
+                                    handleException(
+                                        () => pubKeyAbbr(publicKey),
+                                        () => unknownPubKeyAbbr
+                                    )
+                                }
+                            </div>
                     }
                 </div>
             </div>

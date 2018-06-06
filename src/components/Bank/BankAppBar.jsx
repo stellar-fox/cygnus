@@ -28,12 +28,15 @@ import PowerIcon from "@material-ui/icons/PowerSettingsNew"
 
 import BankAppBarTitle from "./BankAppBarTitle"
 import BankAppBarItems from "./BankAppBarItems"
+import UserMenu from "../../lib/mui-v1/UserMenu"
+import { withLoginManager } from "../LoginManager"
 
 
 
 
 // <BankAppBar> component
 export default compose(
+    withLoginManager,
     withStyles({
 
         appbar: {
@@ -109,7 +112,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, currentView, toggleDrawer, }) =>
+            ({ classes, currentView, toggleDrawer, loginManager, }) =>
                 <AppBar className={classes.appbar}>
                     <Toolbar>
                         <IconButton
@@ -130,14 +133,16 @@ export default compose(
                                 <BankAppBarItems />
                             </div>
                         </Typography>
-                        <IconButton
-                            className={classes.logoutButton}
-                            color="inherit"
-                            aria-label="Logout"
-                            onClick={this.handleLogOutClick}
-                        >
-                            <PowerIcon />
-                        </IconButton>
+                        { loginManager.isAuthenticated() ? <UserMenu /> :
+                            <IconButton
+                                className={classes.logoutButton}
+                                color="inherit"
+                                aria-label="Logout"
+                                onClick={this.handleLogOutClick}
+                            >
+                                <PowerIcon />
+                            </IconButton>
+                        }
                     </Toolbar>
                 </AppBar>
         )(this.props)
