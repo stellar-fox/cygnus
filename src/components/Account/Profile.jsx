@@ -23,11 +23,12 @@ import MsgBadgeSuccess from "./MsgBadgeSuccess"
 import MsgBadgeWarning from "./MsgBadgeWarning"
 import {
     dataDigest,
-    signatureValid,
     emailValid,
     federationIsAliasOnly,
-    insertPathIndex,
     htmlEntities as he,
+    insertPathIndex,
+    ntoes,
+    signatureValid,
 } from "../../lib/utils"
 import {
     buildSetDataTx,
@@ -497,7 +498,7 @@ class Profile extends Component {
                 />
                 <Input
                     className="lcars-input p-t p-b"
-                    value={this.props.state.memo}
+                    value={ntoes(this.props.state.memo)}
                     label="Memo"
                     inputType="text"
                     maxLength="28"
