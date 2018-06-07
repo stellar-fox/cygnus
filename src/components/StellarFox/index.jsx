@@ -7,7 +7,13 @@ import {
     combineReducers,
 } from "redux"
 import thunk from "redux-thunk"
-import { composeWithDevTools } from "redux-devtools-extension/developmentOnly"
+import {
+    composeWithDevTools as composeWithDevTools_prod
+} from "redux-devtools-extension/developmentOnly"
+import {
+    composeWithDevTools as composeWithDevTools_dev
+} from "redux-devtools-extension"
+
 import { isObject } from "@xcmats/js-toolbox"
 
 import throttle from "lodash/throttle"
@@ -55,17 +61,20 @@ export const history = createHistory({
 
 // store with router-redux integration and redux-devtools-extension
 export const store = (() => {
-    let s =
-        createStore(
-            combineReducers(reducers),
-            loadState(),
-            composeWithDevTools(
-                applyMiddleware(
-                    thunk,
-                    routerMiddleware(history)
+    let
+        composeWithDevTools = !devEnv()  ?
+            composeWithDevTools_prod  :  composeWithDevTools_dev,
+        s =
+            createStore(
+                combineReducers(reducers),
+                loadState(),
+                composeWithDevTools(
+                    applyMiddleware(
+                        thunk,
+                        routerMiddleware(history)
+                    )
                 )
             )
-        )
 
     // save state in session storage in min. 1 sec. intervals
     s.subscribe(

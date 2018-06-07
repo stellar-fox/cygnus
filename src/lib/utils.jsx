@@ -25,7 +25,7 @@ const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-
 
 
 // ...
-export const ntoes = (input) => isString(input)  ?  input  :  ""
+export const ntoes = (input) => isString(input)  ?  input  :  emptyString()
 
 
 
@@ -134,7 +134,9 @@ export const getContactRequests = async (userId, token) => {
 
 
 // ...
-export const changeContactStatus = async (userId, token, status, requested_by) => {
+export const changeContactStatus = async (
+    userId, token, status, requested_by
+) => {
     try {
         return (await axios.post(`${config.api}/contact/update/`, {
             user_id: userId,
@@ -152,8 +154,9 @@ export const changeContactStatus = async (userId, token, status, requested_by) =
 
 
 // ...
-export const findContact = (contacts, id, external=false) =>
+export const findContact = (contacts, id, external = false) =>
     contacts.find((c) => external ? id === c.id : id === c.contact_id)
+
 
 
 
@@ -206,7 +209,7 @@ export const emailValid = (email) => !!(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))/,
         /@/,
         domainRegex,
-    ].map(r => r.source).join(""))
+    ].map(r => r.source).join(emptyString()))
 ).test(email)
 
 
@@ -230,7 +233,7 @@ export const federationAddressValid = (federationAddress) => !!(
     new RegExp([
         /^[a-zA-Z\-0-9.@]+\*/,
         domainRegex,
-    ].map(r => r.source).join(""))
+    ].map(r => r.source).join(emptyString()))
 ).test(federationAddress)
 
 
@@ -238,7 +241,9 @@ export const federationAddressValid = (federationAddress) => !!(
 
 // ...
 export const paymentAddress = (alias, domain) => (
-    federationAddressValid(`${alias}*${domain}`) ? `${alias}*${domain}` : ""
+    federationAddressValid(`${alias}*${domain}`)  ?
+        `${alias}*${domain}`  :
+        emptyString()
 )
 
 
@@ -448,7 +453,8 @@ export const emoji = objectMap(emojiDB,
 
 
 // construct emoji string based on given emoji names
-export const emojis = (...args) => args.map((en) => emojiDB[en]).join("")
+export const emojis = (...args) =>
+    args.map((en) => emojiDB[en]).join(emptyString())
 
 
 
@@ -533,6 +539,7 @@ export const shallowEquals = (objA, objB) => {
 // determine runtime environment
 // devEnv() -> true/false
 export const devEnv = () =>
+    Object.prototype.hasOwnProperty.call(sessionStorage, "dev")  ||
     // eslint-disable-next-line
     process.env.NODE_ENV !== "production"
 
