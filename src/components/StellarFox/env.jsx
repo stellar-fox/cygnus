@@ -13,7 +13,7 @@ export const appName = "Stellar Fox"
 
 
 
-// application version (taken from package.json)
+// application version - taken from package.json
 export const appVersion = version
 
 
@@ -25,8 +25,8 @@ export const appCopyDates = "2017-2018"
 
 
 
-// application landing page link (taken from package.json)
-export const appLandingPageLink = homepage
+// application landing page link
+export const appLandingPageLink = "https://stellarfox.net/"
 
 
 
@@ -43,8 +43,8 @@ export const ssSaveThrottlingTime = 1000
 
 
 
-// base URL (change if proxied to other)
-export const appBasePath = "/"
+// base URL (change if proxied to other) - taken from package.json
+export const appBasePath = homepage
 
 
 

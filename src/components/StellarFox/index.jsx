@@ -19,9 +19,14 @@ import { isObject } from "@xcmats/js-toolbox"
 import throttle from "lodash/throttle"
 import createHistory from "history/createBrowserHistory"
 import {
+    ConnectedSwitch as Switch,
     StellarRouter as Router,
     routerMiddleware,
 } from "../StellarRouter"
+import {
+    Redirect,
+    Route,
+} from "react-router-dom"
 
 import {
     loadState,
@@ -52,9 +57,7 @@ import "./index.css"
 
 
 // browser history
-export const history = createHistory({
-    basename: env.appBasePath,
-})
+export const history = createHistory({ /* basename: env.appBasePath, */ })
 
 
 
@@ -99,7 +102,15 @@ export default () =>
                     <LoginManager>
                         <AssetManager>
                             <CssBaseline />
-                            <Layout />
+                            <Switch>
+                                <Route path={env.appBasePath}>
+                                    {
+                                        (routeProps) =>
+                                            <Layout {...routeProps} />
+                                    }
+                                </Route>
+                                <Redirect to={env.appBasePath} />
+                            </Switch>
                         </AssetManager>
                     </LoginManager>
                 </LegacyMuiThemeProvider>
