@@ -57,16 +57,6 @@ export default compose(
 
 
         // ...
-        static getDerivedStateFromProps = ({ drawerVisible, }) => ({
-            style: {
-                paddingLeft: drawerVisible ?
-                    bankDrawerWidth + contentPaneSeparation :
-                    contentPaneSeparation,
-            },
-        })
-
-
-        // ...
         constructor (props) {
             super(props)
 
@@ -85,6 +75,16 @@ export default compose(
 
         // ...
         state = {}
+
+
+        // ...
+        static getDerivedStateFromProps = ({ drawerVisible, }) => ({
+            style: {
+                paddingLeft: drawerVisible ?
+                    bankDrawerWidth + contentPaneSeparation :
+                    contentPaneSeparation,
+            },
+        })
 
 
         // ...
