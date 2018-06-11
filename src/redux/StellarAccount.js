@@ -77,6 +77,7 @@ export const reducer = createReducer(initState)({
         homeDomain: action.account.home_domain ?
             action.account.home_domain : null,
         data: action.account.data_attr ? action.account.data_attr : null,
+        subentryCount: action.account.subentry_count,
     }),
 
 

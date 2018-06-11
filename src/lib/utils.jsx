@@ -14,6 +14,7 @@ import { StellarSdk } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
 import shajs from "sha.js"
+import BigNumber from "bignumber.js"
 
 
 
@@ -623,3 +624,12 @@ export const dataDigest = (dataObj) =>
 // ...
 export const signatureValid = (dataObj, signature) =>
     dataDigest(dataObj) === atob(signature)
+
+
+
+// ...
+export const currentAccountReserve = (accountSubentries) => {
+    BigNumber.config({ DECIMAL_PLACES: 1, ROUNDING_MODE: 4, })
+    const baseReserve = new BigNumber(env.baseReserve)
+    return baseReserve.times(2 + parseInt(accountSubentries, 10)).toFixed(2)
+}
