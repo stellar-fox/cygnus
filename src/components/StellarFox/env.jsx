@@ -161,19 +161,6 @@ export const federationEndpoint = (domain) =>
 
 
 // ...
-export const minimumAccountReserve = 1
-
-
-
-
-// ...
-export const minimumReserveMessage =
-    `Minimum reserve of ${minimumAccountReserve} required.`
-
-
-
-
-// ...
 export const notImplementedText = [
     "Pardon the mess.",
     "We are hard at work to bring you this feature very soon.",
@@ -233,3 +220,8 @@ export const serviceFee = "0.00"
 
 // ...
 export const serviceFeeCurrency = "eur"
+
+
+
+// ...
+export const baseReserve = "0.5"

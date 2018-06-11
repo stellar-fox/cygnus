@@ -47,7 +47,6 @@ class PaymentCard extends Component {
             payeeMemoText: "",
             payeeCurrency: "eur",
             payeeCurrencyAmount: "",
-            minimumReserveMessage: "",
             sendEnabled: false,
             cancelEnabled: true,
             message: null,

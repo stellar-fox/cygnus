@@ -24,7 +24,6 @@ const initState = ((now) => ({
     payeeCurrencyAmount: "",
     payeeMemoText: "",
     message: null,
-    minimumReserveMessage: "",
     newAccount: false,
     payCardVisible: false,
     payDate: now,
