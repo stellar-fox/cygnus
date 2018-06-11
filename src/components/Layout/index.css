@@ -200,6 +200,13 @@ strong { color: rgb(212, 228, 188); }
     flex-direction: column;
 }
 
+.f-e-col-e {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+
 .f-e {
     display: flex;
     flex-direction: row;

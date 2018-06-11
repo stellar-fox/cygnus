@@ -17,6 +17,8 @@ import Button from "../../lib/mui-v1/Button"
 import AssetList from "./AssetList"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as BalancesAction } from "../../redux/Balances"
+import { currentAccountReserve } from "../../lib/utils"
+import { Typography } from "@material-ui/core"
 
 
 
@@ -76,7 +78,7 @@ class BalancesCard extends Component {
             />
 
             <CardText>
-                <div className="flex-row">
+                <div className="f-b">
                     <div>
                         <div className="balance">
                             <span className="fade currency-glyph">
@@ -100,7 +102,39 @@ class BalancesCard extends Component {
                             {this.props.StellarAccount.balance} XLM
                         </div>
                     </div>
-                    <div></div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignContent: "center",
+                            alignItems: "flex-end",
+                            marginLeft: "2rem",
+                        }}
+                    >
+                        <Typography variant="caption" color="inherit">
+                            <span className="fade-strong">Min Balance</span>
+                        </Typography>
+                        <Typography variant="body1" color="inherit">
+                            <span className="fade">{
+                                this.props.assetManager.getAssetGlyph(
+                                    this.props.Account.currency
+                                )
+                            }</span>
+                            <span className="fade">{
+                                this.props.assetManager.convertToAsset(
+                                    currentAccountReserve(
+                                        this.props.StellarAccount.subentryCount
+                                    )
+                                )}</span>
+                        </Typography>
+                        <Typography variant="body1" color="inherit">
+                            <span class="fade-extreme micro">
+                                {currentAccountReserve(
+                                    this.props.StellarAccount.subentryCount
+                                )} XLM
+                            </span>
+                        </Typography>
+                    </div>
                 </div>
             </CardText>
 
