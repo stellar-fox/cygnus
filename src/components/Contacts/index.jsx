@@ -17,7 +17,9 @@ import Button from "@material-ui/core/Button"
 import Modal from "@material-ui/core/Modal"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
-import { getUserContacts, getUserExternalContacts, getContactRequests } from "../../lib/utils"
+import {
+    getUserContacts, getUserExternalContacts, getContactRequests, sortBy,
+} from "../../lib/utils"
 import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
 import Select from "@material-ui/core/Select"
@@ -237,6 +239,7 @@ class Contacts extends Component {
         error: false,
         errorMessage: "",
         selectedView: 0,
+        sortBy: "first_name",
     }
 
 
@@ -324,10 +327,13 @@ class Contacts extends Component {
                     and are signed with digital identity."
                 />
             </Grid> :
-            this.props.contactsInternal.map((contact, index) =>
-                <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3} xl={2}>
-                    <ContactCard data={contact} external={false} />
-                </Grid>
+            this.props.contactsInternal.sort(sortBy(this.state.sortBy)).map(
+                (contact, index) =>
+                    <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
+                        xl={2}
+                    >
+                        <ContactCard data={contact} external={false} />
+                    </Grid>
             )
 
 
@@ -340,10 +346,13 @@ class Contacts extends Component {
                     These contacts are registered with other payment providers."
                 />
             </Grid> :
-            this.props.contactsExternal.map((contact, index) =>
-                <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3} xl={2}>
-                    <ContactCard data={contact} external={true} />
-                </Grid>
+            this.props.contactsExternal.sort(sortBy(this.state.sortBy)).map(
+                (contact, index) =>
+                    <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
+                        xl={2}
+                    >
+                        <ContactCard data={contact} external={true} />
+                    </Grid>
             )
 
 
@@ -356,10 +365,13 @@ class Contacts extends Component {
                     be listed here."
                 />
             </Grid> :
-            this.props.contactRequests.map((request, index) =>
-                <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3} xl={2}>
-                    <ContactRequestCard data={request} />
-                </Grid>
+            this.props.contactRequests.sort(sortBy(this.state.sortBy)).map(
+                (request, index) =>
+                    <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
+                        xl={2}
+                    >
+                        <ContactRequestCard data={request} />
+                    </Grid>
             )
 
 
@@ -375,10 +387,13 @@ class Contacts extends Component {
                 <NoCards title="No contacts found."
                     subtitle="No internal contacts were found matching this search."
                 />
-            </Grid> : results.map((contact, index) =>
-                <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
-                    <ContactCard data={contact} external={false} />
-                </Grid>
+            </Grid> : results.sort(sortBy(this.state.sortBy)).map(
+                (contact, index) =>
+                    <Grid item key={index} xs={12} sm={12} md={4} lg={3}
+                        xl={2}
+                    >
+                        <ContactCard data={contact} external={false} />
+                    </Grid>
             )
     }
 
@@ -396,10 +411,11 @@ class Contacts extends Component {
                     subtitle="No external contacts were found matching this
                     search."
                 />
-            </Grid> : results.map((contact, index) =>
-                <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
-                    <ContactCard data={contact} external={true} />
-                </Grid>
+            </Grid> : results.sort(sortBy(this.state.sortBy)).map(
+                (contact, index) =>
+                    <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
+                        <ContactCard data={contact} external={true} />
+                    </Grid>
             )
 
     }
@@ -418,7 +434,7 @@ class Contacts extends Component {
                     subtitle="No contact requests were found matching this
                     search."
                 />
-            </Grid> : results.map((contact, index) =>
+            </Grid> : results.sort(sortBy()).map((contact, index) =>
                 <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
                     <ContactRequestCard data={contact} />
                 </Grid>

@@ -640,3 +640,23 @@ export const accountIsLocked = (signers, publicKey) => {
     let ownerAccount = signers.find((s) => s.public_key === publicKey)
     return ownerAccount && ownerAccount.weight === 0
 }
+
+
+// ...
+export const sortBy = (attr="first_name") => (a, b) => {
+    let nameA = ""
+    let nameB = ""
+    if (a[attr]) {
+        nameA = a[attr].toUpperCase()
+    }
+    if (b[attr]) {
+        nameB = b[attr].toUpperCase()
+    }
+    if (nameA < nameB) {
+        return -1
+    }
+    if (nameA > nameB) {
+        return 1
+    }
+    return 0
+}
