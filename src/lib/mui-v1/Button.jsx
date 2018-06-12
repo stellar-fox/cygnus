@@ -63,6 +63,7 @@ export default withStyles((theme) => ({
     },
 
     common: {
+        borderRadius: "2px",
         transition: "text-shadow 350ms ease-out, background-color 350ms ease",
         boxShadow: "0 3px 7px rgba(0, 0, 0, 0.3)",
         marginRight: "0.5rem",
