@@ -633,3 +633,10 @@ export const currentAccountReserve = (accountSubentries) => {
     const baseReserve = new BigNumber(env.baseReserve)
     return baseReserve.times(2 + parseInt(accountSubentries, 10)).toFixed(2)
 }
+
+
+// ...
+export const accountIsLocked = (signers, publicKey) => {
+    let ownerAccount = signers.find((s) => s.public_key === publicKey)
+    return ownerAccount && ownerAccount.weight === 0
+}
