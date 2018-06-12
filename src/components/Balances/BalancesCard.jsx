@@ -7,6 +7,7 @@ import {
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { notImplementedText } from "../StellarFox/env"
+import { accountIsLocked } from "../../lib/utils"
 import {
     Card,
     CardActions,
@@ -18,6 +19,7 @@ import AssetList from "./AssetList"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as BalancesAction } from "../../redux/Balances"
 import { currentAccountReserve } from "../../lib/utils"
+import Icon from "@material-ui/core/Icon"
 import { Typography } from "@material-ui/core"
 
 
@@ -78,7 +80,7 @@ class BalancesCard extends Component {
             />
 
             <CardText>
-                <div className="f-b">
+                <div className="f-b space-between">
                     <div>
                         <div className="balance">
                             <span className="fade currency-glyph">
@@ -97,6 +99,37 @@ class BalancesCard extends Component {
                                         )
                                 }
                             </span>
+
+                            {accountIsLocked(
+                                this.props.StellarAccount.signers,
+                                this.props.StellarAccount.accountId
+                            ) ?
+                                <div className="error"
+                                    style={{
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Icon
+                                        style={{
+                                            marginLeft: "1rem",
+                                            marginBottom: "6px",
+                                            fontSize: "20px",
+                                        }}
+                                    >
+                                    lock
+                                    </Icon>
+                                    <span style={{
+                                        fontSize: "14px",
+                                        marginBottom: "3px",
+                                        marginLeft: "2px",
+                                    }}
+                                    >
+                                        Account Locked
+                                    </span>
+                                </div> : null
+                            }
+
                         </div>
                         <div className="fade-extreme micro">
                             {this.props.StellarAccount.balance} XLM
@@ -108,7 +141,6 @@ class BalancesCard extends Component {
                             flexDirection: "column",
                             alignContent: "center",
                             alignItems: "flex-end",
-                            marginLeft: "2rem",
                         }}
                     >
                         <Typography variant="caption" color="inherit">
@@ -128,7 +160,7 @@ class BalancesCard extends Component {
                                 )}</span>
                         </Typography>
                         <Typography variant="body1" color="inherit">
-                            <span class="fade-extreme micro">
+                            <span className="fade-extreme micro">
                                 {currentAccountReserve(
                                     this.props.StellarAccount.subentryCount
                                 )} XLM
