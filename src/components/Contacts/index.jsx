@@ -223,9 +223,8 @@ const SelectView = withStyles(styles)(
                 }}
             >
                 <MenuItem value={0}>All</MenuItem>
-                <MenuItem value={1}>Internal</MenuItem>
-                <MenuItem value={2}>External</MenuItem>
-                <MenuItem value={3}>Requests</MenuItem>
+                <MenuItem value={1}>Contacts</MenuItem>
+                <MenuItem value={2}>Requests</MenuItem>
             </Select>
         </FormControl>
 )
@@ -292,7 +291,6 @@ class Contacts extends Component {
                     })
                 })
 
-
         // list internal contacts only
         this.state.selectedView === 1 &&
             listInternal(this.props.userId, this.props.token)
@@ -315,7 +313,7 @@ class Contacts extends Component {
                     })
                 })
 
-        // list external contacts only
+        // list requested & pending
         this.state.selectedView === 3 &&
             listRequested(this.props.userId, this.props.token)
                 .then((results) => {
@@ -324,47 +322,94 @@ class Contacts extends Component {
                     }) : this.props.setState({
                         requests: [],
                     })
+                }) &&
+
+            listPending(this.props.userId, this.props.token)
+                .then((results) => {
+                    results ? this.props.setState({
+                        pending: results,
+                    }) : this.props.setState({
+                        pending: [],
+                    })
                 })
 
     }
 
 
     // ...
-    showAllInternalCards = () =>
-        this.props.contactsInternal.length === 0 ?
-            <Grid item key={0} xs>
-                <NoCards title="You have no internal contacts at the moment."
-                    subtitle="Internal contacts enable safer money transfers
-                    and are signed with digital identity."
+    showAllContacts = () => {
+        if (this.props.contactsInternal.length === 0 &&
+            this.props.contactsExternal.length === 0) {
+            return (<Grid item key={0} xs>
+                <NoCards title="You have no contacts at the moment."
+                    subtitle="Click 'Add New Contact' to add some."
                 />
-            </Grid> :
-            this.props.contactsInternal.sort(sortBy(this.state.sortBy)).map(
-                (contact, index) =>
-                    <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
-                        xl={2}
-                    >
-                        <ContactCard data={contact} external={false} />
-                    </Grid>
-            )
+            </Grid>)
+        }
+
+        let contacts = []
+
+        if (this.props.contactsInternal.length > 0) {
+            contacts = contacts.concat(this.props.contactsInternal)
+        }
+
+        if (this.props.contactsExternal.length > 0) {
+            contacts = contacts.concat(this.props.contactsExternal)
+        }
+
+        return contacts.sort(sortBy(this.state.sortBy)).map(
+            (contact, index) =>
+                <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
+                    xl={2}
+                >
+                    <ContactCard data={contact}
+                        external={!contact.contact_id}
+                    />
+                </Grid>
+        )
+    }
 
 
     // ...
-    showAllExternalCards = () =>
-        this.props.contactsExternal.length === 0 ?
-            <Grid item key={0} xs>
-                <NoCards title="You have no external contacts at the moment."
-                    subtitle="Send money to anyone with a payment address.
-                    These contacts are registered with other payment providers."
+    showFilteredContacts = () => {
+        let filteredInternal = new Fuse(this.props.contactsInternal, {
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+        }).search(this.state.search)
+
+        let filteredExternal = new Fuse(this.props.contactsExternal, {
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+        }).search(this.state.search)
+
+        if (filteredInternal.length === 0 && filteredExternal.length === 0) {
+            return (<Grid item key={0} xs>
+                <NoCards title="No contacts found."
+                    subtitle="No external contacts were found matching this
+                    search."
                 />
-            </Grid> :
-            this.props.contactsExternal.sort(sortBy(this.state.sortBy)).map(
-                (contact, index) =>
-                    <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
-                        xl={2}
-                    >
-                        <ContactCard data={contact} external={true} />
-                    </Grid>
-            )
+            </Grid>)
+        }
+
+        let filteredResults = []
+
+        if (filteredInternal.length > 0) {
+            filteredResults = filteredResults.concat(filteredInternal)
+        }
+
+        if (filteredExternal.length > 0) {
+            filteredResults = filteredResults.concat(filteredExternal)
+        }
+
+        return filteredResults.sort(sortBy(this.state.sortBy)).map(
+            (contact, index) =>
+                <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
+                    xl={2}
+                >
+                    <ContactCard data={contact}
+                        external={!contact.contact_id}
+                    />
+                </Grid>
+        )
+    }
 
 
     // ...
@@ -380,81 +425,26 @@ class Contacts extends Component {
 
         }
         let requests = []
+
         if (this.props.contactRequests.length > 0) {
-            requests.push(this.props.contactRequests.sort(
-                sortBy(this.state.sortBy)
-            ).map(
-                (request, index) =>
-                    <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
-                        xl={2}
-                    >
-                        <ContactRequestCard data={request} />
-                    </Grid>
-            ))
+            requests = requests.concat(this.props.contactRequests)
         }
 
         if (this.props.pending.length > 0) {
-            requests.push(this.props.pending.sort(
-                sortBy(this.state.sortBy)
-            ).map(
-                (request, index) =>
-                    <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
-                        xl={2}
-                    >
-                        <ContactPendingCard data={request} />
-                    </Grid>
-            ))
+            requests = requests.concat(this.props.pending)
         }
 
-        return requests
-    }
-
-
-
-
-    // ...
-    showFilteredInternalCards = () => {
-
-        let results = new Fuse(this.props.contactsInternal, {
-            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
-        }).search(this.state.search)
-
-        return results.length === 0 ?
-            <Grid item key={0} xs>
-                <NoCards title="No contacts found."
-                    subtitle="No internal contacts were found matching this search."
-                />
-            </Grid> : results.sort(sortBy(this.state.sortBy)).map(
-                (contact, index) =>
-                    <Grid item key={index} xs={12} sm={12} md={4} lg={3}
-                        xl={2}
-                    >
-                        <ContactCard data={contact} external={false} />
-                    </Grid>
-            )
-    }
-
-
-    // ...
-    showFilteredExternalCards = () => {
-
-        let results = new Fuse(this.props.contactsExternal, {
-            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
-        }).search(this.state.search)
-
-        return results.length === 0 ?
-            <Grid item key={0} xs>
-                <NoCards title="No contacts found."
-                    subtitle="No external contacts were found matching this
-                    search."
-                />
-            </Grid> : results.sort(sortBy(this.state.sortBy)).map(
-                (contact, index) =>
-                    <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
-                        <ContactCard data={contact} external={true} />
-                    </Grid>
-            )
-
+        return requests.sort(sortBy(this.state.sortBy)).map(
+            (contact, index) =>
+                <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
+                    xl={2}
+                >
+                    {contact.type === "pending" ?
+                        <ContactPendingCard data={contact} /> :
+                        <ContactRequestCard data={contact} />
+                    }
+                </Grid>
+        )
     }
 
 
@@ -488,13 +478,14 @@ class Contacts extends Component {
             searchResults = searchResults.concat(searchPending)
         }
 
-        return searchResults.sort(sortBy()).map((contact, index) =>
-            <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
-                {contact.contact_id === this.props.userId ?
-                    <ContactPendingCard data={contact} /> :
-                    <ContactRequestCard data={contact} />
-                }
-            </Grid>
+        return searchResults.sort(sortBy(this.state.sortBy)).map(
+            (contact, index) =>
+                <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
+                    {contact.type === "pending" ?
+                        <ContactPendingCard data={contact} /> :
+                        <ContactRequestCard data={contact} />
+                    }
+                </Grid>
         )
 
     }
@@ -576,27 +567,8 @@ class Contacts extends Component {
                         spacing={16}
                     >
                         {this.state.search.length > 0 ?
-                            this.showFilteredInternalCards() :
-                            this.showAllInternalCards()
-                        }
-                    </Grid>
-                    <div className="m-t-medium">
-                        <Typography noWrap align="center" variant="body2"
-                            color="secondary"
-                        >
-                            Federated Contacts
-                        </Typography>
-                        <Divider color="secondary" />
-                    </div>
-                    <Grid
-                        container
-                        alignContent="flex-start"
-                        alignItems="center"
-                        spacing={16}
-                    >
-                        {this.state.search.length > 0 ?
-                            this.showFilteredExternalCards() :
-                            this.showAllExternalCards()
+                            this.showFilteredContacts() :
+                            this.showAllContacts()
                         }
                     </Grid>
                     <div className="m-t-medium">
@@ -618,17 +590,6 @@ class Contacts extends Component {
                             this.showAllContactRequests()
                         }
                     </Grid>
-                    {/* <Grid
-                        container
-                        alignContent="flex-start"
-                        alignItems="center"
-                        spacing={16}
-                    >
-                        {this.state.search.length > 0 ?
-                            this.showFilteredContactRequests() :
-                            this.showAllPending()
-                        }
-                    </Grid> */}
                 </Fragment>
             }
 
@@ -638,7 +599,7 @@ class Contacts extends Component {
                         <Typography noWrap align="center" variant="body2"
                             color="secondary"
                         >
-                            Internal Contacts
+                            Contacts
                         </Typography>
                         <Divider color="secondary" />
                     </div>
@@ -649,38 +610,14 @@ class Contacts extends Component {
                         spacing={16}
                     >
                         {this.state.search.length > 0 ?
-                            this.showFilteredInternalCards() :
-                            this.showAllInternalCards()
+                            this.showFilteredContacts() :
+                            this.showAllContacts()
                         }
                     </Grid>
                 </Fragment>
             }
 
             {this.state.selectedView === 2 &&
-                <Fragment>
-                    <div className="m-t-medium">
-                        <Typography noWrap align="center" variant="body2"
-                            color="secondary"
-                        >
-                            External Contacts
-                        </Typography>
-                        <Divider color="secondary" />
-                    </div>
-                    <Grid
-                        container
-                        alignContent="flex-start"
-                        alignItems="center"
-                        spacing={16}
-                    >
-                        {this.state.search.length > 0 ?
-                            this.showFilteredExternalCards() :
-                            this.showAllExternalCards()
-                        }
-                    </Grid>
-                </Fragment>
-            }
-
-            {this.state.selectedView === 3 &&
                 <Fragment>
                     <div className="m-t-medium">
                         <Typography noWrap align="center" variant="body2"
