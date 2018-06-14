@@ -5,6 +5,7 @@ const initState = {
     internal: [],
     external: [],
     requests: [],
+    pending: [],
     details: {
         external: false,
         contact: null,
