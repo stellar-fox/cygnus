@@ -90,42 +90,12 @@ export const getRegisteredAccount = async (userId, token) => {
 
 
 // ...
-export const getUserContacts = async (userId, token) => {
-    try {
-        return (await axios.post(`${config.api}/contacts/`, {
-            user_id: userId,
-            token,
-        })).data.data
-    } catch (error) {
-        return null
-    }
-}
-
-
-
-
-// ...
 export const getUserExternalContacts = async (userId, token) => {
     try {
-        return (await axios.post(`${config.api}/contacts/external/`, {
+        return (await axios.post(`${config.apiV2}/contacts/list/federated/`, {
             user_id: userId,
             token,
-        })).data.data
-    } catch (error) {
-        return null
-    }
-}
-
-
-
-
-// ...
-export const getContactRequests = async (userId, token) => {
-    try {
-        return (await axios.post(`${config.api}/contact/reqlist/`, {
-            user_id: userId,
-            token,
-        })).data.data
+        })).data
     } catch (error) {
         return null
     }
@@ -550,9 +520,11 @@ export const devEnv = () =>
 // asynchronously load libraries (used in dev. environment)
 export const dynamicImportLibs = async () => {
     let [
+        apiContacts,
         bignumber, toolbox, ledger, jss,
         lodash, mui, md5, redux, utils,
     ] = await Promise.all([
+        import("../../src/components/Contacts/api"),
         import("bignumber.js"),
         import("@xcmats/js-toolbox"),
         import("./ledger"),
@@ -564,6 +536,7 @@ export const dynamicImportLibs = async () => {
         import("./utils"),
     ])
     return {
+        api: { contacts: apiContacts, },
         axios,
         BigNumber: bignumber.default,
         toolbox, ledger, jss, lodash, mui,
