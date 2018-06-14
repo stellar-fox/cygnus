@@ -3,6 +3,7 @@ import {
     homepage,
     version,
 } from "../../../package.json"
+import { timeUnit } from "@xcmats/js-toolbox"
 
 
 
@@ -38,7 +39,7 @@ export const ssAppStateKey = `StellarFox.${appVersion}`
 
 
 // Session Storage save throttling time - finest possible granularity (in ms)
-export const ssSaveThrottlingTime = 1000
+export const ssSaveThrottlingTime = timeUnit.second
 
 
 
@@ -68,7 +69,7 @@ export const bip32Prefix = "44'/148'/"
 
 
 // ...
-export const snackbarAutoHideDuration = 3100
+export const snackbarAutoHideDuration = 3 * timeUnit.second
 
 
 
@@ -148,7 +149,7 @@ export const gravatarSize = "s=96"
 
 
 // ...
-export const defaultCurrencyRateUpdateTime = 300000
+export const defaultCurrencyRateUpdateTime = 5 * timeUnit.minute
 
 
 
@@ -220,6 +221,7 @@ export const serviceFee = "0.00"
 
 // ...
 export const serviceFeeCurrency = "eur"
+
 
 
 

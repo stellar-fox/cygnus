@@ -600,12 +600,15 @@ export const signatureValid = (dataObj, signature) =>
 
 
 
+
 // ...
 export const currentAccountReserve = (accountSubentries) => {
     BigNumber.config({ DECIMAL_PLACES: 1, ROUNDING_MODE: 4, })
     const baseReserve = new BigNumber(env.baseReserve)
     return baseReserve.times(2 + parseInt(accountSubentries, 10)).toFixed(2)
 }
+
+
 
 
 // ...
@@ -615,21 +618,16 @@ export const accountIsLocked = (signers, publicKey) => {
 }
 
 
+
+
 // ...
 export const sortBy = (attr="first_name") => (a, b) => {
-    let nameA = ""
-    let nameB = ""
-    if (a[attr]) {
-        nameA = a[attr].toUpperCase()
-    }
-    if (b[attr]) {
-        nameB = b[attr].toUpperCase()
-    }
-    if (nameA < nameB) {
-        return -1
-    }
-    if (nameA > nameB) {
-        return 1
-    }
+    let nameA = "", nameB = ""
+
+    if (a[attr]) { nameA = a[attr].toUpperCase() }
+    if (b[attr]) { nameB = b[attr].toUpperCase() }
+
+    if (nameA < nameB) { return -1 }
+    if (nameA > nameB) { return 1 }
     return 0
 }
