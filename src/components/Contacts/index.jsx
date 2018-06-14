@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
 import ContactCard from "../ContactCard"
 import ContactRequestCard from "../ContactCard/requestCard"
+import ContactPendingCard from "../ContactCard/pendingCard"
 import AddContactForm from "./AddContactForm"
 import EditContactForm from "./EditContactForm"
 import AppBar from "@material-ui/core/AppBar"
@@ -17,8 +18,9 @@ import Button from "@material-ui/core/Button"
 import Modal from "@material-ui/core/Modal"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
+import { listInternal, listRequested, listPending, } from "./api"
 import {
-    getUserContacts, getUserExternalContacts, getContactRequests, sortBy,
+    getUserExternalContacts, sortBy,
 } from "../../lib/utils"
 import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
@@ -254,7 +256,7 @@ class Contacts extends Component {
 
         // list all user contacts
         this.state.selectedView === 0 &&
-            getUserContacts(this.props.userId, this.props.token)
+            listInternal(this.props.userId, this.props.token)
                 .then((results) => {
                     results ? this.props.setState({
                         internal: results,
@@ -272,19 +274,28 @@ class Contacts extends Component {
                     })
                 }) &&
 
-            getContactRequests(this.props.userId, this.props.token)
+            listRequested(this.props.userId, this.props.token)
                 .then((results) => {
                     results ? this.props.setState({
                         requests: results,
                     }) : this.props.setState({
                         requests: [],
                     })
+                }) &&
+
+            listPending(this.props.userId, this.props.token)
+                .then((results) => {
+                    results ? this.props.setState({
+                        pending: results,
+                    }) : this.props.setState({
+                        pending: [],
+                    })
                 })
 
 
         // list internal contacts only
         this.state.selectedView === 1 &&
-            getUserContacts(this.props.userId, this.props.token)
+            listInternal(this.props.userId, this.props.token)
                 .then((results) => {
                     results ? this.props.setState({
                         internal: results,
@@ -306,7 +317,7 @@ class Contacts extends Component {
 
         // list external contacts only
         this.state.selectedView === 3 &&
-            getContactRequests(this.props.userId, this.props.token)
+            listRequested(this.props.userId, this.props.token)
                 .then((results) => {
                     results ? this.props.setState({
                         requests: results,
@@ -357,22 +368,48 @@ class Contacts extends Component {
 
 
     // ...
-    showAllContactRequests = () =>
-        this.props.contactRequests.length === 0 ?
-            <Grid item key={0} xs={12} sm={12} md={4} lg={3} xl={2}>
+    showAllContactRequests = () => {
+        if (this.props.contactRequests.length === 0 &&
+            this.props.pending.length === 0) {
+            return (<Grid item key={0} xs={12} sm={12} md={4} lg={3} xl={2}>
                 <NoCards title="You have no contact requests at the moment."
                     subtitle="When someone requests you as a contact, it will
                     be listed here."
                 />
-            </Grid> :
-            this.props.contactRequests.sort(sortBy(this.state.sortBy)).map(
+            </Grid>)
+
+        }
+        let requests = []
+        if (this.props.contactRequests.length > 0) {
+            requests.push(this.props.contactRequests.sort(
+                sortBy(this.state.sortBy)
+            ).map(
                 (request, index) =>
                     <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
                         xl={2}
                     >
                         <ContactRequestCard data={request} />
                     </Grid>
-            )
+            ))
+        }
+
+        if (this.props.pending.length > 0) {
+            requests.push(this.props.pending.sort(
+                sortBy(this.state.sortBy)
+            ).map(
+                (request, index) =>
+                    <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
+                        xl={2}
+                    >
+                        <ContactPendingCard data={request} />
+                    </Grid>
+            ))
+        }
+
+        return requests
+    }
+
+
 
 
     // ...
@@ -424,21 +461,41 @@ class Contacts extends Component {
     // ...
     showFilteredContactRequests = () => {
 
-        let results = new Fuse(this.props.contactRequests, {
+        let searchRequests = new Fuse(this.props.contactRequests, {
             keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
         }).search(this.state.search)
 
-        return results.length === 0 ?
-            <Grid item key={0} xs>
+        let searchPending = new Fuse(this.props.pending, {
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+        }).search(this.state.search)
+
+        if (searchRequests.length === 0 && searchPending.length === 0) {
+            return (<Grid item key={0} xs>
                 <NoCards title="No contact requests found."
                     subtitle="No contact requests were found matching this
                     search."
                 />
-            </Grid> : results.sort(sortBy()).map((contact, index) =>
-                <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
+            </Grid>)
+        }
+
+        let searchResults = []
+
+        if (searchRequests.length > 0) {
+            searchResults = searchResults.concat(searchRequests)
+        }
+
+        if (searchPending.length > 0) {
+            searchResults = searchResults.concat(searchPending)
+        }
+
+        return searchResults.sort(sortBy()).map((contact, index) =>
+            <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
+                {contact.contact_id === this.props.userId ?
+                    <ContactPendingCard data={contact} /> :
                     <ContactRequestCard data={contact} />
-                </Grid>
-            )
+                }
+            </Grid>
+        )
 
     }
 
@@ -508,7 +565,7 @@ class Contacts extends Component {
                         <Typography noWrap align="center" variant="body2"
                             color="secondary"
                         >
-                            Internal Contacts
+                            Contacts
                         </Typography>
                         <Divider color="secondary" />
                     </div>
@@ -527,7 +584,7 @@ class Contacts extends Component {
                         <Typography noWrap align="center" variant="body2"
                             color="secondary"
                         >
-                            External Contacts
+                            Federated Contacts
                         </Typography>
                         <Divider color="secondary" />
                     </div>
@@ -561,6 +618,17 @@ class Contacts extends Component {
                             this.showAllContactRequests()
                         }
                     </Grid>
+                    {/* <Grid
+                        container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={16}
+                    >
+                        {this.state.search.length > 0 ?
+                            this.showFilteredContactRequests() :
+                            this.showAllPending()
+                        }
+                    </Grid> */}
                 </Fragment>
             }
 
@@ -651,6 +719,7 @@ export default connect(
         contactsInternal: state.Contacts.internal,
         contactsExternal: state.Contacts.external,
         contactRequests: state.Contacts.requests,
+        pending: state.Contacts.pending,
     }),
     (dispatch) => bindActionCreators({
         setState: ContactsAction.setState,
