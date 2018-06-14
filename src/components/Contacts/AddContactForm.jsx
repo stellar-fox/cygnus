@@ -3,10 +3,9 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import Axios from "axios"
 import { config } from "../../config"
+import { listInternal, listRequested, requestInternalByPaymentAddress, } from "../Contacts/api"
 import {
-    getUserContacts,
     getUserExternalContacts,
-    getContactRequests,
     htmlEntities as he,
     emailValid,
     federationAddressValid,
@@ -250,16 +249,12 @@ class AddContactForm extends Component {
             let [alias, domain,] = toAliasAndDomain(this.state.input)
 
             domain === stellarFoxDomain ?
-                Axios.post(`${config.api}/contact/request`, {
-                    user_id: this.props.userId,
-                    token: this.props.token,
-                    alias: alias,
-                    domain: domain,
-                }).then((_result) => {
-                    this.requestComplete()
-                }).catch((error) => {
-                    this.requestFailed(error)
-                }) :
+                requestInternalByPaymentAddress(this.props.userId, this.props.token, alias, domain)
+                    .then(() => {
+                        this.requestComplete()
+                    }).catch((error) => {
+                        this.requestFailed(error)
+                    }) :
                 /**
                  * Search for contact with other federation providers.
                  */
@@ -355,7 +350,7 @@ class AddContactForm extends Component {
     // ...
     updateContacts = () => {
 
-        getUserContacts(this.props.userId, this.props.token)
+        listInternal(this.props.userId, this.props.token)
             .then((results) => {
                 results ? this.props.setState({
                     internal: results,
@@ -373,7 +368,7 @@ class AddContactForm extends Component {
                     })
                 })
 
-        getContactRequests(this.props.userId, this.props.token)
+        listRequested(this.props.userId, this.props.token)
             .then((results) => {
                 results ? this.props.setState({
                     requests: results,

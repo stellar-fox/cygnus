@@ -19,11 +19,10 @@ import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as AlertAction } from "../../redux/Alert"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
+import { listInternal, listRequested, } from "../Contacts/api"
 import {
-    getContactRequests,
     getRegisteredUser,
     getRegisteredAccount,
-    getUserContacts,
     getUserData,
     getUserExternalContacts,
     insertPathIndex,
@@ -136,7 +135,7 @@ class Balances extends Component {
     // ...
     updateContacts = () => {
 
-        getUserContacts(this.props.userId, this.props.token)
+        listInternal(this.props.userId, this.props.token)
             .then((results) => {
                 results ? this.props.setContactsState({
                     internal: results,
@@ -154,7 +153,7 @@ class Balances extends Component {
                 })
             })
 
-        getContactRequests(this.props.userId, this.props.token)
+        listRequested(this.props.userId, this.props.token)
             .then((results) => {
                 results ? this.props.setContactsState({
                     requests: results,

@@ -9,12 +9,11 @@ import Button from "@material-ui/core/Button"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
+import { listInternal, listRequested, } from "../Contacts/api"
 import {
     pubKeyAbbr,
     changeContactStatus,
-    getUserContacts,
     getUserExternalContacts,
-    getContactRequests
 } from "../../lib/utils"
 
 
@@ -100,7 +99,7 @@ export default compose(
             changeContactStatus(
                 this.props.userId, this.props.token, 2, requested_by
             ).then((_response) => {
-                getUserContacts(this.props.userId, this.props.token)
+                listInternal(this.props.userId, this.props.token)
                     .then((results) => {
                         results ? this.props.setState({
                             internal: results,
@@ -116,7 +115,7 @@ export default compose(
                             external: [],
                         })
                     })
-                getContactRequests(this.props.userId, this.props.token)
+                listRequested(this.props.userId, this.props.token)
                     .then((results) => {
                         results ? this.props.setState({
                             requests: results,
@@ -133,7 +132,7 @@ export default compose(
             changeContactStatus(
                 this.props.userId, this.props.token, 3, requested_by
             ).then((_response) => {
-                getContactRequests(this.props.userId, this.props.token)
+                listRequested(this.props.userId, this.props.token)
                     .then((results) => {
                         results ? this.props.setState({
                             requests: results,
