@@ -49,3 +49,12 @@ export const approveInternal = async (user_id, token) =>
     (await Axios.post(`${config.apiV2}/contact/approve/internal/`, {
         user_id, token,
     })).data
+
+
+
+
+// ...
+export const removeInternal = async (user_id, token, contact_id) =>
+    (await Axios.post(`${config.apiV2}/contact/remove/internal/`, {
+        user_id, token, contact_id,
+    })).status

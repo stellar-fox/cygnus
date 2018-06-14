@@ -4,10 +4,9 @@ import { connect } from "react-redux"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize } from "../StellarFox/env"
 import { config } from "../../config"
+import { listInternal, listRequested, removeInternal, } from "../Contacts/api"
 import {
-    getUserContacts,
     getUserExternalContacts,
-    getContactRequests,
     federationAddressValid,
     formatFullName,
     formatMemo,
@@ -368,12 +367,10 @@ class EditContactForm extends Component {
             })
 
         } else {
-            await Axios.post(`${config.api}/contact/delete`, {
-                user_id: this.props.userId,
-                token: this.props.token,
-                contact_id: this.props.details.contact.contact_id,
-                requested_by: this.props.userId,
-            })
+            await removeInternal(
+                this.props.userId, this.props.token,
+                this.props.details.contact.contact_id
+            )
         }
 
         this.props.setState({
@@ -506,7 +503,7 @@ class EditContactForm extends Component {
     // ...
     updateContacts = () => {
 
-        getUserContacts(this.props.userId, this.props.token)
+        listInternal(this.props.userId, this.props.token)
             .then((results) => {
                 results ? this.props.setState({
                     internal: results,
@@ -524,7 +521,7 @@ class EditContactForm extends Component {
                     })
                 })
 
-        getContactRequests(this.props.userId, this.props.token)
+        listRequested(this.props.userId, this.props.token)
             .then((results) => {
                 results ? this.props.setState({
                     requests: results,
