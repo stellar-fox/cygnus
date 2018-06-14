@@ -47,7 +47,7 @@ export default compose(
             borderRadius: 3,
             width: 48,
             height: 48,
-            border: `1px solid ${theme.palette.primary.light}`,
+            border: `1px solid ${theme.palette.secondary.dark}`,
         },
 
     }))

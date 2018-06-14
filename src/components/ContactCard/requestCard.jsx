@@ -74,14 +74,14 @@ export default compose(
             paddingTop: 16,
             paddingBottom: 16,
             minWidth: 250,
-            backgroundColor: theme.palette.secondary.dark,
+            backgroundColor: theme.palette.secondary.main,
         }),
 
         avatar: {
             borderRadius: 3,
             width: 48,
             height: 48,
-            border: `1px solid ${theme.palette.primary.dark}`,
+            border: `1px solid ${theme.palette.secondary.dark}`,
         },
 
     }))

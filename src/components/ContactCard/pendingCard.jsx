@@ -33,14 +33,15 @@ export default compose(
             paddingTop: 16,
             paddingBottom: 16,
             minWidth: 250,
-            backgroundColor: theme.palette.secondary.dark,
+            backgroundColor: theme.palette.secondary.main,
+            opacity: "0.4",
         }),
 
         avatar: {
             borderRadius: 3,
             width: 48,
             height: 48,
-            border: `1px solid ${theme.palette.primary.dark}`,
+            border: `1px solid ${theme.palette.secondary.dark}`,
         },
 
     }))
@@ -56,7 +57,7 @@ export default compose(
         // ...
         render = () => (
             ({ classes, data, }) =>
-                <Paper elevation={3}
+                <Paper elevation={0}
                     className={classes.root}
                 >
                     <div className="f-b space-between">
@@ -82,11 +83,12 @@ export default compose(
                                     {pubKeyAbbr(data.pubkey)}
                                 </Typography>
                             </div>
-                            <div className="f-e space-between p-l fade-strong">
-                                <Typography variant="body1" align="right"
+                            <div className="f-e-col space-around p-l">
+                                <Typography variant="caption" align="center"
+                                    color="primary"
                                     noWrap
                                 >
-                                    Pending Approval
+                                    Awaiting Approval
                                 </Typography>
                             </div>
                         </div>
