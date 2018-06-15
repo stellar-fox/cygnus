@@ -3,7 +3,10 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import Axios from "axios"
 import { config } from "../../config"
-import { listInternal, listRequested, requestInternalByPaymentAddress, } from "../Contacts/api"
+import {
+    listInternal, listRequested, requestByAccountNumber,
+    requestByPaymentAddress,
+} from "../Contacts/api"
 import {
     getUserExternalContacts,
     htmlEntities as he,
@@ -249,7 +252,7 @@ class AddContactForm extends Component {
             let [alias, domain,] = toAliasAndDomain(this.state.input)
 
             domain === stellarFoxDomain ?
-                requestInternalByPaymentAddress(this.props.userId, this.props.token, alias, domain)
+                requestByPaymentAddress(this.props.userId, this.props.token, alias, domain)
                     .then(() => {
                         this.requestComplete()
                     }).catch((error) => {
@@ -277,11 +280,9 @@ class AddContactForm extends Component {
 
         // try adding a contact based on account number
         else if (this.state.tabSelected === 2) {
-            Axios.post(`${config.api}/contact/reqbyacct`, {
-                user_id: this.props.userId,
-                token: this.props.token,
-                pubkey: this.state.input,
-            }).then((_result) => {
+            requestByAccountNumber(
+                this.props.userId, this.props.token, this.state.input
+            ).then((_result) => {
                 this.requestComplete()
             }).catch((error) => {
                 this.requestFailed(error)

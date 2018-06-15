@@ -32,11 +32,24 @@ export const listPending = async (user_id, token) =>
 
 
 // ...
-export const requestInternalByPaymentAddress = async (
+export const requestByAccountNumber = async (
+    user_id, token, pubkey
+) =>
+    (await Axios.post(
+        `${config.apiV2}/contact/request/by-account-number/`, {
+            user_id, token, pubkey,
+        }
+    )).status
+
+
+
+
+// ...
+export const requestByPaymentAddress = async (
     user_id, token, alias, domain
 ) =>
     (await Axios.post(
-        `${config.apiV2}/contact/request/internal/by-payment-address/`, {
+        `${config.apiV2}/contact/request/by-payment-address/`, {
             user_id, token, alias, domain,
         }
     )).status
