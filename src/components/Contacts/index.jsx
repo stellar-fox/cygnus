@@ -374,10 +374,12 @@ class Contacts extends Component {
     showFilteredContacts = () => {
         let filteredInternal = new Fuse(this.props.contactsInternal, {
             keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+            threshold: "0.2",
         }).search(this.state.search)
 
         let filteredExternal = new Fuse(this.props.contactsExternal, {
             keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+            threshold: "0.2",
         }).search(this.state.search)
 
         if (filteredInternal.length === 0 && filteredExternal.length === 0) {
@@ -453,10 +455,12 @@ class Contacts extends Component {
 
         let searchRequests = new Fuse(this.props.contactRequests, {
             keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+            threshold: "0.2",
         }).search(this.state.search)
 
         let searchPending = new Fuse(this.props.pending, {
             keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+            threshold: "0.2",
         }).search(this.state.search)
 
         if (searchRequests.length === 0 && searchPending.length === 0) {
