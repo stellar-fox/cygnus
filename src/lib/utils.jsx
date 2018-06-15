@@ -8,6 +8,7 @@ import {
     head,
     isString,
     objectMap,
+    wrap,
 } from "@xcmats/js-toolbox"
 
 import { StellarSdk } from "./stellar-tx"
@@ -63,10 +64,10 @@ export const formatMemo = (memoType, memo) => (
 // ...
 export const getRegisteredUser = async (publicKey, bip32Path) => {
     try {
-        return (await axios.post(
-            `${config.api}/user/ledgerauth/${publicKey}/${bip32Path}`)
+        return await axios.post(
+            `${config.api}/user/ledgerauth/${publicKey}/${bip32Path}`
         )
-    } catch (error) {
+    } catch (_e) {
         return null
     }
 }
@@ -81,7 +82,7 @@ export const getRegisteredAccount = async (userId, token) => {
             id: userId,
             token,
         })).data.data
-    } catch (error) {
+    } catch (_e) {
         return null
     }
 }
@@ -96,7 +97,7 @@ export const getUserExternalContacts = async (userId, token) => {
             user_id: userId,
             token,
         })).data
-    } catch (error) {
+    } catch (_e) {
         return null
     }
 }
@@ -109,14 +110,14 @@ export const changeContactStatus = async (
     userId, token, status, requested_by
 ) => {
     try {
-        return (await axios.post(`${config.api}/contact/update/`, {
+        return await axios.post(`${config.api}/contact/update/`, {
             user_id: userId,
             token,
             status,
             contact_id: userId,
             requested_by,
-        }))
-    } catch (error) {
+        })
+    } catch (_e) {
         return null
     }
 }
@@ -137,7 +138,7 @@ export const getUserData = async (id, token) => {
         return (
             await axios.post(`${config.api}/user/`, { id, token, })
         ).data.data
-    } catch (error) {
+    } catch (_e) {
         return null
     }
 }
@@ -631,3 +632,23 @@ export const sortBy = (attr="first_name") => (a, b) => {
     if (nameA > nameB) { return 1 }
     return 0
 }
+
+
+
+
+// little helper for JSS urls
+export const url = (x) => wrap(x, "url(", ")")
+
+
+
+
+// little helper for JSS colors
+export const rgb = (r, g, b) =>
+    wrap([r, g, b,].join(", "), "rgb(", ")")
+
+
+
+
+// little helper for JSS colors with alpha
+export const rgba = (r, g, b, a) =>
+    wrap([r, g, b, a,].join(", "), "rgba(", ")")
