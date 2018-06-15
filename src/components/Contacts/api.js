@@ -45,9 +45,18 @@ export const requestInternalByPaymentAddress = async (
 
 
 // ...
-export const approveInternal = async (user_id, token) =>
+export const approveInternal = async (user_id, token, contact_id) =>
     (await Axios.post(`${config.apiV2}/contact/approve/internal/`, {
-        user_id, token,
+        user_id, token, contact_id,
+    })).data
+
+
+
+
+// ...
+export const rejectInternal = async (user_id, token, contact_id) =>
+    (await Axios.post(`${config.apiV2}/contact/reject/internal/`, {
+        user_id, token, contact_id,
     })).data
 
 

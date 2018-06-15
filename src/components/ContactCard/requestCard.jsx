@@ -9,10 +9,11 @@ import Button from "@material-ui/core/Button"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
-import { listInternal, listRequested, } from "../Contacts/api"
+import {
+    approveInternal, rejectInternal, listInternal, listRequested,
+} from "../Contacts/api"
 import {
     pubKeyAbbr,
-    changeContactStatus,
     getUserExternalContacts,
 } from "../../lib/utils"
 
@@ -49,7 +50,7 @@ const ActionButton = withStyles(styles)(
         <Button onClick={onClick} variant="raised"
             size="small" className={classes[color]}
         >
-            <Typography noWrap variant="caption" color="inherit">
+            <Typography noWrap variant="button" color="inherit">
                 {label}
             </Typography>
         </Button>
@@ -96,8 +97,8 @@ export default compose(
 
         // ...
         acceptContact = (requested_by) => {
-            changeContactStatus(
-                this.props.userId, this.props.token, 2, requested_by
+            approveInternal(
+                this.props.userId, this.props.token, requested_by
             ).then((_response) => {
                 listInternal(this.props.userId, this.props.token)
                     .then((results) => {
@@ -129,8 +130,8 @@ export default compose(
 
         // ...
         rejectContact = (requested_by) => {
-            changeContactStatus(
-                this.props.userId, this.props.token, 3, requested_by
+            rejectInternal(
+                this.props.userId, this.props.token, requested_by
             ).then((_response) => {
                 listRequested(this.props.userId, this.props.token)
                     .then((results) => {
@@ -192,7 +193,7 @@ export default compose(
                                     )}
                                     variant="raised"
                                     color="danger" size="small"
-                                    label="Reject"
+                                    label="Block"
                                 />
                             </div>
                         </div>
