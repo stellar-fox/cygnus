@@ -3,8 +3,10 @@ import { bindActionCreators, compose, } from "redux"
 import { connect } from "react-redux"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize } from "../StellarFox/env"
-import { config } from "../../config"
-import { listInternal, listRequested, removeInternal, } from "../Contacts/api"
+import {
+    listInternal, listRequested, removeFederated, removeInternal,
+    updateFederated,
+} from "../Contacts/api"
 import {
     getUserExternalContacts,
     federationAddressValid,
@@ -33,7 +35,6 @@ import Badge from "@material-ui/core/Badge"
 import Button from "@material-ui/core/Button"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import Typography from "@material-ui/core/Typography"
-import Axios from "axios"
 
 
 
@@ -359,12 +360,12 @@ class EditContactForm extends Component {
         this.props.hideModal()
 
         if (this.props.details.external) {
-            await Axios.post(`${config.api}/contact/extdelete`, {
-                user_id: this.props.userId,
-                token: this.props.token,
-                id: this.props.details.contact.id,
-                added_by: this.props.userId,
-            })
+            await removeFederated(
+                this.props.userId,
+                this.props.token,
+                this.props.details.contact.id,
+                this.props.userId,
+            )
 
         } else {
             await removeInternal(
@@ -459,9 +460,8 @@ class EditContactForm extends Component {
         }
 
         try {
-            await Axios.post(`${config.api}/contact/extupdate`, {
-                user_id: this.props.userId,
-                token: this.props.token,
+
+            await updateFederated(this.props.userId, this.props.token, {
                 id: this.props.details.contact.id,
                 currency: this.state.defaultCurrency,
                 memo: this.state.memo,
@@ -496,7 +496,8 @@ class EditContactForm extends Component {
             this.hideDetails()
 
         } catch (error) {
-            this.props.showAlert("Unable to update currency.", "Error")
+            await this.setState({ inProgress: false, })
+            this.props.showAlert("Unable to update contact info.", "Error")
         }
     }
 
@@ -606,6 +607,8 @@ class EditContactForm extends Component {
             </Fragment>
     )(this.props)
 }
+
+
 
 
 // ...

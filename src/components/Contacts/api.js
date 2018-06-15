@@ -63,7 +63,25 @@ export const rejectInternal = async (user_id, token, contact_id) =>
 
 
 // ...
+export const removeFederated = async (user_id, token, id, added_by) =>
+    (await Axios.post(`${config.apiV2}/contact/remove/federated/`, {
+        user_id, token, id, added_by,
+    })).status
+
+
+
+
+// ...
 export const removeInternal = async (user_id, token, contact_id) =>
     (await Axios.post(`${config.apiV2}/contact/remove/internal/`, {
         user_id, token, contact_id,
+    })).status
+
+
+
+
+// ...
+export const updateFederated = async (user_id, token, attr) =>
+    (await Axios.post(`${config.apiV2}/contact/update/federated/`, {
+        user_id, token, ...attr,
     })).status
