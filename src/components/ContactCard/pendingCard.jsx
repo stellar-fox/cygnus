@@ -34,7 +34,7 @@ export default compose(
             paddingBottom: 16,
             minWidth: 250,
             backgroundColor: theme.palette.secondary.main,
-            opacity: "0.4",
+            opacity: "0.7",
         }),
 
         avatar: {
@@ -83,7 +83,7 @@ export default compose(
                                     {pubKeyAbbr(data.pubkey)}
                                 </Typography>
                             </div>
-                            <div className="f-e-col space-around p-l">
+                            <div className="f-e-col space-around p-l fade">
                                 <Typography variant="caption" align="center"
                                     color="primary"
                                     noWrap
