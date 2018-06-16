@@ -4,12 +4,11 @@ import { connect } from "react-redux"
 import Axios from "axios"
 import { config } from "../../config"
 import {
-    listInternal, listRequested, requestByAccountNumber,
+    listInternal, listPending, listRequested, requestByAccountNumber,
     requestByPaymentAddress,
 } from "../Contacts/api"
 import {
     getUserExternalContacts,
-    htmlEntities as he,
     emailValid,
     federationAddressValid,
     getFederationRecord,
@@ -358,16 +357,16 @@ class AddContactForm extends Component {
                 }) : this.props.setContactsState({
                     internal: [],
                 })
-            }) &&
+            })
 
-            getUserExternalContacts(this.props.userId, this.props.token)
-                .then((results) => {
-                    results ? this.props.setState({
-                        external: results,
-                    }) : this.props.setState({
-                        external: [],
-                    })
+        getUserExternalContacts(this.props.userId, this.props.token)
+            .then((results) => {
+                results ? this.props.setState({
+                    external: results,
+                }) : this.props.setState({
+                    external: [],
                 })
+            })
 
         listRequested(this.props.userId, this.props.token)
             .then((results) => {
@@ -375,6 +374,15 @@ class AddContactForm extends Component {
                     requests: results,
                 }) : this.props.setState({
                     requests: [],
+                })
+            })
+
+        listPending(this.props.userId, this.props.token)
+            .then((results) => {
+                results ? this.props.setState({
+                    pending: results,
+                }) : this.props.setState({
+                    pending: [],
                 })
             })
     }
@@ -508,33 +516,7 @@ class AddContactForm extends Component {
             {!this.state.showProgress && !this.state.showRequestSent &&
                 <div className="p-t"
                     style={{ height: "150px", paddingLeft: "20px", }}
-                >
-                    <div className="f-b center">
-                        <Typography noWrap variant="body1" color="primary">
-                            Fine Print:
-                        </Typography>
-                    </div>
-                    <div className="f-b p-t">
-                        <Typography noWrap variant="caption" color="primary">
-                            <he.Minus /> Adding new contact by payment address
-                            or account number is only possible if this contact
-                            already has an account with Stellar Fox.
-                        </Typography>
-                    </div>
-                    <div className="f-b">
-                        <Typography noWrap variant="caption" color="primary">
-                            <he.Minus /> When the contact accepts the request,
-                            it will appear in your contact list.
-                        </Typography>
-                    </div>
-                    <div className="f-b">
-                        <Typography noWrap variant="caption" color="primary">
-                            <he.Minus /> Adding contact with payment address
-                            other than hosted by Stellar Fox will have limited
-                            security features.
-                        </Typography>
-                    </div>
-                </div>
+                ></div>
             }
 
 
