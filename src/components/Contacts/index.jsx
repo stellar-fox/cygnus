@@ -6,6 +6,7 @@ import { Grid } from "@material-ui/core"
 import ContactCard from "../ContactCard"
 import ContactRequestCard from "../ContactCard/requestCard"
 import ContactPendingCard from "../ContactCard/pendingCard"
+import ContactBlockedCard from "../ContactCard/blockedCard"
 import AddContactForm from "./AddContactForm"
 import EditContactForm from "./EditContactForm"
 import AppBar from "@material-ui/core/AppBar"
@@ -18,7 +19,7 @@ import Button from "@material-ui/core/Button"
 import Modal from "@material-ui/core/Modal"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
-import { listInternal, listRequested, listPending, } from "./api"
+import { listInternal, listRequested, listPending, statusList, } from "./api"
 import {
     getUserExternalContacts, sortBy,
 } from "../../lib/utils"
@@ -441,9 +442,14 @@ class Contacts extends Component {
                 <Grid item key={index + 1} xs={12} sm={12} md={4} lg={3}
                     xl={2}
                 >
-                    {contact.type === "pending" ?
-                        <ContactPendingCard data={contact} /> :
+                    {contact.status === statusList.REQUESTED &&
                         <ContactRequestCard data={contact} />
+                    }
+                    {contact.status === statusList.PENDING &&
+                        <ContactPendingCard data={contact} />
+                    }
+                    {(contact.status === statusList.BLOCKED) &&
+                        <ContactBlockedCard data={contact} />
                     }
                 </Grid>
         )
@@ -485,9 +491,14 @@ class Contacts extends Component {
         return searchResults.sort(sortBy(this.state.sortBy)).map(
             (contact, index) =>
                 <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
-                    {contact.type === "pending" ?
-                        <ContactPendingCard data={contact} /> :
+                    {contact.status === statusList.REQUESTED &&
                         <ContactRequestCard data={contact} />
+                    }
+                    {contact.status === statusList.PENDING &&
+                        <ContactPendingCard data={contact} />
+                    }
+                    {contact.status === statusList.BLOCKED &&
+                        <ContactBlockedCard data={contact} />
                     }
                 </Grid>
         )

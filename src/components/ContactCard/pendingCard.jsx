@@ -62,16 +62,13 @@ export default compose(
                 >
                     <div className="f-b space-between">
                         <Avatar className={classes.avatar}
-                            src={`${gravatar}${data.email_md5}?${
-                                gravatarSize48}&d=robohash`}
+                            src={`${gravatar}xxx?${
+                                gravatarSize48}&d=mm`}
                         />
                         <div className="f-b">
-                            <div className="f-e-col space-between">
+                            <div className="f-e-col center">
                                 <div className="f-e-col">
-                                    <Typography align="right" noWrap>
-                                        {data.first_name} {data.last_name}
-                                    </Typography>
-                                    <Typography variant="caption" align="right"
+                                    <Typography align="right"
                                         noWrap
                                     >
                                         {data.alias}*{data.domain}
@@ -84,11 +81,13 @@ export default compose(
                                 </Typography>
                             </div>
                             <div className="f-e-col space-around p-l fade">
-                                <Typography variant="caption" align="center"
+                                <Typography variant="body1" align="center"
                                     color="primary"
                                     noWrap
                                 >
-                                    Awaiting Approval
+                                    <div className="badge-primary">
+                                        Pending
+                                    </div>
                                 </Typography>
                             </div>
                         </div>

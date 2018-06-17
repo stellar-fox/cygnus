@@ -10,7 +10,7 @@ import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
 import {
-    approveInternal, rejectInternal, listInternal, listRequested,
+    approveInternal, rejectInternal, listInternal, listPending, listRequested,
 } from "../Contacts/api"
 import {
     pubKeyAbbr,
@@ -124,6 +124,15 @@ export default compose(
                             requests: [],
                         })
                     })
+
+                listPending(this.props.userId, this.props.token)
+                    .then((results) => {
+                        results ? this.props.setState({
+                            pending: results,
+                        }) : this.props.setState({
+                            pending: [],
+                        })
+                    })
             })
         }
 
@@ -139,6 +148,15 @@ export default compose(
                             requests: results,
                         }) : this.props.setState({
                             requests: [],
+                        })
+                    })
+
+                listPending(this.props.userId, this.props.token)
+                    .then((results) => {
+                        results ? this.props.setState({
+                            pending: results,
+                        }) : this.props.setState({
+                            pending: [],
                         })
                     })
             })
