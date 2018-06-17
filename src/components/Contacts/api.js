@@ -5,6 +5,18 @@ import Axios from "axios"
 
 
 // ...
+export const statusList = {
+    REQUESTED: 1,
+    APPROVED: 2,
+    BLOCKED: 3,
+    DELETED: 4,
+    PENDING: 5,
+}
+
+
+
+
+// ...
 export const listInternal = async (user_id, token) =>
     (await Axios.post(`${config.apiV2}/contacts/list/internal/`, {
         user_id, token,
@@ -69,6 +81,15 @@ export const approveInternal = async (user_id, token, contact_id) =>
 // ...
 export const rejectInternal = async (user_id, token, contact_id) =>
     (await Axios.post(`${config.apiV2}/contact/reject/internal/`, {
+        user_id, token, contact_id,
+    })).data
+
+
+
+
+// ...
+export const unblockInternal = async (user_id, token, contact_id) =>
+    (await Axios.post(`${config.apiV2}/contact/unblock/internal/`, {
         user_id, token, contact_id,
     })).data
 
