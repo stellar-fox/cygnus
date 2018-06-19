@@ -5,6 +5,8 @@ import md5 from "../../lib/md5"
 import {
     emailValid,
     passwordValid,
+    rgb,
+    rgba,
 } from "../../lib/utils"
 
 import {
@@ -30,15 +32,15 @@ const signupStyles = {
 
     errorStyle: { color: "#912d35", },
 
-    underlineStyle: { borderColor: "rgba(15, 46, 83, 0.9)", },
+    underlineStyle: { borderColor: rgba(15, 46, 83, 0.9), },
 
-    underlineFocusStyle: { borderColor: "rgba(15, 46, 83, 0.7)", },
+    underlineFocusStyle: { borderColor: rgba(15, 46, 83, 0.7), },
 
-    floatingLabelStyle: { color: "rgba(15, 46, 83, 0.7)", },
+    floatingLabelStyle: { color: rgba(15, 46, 83, 0.7), },
 
-    floatingLabelFocusStyle: { color: "rgba(15, 46, 83, 0.4)", },
+    floatingLabelFocusStyle: { color: rgba(15, 46, 83, 0.4), },
 
-    inputStyle: { color: "rgb(15, 46, 83)", },
+    inputStyle: { color: rgb(15, 46, 83), },
 
 }
 

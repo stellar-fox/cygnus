@@ -1,5 +1,11 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { emptyString } from "@xcmats/js-toolbox"
+import {
+    rgb,
+    rgba,
+} from "../../utils"
+
 import TextField from "material-ui/TextField"
 
 import "./index.css"
@@ -16,13 +22,13 @@ const InputFieldStyles = {
         borderColor: "#FFC107",
     },
     floatingLabelStyle: {
-        color: "rgba(212,228,188,0.4)",
+        color: rgba(212,228,188,0.4),
     },
     floatingLabelFocusStyle: {
-        color: "rgba(212,228,188,0.2)",
+        color: rgba(212,228,188,0.2),
     },
     inputStyle: {
-        color: "rgb(244,176,4)",
+        color: rgb(244,176,4),
     },
 }
 
@@ -43,7 +49,7 @@ export default class InputField extends Component {
     // ...
     state = {
         error: null,
-        value: "",
+        value: emptyString(),
     }
 
 

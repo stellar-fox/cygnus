@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import { compose } from "redux"
-
+import { rgb } from "../../lib/utils"
 import { withLoginManager } from "../LoginManager"
 import {
     emailIsValid,
@@ -27,11 +27,11 @@ export default compose(
         },
 
         colorPrimary: {
-            backgroundColor: "rgb(15, 46, 83)",
+            backgroundColor: rgb(15, 46, 83),
         },
 
         barColorPrimary: {
-            backgroundColor: "rgb(246, 190, 49)",
+            backgroundColor: rgb(246, 190, 49),
         },
 
     }),

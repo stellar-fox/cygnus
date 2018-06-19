@@ -5,6 +5,8 @@ import { connect } from "react-redux"
 
 import {
     pubKeyAbbr,
+    rgb,
+    rgba,
     utcToLocaleDateTime,
 } from "../../lib/utils"
 
@@ -28,11 +30,11 @@ import {
 // ...
 const styles = {
     table: {
-        backgroundColor: "rgb(15,46,83)",
+        backgroundColor: rgb(15,46,83),
     },
     tableRow: {},
     tooltip: {
-        backgroundColor: "rgba(244,176,4,0.8)",
+        backgroundColor: rgba(244,176,4,0.8),
         fontSize: "0.9rem",
     },
 }
