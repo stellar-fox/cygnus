@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from "react"
 import Axios from "axios"
 
+import { bindActionCreators } from "redux"
+
 import md5 from "../../lib/md5"
 import {
     emailValid,
@@ -20,7 +22,10 @@ import LedgerAuthenticator from "../LedgerAuthenticator"
 
 import { config } from "../../config"
 
-
+import { firebaseApp } from "../../components/StellarFox"
+import connect from "react-redux/lib/connect/connect"
+import { action as AlertAction } from "../../redux/Alert"
+import { action as ModalAction } from "../../redux/Modal"
 
 
 // ...
@@ -46,7 +51,7 @@ const signupStyles = {
 
 
 // <Signup> component
-export default class Signup extends Component {
+class Signup extends Component {
 
     // ...
     state = {
@@ -66,6 +71,14 @@ export default class Signup extends Component {
         if (stepIndex === 0  &&  !this.validateInput()) {
             return false
         }
+        firebaseApp.auth("session").createUserWithEmailAndPassword(
+            this.textInputFieldEmail.state.value,
+            this.textInputFieldPassword.state.value
+        ).catch((error) => {
+            this.props.hideModal()
+            this.props.showAlert(error.message, "Error")
+        })
+
 
         this.setState({
             stepIndex: action === "next" ?
@@ -355,3 +368,15 @@ export default class Signup extends Component {
             </Step>
         </Stepper>
 }
+
+
+
+
+// ...
+export default connect(
+    (_state) => ({}),
+    (dispatch) => bindActionCreators({
+        showAlert: AlertAction.showAlert,
+        hideModal: ModalAction.hideModal,
+    }, dispatch)
+)(Signup)
