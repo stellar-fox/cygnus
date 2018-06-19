@@ -50,10 +50,16 @@ import AssetManager from "../AssetManager"
 import LoginManager from "../LoginManager"
 import Layout from "../Layout"
 
+import { config } from "../../config"
+import firebase from "firebase"
+import "firebase/auth"
+
 import "typeface-roboto"
 import "./index.css"
 
 
+// firebase app
+export const firebaseApp = firebase.initializeApp(config.firebase)
 
 
 // browser history

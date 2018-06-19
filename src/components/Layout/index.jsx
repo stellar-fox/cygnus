@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import { compose } from "redux"
+import { compose, bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import {
     Redirect,
@@ -14,6 +14,8 @@ import {
     withStaticRouter,
 } from "../StellarRouter"
 import { Null } from "../../lib/utils"
+import { firebaseApp } from "../../components/StellarFox"
+import { action as AuthAction } from "../../redux/Auth"
 
 import AlertModal from "./AlertModal"
 import ConnectedSnackbar from "./ConnectedSnackbar"
@@ -32,7 +34,11 @@ export default compose(
         // map state to props.
         (state) => ({
             loggedIn: !!state.LedgerHQ.publicKey,
-        })
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            setAuthState: AuthAction.setState,
+        }, dispatch)
     )
 )(
     class extends Component {
@@ -65,12 +71,21 @@ export default compose(
 
 
         // ...
-        componentDidMount = () => raf(() =>
+        componentDidMount = () => raf(() => {
+
+            firebaseApp.auth().onAuthStateChanged((user) => (
+                user ? this.props.setAuthState({
+                    authenticated: true,
+                }) : this.props.setAuthState({
+                    authenticated: false,
+                }))
+            )
+
             import("../Bank")
                 .then((B) => this.setState(
                     () => ({ Bank: B.default, })
                 ))
-        )
+        })
 
 
         // ...
