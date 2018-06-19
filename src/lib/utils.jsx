@@ -522,11 +522,12 @@ export const devEnv = () =>
 export const dynamicImportLibs = async () => {
     let [
         apiContacts,
-        bignumber, toolbox, ledger, jss,
+        bignumber, firebase, toolbox, ledger, jss,
         lodash, mui, md5, redux, utils,
     ] = await Promise.all([
         import("../../src/components/Contacts/api"),
         import("bignumber.js"),
+        import("../../src/components/StellarFox"),
         import("@xcmats/js-toolbox"),
         import("./ledger"),
         import("jss"),
@@ -537,7 +538,7 @@ export const dynamicImportLibs = async () => {
         import("./utils"),
     ])
     return {
-        api: { contacts: apiContacts, },
+        api: { contacts: apiContacts, firebase: firebase.firebaseApp, },
         axios,
         BigNumber: bignumber.default,
         toolbox, ledger, jss, lodash, mui,
