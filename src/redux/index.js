@@ -2,6 +2,7 @@ import { reducer as AccountReducer } from "./Account"
 import { reducer as AlertChoiceReducer } from "./AlertChoice"
 import { reducer as AlertReducer } from "./Alert"
 import { reducer as AssetManagerReducer } from "./AssetManager"
+import { reducer as AuthReducer } from "./Auth"
 import { reducer as BalancesReducer } from "./Balances"
 import { reducer as BankReducer } from "./Bank"
 import { reducer as ContactsReducer } from "./Contacts"
@@ -23,6 +24,7 @@ export default {
     AlertChoice: AlertChoiceReducer,
     Alert: AlertReducer,
     Assets: AssetManagerReducer,
+    Auth: AuthReducer,
     Balances: BalancesReducer,
     Bank: BankReducer,
     Contacts: ContactsReducer,
