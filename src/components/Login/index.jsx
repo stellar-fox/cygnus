@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import { compose } from "redux"
-
+import { bindActionCreators, compose } from "redux"
+import { connect } from "react-redux"
 import { withLoginManager } from "../LoginManager"
 import {
     emailIsValid,
@@ -13,6 +13,8 @@ import { withStyles } from "@material-ui/core/styles"
 import { LinearProgress } from "@material-ui/core"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
+import { firebaseApp } from "../../components/StellarFox"
+import { action as AlertAction } from "../../redux/Alert"
 
 
 
@@ -35,7 +37,13 @@ export default compose(
         },
 
     }),
-    withLoginManager
+    withLoginManager,
+    connect(
+        (_state) => ({}),
+        (dispatch) => bindActionCreators({
+            showAlert: AlertAction.showAlert,
+        }, dispatch)
+    )
 )(
     class Login extends Component {
 
@@ -110,6 +118,30 @@ export default compose(
                 buttonDisabled: true,
                 progressBarOpacity: 1,
             }))
+
+
+            try {
+                await firebaseApp.auth().signInWithEmailAndPassword(
+                    this.state.emailInputValue,
+                    this.state.passwordInputValue
+                )
+            } catch (error) {
+                this.props.showAlert(error.message, "Error")
+                this.setState(() => ({
+                    buttonDisabled: false,
+                    progressBarOpacity: 0,
+                }))
+                this.setState({
+                    emailInputError: true,
+                    emailInputErrorTextValue: error.message,
+                })
+                this.setState({
+                    passwordInputError: true,
+                    passwordInputErrorTextValue: error.message,
+                })
+                return
+            }
+
 
             this.props.loginManager.attemptLogin(
                 this.state.emailInputValue,
