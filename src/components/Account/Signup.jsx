@@ -16,11 +16,13 @@ import {
     StepContent
 } from "material-ui/Stepper"
 
+import CircularProgress from "@material-ui/core/CircularProgress"
 import Button from "../../lib/mui-v1/Button"
 import InputField from "../../lib/common/InputField"
 import LedgerAuthenticator from "../LedgerAuthenticator"
 
 import { config } from "../../config"
+import { withStyles } from "@material-ui/core/styles"
 
 import { firebaseApp } from "../../components/StellarFox"
 import connect from "react-redux/lib/connect/connect"
@@ -48,6 +50,18 @@ const signupStyles = {
 }
 
 
+// ...
+const styles = (_theme) => ({
+    progress: {},
+})
+
+
+const RequestProgress = withStyles(styles)(
+    ({ classes, }) =>
+        <CircularProgress color="secondary" className={classes.progress}
+            thickness={4} size={20}
+        />
+)
 
 
 // <Signup> component
@@ -61,26 +75,20 @@ class Signup extends Component {
         email: null,
         password: null,
         buttonDisabled: false,
+        loading: false,
     }
 
 
     // ...
-    handleButtonAction = (action) => {
+    handleButtonAction = async (action) => {
         const { stepIndex, } = this.state
 
         if (stepIndex === 0  &&  !this.validateInput()) {
-            return false
+            return
         }
-        firebaseApp.auth("session").createUserWithEmailAndPassword(
-            this.textInputFieldEmail.state.value,
-            this.textInputFieldPassword.state.value
-        ).catch((error) => {
-            this.props.hideModal()
-            this.props.showAlert(error.message, "Error")
-        })
 
 
-        this.setState({
+        await this.setState({
             stepIndex: action === "next" ?
                 (stepIndex + 1) : (stepIndex - 1),
         })
@@ -94,20 +102,38 @@ class Signup extends Component {
             return false
         }
         if (!ledgerData.errorCode) {
+
             try {
-                const userResp = await Axios.post(`${config.api}/user/create/`,
-                    {
+                await this.setState({ loading: true, })
+                await firebaseApp.auth("session").createUserWithEmailAndPassword(
+                    this.textInputFieldEmail.state.value,
+                    this.textInputFieldPassword.state.value
+                )
+                await this.setState({ loading: false, })
+            } catch (error) {
+                this.props.hideModal()
+                this.props.showAlert(error.message, "Error")
+                return
+            }
+
+            try {
+
+                const userResp = await Axios.post(
+                    `${config.apiV2}/user/create/`, {
                         email: this.state.email,
                         password: this.state.password,
+                        token: (await firebaseApp.auth()
+                            .currentUser.getIdToken()),
                     }
                 )
 
                 await Axios
                     .post(
-                        `${config.api}/account/create/${userResp.data.id
+                        `${config.api}/account/create/${userResp.data.userid
                         }/${ledgerData.publicKey}?path=${ledgerData.bip32Path
                         }&md5=${md5(this.state.email)}`
                     )
+
 
                 const authResp = await Axios
                     .post(`${config.api}/user/authenticate/`, {
@@ -286,10 +312,14 @@ class Signup extends Component {
                                 ref={(self) => { this.textInputFieldPasswordConf = self }}
                                 style={{ marginBottom: "15px", }}
                             />
+
                             <Button
                                 color="primary"
                                 onClick={this.handleButtonAction.bind(this, "next")}
-                            >Next</Button>
+                            >
+                                {this.state.loading ? <RequestProgress /> : "Next"}
+                            </Button>
+
                         </div>
                     </div>
                 </StepContent>
