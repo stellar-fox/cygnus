@@ -6,15 +6,7 @@ import {
 } from "redux"
 import { connect } from "react-redux"
 
-import { action as AccountAction } from "../../redux/Account"
-import { action as AssetsAction } from "../../redux/AssetManager"
 import { action as BankAction } from "../../redux/Bank"
-import { action as BalancesAction } from "../../redux/Balances"
-import { action as ContactsAction } from "../../redux/Contacts"
-import { action as LedgerHQAction } from "../../redux/LedgerHQ"
-import { action as LoginManagerAction } from "../../redux/LoginManager"
-import { action as StellarAccountAction } from "../../redux/StellarAccount"
-import { action as PaymentsAction } from "../../redux/Payments"
 
 import { withStyles } from "@material-ui/core/styles"
 import {
@@ -24,7 +16,6 @@ import {
     Typography,
 } from "@material-ui/core"
 import MenuIcon from "@material-ui/icons/Menu"
-import PowerIcon from "@material-ui/icons/PowerSettingsNew"
 
 import BankAppBarTitle from "./BankAppBarTitle"
 import BankAppBarItems from "./BankAppBarItems"
@@ -49,11 +40,6 @@ export default compose(
 
         flex: { flex: 1, },
 
-        logoutButton: {
-            marginLeft: 20,
-            marginRight: -12,
-        },
-
         menuButton: {
             marginLeft: -12,
             marginRight: 20,
@@ -67,14 +53,6 @@ export default compose(
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
-            resetAccountState: AccountAction.resetState,
-            resetAssetsState: AssetsAction.resetState,
-            resetBalancesState: BalancesAction.resetState,
-            resetContactsState: ContactsAction.resetState,
-            resetLedgerHQState: LedgerHQAction.resetState,
-            resetLoginManagerState: LoginManagerAction.resetState,
-            resetPaymentsState: PaymentsAction.resetState,
-            resetStellarAccountState: StellarAccountAction.resetState,
             toggleDrawer: BankAction.toggleDrawer,
         }, dispatch)
     )
@@ -85,28 +63,7 @@ export default compose(
         static propTypes = {
             classes: PropTypes.object.isRequired,
             currentView: PropTypes.string.isRequired,
-            resetAccountState: PropTypes.func.isRequired,
-            resetAssetsState: PropTypes.func.isRequired,
-            resetBalancesState: PropTypes.func.isRequired,
-            resetContactsState: PropTypes.func.isRequired,
-            resetLedgerHQState: PropTypes.func.isRequired,
-            resetLoginManagerState: PropTypes.func.isRequired,
-            resetPaymentsState: PropTypes.func.isRequired,
-            resetStellarAccountState: PropTypes.func.isRequired,
             toggleDrawer: PropTypes.func.isRequired,
-        }
-
-
-        // ...
-        handleLogOutClick = () => {
-            this.props.resetAccountState()
-            this.props.resetAssetsState()
-            this.props.resetBalancesState()
-            this.props.resetContactsState()
-            this.props.resetLedgerHQState()
-            this.props.resetLoginManagerState()
-            this.props.resetPaymentsState()
-            this.props.resetStellarAccountState()
         }
 
 
@@ -133,16 +90,7 @@ export default compose(
                                 <BankAppBarItems />
                             </div>
                         </Typography>
-                        { loginManager.isAuthenticated() ? <UserMenu /> :
-                            <IconButton
-                                className={classes.logoutButton}
-                                color="inherit"
-                                aria-label="Logout"
-                                onClick={this.handleLogOutClick}
-                            >
-                                <PowerIcon />
-                            </IconButton>
-                        }
+                        { loginManager.isAuthenticated() && <UserMenu /> }
                     </Toolbar>
                 </AppBar>
         )(this.props)

@@ -15,6 +15,7 @@ import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as PaymentsAction } from "../../redux/Payments"
+import { firebaseApp } from "../../components/StellarFox"
 
 
 
@@ -54,6 +55,7 @@ class UserMenu extends Component {
 
     // ...
     logout = () => {
+        firebaseApp.auth().signOut()
         this.props.resetAccountState()
         this.props.resetAssetsState()
         this.props.resetBalancesState()
