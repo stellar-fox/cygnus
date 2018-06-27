@@ -1,6 +1,6 @@
 /* --------- paddings / margins --------- */
 
-.p-b { padding-bottom: 1rem; }
+.p-b { padding-bottom: 1rem !important; }
 
 .p-b:last-child { padding-bottom: 0rem; }
 
