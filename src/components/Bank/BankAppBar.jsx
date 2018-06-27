@@ -20,14 +20,12 @@ import MenuIcon from "@material-ui/icons/Menu"
 import BankAppBarTitle from "./BankAppBarTitle"
 import BankAppBarItems from "./BankAppBarItems"
 import UserMenu from "../../lib/mui-v1/UserMenu"
-import { withLoginManager } from "../LoginManager"
 
 
 
 
 // <BankAppBar> component
 export default compose(
-    withLoginManager,
     withStyles({
 
         appbar: {
@@ -69,7 +67,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, currentView, toggleDrawer, loginManager, }) =>
+            ({ classes, currentView, toggleDrawer, }) =>
                 <AppBar className={classes.appbar}>
                     <Toolbar>
                         <IconButton
@@ -90,7 +88,7 @@ export default compose(
                                 <BankAppBarItems />
                             </div>
                         </Typography>
-                        { loginManager.isAuthenticated() && <UserMenu /> }
+                        <UserMenu />
                     </Toolbar>
                 </AppBar>
         )(this.props)

@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
@@ -16,6 +16,8 @@ import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as PaymentsAction } from "../../redux/Payments"
 import { firebaseApp } from "../../components/StellarFox"
+import { withLoginManager } from "../../components/LoginManager"
+import PowerIcon from "@material-ui/icons/PowerSettingsNew"
 
 
 
@@ -70,33 +72,45 @@ class UserMenu extends Component {
     // ...
     render = () => {
         const { anchorEl, } = this.state
-        const { classes, gravatarHash, } = this.props
+        const { classes, gravatarHash, loginManager, } = this.props
 
         return (
             <div className="f-b m-l-small">
-                <IconButton
-                    aria-owns={anchorEl ? "user-menu" : null}
-                    aria-haspopup="true"
-                    onClick={this.openMenu}
-                    color="inherit"
-                >
-                    <Avatar className={classes.avatar}
-                        src={`${gravatar}${gravatarHash}?${
-                            gravatarSize48}&d=robohash`}
-                    />
-                </IconButton>
-                <Menu
-                    classes={{ paper: classes.menu, }}
-                    id="user-menu"
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={this.handleClose}
-                >
-                    <MenuItem classes={{ root: classes.menuItem, }}
-                        onClick={(event) =>
-                            this.handleClose(event, this.logout)}
-                    >Logout</MenuItem>
-                </Menu>
+                {loginManager.isAuthenticated() ?
+                    <Fragment>
+                        <IconButton
+                            aria-owns={anchorEl ? "user-menu" : null}
+                            aria-haspopup="true"
+                            onClick={this.openMenu}
+                            color="inherit"
+                        >
+                            <Avatar className={classes.avatar}
+                                src={`${gravatar}${gravatarHash}?${
+                                    gravatarSize48}&d=robohash`}
+                            />
+                        </IconButton>
+                        <Menu
+                            classes={{ paper: classes.menu, }}
+                            id="user-menu"
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={this.handleClose}
+                        >
+                            <MenuItem classes={{ root: classes.menuItem, }}
+                                onClick={(event) =>
+                                    this.handleClose(event, this.logout)}
+                            >Logout</MenuItem>
+                        </Menu>
+                    </Fragment> :
+                    <IconButton
+                        // className={classes.logoutButton}
+                        color="inherit"
+                        aria-label="Logout"
+                        onClick={this.logout}
+                    >
+                        <PowerIcon />
+                    </IconButton>
+                }
             </div>
         )
     }
@@ -130,5 +144,6 @@ export default compose(
             resetStellarAccountState: StellarAccountAction.resetState,
         }, dispatch)
     ),
-    withStyles(styles)
+    withStyles(styles),
+    withLoginManager,
 )(UserMenu)
