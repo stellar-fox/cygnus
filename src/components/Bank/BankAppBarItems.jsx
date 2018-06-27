@@ -5,7 +5,11 @@ import { compose } from "redux"
 import { withStyles } from "@material-ui/core/styles"
 import { Typography } from "@material-ui/core"
 import { handleException } from "@xcmats/js-toolbox"
-import { formatFullName, pubKeyAbbr } from "../../lib/utils"
+import {
+    formatFullName,
+    rgb,
+    pubKeyAbbr,
+} from "../../lib/utils"
 import { unknownPubKeyAbbr } from "../StellarFox/env"
 import { withLoginManager } from "../LoginManager"
 
@@ -21,7 +25,7 @@ export default compose(
 
         appBarItems: {
             display: "block",
-            color: "rgb(15,46,83)",
+            color: rgb(15,46,83),
             fontWeight: "normal",
             "&:before": {
                 content: "''",

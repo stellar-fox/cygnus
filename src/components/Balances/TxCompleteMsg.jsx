@@ -2,7 +2,9 @@ import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { appName } from "../StellarFox/env"
 import {
-    htmlEntities as he, pubKeyAbbrLedgerHQ,
+    htmlEntities as he,
+    pubKeyAbbrLedgerHQ,
+    rgb,
 } from "../../lib/utils"
 import {
     Table,
@@ -27,7 +29,7 @@ export default connect(
 
             <Table
                 style={{
-                    backgroundColor: "rgb(244,176,4)",
+                    backgroundColor: rgb(244,176,4),
                 }}
                 selectable={false}
             >

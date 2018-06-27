@@ -122,10 +122,40 @@ export const StaticRouter = connect(
         _pathToViewMap = {}
 
 
+        // check for all possible (and not wanted) duplicates
+        duplicates = (paths) => {
+            let
+                valDuplicates = findDuplicates(Object.values(paths)),
+                keyOverlaps = null,
+                swappedPaths = null,
+                valOverlaps = null
+
+            if (valDuplicates.length) { return valDuplicates }
+
+            keyOverlaps = findDuplicates([
+                ...Object.keys(paths),
+                ...Object.keys(this._staticPaths),
+            ]).filter((k) => paths[k] !== this._staticPaths[k])
+
+            if (keyOverlaps.length) { return keyOverlaps }
+
+            swappedPaths = swap(paths)
+
+            valOverlaps = findDuplicates([
+                ...Object.keys(swappedPaths),
+                ...Object.keys(this._pathToViewMap),
+            ]).filter((v) => swappedPaths[v] !== this._pathToViewMap[v])
+
+            if (valOverlaps.length) { return valOverlaps }
+
+            return []
+        }
+
+
         // whenever new set of static paths are added
         // a new path-to-view mapping is computed
         addPaths = (paths) => {
-            let duplicates = findDuplicates(Object.values(paths))
+            let duplicates = this.duplicates(paths)
             if (duplicates.length) {
                 throw new Error(
                     "A following duplicates found: " +

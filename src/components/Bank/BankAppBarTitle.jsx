@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import { compose } from "redux"
-
+import { rgb } from "../../lib/utils"
 import { withStyles } from "@material-ui/core/styles"
 
 import {
@@ -18,7 +18,7 @@ export default compose(
 
         appBarTitle: {
             float: "left",
-            color: "rgb(15, 46, 83)",
+            color: rgb(15, 46, 83),
             fontWeight: "normal",
         },
 

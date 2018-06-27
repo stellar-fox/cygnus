@@ -1,6 +1,7 @@
 import React from "react"
-import CircularProgress from "material-ui/CircularProgress"
 import { connect } from "react-redux"
+import { rgb } from "../../lib/utils"
+import CircularProgress from "material-ui/CircularProgress"
 
 import "./index.css"
 
@@ -30,8 +31,8 @@ export default connect(
                     </div>
                     <div className="loading-modal-content">
                         <CircularProgress
-                            style={{ backgroundColor: "rgb(15,46,83)", }}
-                            color="rgb(244,176,4)"
+                            style={{ backgroundColor: rgb(15,46,83), }}
+                            color={rgb(244,176,4)}
                         />
                     </div>
                     <div className="loading-modal-content">
