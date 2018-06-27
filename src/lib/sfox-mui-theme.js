@@ -12,6 +12,11 @@ export default createMuiTheme({
 
     palette: {
 
+        action: {
+            active: rgb(244, 176, 4),
+            disabled: rgba(244, 176, 4, 0.2),
+        },
+
         primary: {
             main: rgb(15, 46, 83),
             light: rgb(36, 65, 98),
