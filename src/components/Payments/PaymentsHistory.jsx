@@ -11,7 +11,7 @@ import { withAssetManager } from "../AssetManager"
 import { choose } from "@xcmats/js-toolbox"
 import {
     htmlEntities as he,
-    utcToLocaleDateTime,
+    // utcToLocaleDateTime,
 } from "../../lib/utils"
 import { gravatarLink } from "../../lib/deneb"
 
@@ -19,21 +19,23 @@ import { action as PaymentsAction } from "../../redux/Payments"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
-import { ListItem } from "material-ui/List"
-import Avatar from "material-ui/Avatar"
-import IconButton from "material-ui/IconButton"
-import SelectableList from "../../lib/common/SelectableList"
+// import { ListItem } from "material-ui/List"
+// import Avatar from "material-ui/Avatar"
+// import IconButton from "material-ui/IconButton"
+// import SelectableList from "../../lib/common/SelectableList"
+
+import History from "./History"
 
 
 
 
 // ...
-const styles = {
-    tooltip: {
-        backgroundColor: "rgba(244,176,4,0.8)",
-        fontSize: "0.9rem",
-    },
-}
+// const styles = {
+//     tooltip: {
+//         backgroundColor: "rgba(244,176,4,0.8)",
+//         fontSize: "0.9rem",
+//     },
+// }
 
 
 
@@ -263,7 +265,8 @@ class PaymentsHistory extends Component {
         <Fragment>
             <div className="account-title">Payments History</div>
             <div className="account-subtitle">Newest payments shown as first.</div>
-            <div className="flex-row-space-between">
+            <History data={this.props.payments} />
+            {/* <div className="flex-row-space-between">
                 <div className="flex-row-column">
                     {
                         this.props.payments ?
@@ -399,7 +402,7 @@ class PaymentsHistory extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </Fragment>
 
 }

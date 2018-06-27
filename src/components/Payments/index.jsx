@@ -98,88 +98,88 @@ class Payments extends Component {
 
     // ...
     componentDidMount = () => {
-        this.props.showLoadingModal("Loading payments data ...")
+        // this.props.showLoadingModal("Loading payments data ...")
 
-        this.stellarServer
-            .payments(this.props.horizon)
-            .forAccount(this.props.publicKey)
-            .order("desc")
-            .limit(5)
-            .call()
-            .then((paymentsResult) => {
-                const gravatarLinkPromises =
-                    paymentsResult.records.map((r) => {
-                        let link = "https://www.gravatar.com/avatar?d=mm&s=100"
-                        if (this.props.loginManager.isAuthenticated()) {
-                            switch (r.type) {
-                                case "create_account":
-                                    if (
-                                        r.funder === this.props.publicKey
-                                    ) {
-                                        link = gravatarLink(r.account)
-                                    } else {
-                                        link = gravatarLink(r.funder)
-                                    }
-                                    break
+        // this.stellarServer
+        //     .payments(this.props.horizon)
+        //     .forAccount(this.props.publicKey)
+        //     .order("desc")
+        //     .limit(5)
+        //     .call()
+        //     .then((paymentsResult) => {
+        //         const gravatarLinkPromises =
+        //             paymentsResult.records.map((r) => {
+        //                 let link = "https://www.gravatar.com/avatar?d=mm&s=100"
+        //                 if (this.props.loginManager.isAuthenticated()) {
+        //                     switch (r.type) {
+        //                         case "create_account":
+        //                             if (
+        //                                 r.funder === this.props.publicKey
+        //                             ) {
+        //                                 link = gravatarLink(r.account)
+        //                             } else {
+        //                                 link = gravatarLink(r.funder)
+        //                             }
+        //                             break
 
-                                // payment
-                                default:
-                                    if(r.to === this.props.publicKey) {
-                                        link = gravatarLink(r.from)
-                                    } else {
-                                        link = gravatarLink(r.to)
-                                    }
-                                    break
-                            }
-                        }
-                        return link
-                    })
+        //                         // payment
+        //                         default:
+        //                             if(r.to === this.props.publicKey) {
+        //                                 link = gravatarLink(r.from)
+        //                             } else {
+        //                                 link = gravatarLink(r.to)
+        //                             }
+        //                             break
+        //                     }
+        //                 }
+        //                 return link
+        //             })
 
-                Promise.all(gravatarLinkPromises).then((links) => {
-                    links.forEach((link, index) => {
-                        paymentsResult.records[index]
-                            .gravatar = link.link
-                        paymentsResult.records[index]
-                            .firstName = link.firstName
-                        paymentsResult.records[index]
-                            .lastName = link.lastName
-                        paymentsResult.records[index]
-                            .email = link.email
-                        paymentsResult.records[index]
-                            .alias = link.alias
-                        paymentsResult.records[index]
-                            .domain = link.domain
-                    })
-                    this.props.setPayments(paymentsResult.records)
-                    this.updateCursors(paymentsResult.records)
-                    paymentsResult.records[0].effects().then((effects) => {
-                        paymentsResult.records[0].transaction().then((tx) => {
-                            this.props.setState({
-                                paymentDetails: {
-                                    txid: paymentsResult.records[0].id,
-                                    created_at:
-                                        paymentsResult.records[0].created_at,
-                                    effects: effects.records,
-                                    memo: tx.memo,
-                                    selectedPaymentId:
-                                        paymentsResult.records[0].id,
-                                },
-                            })
-                            this.props.hideLoadingModal()
-                        }).catch((err) => {
-                            // eslint-disable-next-line no-console
-                            console.log(err)
-                        })
-                    }).catch((err) => {
-                        // eslint-disable-next-line no-console
-                        console.log(err)
-                    })
-                })
-            })
-            .catch(function (err) {
-                // eslint-disable-next-line no-console
-                console.log(err)
-            })
+        //         Promise.all(gravatarLinkPromises).then((links) => {
+        //             links.forEach((link, index) => {
+        //                 paymentsResult.records[index]
+        //                     .gravatar = link.link
+        //                 paymentsResult.records[index]
+        //                     .firstName = link.firstName
+        //                 paymentsResult.records[index]
+        //                     .lastName = link.lastName
+        //                 paymentsResult.records[index]
+        //                     .email = link.email
+        //                 paymentsResult.records[index]
+        //                     .alias = link.alias
+        //                 paymentsResult.records[index]
+        //                     .domain = link.domain
+        //             })
+        //             this.props.setPayments(paymentsResult.records)
+        //             this.updateCursors(paymentsResult.records)
+        //             paymentsResult.records[0].effects().then((effects) => {
+        //                 paymentsResult.records[0].transaction().then((tx) => {
+        //                     this.props.setState({
+        //                         paymentDetails: {
+        //                             txid: paymentsResult.records[0].id,
+        //                             created_at:
+        //                                 paymentsResult.records[0].created_at,
+        //                             effects: effects.records,
+        //                             memo: tx.memo,
+        //                             selectedPaymentId:
+        //                                 paymentsResult.records[0].id,
+        //                         },
+        //                     })
+        //                     this.props.hideLoadingModal()
+        //                 }).catch((err) => {
+        //                     // eslint-disable-next-line no-console
+        //                     console.log(err)
+        //                 })
+        //             }).catch((err) => {
+        //                 // eslint-disable-next-line no-console
+        //                 console.log(err)
+        //             })
+        //         })
+        //     })
+        //     .catch(function (err) {
+        //         // eslint-disable-next-line no-console
+        //         console.log(err)
+        //     })
     }
 
 
