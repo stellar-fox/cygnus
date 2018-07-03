@@ -228,6 +228,8 @@ export default compose(
         classes: PropTypes.object.isRequired,
     }
 
+
+    // ...
     state = {
         page: 0,
         rowsPerPage: 5,
@@ -265,7 +267,7 @@ export default compose(
                     return { key, transaction, operations, meta, txresult, r, }
                 })
 
-                this.setState({ data, loading: false, })
+                this.setState({ data: data.filter(this.paymentsFilter), loading: false, })
 
             })
             .catch((error) => {
@@ -293,6 +295,14 @@ export default compose(
     handleRowClick = (detailsData) => {
         this.setState({ detailsData, })
     }
+
+
+    // ...
+    paymentsFilter = (tx) => tx.operations.every(
+        (o) => (o.type === "payment" ||
+            o.type === "createAccount" ||
+            o.type === "mergeAccount")
+    )
 
 
     // ...
