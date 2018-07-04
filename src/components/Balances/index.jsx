@@ -22,7 +22,6 @@ import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { listInternal, listRequested, } from "../Contacts/api"
 import {
     getRegisteredUser,
-    getRegisteredAccount,
     getUserData,
     getUserExternalContacts,
     insertPathIndex,
@@ -168,21 +167,17 @@ class Balances extends Component {
     checkForRegisteredAccount = async (publicKey, bip32Path) => {
         try {
             const auth = await getRegisteredUser(publicKey, bip32Path)
-            const account = await getRegisteredAccount(
-                auth.data.user_id, auth.data.token
-            )
+            const user = await getUserData(auth.data.user_id, auth.data.token)
 
-            getUserData(this.props.userId, this.props.token).then((data) => {
-                this.props.setState({
-                    firstName: data.first_name,
-                    lastName: data.last_name,
-                    email: data.email,
-                    gravatar: data.email_md5,
-                    paymentAddress: paymentAddress(data.alias, data.domain),
-                    memo: data.memo,
-                    discoverable: data.visible,
-                    currency: data.currency,
-                })
+            this.props.setState({
+                firstName: user.first_name,
+                lastName: user.lastName,
+                email: user.email,
+                gravatar: user.email_md5,
+                paymentAddress: paymentAddress(user.alias, user.domain),
+                memo: user.memo,
+                discoverable: user.visible,
+                currency: user.currency,
             })
 
             /**
@@ -193,11 +188,11 @@ class Balances extends Component {
                 this.updateContacts()
 
             this.props.setState({
-                currency: account.currency,
+                currency: user.currency,
                 needsRegistration: false,
             })
             this.props.assetManager.updateExchangeRate(
-                account.currency
+                user.currency
             )
         } catch (error) {
             this.props.setState({ needsRegistration: true, })

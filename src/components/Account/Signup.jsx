@@ -108,8 +108,8 @@ class Signup extends Component {
             try {
                 await this.setState({ loading: true, })
                 await firebaseApp.auth("session").createUserWithEmailAndPassword(
-                    this.textInputFieldEmail.state.value,
-                    this.textInputFieldPassword.state.value
+                    this.state.email,
+                    this.state.password
                 )
                 await this.setState({ loading: false, })
             } catch (error) {
@@ -151,7 +151,7 @@ class Signup extends Component {
                 this.props.onComplete({
                     publicKey: ledgerData.publicKey,
                     bip32Path: ledgerData.bip32Path,
-                    userId: userResp.data.id,
+                    userId: userResp.data.userid,
                     token: authResp.data.token,
                 })
             } catch (error) {
