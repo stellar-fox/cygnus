@@ -227,3 +227,9 @@ export const serviceFeeCurrency = "eur"
 
 // ...
 export const baseReserve = "0.5"
+
+
+
+
+// ...
+export const transactionFetchLimit = 100
