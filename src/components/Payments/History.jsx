@@ -32,6 +32,7 @@ import {
     credit, debit, displayCredit, displayDebit,
 } from "../../lib/stellar-tx"
 import TransactionDetails from "./TransactionDetails"
+import { transactionFetchLimit } from "../../components/StellarFox/env"
 
 
 
@@ -238,6 +239,8 @@ export default compose(
         errorMessage: "",
         data: [],
         detailsData: [],
+        cursorRight: "0",
+        highestFetched: transactionFetchLimit,
     }
 
 
@@ -247,7 +250,7 @@ export default compose(
             .transactions()
             .forAccount(this.props.publicKey)
             .order("desc")
-            .limit(100)
+            .limit(transactionFetchLimit)
             .call()
             .then((accountResult) => {
                 const data = accountResult.records.map((r, key) => {
@@ -267,7 +270,11 @@ export default compose(
                     return { key, transaction, operations, meta, txresult, r, }
                 })
 
-                this.setState({ data: data.filter(this.paymentsFilter), loading: false, })
+                this.setState({
+                    data: data.filter(this.paymentsFilter),
+                    cursorRight: data[data.length - 1].r.paging_token,
+                    loading: false,
+                })
 
             })
             .catch((error) => {
@@ -282,6 +289,37 @@ export default compose(
 
     // ...
     handleChangePage = (_event, page) => {
+        if ((page * this.state.rowsPerPage + this.state.rowsPerPage) %
+            this.state.highestFetched === 0) {
+            this.setState({ loading: true, })
+            this.pageRight().then((accountResult) => {
+                const data = accountResult.records.map((r, key) => {
+                    let transaction = StellarSdk.xdr.Transaction.fromXDR(
+                        r.envelope_xdr, "base64"
+                    )
+                    let meta = StellarSdk.xdr.TransactionMeta.fromXDR(
+                        r.result_meta_xdr, "base64"
+                    )
+                    let txresult = StellarSdk.xdr.TransactionResult.fromXDR(
+                        r.result_xdr, "base64"
+                    )
+                    let operations = transaction.operations().map(
+                        (op) => StellarSdk.Operation.fromXDRObject(op)
+                    )
+
+                    return { key, transaction, operations, meta, txresult, r, }
+                })
+                this.setState({
+                    loading: false,
+                    data: this.state.data.concat(
+                        data.filter(this.paymentsFilter)
+                    ),
+                    cursorRight: data[data.length - 1].r.paging_token,
+                    highestFetched: (this.state.highestFetched +
+                        transactionFetchLimit),
+                })
+            })
+        }
         this.setState({ page, })
     }
 
@@ -295,6 +333,16 @@ export default compose(
     handleRowClick = (detailsData) => {
         this.setState({ detailsData, })
     }
+
+
+    // ...
+    pageRight = async () => await new StellarSdk.Server(this.props.horizon)
+        .transactions()
+        .forAccount(this.props.publicKey)
+        .cursor(this.props.cursorRight)
+        .order("desc")
+        .limit(transactionFetchLimit)
+        .call()
 
 
     // ...
