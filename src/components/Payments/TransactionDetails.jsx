@@ -9,7 +9,10 @@ import { withStyles } from "@material-ui/core/styles"
 import {
     Paper, Typography,
 } from "@material-ui/core"
-import { htmlEntities as he } from "../../lib/utils"
+import {
+    htmlEntities as he, findContactByPublicKey, formatFullName,
+    formatPaymentAddress,
+} from "../../lib/utils"
 import classNames from "classnames"
 import { choose } from "@xcmats/js-toolbox"
 import { withLoginManager } from "../LoginManager"
@@ -39,6 +42,7 @@ export default compose(
         (state) => ({
             publicKey: state.LedgerHQ.publicKey,
             currency: state.Account.currency,
+            contacts: state.Contacts.internal.concat(state.Contacts.external),
         }),
         (dispatch) => bindActionCreators({}, dispatch)
     )
@@ -64,18 +68,39 @@ export default compose(
                         "createAccount": () =>
                             operation.funder === this.props.publicKey ?
                                 <i className={iconClass}>card_giftcard</i> :
-                                <i className={iconClass}>account_balance</i>,
+                                <div className="f-b-c">
+                                    <i className={iconClass}>
+                                        account_balance
+                                    </i>
+                                    <Typography variant="subheading"
+                                        color="primary"
+                                    >
+                                        Account Opened
+                                    </Typography>
+                                </div>,
                         "accountMerge": () =>
                             <i className={iconClass}>merge_type</i>,
                     },
                     () =>
                         operation.destination === this.props.publicKey ?
-                            <i className={iconClass}>
-                                account_balance_wallet
-                            </i> :
-                            <Fragment>
+                            <div className="f-b-c">
+                                <i className={iconClass}>
+                                    account_balance_wallet
+                                </i>
+                                <Typography variant="subheading"
+                                    color="primary"
+                                >
+                                    Credit
+                                </Typography>
+                            </div> :
+                            <div className="f-b-c">
                                 <i className={iconClass}>payment</i>
-                            </Fragment>
+                                <Typography variant="subheading"
+                                    color="primary"
+                                >
+                                    Debit
+                                </Typography>
+                            </div>
                 )
         )(
             this.props.loginManager.isAuthenticated() ?
@@ -84,6 +109,7 @@ export default compose(
         )
 
 
+        // ...
         opNativeAmount = (operation) => choose(
             operation.type,
             {
@@ -93,53 +119,32 @@ export default compose(
         )
 
 
-
+        // ...
         opCurrencyAmount = (operation) =>
             this.props.assetManager.convertToAsset(
                 this.opNativeAmount(operation)
             )
 
 
-
-
         // ...
-        determinePrimaryText = (payment) => (
-            (glyph) =>
-                choose(
-                    payment.type,
-                    {
-                        "create_account": () => (
-                            (Sign) =>
-                                <span>
-                                    <Sign /><he.Space />{glyph}<he.Space />
-                                    {this.props.assetManager.convertToAsset(
-                                        payment.starting_balance)}
-                                </span>
-                        )(
-                            payment.funder === this.props.publicKey ?
-                                he.Minus : he.Plus
-                        ),
-                        "account_merge": () => "Account Merged",
-                    },
-                    () => (
-                        (assetCode, Sign) => assetCode === "XLM" ?
-                            <span>
-                                <Sign /><he.Space />{glyph}<he.Space />
-                                {this.props.assetManager.convertToAsset(
-                                    payment.amount)}
-                            </span> :
-                            <span>
-                                <Sign /><he.Space />
-                                {payment.amount}<he.Space />{assetCode}
-                            </span>
-                    )(
-                        this.props.assetManager.getAssetCode(payment),
-                        payment.to === this.props.publicKey ?
-                            he.Plus : he.Minus
-                    )
+        sourceAccountInfo = (publicKey) => {
+            const contact = findContactByPublicKey(
+                this.props.contacts, publicKey
+            )
+            if (contact) {
+                return (
+                    <Typography variant="body2" color="primary">
+                        {formatFullName(contact.first_name, contact.last_name)}
+                        <span className="p-l-small micro fade-strong">
+                            {formatPaymentAddress(
+                                contact.alias, contact.domain
+                            )}
+                        </span>
+                    </Typography>
                 )
-        )(this.props.assetManager.getAssetGlyph(this.props.Account.currency))
-
+            }
+            return publicKey
+        }
 
 
         // ...
@@ -180,17 +185,24 @@ export default compose(
                                     </span>
                                 </Typography>
 
+
                                 <Typography color="primary"
                                     variant="body2"
                                 >
                                     <span className="fade-strong">
                                         From:
                                     </span>
-                                    <he.Nbsp /><he.Nbsp />
-                                    <span className="smaller">
-                                        {data.r.source_account}
-                                    </span>
                                 </Typography>
+
+                                <div className="p-l-small">
+                                    <Typography color="primary"
+                                        variant="body2"
+                                    >
+                                        {this.sourceAccountInfo(
+                                            data.r.source_account
+                                        )}
+                                    </Typography>
+                                </div>
 
 
                                 <Typography color="primary"
@@ -230,12 +242,20 @@ export default compose(
                                             </span>
                                             <he.Nbsp /><he.Nbsp />
                                             <span className="smaller">
-                                                {this.opCurrencyAmount(operation)}
-                                                {this.props.assetManager.getAssetGlyph(this.props.currency)}
+                                                {this.opCurrencyAmount(
+                                                    operation
+                                                )}
+                                                {this.props.assetManager
+                                                    .getAssetGlyph(
+                                                        this.props.currency
+                                                    )
+                                                }
                                             </span>
                                             <he.Nbsp /><he.Nbsp />
                                             <span className="micro fade-strong">
-                                                {this.opNativeAmount(operation)} XLM
+                                                {this.opNativeAmount(
+                                                    operation
+                                                )} XLM
                                             </span>
                                         </Typography>
 

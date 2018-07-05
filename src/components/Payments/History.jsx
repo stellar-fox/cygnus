@@ -192,9 +192,11 @@ export default compose(
             "&:nth-of-type(odd)": {
                 backgroundColor: theme.palette.secondary.main,
             },
-            "&:hover": {
-                backgroundColor: "rgba(246, 190, 49, 0.95)",
-            },
+        },
+        selectedRow: {
+            backgroundColor: "rgba(244, 176, 4, 0.9) !important",
+            borderTop: "1px solid rgba(15, 46, 83, 0.5)",
+            borderBottom: "1px solid rgba(15, 46, 83, 0.5)",
         },
         cell: {
             borderBottom: "none",
@@ -241,6 +243,7 @@ export default compose(
         detailsData: [],
         cursorRight: "0",
         highestFetched: transactionFetchLimit,
+        selectedRow: null,
     }
 
 
@@ -331,7 +334,7 @@ export default compose(
 
     // ...
     handleRowClick = (detailsData) => {
-        this.setState({ detailsData, })
+        this.setState({ detailsData, selectedRow: detailsData.key, })
     }
 
 
@@ -367,7 +370,9 @@ export default compose(
                     <TableHead>
                         <TableRow>
                             <TableHeaderCell>Date</TableHeaderCell>
-                            <TableHeaderCell>Transaction Details</TableHeaderCell>
+                            <TableHeaderCell>
+                                Transaction Details
+                            </TableHeaderCell>
                             <TableHeaderCell>Amount</TableHeaderCell>
                         </TableRow>
                     </TableHead>
@@ -376,19 +381,23 @@ export default compose(
                             page * rowsPerPage, page * rowsPerPage +
                             rowsPerPage).map(n => {
 
-                            let debitVal = debit(n.operations, this.props.publicKey)
-                            let creditVal = credit(n.operations, this.props.publicKey)
+                            let debitVal = debit(
+                                n.operations, this.props.publicKey
+                            )
+                            let creditVal = credit(
+                                n.operations, this.props.publicKey
+                            )
 
                             return (
-                                <TableRow className={classes.row}
+                                <TableRow classes={{root: classes.row, selected: classes.selectedRow,}}
                                     onClick={this.handleRowClick.bind(
                                         this, n
                                     )}
                                     key={n.key}
+                                    selected={this.state.selectedRow === n.key}
                                 >
                                     <TableCell
                                         classes={{ root: classes.cell, }}
-                                        component="th" scope="row"
                                     >
                                         {utcToLocaleDateTime(n.r.created_at)}
                                     </TableCell>
