@@ -234,6 +234,12 @@ strong { color: rgb(212, 228, 188); }
     justify-content: flex-start;
 }
 
+.f-b-c {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .f-b-col {
     display: flex;
     flex-direction: column;
