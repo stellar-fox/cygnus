@@ -7,16 +7,17 @@ import {
 import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
 import {
-    Paper, Typography,
+    Avatar, Paper, Typography,
 } from "@material-ui/core"
 import {
     htmlEntities as he, findContactByPublicKey, formatFullName,
-    formatPaymentAddress,
+    formatPaymentAddress, pubKeyAbbr,
 } from "../../lib/utils"
 import classNames from "classnames"
 import { choose } from "@xcmats/js-toolbox"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
+import { gravatar, gravatarSize48 } from "../../components/StellarFox/env"
 
 
 
@@ -43,6 +44,10 @@ export default compose(
             publicKey: state.LedgerHQ.publicKey,
             currency: state.Account.currency,
             contacts: state.Contacts.internal.concat(state.Contacts.external),
+            firstName: state.Account.firstName,
+            lastName: state.Account.lastName,
+            paymentAddress: state.Account.paymentAddress,
+            gravatarHash: state.Account.gravatar,
         }),
         (dispatch) => bindActionCreators({}, dispatch)
     )
@@ -127,23 +132,64 @@ export default compose(
 
 
         // ...
-        sourceAccountInfo = (publicKey) => {
+        accountInfo = (publicKey) => {
+            if (publicKey === this.props.publicKey) {
+                return (
+                    <div className="f-b-c">
+                        <span className="p-r-small">
+                            <Avatar src={`${gravatar}${this.props.gravatarHash}?${
+                                gravatarSize48}&d=robohash`}
+                            />
+                        </span>
+                        <Typography variant="body2" color="primary">
+                            {formatFullName(
+                                this.props.firstName,
+                                this.props.lastName
+                            )}
+                            <span className="p-l-small micro fade-strong">
+                                {this.props.paymentAddress}
+                            </span>
+                        </Typography>
+                    </div>
+                )
+            }
+
             const contact = findContactByPublicKey(
                 this.props.contacts, publicKey
             )
+
             if (contact) {
                 return (
-                    <Typography variant="body2" color="primary">
-                        {formatFullName(contact.first_name, contact.last_name)}
-                        <span className="p-l-small micro fade-strong">
-                            {formatPaymentAddress(
-                                contact.alias, contact.domain
-                            )}
+                    <div className="f-b-c">
+                        <span className="p-r-small">
+                            <Avatar src={`${gravatar}${contact.email_md5}?${
+                                gravatarSize48}&d=robohash`}
+                            />
                         </span>
-                    </Typography>
+                        <Typography variant="body2" color="primary">
+                            {formatFullName(contact.first_name, contact.last_name)}
+                            <span className="p-l-small micro fade-strong">
+                                {formatPaymentAddress(
+                                    contact.alias, contact.domain
+                                )}
+                            </span>
+                        </Typography>
+                    </div>
                 )
             }
-            return publicKey
+
+            return (
+                <div className="f-b-c">
+                    <span className="p-r-small">
+                        <Avatar src={`${gravatar}?${
+                            gravatarSize48}&d=mm`}
+                        />
+                    </span>
+                    <Typography variant="body2" color="primary">
+                        {pubKeyAbbr(publicKey)}
+                    </Typography>
+                </div>
+            )
         }
 
 
@@ -198,7 +244,7 @@ export default compose(
                                     <Typography color="primary"
                                         variant="body2"
                                     >
-                                        {this.sourceAccountInfo(
+                                        {this.accountInfo(
                                             data.r.source_account
                                         )}
                                     </Typography>
@@ -228,11 +274,17 @@ export default compose(
                                             <span className="fade-strong">
                                                 To:
                                             </span>
-                                            <he.Nbsp /><he.Nbsp />
-                                            <span className="smaller">
-                                                {operation.destination}
-                                            </span>
                                         </Typography>
+
+                                        <div className="p-l-small">
+                                            <Typography color="primary"
+                                                variant="body2"
+                                            >
+                                                {this.accountInfo(
+                                                    operation.destination
+                                                )}
+                                            </Typography>
+                                        </div>
 
                                         <Typography color="primary"
                                             variant="body2"
