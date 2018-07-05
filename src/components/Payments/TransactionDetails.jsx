@@ -18,7 +18,7 @@ import { choose } from "@xcmats/js-toolbox"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize48 } from "../../components/StellarFox/env"
-
+import md5 from "../../lib/md5"
 
 
 
@@ -181,8 +181,8 @@ export default compose(
             return (
                 <div className="f-b-c">
                     <span className="p-r-small">
-                        <Avatar src={`${gravatar}?${
-                            gravatarSize48}&d=mm`}
+                        <Avatar src={`${gravatar}${md5(publicKey)}?${
+                            gravatarSize48}&d=robohash`}
                         />
                     </span>
                     <Typography variant="body2" color="primary">
@@ -222,23 +222,25 @@ export default compose(
                                 <Typography color="primary"
                                     variant="body2"
                                 >
-                                    <span className="fade-strong">
-                                        Transaction ID:
+                                    <span className="tiny fade-extreme">
+                                        Transaction:
                                     </span>
                                     <he.Nbsp /><he.Nbsp />
-                                    <span className="smaller">
+                                    <span className="tiny fade-extreme">
                                         {data.r.id}
                                     </span>
                                 </Typography>
 
 
-                                <Typography color="primary"
-                                    variant="body2"
-                                >
-                                    <span className="fade-strong">
-                                        From:
-                                    </span>
-                                </Typography>
+                                <div className="p-t">
+                                    <Typography color="primary"
+                                        variant="body2"
+                                    >
+                                        <span className="fade-strong">
+                                            From:
+                                        </span>
+                                    </Typography>
+                                </div>
 
                                 <div className="p-l-small">
                                     <Typography color="primary"
@@ -251,68 +253,70 @@ export default compose(
                                 </div>
 
 
-                                <Typography color="primary"
-                                    variant="subheading"
-                                >
-                                    Operations
-                                </Typography>
+                                <div className="p-t">
+                                    <Typography color="primary"
+                                        variant="subheading"
+                                    >
+                                        Operations
+                                    </Typography>
 
-                                {data.operations.map((operation, index) =>
-                                    <div className="p-l-small" key={index}>
+                                    {data.operations.map((operation, index) =>
+                                        <div className="p-t p-l-small" key={index}>
 
-                                        <Typography color="primary"
-                                            variant="body2"
-                                        >
-                                            <span className="smaller">
-                                                {this.operationType(operation)}
-                                            </span>
-                                        </Typography>
-
-                                        <Typography color="primary"
-                                            variant="body2"
-                                        >
-                                            <span className="fade-strong">
-                                                To:
-                                            </span>
-                                        </Typography>
-
-                                        <div className="p-l-small">
                                             <Typography color="primary"
                                                 variant="body2"
                                             >
-                                                {this.accountInfo(
-                                                    operation.destination
-                                                )}
+                                                <span className="smaller">
+                                                    {this.operationType(operation)}
+                                                </span>
                                             </Typography>
+
+                                            <Typography color="primary"
+                                                variant="body2"
+                                            >
+                                                <span className="fade-strong">
+                                                    To:
+                                                </span>
+                                            </Typography>
+
+                                            <div className="p-l-small">
+                                                <Typography color="primary"
+                                                    variant="body2"
+                                                >
+                                                    {this.accountInfo(
+                                                        operation.destination
+                                                    )}
+                                                </Typography>
+                                            </div>
+
+                                            <Typography color="primary"
+                                                variant="body2"
+                                            >
+                                                <span className="fade-strong">
+                                                    Amount:
+                                                </span>
+                                                <he.Nbsp /><he.Nbsp />
+                                                <span className="smaller">
+                                                    {this.opCurrencyAmount(
+                                                        operation
+                                                    )}
+                                                    {this.props.assetManager
+                                                        .getAssetGlyph(
+                                                            this.props.currency
+                                                        )
+                                                    }
+                                                </span>
+                                                <he.Nbsp /><he.Nbsp />
+                                                <span className="micro fade-strong">
+                                                    {this.opNativeAmount(
+                                                        operation
+                                                    )} XLM
+                                                </span>
+                                            </Typography>
+
                                         </div>
-
-                                        <Typography color="primary"
-                                            variant="body2"
-                                        >
-                                            <span className="fade-strong">
-                                                Amount:
-                                            </span>
-                                            <he.Nbsp /><he.Nbsp />
-                                            <span className="smaller">
-                                                {this.opCurrencyAmount(
-                                                    operation
-                                                )}
-                                                {this.props.assetManager
-                                                    .getAssetGlyph(
-                                                        this.props.currency
-                                                    )
-                                                }
-                                            </span>
-                                            <he.Nbsp /><he.Nbsp />
-                                            <span className="micro fade-strong">
-                                                {this.opNativeAmount(
-                                                    operation
-                                                )} XLM
-                                            </span>
-                                        </Typography>
-
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
                         }
                     </Paper>
