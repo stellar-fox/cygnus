@@ -33,6 +33,13 @@ export const ntoes = (input) => isString(input)  ?  input  :  emptyString()
 
 
 // ...
+export const findContactByPublicKey = (contacts, publicKey) => contacts.find(
+    (c) => c.pubkey === publicKey
+)
+
+
+
+// ...
 export const formatFullName = (firstName, lastName) => (
     firstName && lastName ?
         `${firstName} ${lastName}`  :
