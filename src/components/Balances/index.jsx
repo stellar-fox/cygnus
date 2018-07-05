@@ -171,7 +171,7 @@ class Balances extends Component {
 
             this.props.setState({
                 firstName: user.first_name,
-                lastName: user.lastName,
+                lastName: user.last_name,
                 email: user.email,
                 gravatar: user.email_md5,
                 paymentAddress: paymentAddress(user.alias, user.domain),
