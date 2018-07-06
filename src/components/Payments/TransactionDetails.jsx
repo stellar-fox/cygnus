@@ -97,6 +97,9 @@ export default compose(
                                 >
                                     Credit
                                 </Typography>
+                                <i className={`${iconClass} p-l p-r`}>
+                                    forward
+                                </i>
                             </div> :
                             <div className="f-b-c">
                                 <i className={iconClass}>payment</i>
@@ -105,6 +108,9 @@ export default compose(
                                 >
                                     Debit
                                 </Typography>
+                                <i className={`${iconClass} p-l p-r`}>
+                                    forward
+                                </i>
                             </div>
                 )
         )(
@@ -146,9 +152,11 @@ export default compose(
                                 this.props.firstName,
                                 this.props.lastName
                             )}
-                            <span className="p-l-small micro fade-strong">
-                                {this.props.paymentAddress}
-                            </span>
+                            <Typography color="primary">
+                                <span className="micro fade-strong">
+                                    {this.props.paymentAddress}
+                                </span>
+                            </Typography>
                         </Typography>
                     </div>
                 )
@@ -168,11 +176,13 @@ export default compose(
                         </span>
                         <Typography variant="body2" color="primary">
                             {formatFullName(contact.first_name, contact.last_name)}
-                            <span className="p-l-small micro fade-strong">
-                                {formatPaymentAddress(
-                                    contact.alias, contact.domain
-                                )}
-                            </span>
+                            <Typography color="primary">
+                                <span className="p-l-small micro fade-strong">
+                                    {formatPaymentAddress(
+                                        contact.alias, contact.domain
+                                    )}
+                                </span>
+                            </Typography>
                         </Typography>
                     </div>
                 )
@@ -191,6 +201,49 @@ export default compose(
                 </div>
             )
         }
+
+
+        // ...
+        listOperations = (operations) =>
+            <div className="p-t-medium">
+                <Typography color="primary" variant="subheading">
+                    Operations
+                </Typography>
+
+                {operations.map((operation, index) =>
+                    <div className="p-t-medium p-l paper" key={index}>
+
+                        <div className="f-b-c">
+                            <Typography color="primary" variant="body2">
+                                <span className="smaller">
+                                    {this.operationType(operation)}
+                                </span>
+                            </Typography><he.Nbsp />
+                            {this.accountInfo(operation.destination)}
+                        </div>
+
+                        <div className="p-t">
+                            <Typography color="primary" variant="body2">
+                                <span className="fade-strong">
+                                    Amount:
+                                </span>
+                                <he.Nbsp /><he.Nbsp />
+                                {this.props.assetManager.getAssetGlyph(
+                                    this.props.currency
+                                )}
+                                <he.Nbsp />
+                                {this.opCurrencyAmount(operation)}
+                                <he.Nbsp /><he.Nbsp />
+                                <span className="tiny fade-strong">
+                                    {this.opNativeAmount(operation)} XLM
+                                </span>
+                            </Typography>
+                        </div>
+
+                    </div>
+                )}
+            </div>
+
 
 
         // ...
@@ -214,6 +267,8 @@ export default compose(
                                     Select transaction to view details here.
                                 </Typography>
                             </div> :
+
+
                             <div
                                 className={
                                     classNames(classes.withdata, "p-t p-l p-b")
@@ -242,7 +297,7 @@ export default compose(
                                     </Typography>
                                 </div>
 
-                                <div className="p-l-small">
+                                <div className="p-t p-l">
                                     <Typography color="primary"
                                         variant="body2"
                                     >
@@ -252,71 +307,8 @@ export default compose(
                                     </Typography>
                                 </div>
 
+                                {this.listOperations(data.operations)}
 
-                                <div className="p-t">
-                                    <Typography color="primary"
-                                        variant="subheading"
-                                    >
-                                        Operations
-                                    </Typography>
-
-                                    {data.operations.map((operation, index) =>
-                                        <div className="p-t p-l-small" key={index}>
-
-                                            <Typography color="primary"
-                                                variant="body2"
-                                            >
-                                                <span className="smaller">
-                                                    {this.operationType(operation)}
-                                                </span>
-                                            </Typography>
-
-                                            <Typography color="primary"
-                                                variant="body2"
-                                            >
-                                                <span className="fade-strong">
-                                                    To:
-                                                </span>
-                                            </Typography>
-
-                                            <div className="p-l-small">
-                                                <Typography color="primary"
-                                                    variant="body2"
-                                                >
-                                                    {this.accountInfo(
-                                                        operation.destination
-                                                    )}
-                                                </Typography>
-                                            </div>
-
-                                            <Typography color="primary"
-                                                variant="body2"
-                                            >
-                                                <span className="fade-strong">
-                                                    Amount:
-                                                </span>
-                                                <he.Nbsp /><he.Nbsp />
-                                                <span className="smaller">
-                                                    {this.opCurrencyAmount(
-                                                        operation
-                                                    )}
-                                                    {this.props.assetManager
-                                                        .getAssetGlyph(
-                                                            this.props.currency
-                                                        )
-                                                    }
-                                                </span>
-                                                <he.Nbsp /><he.Nbsp />
-                                                <span className="micro fade-strong">
-                                                    {this.opNativeAmount(
-                                                        operation
-                                                    )} XLM
-                                                </span>
-                                            </Typography>
-
-                                        </div>
-                                    )}
-                                </div>
                             </div>
                         }
                     </Paper>
