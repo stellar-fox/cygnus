@@ -1,14 +1,8 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import {
-    bindActionCreators,
-    compose,
-} from "redux"
+import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
-import {
-    Redirect,
-    Route,
-} from "react-router-dom"
+import { Redirect, Route } from "react-router-dom"
 import {
     ConnectedSwitch as Switch,
     ensureTrailingSlash,
@@ -17,26 +11,13 @@ import {
     withStaticRouter,
 } from "../StellarRouter"
 
-import {
-    emoji,
-    htmlEntities as he,
-    pubKeyAbbr,
-} from "../../lib/utils"
-import { gravatarLink } from "../../lib/deneb"
-import { withLoginManager } from "../LoginManager"
-import { withAssetManager } from "../AssetManager"
 import { action as PaymentsAction } from "../../redux/Payments"
-import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
-import { action as LoadingModalAction } from "../../redux/LoadingModal"
 
-import {
-    Tab,
-    Tabs,
-} from "material-ui/Tabs"
+import { Tab, Tabs } from "material-ui/Tabs"
 import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
-import { StellarSdk, loadAccount } from "../../lib/stellar-tx"
+import { StellarSdk } from "../../lib/stellar-tx"
 
 import "./index.css"
 
@@ -97,93 +78,6 @@ class Payments extends Component {
 
 
     // ...
-    componentDidMount = () => {
-        // this.props.showLoadingModal("Loading payments data ...")
-
-        // this.stellarServer
-        //     .payments(this.props.horizon)
-        //     .forAccount(this.props.publicKey)
-        //     .order("desc")
-        //     .limit(5)
-        //     .call()
-        //     .then((paymentsResult) => {
-        //         const gravatarLinkPromises =
-        //             paymentsResult.records.map((r) => {
-        //                 let link = "https://www.gravatar.com/avatar?d=mm&s=100"
-        //                 if (this.props.loginManager.isAuthenticated()) {
-        //                     switch (r.type) {
-        //                         case "create_account":
-        //                             if (
-        //                                 r.funder === this.props.publicKey
-        //                             ) {
-        //                                 link = gravatarLink(r.account)
-        //                             } else {
-        //                                 link = gravatarLink(r.funder)
-        //                             }
-        //                             break
-
-        //                         // payment
-        //                         default:
-        //                             if(r.to === this.props.publicKey) {
-        //                                 link = gravatarLink(r.from)
-        //                             } else {
-        //                                 link = gravatarLink(r.to)
-        //                             }
-        //                             break
-        //                     }
-        //                 }
-        //                 return link
-        //             })
-
-        //         Promise.all(gravatarLinkPromises).then((links) => {
-        //             links.forEach((link, index) => {
-        //                 paymentsResult.records[index]
-        //                     .gravatar = link.link
-        //                 paymentsResult.records[index]
-        //                     .firstName = link.firstName
-        //                 paymentsResult.records[index]
-        //                     .lastName = link.lastName
-        //                 paymentsResult.records[index]
-        //                     .email = link.email
-        //                 paymentsResult.records[index]
-        //                     .alias = link.alias
-        //                 paymentsResult.records[index]
-        //                     .domain = link.domain
-        //             })
-        //             this.props.setPayments(paymentsResult.records)
-        //             this.updateCursors(paymentsResult.records)
-        //             paymentsResult.records[0].effects().then((effects) => {
-        //                 paymentsResult.records[0].transaction().then((tx) => {
-        //                     this.props.setState({
-        //                         paymentDetails: {
-        //                             txid: paymentsResult.records[0].id,
-        //                             created_at:
-        //                                 paymentsResult.records[0].created_at,
-        //                             effects: effects.records,
-        //                             memo: tx.memo,
-        //                             selectedPaymentId:
-        //                                 paymentsResult.records[0].id,
-        //                         },
-        //                     })
-        //                     this.props.hideLoadingModal()
-        //                 }).catch((err) => {
-        //                     // eslint-disable-next-line no-console
-        //                     console.log(err)
-        //                 })
-        //             }).catch((err) => {
-        //                 // eslint-disable-next-line no-console
-        //                 console.log(err)
-        //             })
-        //         })
-        //     })
-        //     .catch(function (err) {
-        //         // eslint-disable-next-line no-console
-        //         console.log(err)
-        //     })
-    }
-
-
-    // ...
     getTransactions = () => {
         if (
             (this.props.state.txCursorLeft === null  &&
@@ -210,178 +104,6 @@ class Payments extends Component {
 
 
     // ...
-    paymentsStreamer = () =>
-        this.stellarServer
-            .payments(this.props.horizon)
-            .cursor("now")
-            .stream({
-                onmessage: (message) => {
-
-                    /*
-                     * Payment to fund a new account.
-                     */
-                    if (
-                        message.type === "create_account" &&
-                        message.source_account === this.props.publicKey
-                    ) {
-                        this.updateAccount.call(this)
-                        this.props.popupSnackbar(
-                            `Payment sent to new account [${
-                                pubKeyAbbr(message.acount)}]: ${
-                                this.props.assetManager.convertToAsset(
-                                    message.starting_balance)} ${
-                                this.props.Account.currency.toUpperCase()}`
-                        )
-                    }
-
-
-                    /*
-                     * Initial funding of own account.
-                     */
-                    if (
-                        message.type === "create_account" &&
-                        message.account === this.props.publicKey
-                    ) {
-                        this.updateAccount.call(this)
-                        this.props.popupSnackbar(
-                            `Account Funded: ${
-                                this.props.assetManager.convertToAsset(
-                                    message.starting_balance)} ${
-                                this.props.Account.currency.toUpperCase()}`
-                        )
-                    }
-
-                    /*
-                     * Receiving payment.
-                     */
-                    if (
-                        message.type === "payment" &&
-                        message.to === this.props.publicKey
-                    ) {
-                        this.updateAccount.call(this)
-                        this.props.popupSnackbar(
-                            `Payment Received: ${
-                                this.props.assetManager.convertToAsset(
-                                    message.amount)} ${
-                                this.props.Account.currency.toUpperCase()}`
-                        )
-                    }
-
-                    /*
-                     * Sending payment.
-                     */
-                    if (
-                        message.type === "payment" &&
-                        message.from === this.props.publicKey
-                    ) {
-                        this.updateAccount.call(this)
-                        this.props.popupSnackbar(
-                            `Payment Sent: ${
-                                this.props.assetManager.convertToAsset(
-                                    message.amount)} ${
-                                this.props.Account.currency.toUpperCase()}`
-                        )
-                    }
-                },
-            })
-
-
-    // ...
-    updateAccount = () =>
-        loadAccount(this.props.publicKey, this.props.horizon)
-            .catch(StellarSdk.NotFoundError, function (_err) {
-                throw new Error("The destination account does not exist!")
-            })
-            .then(
-                (_account) => {
-                    this.stellarServer
-                        .payments(this.props.horizon)
-                        .limit(5)
-                        .forAccount(this.props.publicKey)
-                        .order("desc")
-                        .call()
-                        .then((paymentsResult) => {
-                            const gravatarLinkPromises =
-                                paymentsResult.records.map((r) => {
-                                    let link = "https://www.gravatar.com/avatar?d=mm&s=100"
-                                    if (this.props.loginManager.isAuthenticated()) {
-                                        switch (r.type) {
-                                            case "create_account":
-                                                if (
-                                                    r.funder ===
-                                                        this.props.publicKey
-                                                ) {
-                                                    link = gravatarLink(r.account)
-                                                } else {
-                                                    link = gravatarLink(r.funder)
-                                                }
-                                                break
-
-                                            // payment
-                                            default:
-                                                if (
-                                                    r.to ===
-                                                        this.props.publicKey
-                                                ) {
-                                                    link = gravatarLink(r.from)
-                                                } else {
-                                                    link = gravatarLink(r.to)
-                                                }
-                                                break
-                                        }
-                                    }
-                                    return link
-                                })
-
-                            Promise.all(gravatarLinkPromises).then((links) => {
-                                links.forEach((link, index) => {
-                                    paymentsResult.records[index]
-                                        .gravatar = link.link
-                                    paymentsResult.records[index]
-                                        .firstName = link.firstName
-                                    paymentsResult.records[index]
-                                        .lastName = link.lastName
-                                    paymentsResult.records[index]
-                                        .email = link.email
-                                    paymentsResult.records[index]
-                                        .alias = link.alias
-                                    paymentsResult.records[index]
-                                        .domain = link.domain
-                                })
-                                this.props.setPayments(paymentsResult.records)
-                                this.updateCursors(paymentsResult.records)
-                                paymentsResult.records[0]
-                                    .effects().then((effects) => {
-                                        paymentsResult.records[0]
-                                            .transaction().then((tx) => {
-                                                this.props.setState({
-                                                    paymentDetails: {
-                                                        txid:
-                                                            paymentsResult
-                                                                .records[0].id,
-                                                        created_at:
-                                                            paymentsResult
-                                                                .records[0]
-                                                                .created_at,
-                                                        effects:
-                                                            effects
-                                                                .records,
-                                                        memo: tx.memo,
-                                                        selectedPaymentId:
-                                                            paymentsResult
-                                                                .records[0].id,
-                                                    },
-                                                })
-                                                this.props.hideLoadingModal()
-                                            })
-                                    })
-                            })
-                        })
-                }
-            )
-
-
-    // ...
     handleTabSelect = (value) => {
         this.props.setState({ tabSelected: value, })
         this.props.staticRouter.pushByView(value)
@@ -392,376 +114,11 @@ class Payments extends Component {
 
 
     // ...
-    handlePaymentClick = (payment, paymentId) =>
-        payment.effects().then((effects) =>
-            payment.transaction().then((tx) =>
-                this.props.setState({
-                    paymentDetails: {
-                        txid: payment.id,
-                        created_at: payment.created_at,
-                        effects: effects.records,
-                        memo: tx.memo,
-                        selectedPaymentId: paymentId,
-                    },
-                })
-            )
-        )
-
-
-    // ...
-    updateCursors = (records) =>
-        this.props.setState({
-            cursorLeft: records[0].paging_token,
-            cursorRight: records[records.length - 1].paging_token,
-        })
-
-
-    // ...
     updateTransactionsCursors = (records) =>
         this.props.setState({
             txCursorLeft: records[0].paging_token,
             txCursorRight: records[records.length - 1].paging_token,
         })
-
-
-    // ...
-    decodeEffectType = (effect, index) => {
-        let humanizedEffectType = ""
-        const icon = `filter_${index + 1}`
-
-        switch (effect.type) {
-            case "account_created":
-                humanizedEffectType = (
-                    <div>
-                        <div className="flex-row">
-                            <div>
-                                <i className="material-icons">{icon}</i>
-                                <span>New Acccount Created </span>
-                                <span className="account-direction">
-                                    {
-                                        effect.account ===
-                                            this.props.publicKey ?
-                                            "Yours" : "Theirs"
-                                    }
-                                </span>
-                            </div>
-                            <div className="f-e-col">
-                                <div>
-                                    <span className="credit">
-                                        <he.Space /><he.Plus /><he.Space />
-                                        {
-                                            this.props.assetManager
-                                                .getAssetGlyph(
-                                                    this.props.Account
-                                                        .currency
-                                                )
-                                        }
-                                        <he.Space />
-                                        {
-                                            this.props
-                                                .assetManager.convertToAsset(
-                                                    effect.starting_balance
-                                                )
-                                        }
-                                    </span>
-                                </div>
-                                <div className="fade-extreme">
-                                    <span className="micro-font">
-                                        {effect.starting_balance}
-                                    </span><he.Space />
-                                    <span className="pico-font small-caps">
-                                        XLM
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="payment-details-body">
-                            <div>
-                                <span className="payment-details-account">
-                                    {pubKeyAbbr(effect.account)}
-                                </span>
-                                <div className="payment-details-fieldset">
-                                    <div className="payment-details-memo">
-                                        <span className="smaller">Memo:</span>
-                                        <he.Space />
-                                        {this.props.state.paymentDetails.memo}
-                                    </div>
-                                    <div className="payment-details-id">
-                                        ID: {effect.id}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-                break
-
-            case "account_removed":
-                humanizedEffectType = (
-                    <div>
-                        <div>
-                            <div className="flex-row">
-                                <div>
-                                    <i className="material-icons">{icon}</i>
-                                    <span>Acccount Removed </span>
-                                    <span className="account-direction">
-                                        {
-                                            effect.account ===
-                                                this.props.publicKey ?
-                                                "Yours" :
-                                                "Theirs"
-                                        }
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="payment-details-body">
-                            <div>
-                                <span className="payment-details-account">
-                                    {pubKeyAbbr(effect.account)}
-                                </span>
-                                <div className="payment-details-fieldset">
-                                    <div className="payment-details-memo">
-                                        <span className="smaller">
-                                            Account Closed:
-                                            <he.Space />
-                                            {pubKeyAbbr(effect.account)}
-                                        </span>
-                                    </div>
-                                    <div className="payment-details-id">
-                                        ID: {effect.id}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-                break
-
-            case "account_credited":
-                humanizedEffectType = (
-                    <div>
-                        <div className="flex-row">
-                            <div>
-                                <i className="material-icons">{icon}</i>
-                                <span>Acccount Credited </span>
-                                <span className="account-direction">
-                                    {
-                                        effect.account ===
-                                            this.props.publicKey ?
-                                            "Yours" : "Theirs"
-                                    }
-                                </span>
-                            </div>
-                            <div>
-                                <div className="f-e-col">
-                                    <div>
-                                        {
-                                            this.props.assetManager
-                                                .getAssetCode(effect) ===
-                                                    "XLM" ?
-                                                <span className="credit">
-                                                    <he.Space />
-                                                    <he.Plus />
-                                                    <he.Space />
-                                                    {
-                                                        this.props.assetManager
-                                                            .getAssetGlyph(
-                                                                this.props
-                                                                    .Account
-                                                                    .currency
-                                                            )
-                                                    }<he.Space />
-                                                    {
-                                                        this.props
-                                                            .assetManager
-                                                            .convertToAsset(
-                                                                effect.amount
-                                                            )
-                                                    }
-                                                </span> :
-                                                <span className="credit">
-                                                    <he.Space />
-                                                    <he.Plus />
-                                                    <he.Space />
-                                                    {effect.amount}<he.Space />
-                                                    <span className="smaller">
-                                                        {
-                                                            this.props
-                                                                .assetManager
-                                                                .getAssetCode(
-                                                                    effect
-                                                                )
-                                                        }
-                                                    </span>
-                                                </span>
-                                        }
-                                    </div>
-                                    <div className="fade-extreme">
-                                        <span className="micro-font">
-                                            {effect.amount}
-                                        </span><he.Space />
-                                        <span className="pico-font small-caps">
-                                            XLM
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="payment-details-body">
-                            <div>
-                                <span className="payment-details-account">
-                                    {pubKeyAbbr(effect.account)}
-                                </span>
-                                <div className="payment-details-fieldset">
-                                    <div className="payment-details-memo">
-                                        <span className="smaller">Memo:</span>
-                                        <he.Space />
-                                        {this.props.state.paymentDetails.memo}
-                                    </div>
-                                    <div className="payment-details-id">
-                                        ID: {effect.id}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-                break
-
-            case "account_debited":
-                humanizedEffectType = (
-                    <div>
-                        <div className="flex-row">
-                            <div>
-                                <i className="material-icons">{icon}</i>
-                                <span>Acccount Debited </span>
-                                <span className="account-direction">
-                                    {effect.account ===
-                                    this.props.publicKey
-                                        ? "Yours"
-                                        : "Theirs"}
-                                </span>
-                            </div>
-                            <div>
-                                <div className="f-e-col">
-                                    <div>
-                                        {
-                                            this.props.assetManager
-                                                .getAssetCode(effect) ===
-                                                "XLM" ?
-                                                <span className="debit">
-                                                    <he.Space />
-                                                    <he.Minus />
-                                                    <he.Space />
-                                                    {
-                                                        this.props
-                                                            .assetManager
-                                                            .getAssetGlyph(
-                                                                this.props
-                                                                    .Account
-                                                                    .currency
-                                                            )
-                                                    }<he.Space />
-                                                    {
-                                                        this.props
-                                                            .assetManager
-                                                            .convertToAsset(
-                                                                effect.amount
-                                                            )
-                                                    }
-                                                </span> :
-                                                <span className="debit">
-                                                    <he.Space />
-                                                    <he.Minus />
-                                                    <he.Space />
-                                                    {effect.amount}
-                                                    <he.Space />
-                                                    <span className="smaller">
-                                                        {
-                                                            this.props
-                                                                .assetManager
-                                                                .getAssetCode(
-                                                                    effect
-                                                                )
-                                                        }
-                                                    </span>
-                                                </span>
-                                        }
-                                    </div>
-                                    <div className="fade-extreme">
-                                        <span className="micro-font">
-                                            {effect.amount}
-                                        </span>
-                                        <he.Space />
-                                        <span className="pico-font small-caps">
-                                            XLM
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="payment-details-body">
-                            <div>
-                                <span className="payment-details-account">
-                                    {pubKeyAbbr(effect.account)}
-                                </span>
-                                <div className="payment-details-fieldset">
-                                    <div className="payment-details-memo">
-                                        <span className="smaller">Memo:</span>
-                                        <he.Space />
-                                        {this.props.state.paymentDetails.memo}
-                                    </div>
-                                    <div className="payment-details-id">
-                                        ID: {effect.id}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-                break
-
-            case "signer_created":
-                humanizedEffectType = (
-                    <div>
-                        <div className="flex-row">
-                            <div>
-                                <i className="material-icons">{icon}</i>
-                                <span>Signer Created <emoji.Pencil /></span>
-                                <he.Space />
-                                <span className="account-direction">
-                                    {effect.public_key ===
-                                    this.props.publicKey
-                                        ? "You"
-                                        : "They"}
-                                </span>
-                            </div>
-                            <div />
-                        </div>
-                        <div className="payment-details-body">
-                            <div>
-                                <span className="payment-details-account">
-                                    {pubKeyAbbr(effect.account)}
-                                </span>
-                                <div className="payment-details-fieldset">
-                                    <div className="payment-details-id">
-                                        ID: {effect.id}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-                break
-
-            default:
-                humanizedEffectType = effect.type
-                break
-        }
-
-        return humanizedEffectType
-    }
 
 
     // ...
@@ -788,14 +145,7 @@ class Payments extends Component {
                             value={this.validTabNames[0]}
                         >
                             <div className="tab-content">
-                                <PaymentsHistory
-                                    stellarServer={this.stellarServer}
-                                    handlePaymentClick={
-                                        this.handlePaymentClick
-                                    }
-                                    decodeEffectType={this.decodeEffectType}
-                                    updateCursors={this.updateCursors}
-                                />
+                                <PaymentsHistory />
                             </div>
                         </Tab>
                         <Tab
@@ -824,15 +174,12 @@ class Payments extends Component {
 
 // ...
 export default compose(
-    withAssetManager,
-    withLoginManager,
     withStaticRouter,
     withDynamicRoutes,
     connect(
         // map state to props.
         (state) => ({
             state: state.Payments,
-            Account: state.Account,
             transactions: state.StellarAccount.transactions,
             publicKey: state.LedgerHQ.publicKey,
             horizon: state.StellarAccount.horizon,
@@ -841,10 +188,6 @@ export default compose(
         (dispatch) => bindActionCreators({
             setState: PaymentsAction.setState,
             setTransactions: StellarAccountAction.setTransactions,
-            setPayments: StellarAccountAction.setPayments,
-            popupSnackbar: SnackbarAction.popupSnackbar,
-            showLoadingModal: LoadingModalAction.showLoadingModal,
-            hideLoadingModal: LoadingModalAction.hideLoadingModal,
         }, dispatch)
     ),
 )(Payments)
