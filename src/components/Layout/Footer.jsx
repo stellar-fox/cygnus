@@ -45,6 +45,7 @@ export default withStyles({
                     <he.Nbsp /><he.Nbsp />
                     <he.Copy /><he.Nbsp /><he.Nbsp />
                     <a target="_blank"
+                        rel="noopener noreferrer"
                         href={env.appLandingPageLink}
                     >
                         <b>{env.appName}</b>
@@ -58,6 +59,7 @@ export default withStyles({
                     <a
                         className={classes.tiny}
                         target="_blank"
+                        rel="noopener noreferrer"
                         href={env.tos}
                     >
                         <b>Terms Of Service</b>
@@ -66,6 +68,7 @@ export default withStyles({
                     <a
                         className={classes.tiny}
                         target="_blank"
+                        rel="noopener noreferrer"
                         href={env.privacy}
                     >
                         <b>Privacy</b>
