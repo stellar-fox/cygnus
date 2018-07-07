@@ -147,17 +147,22 @@ export default compose(
                                 gravatarSize48}&d=robohash`}
                             />
                         </span>
-                        <Typography variant="body2" color="primary">
-                            {formatFullName(
-                                this.props.firstName,
-                                this.props.lastName
-                            )}
-                            <Typography color="primary">
+                        <div className="compact">
+                            <div className="text-primary">
+                                {formatFullName(
+                                    this.props.firstName,
+                                    this.props.lastName
+                                )}
+                            </div>
+                            <div>
                                 <span className="micro fade-strong">
                                     {this.props.paymentAddress}
                                 </span>
-                            </Typography>
-                        </Typography>
+                            </div>
+                        </div>
+
+
+
                     </div>
                 )
             }
@@ -174,16 +179,19 @@ export default compose(
                                 gravatarSize48}&d=robohash`}
                             />
                         </span>
-                        <Typography variant="body2" color="primary">
-                            {formatFullName(contact.first_name, contact.last_name)}
-                            <Typography color="primary">
-                                <span className="p-l-small micro fade-strong">
+                        <div className="compact">
+                            <div className="text-primary">
+                                {formatFullName(contact.first_name,
+                                    contact.last_name)}
+                            </div>
+                            <div>
+                                <span className="micro fade-strong">
                                     {formatPaymentAddress(
                                         contact.alias, contact.domain
                                     )}
                                 </span>
-                            </Typography>
-                        </Typography>
+                            </div>
+                        </div>
                     </div>
                 )
             }
@@ -219,7 +227,11 @@ export default compose(
                                     {this.operationType(operation)}
                                 </span>
                             </Typography><he.Nbsp />
-                            {this.accountInfo(operation.destination)}
+                            <Typography color="primary"
+                                variant="body2"
+                            >
+                                {this.accountInfo(operation.destination)}
+                            </Typography>
                         </div>
 
                         <div className="p-t">
