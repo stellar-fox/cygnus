@@ -44,6 +44,19 @@ export const listPending = async (user_id, token) =>
 
 
 // ...
+export const requestByEmail = async (
+    user_id, token, email
+) =>
+    (await Axios.post(
+        `${config.apiV2}/contact/request/by-email/`, {
+            user_id, token, email,
+        }
+    )).status
+
+
+
+
+// ...
 export const requestByAccountNumber = async (
     user_id, token, pubkey
 ) =>
