@@ -5,7 +5,7 @@ import Axios from "axios"
 import { config } from "../../config"
 import {
     listInternal, listPending, listRequested, requestByAccountNumber,
-    requestByPaymentAddress,
+    requestByEmail, requestByPaymentAddress,
 } from "../Contacts/api"
 import {
     getUserExternalContacts,
@@ -13,7 +13,7 @@ import {
     federationAddressValid,
     getFederationRecord,
     toAliasAndDomain,
-    publicKeyValid
+    publicKeyValid,
 } from "../../lib/utils"
 import { stellarFoxDomain } from "../StellarFox/env"
 import { action as AlertAction } from "../../redux/Alert"
@@ -239,10 +239,14 @@ class AddContactForm extends Component {
                 buttonDisabled: false,
                 input: "",
             })
-            this.props.showAlert(
-                "Not yet implemented. Please, check back soon.",
-                "Notice"
-            )
+
+            requestByEmail(
+                this.props.userId, this.props.token, this.state.input
+            ).then((_result) => {
+                this.requestComplete()
+            }).catch((error) => {
+                this.requestFailed(error)
+            })
         }
 
         // try adding a contact based on payment address
