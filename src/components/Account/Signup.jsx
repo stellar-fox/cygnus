@@ -30,6 +30,7 @@ import { firebaseApp } from "../../components/StellarFox"
 import connect from "react-redux/lib/connect/connect"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
+import { subscribeEmail } from "./api"
 
 
 // ...
@@ -147,6 +148,12 @@ class Signup extends Component {
                     message: "Your account has been created.",
                     buttonDisabled: true,
                 })
+
+                await subscribeEmail(
+                    userResp.data.userid,
+                    authResp.data.token,
+                    this.state.email
+                )
 
                 this.props.onComplete({
                     publicKey: ledgerData.publicKey,
