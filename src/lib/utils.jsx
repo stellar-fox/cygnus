@@ -528,10 +528,11 @@ export const devEnv = () =>
 // asynchronously load libraries (used in dev. environment)
 export const dynamicImportLibs = async () => {
     let [
-        apiContacts,
+        apiAccount, apiContacts,
         bignumber, firebase, toolbox, ledger, jss,
         lodash, mui, md5, redux, utils,
     ] = await Promise.all([
+        import("../../src/components/Account/api"),
         import("../../src/components/Contacts/api"),
         import("bignumber.js"),
         import("../../src/components/StellarFox"),
@@ -545,7 +546,11 @@ export const dynamicImportLibs = async () => {
         import("./utils"),
     ])
     return {
-        api: { contacts: apiContacts, firebase: firebase.firebaseApp, },
+        api: {
+            account: apiAccount,
+            contacts: apiContacts,
+            firebase: firebase.firebaseApp,
+        },
         axios,
         BigNumber: bignumber.default,
         toolbox, ledger, jss, lodash, mui,
