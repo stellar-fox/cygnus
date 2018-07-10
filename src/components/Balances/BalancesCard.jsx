@@ -35,6 +35,13 @@ class BalancesCard extends Component {
 
 
     // ...
+    toggleFundCard = () =>
+        this.props.setState({
+            fundCardVisible: !this.props.Balances.fundCardVisible,
+        })
+
+
+    // ...
     togglePaymentCard = () =>
         this.props.setState({
             payCardVisible: !this.props.Balances.payCardVisible,
@@ -173,7 +180,7 @@ class BalancesCard extends Component {
             <CardActions>
                 <Button
                     color="success"
-                    onClick={this.showNotImplementedModal}
+                    onClick={this.toggleFundCard}
                 >Fund</Button>
                 <Button
                     color="warning"

@@ -14,6 +14,7 @@ import {
 } from "material-ui/Card"
 import Button from "../../lib/mui-v1/Button"
 import { action as AlertAction } from "../../redux/Alert"
+import { action as BalancesAction } from "../../redux/Balances"
 
 
 
@@ -23,6 +24,13 @@ class NoAccountCard extends Component {
     // ...
     showNotImplementedModal = () =>
         this.props.showAlert(notImplementedText, "Not Yet Implemented")
+
+
+    // ...
+    toggleFundCard = () =>
+        this.props.setState({
+            fundCardVisible: !this.props.Balances.fundCardVisible,
+        })
 
 
     // ...
@@ -72,7 +80,7 @@ class NoAccountCard extends Component {
 
         <CardActions>
             <Button
-                onClick={this.showNotImplementedModal}
+                onClick={this.toggleFundCard}
                 color="success"
             >Fund</Button>
             <Button
@@ -90,9 +98,13 @@ export default compose(
     withAssetManager,
     connect(
         // map state to props.
-        (state) => ({ Account: state.Account, }),
+        (state) => ({
+            Account: state.Account,
+            Balances: state.Balances,
+        }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
+            setState: BalancesAction.setState,
             showAlert: AlertAction.showAlert,
         }, dispatch)
     )

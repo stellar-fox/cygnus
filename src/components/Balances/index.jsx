@@ -56,6 +56,7 @@ import {
 } from "../Streamers"
 
 import "./index.css"
+import FundCard from "./FundCard"
 
 
 
@@ -411,6 +412,12 @@ class Balances extends Component {
                                     onSignTransaction={this.sendPayment}
                                 /> : null
                         }
+
+                        {
+                            Balances.fundCardVisible ?
+                                <FundCard /> : null
+                        }
+
                     </Fragment>
                 </Route>
                 <Redirect to={this.rr(".")} />

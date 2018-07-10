@@ -25,6 +25,7 @@ const initState = ((now) => ({
     payeeMemoText: "",
     message: null,
     newAccount: false,
+    fundCardVisible: false,
     payCardVisible: false,
     payDate: now,
     payee: null,
