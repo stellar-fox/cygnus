@@ -14,4 +14,7 @@ export const config = {
     mailchimp: {
         apiKey: "<mail_chimp_api_key>",
     },
+    stripe: {
+        apiKey: "<stripe_api_key>",
+    },
 }
