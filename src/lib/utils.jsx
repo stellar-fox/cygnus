@@ -11,7 +11,7 @@ import {
     wrap,
 } from "@xcmats/js-toolbox"
 
-import { StellarSdk } from "./stellar-tx"
+import { StrKey } from "stellar-sdk"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
 import shajs from "sha.js"
@@ -237,7 +237,7 @@ export const toAliasAndDomain = (paymentAddress) => paymentAddress.split("*")
 // Validates given public key (string)
 // returns true/false  (valid/invalid key).
 export const publicKeyValid = (publicKey) =>
-    StellarSdk.StrKey.isValidEd25519PublicKey(publicKey)
+    StrKey.isValidEd25519PublicKey(publicKey)
 
 
 
@@ -555,8 +555,7 @@ export const dynamicImportLibs = async () => {
         BigNumber: bignumber.default,
         toolbox, ledger, jss, lodash, mui,
         md5: md5.default,
-        redux, StellarSdk,
-        toml, utils,
+        redux, toml, utils,
     }
 }
 

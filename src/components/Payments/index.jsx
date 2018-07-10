@@ -17,7 +17,7 @@ import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { Tab, Tabs } from "material-ui/Tabs"
 import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
-import { StellarSdk } from "../../lib/stellar-tx"
+import { Server } from "stellar-sdk"
 
 import "./index.css"
 
@@ -73,7 +73,7 @@ class Payments extends Component {
         )
 
         // ...
-        this.stellarServer = new StellarSdk.Server(this.props.horizon)
+        this.stellarServer = new Server(this.props.horizon)
     }
 
 

@@ -5,11 +5,9 @@ import {
 
 import BigNumber from "bignumber.js"
 
-
-
-
-// TODO: convert-to/use-as module
-export const StellarSdk = window.StellarSdk
+import {
+    Asset, Memo, Network, Operation, Server, TransactionBuilder,
+} from "stellar-sdk"
 
 
 
@@ -17,11 +15,11 @@ export const StellarSdk = window.StellarSdk
 // ...
 export const server = (network) => {
     if (network === liveNetAddr) {
-        StellarSdk.Network.usePublicNetwork()
-        return new StellarSdk.Server(liveNetAddr)
+        Network.usePublicNetwork()
+        return new Server(liveNetAddr)
     }
-    StellarSdk.Network.useTestNetwork()
-    return new StellarSdk.Server(testNetAddr)
+    Network.useTestNetwork()
+    return new Server(testNetAddr)
 }
 
 
@@ -48,34 +46,34 @@ export const operations = (network) =>
 
 // ...
 export const buildSetDataTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.manageData({
+    ).addOperation(Operation.manageData({
         name: txData.name,
         value: txData.value,
     })).build()
 
 // ...
 export const buildCreateAccountTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.createAccount({
+    ).addOperation(Operation.createAccount({
         destination: txData.destination,
         startingBalance: txData.amount,
-    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
+    })).addMemo(Memo.text(txData.memo)).build()
 
 
 
 
 // ...
 export const buildPaymentTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.payment({
+    ).addOperation(Operation.payment({
         destination: txData.destination,
-        asset: StellarSdk.Asset.native(),
+        asset: Asset.native(),
         amount: txData.amount,
-    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
+    })).addMemo(Memo.text(txData.memo)).build()
 
 
 
