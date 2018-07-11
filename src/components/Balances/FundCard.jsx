@@ -1,20 +1,86 @@
 import React, { Component } from "react"
-import Paper from "../../lib/mui-v1/Paper"
+import { connect } from "react-redux"
+import { bindActionCreators, compose } from "redux"
+import { Typography, withStyles } from "@material-ui/core"
+import { action as BalancesAction } from "../../redux/Balances"
 import StripeCheckout from "../StripeCheckout"
+import { Card, CardActions, CardHeader, CardText } from "material-ui/Card"
+import Button from "../../lib/mui-v1/Button"
+import Divider from "../../lib/mui-v1/Divider"
 
 
-// ...
-class FundCard extends Component {
 
 
-    // ...
-    render = () =>
-        <div style={{ padding: "0rem 0.8rem", }}>
-            <Paper>
-                <StripeCheckout />
-            </Paper>
-        </div>
+export default compose(
+    withStyles({
+        cardActions: {
+            padding: "1rem",
+        },
+    }),
+    connect(
+        (state) => ({
+            fundCardVisible: state.Balances.fundCardVisible,
+            publicKey: state.LedgerHQ.publicKey,
+        }),
+        (dispatch) => bindActionCreators({
+            setState: BalancesAction.setState,
+        }, dispatch)
+    ),
+)(
 
-}
+    class FundCard extends Component {
 
-export default FundCard
+        // ...
+        toggleFundCard = () =>
+            this.props.setState({
+                fundCardVisible: !this.props.fundCardVisible,
+            })
+
+        // ...
+        render = () => (
+            ({ classes, publicKey, }) => <Card className='account'>
+                <CardHeader
+                    title={
+                        <span>
+                            <span>Fund your account.</span>
+                        </span>
+                    }
+                    subtitle="Use available methods below to purchase transfer tokens."
+                    actAsExpander={false}
+                    showExpandableButton={false}
+                />
+
+                <CardText>
+                    <Typography variant="subheading" color="inherit">
+                        Fund with Credit Card.
+                        <Typography variant="caption" color="inherit">
+                            Specify the amount and the destination currency.
+                        </Typography>
+                    </Typography>
+                    <StripeCheckout />
+                    <div className="p-t p-b">
+                        <Divider />
+                    </div>
+                    <Typography variant="subheading" color="inherit">
+                        Fund with Stellar Lumens.
+                        <Typography variant="caption" color="inherit">
+                            Send any amount of Stellar Lumens to the
+                            following address.
+                        </Typography>
+                    </Typography>
+                    <div className="p-l p-t-small bg-green">
+                        {publicKey}
+                    </div>
+                </CardText>
+
+                <CardActions classes={{ root: classes.cardActions, }}>
+                    <div className="f-e">
+                        <Button color="primary" onClick={this.toggleFundCard}>
+                            Cancel
+                        </Button>
+                    </div>
+                </CardActions>
+            </Card>)(this.props)
+    }
+)
+
