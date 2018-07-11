@@ -57,6 +57,7 @@ export default compose(
                             Specify the amount and the destination currency.
                         </Typography>
                     </Typography>
+                    <div className="p-t"></div>
                     <StripeCheckout />
                     <div className="p-t p-b">
                         <Divider />

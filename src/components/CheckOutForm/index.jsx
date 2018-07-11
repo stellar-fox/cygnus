@@ -6,6 +6,7 @@ import "./index.css"
 import { CardElement, injectStripe } from "react-stripe-elements"
 import InputField from "../../lib/mui-v1/InputField"
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core"
+import { htmlEntities as he } from "../../lib/utils"
 
 
 
@@ -45,6 +46,10 @@ const styles = (theme) => ({
         zIndex: 1001,
         backgroundColor: theme.palette.secondary.light,
     },
+
+    icon: {
+        color: theme.palette.primary.fade,
+    },
 })
 
 
@@ -60,6 +65,7 @@ const SelectView = withStyles(styles)(
             <Select
                 classes={{
                     select: classes.select,
+                    icon: classes.icon,
                 }}
                 MenuProps={{
                     PopoverClasses: {
@@ -132,6 +138,7 @@ class CheckoutForm extends Component {
                     errorMessage={this.state.errorMessage}
                     onChange={this.updateInputValue}
                 />
+                <he.Nbsp /><he.Nbsp /><he.Nbsp /><he.Nbsp />
                 <SelectView value={this.state.selectedCurrency}
                     onChange={this.changeCurrency}
                 />
