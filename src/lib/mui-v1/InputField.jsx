@@ -15,6 +15,16 @@ import {
 // <InputField> component
 export default withStyles((theme) => ({
 
+    primary: {
+        color: theme.palette.primary.main,
+        "&:hover:before": {
+            borderBottomColor: `${theme.palette.primary.main} !important`,
+            borderBottomWidth: "1px !important",
+        },
+        "&:before": { borderBottomColor: theme.palette.primary.main, },
+        "&:after": { borderBottomColor: theme.palette.primary.main, },
+    },
+
     secondary: {
         color: theme.palette.secondaryColor,
         "&:hover:before": {
@@ -26,6 +36,9 @@ export default withStyles((theme) => ({
     },
 
     root: { color: "rgba(212,228,188,0.6)", },
+    shrink: { color: "rgba(212,228,188,0.4) !important", },
+    rootPrimary: { color: "rgba(15, 46, 83, 0.8)", },
+    shrinkPrimary: { color: "rgba(15, 46, 83, 0.4) !important", },
 
     focused: {
         "&$root": {
@@ -55,8 +68,11 @@ export default withStyles((theme) => ({
                     margin={margin || "dense"}
                 >
                     <InputLabel
+                        classes={{
+                            shrink: color === "secondary" ? classes.shrink : classes.shrinkPrimary,
+                        }}
                         FormLabelClasses={{
-                            root: classes.root,
+                            root: color === "secondary" ? classes.root : classes.rootPrimary,
                             focused: classes.focused,
                         }}
                     >
