@@ -8,7 +8,7 @@ import InputField from "../../lib/mui-v1/InputField"
 import {
     CircularProgress, FormControl, InputLabel, MenuItem, Select
 } from "@material-ui/core"
-import { htmlEntities as he } from "../../lib/utils"
+import { htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
 import { fundAccount } from "./api"
 import "./index.css"
 
@@ -121,6 +121,7 @@ class CheckoutForm extends Component {
             token: token.id,
             amount: (new BigNumber(this.state.amount).times(100).toString()),
             currency: this.state.selectedCurrency,
+            publicKey: pubKeyAbbr(this.props.publicKey),
         }
 
         fundAccount(this.props.userId, this.props.token, charge)
@@ -212,5 +213,6 @@ export default injectStripe(connect(
     (state) => ({
         userId: state.LoginManager.userId,
         token: state.LoginManager.token,
+        publicKey: state.LedgerHQ.publicKey,
     })
 )(CheckoutForm))
