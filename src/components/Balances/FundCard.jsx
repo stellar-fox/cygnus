@@ -54,7 +54,7 @@ export default compose(
                     <Typography variant="subheading" color="inherit">
                         Fund with Credit Card.
                         <Typography variant="caption" color="inherit">
-                            Specify the amount and the destination currency.
+                            Minimum amount is an equivalent of 0.50 €.
                         </Typography>
                     </Typography>
                     <div className="p-t"></div>

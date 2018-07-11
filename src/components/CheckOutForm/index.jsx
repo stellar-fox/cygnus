@@ -1,13 +1,16 @@
 import React, { Component, Fragment } from "react"
+import BigNumber from "bignumber.js"
+import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
 import Button from "../../lib/mui-v1/Button"
-import "./index.css"
-
 import { CardElement, injectStripe } from "react-stripe-elements"
 import InputField from "../../lib/mui-v1/InputField"
-import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core"
+import {
+    CircularProgress, FormControl, InputLabel, MenuItem, Select
+} from "@material-ui/core"
 import { htmlEntities as he } from "../../lib/utils"
-
+import { fundAccount } from "./api"
+import "./index.css"
 
 
 
@@ -59,8 +62,9 @@ const styles = (theme) => ({
 const SelectView = withStyles(styles)(
     ({ classes, value, onChange, }) =>
         <FormControl className={classes.formControl}>
-            <InputLabel classes={{ root: classes.inputLabel, shrink: classes.inputLabel, }}
-                htmlFor="select-view"
+            <InputLabel classes={{
+                root: classes.inputLabel, shrink: classes.inputLabel,
+            }} htmlFor="select-view"
             >Select Currency</InputLabel>
             <Select
                 classes={{
@@ -101,15 +105,41 @@ class CheckoutForm extends Component {
             error: false,
             errorMessage: "",
             selectedCurrency: "eur",
+            inProgress: false,
         }
     }
 
 
     // ...
     async submit (_ev) {
+        this.setState({
+            inProgress: true,
+        })
         let { token, } = await this.props.stripe.createToken({ name: "Name", })
-        // eslint-disable-next-line no-console
-        console.log(`Charging: ${this.state.amount} of ${this.state.selectedCurrency} with token ${token}`)
+
+        const charge = {
+            token: token.id,
+            amount: (new BigNumber(this.state.amount).times(100).toString()),
+            currency: this.state.selectedCurrency,
+        }
+
+        fundAccount(this.props.userId, this.props.token, charge)
+            .then((response) => {
+                // eslint-disable-next-line no-console
+                console.log(response)
+            })
+            .catch((error) => {
+                this.setState({
+                    error: true,
+                    errorMessage: error.response.data.error,
+                })
+            })
+            .finally(() => {
+                this.setState({
+                    inProgress: false,
+                })
+            })
+
     }
 
 
@@ -120,9 +150,20 @@ class CheckoutForm extends Component {
 
 
     // ...
-    updateInputValue = (event) => this.setState({
-        amount: event.target.value,
-    })
+    updateInputValue = (event) => {
+        if (!/^(\d+)([.](\d{1,2}))?$/.test(event.target.value)) {
+            this.setState({
+                error: true,
+                errorMessage: "Invalid amount entered.",
+            })
+        } else {
+            this.setState({
+                error: false,
+                errorMessage: "",
+                amount: event.target.value,
+            })
+        }
+    }
 
 
     // ...
@@ -148,8 +189,14 @@ class CheckoutForm extends Component {
                     <CardElement />
                 </div>
                 <div>
-                    <Button color="primary" onClick={this.submit}>
-                        Charge
+                    <Button
+                        color="primary"
+                        onClick={this.submit}
+                        disabled={this.state.inProgress}
+                    >
+                        {this.state.inProgress ? <CircularProgress
+                            color="primary" thickness={4} size={20}
+                        /> : "Charge"}
                     </Button>
                 </div>
             </div>
@@ -161,4 +208,9 @@ class CheckoutForm extends Component {
 
 
 // ...
-export default injectStripe(CheckoutForm)
+export default injectStripe(connect(
+    (state) => ({
+        userId: state.LoginManager.userId,
+        token: state.LoginManager.token,
+    })
+)(CheckoutForm))
