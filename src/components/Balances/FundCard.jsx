@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import { Typography, withStyles } from "@material-ui/core"
@@ -7,11 +7,13 @@ import StripeCheckout from "../StripeCheckout"
 import { Card, CardActions, CardHeader, CardText } from "material-ui/Card"
 import Button from "../../lib/mui-v1/Button"
 import Divider from "../../lib/mui-v1/Divider"
+import { withLoginManager } from "../LoginManager"
 
 
 
 
 export default compose(
+    withLoginManager,
     withStyles({
         cardActions: {
             padding: "1rem",
@@ -51,17 +53,21 @@ export default compose(
                 />
 
                 <CardText>
-                    <Typography variant="subheading" color="inherit">
-                        Fund with Credit Card.
-                        <Typography variant="caption" color="inherit">
-                            Minimum amount is an equivalent of 0.50 €.
-                        </Typography>
-                    </Typography>
-                    <div className="p-t"></div>
-                    <StripeCheckout />
-                    <div className="p-t p-b">
-                        <Divider />
-                    </div>
+                    {this.props.loginManager.isAuthenticated() &&
+                        <Fragment>
+                            <Typography variant="subheading" color="inherit">
+                                Fund with Credit Card.
+                                <Typography variant="caption" color="inherit">
+                                    Minimum amount is an equivalent of 0.50 €.
+                                </Typography>
+                            </Typography>
+                            <div className="p-t"></div>
+                            <StripeCheckout />
+                            <div className="p-t p-b">
+                                <Divider />
+                            </div>
+                        </Fragment>
+                    }
                     <Typography variant="subheading" color="inherit">
                         Fund with Stellar Lumens.
                         <Typography variant="caption" color="inherit">
