@@ -119,6 +119,17 @@ export default compose(
                 "material-icons"
         )
 
+        // ...
+        opAmount = (operation) => choose(
+            operation.type,
+            {
+                "createAccount": () => this.opNativeAmount(operation),
+                "payment": () => operation.asset ?
+                    operation.amount :
+                    this.props.assetManager.convertToAsset(operation.amount),
+            }
+        )
+
 
         // ...
         opNativeAmount = (operation) => choose(
@@ -131,10 +142,20 @@ export default compose(
 
 
         // ...
+        opAssetSymbol = (operation) => choose(
+            operation.type,
+            {
+                "createAccount": () => "XLM",
+            },
+            () => operation.asset.code
+        )
+
+
+        // ...
         opCurrencyAmount = (operation) =>
-            this.props.assetManager.convertToAsset(
-                this.opNativeAmount(operation)
-            )
+            operation.asset ? this.opNativeAmount(operation) :
+                this.props.assetManager.convertToAsset(
+                    this.opNativeAmount(operation))
 
 
         // ...
@@ -160,9 +181,6 @@ export default compose(
                                 </span>
                             </div>
                         </div>
-
-
-
                     </div>
                 )
             }
@@ -247,7 +265,9 @@ export default compose(
                                 {this.opCurrencyAmount(operation)}
                                 <he.Nbsp /><he.Nbsp />
                                 <span className="tiny fade-strong">
-                                    {this.opNativeAmount(operation)} XLM
+                                    {this.opAmount(operation)}
+                                    <he.Nbsp />
+                                    {this.opAssetSymbol(operation)}
                                 </span>
                             </Typography>
                         </div>
