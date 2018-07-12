@@ -255,7 +255,9 @@ class AddContactForm extends Component {
             let [alias, domain,] = toAliasAndDomain(this.state.input)
 
             domain === stellarFoxDomain ?
-                requestByPaymentAddress(this.props.userId, this.props.token, alias, domain)
+                requestByPaymentAddress(
+                    this.props.userId, this.props.token, alias, domain
+                )
                     .then(() => {
                         this.requestComplete()
                     }).catch((error) => {

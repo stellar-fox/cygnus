@@ -8,9 +8,7 @@ import Avatar from "@material-ui/core/Avatar"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
-import {
-    pubKeyAbbr,
-} from "../../lib/utils"
+import { formatPaymentAddress } from "../../lib/utils"
 
 
 
@@ -71,23 +69,22 @@ export default compose(
                                     <Typography align="right"
                                         noWrap
                                     >
-                                        {data.alias}*{data.domain}
+                                        {data.request_str ?
+                                            data.request_str :
+                                            formatPaymentAddress(
+                                                data.alias, data.domain
+                                            )}
                                     </Typography>
                                 </div>
-                                <Typography variant="caption" align="right"
-                                    noWrap
-                                >
-                                    {pubKeyAbbr(data.pubkey)}
-                                </Typography>
                             </div>
                             <div className="f-e-col space-around p-l fade">
                                 <Typography variant="body1" align="center"
                                     color="primary"
                                     noWrap
                                 >
-                                    <div className="badge-primary">
+                                    <span className="badge-pending">
                                         Pending
-                                    </div>
+                                    </span>
                                 </Typography>
                             </div>
                         </div>
