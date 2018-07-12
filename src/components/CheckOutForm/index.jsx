@@ -1,8 +1,10 @@
 import React, { Component, Fragment } from "react"
+import { bindActionCreators } from "redux"
 import BigNumber from "bignumber.js"
 import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
 import Button from "../../lib/mui-v1/Button"
+import { action as SnackbarAction } from "../../redux/Snackbar"
 import { CardElement, injectStripe } from "react-stripe-elements"
 import InputField from "../../lib/mui-v1/InputField"
 import {
@@ -126,8 +128,17 @@ class CheckoutForm extends Component {
 
         fundAccount(this.props.userId, this.props.token, charge)
             .then((response) => {
-                // eslint-disable-next-line no-console
-                console.log(response)
+                if (response.data && response.data.status === "succeeded") {
+                    this._element.clear()
+                    this.setState({
+                        selectedCurrency: "eur",
+                    })
+                    this.props.popupSnackbar(
+                        "Account fund payment successful."
+                    )
+                } else {
+                    this.props.popupSnackbar(response.data.status)
+                }
             })
             .catch((error) => {
                 this.setState({
@@ -187,7 +198,7 @@ class CheckoutForm extends Component {
             </div>
             <div className="f-b-c">
                 <div className="stripe-checkout">
-                    <CardElement />
+                    <CardElement onReady={(c) => this._element = c} />
                 </div>
                 <div>
                     <Button
@@ -214,5 +225,8 @@ export default injectStripe(connect(
         userId: state.LoginManager.userId,
         token: state.LoginManager.token,
         publicKey: state.LedgerHQ.publicKey,
-    })
+    }),
+    (dispatch) => bindActionCreators({
+        popupSnackbar: SnackbarAction.popupSnackbar,
+    }, dispatch)
 )(CheckoutForm))
