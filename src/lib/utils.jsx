@@ -335,6 +335,17 @@ export const endpointLookup = (federationAddress) => (
 
 
 
+// Lookup asset information in stellar.toml located at specified domain
+export const assetLookup = async (domain) =>
+    toml.parse(
+        (await axios.get(
+            env.federationEndpoint(domain))
+        ).data
+    ).CURRENCIES
+
+
+
+
 // extracts Z from "XX'/YYY'/Z'"
 export const extractPathIndex = (path) => handleException(
     () => path.match(/\/(\d{1,})'$/)[1],
