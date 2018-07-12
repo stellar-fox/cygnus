@@ -123,7 +123,8 @@ class CheckoutForm extends Component {
             token: token.id,
             amount: (new BigNumber(this.state.amount).times(100).toString()),
             currency: this.state.selectedCurrency,
-            publicKey: pubKeyAbbr(this.props.publicKey),
+            publicKeyAbbr: pubKeyAbbr(this.props.publicKey),
+            publicKey: this.props.publicKey,
         }
 
         fundAccount(this.props.userId, this.props.token, charge)
