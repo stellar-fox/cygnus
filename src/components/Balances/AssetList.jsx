@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { BigNumber } from "bignumber.js"
-
+import NumberFormat from "react-number-format"
 import { assetLookup, htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
 import { maximumTrustLimit } from "../StellarFox/env"
 import MD5 from "../../lib/md5"
@@ -115,8 +115,18 @@ export default compose(
             )
 
             return assetInfoObj && assetInfoObj.decimals ?
-                new BigNumber(asset.balance).toFixed(assetInfoObj.decimals) :
-                asset.balance
+                <NumberFormat
+                    value={new BigNumber(asset.balance).toFixed(
+                        assetInfoObj.decimals
+                    )}
+                    displayType={"text"} thousandSeparator={true}
+                    decimalScale={assetInfoObj.decimals}
+                    fixedDecimalScale={true}
+                /> :
+                <NumberFormat value={asset.balance} displayType={"text"}
+                    thousandSeparator={true}
+                />
+
         }
 
 
@@ -130,14 +140,19 @@ export default compose(
 
             return assetInfoObj && assetInfoObj.decimals ?
                 assetLimit.isLessThan(maximumTrustLimit) ?
-                    assetLimit.toFixed(assetInfoObj.decimals) : "None" :
+                    <NumberFormat
+                        value={assetLimit.toFixed(assetInfoObj.decimals)}
+                        displayType={"text"} thousandSeparator={true}
+                        decimalScale={assetInfoObj.decimals}
+                        fixedDecimalScale={true}
+                    /> : "None" :
                 asset.balance
         }
 
 
         // ...
         formatAssets = (assets) => assets.map((asset, index) =>
-            <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
+            <Grid item key={index} xs={12} sm={12} md={6} lg={6} xl={4}>
                 <Paper color="primaryMaxWidth">
                     <div className="f-b-c space-between cursor-pointer">
 

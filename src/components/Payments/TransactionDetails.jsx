@@ -19,6 +19,7 @@ import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize48 } from "../../components/StellarFox/env"
 import md5 from "../../lib/md5"
+import NumberFormat from "react-number-format"
 
 
 
@@ -119,11 +120,21 @@ export default compose(
                 "material-icons"
         )
 
+
+        // ...
+        isNative = (operation) =>
+            (operation.asset && operation.asset.code === "XLM")
+                || operation.startingBalance
+
+
         // ...
         opAmount = (operation) => choose(
             operation.type,
             {
+                // createAccount is always in native currency
                 "createAccount": () => this.opNativeAmount(operation),
+
+                // payment can be in any asset
                 "payment": () => operation.asset ?
                     operation.amount :
                     this.props.assetManager.convertToAsset(operation.amount),
@@ -152,10 +163,14 @@ export default compose(
 
 
         // ...
-        opCurrencyAmount = (operation) =>
-            operation.asset ? this.opNativeAmount(operation) :
+        displayAmount = (operation) =>
+            this.isNative(operation) ?
                 this.props.assetManager.convertToAsset(
-                    this.opNativeAmount(operation))
+                    this.opNativeAmount(operation)) :
+                <NumberFormat
+                    value={this.opNativeAmount(operation)}
+                    displayType={"text"} thousandSeparator={true}
+                />
 
 
         // ...
@@ -258,17 +273,25 @@ export default compose(
                                     Amount:
                                 </span>
                                 <he.Nbsp /><he.Nbsp />
-                                {this.props.assetManager.getAssetGlyph(
-                                    this.props.currency
-                                )}
+
+                                {this.isNative(operation) ?
+                                    this.props.assetManager.getAssetGlyph(
+                                        this.props.currency
+                                    ) : operation.asset.code
+                                }
                                 <he.Nbsp />
-                                {this.opCurrencyAmount(operation)}
+
+                                {this.displayAmount(operation)}
+
                                 <he.Nbsp /><he.Nbsp />
-                                <span className="tiny fade-strong">
-                                    {this.opAmount(operation)}
-                                    <he.Nbsp />
-                                    {this.opAssetSymbol(operation)}
-                                </span>
+                                {this.isNative(operation) &&
+                                    <span className="tiny fade-strong">
+                                        {this.opAmount(operation)}
+                                        <he.Nbsp />
+                                        {this.opAssetSymbol(operation)}
+                                    </span>
+                                }
+
                             </Typography>
                         </div>
 
