@@ -83,7 +83,7 @@ export default compose(
                 <CardActions classes={{ root: classes.cardActions, }}>
                     <div className="f-e">
                         <Button color="primary" onClick={this.toggleFundCard}>
-                            Cancel
+                            Done
                         </Button>
                     </div>
                 </CardActions>
