@@ -98,7 +98,7 @@ export default compose(
                 (<div className="f-b-col-c center">
                     <div>
                         <VerifiedUser
-                            className="svg-success"
+                            className="svg-success m-l-small"
                         />
                         <Typography variant="caption" color="secondary">
                             Verified
