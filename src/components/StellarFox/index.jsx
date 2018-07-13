@@ -51,7 +51,7 @@ import LoginManager from "../LoginManager"
 import Layout from "../Layout"
 
 import { config } from "../../config"
-import firebase from "firebase"
+import firebase from "firebase/app"
 import "firebase/auth"
 
 import "typeface-roboto"
