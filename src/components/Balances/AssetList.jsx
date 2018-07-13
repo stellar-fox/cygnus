@@ -3,17 +3,18 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { BigNumber } from "bignumber.js"
 
-import { assetLookup, pubKeyAbbr } from "../../lib/utils"
+import { assetLookup, htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
 import { maximumTrustLimit } from "../StellarFox/env"
 import MD5 from "../../lib/md5"
 
-import { Grid } from "@material-ui/core"
+import { Grid, Typography } from "@material-ui/core"
 
 import { withAssetManager } from "../AssetManager"
 
 import Paper from "../../lib/mui-v1/Paper"
 import Avatar from "../../lib/mui-v1/Avatar"
 import { loadAccount } from "../../lib/stellar-tx"
+import VerifiedUser from "@material-ui/icons/VerifiedUser"
 
 
 
@@ -65,6 +66,7 @@ export default compose(
                                 )}?s=42&d=mm`,
                             decimals: assetIssuerInfo ?
                                 assetIssuerInfo.display_decimals : 7,
+                            verified: assetIssuerInfo ? true : false,
                         },],
                     })
                 }
@@ -77,10 +79,32 @@ export default compose(
             let assetInfoObj = this.state.assetTomlInfo.find(
                 (a) => a.asset_code === asset.asset_code
             )
-            return assetInfoObj ? assetInfoObj.avatar :
+            const url = assetInfoObj ? assetInfoObj.avatar :
                 `https://www.gravatar.com/avatar/${MD5(
                     asset.asset_issuer
                 )}?s=42&d=identicon`
+
+            return <Avatar src={url} />
+        }
+
+
+        // ...
+        displayVerified = (asset) => {
+            let assetInfoObj = this.state.assetTomlInfo.find(
+                (a) => a.asset_code === asset.asset_code
+            )
+
+            return assetInfoObj && assetInfoObj.verified &&
+                (<div className="f-b-col-c center">
+                    <div>
+                        <VerifiedUser
+                            className="svg-success"
+                        />
+                        <Typography variant="caption" color="secondary">
+                            Verified
+                        </Typography>
+                    </div>
+                </div>)
         }
 
 
@@ -97,30 +121,58 @@ export default compose(
 
 
         // ...
+        displayLimit = (asset) => {
+            let assetInfoObj = this.state.assetTomlInfo.find(
+                (a) => a.asset_code === asset.asset_code
+            )
+
+            let assetLimit = new BigNumber(asset.limit)
+
+            return assetInfoObj && assetInfoObj.decimals ?
+                assetLimit.isLessThan(maximumTrustLimit) ?
+                    assetLimit.toFixed(assetInfoObj.decimals) : "None" :
+                asset.balance
+        }
+
+
+        // ...
         formatAssets = (assets) => assets.map((asset, index) =>
             <Grid item key={index} xs={12} sm={12} md={4} lg={3} xl={2}>
                 <Paper color="primaryMaxWidth">
-                    <div className="f-b space-between cursor-pointer">
-                        <Avatar src={this.displayAvatar(asset)} />
+                    <div className="f-b-c space-between cursor-pointer">
+
                         <div className="p-l-small">
-                            <div className="nano p-b-nano fade-strong">
-                                Issuer: {pubKeyAbbr(asset.asset_issuer)}
+                            {this.displayAvatar(asset)}
+                        </div>
+
+                        <div className="p-l-small">
+                            {this.displayVerified(asset)}
+                        </div>
+
+                        <div className="p-l-small">
+                            <div className="p-b-nano">
+                                <Typography variant="caption"
+                                    color="secondary"
+                                >
+                                    Issuer:<he.Nbsp /><he.Nbsp />
+                                    {pubKeyAbbr(asset.asset_issuer)}
+                                </Typography>
                             </div>
-                            <div className="">
+
+                            <Typography variant="subheading" color="secondary">
                                 <span className="asset-balance">
                                     {this.displayBalance(asset)}
                                 </span>
                                 <span className="asset-code">
                                     {asset.asset_code}
                                 </span>
-                            </div>
-                            <div className="nano p-t-nano fade-strong nowrap">
-                                Trust Limit: {
-                                    new BigNumber(asset.limit)
-                                        .isLessThan(maximumTrustLimit) ?
-                                        asset.limit : "None"
-                                }
-                            </div>
+                            </Typography>
+
+                            <Typography variant="caption" color="secondary">
+                                Trust Limit:<he.Nbsp /><he.Nbsp />
+                                {this.displayLimit(asset)}
+                            </Typography>
+
                         </div>
                     </div>
                 </Paper>
