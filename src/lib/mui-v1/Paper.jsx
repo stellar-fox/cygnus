@@ -21,8 +21,7 @@ export default withStyles((theme) => ({
     }),
 
     primaryMaxWidth: {
-        backgroundColor: theme.palette.primaryColor,
-        color: theme.palette.secondaryColor,
+        backgroundColor: theme.palette.primary.main,
         maxWidth: "300px",
     },
 
