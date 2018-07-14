@@ -6,6 +6,7 @@ import { bindActionCreators } from "redux"
 import md5 from "../../lib/md5"
 import {
     emailValid,
+    htmlEntities as he,
     passwordValid,
     rgb,
     rgba,
@@ -31,6 +32,7 @@ import connect from "react-redux/lib/connect/connect"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
 import { subscribeEmail } from "./api"
+import { Typography } from "@material-ui/core"
 
 
 // ...
@@ -60,8 +62,9 @@ const styles = (_theme) => ({
 
 
 const RequestProgress = withStyles(styles)(
-    ({ classes, }) =>
-        <CircularProgress color="secondary" className={classes.progress}
+    ({ classes, color, }) =>
+        <CircularProgress color={color || "secondary"}
+            className={classes.progress}
             thickness={4} size={20}
         />
 )
@@ -107,13 +110,16 @@ class Signup extends Component {
         if (!ledgerData.errorCode) {
 
             try {
-                await this.setState({ loading: true, })
+                await this.setState({
+                    message: "Creating your account ...",
+                    loading: true,
+                })
                 await firebaseApp.auth("session").createUserWithEmailAndPassword(
                     this.state.email,
                     this.state.password
                 )
-                await this.setState({ loading: false, })
             } catch (error) {
+                await this.setState({ loading: false, })
                 this.props.hideModal()
                 this.props.showAlert(error.message, "Error")
                 return
@@ -137,23 +143,21 @@ class Signup extends Component {
                         }&md5=${md5(this.state.email)}`
                     )
 
-
                 const authResp = await Axios
                     .post(`${config.api}/user/authenticate/`, {
                         email: this.state.email,
                         password: this.state.password,
                     })
 
-                this.setState({
-                    message: "Your account has been created.",
-                    buttonDisabled: true,
-                })
-
                 await subscribeEmail(
                     userResp.data.userid,
                     authResp.data.token,
                     this.state.email
                 )
+
+                await this.setState({
+                    message: "Your account has been created.",
+                })
 
                 this.props.onComplete({
                     publicKey: ledgerData.publicKey,
@@ -164,7 +168,11 @@ class Signup extends Component {
             } catch (error) {
                 this.setState({
                     error: error.message,
+                })
+            } finally {
+                this.setState({
                     buttonDisabled: false,
+                    loading: false,
                 })
             }
         }
@@ -393,15 +401,25 @@ class Signup extends Component {
                             }
                         </div>
                     </div>
-                    <div className="p-t">
-                        <span className="placeholder-1rem">
-                            <span className="success">
-                                {this.state.message}
-                            </span>
-                            <span className="error">
-                                {this.state.error}
-                            </span>
-                        </span>
+
+                    <div className="p-t f-b-c">
+                        {this.state.loading ?
+                            <Fragment>
+                                <RequestProgress color="primary" />
+                                <he.Nbsp /><he.Nbsp /><he.Nbsp /><he.Nbsp />
+                                <Typography variant="body2" color="primary">
+                                    {this.state.message}
+                                </Typography>
+                            </Fragment> : this.state.error ?
+                                <Typography variant="body2">
+                                    <span className="error">
+                                        {this.state.error}
+                                    </span>
+                                </Typography> :
+                                <Typography variant="body2" color="primary">
+                                    {this.state.message}<he.Nbsp />
+                                </Typography>
+                        }
                     </div>
                 </StepContent>
             </Step>
