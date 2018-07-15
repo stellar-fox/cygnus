@@ -57,7 +57,7 @@ class UserMenu extends Component {
 
     // ...
     logout = () => {
-        firebaseApp.auth().signOut()
+        firebaseApp.auth("session").signOut()
         this.props.resetAccountState()
         this.props.resetAssetsState()
         this.props.resetBalancesState()

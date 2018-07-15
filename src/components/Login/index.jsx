@@ -122,7 +122,7 @@ export default compose(
 
 
             try {
-                await firebaseApp.auth().signInWithEmailAndPassword(
+                await firebaseApp.auth("session").signInWithEmailAndPassword(
                     this.state.emailInputValue,
                     this.state.passwordInputValue
                 )
