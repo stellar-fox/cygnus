@@ -115,43 +115,51 @@ class CheckoutForm extends Component {
     // ...
     async submit (_ev) {
         this.setState({
+            error: false,
+            errorMessage: "",
             inProgress: true,
         })
-        let { token, } = await this.props.stripe.createToken({ name: "Name", })
+        try {
+            let { token, } = await this.props.stripe.createToken({ name: "Name", })
 
-        const charge = {
-            token: token.id,
-            amount: (new BigNumber(this.state.amount).times(100).toString()),
-            currency: this.state.selectedCurrency,
-            publicKeyAbbr: pubKeyAbbr(this.props.publicKey),
-            publicKey: this.props.publicKey,
-        }
+            const charge = {
+                token: token.id,
+                amount: (new BigNumber(this.state.amount).times(100).toString()),
+                currency: this.state.selectedCurrency,
+                publicKeyAbbr: pubKeyAbbr(this.props.publicKey),
+                publicKey: this.props.publicKey,
+            }
 
-        fundAccount(this.props.userId, this.props.token, charge)
-            .then((response) => {
-                if (response.data && response.data.status === "succeeded") {
-                    this._element.clear()
+            fundAccount(this.props.userId, this.props.token, charge)
+                .then((response) => {
+                    if (response.data && response.data.status === "succeeded") {
+                        this._element.clear()
+                        this.setState({
+                            selectedCurrency: "eur",
+                        })
+                        this.props.popupSnackbar(
+                            "Account fund payment successful."
+                        )
+                    } else {
+                        this.props.popupSnackbar(response.data.status)
+                    }
+                })
+                .catch((error) => {
                     this.setState({
-                        selectedCurrency: "eur",
+                        error: true,
+                        errorMessage: error.response.data.error,
                     })
-                    this.props.popupSnackbar(
-                        "Account fund payment successful."
-                    )
-                } else {
-                    this.props.popupSnackbar(response.data.status)
-                }
-            })
-            .catch((error) => {
-                this.setState({
-                    error: true,
-                    errorMessage: error.response.data.error,
                 })
-            })
-            .finally(() => {
-                this.setState({
-                    inProgress: false,
+                .finally(() => {
+                    this.setState({
+                        inProgress: false,
+                    })
                 })
+        } catch (error) {
+            this.setState({
+                inProgress: false,
             })
+        }
 
     }
 
