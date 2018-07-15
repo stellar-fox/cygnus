@@ -42,6 +42,7 @@ import { action as ModalAction } from "../../redux/Modal"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { withLoginManager } from "../LoginManager"
+import { firebaseApp } from "../../components/StellarFox"
 
 
 
@@ -54,6 +55,11 @@ class Profile extends Component {
         setState: PropTypes.func.isRequired,
     }
 
+
+    // ...
+    state = {
+        verifyEmailDisabled: false,
+    }
 
     // ...
     buildTransaction = async (name, value) => {
@@ -349,6 +355,20 @@ class Profile extends Component {
 
 
     // ...
+    verifyEmail = () => {
+        try {
+            firebaseApp.auth("session").currentUser.sendEmailVerification()
+            this.setState({ verifyEmailDisabled: true, })
+            this.props.popupSnackbar("Verification email sent.")
+        } catch (error) {
+            this.props.showAlert(error.message, "Error")
+            this.setState({ verifyEmailDisabled: false, })
+        }
+
+    }
+
+
+    // ...
     render = () =>
         <Fragment>
             <Modal
@@ -431,7 +451,8 @@ class Profile extends Component {
                 <Input
                     className="lcars-input p-t p-b"
                     value={this.props.state.email}
-                    label="Email"
+                    label={this.props.emailVerified ?
+                        "Email" : "Email - Not Verified"}
                     inputType="text"
                     maxLength="100"
                     autoComplete="off"
@@ -454,6 +475,15 @@ class Profile extends Component {
                     color="secondary"
                     onClick={this.updateProfile}
                 >Update User Data</Button>
+                <he.Nbsp /><he.Nbsp />
+                {!this.props.emailVerified &&
+                    <Button
+                        disabled={this.state.verifyEmailDisabled}
+                        color="secondary"
+                        onClick={this.verifyEmail}
+                    >Verify Email</Button>
+                }
+
                 <div className="f-b p-t-small tiny">{
                     this.props.state.messageUserData.length > 0 ?
                         this.props.state.messageUserData : <he.Nbsp />
@@ -537,6 +567,7 @@ export default compose(
     connect(
         // bind state to props.
         (state) => ({
+            emailVerified: state.Auth.verified,
             state: state.Account,
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,

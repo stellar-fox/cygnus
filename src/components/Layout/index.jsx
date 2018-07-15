@@ -73,9 +73,10 @@ export default compose(
         // ...
         componentDidMount = () => raf(() => {
 
-            firebaseApp.auth().onAuthStateChanged((user) => (
+            firebaseApp.auth("session").onAuthStateChanged((user) => (
                 user ? this.props.setAuthState({
                     authenticated: true,
+                    verified: user.emailVerified,
                 }) : this.props.setAuthState({
                     authenticated: false,
                 }))

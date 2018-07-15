@@ -131,7 +131,7 @@ class Signup extends Component {
                     `${config.apiV2}/user/create/`, {
                         email: this.state.email,
                         password: this.state.password,
-                        token: (await firebaseApp.auth()
+                        token: (await firebaseApp.auth("session")
                             .currentUser.getIdToken()),
                     }
                 )
@@ -154,6 +154,9 @@ class Signup extends Component {
                     authResp.data.token,
                     this.state.email
                 )
+
+                await firebaseApp.auth("session")
+                    .currentUser.sendEmailVerification()
 
                 await this.setState({
                     message: "Your account has been created.",
