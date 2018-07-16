@@ -8,6 +8,7 @@ import { Card, CardActions, CardHeader, CardText } from "material-ui/Card"
 import Button from "../../lib/mui-v1/Button"
 import Divider from "../../lib/mui-v1/Divider"
 import { withLoginManager } from "../LoginManager"
+import { testNetAddr } from "../StellarFox/env"
 
 
 
@@ -22,6 +23,7 @@ export default compose(
     connect(
         (state) => ({
             fundCardVisible: state.Balances.fundCardVisible,
+            horizon: state.StellarAccount.horizon,
             publicKey: state.LedgerHQ.publicKey,
         }),
         (dispatch) => bindActionCreators({
@@ -54,6 +56,7 @@ export default compose(
 
                 <CardText>
                     {this.props.loginManager.isAuthenticated() &&
+                        this.props.horizon === testNetAddr &&
                         <Fragment>
                             <Typography variant="subheading" color="inherit">
                                 Fund with Credit Card.
