@@ -205,7 +205,7 @@ class Balances extends Component {
     _tmpQueryHorizon = async () => {
         try {
             const account = await loadAccount(
-                this.props.publicKey, this.props.StellarAccount.horizon
+                this.props.publicKey, this.props.horizon
             )
             this.props.updateAccountTree(account)
             this.props.setState({ exists: true, })
@@ -227,7 +227,7 @@ class Balances extends Component {
                 amount: this.props.assetManager.convertToNative(
                     this.props.Balances.amount),
                 memo: this.props.Balances.memoText,
-                network: this.props.StellarAccount.horizon,
+                network: this.props.horizon,
             }
             if (this.props.Balances.newAccount) {
                 tx = await buildCreateAccountTx(paymentData)
@@ -256,7 +256,7 @@ class Balances extends Component {
             this.props.showModal("txBroadcast")
 
             const broadcast = await submitTransaction(
-                signedTx, this.props.StellarAccount.horizon
+                signedTx, this.props.horizon
             )
 
             this.props.setStateForBalances({
@@ -442,6 +442,7 @@ export default compose(
             Modal: state.Modal,
             userId: state.LoginManager.userId,
             token: state.LoginManager.token,
+            horizon: state.StellarAccount.horizon,
         }),
         // match dispatch to props.
         (dispatch) => bindActionCreators({
