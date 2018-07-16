@@ -178,13 +178,13 @@ export const maximumTrustLimit = "922337203685.4775807"
 
 
 // ...
-export const testNetAddr = "https://horizon-testnet.stellar.org/"
+export const testNetAddr = "https://horizon-testnet.stellar.org"
 
 
 
 
 // ...
-export const liveNetAddr = "https://horizon.stellar.org/"
+export const liveNetAddr = "https://horizon.stellar.org"
 
 
 
