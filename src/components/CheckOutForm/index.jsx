@@ -89,6 +89,9 @@ const SelectView = withStyles(styles)(
                 <MenuItem value="eur">EUR</MenuItem>
                 <MenuItem value="usd">USD</MenuItem>
                 <MenuItem value="aud">AUD</MenuItem>
+                <MenuItem value="aud">NZD</MenuItem>
+                <MenuItem value="aud">PLN</MenuItem>
+                <MenuItem value="aud">THB</MenuItem>
             </Select>
         </FormControl>
 )
