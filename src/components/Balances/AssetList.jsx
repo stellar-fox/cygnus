@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { compose } from "redux"
+import { compose, bindActionCreators } from "redux"
+import { parMap } from "@xcmats/js-toolbox"
 import { BigNumber } from "bignumber.js"
 import NumberFormat from "react-number-format"
 import { assetLookup, htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
@@ -15,6 +16,7 @@ import Paper from "../../lib/mui-v1/Paper"
 import Avatar from "../../lib/mui-v1/Avatar"
 import { loadAccount } from "../../lib/stellar-tx"
 import VerifiedUser from "@material-ui/icons/VerifiedUser"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 
 
@@ -28,7 +30,10 @@ export default compose(
             assets: state.StellarAccount.assets,
             publicKey: state.StellarAccount.publicKey,
             horizon: state.StellarAccount.horizon,
-        })
+        }),
+        (dispatch) => bindActionCreators({
+            setState: StellarAccountAction.setState,
+        }, dispatch),
     )
 )(
     class extends Component {
@@ -36,12 +41,31 @@ export default compose(
         // ..
         state = {
             assetTomlInfo: [],
+            assets: [],
         }
 
 
         // ...
-        componentDidMount = () =>
-            this.props.assets.forEach((asset) => this.assetAvatar(asset))
+        componentDidMount = () => {
+            parMap(
+                this.props.assets,
+                (asset) => this.assetAvatar(asset)).then(
+                (results) => {
+                    let stellarAssets = this.props.assets
+                    let updatedAssets = results.map((r) => {
+                        let assetToUpdate = stellarAssets.find((a) => 
+                            a.asset_code === r.asset_code
+                        )
+                        assetToUpdate["avatar"] = r.avatar
+                        assetToUpdate["decimals"] = r.decimals
+                        assetToUpdate["verified"] = r.verified
+                        return assetToUpdate
+                    })
+                    this.props.setState({
+                        assets: updatedAssets,        
+                    })
+                })
+        }
 
 
         // ...
@@ -56,45 +80,43 @@ export default compose(
                     const assetIssuerInfo = assetInfo.find(
                         (a) => a.code === asset.asset_code
                     )
-                    this.setState({
-                        assetTomlInfo: [{
-                            asset_code: asset.asset_code,
-                            avatar: assetIssuerInfo ?
-                                assetIssuerInfo.image :
-                                `https://www.gravatar.com/avatar/${MD5(
-                                    asset.asset_issuer
-                                )}?s=42&d=mm`,
-                            decimals: assetIssuerInfo ?
-                                assetIssuerInfo.display_decimals : 7,
-                            verified: assetIssuerInfo ? true : false,
-                        },],
-                    })
+                    return {
+                        asset_code: asset.asset_code,
+                        avatar: assetIssuerInfo ?
+                            assetIssuerInfo.image :
+                            `https://www.gravatar.com/avatar/${MD5(
+                                asset.asset_issuer
+                            )}?s=42&d=identicon`,
+                        decimals: assetIssuerInfo ?
+                            assetIssuerInfo.display_decimals : 7,
+                        verified: assetIssuerInfo ? true : false,
+                    }
+                }
+            } else {
+                return {
+                    asset_code: asset.asset_code,
+                    avatar: `https://www.gravatar.com/avatar/${MD5(
+                        asset.asset_issuer
+                    )}?s=42&d=identicon`,
+                    decimals: 7,
+                    verified: false,
                 }
             }
         }
 
 
         // ...
-        displayAvatar = (asset) => {
-            let assetInfoObj = this.state.assetTomlInfo.find(
-                (a) => a.asset_code === asset.asset_code
-            )
-            const url = assetInfoObj ? assetInfoObj.avatar :
-                `https://www.gravatar.com/avatar/${MD5(
-                    asset.asset_issuer
-                )}?s=42&d=identicon`
-
-            return <Avatar src={url} />
-        }
+        displayAvatar = (asset) =>            
+            this.props.assets.find((a) =>
+                a.asset_code === asset.asset_code
+            ).avatar
 
 
         // ...
-        displayVerified = (asset) => {
-            let assetInfoObj = this.state.assetTomlInfo.find(
-                (a) => a.asset_code === asset.asset_code
-            )
-
-            return assetInfoObj && assetInfoObj.verified &&
+        displayVerified = (asset) =>
+            this.props.assets.find((a) =>
+                a.asset_code === asset.asset_code
+            ).verified &&
                 (<div className="f-b-col-c center">
                     <div>
                         <VerifiedUser
@@ -105,35 +127,31 @@ export default compose(
                         </Typography>
                     </div>
                 </div>)
-        }
+        
 
 
         // ...
         displayBalance = (asset) => {
-            let assetInfoObj = this.state.assetTomlInfo.find(
-                (a) => a.asset_code === asset.asset_code
-            )
+            const decimals = this.props.assets.find((a) =>
+                a.asset_code === asset.asset_code
+            ).decimals
 
-            return assetInfoObj && assetInfoObj.decimals ?
-                <NumberFormat
-                    value={new BigNumber(asset.balance).toFixed(
-                        assetInfoObj.decimals
-                    )}
-                    displayType={"text"} thousandSeparator={true}
-                    decimalScale={assetInfoObj.decimals}
-                    fixedDecimalScale={true}
-                /> :
-                <NumberFormat value={asset.balance} displayType={"text"}
-                    thousandSeparator={true}
-                />
+            return (<NumberFormat
+                value={new BigNumber(asset.balance).toFixed(
+                    decimals
+                )}
+                displayType={"text"} thousandSeparator={true}
+                decimalScale={decimals}
+                fixedDecimalScale={true}
+            />)
 
         }
 
 
         // ...
         displayLimit = (asset) => {
-            let assetInfoObj = this.state.assetTomlInfo.find(
-                (a) => a.asset_code === asset.asset_code
+            let assetInfoObj = this.props.assets.find((a) =>
+                a.asset_code === asset.asset_code
             )
 
             let assetLimit = new BigNumber(asset.limit)
@@ -157,7 +175,7 @@ export default compose(
                     <div className="f-b-c space-between cursor-pointer">
 
                         <div className="p-l-small">
-                            {this.displayAvatar(asset)}
+                            <Avatar src={this.displayAvatar(asset)} />
                         </div>
 
                         <div className="p-l-small">
