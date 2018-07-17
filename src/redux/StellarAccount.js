@@ -17,6 +17,7 @@ const initState = {
 export const LOAD_STELLAR_ACCOUNT = "StellarAccount/LOAD_STELLAR_ACCOUNT"
 export const SET_PAYMENTS = "StellarAccount/SET_PAYMENTS"
 export const SET_TRANSACTIONS = "StellarAccount/SET_TRANSACTIONS"
+export const SET_STATE = "@StellarAccount/SET_STATE"
 export const RESET_STATE = "@StellarAccount/RESET_STATE"
 export const SET_HORIZON = "StellarAccount/SET_HORIZON"
 
@@ -53,6 +54,11 @@ export const action = {
         horizon,
     }),
 
+    // ...
+    setState: (state) => ({
+        type: SET_STATE,
+        state,
+    }),
 
     // ...
     resetState: () => ({ type: RESET_STATE, }),
@@ -103,6 +109,13 @@ export const reducer = createReducer(initState)({
     }),
 
 
+    // ...
+    [SET_STATE]: (state, action) => ({
+        ...state,
+        ...action.state,
+    }),
+
+    
     // ...
     [RESET_STATE]: () => initState,
 
