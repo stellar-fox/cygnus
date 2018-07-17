@@ -1,20 +1,15 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { compose, bindActionCreators } from "redux"
-import { parMap } from "@xcmats/js-toolbox"
 import { BigNumber } from "bignumber.js"
 import NumberFormat from "react-number-format"
-import { assetLookup, htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
+import { htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
 import { maximumTrustLimit } from "../StellarFox/env"
-import MD5 from "../../lib/md5"
 
 import { Grid, Typography } from "@material-ui/core"
-
 import { withAssetManager } from "../AssetManager"
-
 import Paper from "../../lib/mui-v1/Paper"
 import Avatar from "../../lib/mui-v1/Avatar"
-import { loadAccount } from "../../lib/stellar-tx"
 import VerifiedUser from "@material-ui/icons/VerifiedUser"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
@@ -37,73 +32,6 @@ export default compose(
     )
 )(
     class extends Component {
-
-        // ..
-        state = {
-            assetTomlInfo: [],
-            assets: [],
-        }
-
-
-        // ...
-        componentDidMount = () => {
-            parMap(
-                this.props.assets,
-                (asset) => this.assetAvatar(asset)).then(
-                (results) => {
-                    let stellarAssets = this.props.assets
-                    let updatedAssets = results.map((r) => {
-                        let assetToUpdate = stellarAssets.find((a) => 
-                            a.asset_code === r.asset_code
-                        )
-                        assetToUpdate["avatar"] = r.avatar
-                        assetToUpdate["decimals"] = r.decimals
-                        assetToUpdate["verified"] = r.verified
-                        return assetToUpdate
-                    })
-                    this.props.setState({
-                        assets: updatedAssets,        
-                    })
-                })
-        }
-
-
-        // ...
-        assetAvatar = async (asset) => {
-            let issuingAccount = await loadAccount(
-                asset.asset_issuer, this.props.horizon
-            )
-
-            if (issuingAccount.home_domain) {
-                const assetInfo = await assetLookup(issuingAccount.home_domain)
-                if (assetInfo) {
-                    const assetIssuerInfo = assetInfo.find(
-                        (a) => a.code === asset.asset_code
-                    )
-                    return {
-                        asset_code: asset.asset_code,
-                        avatar: assetIssuerInfo ?
-                            assetIssuerInfo.image :
-                            `https://www.gravatar.com/avatar/${MD5(
-                                asset.asset_issuer
-                            )}?s=42&d=identicon`,
-                        decimals: assetIssuerInfo ?
-                            assetIssuerInfo.display_decimals : 7,
-                        verified: assetIssuerInfo ? true : false,
-                    }
-                }
-            } else {
-                return {
-                    asset_code: asset.asset_code,
-                    avatar: `https://www.gravatar.com/avatar/${MD5(
-                        asset.asset_issuer
-                    )}?s=42&d=identicon`,
-                    decimals: 7,
-                    verified: false,
-                }
-            }
-        }
-
 
         // ...
         displayAvatar = (asset) =>            

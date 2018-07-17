@@ -21,6 +21,7 @@ import { action as AlertAction } from "../../redux/Alert"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { listInternal, listRequested, } from "../Contacts/api"
 import {
+    augmentAssets,
     getRegisteredUser,
     getUserData,
     getUserExternalContacts,
@@ -95,13 +96,13 @@ class Balances extends Component {
                 this.props.publicKey,
                 this.props.horizon,
                 this.props.popupSnackbar,
-                this.props.updateAccountTree,
+                this.updateAccountTree,
             ),
             operationsStreamer: operationsStreamer(
                 this.props.publicKey,
                 this.props.horizon,
                 this.props.popupSnackbar,
-                this.props.updateAccountTree,
+                this.updateAccountTree,
             ),
         })
 
@@ -129,6 +130,16 @@ class Balances extends Component {
         this.state.paymentsStreamer.call(this)
         this.state.operationsStreamer.call(this)
         this.props.resetBalancesState()
+    }
+
+
+    // ...
+    updateAccountTree = (account) => {
+        this.props.updateAccountTree(account)
+        augmentAssets(
+            this.props.StellarAccount.assets,
+            this.props.StellarAccount.horizon
+        )
     }
 
 
@@ -207,7 +218,7 @@ class Balances extends Component {
             const account = await loadAccount(
                 this.props.publicKey, this.props.horizon
             )
-            this.props.updateAccountTree(account)
+            this.updateAccountTree(account)
             this.props.setState({ exists: true, })
         } catch (error) {
             this.props.setState({ exists: false, })

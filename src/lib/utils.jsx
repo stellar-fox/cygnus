@@ -8,6 +8,7 @@ import {
     head,
     isString,
     objectMap,
+    parMap,
     wrap,
 } from "@xcmats/js-toolbox"
 
@@ -16,6 +17,8 @@ import { env } from "../components/StellarFox"
 import { config } from "../config"
 import shajs from "sha.js"
 import BigNumber from "bignumber.js"
+import { loadAccount } from "../lib/stellar-tx"
+import MD5 from "../lib/md5"
 
 
 
@@ -343,6 +346,65 @@ export const assetLookup = async (domain) =>
         ).data
     ).CURRENCIES
 
+
+
+
+// ...
+export const augmentAssets = (assets, horizon) =>
+    parMap(
+        assets,
+        (asset) => assetAvatar(asset, horizon)
+    ).then(
+        (results) => {
+            return results.map((r) => {
+                let assetToUpdate = assets.find((a) =>
+                    a.asset_code === r.asset_code
+                )
+                assetToUpdate["avatar"] = r.avatar
+                assetToUpdate["decimals"] = r.decimals
+                assetToUpdate["verified"] = r.verified
+                return assetToUpdate
+            })
+        }
+    )
+
+
+
+// ...
+export const assetAvatar = async (asset, horizon) => {
+    let issuingAccount = await loadAccount(
+        asset.asset_issuer, horizon
+    )
+
+    if (issuingAccount.home_domain) {
+        const assetInfo = await assetLookup(issuingAccount.home_domain)
+        if (assetInfo) {
+            const assetIssuerInfo = assetInfo.find(
+                (a) => a.code === asset.asset_code
+            )
+            return {
+                asset_code: asset.asset_code,
+                avatar: assetIssuerInfo ?
+                    assetIssuerInfo.image :
+                    `https://www.gravatar.com/avatar/${MD5(
+                        asset.asset_issuer
+                    )}?s=42&d=identicon`,
+                decimals: assetIssuerInfo ?
+                    assetIssuerInfo.display_decimals : 7,
+                verified: assetIssuerInfo ? true : false,
+            }
+        }
+    } else {
+        return {
+            asset_code: asset.asset_code,
+            avatar: `https://www.gravatar.com/avatar/${MD5(
+                asset.asset_issuer
+            )}?s=42&d=identicon`,
+            decimals: 7,
+            verified: false,
+        }
+    }
+}
 
 
 
