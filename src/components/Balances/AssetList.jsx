@@ -1,19 +1,39 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { compose, bindActionCreators } from "redux"
+import { compose } from "redux"
 import { BigNumber } from "bignumber.js"
 import NumberFormat from "react-number-format"
 import { htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
 import { maximumTrustLimit } from "../StellarFox/env"
-
-import { Grid, Typography } from "@material-ui/core"
+import { withStyles } from "@material-ui/core/styles"
+import { CircularProgress, Grid, Typography } from "@material-ui/core"
 import { withAssetManager } from "../AssetManager"
 import Paper from "../../lib/mui-v1/Paper"
 import Avatar from "../../lib/mui-v1/Avatar"
 import VerifiedUser from "@material-ui/icons/VerifiedUser"
-import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
 
+
+
+// ...
+const styles = theme => ({
+    progress: {
+        color: theme.palette.secondary.main,
+        marginRight: theme.spacing.unit,
+        marginBottom: theme.spacing.unit / 1.10,
+        marginTop: theme.spacing.unit / 1.10,
+        padding: theme.spacing.unit,
+    },
+})
+
+
+// ...
+const RequestProgress = withStyles(styles)(
+    ({ classes, }) =>
+        <CircularProgress className={classes.progress}
+            thickness={4} size={40}
+        />
+)
 
 
 // <AssetList> component
@@ -22,13 +42,11 @@ export default compose(
     connect(
         // map state to props
         (state) => ({
+            loading: state.Assets.loading,
             assets: state.StellarAccount.assets,
             publicKey: state.StellarAccount.publicKey,
             horizon: state.StellarAccount.horizon,
-        }),
-        (dispatch) => bindActionCreators({
-            setState: StellarAccountAction.setState,
-        }, dispatch),
+        })
     )
 )(
     class extends Component {
@@ -99,7 +117,14 @@ export default compose(
         // ...
         formatAssets = (assets) => assets.map((asset, index) =>
             <Grid item key={index} xs={12} sm={12} md={6} lg={6} xl={4}>
-                <Paper color="primaryMaxWidth">
+                <Paper color="primaryMaxWidth">{this.props.loading ?
+                    <div className="f-b-c">
+                        <RequestProgress />
+                        <Typography variant="caption" color="secondary">
+                            Updating ...
+                        </Typography>
+                    </div> :
+                    
                     <div className="f-b-c space-between cursor-pointer">
 
                         <div className="p-l-small">
@@ -136,6 +161,8 @@ export default compose(
 
                         </div>
                     </div>
+                    
+                }
                 </Paper>
             </Grid>
         )

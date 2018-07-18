@@ -11,6 +11,7 @@ import {
 } from "react-router-dom"
 import "number-to-text/converters/en-us"
 import { action as AccountAction } from "../../redux/Account"
+import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as BalancesAction } from "../../redux/Balances"
@@ -28,6 +29,7 @@ import {
     insertPathIndex,
     paymentAddress,
 } from "../../lib/utils"
+import { delay } from "@xcmats/js-toolbox"
 import {
     loadAccount,
     buildCreateAccountTx,
@@ -135,11 +137,20 @@ class Balances extends Component {
 
     // ...
     updateAccountTree = (account) => {
+        this.props.setAssetsState({ loading: true, })
         this.props.updateAccountTree(account)
-        augmentAssets(
-            this.props.StellarAccount.assets,
-            this.props.StellarAccount.horizon
-        )
+        delay(300).then(() => {
+            augmentAssets(
+                this.props.StellarAccount.assets,
+                this.props.StellarAccount.horizon
+            ).then((augmentedAssets) => {
+                this.props.setStellarAccountState({
+                    assets: augmentedAssets,
+                })
+                this.props.setAssetsState({ loading: false, })
+            })
+            
+        })
     }
 
 
@@ -454,12 +465,15 @@ export default compose(
             userId: state.LoginManager.userId,
             token: state.LoginManager.token,
             horizon: state.StellarAccount.horizon,
+            assets: state.Assets,
         }),
         // match dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
+            setAssetsState: AssetManagerAction.setState,
             setBalancesState: BalancesAction.setState,
             setContactsState: ContactsAction.setState,
+            setStellarAccountState: StellarAccountAction.setState,
             updateAccountTree: StellarAccountAction.loadStellarAccount,
             setStateForBalances: BalancesAction.setState,
             resetBalancesState: BalancesAction.resetState,
