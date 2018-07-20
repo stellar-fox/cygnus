@@ -603,7 +603,7 @@ export const dynamicImportLibs = async () => {
     let [
         apiAccount, apiContacts,
         bignumber, firebase, toolbox, ledger, jss,
-        lodash, mui, md5, redux, utils,
+        lodash, mui, md5, redux, StellarSdk, utils,
     ] = await Promise.all([
         import("../../src/components/Account/api"),
         import("../../src/components/Contacts/api"),
@@ -616,6 +616,7 @@ export const dynamicImportLibs = async () => {
         import("@material-ui/core"),
         import("./md5"),
         import("redux"),
+        import("stellar-sdk"),
         import("./utils"),
     ])
     return {
@@ -628,7 +629,7 @@ export const dynamicImportLibs = async () => {
         BigNumber: bignumber.default,
         toolbox, ledger, jss, lodash, mui,
         md5: md5.default,
-        redux, toml, utils,
+        redux, StellarSdk, toml, utils,
     }
 }
 
