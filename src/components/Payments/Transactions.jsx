@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
@@ -23,6 +23,8 @@ import {
     TableRow,
     TableRowColumn,
 } from "material-ui/Table"
+
+import FailedTransactions from "./FailedTransactions"
 
 
 
@@ -129,7 +131,7 @@ class Transactions extends Component {
 
 
     // ...
-    render = () =>
+    render = () => <Fragment>
         <div className="flex-row">
             <div>
                 <div className="account-title">Account Transactions</div>
@@ -239,6 +241,11 @@ class Transactions extends Component {
                 </div>
             </div>
         </div>
+
+        <div className="p-t">
+            <FailedTransactions />
+        </div>
+    </Fragment>
 
 }
 
