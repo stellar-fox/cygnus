@@ -60,7 +60,7 @@ import {
 
 import "./index.css"
 import FundCard from "./FundCard"
-
+import AssetDetails from "./AssetDetails"
 
 
 
@@ -149,7 +149,7 @@ class Balances extends Component {
                 })
                 this.props.setAssetsState({ loading: false, })
             })
-            
+
         })
     }
 
@@ -349,6 +349,18 @@ class Balances extends Component {
 
 
     // ...
+    closeAssetDetailsModal = () => {
+        this.props.setAssetsState({ selected: null, })
+        this.props.setBalancesState({
+            amount: "",
+            payee: null,
+            paymentAddress: null,
+        })
+        this.props.hideModal()
+    }
+
+
+    // ...
     render = () => (
         ({Balances, bip32Path, assetManager, loginManager, publicKey, }) =>
             <Switch>
@@ -412,6 +424,22 @@ class Balances extends Component {
                             <TxCompleteMsg
                                 assetManager={assetManager}
                             />
+                        </Modal>
+
+                        <Modal
+                            open={
+                                this.props.Modal.modalId === "assetDetails" &&
+                                this.props.Modal.visible
+                            }
+                            title="Manage Asset"
+                            actions={[
+                                <Button
+                                    onClick={this.closeAssetDetailsModal}
+                                    color="primary"
+                                >CLOSE</Button>,
+                            ]}
+                        >
+                            <AssetDetails />
                         </Modal>
 
                         {

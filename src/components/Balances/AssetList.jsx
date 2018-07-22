@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { compose } from "redux"
+import { bindActionCreators, compose } from "redux"
 import { BigNumber } from "bignumber.js"
 import NumberFormat from "react-number-format"
 import { htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
@@ -11,6 +11,8 @@ import { withAssetManager } from "../AssetManager"
 import Paper from "../../lib/mui-v1/Paper"
 import Avatar from "../../lib/mui-v1/Avatar"
 import VerifiedUser from "@material-ui/icons/VerifiedUser"
+import { action as AssetManagerAction } from "../../redux/AssetManager"
+import { action as ModalAction } from "../../redux/Modal"
 
 
 
@@ -46,13 +48,18 @@ export default compose(
             assets: state.StellarAccount.assets,
             publicKey: state.StellarAccount.publicKey,
             horizon: state.StellarAccount.horizon,
-        })
+        }),
+        (dispatch) => bindActionCreators({
+            setState: AssetManagerAction.setState,
+            hideModal: ModalAction.hideModal,
+            showModal: ModalAction.showModal,
+        }, dispatch)
     )
 )(
     class extends Component {
 
         // ...
-        displayAvatar = (asset) =>            
+        displayAvatar = (asset) =>
             this.props.assets.find((a) =>
                 a.asset_code === asset.asset_code
             ).avatar
@@ -73,7 +80,7 @@ export default compose(
                         </Typography>
                     </div>
                 </div>)
-        
+
 
 
         // ...
@@ -124,8 +131,10 @@ export default compose(
                             Updating ...
                         </Typography>
                     </div> :
-                    
-                    <div className="f-b-c space-between cursor-pointer">
+
+                    <div onClick={this.showAssetDetails.bind(this, asset)}
+                        className="f-b-c space-between cursor-pointer"
+                    >
 
                         <div className="p-l-small">
                             <Avatar src={this.displayAvatar(asset)} />
@@ -161,11 +170,18 @@ export default compose(
 
                         </div>
                     </div>
-                    
+
                 }
                 </Paper>
             </Grid>
         )
+
+
+        // ...
+        showAssetDetails = (asset, _event) => {
+            this.props.setState({ selected: asset, })
+            this.props.showModal("assetDetails")
+        }
 
 
         // ...
