@@ -31,6 +31,8 @@ import StellarSdk from "stellar-sdk"
 import FailedTxDetails from "./FailedTxDetails"
 import { transactionFetchLimit } from "../../components/StellarFox/env"
 import { firebaseApp } from "../StellarFox"
+import NumberFormat from "react-number-format"
+import { withAssetManager } from "../AssetManager"
 
 
 
@@ -174,6 +176,7 @@ const RequestProgress = withStyles(styles)(
 
 // <UserGroupList> component
 export default compose(
+    withAssetManager,
     withStyles((theme) => ({
         table: {
             minWidth: 500,
@@ -351,10 +354,12 @@ export default compose(
                             page * rowsPerPage, page * rowsPerPage +
                             rowsPerPage).map(n => {
 
-
-
                             return (
-                                <TableRow classes={{ root: classes.row, selected: classes.selectedRow, }}
+                                <TableRow
+                                    classes={{
+                                        root: classes.row,
+                                        selected: classes.selectedRow,
+                                    }}
                                     onClick={this.handleRowClick.bind(
                                         this, n
                                     )}
@@ -369,12 +374,18 @@ export default compose(
                                     <TableCell
                                         classes={{ root: classes.cell, }}
                                     >
-                                        {n.amount}
+                                        <NumberFormat
+                                            value={n.amount}
+                                            displayType={"text"}
+                                            thousandSeparator
+                                            decimalScale={2}
+                                            fixedDecimalScale
+                                        />
                                     </TableCell>
                                     <TableCell
                                         classes={{ root: classes.cell, }}
                                     >
-                                        {n.currency}
+                                        {n.currency.toUpperCase()}
                                     </TableCell>
                                     <TableCell
                                         classes={{ root: classes.cell, }}

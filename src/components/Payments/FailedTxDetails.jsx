@@ -10,6 +10,10 @@ import { withStyles } from "@material-ui/core/styles"
 import {
     Paper, Typography,
 } from "@material-ui/core"
+import {
+    utcToLocaleDateTime,
+} from "../../lib/utils"
+import Button from "../../lib/mui-v1/Button"
 
 
 
@@ -50,6 +54,24 @@ export default compose(
         }
 
 
+        // ...
+        formatTxFailReasons = (reasons) => (decoder =>
+            reasons.map(r => <div className="f-b-c p-l-small">
+                <Typography color="primary"
+                    variant="body2"
+                >
+                    ❌ {decoder[r]}
+                </Typography>
+            </div>)
+        )({"op_no_trust" : "No Trustline",})
+
+
+        // ...
+        submitTransaction = (xdrBody, _event) => {
+            // eslint-disable-next-line no-console
+            console.log(xdrBody)
+        }
+
 
         // ...
         render = () => (
@@ -57,10 +79,10 @@ export default compose(
                 <Fragment>
                     <div className="p-t-large p-b">
                         <Typography color="secondary" variant="title">
-                            Failed Transaction Details
+                            Pending Transaction Details
                         </Typography>
                         <Typography color="secondary" variant="subheading">
-                            Manage transactions here.
+                            Manage pending transactions here.
                         </Typography>
                     </div>
                     <Paper>
@@ -69,9 +91,34 @@ export default compose(
                                 <Typography align="center" color="primary"
                                     variant="body1"
                                 >
-                                    Select transaction to view details here.
+                                    Select pending transaction to view details here.
                                 </Typography>
-                            </div> : <div className={classNames(classes.withdata, "p-t p-l p-b")}></div>
+                            </div> :
+                            <div className={classNames(classes.withdata, "p-t p-l p-b")}>
+                                <Typography color="primary"
+                                    variant="body1"
+                                >
+                                    Last Transmit Attempt: {
+                                        utcToLocaleDateTime(data.lastAttempt)
+                                    }
+                                </Typography>
+                                <Typography color="primary"
+                                    variant="body1"
+                                >
+                                    Reasons:
+                                </Typography>
+
+                                {this.formatTxFailReasons(data.reason.operations)}
+
+                                <Typography color="primary"
+                                    variant="body1"
+                                >
+                                    Retry Attempts: {data.retries}
+                                </Typography>
+                                <Button color="primary"
+                                    onClick={this.submitTransaction.bind(this, data.xdrBody)}
+                                >Retry Now</Button>
+                            </div>
                         }
                     </Paper>
                 </Fragment>
