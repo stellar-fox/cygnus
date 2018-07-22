@@ -270,10 +270,6 @@ strong { color: rgb(212, 228, 188); }
 
 .blockcenter { margin: 0 auto; }
 
-.space-between { justify-content: space-between; }
-
-.space-around { justify-content: space-around; }
-
 .bottom { align-items: flex-end; }
 
 /* --------- positioning / alignment --------- */
