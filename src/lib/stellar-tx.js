@@ -44,6 +44,8 @@ export const operations = (network) =>
     server(network).operations().cursor("now")
 
 
+
+
 // ...
 export const buildSetDataTx = async (txData) =>
     new TransactionBuilder(
@@ -52,6 +54,9 @@ export const buildSetDataTx = async (txData) =>
         name: txData.name,
         value: txData.value,
     })).build()
+
+
+
 
 // ...
 export const buildCreateAccountTx = async (txData) =>
@@ -72,6 +77,19 @@ export const buildPaymentTx = async (txData) =>
     ).addOperation(Operation.payment({
         destination: txData.destination,
         asset: Asset.native(),
+        amount: txData.amount,
+    })).addMemo(Memo.text(txData.memo)).build()
+
+
+
+
+// ...
+export const buildAssetPaymentTx = async (txData) =>
+    new TransactionBuilder(
+        await loadAccount(txData.source, txData.network)
+    ).addOperation(Operation.payment({
+        destination: txData.destination,
+        asset: new Asset(txData.assetCode, txData.assetIssuer),
         amount: txData.amount,
     })).addMemo(Memo.text(txData.memo)).build()
 
