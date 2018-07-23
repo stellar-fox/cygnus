@@ -107,12 +107,12 @@ class TxConfirmMsg extends Component {
     render = () => (
         ({ classes, Account, Balances, }) =>
             <Fragment>
-                <div className="p-t centered">
-                    <Typography align="center" color="primary" variant="title">
+                <div className="centered">
+                    <Typography align="center" color="primary" variant="body1">
                         Transaction
                     </Typography>
                     <div style={{alignItems: "center", }}
-                        className="f-b center p-t-medium p-b-large"
+                        className="f-b center"
                     >
                         <div className="f-b-col-c">
                             <Avatar classes={{
@@ -166,11 +166,11 @@ class TxConfirmMsg extends Component {
                             </Typography>
                         </div>
                     </div>
-                    <Typography align="center" color="primary" variant="title">
+                    <Typography align="center" color="primary" variant="body1">
                         Cost Breakdown
                     </Typography>
                     <div style={{ alignItems: "center", }}
-                        className="f-b-col-c p-t-medium p-b-small"
+                        className="f-b-col-c"
                     >
                         <div style={{width: "60%", marginBottom: "5px", }}
                             className="f-b space-between"
@@ -296,7 +296,9 @@ class TxConfirmMsg extends Component {
                 </div>
                 <div className="p-b centered">
                     When you are sure it is correct press
-                    <span className="bigger text-primary"><he.Check /></span>
+                    <span className="bigger text-primary">
+                        <he.Nbsp /><he.Check />
+                    </span>
                     on the device to sign your transaction and send it off.
                 </div>
             </Fragment>
