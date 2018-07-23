@@ -125,7 +125,6 @@ const styles = (theme) => ({
 })
 
 
-
 // ...
 const renderInput = (inputProps) => {
     const {
@@ -639,6 +638,7 @@ class ContactSuggester extends Component {
             payeeCurrencyAmount: "",
             payeeMemoText: "",
             payeeStellarAccount: null,
+            transactionAsset: null,
         })
         this.setState({
             label: "",

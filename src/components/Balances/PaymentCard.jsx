@@ -152,7 +152,10 @@ class PaymentCard extends Component {
 
         this.textInputFieldAmount.setState({ error: "", })
 
-        this.props.setState({ amountText: this.amountToText(amount), })
+        this.props.setState({
+            amountText: this.amountToText(amount),
+            transactionAsset: { asset_code: this.props.Account.currency, },
+        })
 
         this.toggleSignButton()
     }

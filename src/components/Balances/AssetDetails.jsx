@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react"
-import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
@@ -8,11 +7,20 @@ import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
 import { CircularProgress, Typography } from "@material-ui/core"
 import { action as BalancesAction } from "../../redux/Balances"
+import { action as ModalAction } from "../../redux/Modal"
 import {
     loadAccount,
     buildAssetPaymentTx,
+    assetBalance,
     submitTransaction,
 } from "../../lib/stellar-tx"
+import { Asset } from "stellar-sdk"
+import { insertPathIndex, htmlEntities as he } from "../../lib/utils"
+import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
+import clone from "lodash/clone"
+
+
+
 
 // ...
 export default compose(
@@ -25,13 +33,16 @@ export default compose(
             amount: state.Balances.amount,
             payee: state.Balances.payee,
             horizon: state.StellarAccount.horizon,
-            publicKey: state.StellarAccount.accountId,
             memoText: state.Balances.memoText,
+            publicKey: state.LedgerHQ.publicKey,
+            bip32Path: state.LedgerHQ.bip32Path,
+            transactionAsset: state.Balances.transactionAsset,
 
         }),
         // match dispatch to props.
         (dispatch) => bindActionCreators({
             setState: BalancesAction.setState,
+            showModal: ModalAction.showModal,
         }, dispatch)
     ),
     withStyles((theme) => ({
@@ -55,20 +66,14 @@ export default compose(
     class extends Component {
 
         // ...
-        static propTypes = {
-            classes: PropTypes.object.isRequired,
-        }
-
-
-        // ...
         state = {
             error: false,
             errorMessage: "",
             inProgress: false,
+            statusMessage: "",
         }
 
 
-        // ...
         // ...
         updateInputValue = (event) => {
             if (!/^(\d+)([.](\d{1,2}))?$/.test(event.target.value)) {
@@ -76,28 +81,31 @@ export default compose(
                     error: true,
                     errorMessage: "Invalid amount entered.",
                 })
-                this.props.setState({ amount: "", })
+                this.props.setState({
+                    amount: "",
+                    transactionAsset: null,
+                })
             } else {
                 this.setState({
                     error: false,
                     errorMessage: "",
                 })
-                this.props.setState({ amount: event.target.value, })
+                this.props.setState({
+                    amount: event.target.value,
+                    transactionAsset: clone(this.props.asset),
+                })
             }
-        }
-
-
-        // ...
-        disableButton = () => {
-            if (this.props.amount && this.props.payee) {
-                return false
-            }
-            return true
         }
 
 
         // ...
         sendAsset = async () => {
+
+            this.setState({
+                inProgress: true,
+            })
+
+            let availableAssetBalance = null
 
             const paymentData = {
                 source: this.props.publicKey,
@@ -113,16 +121,85 @@ export default compose(
                 this.props.payee, this.props.horizon
             )
 
-            let tx = await buildAssetPaymentTx(paymentData)
+            const asset = new Asset(
+                this.props.asset.asset_code,
+                this.props.asset.asset_issuer
+            )
 
-            console.log(account)
-            console.log(tx)
+            try {
+                availableAssetBalance = assetBalance(account, asset)
+            } catch (error) {
+                this.setState({
+                    inProgress: false,
+                    statusMessage: "",
+                })
+                return Promise.reject({
+                    error: true, message: error.message,
+                })
+            }
+
+            if (availableAssetBalance) {
+                let tx = await buildAssetPaymentTx(paymentData)
+
+                this.setState({
+                    statusMessage: "Waiting for device ...",
+                })
+
+                try {
+                    await getSoftwareVersion()
+
+                    this.setState({
+                        statusMessage: "Awaiting signature ...",
+                    })
+
+                    const signedTx = await signTransaction(
+                        insertPathIndex(this.props.bip32Path),
+                        this.props.publicKey,
+                        tx
+                    )
+
+                    this.setState({
+                        statusMessage: "Sending transaction ...",
+                    })
+
+                    const broadcast = await submitTransaction(
+                        signedTx, this.props.horizon
+                    )
+
+                    this.props.setState({
+                        paymentId: broadcast.hash,
+                        ledgerId: broadcast.ledger,
+                        transactionType: null,
+                    })
+
+                    await this.setState({
+                        inProgress: false,
+                        statusMessage: "",
+                    })
+
+                    this.props.showModal("txCustomAssetComplete")
+
+
+                } catch (error) {
+                    this.setState({
+                        inProgress: false,
+                        statusMessage: error.message,
+                    })
+                    return Promise.reject({
+                        error: true, message: error.message,
+                    })
+                }
+
+            }
+
+            return Promise.resolve({ ok: true, })
         }
+
 
 
         // ...
         render = () => (
-            ({ classes, asset, }) =>
+            ({ asset, }) =>
                 <Fragment>
                     {asset &&
                         <div className="p-t flex-box-col items-flex-start">
@@ -145,9 +222,14 @@ export default compose(
                                 disabled={this.props.amount === "" || !this.props.payee}
                             >
                                 {this.state.inProgress ? <CircularProgress
-                                    color="primary" thickness={4} size={20}
+                                    color="secondary" thickness={4} size={20}
                                 /> : "Sign"}
                             </Button>
+                            <Typography variant="caption" color="primary">
+                                {this.state.statusMessage ?
+                                    this.state.statusMessage : <he.Nbsp />
+                                }
+                            </Typography>
                         </div>
                     }
                 </Fragment>

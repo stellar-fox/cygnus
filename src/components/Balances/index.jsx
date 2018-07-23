@@ -53,6 +53,7 @@ import PaymentCard from "./PaymentCard"
 import TxConfirmMsg from "./TxConfirmMsg"
 import TxBroadcastMsg from "./TxBroadcastMsg"
 import TxCompleteMsg from "./TxCompleteMsg"
+import TxCustomAssetCompleteMsg from "./TxCustomAssetCompleteMsg"
 import {
     operationsStreamer,
     paymentsStreamer
@@ -355,6 +356,8 @@ class Balances extends Component {
             amount: "",
             payee: null,
             paymentAddress: null,
+            payeeStellarAccount: null,
+            transactionAsset: null,
         })
         this.props.hideModal()
     }
@@ -424,6 +427,22 @@ class Balances extends Component {
                             <TxCompleteMsg
                                 assetManager={assetManager}
                             />
+                        </Modal>
+
+                        <Modal
+                            open={
+                                this.props.Modal.modalId === "txCustomAssetComplete" &&
+                                this.props.Modal.visible
+                            }
+                            title="Transaction Complete"
+                            actions={[
+                                <Button
+                                    onClick={this.props.hideModal}
+                                    color="primary"
+                                >OK</Button>,
+                            ]}
+                        >
+                            <TxCustomAssetCompleteMsg />
                         </Modal>
 
                         <Modal
