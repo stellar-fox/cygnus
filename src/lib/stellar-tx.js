@@ -218,3 +218,36 @@ export const creditOrDebit = (operation, publicKey) => {
         return operation.destination === publicKey ? "+" : "-"
     }
 }
+
+
+
+
+/**
+ * Returns native balance of the Account.
+ *
+ * @returns {string}
+ */
+export const nativeBalance = (Account) =>
+    Account.balances.find((asset) => asset.asset_type === "native").balance
+
+
+
+
+/**
+ * Returns balance of an Asset held by the Account
+ *
+ * @returns {string}
+ */
+export const assetBalance = (Account, Asset) => {
+    const balanceObj = Account.balances.find(
+        (asset) => asset.asset_code === Asset.getCode() &&
+            asset.asset_issuer === Asset.getIssuer() &&
+            asset.asset_type === Asset.getAssetType()
+    )
+
+    if (!balanceObj) {
+        throw new Error("No trustline found for this asset.")
+    }
+
+    return balanceObj.balance
+}
