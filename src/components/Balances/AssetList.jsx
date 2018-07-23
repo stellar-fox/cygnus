@@ -13,8 +13,16 @@ import Avatar from "../../lib/mui-v1/Avatar"
 import VerifiedUser from "@material-ui/icons/VerifiedUser"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as ModalAction } from "../../redux/Modal"
+import Switch from "../../lib/mui-v1/Switch"
+import { Asset } from "stellar-sdk"
 
 
+// ...
+const baseAssets = ["EUR", "USD", "AUD", "NZD", "THB", "PLN",].map(
+    assetCode => new Asset(assetCode, "GBIB7XSUUNTM4BFAOQ7PQO2L6XAMIYN2PREI54F4DS3W3DB76EFGUJI7")
+)
+
+const defaultAsseetIssuer = "GBIB7XSUUNTM4BFAOQ7PQO2L6XAMIYN2PREI54F4DS3W3DB76EFGUJI7"
 
 
 // ...
@@ -82,7 +90,6 @@ export default compose(
                 </div>)
 
 
-
         // ...
         displayBalance = (asset) => {
             const decimals = this.props.assets.find((a) =>
@@ -122,8 +129,13 @@ export default compose(
 
 
         // ...
-        formatAssets = (assets) => assets.map((asset, index) =>
-            <Grid item key={index} xs={12} sm={12} md={6} lg={6} xl={4}>
+        formatAssets = (assets) => baseAssets.map((baseAsset, index) => {
+            let trustedAsset = assets.find(
+                asset => baseAsset.getCode() === asset.asset_code &&
+                    baseAsset.getIssuer() === asset.asset_issuer
+            )
+
+            return trustedAsset ? <Grid item key={index} xs={12} sm={12} md={6} lg={6} xl={4}>
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">
                         <RequestProgress />
@@ -132,17 +144,72 @@ export default compose(
                         </Typography>
                     </div> :
 
-                    <div onClick={this.showAssetDetails.bind(this, asset)}
-                        className="f-b-c space-between cursor-pointer"
+                    <div
+                        className="f-b-c space-between"
                     >
 
                         <div className="p-l-small">
-                            <Avatar src={this.displayAvatar(asset)} />
+                            <Avatar src={this.displayAvatar(trustedAsset)} />
                         </div>
 
                         <div className="p-l-small">
-                            {this.displayVerified(asset)}
+                            {this.displayVerified(trustedAsset)}
                         </div>
+
+                        <Switch
+                            checked={true}
+                            onChange={null}
+                            color="secondary"
+                        />
+
+                        <div onClick={this.showAssetDetails.bind(this, trustedAsset)}
+                            className="p-l-small cursor-pointer"
+                        >
+                            <div className="p-b-nano">
+                                <Typography variant="caption"
+                                    color="secondary"
+                                >
+                                    Issuer:<he.Nbsp /><he.Nbsp />
+                                    {pubKeyAbbr(trustedAsset.asset_issuer)}
+                                </Typography>
+                            </div>
+
+                            <Typography variant="subheading" color="secondary">
+                                <span className="asset-balance">
+                                    {this.displayBalance(trustedAsset)}
+                                </span>
+                                <span className="asset-code">
+                                    {trustedAsset.asset_code}
+                                </span>
+                            </Typography>
+
+                            <Typography variant="caption" color="secondary">
+                                Trust Limit:<he.Nbsp /><he.Nbsp />
+                                {this.displayLimit(trustedAsset)}
+                            </Typography>
+
+                        </div>
+                    </div>
+
+                }
+                </Paper>
+            </Grid> : <Grid item key={index} xs={12} sm={12} md={6} lg={6} xl={4}>
+                <Paper color="primaryMaxWidth">{this.props.loading ?
+                    <div className="f-b-c">
+                        <RequestProgress />
+                        <Typography variant="caption" color="secondary">
+                            Updating ...
+                        </Typography>
+                    </div> :
+
+                    <div
+                        className="f-b-c space-between"
+                    >
+                        <Switch
+                            checked={false}
+                            onChange={null}
+                            color="secondary"
+                        />
 
                         <div className="p-l-small">
                             <div className="p-b-nano">
@@ -150,22 +217,21 @@ export default compose(
                                     color="secondary"
                                 >
                                     Issuer:<he.Nbsp /><he.Nbsp />
-                                    {pubKeyAbbr(asset.asset_issuer)}
+                                    {pubKeyAbbr(defaultAsseetIssuer)}
                                 </Typography>
                             </div>
 
                             <Typography variant="subheading" color="secondary">
                                 <span className="asset-balance">
-                                    {this.displayBalance(asset)}
+                                    0
                                 </span>
                                 <span className="asset-code">
-                                    {asset.asset_code}
+                                    {baseAsset.getCode()}
                                 </span>
                             </Typography>
 
                             <Typography variant="caption" color="secondary">
-                                Trust Limit:<he.Nbsp /><he.Nbsp />
-                                {this.displayLimit(asset)}
+                                Trust Limit:<he.Nbsp /><he.Nbsp />0
                             </Typography>
 
                         </div>
@@ -174,7 +240,7 @@ export default compose(
                 }
                 </Paper>
             </Grid>
-        )
+        })
 
 
         // ...
