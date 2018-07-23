@@ -35,6 +35,7 @@ const initState = ((now) => ({
     sendEnabled: false,
     today: now,
     transactionType: null,
+    transactionAsset: null,
 }))(new Date())
 
 
