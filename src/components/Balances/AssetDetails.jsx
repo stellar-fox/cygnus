@@ -103,6 +103,7 @@ export default compose(
 
             this.setState({
                 inProgress: true,
+                statusMessage: "",
             })
 
             let availableAssetBalance = null
@@ -131,7 +132,7 @@ export default compose(
             } catch (error) {
                 this.setState({
                     inProgress: false,
-                    statusMessage: "",
+                    statusMessage: error.message,
                 })
                 return Promise.reject({
                     error: true, message: error.message,
