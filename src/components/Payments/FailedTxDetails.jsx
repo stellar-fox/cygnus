@@ -60,7 +60,7 @@ export default compose(
                 <Typography color="primary"
                     variant="body2"
                 >
-                    ❌ {decoder[r]}
+                    <span aria-label="cross" role="img">❌</span> {decoder[r]}
                 </Typography>
             </div>)
         )({"op_no_trust" : "No Trustline",})
