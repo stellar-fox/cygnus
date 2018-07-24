@@ -82,3 +82,11 @@ a:focus {
 .space-around {
     justify-content: space-around;
 }
+
+.washed-out-strong {
+    opacity: 0.35;
+}
+
+.washed-out {
+    opacity: 0.8;
+}

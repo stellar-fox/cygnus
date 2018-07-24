@@ -23,6 +23,7 @@ const baseAssets = ["EUR", "USD", "AUD", "NZD", "THB", "PLN",].map(
 )
 
 const defaultAsseetIssuer = "GBIB7XSUUNTM4BFAOQ7PQO2L6XAMIYN2PREI54F4DS3W3DB76EFGUJI7"
+const defaultAvatar = "https://stellarfox.net/.well-known/logo.png"
 
 
 // ...
@@ -78,7 +79,7 @@ export default compose(
             this.props.assets.find((a) =>
                 a.asset_code === asset.asset_code
             ).verified &&
-                (<div className="f-b-col-c center">
+                <div className="f-b-col-c center">
                     <div>
                         <VerifiedUser
                             className="svg-success m-l-small"
@@ -87,7 +88,7 @@ export default compose(
                             Verified
                         </Typography>
                     </div>
-                </div>)
+                </div>
 
 
         // ...
@@ -205,13 +206,33 @@ export default compose(
                     <div
                         className="f-b-c space-between"
                     >
-                        <Switch
-                            checked={false}
-                            onChange={null}
-                            color="secondary"
-                        />
 
-                        <div className="p-l-small">
+                        <div className="p-l-small washed-out-strong">
+                            <Avatar src={defaultAvatar} />
+                        </div>
+
+                        <div className="p-l-small washed-out-strong">
+                            <div className="f-b-col-c center">
+                                <div>
+                                    <VerifiedUser
+                                        className="svg-success m-l-small"
+                                    />
+                                    <Typography variant="caption" color="secondary">
+                                        Verified
+                                    </Typography>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="washed-out">
+                            <Switch
+                                checked={false}
+                                onChange={null}
+                                color="secondary"
+                            />
+                        </div>
+
+                        <div className="p-l-small washed-out-strong">
                             <div className="p-b-nano">
                                 <Typography variant="caption"
                                     color="secondary"
@@ -233,8 +254,8 @@ export default compose(
                             <Typography variant="caption" color="secondary">
                                 Trust Limit:<he.Nbsp /><he.Nbsp />0
                             </Typography>
-
                         </div>
+
                     </div>
 
                 }
