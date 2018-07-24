@@ -13,10 +13,11 @@ import Avatar from "../../lib/mui-v1/Avatar"
 import VerifiedUser from "@material-ui/icons/VerifiedUser"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as ModalAction } from "../../redux/Modal"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import Switch from "../../lib/mui-v1/Switch"
 import { Asset } from "stellar-sdk"
 import { toBool } from "@xcmats/js-toolbox"
-
+import clone from "lodash/clone"
 
 // ...
 const baseAssets = ["EUR", "USD", "AUD", "NZD", "THB", "PLN",].map(
@@ -27,6 +28,7 @@ const baseAssets = ["EUR", "USD", "AUD", "NZD", "THB", "PLN",].map(
 
 const defaultAsseetIssuer = "GBIB7XSUUNTM4BFAOQ7PQO2L6XAMIYN2PREI54F4DS3W3DB76EFGUJI7"
 const defaultAvatar = "https://stellarfox.net/.well-known/logo.png"
+const defaultAssetType = "credit_alphanum4"
 
 
 // ...
@@ -64,6 +66,7 @@ export default compose(
         }),
         (dispatch) => bindActionCreators({
             setState: AssetManagerAction.setState,
+            setStellarAccountState: StellarAccountAction.setState,
             hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
         }, dispatch)
@@ -96,6 +99,26 @@ export default compose(
             })
 
         }
+
+
+        // ...
+        changeTrust = async (baseAsset, checked) => {
+            if (checked) {
+                let newAssets = clone(this.props.assets)
+                newAssets.push({
+                    asset_code: baseAsset.getCode(),
+                    asset_issuer: baseAsset.getIssuer(),
+                    asset_type: defaultAssetType,
+                    avatar: defaultAvatar,
+                    balance: "0.00",
+                    decimals: 2,
+                    limit: "0.00",
+                    verified: true,
+                })
+                await this.props.setStellarAccountState({ assets: newAssets, })
+            }
+        }
+
 
         // ...
         displayAvatar = (asset) =>
@@ -164,7 +187,6 @@ export default compose(
             toBool(this.props.assets.find(
                 asset => baseAsset.getCode() === asset.asset_code &&
                     baseAsset.getIssuer() === asset.asset_issuer))
-
 
 
         // ...
@@ -273,7 +295,9 @@ export default compose(
                         <div className="washed-out">
                             <Switch
                                 checked={this.isTrustedAsset(baseAsset)}
-                                onChange={null}
+                                onChange={this.changeTrust.bind(
+                                    this, baseAsset
+                                )}
                                 color="secondary"
                             />
                         </div>
