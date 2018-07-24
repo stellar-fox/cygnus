@@ -15,12 +15,15 @@ import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as ModalAction } from "../../redux/Modal"
 import Switch from "../../lib/mui-v1/Switch"
 import { Asset } from "stellar-sdk"
+import { toBool } from "@xcmats/js-toolbox"
 
 
 // ...
 const baseAssets = ["EUR", "USD", "AUD", "NZD", "THB", "PLN",].map(
-    assetCode => new Asset(assetCode, "GBIB7XSUUNTM4BFAOQ7PQO2L6XAMIYN2PREI54F4DS3W3DB76EFGUJI7")
-)
+    assetCode => new Asset(
+        assetCode,
+        "GBIB7XSUUNTM4BFAOQ7PQO2L6XAMIYN2PREI54F4DS3W3DB76EFGUJI7"
+    ))
 
 const defaultAsseetIssuer = "GBIB7XSUUNTM4BFAOQ7PQO2L6XAMIYN2PREI54F4DS3W3DB76EFGUJI7"
 const defaultAvatar = "https://stellarfox.net/.well-known/logo.png"
@@ -53,6 +56,7 @@ export default compose(
     connect(
         // map state to props
         (state) => ({
+            awaitingTrust: state.Assets.awaitingTrust,
             loading: state.Assets.loading,
             assets: state.StellarAccount.assets,
             publicKey: state.StellarAccount.publicKey,
@@ -66,6 +70,32 @@ export default compose(
     )
 )(
     class extends Component {
+
+
+        // ...
+        componentDidMount = () => {
+            this.props.setState({
+                awaitingTrust: [],
+            })
+
+            let updatedAwaitingTrust = []
+
+            baseAssets.forEach((baseAsset) => {
+                let trustedAsset = this.props.assets.find(
+                    asset => baseAsset.getCode() === asset.asset_code &&
+                        baseAsset.getIssuer() === asset.asset_issuer
+                )
+
+                if (!trustedAsset) {
+                    updatedAwaitingTrust.push(baseAsset)
+                }
+            })
+
+            this.props.setState({
+                awaitingTrust: updatedAwaitingTrust,
+            })
+
+        }
 
         // ...
         displayAvatar = (asset) =>
@@ -97,14 +127,14 @@ export default compose(
                 a.asset_code === asset.asset_code
             ).decimals
 
-            return (<NumberFormat
+            return <NumberFormat
                 value={new BigNumber(asset.balance).toFixed(
                     decimals
                 )}
                 displayType={"text"} thousandSeparator={true}
                 decimalScale={decimals}
                 fixedDecimalScale={true}
-            />)
+            />
 
         }
 
@@ -124,9 +154,17 @@ export default compose(
                         displayType={"text"} thousandSeparator={true}
                         decimalScale={assetInfoObj.decimals}
                         fixedDecimalScale={true}
-                    /> : "None" :
+                    /> : "Unlimited" :
                 asset.balance
         }
+
+
+        // ...
+        isTrustedAsset = (baseAsset) =>
+            toBool(this.props.assets.find(
+                asset => baseAsset.getCode() === asset.asset_code &&
+                    baseAsset.getIssuer() === asset.asset_issuer))
+
 
 
         // ...
@@ -136,7 +174,10 @@ export default compose(
                     baseAsset.getIssuer() === asset.asset_issuer
             )
 
-            return trustedAsset ? <Grid item key={index} xs={12} sm={12} md={6} lg={6} xl={4}>
+
+            return trustedAsset ? <Grid item key={index} xs={12} sm={12} md={6}
+                lg={6} xl={4}
+            >
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">
                         <RequestProgress />
@@ -158,13 +199,14 @@ export default compose(
                         </div>
 
                         <Switch
-                            checked={true}
+                            checked={this.isTrustedAsset(baseAsset)}
                             onChange={null}
                             color="secondary"
                         />
 
-                        <div onClick={this.showAssetDetails.bind(this, trustedAsset)}
-                            className="p-l-small cursor-pointer"
+                        <div onClick={this.showAssetDetails.bind(
+                            this, trustedAsset
+                        )} className="p-l-small cursor-pointer"
                         >
                             <div className="p-b-nano">
                                 <Typography variant="caption"
@@ -194,7 +236,9 @@ export default compose(
 
                 }
                 </Paper>
-            </Grid> : <Grid item key={index} xs={12} sm={12} md={6} lg={6} xl={4}>
+            </Grid> : <Grid item key={index} xs={12} sm={12} md={6} lg={6}
+                xl={4}
+            >
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">
                         <RequestProgress />
@@ -217,7 +261,9 @@ export default compose(
                                     <VerifiedUser
                                         className="svg-success m-l-small"
                                     />
-                                    <Typography variant="caption" color="secondary">
+                                    <Typography variant="caption"
+                                        color="secondary"
+                                    >
                                         Verified
                                     </Typography>
                                 </div>
@@ -226,7 +272,7 @@ export default compose(
 
                         <div className="washed-out">
                             <Switch
-                                checked={false}
+                                checked={this.isTrustedAsset(baseAsset)}
                                 onChange={null}
                                 color="secondary"
                             />
@@ -244,7 +290,7 @@ export default compose(
 
                             <Typography variant="subheading" color="secondary">
                                 <span className="asset-balance">
-                                    0
+                                    0.00
                                 </span>
                                 <span className="asset-code">
                                     {baseAsset.getCode()}
@@ -252,7 +298,7 @@ export default compose(
                             </Typography>
 
                             <Typography variant="caption" color="secondary">
-                                Trust Limit:<he.Nbsp /><he.Nbsp />0
+                                Trust Limit:<he.Nbsp /><he.Nbsp />None
                             </Typography>
                         </div>
 

@@ -6,6 +6,7 @@ import { createReducer } from "@xcmats/js-toolbox"
 // <AssetManager> component state
 const initState = {
     loading: false,
+    awaitingTrust: [],
 }
 
 
