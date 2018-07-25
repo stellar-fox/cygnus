@@ -7,7 +7,7 @@ import {
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { notImplementedText } from "../StellarFox/env"
-import { accountIsLocked } from "../../lib/utils"
+import { accountIsLocked, htmlEntities as he } from "../../lib/utils"
 import {
     Card,
     CardActions,
@@ -18,10 +18,15 @@ import Button from "../../lib/mui-v1/Button"
 import AssetList from "./AssetList"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as BalancesAction } from "../../redux/Balances"
-import { currentAccountReserve } from "../../lib/utils"
+import { augmentAssets, insertPathIndex, currentAccountReserve } from "../../lib/utils"
 import Icon from "@material-ui/core/Icon"
-import { Typography } from "@material-ui/core"
-
+import { CircularProgress, Typography } from "@material-ui/core"
+import { buildChangeTrustTx, loadAccount, submitTransaction } from "../../lib/stellar-tx"
+import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
+import { action as AssetManagerAction } from "../../redux/AssetManager"
+import { action as SnackbarAction } from "../../redux/Snackbar"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
+import { delay } from "@xcmats/js-toolbox"
 
 
 
@@ -29,9 +34,21 @@ import { Typography } from "@material-ui/core"
 class BalancesCard extends Component {
 
     // ...
+    state = {
+        inProgress: false,
+        statusMessage: "",
+    }
+
+
+    // ...
     componentDidMount = () => {
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
+
+
+    // ...
+    changeTrustNeedsSignature = () =>
+        this.props.Assets.awaitingSignature.length > 0
 
 
     // ...
@@ -49,6 +66,83 @@ class BalancesCard extends Component {
 
 
     // ...
+    signChangeTrust = async () => {
+        this.setState({
+            inProgress: true,
+            statusMessage: "Building transaction ...",
+        })
+
+        const txData = {
+            source: this.props.publicKey,
+            network: this.props.horizon,
+            assets: this.props.Assets.awaitingSignature,
+        }
+
+        let tx = await buildChangeTrustTx(txData)
+
+        this.setState({
+            statusMessage: "Waiting for device ...",
+        })
+
+        try {
+            await getSoftwareVersion()
+
+            this.setState({
+                statusMessage: "Awaiting signature ...",
+            })
+
+            const signedTx = await signTransaction(
+                insertPathIndex(this.props.bip32Path),
+                this.props.publicKey,
+                tx
+            )
+
+            this.setState({
+                statusMessage: "Sending transaction ...",
+            })
+
+            const broadcast = await submitTransaction(
+                signedTx, this.props.horizon
+            )
+
+            this.props.setState({
+                txId: broadcast.hash,
+                ledgerId: broadcast.ledger,
+            })
+
+            await this.setState({
+                inProgress: false,
+                statusMessage: "",
+            })
+
+            await this.props.setAssetsState({
+                awaitingSignature: [],
+            })
+
+            this.props.popupSnackbar("Trustlines Established.")
+
+            const account = await loadAccount(
+                this.props.publicKey, this.props.horizon
+            )
+
+            this.updateAccountTree(account)
+
+
+        } catch (error) {
+            this.setState({
+                inProgress: false,
+                statusMessage: error.message,
+            })
+            return Promise.reject({
+                error: true, message: error.message,
+            })
+        }
+
+
+    }
+
+
+    // ...
     showNotImplementedModal = () =>
         this.props.showAlert(notImplementedText, "Not Yet Implemented")
 
@@ -56,6 +150,24 @@ class BalancesCard extends Component {
     // ...
     exchangeRateFetched = () => this.props.Assets[this.props.Account.currency]
 
+
+    // ...
+    updateAccountTree = (account) => {
+        this.props.setAssetsState({ loading: true, })
+        this.props.updateAccountTree(account)
+        delay(300).then(() => {
+            augmentAssets(
+                this.props.StellarAccount.assets,
+                this.props.StellarAccount.horizon
+            ).then((augmentedAssets) => {
+                this.props.setStellarAccountState({
+                    assets: augmentedAssets,
+                })
+                this.props.setAssetsState({ loading: false, })
+            })
+
+        })
+    }
 
     // ...
     render = () =>
@@ -70,12 +182,10 @@ class BalancesCard extends Component {
                 subtitle={
                     <span>
                         <span>
-                            {
-                                this.props
-                                    .assetManager.getAssetDescription(
-                                        this.props.Account.currency
-                                    )
-                            }
+                            {this.props
+                                .assetManager.getAssetDescription(
+                                    this.props.Account.currency
+                                )}
                         </span>
                         <span className="fade currency-iso p-l-small">
                             ({this.props.Account.currency.toUpperCase()})
@@ -204,6 +314,26 @@ class BalancesCard extends Component {
                                 Other Assets List:
                             </div>
                             <AssetList />
+                            <div className="p-t flex-box-col items-flex-start">
+                                <Button
+                                    color="primary"
+                                    onClick={this.signChangeTrust}
+                                    disabled={
+                                        !this.changeTrustNeedsSignature() ||
+                                        this.state.inProgress
+                                    }
+                                >
+                                    {this.state.inProgress ? <CircularProgress
+                                        color="primary" thickness={4}
+                                        size={20}
+                                    /> : "Save Changes"}
+                                </Button>
+                                <Typography variant="caption" color="primary">
+                                    {this.state.statusMessage ?
+                                        this.state.statusMessage : <he.Nbsp />
+                                    }
+                                </Typography>
+                            </div>
                         </Fragment> : <Fragment>
                             <div className="assets">Other Assets</div>
                             <div className='faded'>
@@ -229,11 +359,18 @@ export default compose(
             Account: state.Account,
             Assets: state.Assets,
             StellarAccount: state.StellarAccount,
+            horizon: state.StellarAccount.horizon,
+            publicKey: state.LedgerHQ.publicKey,
+            bip32Path: state.LedgerHQ.bip32Path,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: BalancesAction.setState,
+            setAssetsState: AssetManagerAction.setState,
+            setStellarAccountState: StellarAccountAction.setState,
             showAlert: AlertAction.showAlert,
+            popupSnackbar: SnackbarAction.popupSnackbar,
+            updateAccountTree: StellarAccountAction.loadStellarAccount,
         }, dispatch)
     )
 )(BalancesCard)

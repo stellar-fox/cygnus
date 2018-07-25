@@ -17,7 +17,7 @@ import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import Switch from "../../lib/mui-v1/Switch"
 import { Asset } from "stellar-sdk"
 import { toBool } from "@xcmats/js-toolbox"
-import clone from "lodash/clone"
+import { clone, remove } from "lodash"
 
 // ...
 const baseAssets = ["EUR", "USD", "AUD", "NZD", "THB", "PLN",].map(
@@ -58,6 +58,7 @@ export default compose(
     connect(
         // map state to props
         (state) => ({
+            awaitingSignature: state.Assets.awaitingSignature,
             awaitingTrust: state.Assets.awaitingTrust,
             loading: state.Assets.loading,
             assets: state.StellarAccount.assets,
@@ -102,10 +103,12 @@ export default compose(
 
 
         // ...
-        changeTrust = async (baseAsset, checked) => {
+        changeTrust = async (baseAsset, _event, checked) => {
+            let newAssets = clone(this.props.assets)
+            let assetsToSign = clone(this.props.awaitingSignature)
+
             if (checked) {
-                let newAssets = clone(this.props.assets)
-                newAssets.push({
+                const newAsset = {
                     asset_code: baseAsset.getCode(),
                     asset_issuer: baseAsset.getIssuer(),
                     asset_type: defaultAssetType,
@@ -114,8 +117,26 @@ export default compose(
                     decimals: 2,
                     limit: "0.00",
                     verified: true,
-                })
+                    needs_signature: true,
+                }
+
+                newAssets.push(newAsset)
+                assetsToSign.push(newAsset)
+                await this.props.setState({ awaitingSignature: assetsToSign, })
                 await this.props.setStellarAccountState({ assets: newAssets, })
+            } else {
+                remove(newAssets,
+                    asset => asset.asset_code === baseAsset.getCode() &&
+                        asset.asset_issuer === baseAsset.getIssuer()
+                )
+                await this.props.setStellarAccountState({
+                    assets: newAssets,
+                })
+                remove(assetsToSign,
+                    asset => asset.asset_code === baseAsset.getCode() &&
+                        asset.asset_issuer === baseAsset.getIssuer()
+                )
+                await this.props.setState({ awaitingSignature: assetsToSign, })
             }
         }
 
@@ -222,7 +243,9 @@ export default compose(
 
                         <Switch
                             checked={this.isTrustedAsset(baseAsset)}
-                            onChange={null}
+                            onChange={this.changeTrust.bind(
+                                this, baseAsset
+                            )}
                             color="secondary"
                         />
 
