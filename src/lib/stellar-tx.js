@@ -59,6 +59,24 @@ export const buildSetDataTx = async (txData) =>
 
 
 // ...
+export const buildChangeTrustTx = async (txData) => {
+    let txBuilder = new TransactionBuilder(
+        await loadAccount(txData.source, txData.network)
+    )
+
+    txData.assets.forEach(asset => {
+        txBuilder.addOperation(Operation.changeTrust({
+            asset: new Asset(asset.asset_code, asset.asset_issuer),
+        }))
+    })
+
+    return txBuilder.build()
+}
+
+
+
+
+// ...
 export const buildCreateAccountTx = async (txData) =>
     new TransactionBuilder(
         await loadAccount(txData.source, txData.network)
