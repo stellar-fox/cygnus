@@ -103,7 +103,7 @@ export default compose(
 
             this.setState({
                 inProgress: true,
-                statusMessage: "",
+                statusMessage: "Fetching account info ...",
             })
 
             let availableAssetBalance = null
