@@ -528,32 +528,34 @@ export const devEnv = () =>
 // asynchronously load libraries (used in dev. environment)
 export const dynamicImportLibs = async () => {
     let [
-        apiContacts,
-        bignumber, firebase, toolbox, ledger, jss,
-        lodash, mui, md5, redshift, redux, utils,
+        apiContacts, bignumber, firebase, jss,
+        ledger, lodash, md5, mui, redshift, redux,
+        toolbox, utils,
     ] = await Promise.all([
         import("../../src/components/Contacts/api"),
         import("bignumber.js"),
         import("../../src/components/StellarFox"),
-        import("@xcmats/js-toolbox"),
-        import("./ledger"),
         import("jss"),
+        import("./ledger"),
         import("lodash"),
-        import("@material-ui/core"),
         import("./md5"),
+        import("@material-ui/core"),
         import("@stellar-fox/redshift"),
         import("redux"),
+        import("@xcmats/js-toolbox"),
         import("./utils"),
     ])
     return {
-        api: { contacts: apiContacts, firebase: firebase.firebaseApp, },
+        api: {
+            contacts: apiContacts,
+            firebase: firebase.firebaseApp,
+        },
         axios,
         BigNumber: bignumber.default,
-        toolbox, ledger, jss, lodash, mui,
+        jss, ledger, lodash,
         md5: md5.default,
-        redshift,
-        redux, StellarSdk,
-        toml, utils,
+        mui, redux, redshift,
+        toml, toolbox, utils,
     }
 }
 
