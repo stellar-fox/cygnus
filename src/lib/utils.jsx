@@ -530,7 +530,7 @@ export const dynamicImportLibs = async () => {
     let [
         apiContacts,
         bignumber, firebase, toolbox, ledger, jss,
-        lodash, mui, md5, redux, utils,
+        lodash, mui, md5, redshift, redux, utils,
     ] = await Promise.all([
         import("../../src/components/Contacts/api"),
         import("bignumber.js"),
@@ -541,6 +541,7 @@ export const dynamicImportLibs = async () => {
         import("lodash"),
         import("@material-ui/core"),
         import("./md5"),
+        import("@stellar-fox/redshift"),
         import("redux"),
         import("./utils"),
     ])
@@ -550,6 +551,7 @@ export const dynamicImportLibs = async () => {
         BigNumber: bignumber.default,
         toolbox, ledger, jss, lodash, mui,
         md5: md5.default,
+        redshift,
         redux, StellarSdk,
         toml, utils,
     }
