@@ -17,4 +17,10 @@ export const config = {
     stripe: {
         apiKey: "<stripe_api_key>",
     },
+    assets: {
+        codes: ["EUR", "USD", "AUD", "NZD", "THB", "PLN",],
+        issuer: "<issuing_account_public_key>",
+        avatar: "https://example.com/.well-known/logo.png",
+        type: "asset_type_string",
+    },
 }
