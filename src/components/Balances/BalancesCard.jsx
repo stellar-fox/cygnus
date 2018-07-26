@@ -307,40 +307,30 @@ class BalancesCard extends Component {
 
             <CardText expandable={true}>
                 <Fragment>
-                    {Array.isArray(this.props.StellarAccount.assets)
-                        && this.props.StellarAccount.assets.length > 0 ?
-                        <Fragment>
-                            <div className="assets p-b-small">
-                                Other Assets List:
-                            </div>
-                            <AssetList />
-                            <div className="p-t flex-box-col items-flex-start">
-                                <Button
-                                    color="primary"
-                                    onClick={this.signChangeTrust}
-                                    disabled={
-                                        !this.changeTrustNeedsSignature() ||
-                                        this.state.inProgress
-                                    }
-                                >
-                                    {this.state.inProgress ? <CircularProgress
-                                        color="primary" thickness={4}
-                                        size={20}
-                                    /> : "Save Changes"}
-                                </Button>
-                                <Typography variant="caption" color="primary">
-                                    {this.state.statusMessage ?
-                                        this.state.statusMessage : <he.Nbsp />
-                                    }
-                                </Typography>
-                            </div>
-                        </Fragment> : <Fragment>
-                            <div className="assets">Other Assets</div>
-                            <div className='faded'>
-                                You currently do not own any other assets.
-                            </div>
-                        </Fragment>
-                    }
+                    <div className="assets p-b-small">
+                        Available Currencies:
+                    </div>
+                    <AssetList />
+                    <div className="p-t flex-box-col items-flex-start">
+                        <Button
+                            color="primary"
+                            onClick={this.signChangeTrust}
+                            disabled={
+                                !this.changeTrustNeedsSignature() ||
+                                this.state.inProgress
+                            }
+                        >
+                            {this.state.inProgress ? <CircularProgress
+                                color="primary" thickness={4}
+                                size={20}
+                            /> : "Save Changes"}
+                        </Button>
+                        <Typography variant="caption" color="primary">
+                            {this.state.statusMessage ?
+                                this.state.statusMessage : <he.Nbsp />
+                            }
+                        </Typography>
+                    </div>
                 </Fragment>
             </CardText>
         </Card>

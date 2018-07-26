@@ -18,17 +18,18 @@ import Switch from "../../lib/mui-v1/Switch"
 import { Asset } from "stellar-sdk"
 import { toBool } from "@xcmats/js-toolbox"
 import { clone, remove } from "lodash"
+import { config } from "../../config"
+
+
+
 
 // ...
-const baseAssets = ["EUR", "USD", "AUD", "NZD", "THB", "PLN",].map(
+const baseAssets = config.assets.codes.map(
     assetCode => new Asset(
         assetCode,
-        "GBIB7XSUUNTM4BFAOQ7PQO2L6XAMIYN2PREI54F4DS3W3DB76EFGUJI7"
-    ))
-
-const defaultAsseetIssuer = "GBIB7XSUUNTM4BFAOQ7PQO2L6XAMIYN2PREI54F4DS3W3DB76EFGUJI7"
-const defaultAvatar = "https://stellarfox.net/.well-known/logo.png"
-const defaultAssetType = "credit_alphanum4"
+        config.assets.issuer
+    )
+)
 
 
 // ...
@@ -149,8 +150,8 @@ export default compose(
             const newStellarAsset = {
                 asset_code: baseAsset.getCode(),
                 asset_issuer: baseAsset.getIssuer(),
-                asset_type: defaultAssetType,
-                avatar: defaultAvatar,
+                asset_type: config.assets.type,
+                avatar: config.assets.avatar,
                 balance: "0.00",
                 decimals: 2,
                 limit: "0.00",
@@ -350,7 +351,7 @@ export default compose(
                     >
 
                         <div className="p-l-small washed-out-strong">
-                            <Avatar src={defaultAvatar} />
+                            <Avatar src={config.assets.avatar} />
                         </div>
 
                         <div className="p-l-small washed-out-strong">
@@ -384,7 +385,7 @@ export default compose(
                                     color="secondary"
                                 >
                                     Issuer:<he.Nbsp /><he.Nbsp />
-                                    {pubKeyAbbr(defaultAsseetIssuer)}
+                                    {pubKeyAbbr(config.assets.issuer)}
                                 </Typography>
                             </div>
 
