@@ -65,9 +65,18 @@ export const buildChangeTrustTx = async (txData) => {
     )
 
     txData.assets.forEach(asset => {
-        txBuilder.addOperation(Operation.changeTrust({
-            asset: new Asset(asset.asset_code, asset.asset_issuer),
-        }))
+
+        if (asset.trustLimit) {
+            txBuilder.addOperation(Operation.changeTrust({
+                asset: new Asset(asset.code, asset.issuer),
+                limit: asset.trustLimit,
+            }))
+        } else {
+            txBuilder.addOperation(Operation.changeTrust({
+                asset: new Asset(asset.code, asset.issuer),
+            }))
+        }
+
     })
 
     return txBuilder.build()
