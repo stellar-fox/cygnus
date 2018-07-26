@@ -647,13 +647,14 @@ export const accountIsLocked = (signers, publicKey) => {
 
 // ...
 export const sortBy = (attr="first_name") => (a, b) => {
-    let nameA = "", nameB = ""
+    let nameA = emptyString(), nameB = emptyString()
 
     if (a[attr]) { nameA = a[attr].toUpperCase() }
     if (b[attr]) { nameB = b[attr].toUpperCase() }
 
     if (nameA < nameB) { return -1 }
     if (nameA > nameB) { return 1 }
+
     return 0
 }
 
