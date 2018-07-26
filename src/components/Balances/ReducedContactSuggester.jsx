@@ -51,7 +51,7 @@ const styles = (theme) => ({
         marginTop: theme.spacing.unit,
         left: 0,
         right: 0,
-        backgroundColor: "#fff",
+        backgroundColor: theme.palette.primary.light,
         borderRadius: "3px",
     },
     suggestion: {
@@ -164,24 +164,24 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
         <Fragment>
             <MenuItem selected={isHighlighted} component="div">
                 <div className="f-b-col">
-                    <div className="text-primary">
+                    <div className="p-t-small text-secondary">
                         {parts.map((part, index) => {
                             return part.highlight ? (
                                 <span key={String(index)}
-                                    style={{ fontWeight: 400, }}
+                                    style={{ fontWeight: 600, }}
                                 >
                                     {part.text}
                                 </span>
                             ) : (
                                 <span key={String(index)}
-                                    style={{ fontWeight: 100, }}
+                                    style={{ fontWeight: 400, }}
                                 >
                                     {part.text}
                                 </span>
                             )
                         })}
                     </div>
-                    <div className="f-b micro text-primary fade-strong">
+                    <div className="f-b micro text-secondary fade">
                         {suggestion.alias && suggestion.domain ?
                             paymentAddress(
                                 suggestion.alias, suggestion.domain

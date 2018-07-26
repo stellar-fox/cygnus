@@ -196,6 +196,10 @@ export default compose(
 
 
         // ...
+        balanceIsZero = (asset) => new BigNumber(asset.balance).isEqualTo(0)
+
+
+        // ...
         displayAvatar = (asset) =>
             this.props.assets.find((a) =>
                 a.asset_code === asset.asset_code
@@ -233,7 +237,6 @@ export default compose(
                 decimalScale={decimals}
                 fixedDecimalScale={true}
             />
-
         }
 
 
@@ -295,13 +298,15 @@ export default compose(
                             {this.displayVerified(trustedAsset)}
                         </div>
 
-                        <Switch
-                            checked={this.isTrustedAsset(baseAsset)}
-                            onChange={this.removeTrustline.bind(
-                                this, baseAsset
-                            )}
-                            color="secondary"
-                        />
+                        {this.balanceIsZero(trustedAsset) &&
+                            <Switch
+                                checked={this.isTrustedAsset(baseAsset)}
+                                onChange={this.removeTrustline.bind(
+                                    this, baseAsset
+                                )}
+                                color="secondary"
+                            />
+                        }
 
                         <div onClick={this.showAssetDetails.bind(
                             this, trustedAsset

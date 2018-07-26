@@ -458,7 +458,7 @@ class Balances extends Component {
                                 >CLOSE</Button>,
                             ]}
                         >
-                            <AssetDetails />
+                            <AssetDetails assetManager={this.props.assetManager} />
                         </Modal>
 
                         {

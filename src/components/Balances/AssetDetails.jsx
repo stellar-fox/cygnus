@@ -42,6 +42,7 @@ export default compose(
         // match dispatch to props.
         (dispatch) => bindActionCreators({
             setState: BalancesAction.setState,
+            resetState: BalancesAction.resetState,
             showModal: ModalAction.showModal,
         }, dispatch)
     ),
@@ -71,6 +72,12 @@ export default compose(
             errorMessage: "",
             inProgress: false,
             statusMessage: "",
+        }
+
+
+        // ...
+        componentDidMount = () => {
+            this.props.resetState()
         }
 
 
@@ -167,7 +174,7 @@ export default compose(
                         signedTx, this.props.horizon
                     )
 
-                    this.props.setState({
+                    await this.props.setState({
                         paymentId: broadcast.hash,
                         ledgerId: broadcast.ledger,
                         transactionType: null,
@@ -200,18 +207,24 @@ export default compose(
 
         // ...
         render = () => (
-            ({ asset, }) =>
+            ({ asset, assetManager, }) =>
                 <Fragment>
                     {asset &&
                         <div className="p-t flex-box-col items-flex-start">
-                            <Typography variant="title" color="primary">
-                                Pay with {asset.asset_code} to:
+                            <Typography variant="subheading" color="primary">
+                            Send {assetManager.getAssetDescription(
+                                    asset.asset_code.toLowerCase()
+                                )} to:
                             </Typography>
                             <ReducedContactSuggester />
                             <InputField
                                 id="payment-amount"
                                 type="text"
-                                label="Amount"
+                                label={`${
+                                    assetManager.getAssetGlyph(
+                                        asset.asset_code.toLowerCase()
+                                    )
+                                } Amount`}
                                 color="primary"
                                 error={this.state.error}
                                 errorMessage={this.state.errorMessage}
