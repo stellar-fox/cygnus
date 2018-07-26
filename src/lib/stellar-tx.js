@@ -1,15 +1,10 @@
+import BigNumber from "bignumber.js"
+import { StellarSDK } from "../lib/utils"
+import { emptyString } from "@xcmats/js-toolbox"
 import {
     liveNetAddr,
     testNetAddr,
 } from "../components/StellarFox/env"
-
-import BigNumber from "bignumber.js"
-
-
-
-
-// TODO: convert-to/use-as module
-export const StellarSdk = window.StellarSdk
 
 
 
@@ -17,11 +12,11 @@ export const StellarSdk = window.StellarSdk
 // ...
 export const server = (network) => {
     if (network === liveNetAddr) {
-        StellarSdk.Network.usePublicNetwork()
-        return new StellarSdk.Server(liveNetAddr)
+        StellarSDK.Network.usePublicNetwork()
+        return new StellarSDK.Server(liveNetAddr)
     }
-    StellarSdk.Network.useTestNetwork()
-    return new StellarSdk.Server(testNetAddr)
+    StellarSDK.Network.useTestNetwork()
+    return new StellarSDK.Server(testNetAddr)
 }
 
 
@@ -46,36 +41,47 @@ export const operations = (network) =>
     server(network).operations().cursor("now")
 
 
+
+
 // ...
 export const buildSetDataTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new StellarSDK.TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.manageData({
-        name: txData.name,
-        value: txData.value,
-    })).build()
+    )
+        .addOperation(StellarSDK.Operation.manageData({
+            name: txData.name,
+            value: txData.value,
+        }))
+        .build()
+
+
+
 
 // ...
 export const buildCreateAccountTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new StellarSDK.TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.createAccount({
-        destination: txData.destination,
-        startingBalance: txData.amount,
-    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
+    )
+        .addOperation(StellarSDK.Operation.createAccount({
+            destination: txData.destination,
+            startingBalance: txData.amount,
+        }))
+        .addMemo(StellarSDK.Memo.text(txData.memo)).build()
 
 
 
 
 // ...
 export const buildPaymentTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new StellarSDK.TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.payment({
-        destination: txData.destination,
-        asset: StellarSdk.Asset.native(),
-        amount: txData.amount,
-    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
+    )
+        .addOperation(StellarSDK.Operation.payment({
+            destination: txData.destination,
+            asset: StellarSDK.Asset.native(),
+            amount: txData.amount,
+        }))
+        .addMemo(StellarSDK.Memo.text(txData.memo)).build()
 
 
 
@@ -91,17 +97,11 @@ export const submitTransaction = async (signedTx, network) =>
 export const displayLastBalance = (balance) => {
     const bnBalance = new BigNumber(balance)
 
-    if (bnBalance.isEqualTo(0)) {
-        return bnBalance.toString()
-    }
+    if (bnBalance.isEqualTo(0)) { return bnBalance.toString() }
 
-    if (bnBalance.isGreaterThan(0)) {
-        return `+ ${balance.toString()}`
-    }
+    if (bnBalance.isGreaterThan(0)) { return `+ ${balance.toString()}` }
 
-    if (bnBalance.isLessThan(0)) {
-        return `- ${balance.toString()}`
-    }
+    if (bnBalance.isLessThan(0)) { return `- ${balance.toString()}` }
 }
 
 
@@ -109,14 +109,14 @@ export const displayLastBalance = (balance) => {
 
 // ...
 export const displayDebit = (debit) =>
-    debit ? `- ${new BigNumber(debit).abs().toString()}` : ""
+    debit ? `- ${new BigNumber(debit).abs().toString()}` : emptyString()
 
 
 
 
 // ...
 export const displayCredit = (credit) =>
-    credit ? `+ ${new BigNumber(credit).abs().toString()}` : ""
+    credit ? `+ ${new BigNumber(credit).abs().toString()}` : emptyString()
 
 
 
@@ -136,7 +136,7 @@ export const debit = (operations, publicKey) => {
         return balance.toString()
     }
 
-    return ""
+    return emptyString()
 }
 
 
@@ -146,11 +146,9 @@ export const debit = (operations, publicKey) => {
 export const credit = (operations, publicKey) => {
     const balance = operationsBalance(operations, publicKey)
 
-    if (balance.isGreaterThan(0)) {
-        return balance.toString()
-    }
+    if (balance.isGreaterThan(0)) { return balance.toString() }
 
-    return ""
+    return emptyString()
 }
 
 
@@ -178,6 +176,7 @@ export const operationsBalance = (operations, publicKey) => {
 
     return balance
 }
+
 
 
 

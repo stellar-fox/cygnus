@@ -1,12 +1,16 @@
 import Transport from "@ledgerhq/hw-transport-u2f"
 import Str from "@ledgerhq/hw-app-str"
-import { StellarSdk } from "./stellar-tx"
+import { StellarSDK } from "../lib/utils"
+
+
 
 
 /**
  * Statically check if a transport is supported on the user's platform/browser.
  */
 export const isSupported = async () => Transport.isSupported()
+
+
 
 
 /**
@@ -22,6 +26,8 @@ export const getSoftwareVersion = async () => {
         result = await str.getAppConfiguration()
     return result.version
 }
+
+
 
 
 /**
@@ -40,6 +46,8 @@ export const getPublicKey = async (bip32Path) => {
 }
 
 
+
+
 /**
  * Returns signed transaction with a signature for the account specified by
  * BIP-32 derivation path and provided Stellar Public Key.
@@ -54,9 +62,9 @@ export const signTransaction = async (bip32Path, publicKey, transaction) => {
             bip32Path,
             transaction.signatureBase()
         ),
-        keyPair = StellarSdk.Keypair.fromPublicKey(publicKey),
+        keyPair = StellarSDK.Keypair.fromPublicKey(publicKey),
         hint = keyPair.signatureHint(),
-        decorated = new StellarSdk.xdr.DecoratedSignature({
+        decorated = new StellarSDK.xdr.DecoratedSignature({
             hint: hint,
             signature: signature.signature,
             /**

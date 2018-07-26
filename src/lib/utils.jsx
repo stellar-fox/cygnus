@@ -10,12 +10,22 @@ import {
     objectMap,
     wrap,
 } from "@xcmats/js-toolbox"
-
-import { StellarSdk } from "./stellar-tx"
-import { env } from "../components/StellarFox"
-import { config } from "../config"
 import shajs from "sha.js"
 import BigNumber from "bignumber.js"
+import { env } from "../components/StellarFox"
+import { config } from "../config"
+
+
+
+
+// FIXME
+// when using:
+//    import StellarSdk from "stellar-sdk"
+// or
+//    import { Network, Server, ... } from "stellar-sdk"
+// a following error occurs:
+//     Error: XDR Error:AccountId is already defined
+export const StellarSDK = window.StellarSdk
 
 
 
@@ -237,7 +247,7 @@ export const toAliasAndDomain = (paymentAddress) => paymentAddress.split("*")
 // Validates given public key (string)
 // returns true/false  (valid/invalid key).
 export const publicKeyValid = (publicKey) =>
-    StellarSdk.StrKey.isValidEd25519PublicKey(publicKey)
+    StellarSDK.StrKey.isValidEd25519PublicKey(publicKey)
 
 
 
@@ -530,7 +540,7 @@ export const dynamicImportLibs = async () => {
     let [
         apiContacts, bignumber, firebase, jss,
         ledger, lodash, md5, mui, redshift, redux,
-        toolbox, utils,
+        StellarTX, toolbox, utils,
     ] = await Promise.all([
         import("../../src/components/Contacts/api"),
         import("bignumber.js"),
@@ -542,6 +552,7 @@ export const dynamicImportLibs = async () => {
         import("@material-ui/core"),
         import("@stellar-fox/redshift"),
         import("redux"),
+        import("../lib/stellar-tx"),
         import("@xcmats/js-toolbox"),
         import("./utils"),
     ])
@@ -554,7 +565,8 @@ export const dynamicImportLibs = async () => {
         BigNumber: bignumber.default,
         jss, ledger, lodash,
         md5: md5.default,
-        mui, redux, redshift,
+        mui, redshift, redux,
+        StellarSDK, StellarTX,
         toml, toolbox, utils,
     }
 }
