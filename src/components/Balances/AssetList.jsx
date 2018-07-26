@@ -103,41 +103,94 @@ export default compose(
 
 
         // ...
-        changeTrust = async (baseAsset, _event, checked) => {
-            let newAssets = clone(this.props.assets)
-            let assetsToSign = clone(this.props.awaitingSignature)
+        removeTrustline = async (baseAsset) => {
 
-            if (checked) {
-                const newAsset = {
-                    asset_code: baseAsset.getCode(),
-                    asset_issuer: baseAsset.getIssuer(),
-                    asset_type: defaultAssetType,
-                    avatar: defaultAvatar,
-                    balance: "0.00",
-                    decimals: 2,
-                    limit: "0.00",
-                    verified: true,
-                    needs_signature: true,
-                }
+            let stellarAssets = clone(this.props.assets)
 
-                newAssets.push(newAsset)
-                assetsToSign.push(newAsset)
-                await this.props.setState({ awaitingSignature: assetsToSign, })
-                await this.props.setStellarAccountState({ assets: newAssets, })
-            } else {
-                remove(newAssets,
-                    asset => asset.asset_code === baseAsset.getCode() &&
-                        asset.asset_issuer === baseAsset.getIssuer()
+            let removed = remove(stellarAssets,
+                asset => asset.asset_code === baseAsset.getCode() &&
+                    asset.asset_issuer === baseAsset.getIssuer()
+            )
+
+            await this.props.setStellarAccountState({ assets: stellarAssets, })
+
+            // ================================================================
+
+            // 1.
+            const alreadyQueued = this.props.awaitingSignature.find(
+                asset => asset.code === baseAsset.getCode() &&
+                    asset.issuer === baseAsset.getIssuer())
+
+            if (alreadyQueued) {
+                let awaitingSignature = clone(this.props.awaitingSignature)
+                remove(awaitingSignature,
+                    asset => asset.code === baseAsset.getCode() &&
+                        asset.issuer === baseAsset.getIssuer()
                 )
-                await this.props.setStellarAccountState({
-                    assets: newAssets,
-                })
-                remove(assetsToSign,
-                    asset => asset.asset_code === baseAsset.getCode() &&
-                        asset.asset_issuer === baseAsset.getIssuer()
-                )
-                await this.props.setState({ awaitingSignature: assetsToSign, })
+                await this.props.setState({ awaitingSignature, })
+                return Promise.resolve({ ok: true, })
             }
+
+            // 2.
+            if (removed.limit !== "0.00") {
+                let awaitingSignature = clone(this.props.awaitingSignature)
+                baseAsset.trustLimit = "0"
+                awaitingSignature.push(baseAsset)
+                await this.props.setState({ awaitingSignature, })
+            }
+            return Promise.resolve({ ok: true, })
+
+        }
+
+
+        // ...
+        addTrustline = async (baseAsset) => {
+
+            const newStellarAsset = {
+                asset_code: baseAsset.getCode(),
+                asset_issuer: baseAsset.getIssuer(),
+                asset_type: defaultAssetType,
+                avatar: defaultAvatar,
+                balance: "0.00",
+                decimals: 2,
+                limit: "0.00",
+                verified: true,
+            }
+
+            let stellarAssets = clone(this.props.assets)
+            stellarAssets.push(newStellarAsset)
+            await this.props.setStellarAccountState({ assets: stellarAssets, })
+
+            // ================================================================
+
+            // 1.
+            const alreadyQueued = this.props.awaitingSignature.find(
+                asset => asset.code === baseAsset.getCode() &&
+                    asset.issuer === baseAsset.getIssuer())
+
+            if (alreadyQueued) {
+                let awaitingSignature = clone(this.props.awaitingSignature)
+                remove(awaitingSignature,
+                    asset => asset.code === baseAsset.getCode() &&
+                        asset.issuer === baseAsset.getIssuer()
+                )
+                await this.props.setState({ awaitingSignature, })
+                return Promise.resolve({ok: true,})
+            }
+
+
+            // 2.
+            const needsTrustline = this.props.awaitingTrust.find(
+                asset => asset.code === baseAsset.getCode() &&
+                    asset.issuer === baseAsset.getIssuer())
+
+            if (needsTrustline) {
+                let awaitingSignature = clone(this.props.awaitingSignature)
+                awaitingSignature.push(baseAsset)
+                await this.props.setState({ awaitingSignature, })
+            }
+            return Promise.resolve({ok: true,})
+
         }
 
 
@@ -243,7 +296,7 @@ export default compose(
 
                         <Switch
                             checked={this.isTrustedAsset(baseAsset)}
-                            onChange={this.changeTrust.bind(
+                            onChange={this.removeTrustline.bind(
                                 this, baseAsset
                             )}
                             color="secondary"
@@ -318,7 +371,7 @@ export default compose(
                         <div className="washed-out">
                             <Switch
                                 checked={this.isTrustedAsset(baseAsset)}
-                                onChange={this.changeTrust.bind(
+                                onChange={this.addTrustline.bind(
                                     this, baseAsset
                                 )}
                                 color="secondary"

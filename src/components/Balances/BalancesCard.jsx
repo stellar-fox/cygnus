@@ -133,7 +133,7 @@ class BalancesCard extends Component {
                 inProgress: false,
                 statusMessage: error.message,
             })
-            return Promise.reject({
+            return Promise.resolve({
                 error: true, message: error.message,
             })
         }
