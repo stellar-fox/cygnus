@@ -56,13 +56,19 @@ export default compose(
 
         // ...
         formatTxFailReasons = (reasons) => (decoder =>
-            reasons.map(r => <div className="f-b-c p-l-small">
-                <Typography color="primary"
-                    variant="body2"
+            reasons.map((r, index) =>
+                <div key={index}
+                    className="f-b-c p-l-small"
                 >
-                    <span aria-label="cross" role="img">❌</span> {decoder[r]}
-                </Typography>
-            </div>)
+                    <Typography color="primary"
+                        variant="body2"
+                    >
+                        <span aria-label="cross" role="img">
+                            ❌
+                        </span> {decoder[r]}
+                    </Typography>
+                </div>
+            )
         )({"op_no_trust" : "No Trustline",})
 
 
