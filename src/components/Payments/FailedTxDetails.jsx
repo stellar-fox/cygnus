@@ -74,11 +74,13 @@ export default compose(
 
 
         // ...
-        submitTransaction = (xdrBody, _event) => {
+        submitTransaction = (data) => {
             // eslint-disable-next-line no-console
-            console.log(xdrBody)
-            // eslint-disable-next-line no-console
-            console.log(JSON.stringify(StellarSdk.xdr.TransactionEnvelope.fromXDR(xdrBody, "base64")))
+            console.log(data)
+
+            window.xxx = StellarSdk.xdr.TransactionEnvelope.fromXDR(data.xdrBody, "base64")
+            window.yyy = new StellarSdk.Transaction(data.xdrBody)
+            // submit data obj to backend and re-process this tx there
         }
 
 
@@ -125,7 +127,7 @@ export default compose(
                                     Retry Attempts: {data.retries}
                                 </Typography>
                                 <Button color="primary"
-                                    onClick={this.submitTransaction.bind(this, data.xdrBody)}
+                                    onClick={this.submitTransaction.bind(this, data)}
                                 >Retry Now</Button>
                             </div>
                         }
