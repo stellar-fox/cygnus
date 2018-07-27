@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react"
-import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
@@ -114,14 +113,6 @@ class UserMenu extends Component {
             </div>
         )
     }
-}
-
-
-
-
-// ...
-UserMenu.propTypes = {
-    classes: PropTypes.object.isRequired,
 }
 
 
