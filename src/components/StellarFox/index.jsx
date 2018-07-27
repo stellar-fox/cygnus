@@ -59,8 +59,12 @@ import "typeface-roboto"
 import "./index.css"
 
 
+
+
 // firebase app
 export const firebaseApp = firebase.initializeApp(config.firebase)
+
+
 
 
 // browser history

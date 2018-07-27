@@ -5,10 +5,17 @@ import {
     compose,
 } from "redux"
 import { connect } from "react-redux"
-import { withStyles } from "@material-ui/core/styles"
 import {
+    credit,
+    debit,
+    displayCredit,
+    displayDebit,
+} from "../../lib/stellar-tx"
+import {
+    StellarSDK,
     utcToLocaleDateTime,
 } from "../../lib/utils"
+import { withStyles } from "@material-ui/core/styles"
 import {
     CircularProgress,
     Table,
@@ -27,10 +34,6 @@ import {
 } from "@material-ui/icons"
 import FirstPageIcon from "@material-ui/icons/FirstPage"
 import LastPageIcon from "@material-ui/icons/LastPage"
-import StellarSdk from "stellar-sdk"
-import {
-    credit, debit, displayCredit, displayDebit,
-} from "../../lib/stellar-tx"
 import TransactionDetails from "./TransactionDetails"
 import { transactionFetchLimit } from "../../components/StellarFox/env"
 
@@ -249,7 +252,7 @@ export default compose(
 
     // ...
     componentDidMount = () => {
-        new StellarSdk.Server(this.props.horizon)
+        new StellarSDK.Server(this.props.horizon)
             .transactions()
             .forAccount(this.props.publicKey)
             .order("desc")
@@ -257,17 +260,17 @@ export default compose(
             .call()
             .then((accountResult) => {
                 const data = accountResult.records.map((r, key) => {
-                    let transaction = StellarSdk.xdr.Transaction.fromXDR(
+                    let transaction = StellarSDK.xdr.Transaction.fromXDR(
                         r.envelope_xdr, "base64"
                     )
-                    let meta = StellarSdk.xdr.TransactionMeta.fromXDR(
+                    let meta = StellarSDK.xdr.TransactionMeta.fromXDR(
                         r.result_meta_xdr, "base64"
                     )
-                    let txresult = StellarSdk.xdr.TransactionResult.fromXDR(
+                    let txresult = StellarSDK.xdr.TransactionResult.fromXDR(
                         r.result_xdr, "base64"
                     )
                     let operations = transaction.operations().map(
-                        (op) => StellarSdk.Operation.fromXDRObject(op)
+                        (op) => StellarSDK.Operation.fromXDRObject(op)
                     )
 
                     return { key, transaction, operations, meta, txresult, r, }
@@ -297,17 +300,17 @@ export default compose(
             this.setState({ loading: true, })
             this.pageRight().then((accountResult) => {
                 const data = accountResult.records.map((r, key) => {
-                    let transaction = StellarSdk.xdr.Transaction.fromXDR(
+                    let transaction = StellarSDK.xdr.Transaction.fromXDR(
                         r.envelope_xdr, "base64"
                     )
-                    let meta = StellarSdk.xdr.TransactionMeta.fromXDR(
+                    let meta = StellarSDK.xdr.TransactionMeta.fromXDR(
                         r.result_meta_xdr, "base64"
                     )
-                    let txresult = StellarSdk.xdr.TransactionResult.fromXDR(
+                    let txresult = StellarSDK.xdr.TransactionResult.fromXDR(
                         r.result_xdr, "base64"
                     )
                     let operations = transaction.operations().map(
-                        (op) => StellarSdk.Operation.fromXDRObject(op)
+                        (op) => StellarSDK.Operation.fromXDRObject(op)
                     )
 
                     return { key, transaction, operations, meta, txresult, r, }
@@ -339,7 +342,7 @@ export default compose(
 
 
     // ...
-    pageRight = async () => await new StellarSdk.Server(this.props.horizon)
+    pageRight = async () => await new StellarSDK.Server(this.props.horizon)
         .transactions()
         .forAccount(this.props.publicKey)
         .cursor(this.props.cursorRight)

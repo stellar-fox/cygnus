@@ -4,9 +4,10 @@ import { compose } from "redux"
 import { connect } from "react-redux"
 import { withLoginManager } from "../LoginManager"
 import { NavLink } from "react-router-dom"
+import { toBool } from "@xcmats/js-toolbox"
 import {
     withDynamicRoutes,
-    withStaticRouter
+    withStaticRouter,
 } from "../StellarRouter"
 import { Null } from "../../lib/utils"
 import { bankDrawerWidth } from "../StellarFox/env"
@@ -144,7 +145,7 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
-            accountExists: !!state.StellarAccount.accountId,
+            accountExists: toBool(state.StellarAccount.accountId),
             drawerVisible: state.Bank.drawerVisible,
             contactRequests: state.Contacts.requests,
         })

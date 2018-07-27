@@ -14,7 +14,10 @@ import {
 import { action as PaymentsAction } from "../../redux/Payments"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
-import { Tab, Tabs } from "material-ui/Tabs"
+import {
+    Tab,
+    Tabs,
+} from "material-ui/Tabs"
 import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
 import { Server } from "stellar-sdk"

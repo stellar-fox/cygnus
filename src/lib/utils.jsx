@@ -12,6 +12,7 @@ import {
     wrap,
 } from "@xcmats/js-toolbox"
 
+
 import { StrKey } from "stellar-sdk"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
@@ -19,6 +20,20 @@ import shajs from "sha.js"
 import BigNumber from "bignumber.js"
 import { loadAccount } from "../lib/stellar-tx"
 import MD5 from "../lib/md5"
+
+
+
+
+
+// FIXME
+// when using:
+//    import StellarSdk from "stellar-sdk"
+// or
+//    import { Network, Server, ... } from "stellar-sdk"
+// a following error occurs:
+//     Error: XDR Error:AccountId is already defined
+export const StellarSDK = window.StellarSdk
+
 
 
 
@@ -601,23 +616,36 @@ export const devEnv = () =>
 // asynchronously load libraries (used in dev. environment)
 export const dynamicImportLibs = async () => {
     let [
-        apiAccount, apiContacts,
-        bignumber, firebase, toolbox, ledger, jss,
-        lodash, mui, md5, redux, StellarSdk, StellarTx, utils,
+        apiAccount,
+        apiContacts,
+        bignumber,
+        firebase,
+        jss,
+        ledger,
+        lodash,
+        md5,
+        mui,
+        redshift,
+        redux,
+        StellarSdk,
+        StellarTx,
+        toolbox,
+        utils,
     ] = await Promise.all([
         import("../../src/components/Account/api"),
         import("../../src/components/Contacts/api"),
         import("bignumber.js"),
         import("../../src/components/StellarFox"),
-        import("@xcmats/js-toolbox"),
-        import("./ledger"),
         import("jss"),
+        import("./ledger"),
         import("lodash"),
-        import("@material-ui/core"),
         import("./md5"),
+        import("@material-ui/core"),
+        import("@stellar-fox/redshift"),
         import("redux"),
         import("stellar-sdk"),
-        import("./stellar-tx"),
+        import("../lib/stellar-tx"),
+        import("@xcmats/js-toolbox"),
         import("./utils"),
     ])
     return {
@@ -628,9 +656,15 @@ export const dynamicImportLibs = async () => {
         },
         axios,
         BigNumber: bignumber.default,
-        toolbox, ledger, jss, lodash, mui,
+        jss, ledger, lodash,
         md5: md5.default,
-        redux, StellarSdk, StellarTx, toml, utils,
+        mui,
+        redshift,
+        redux,
+        StellarSdk,
+        StellarTx,
+        toolbox,
+        utils,
     }
 }
 
@@ -710,13 +744,14 @@ export const accountIsLocked = (signers, publicKey) => {
 
 // ...
 export const sortBy = (attr="first_name") => (a, b) => {
-    let nameA = "", nameB = ""
+    let nameA = emptyString(), nameB = emptyString()
 
     if (a[attr]) { nameA = a[attr].toUpperCase() }
     if (b[attr]) { nameB = b[attr].toUpperCase() }
 
     if (nameA < nameB) { return -1 }
     if (nameA > nameB) { return 1 }
+
     return 0
 }
 

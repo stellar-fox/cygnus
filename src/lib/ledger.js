@@ -9,6 +9,8 @@ import { Keypair, xdr } from "stellar-sdk"
 export const isSupported = async () => Transport.isSupported()
 
 
+
+
 /**
  * Establishing connection to the Ledger device constitutes essentially
  * querrying for the current software version of the installed application.
@@ -22,6 +24,8 @@ export const getSoftwareVersion = async () => {
         result = await str.getAppConfiguration()
     return result.version
 }
+
+
 
 
 /**
@@ -38,6 +42,8 @@ export const getPublicKey = async (bip32Path) => {
 
     return result.publicKey
 }
+
+
 
 
 /**

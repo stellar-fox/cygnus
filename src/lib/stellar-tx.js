@@ -1,10 +1,6 @@
-import {
-    liveNetAddr,
-    testNetAddr,
-} from "../components/StellarFox/env"
-
 import BigNumber from "bignumber.js"
-
+import { emptyString } from "@xcmats/js-toolbox"
+import { liveNetAddr, testNetAddr } from "../components/StellarFox/env"
 import {
     Asset, Memo, Network, Operation, Server, TransactionBuilder,
 } from "stellar-sdk"
@@ -134,17 +130,11 @@ export const submitTransaction = async (signedTx, network) =>
 export const displayLastBalance = (balance) => {
     const bnBalance = new BigNumber(balance)
 
-    if (bnBalance.isEqualTo(0)) {
-        return bnBalance.toString()
-    }
+    if (bnBalance.isEqualTo(0)) { return bnBalance.toString() }
 
-    if (bnBalance.isGreaterThan(0)) {
-        return `+ ${balance.toString()}`
-    }
+    if (bnBalance.isGreaterThan(0)) { return `+ ${balance.toString()}` }
 
-    if (bnBalance.isLessThan(0)) {
-        return `- ${balance.toString()}`
-    }
+    if (bnBalance.isLessThan(0)) { return `- ${balance.toString()}` }
 }
 
 
@@ -152,14 +142,14 @@ export const displayLastBalance = (balance) => {
 
 // ...
 export const displayDebit = (debit) =>
-    debit ? `- ${new BigNumber(debit).abs().toString()}` : ""
+    debit ? `- ${new BigNumber(debit).abs().toString()}` : emptyString()
 
 
 
 
 // ...
 export const displayCredit = (credit) =>
-    credit ? `+ ${new BigNumber(credit).abs().toString()}` : ""
+    credit ? `+ ${new BigNumber(credit).abs().toString()}` : emptyString()
 
 
 
@@ -179,7 +169,7 @@ export const debit = (operations, publicKey) => {
         return balance.toString()
     }
 
-    return ""
+    return emptyString()
 }
 
 
@@ -189,11 +179,9 @@ export const debit = (operations, publicKey) => {
 export const credit = (operations, publicKey) => {
     const balance = operationsBalance(operations, publicKey)
 
-    if (balance.isGreaterThan(0)) {
-        return balance.toString()
-    }
+    if (balance.isGreaterThan(0)) { return balance.toString() }
 
-    return ""
+    return emptyString()
 }
 
 
@@ -221,6 +209,7 @@ export const operationsBalance = (operations, publicKey) => {
 
     return balance
 }
+
 
 
 
