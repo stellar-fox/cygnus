@@ -1,6 +1,8 @@
 import Transport from "@ledgerhq/hw-transport-u2f"
 import Str from "@ledgerhq/hw-app-str"
-import { Keypair, xdr } from "stellar-sdk"
+import { StellarSdk } from "./utils"
+
+
 
 
 /**
@@ -60,9 +62,9 @@ export const signTransaction = async (bip32Path, publicKey, transaction) => {
             bip32Path,
             transaction.signatureBase()
         ),
-        keyPair = Keypair.fromPublicKey(publicKey),
+        keyPair = StellarSdk.Keypair.fromPublicKey(publicKey),
         hint = keyPair.signatureHint(),
-        decorated = new xdr.DecoratedSignature({
+        decorated = new StellarSdk.xdr.DecoratedSignature({
             hint: hint,
             signature: signature.signature,
             /**

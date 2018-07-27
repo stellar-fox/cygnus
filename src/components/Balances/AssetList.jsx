@@ -3,7 +3,11 @@ import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import { BigNumber } from "bignumber.js"
 import NumberFormat from "react-number-format"
-import { htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
+import {
+    htmlEntities as he,
+    pubKeyAbbr,
+    StellarSdk,
+} from "../../lib/utils"
 import { maximumTrustLimit } from "../StellarFox/env"
 import { withStyles } from "@material-ui/core/styles"
 import { CircularProgress, Grid, Typography } from "@material-ui/core"
@@ -15,7 +19,6 @@ import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import Switch from "../../lib/mui-v1/Switch"
-import { Asset } from "stellar-sdk"
 import { toBool } from "@xcmats/js-toolbox"
 import { clone, remove } from "lodash"
 import { config } from "../../config"
@@ -25,7 +28,7 @@ import { config } from "../../config"
 
 // ...
 const baseAssets = config.assets.codes.map(
-    assetCode => new Asset(
+    assetCode => new StellarSdk.Asset(
         assetCode,
         config.assets.issuer
     )
@@ -308,9 +311,11 @@ export default compose(
                             />
                         }
 
-                        <div onClick={this.showAssetDetails.bind(
-                            this, trustedAsset
-                        )} className="p-l-small cursor-pointer"
+                        <div
+                            onClick={this.showAssetDetails.bind(
+                                this, trustedAsset
+                            )}
+                            className="p-l-small cursor-pointer"
                         >
                             <div className="p-b-nano">
                                 <Typography variant="caption"

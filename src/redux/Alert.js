@@ -1,4 +1,7 @@
-import { createReducer } from "@xcmats/js-toolbox"
+import {
+    createReducer,
+    emptyString,
+} from "@xcmats/js-toolbox"
 
 
 
@@ -7,8 +10,8 @@ import { createReducer } from "@xcmats/js-toolbox"
 const initState = {
 
     visible: false,
-    title: "",
-    text: "",
+    title: emptyString(),
+    text: emptyString(),
 
 }
 
@@ -59,8 +62,8 @@ export const reducer = createReducer(initState)({
     [ALERT_HIDE]: (state) => ({
         ...state,
         visible: false,
-        title: "",
-        text: "",
+        title: emptyString(),
+        text: emptyString(),
     }),
 
 })

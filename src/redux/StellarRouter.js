@@ -1,5 +1,6 @@
 import {
     createReducer,
+    emptyString,
     swap,
 } from "@xcmats/js-toolbox"
 
@@ -15,12 +16,12 @@ import { StaticRouter } from "../components/StellarRouter"
 // <StellarRouter> component state
 const initState = {
 
-    currentView: "",
+    currentView: emptyString(),
     location: {
-        pathname: "",
-        search: "",
-        hash: "",
-        key: "",
+        pathname: emptyString(),
+        search: emptyString(),
+        hash: emptyString(),
+        key: emptyString(),
     },
     staticPaths: {},
     pathToView: {},

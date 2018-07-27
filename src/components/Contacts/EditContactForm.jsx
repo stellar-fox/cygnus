@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators, compose, } from "redux"
 import { connect } from "react-redux"
+import { emptyString } from "@xcmats/js-toolbox"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize } from "../StellarFox/env"
 import {
@@ -110,6 +111,9 @@ const styles = (theme) => ({
 
 })
 
+
+
+
 // ...
 const EditContactInfoTextField = withStyles(styles)(
     ({ classes, label, id, onChange, value, error, helperText, }) =>
@@ -138,6 +142,8 @@ const EditContactInfoTextField = withStyles(styles)(
 )
 
 
+
+
 // ...
 const RequestProgress = withStyles(styles)(
     ({ classes, }) =>
@@ -145,6 +151,8 @@ const RequestProgress = withStyles(styles)(
             thickness={3} size={25}
         />
 )
+
+
 
 
 // ...
@@ -159,6 +167,8 @@ const ModalButton = withStyles(styles)(
 )
 
 
+
+
 // ...
 const DeleteContactButton = withStyles(styles)(
     ({ classes, onClick, }) =>
@@ -168,6 +178,8 @@ const DeleteContactButton = withStyles(styles)(
             Delete Contact
         </Button>
 )
+
+
 
 
 // ...
@@ -240,6 +252,9 @@ const ExtContactDetails = withStyles(styles)(
         </div>
 )
 
+
+
+
 // ...
 const ContactDetails = withStyles(styles)(
     ({ classes, details, assetManager, deleteAction, }) =>
@@ -305,20 +320,22 @@ const ContactDetails = withStyles(styles)(
 )
 
 
+
+
 // ...
 class EditContactForm extends Component {
 
     state = {
-        memo: "",
-        firstName: "",
-        lastName: "",
-        alias: "",
-        domain: "",
-        paymentAddress: "",
+        memo: emptyString(),
+        firstName: emptyString(),
+        lastName: emptyString(),
+        alias: emptyString(),
+        domain: emptyString(),
+        paymentAddress: emptyString(),
         defaultCurrency: "eur",
         inProgress: false,
         error: false,
-        errorMessage: "",
+        errorMessage: emptyString(),
     }
 
 
@@ -405,7 +422,7 @@ class EditContactForm extends Component {
 
         await this.setState({
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
             inProgress: true,
         })
 
@@ -454,7 +471,7 @@ class EditContactForm extends Component {
 
             await this.setState({
                 error: false,
-                errorMessage: "",
+                errorMessage: emptyString(),
                 inProgress: true,
             })
         }
@@ -559,8 +576,8 @@ class EditContactForm extends Component {
             })
         } else {
             this.setState({
-                alias: "",
-                domain: "",
+                alias: emptyString(),
+                domain: emptyString(),
                 paymentAddress: event.target.value,
             })
         }

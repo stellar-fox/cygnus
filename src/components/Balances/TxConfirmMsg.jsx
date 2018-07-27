@@ -6,7 +6,10 @@ import {
     List,
     ListItem,
 } from "material-ui/List"
-import { handleException } from "@xcmats/js-toolbox"
+import {
+    emptyString,
+    handleException,
+} from "@xcmats/js-toolbox"
 import {
     findContact,
     htmlEntities as he,
@@ -20,6 +23,10 @@ import { Typography } from "@material-ui/core"
 import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
 
+
+
+
+// ...
 const styles = (theme) => ({
     avatar: {
         borderRadius: 3,
@@ -38,6 +45,7 @@ const styles = (theme) => ({
         marginBottom: theme.spacing.unit,
     },
 })
+
 
 
 
@@ -263,7 +271,7 @@ class TxConfirmMsg extends Component {
                             disabled={true}
                             primaryText="Memo"
                             secondaryText={
-                                Balances.memoText === "" ?
+                                Balances.memoText === emptyString() ?
                                     "Empty" : Balances.memoText
                             }
                             leftIcon={

@@ -11,16 +11,12 @@ import {
     parMap,
     wrap,
 } from "@xcmats/js-toolbox"
-
-
-import { StrKey } from "stellar-sdk"
-import { env } from "../components/StellarFox"
-import { config } from "../config"
+import MD5 from "../lib/md5"
 import shajs from "sha.js"
 import BigNumber from "bignumber.js"
 import { loadAccount } from "../lib/stellar-tx"
-import MD5 from "../lib/md5"
-
+import { env } from "../components/StellarFox"
+import { config } from "../config"
 
 
 
@@ -32,7 +28,7 @@ import MD5 from "../lib/md5"
 //    import { Network, Server, ... } from "stellar-sdk"
 // a following error occurs:
 //     Error: XDR Error:AccountId is already defined
-export const StellarSDK = window.StellarSdk
+export const StellarSdk = window.StellarSdk
 
 
 
@@ -255,7 +251,7 @@ export const toAliasAndDomain = (paymentAddress) => paymentAddress.split("*")
 // Validates given public key (string)
 // returns true/false  (valid/invalid key).
 export const publicKeyValid = (publicKey) =>
-    StrKey.isValidEd25519PublicKey(publicKey)
+    StellarSdk.StrKey.isValidEd25519PublicKey(publicKey)
 
 
 
@@ -369,19 +365,21 @@ export const augmentAssets = (assets, horizon) =>
     parMap(
         assets,
         (asset) => assetAvatar(asset, horizon)
-    ).then(
-        (results) => {
-            return results.map((r) => {
-                let assetToUpdate = assets.find((a) =>
-                    a.asset_code === r.asset_code
-                )
-                assetToUpdate["avatar"] = r.avatar
-                assetToUpdate["decimals"] = r.decimals
-                assetToUpdate["verified"] = r.verified
-                return assetToUpdate
-            })
-        }
     )
+        .then(
+            (results) => {
+                return results.map((r) => {
+                    let assetToUpdate = assets.find((a) =>
+                        a.asset_code === r.asset_code
+                    )
+                    assetToUpdate["avatar"] = r.avatar
+                    assetToUpdate["decimals"] = r.decimals
+                    assetToUpdate["verified"] = r.verified
+                    return assetToUpdate
+                })
+            }
+        )
+
 
 
 
@@ -420,6 +418,7 @@ export const assetAvatar = async (asset, horizon) => {
         }
     }
 }
+
 
 
 
@@ -616,26 +615,16 @@ export const devEnv = () =>
 // asynchronously load libraries (used in dev. environment)
 export const dynamicImportLibs = async () => {
     let [
-        apiAccount,
-        apiContacts,
-        bignumber,
-        firebase,
-        jss,
-        ledger,
-        lodash,
-        md5,
-        mui,
-        redshift,
-        redux,
-        StellarSdk,
+        StellarFox, apiAccount, apiContacts,
+        bignumber, jss, ledger, lodash, md5, mui,
+        redshift, redux,
         StellarTx,
-        toolbox,
-        utils,
+        toolbox, utils,
     ] = await Promise.all([
+        import("../../src/components/StellarFox"),
         import("../../src/components/Account/api"),
         import("../../src/components/Contacts/api"),
         import("bignumber.js"),
-        import("../../src/components/StellarFox"),
         import("jss"),
         import("./ledger"),
         import("lodash"),
@@ -643,7 +632,6 @@ export const dynamicImportLibs = async () => {
         import("@material-ui/core"),
         import("@stellar-fox/redshift"),
         import("redux"),
-        import("stellar-sdk"),
         import("../lib/stellar-tx"),
         import("@xcmats/js-toolbox"),
         import("./utils"),
@@ -652,19 +640,14 @@ export const dynamicImportLibs = async () => {
         api: {
             account: apiAccount,
             contacts: apiContacts,
-            firebase: firebase.firebaseApp,
+            firebase: StellarFox.firebaseApp,
         },
         axios,
         BigNumber: bignumber.default,
-        jss, ledger, lodash,
-        md5: md5.default,
-        mui,
-        redshift,
-        redux,
-        StellarSdk,
-        StellarTx,
-        toolbox,
-        utils,
+        jss, ledger, lodash, md5: md5.default, mui,
+        redshift, redux,
+        StellarSdk, StellarTx,
+        toolbox, utils,
     }
 }
 

@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import debounce from "lodash/debounce"
+import { emptyString } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
@@ -125,6 +126,8 @@ const styles = (theme) => ({
 })
 
 
+
+
 // ...
 const renderInput = (inputProps) => {
     const {
@@ -152,6 +155,8 @@ const renderInput = (inputProps) => {
         />
     )
 }
+
+
 
 
 // ...
@@ -195,6 +200,8 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
 }
 
 
+
+
 // ...
 const renderSuggestionsContainer = (options) => {
     const { containerProps, children, } = options
@@ -207,18 +214,19 @@ const renderSuggestionsContainer = (options) => {
 }
 
 
+
+
 // ...
 class ContactSuggester extends Component {
 
-
     state = {
-        value: "",
+        value: emptyString(),
         suggestions: [],
         error: false,
-        errorMessage: "",
-        paymentAddress: "",
-        label: "",
-        emailMD5: "",
+        errorMessage: emptyString(),
+        paymentAddress: emptyString(),
+        label: emptyString(),
+        emailMD5: emptyString(),
         loading: false,
     }
 
@@ -231,11 +239,11 @@ class ContactSuggester extends Component {
         })
 
         suggestion && this.setState({
-            label: "",
-            paymentAddress: "",
-            emailMD5: "",
+            label: emptyString(),
+            paymentAddress: emptyString(),
+            emailMD5: emptyString(),
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
         })
     }
 
@@ -327,9 +335,9 @@ class ContactSuggester extends Component {
             this.setState({
                 error: true,
                 errorMessage,
-                paymentAddress: "",
-                label: "",
-                emailMD5: "",
+                paymentAddress: emptyString(),
+                label: emptyString(),
+                emailMD5: emptyString(),
             })
 
             this.props.setBalancesState({ payee: null, })
@@ -350,7 +358,7 @@ class ContactSuggester extends Component {
                  */
                 const federationRecord = await getFederationRecord(input)
 
-                memo = federationRecord.memo ? federationRecord.memo : ""
+                memo = federationRecord.memo ? federationRecord.memo : emptyString()
 
                 /**
                  * stellar account corresponding to the public key that is
@@ -402,7 +410,7 @@ class ContactSuggester extends Component {
                         )
                         this.props.setBalancesState({
                             memoRequired: false,
-                            payeeMemoText: "",
+                            payeeMemoText: emptyString(),
                         })
                     }
                 /**
@@ -441,16 +449,16 @@ class ContactSuggester extends Component {
                     indicatorStyle: "fade-extreme",
                     sendEnabled: false,
                     memoRequired: false,
-                    memoText: "",
+                    memoText: emptyString(),
                     payeeCurrency: "eur",
-                    payeeCurrencyAmount: "",
-                    payeeMemoText: "",
+                    payeeCurrencyAmount: emptyString(),
+                    payeeMemoText: emptyString(),
                     payeeStellarAccount: null,
                 })
                 this.setState({
-                    label: "",
-                    paymentAddress: "",
-                    emailMD5: "",
+                    label: emptyString(),
+                    paymentAddress: emptyString(),
+                    emailMD5: emptyString(),
                 })
                 return false
             }
@@ -561,7 +569,7 @@ class ContactSuggester extends Component {
              */
             this.props.setBalancesState({
                 memoText: memo ? memo : this.props.payeeMemoText ?
-                    this.props.payeeMemoText : "",
+                    this.props.payeeMemoText : emptyString(),
                 payeeCurrency: contact ?
                     contact.currency : extContact ?
                         extContact.currency : this.props.payeeCurrency,
@@ -572,8 +580,8 @@ class ContactSuggester extends Component {
         this.setState({
             loading: false,
             error: false,
-            errorMessage: "",
-            emailMD5: contact ? contact.email_md5 : "",
+            errorMessage: emptyString(),
+            emailMD5: contact ? contact.email_md5 : emptyString(),
             label: displayName,
             paymentAddress: displayPaymentAddress.props &&
                 displayPaymentAddress.props.children === "−" ?
@@ -600,6 +608,7 @@ class ContactSuggester extends Component {
         this.toggleSignButton()
         return true
     }
+
 
     // ...
     paymentValid = () =>
@@ -633,18 +642,18 @@ class ContactSuggester extends Component {
             indicatorStyle: "fade-extreme",
             sendEnabled: false,
             memoRequired: false,
-            memoText: "",
+            memoText: emptyString(),
             payeeCurrency: "eur",
-            payeeCurrencyAmount: "",
-            payeeMemoText: "",
+            payeeCurrencyAmount: emptyString(),
+            payeeMemoText: emptyString(),
             payeeStellarAccount: null,
             transactionAsset: null,
         })
         this.setState({
-            label: "",
-            paymentAddress: "",
-            emailMD5: "",
-            value: "",
+            label: emptyString(),
+            paymentAddress: emptyString(),
+            emailMD5: emptyString(),
+            value: emptyString(),
         })
     }
 
@@ -660,8 +669,6 @@ class ContactSuggester extends Component {
     // ...
     render = () => {
         const { classes, } = this.props
-
-
 
         return (
             <div className="f-b-col">

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import { emptyString } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
 import ContactCard from "../ContactCard"
@@ -232,14 +233,15 @@ const SelectView = withStyles(styles)(
 
 
 
+
 // ...
 class Contacts extends Component {
 
     // ...
     state = {
-        search: "",
+        search: emptyString(),
         error: false,
-        errorMessage: "",
+        errorMessage: emptyString(),
         selectedView: 0,
         sortBy: "first_name",
     }
@@ -658,6 +660,7 @@ class Contacts extends Component {
 
         </Fragment>
 }
+
 
 
 

@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react"
 import Axios from "axios"
 
 import { bindActionCreators } from "redux"
+import { emptyString } from "@xcmats/js-toolbox"
 
 import md5 from "../../lib/md5"
 import {
@@ -35,6 +36,8 @@ import { subscribeEmail } from "./api"
 import { Typography } from "@material-ui/core"
 
 
+
+
 // ...
 const signupStyles = {
 
@@ -55,12 +58,17 @@ const signupStyles = {
 }
 
 
+
+
 // ...
 const styles = (_theme) => ({
     progress: {},
 })
 
 
+
+
+// ...
 const RequestProgress = withStyles(styles)(
     ({ classes, color, }) =>
         <CircularProgress color={color || "secondary"}
@@ -70,14 +78,16 @@ const RequestProgress = withStyles(styles)(
 )
 
 
+
+
 // <Signup> component
 class Signup extends Component {
 
     // ...
     state = {
         stepIndex: 0,
-        message: "",
-        error: "",
+        message: emptyString(),
+        error: emptyString(),
         email: null,
         password: null,
         buttonDisabled: false,
@@ -92,7 +102,6 @@ class Signup extends Component {
         if (stepIndex === 0  &&  !this.validateInput()) {
             return
         }
-
 
         await this.setState({
             stepIndex: action === "next" ?
@@ -185,27 +194,21 @@ class Signup extends Component {
     // ...
     emailValidator = () => {
         emailValid(this.textInputFieldEmail.state.value) &&
-        this.textInputFieldEmail.setState({
-            error: "",
-        })
+        this.textInputFieldEmail.setState({ error: emptyString(), })
     }
 
 
     // ...
     passwordValidator = () =>
         !passwordValid(this.textInputFieldPassword.state.value) &&
-        this.textInputFieldPassword.setState({
-            error: "",
-        })
+        this.textInputFieldPassword.setState({ error: emptyString(), })
 
 
     // ...
     passwordMatchValidator = () =>
         (this.textInputFieldPassword.state.value ===
             this.textInputFieldPasswordConf.state.value) &&
-        this.textInputFieldPasswordConf.setState({
-            error: "",
-        })
+        this.textInputFieldPasswordConf.setState({ error: emptyString(), })
 
 
     // ...
@@ -430,11 +433,9 @@ class Signup extends Component {
 }
 
 
-
-
 // ...
 export default connect(
-    (_state) => ({}),
+    null,
     (dispatch) => bindActionCreators({
         showAlert: AlertAction.showAlert,
         hideModal: ModalAction.hideModal,

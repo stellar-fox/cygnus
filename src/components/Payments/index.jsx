@@ -10,6 +10,7 @@ import {
     withDynamicRoutes,
     withStaticRouter,
 } from "../StellarRouter"
+import { StellarSdk } from "../../lib/utils"
 
 import { action as PaymentsAction } from "../../redux/Payments"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
@@ -20,7 +21,6 @@ import {
 } from "material-ui/Tabs"
 import PaymentsHistory from "./PaymentsHistory"
 import Transactions from "./Transactions"
-import { Server } from "stellar-sdk"
 
 import "./index.css"
 
@@ -76,7 +76,7 @@ class Payments extends Component {
         )
 
         // ...
-        this.stellarServer = new Server(this.props.horizon)
+        this.stellarServer = new StellarSdk.Server(this.props.horizon)
     }
 
 

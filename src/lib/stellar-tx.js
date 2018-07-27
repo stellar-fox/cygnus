@@ -1,9 +1,7 @@
 import BigNumber from "bignumber.js"
 import { emptyString } from "@xcmats/js-toolbox"
 import { liveNetAddr, testNetAddr } from "../components/StellarFox/env"
-import {
-    Asset, Memo, Network, Operation, Server, TransactionBuilder,
-} from "stellar-sdk"
+import { StellarSdk } from "./utils"
 
 
 
@@ -11,11 +9,11 @@ import {
 // ...
 export const server = (network) => {
     if (network === liveNetAddr) {
-        Network.usePublicNetwork()
-        return new Server(liveNetAddr)
+        StellarSdk.Network.usePublicNetwork()
+        return new StellarSdk.Server(liveNetAddr)
     }
-    Network.useTestNetwork()
-    return new Server(testNetAddr)
+    StellarSdk.Network.useTestNetwork()
+    return new StellarSdk.Server(testNetAddr)
 }
 
 
@@ -44,9 +42,9 @@ export const operations = (network) =>
 
 // ...
 export const buildSetDataTx = async (txData) =>
-    new TransactionBuilder(
+    new StellarSdk.TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(Operation.manageData({
+    ).addOperation(StellarSdk.Operation.manageData({
         name: txData.name,
         value: txData.value,
     })).build()
@@ -56,20 +54,20 @@ export const buildSetDataTx = async (txData) =>
 
 // ...
 export const buildChangeTrustTx = async (txData) => {
-    let txBuilder = new TransactionBuilder(
+    let txBuilder = new StellarSdk.TransactionBuilder(
         await loadAccount(txData.source, txData.network)
     )
 
     txData.assets.forEach(asset => {
 
         if (asset.trustLimit) {
-            txBuilder.addOperation(Operation.changeTrust({
-                asset: new Asset(asset.code, asset.issuer),
+            txBuilder.addOperation(StellarSdk.Operation.changeTrust({
+                asset: new StellarSdk.Asset(asset.code, asset.issuer),
                 limit: asset.trustLimit,
             }))
         } else {
-            txBuilder.addOperation(Operation.changeTrust({
-                asset: new Asset(asset.code, asset.issuer),
+            txBuilder.addOperation(StellarSdk.Operation.changeTrust({
+                asset: new StellarSdk.Asset(asset.code, asset.issuer),
             }))
         }
 
@@ -83,38 +81,38 @@ export const buildChangeTrustTx = async (txData) => {
 
 // ...
 export const buildCreateAccountTx = async (txData) =>
-    new TransactionBuilder(
+    new StellarSdk.TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(Operation.createAccount({
+    ).addOperation(StellarSdk.Operation.createAccount({
         destination: txData.destination,
         startingBalance: txData.amount,
-    })).addMemo(Memo.text(txData.memo)).build()
+    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
 
 
 
 
 // ...
 export const buildPaymentTx = async (txData) =>
-    new TransactionBuilder(
+    new StellarSdk.TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(Operation.payment({
+    ).addOperation(StellarSdk.Operation.payment({
         destination: txData.destination,
-        asset: Asset.native(),
+        asset: StellarSdk.Asset.native(),
         amount: txData.amount,
-    })).addMemo(Memo.text(txData.memo)).build()
+    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
 
 
 
 
 // ...
 export const buildAssetPaymentTx = async (txData) =>
-    new TransactionBuilder(
+    new StellarSdk.TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(Operation.payment({
+    ).addOperation(StellarSdk.Operation.payment({
         destination: txData.destination,
-        asset: new Asset(txData.assetCode, txData.assetIssuer),
+        asset: new StellarSdk.Asset(txData.assetCode, txData.assetIssuer),
         amount: txData.amount,
-    })).addMemo(Memo.text(txData.memo)).build()
+    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
 
 
 
@@ -131,9 +129,7 @@ export const displayLastBalance = (balance) => {
     const bnBalance = new BigNumber(balance)
 
     if (bnBalance.isEqualTo(0)) { return bnBalance.toString() }
-
     if (bnBalance.isGreaterThan(0)) { return `+ ${balance.toString()}` }
-
     if (bnBalance.isLessThan(0)) { return `- ${balance.toString()}` }
 }
 

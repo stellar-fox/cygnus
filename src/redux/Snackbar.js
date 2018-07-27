@@ -1,4 +1,7 @@
-import { createReducer } from "@xcmats/js-toolbox"
+import {
+    createReducer,
+    emptyString,
+} from "@xcmats/js-toolbox"
 
 
 
@@ -7,7 +10,7 @@ import { createReducer } from "@xcmats/js-toolbox"
 const initState = {
 
     visible: false,
-    message: "",
+    message: emptyString(),
 
 }
 
@@ -56,7 +59,7 @@ export const reducer = createReducer(initState)({
     [SNACKBAR_RESET]: (state) => ({
         ...state,
         visible: false,
-        message: "",
+        message: emptyString(),
     }),
 
 })

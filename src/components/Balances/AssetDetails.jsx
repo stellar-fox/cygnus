@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react"
 import { withStyles } from "@material-ui/core/styles"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
+import { emptyString } from "@xcmats/js-toolbox"
 import ReducedContactSuggester from "./ReducedContactSuggester"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
@@ -14,8 +15,11 @@ import {
     assetBalance,
     submitTransaction,
 } from "../../lib/stellar-tx"
-import { Asset } from "stellar-sdk"
-import { insertPathIndex, htmlEntities as he } from "../../lib/utils"
+import {
+    insertPathIndex,
+    htmlEntities as he,
+    StellarSdk,
+} from "../../lib/utils"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import clone from "lodash/clone"
 
@@ -69,9 +73,9 @@ export default compose(
         // ...
         state = {
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
             inProgress: false,
-            statusMessage: "",
+            statusMessage: emptyString(),
         }
 
 
@@ -89,13 +93,13 @@ export default compose(
                     errorMessage: "Invalid amount entered.",
                 })
                 this.props.setState({
-                    amount: "",
+                    amount: emptyString(),
                     transactionAsset: null,
                 })
             } else {
                 this.setState({
                     error: false,
-                    errorMessage: "",
+                    errorMessage: emptyString(),
                 })
                 this.props.setState({
                     amount: event.target.value,
@@ -129,7 +133,7 @@ export default compose(
                 this.props.payee, this.props.horizon
             )
 
-            const asset = new Asset(
+            const asset = new StellarSdk.Asset(
                 this.props.asset.asset_code,
                 this.props.asset.asset_issuer
             )
@@ -182,7 +186,7 @@ export default compose(
 
                     await this.setState({
                         inProgress: false,
-                        statusMessage: "",
+                        statusMessage: emptyString(),
                     })
 
                     this.props.showModal("txCustomAssetComplete")
@@ -233,7 +237,7 @@ export default compose(
                             <Button
                                 color="primary"
                                 onClick={this.sendAsset}
-                                disabled={this.props.amount === "" || !this.props.payee}
+                                disabled={this.props.amount === emptyString() || !this.props.payee}
                             >
                                 {this.state.inProgress ? <CircularProgress
                                     color="secondary" thickness={4} size={20}

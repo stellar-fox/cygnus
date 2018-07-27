@@ -5,9 +5,11 @@ import {
     compose,
 } from "redux"
 import { connect } from "react-redux"
+import { emptyString } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import {
     utcToLocaleDateTime,
+    StellarSdk,
 } from "../../lib/utils"
 import {
     CircularProgress,
@@ -27,12 +29,12 @@ import {
 } from "@material-ui/icons"
 import FirstPageIcon from "@material-ui/icons/FirstPage"
 import LastPageIcon from "@material-ui/icons/LastPage"
-import StellarSdk from "stellar-sdk"
 import FailedTxDetails from "./FailedTxDetails"
 import { transactionFetchLimit } from "../../components/StellarFox/env"
 import { firebaseApp } from "../StellarFox"
 import NumberFormat from "react-number-format"
 import { withAssetManager } from "../AssetManager"
+
 
 
 
@@ -239,7 +241,7 @@ export default compose(
         rowsPerPage: 5,
         loading: true,
         error: false,
-        errorMessage: "",
+        errorMessage: emptyString(),
         data: [],
         detailsData: [],
         cursorRight: "0",
