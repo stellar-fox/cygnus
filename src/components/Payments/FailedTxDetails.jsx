@@ -14,6 +14,7 @@ import {
     utcToLocaleDateTime,
 } from "../../lib/utils"
 import Button from "../../lib/mui-v1/Button"
+import { StellarSdk } from "../../lib/utils"
 
 
 
@@ -76,6 +77,8 @@ export default compose(
         submitTransaction = (xdrBody, _event) => {
             // eslint-disable-next-line no-console
             console.log(xdrBody)
+            // eslint-disable-next-line no-console
+            console.log(JSON.stringify(StellarSdk.xdr.TransactionEnvelope.fromXDR(xdrBody, "base64")))
         }
 
 
