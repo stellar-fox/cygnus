@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
+import { emptyString } from "@xcmats/js-toolbox"
 
 import { bip32Prefix } from "../StellarFox/env"
 import { getPublicKey } from "../../lib/ledger"
@@ -23,7 +24,7 @@ class LedgerAuthenticator extends Component {
         pathEditable: false,
         useDefaultAccount: true,
         buttonDisabled: false,
-        status: "",
+        status: emptyString(),
     }
 
 
@@ -68,7 +69,7 @@ class LedgerAuthenticator extends Component {
 
     // ...
     errorCodeToUserMessage = (code) => {
-        let message = ""
+        let message = emptyString()
         switch (code) {
             case 26625:
                 message =
@@ -88,7 +89,7 @@ class LedgerAuthenticator extends Component {
 
     // ...
     formBip32Path = () =>
-        this.state.derivationPath === "" ?
+        this.state.derivationPath === emptyString() ?
             `${bip32Prefix}0'` :
             `${bip32Prefix}${this.state.derivationPath}'`
 

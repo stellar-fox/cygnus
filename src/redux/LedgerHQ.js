@@ -1,5 +1,7 @@
-import { createReducer } from "@xcmats/js-toolbox"
-
+import {
+    createReducer,
+    emptyString,
+} from "@xcmats/js-toolbox"
 import { getSoftwareVersion as ledgerGetSoftwareVersion } from "../lib/ledger"
 
 
@@ -9,7 +11,7 @@ import { getSoftwareVersion as ledgerGetSoftwareVersion } from "../lib/ledger"
 const initState = {
     connected: false,
     version: "unknown",
-    status: "",
+    status: emptyString(),
     publicKey: null,
     bip32Path: null,
 }
@@ -133,6 +135,5 @@ export const reducer = createReducer(initState)({
         ...state,
         bip32Path: action.bip32Path,
     }),
-
 
 })

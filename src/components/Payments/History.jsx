@@ -5,6 +5,7 @@ import {
     compose,
 } from "redux"
 import { connect } from "react-redux"
+import { emptyString } from "@xcmats/js-toolbox"
 import {
     credit,
     debit,
@@ -36,6 +37,7 @@ import FirstPageIcon from "@material-ui/icons/FirstPage"
 import LastPageIcon from "@material-ui/icons/LastPage"
 import TransactionDetails from "./TransactionDetails"
 import { transactionFetchLimit } from "../../components/StellarFox/env"
+
 
 
 
@@ -241,7 +243,7 @@ export default compose(
         rowsPerPage: 5,
         loading: true,
         error: false,
-        errorMessage: "",
+        errorMessage: emptyString(),
         data: [],
         detailsData: [],
         cursorRight: "0",

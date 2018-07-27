@@ -1,25 +1,28 @@
-import { createReducer } from "@xcmats/js-toolbox"
+import {
+    createReducer,
+    emptyString,
+} from "@xcmats/js-toolbox"
 
 
 
 
 // <Account> component state
 const initState = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    gravatar: "",
-    paymentAddress: "",
-    memo: "",
+    firstName: emptyString(),
+    lastName: emptyString(),
+    email: emptyString(),
+    gravatar: emptyString(),
+    paymentAddress: emptyString(),
+    memo: emptyString(),
     discoverable: true,
     currency: "eur",
     exists: false,
     tabSelected: "Settings",
     needsRegistration: false,
-    messageUserData: "",
-    messagePaymentData: "",
-    fingerprintUserData: "",
-    fingerprintPaymentData: "",
+    messageUserData: emptyString(),
+    messagePaymentData: emptyString(),
+    fingerprintUserData: emptyString(),
+    fingerprintPaymentData: emptyString(),
 }
 
 

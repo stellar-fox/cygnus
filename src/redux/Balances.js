@@ -1,5 +1,7 @@
-import { createReducer } from "@xcmats/js-toolbox"
-
+import {
+    createReducer,
+    emptyString,
+} from "@xcmats/js-toolbox"
 import { securityMsgPlaceholder } from "../../src/components/StellarFox/env"
 
 
@@ -7,29 +9,29 @@ import { securityMsgPlaceholder } from "../../src/components/StellarFox/env"
 
 // <Balances> component state
 const initState = ((now) => ({
-    amount: "",
-    amountNative: "",
-    amountText: "",
+    amount: emptyString(),
+    amountNative: emptyString(),
+    amountText: emptyString(),
     amountIsValid: false,
     cancelEnabled: true,
     contactId: null,
-    contactType: "",
-    error: "",
+    contactType: emptyString(),
+    error: emptyString(),
     indicatorMessage: securityMsgPlaceholder,
     indicatorStyle: "fade",
     ledgerId: null,
     memoRequired: false,
-    memoText: "",
+    memoText: emptyString(),
     payeeCurrency: "eur",
-    payeeCurrencyAmount: "",
-    payeeMemoText: "",
+    payeeCurrencyAmount: emptyString(),
+    payeeMemoText: emptyString(),
     message: null,
     newAccount: false,
     payCardVisible: false,
     payDate: now,
     payee: null,
     payeeStellarAccount: null,
-    payeeAddress: "",
+    payeeAddress: emptyString(),
     paymentId: null,
     sendEnabled: false,
     today: now,

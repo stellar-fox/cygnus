@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import Axios from "axios"
+import { emptyString } from "@xcmats/js-toolbox"
 import { config } from "../../config"
 import {
     listInternal, listPending, listRequested, requestByAccountNumber,
@@ -22,7 +23,6 @@ import { action as ModalAction } from "../../redux/Modal"
 import { withStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
 import SwipeableViews from "react-swipeable-views"
-
 import Button from "@material-ui/core/Button"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import Tab from "@material-ui/core/Tab"
@@ -168,10 +168,10 @@ class AddContactForm extends Component {
         showRequestSent: false,
         tabSelected: 0,
         buttonDisabled: false,
-        input: "",
-        lastInput: "",
+        input: emptyString(),
+        lastInput: emptyString(),
         error: false,
-        errorMessage: "",
+        errorMessage: emptyString(),
     }
 
 
@@ -179,11 +179,11 @@ class AddContactForm extends Component {
     onTabChange = (_event, value) =>
         this.setState({
             tabSelected: value,
-            input: "",
-            lastInput: "",
+            input: emptyString(),
+            lastInput: emptyString(),
             showRequestSent: false,
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
         })
 
 
@@ -224,7 +224,7 @@ class AddContactForm extends Component {
 
         this.setState({
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
             showProgress: true,
             showRequestSent: false,
             buttonDisabled: true,
@@ -237,7 +237,7 @@ class AddContactForm extends Component {
                 showProgress: false,
                 showRequestSent: false,
                 buttonDisabled: false,
-                input: "",
+                input: emptyString(),
             })
             this.props.showAlert(
                 "Not yet implemented. Please, check back soon.",
@@ -298,7 +298,7 @@ class AddContactForm extends Component {
             showProgress: false,
             showRequestSent: true,
             buttonDisabled: false,
-            input: "",
+            input: emptyString(),
         })
         this.updateContacts()
     }
@@ -392,12 +392,12 @@ class AddContactForm extends Component {
     hideModal = () => {
         this.setState({
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
             showProgress: false,
             showRequestSent: false,
             buttonDisabled: false,
-            input: "",
-            lastInput: "",
+            input: emptyString(),
+            lastInput: emptyString(),
         })
         this.props.hideModal()
     }
@@ -408,7 +408,7 @@ class AddContactForm extends Component {
         this.setState({
             input: event.target.value,
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
         })
 
 

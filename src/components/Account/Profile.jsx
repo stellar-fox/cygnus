@@ -6,21 +6,12 @@ import {
 } from "redux"
 import { connect } from "react-redux"
 import Axios from "axios"
+import { emptyString } from "@xcmats/js-toolbox"
 import { config } from "../../config"
 import {
     gravatar,
     gravatarSize
 } from "../StellarFox/env"
-import Input from "../../lib/common/Input"
-import Button from "../../lib/mui-v1/Button"
-import Divider from "../../lib/mui-v1/Divider"
-import Modal from "../../lib/common/Modal"
-import TxConfirmProfile from "./TxConfirmProfile"
-import TxConfirmPay from "./TxConfirmPay"
-import TxBroadcast from "./TxBroadcast"
-import MsgBadgeError from "./MsgBadgeError"
-import MsgBadgeSuccess from "./MsgBadgeSuccess"
-import MsgBadgeWarning from "./MsgBadgeWarning"
 import {
     dataDigest,
     emailValid,
@@ -35,13 +26,23 @@ import {
     loadAccount,
     submitTransaction,
 } from "../../lib/stellar-tx"
+import { withLoginManager } from "../LoginManager"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { action as AccountAction } from "../../redux/Account"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
-import { withLoginManager } from "../LoginManager"
+import Input from "../../lib/common/Input"
+import Button from "../../lib/mui-v1/Button"
+import Divider from "../../lib/mui-v1/Divider"
+import Modal from "../../lib/common/Modal"
+import TxConfirmProfile from "./TxConfirmProfile"
+import TxConfirmPay from "./TxConfirmPay"
+import TxBroadcast from "./TxBroadcast"
+import MsgBadgeError from "./MsgBadgeError"
+import MsgBadgeSuccess from "./MsgBadgeSuccess"
+import MsgBadgeWarning from "./MsgBadgeWarning"
 
 
 
@@ -71,9 +72,7 @@ class Profile extends Component {
     showError = (message) => {
         this.props.hideModal()
         this.props.showAlert(message, "Error")
-        this.props.setState({
-            message: "",
-        })
+        this.props.setState({ message: emptyString(), })
     }
 
 
@@ -117,9 +116,7 @@ class Profile extends Component {
          */
         if (!this.props.accountId) {
             this.props.popupSnackbar("User data updated without signature.")
-            this.props.setState({
-                messageUserData: "",
-            })
+            this.props.setState({ messageUserData: emptyString(), })
             return
         }
 
@@ -145,9 +142,7 @@ class Profile extends Component {
 
             this.props.showModal("txConfirmProfile")
 
-            this.props.setState({
-                messageUserData: "",
-            })
+            this.props.setState({ messageUserData: emptyString(), })
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
@@ -171,12 +166,8 @@ class Profile extends Component {
 
         } catch (error) {
 
-            this.props.setState({
-                messageUserData: "",
-            })
-
+            this.props.setState({ messageUserData: emptyString(), })
             this.props.hideModal()
-
             this.props.showAlert(error.message, "Error")
 
         }
@@ -230,9 +221,7 @@ class Profile extends Component {
          */
         if (!this.props.accountId) {
             this.props.popupSnackbar("Payment data updated without signature.")
-            this.props.setState({
-                messagePaymentData: "",
-            })
+            this.props.setState({ messagePaymentData: emptyString(), })
             return
         }
 
@@ -258,9 +247,7 @@ class Profile extends Component {
 
             this.props.showModal("txConfirmPay")
 
-            this.props.setState({
-                messagePaymentData: "",
-            })
+            this.props.setState({ messagePaymentData: emptyString(), })
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
@@ -284,12 +271,8 @@ class Profile extends Component {
 
         } catch (error) {
 
-            this.props.setState({
-                messagePaymentData: "",
-            })
-
+            this.props.setState({ messagePaymentData: emptyString(), })
             this.props.hideModal()
-
             this.props.showAlert(error.message, "Error")
 
         }

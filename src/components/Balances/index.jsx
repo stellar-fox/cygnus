@@ -10,6 +10,7 @@ import {
     Route,
 } from "react-router-dom"
 import "number-to-text/converters/en-us"
+import { emptyString } from "@xcmats/js-toolbox"
 import { action as AccountAction } from "../../redux/Account"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
@@ -240,9 +241,7 @@ class Balances extends Component {
                 })
             }
 
-            this.props.setStateForBalances({
-                message: "",
-            })
+            this.props.setStateForBalances({ message: emptyString(), })
 
             this.props.showModal("txConfirm")
 

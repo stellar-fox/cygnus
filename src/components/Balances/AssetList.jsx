@@ -43,7 +43,7 @@ export default compose(
                             <div className="nano p-b-nano fade-strong">
                                 Issuer: {pubKeyAbbr(asset.asset_issuer)}
                             </div>
-                            <div className="">
+                            <div>
                                 <span className="asset-balance">
                                     {asset.balance}
                                 </span>
