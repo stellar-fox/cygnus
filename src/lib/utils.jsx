@@ -97,21 +97,6 @@ export const getRegisteredUser = async (publicKey, bip32Path) => {
 
 
 // ...
-export const getRegisteredAccount = async (userId, token) => {
-    try {
-        return (await axios.post(`${config.api}/account/`, {
-            id: userId,
-            token,
-        })).data.data
-    } catch (_e) {
-        return null
-    }
-}
-
-
-
-
-// ...
 export const getUserExternalContacts = async (userId, token) => {
     try {
         return (await axios.post(`${config.apiV2}/contacts/list/federated/`, {
@@ -157,10 +142,23 @@ export const findContact = (contacts, id, external = false) =>
 export const getUserData = async (id, token) => {
     try {
         return (
-            await axios.post(`${config.api}/user/`, { id, token, })
+            await axios.post(`${config.api}/user/`, { user_id: id, token, })
         ).data.data
     } catch (_e) {
         return null
+    }
+}
+
+
+
+
+// ...
+export const resubmitFundingTx = async (userId, token, chargeData) => {
+    try {
+        return await axios.post(`${config.apiV2}/account/resubmit-fund/`,
+            { user_id: userId, token, chargeData, })
+    } catch (e) {
+        throw new Error(e.message)
     }
 }
 

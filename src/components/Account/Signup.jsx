@@ -146,11 +146,12 @@ class Signup extends Component {
                 )
 
                 await Axios
-                    .post(
-                        `${config.api}/account/create/${userResp.data.userid
-                        }/${ledgerData.publicKey}?path=${ledgerData.bip32Path
-                        }&md5=${md5(this.state.email)}`
-                    )
+                    .post(`${config.api}/account/create/`, {
+                        user_id: userResp.data.userid,
+                        pubkey: ledgerData.publicKey,
+                        path: ledgerData.bip32Path,
+                        email_md5: md5(this.state.email),
+                    })
 
                 const authResp = await Axios
                     .post(`${config.api}/user/authenticate/`, {
@@ -177,10 +178,13 @@ class Signup extends Component {
                     userId: userResp.data.userid,
                     token: authResp.data.token,
                 })
+
             } catch (error) {
+
                 this.setState({
                     error: error.message,
                 })
+
             } finally {
                 this.setState({
                     buttonDisabled: false,

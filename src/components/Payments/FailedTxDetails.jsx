@@ -6,15 +6,16 @@ import {
 } from "redux"
 import classNames from "classnames"
 import { connect } from "react-redux"
+import { emptyString } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import {
-    Paper, Typography,
+    CircularProgress, Paper, Typography,
 } from "@material-ui/core"
 import {
     utcToLocaleDateTime,
 } from "../../lib/utils"
 import Button from "../../lib/mui-v1/Button"
-import { StellarSdk } from "../../lib/utils"
+import { resubmitFundingTx } from "../../lib/utils"
 
 
 
@@ -36,6 +37,8 @@ export default compose(
     }),
     connect(
         (state) => ({
+            userId: state.LoginManager.userId,
+            token: state.LoginManager.token,
             publicKey: state.LedgerHQ.publicKey,
             currency: state.Account.currency,
             contacts: state.Contacts.internal.concat(state.Contacts.external),
@@ -56,31 +59,60 @@ export default compose(
 
 
         // ...
-        formatTxFailReasons = (reasons) => (decoder =>
-            reasons.map((r, index) =>
-                <div key={index}
-                    className="f-b-c p-l-small"
-                >
-                    <Typography color="primary"
-                        variant="body2"
+        state = {
+            error: false,
+            errorMessage: emptyString(),
+            inProgress: false,
+            statusMessage: emptyString(),
+            disabled: false,
+        }
+
+        // ...
+        formatTxFailReasons = (reasons) => (decoder => {
+            if (reasons) {
+                return reasons.map((r, index) =>
+                    <div key={index}
+                        className="f-b-c p-l-small"
                     >
-                        <span aria-label="cross" role="img">
-                            ❌
-                        </span> {decoder[r]}
-                    </Typography>
-                </div>
-            )
-        )({"op_no_trust" : "No Trustline",})
+                        <Typography color="primary"
+                            variant="body2"
+                        >
+                            <span aria-label="cross" role="img">
+                                ❌
+                            </span> {decoder[r]}
+                        </Typography>
+                    </div>
+                )
+            }
+        })({
+            "op_no_trust" : "No Trustline",
+            "op_no_issuer" : "Invalid Issuer",
+        })
 
 
         // ...
-        submitTransaction = (data) => {
-            // eslint-disable-next-line no-console
-            console.log(data)
+        submitTransaction = async (data) => {
 
-            window.xxx = StellarSdk.xdr.TransactionEnvelope.fromXDR(data.xdrBody, "base64")
-            window.yyy = new StellarSdk.Transaction(data.xdrBody)
-            // submit data obj to backend and re-process this tx there
+            this.setState({
+                inProgress: true,
+                statusMessage: "Re-submitting transaction ...",
+            })
+
+            try {
+                await resubmitFundingTx(
+                    this.props.userId, this.props.token, data
+                )
+                this.setState({
+                    inProgress: false,
+                    statusMessage: "",
+                    disabled: true,
+                })
+            } catch (error) {
+                this.setState({
+                    inProgress: false,
+                    statusMessage: error.message,
+                })
+            }
         }
 
 
@@ -126,9 +158,15 @@ export default compose(
                                 >
                                     Retry Attempts: {data.retries}
                                 </Typography>
-                                <Button color="primary"
+                                <Button
+                                    color="primary"
                                     onClick={this.submitTransaction.bind(this, data)}
-                                >Retry Now</Button>
+                                    disabled={this.props.inProgress || this.state.disabled}
+                                >
+                                    {this.state.inProgress ? <CircularProgress
+                                        color="secondary" thickness={4} size={20}
+                                    /> : "Retry Now"}
+                                </Button>
                             </div>
                         }
                     </Paper>

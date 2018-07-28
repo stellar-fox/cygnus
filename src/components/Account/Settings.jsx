@@ -47,7 +47,7 @@ class Settings extends Component {
             Axios
                 .post(
                     `${config.api}/account/update/`, {
-                        id: this.props.userId,
+                        user_id: this.props.userId,
                         token: this.props.token,
                         currency,
                     }
@@ -71,7 +71,7 @@ class Settings extends Component {
             Axios
                 .post(
                     `${config.api}/account/update/`, {
-                        id: this.props.userId,
+                        user_id: this.props.userId,
                         token: this.props.token,
                         visible: isInputChecked ? "true" : "false",
                     }

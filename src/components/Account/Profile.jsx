@@ -86,7 +86,7 @@ class Profile extends Component {
     updateResource = async (resource, attr) => Axios
         .post(`${config.api}/${resource}/update/`, {
             ...attr,
-            id: this.props.userId,
+            user_id: this.props.userId,
             token: this.props.token,
         })
 
