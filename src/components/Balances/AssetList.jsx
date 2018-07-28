@@ -12,6 +12,7 @@ import { maximumTrustLimit } from "../StellarFox/env"
 import { withStyles } from "@material-ui/core/styles"
 import { CircularProgress, Grid, Typography } from "@material-ui/core"
 import { withAssetManager } from "../AssetManager"
+import { withLoginManager } from "../LoginManager"
 import Paper from "../../lib/mui-v1/Paper"
 import Avatar from "../../lib/mui-v1/Avatar"
 import VerifiedUser from "@material-ui/icons/VerifiedUser"
@@ -59,6 +60,7 @@ const RequestProgress = withStyles(styles)(
 // <AssetList> component
 export default compose(
     withAssetManager,
+    withLoginManager,
     connect(
         // map state to props
         (state) => ({
@@ -302,6 +304,7 @@ export default compose(
                         </div>
 
                         {this.balanceIsZero(trustedAsset) &&
+                            this.props.loginManager.isPayEnabled() &&
                             <Switch
                                 checked={this.isTrustedAsset(baseAsset)}
                                 onChange={this.removeTrustline.bind(
@@ -312,10 +315,16 @@ export default compose(
                         }
 
                         <div
-                            onClick={this.showAssetDetails.bind(
-                                this, trustedAsset
-                            )}
-                            className="p-l-small cursor-pointer"
+                            onClick={
+                                this.props.loginManager.isAuthenticated() &&
+                                this.showAssetDetails.bind(
+                                    this, trustedAsset
+                                )
+                            }
+                            className={`p-l-small ${
+                                this.props.loginManager.isAuthenticated() &&
+                                "cursor-pointer"
+                            }`}
                         >
                             <div className="p-b-nano">
                                 <Typography variant="caption"
@@ -345,7 +354,8 @@ export default compose(
 
                 }
                 </Paper>
-            </Grid> : <Grid item key={index} xs={12} sm={12} md={6} lg={6}
+            </Grid> : this.props.loginManager.isAuthenticated() &&
+            <Grid item key={index} xs={12} sm={12} md={6} lg={6}
                 xl={4}
             >
                 <Paper color="primaryMaxWidth">{this.props.loading ?

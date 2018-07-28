@@ -311,6 +311,7 @@ class BalancesCard extends Component {
                         Available Currencies:
                     </div>
                     <AssetList />
+                    {this.props.loginManager.isAuthenticated() &&
                     <div className="p-t flex-box-col items-flex-start">
                         <Button
                             color="primary"
@@ -330,7 +331,7 @@ class BalancesCard extends Component {
                                 this.state.statusMessage : <he.Nbsp />
                             }
                         </Typography>
-                    </div>
+                    </div>}
                 </Fragment>
             </CardText>
         </Card>
