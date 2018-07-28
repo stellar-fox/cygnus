@@ -84,12 +84,14 @@ export const formatMemo = (memoType, memo) => (
 
 // ...
 export const getRegisteredUser = async (publicKey, bip32Path) => {
-    try {
-        return await axios.post(
-            `${config.api}/user/ledgerauth/${publicKey}/${bip32Path}`
-        )
-    } catch (_e) {
-        return null
+    if (publicKey && bip32Path) {
+        try {
+            return await axios.post(
+                `${config.api}/user/ledgerauth/${publicKey}/${bip32Path}`
+            )
+        } catch (e) {
+            return Promise.reject({ error: e.message, })
+        }
     }
 }
 
