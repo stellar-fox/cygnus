@@ -47,6 +47,14 @@ export const ntoes = (input) => isString(input)  ?  input  :  emptyString()
 
 
 // ...
+export const ellipsis = (string, cutoff) =>
+    (string.length > cutoff) ?
+        string.substring(0, cutoff) + "…" : string
+
+
+
+
+// ...
 export const findContactByPublicKey = (contacts, publicKey) => contacts.find(
     (c) => c.pubkey === publicKey
 )
