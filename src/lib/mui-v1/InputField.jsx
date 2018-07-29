@@ -59,7 +59,7 @@ export default withStyles((theme) => ({
         render = () => (
             ({
                 classes, id, color, error, errorMessage, margin,
-                label, type, onChange, fullWidth, autoComplete,
+                label, type, onChange, fullWidth, autoComplete, placeholder,
             }) =>
                 <FormControl
                     error={error}
@@ -88,6 +88,7 @@ export default withStyles((theme) => ({
                         type={type}
                         onChange={onChange}
                         fullWidth={fullWidth}
+                        placeholder={placeholder}
                     />
                     <FormHelperText id="name-error-text">
                         { errorMessage }

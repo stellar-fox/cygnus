@@ -7,7 +7,7 @@ import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
 
 import {
-    federationAddressValid, formatFullName, formatPaymentAddress,
+    ellipsis, federationAddressValid, formatFullName, formatPaymentAddress,
     getFederationRecord, htmlEntities as he, invalidPaymentAddressMessage,
     paymentAddress, pubKeyAbbr, publicKeyValid, signatureValid,
 } from "../../lib/utils"
@@ -490,16 +490,17 @@ class ReducedContactSuggester extends Component {
          */
         contact ?
             (() => {
-                this.props.setBalancesState({
-                    contactType: "internal",
-                    contactId: contact.contact_id,
-                })
                 displayName = formatFullName(
                     contact.first_name, contact.last_name
                 )
                 displayPaymentAddress = formatPaymentAddress(
                     contact.alias, contact.domain
                 )
+                this.props.setBalancesState({
+                    contactType: "internal",
+                    contactId: contact.contact_id,
+                    payeeFullName: displayName,
+                })
             })() : (
                 extContact = this.searchForExtContact(publicKey)
             )
@@ -531,6 +532,7 @@ class ReducedContactSuggester extends Component {
                     contactType: "external",
                     memoRequired: true,
                     payeeMemoText: extContact.memo,
+                    payeeFullName: displayName,
                 })
 
             })() :
@@ -581,6 +583,10 @@ class ReducedContactSuggester extends Component {
                 pubKeyAbbr(input) : displayPaymentAddress,
         })
 
+        this.props.setBalancesState({
+            payeeEmailMD5: contact ? contact.email_md5 : "",
+        })
+
 
         this.toggleSignButton()
         return true
@@ -623,6 +629,8 @@ class ReducedContactSuggester extends Component {
             payeeCurrencyAmount: "",
             payeeMemoText: "",
             payeeStellarAccount: null,
+            payeeEmailMD5: "",
+            payeeFullName: "",
         })
         this.setState({
             label: "",
@@ -674,6 +682,7 @@ class ReducedContactSuggester extends Component {
                         error: this.state.error,
                         helperText: this.state.errorMessage,
                         disabled: this.props.cancelEnabled ? false : true,
+                        placeholder: "Enter recipient",
                     }}
                     shouldRenderSuggestions={this.shouldRenderSuggestions}
                     focusInputOnSuggestionClick={false}
@@ -702,7 +711,7 @@ class ReducedContactSuggester extends Component {
                                         label={
                                             <Typography variant="body1" noWrap>
                                                 <span>
-                                                    {this.state.label}
+                                                    {ellipsis(this.state.label, 24)}
                                                 </span><he.Nbsp /><he.Nbsp /><he.Nbsp />
                                                 <span className="tiny fade-strong">
                                                     {this.state.paymentAddress}
