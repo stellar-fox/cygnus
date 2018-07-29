@@ -37,7 +37,7 @@ import FirstPageIcon from "@material-ui/icons/FirstPage"
 import LastPageIcon from "@material-ui/icons/LastPage"
 import TransactionDetails from "./TransactionDetails"
 import { transactionFetchLimit } from "../../components/StellarFox/env"
-
+import NumberFormat from "react-number-format"
 
 
 
@@ -415,10 +415,20 @@ export default compose(
                                         classes={{ root: classes.cell, }}
                                     >
                                         <span className="error">
-                                            {displayDebit(debitVal)}
+                                            <NumberFormat
+                                                value={displayDebit(debitVal)}
+                                                displayType={"text"}
+                                                thousandSeparator={true}
+                                                fixedDecimalScale={true}
+                                            />
                                         </span>
                                         <span className="success">
-                                            {displayCredit(creditVal)}
+                                            <NumberFormat
+                                                value={displayCredit(creditVal)}
+                                                displayType={"text"}
+                                                thousandSeparator={true}
+                                                fixedDecimalScale={true}
+                                            />
                                         </span>
                                     </TableCell>
                                 </TableRow>

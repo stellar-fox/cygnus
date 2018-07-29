@@ -166,11 +166,9 @@ export default compose(
         displayAmount = (operation) =>
             this.isNative(operation) ?
                 this.props.assetManager.convertToAsset(
-                    this.opNativeAmount(operation)) :
-                <NumberFormat
-                    value={this.opNativeAmount(operation)}
-                    displayType={"text"} thousandSeparator={true}
-                />
+                    this.opNativeAmount(operation)
+                ) : this.opNativeAmount(operation)
+
 
 
         // ...
@@ -268,7 +266,7 @@ export default compose(
                         </div>
 
                         <div className="p-t">
-                            <Typography color="primary" variant="body2">
+                            <Typography color="primary" variant="subheading">
                                 <span className="fade-strong">
                                     Amount:
                                 </span>
@@ -280,13 +278,23 @@ export default compose(
                                     ) : operation.asset.code
                                 }
                                 <he.Nbsp />
-
-                                {this.displayAmount(operation)}
-
+                                <NumberFormat
+                                    value={this.displayAmount(operation)}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    fixedDecimalScale={true}
+                                    decimals={2}
+                                />
                                 <he.Nbsp /><he.Nbsp />
                                 {this.isNative(operation) &&
                                     <span className="tiny fade-strong">
-                                        {this.opAmount(operation)}
+                                        <NumberFormat
+                                            value={this.opAmount(operation)}
+                                            displayType={"text"}
+                                            thousandSeparator={true}
+                                            fixedDecimalScale={true}
+                                            decimals={7}
+                                        />
                                         <he.Nbsp />
                                         {this.opAssetSymbol(operation)}
                                     </span>

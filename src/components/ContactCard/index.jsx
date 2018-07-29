@@ -10,7 +10,7 @@ import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
 import {
-    formatFullName, formatPaymentAddress, pubKeyAbbr
+    ellipsis, formatFullName, formatPaymentAddress, pubKeyAbbr
 } from "../../lib/utils"
 
 
@@ -90,22 +90,18 @@ export default compose(
                         />
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
-                                <Typography align="right" noWrap>
-                                    {formatFullName(
+                                <Typography align="right">
+                                    {ellipsis(formatFullName(
                                         data.first_name, data.last_name
-                                    )}
+                                    ), 22)}
                                 </Typography>
-                                <Typography variant="caption" align="right"
-                                    noWrap
-                                >
-                                    {formatPaymentAddress(
+                                <Typography variant="caption" align="right">
+                                    {ellipsis(formatPaymentAddress(
                                         data.alias, data.domain
-                                    )}
+                                    ), 30)}
                                 </Typography>
                             </div>
-                            <Typography variant="caption" align="right"
-                                noWrap
-                            >
+                            <Typography variant="caption" align="right">
                                 {pubKeyAbbr(data.pubkey)}
                             </Typography>
                         </div>
