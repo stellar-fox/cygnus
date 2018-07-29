@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import PropTypes from "prop-types"
@@ -17,6 +17,7 @@ import { action as BalancesAction } from "../../redux/Balances"
 import sflogo from "../StellarFox/static/sf-logo.svg"
 import ContactSuggester from "./ContactSuggester"
 import { Typography } from "@material-ui/core"
+import NumberFormat from "react-number-format"
 
 
 
@@ -181,13 +182,24 @@ class PaymentCard extends Component {
 
     // ...
     displayPayeeAmount = () =>
-        this.props.Balances.amount ? (() => {
-            return `${this.props.Balances.payeeCurrencyAmount ?
-                this.props.Balances.payeeCurrencyAmount : "0.00"
-            } ${this.props.assetManager.getAssetDescription(
-                this.props.Balances.payeeCurrency
-            )}`
-        })() : null
+        this.props.Balances.amount ? (() =>
+            <Fragment>
+                <NumberFormat
+                    value={new BigNumber(
+                        this.props.Balances.payeeCurrencyAmount ?
+                            this.props.Balances.payeeCurrencyAmount : "0.00"
+                    ).toFixed(2)}
+                    displayType={"text"} thousandSeparator={true}
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                /><he.Nbsp />
+                <span>
+                    {this.props.assetManager.getAssetDescription(
+                        this.props.Balances.payeeCurrency
+                    )}
+                </span>
+            </Fragment>
+        )() : null
 
 
     // ...
