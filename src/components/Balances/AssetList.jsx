@@ -83,7 +83,11 @@ export default compose(
 
 
         // ...
-        componentDidMount = () => {
+        componentDidMount = () => this.updateAwaitingTrust()
+
+
+        // ...
+        updateAwaitingTrust = () => {
             this.props.setState({
                 awaitingTrust: [],
             })
@@ -104,8 +108,8 @@ export default compose(
             this.props.setState({
                 awaitingTrust: updatedAwaitingTrust,
             })
-
         }
+
 
 
         // ...
@@ -192,6 +196,7 @@ export default compose(
 
             if (needsTrustline) {
                 let awaitingSignature = clone(this.props.awaitingSignature)
+                delete baseAsset.trustLimit
                 awaitingSignature.push(baseAsset)
                 await this.props.setState({ awaitingSignature, })
             }

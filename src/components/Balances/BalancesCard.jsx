@@ -18,15 +18,31 @@ import Button from "../../lib/mui-v1/Button"
 import AssetList from "./AssetList"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as BalancesAction } from "../../redux/Balances"
-import { augmentAssets, insertPathIndex, currentAccountReserve } from "../../lib/utils"
+import {
+    augmentAssets, insertPathIndex, currentAccountReserve, StellarSdk,
+} from "../../lib/utils"
 import Icon from "@material-ui/core/Icon"
 import { CircularProgress, Typography } from "@material-ui/core"
-import { buildChangeTrustTx, loadAccount, submitTransaction } from "../../lib/stellar-tx"
+import {
+    buildChangeTrustTx, loadAccount, submitTransaction
+} from "../../lib/stellar-tx"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { delay } from "@xcmats/js-toolbox"
+import { config } from "../../config"
+
+
+
+// ...
+const baseAssets = config.assets.codes.map(
+    assetCode => new StellarSdk.Asset(
+        assetCode,
+        config.assets.issuer
+    )
+)
+
 
 
 
@@ -119,14 +135,14 @@ class BalancesCard extends Component {
                 awaitingSignature: [],
             })
 
-            this.props.popupSnackbar("Trustlines Established.")
+            this.props.popupSnackbar("Trustlines updated.")
 
             const account = await loadAccount(
                 this.props.publicKey, this.props.horizon
             )
 
-            this.updateAccountTree(account)
-
+            await this.updateAccountTree(account)
+            await this.updateAwaitingTrust()
 
         } catch (error) {
             this.setState({
@@ -152,7 +168,7 @@ class BalancesCard extends Component {
 
 
     // ...
-    updateAccountTree = (account) => {
+    updateAccountTree = async (account) => {
         this.props.setAssetsState({ loading: true, })
         this.props.updateAccountTree(account)
         delay(300).then(() => {
@@ -168,6 +184,32 @@ class BalancesCard extends Component {
 
         })
     }
+
+
+    // ...
+    updateAwaitingTrust = async () => {
+        await this.props.setAssetsState({
+            awaitingTrust: [],
+        })
+
+        let updatedAwaitingTrust = []
+
+        baseAssets.forEach((baseAsset) => {
+            let trustedAsset = this.props.StellarAccount.assets.find(
+                asset => baseAsset.getCode() === asset.asset_code &&
+                    baseAsset.getIssuer() === asset.asset_issuer
+            )
+
+            if (!trustedAsset) {
+                updatedAwaitingTrust.push(baseAsset)
+            }
+        })
+
+        await this.props.setAssetsState({
+            awaitingTrust: updatedAwaitingTrust,
+        })
+    }
+
 
     // ...
     render = () =>
