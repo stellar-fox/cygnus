@@ -42,6 +42,7 @@ const styles = (theme) => ({
     img: {
         width: 96,
         height: 96,
+        minWidth: 96,
         borderRadius: "5px",
         border: `3px solid ${theme.palette.secondary.light}`,
     },
