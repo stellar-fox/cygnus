@@ -258,7 +258,7 @@ export const assetBalance = (Account, Asset) => {
     )
 
     if (!balanceObj) {
-        throw new Error("No trustline found for this asset.")
+        throw new Error("Recipient did not enable this currency.")
     }
 
     return balanceObj.balance
