@@ -449,11 +449,12 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "assetDetails" &&
                                 this.props.Modal.visible
                             }
-                            title="Manage Asset"
+                            title=""
                             actions={[
                                 <Button
                                     onClick={this.closeAssetDetailsModal}
                                     color="primary"
+                                    disabled={!this.props.cancelEnabled}
                                 >CLOSE</Button>,
                             ]}
                         >
@@ -512,6 +513,7 @@ export default compose(
             token: state.LoginManager.token,
             horizon: state.StellarAccount.horizon,
             assets: state.Assets,
+            cancelEnabled: state.Balances.cancelEnabled,
         }),
         // match dispatch to props.
         (dispatch) => bindActionCreators({

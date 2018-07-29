@@ -33,6 +33,8 @@ const initState = ((now) => ({
     payee: null,
     payeeStellarAccount: null,
     payeeAddress: emptyString(),
+    payeeEmailMD5: emptyString(),
+    payeeFullName: emptyString(),
     paymentId: null,
     sendEnabled: false,
     today: now,
