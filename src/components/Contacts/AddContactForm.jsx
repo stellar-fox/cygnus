@@ -233,15 +233,13 @@ class AddContactForm extends Component {
 
         // try adding a contact based on email address
         if (this.state.tabSelected === 0) {
-            this.setState({
-                showProgress: false,
-                showRequestSent: false,
-                buttonDisabled: false,
-                input: emptyString(),
-            })
-
             requestByEmail(
-                this.props.userId, this.props.token, this.state.input
+                this.props.userId, this.props.token, this.state.input,
+                {
+                    email: this.props.accountEmail,
+                    first_name: this.props.accountFirstName,
+                    last_name: this.props.accountLastName,
+                },
             ).then((_result) => {
                 this.requestComplete()
             }).catch((error) => {
@@ -320,7 +318,7 @@ class AddContactForm extends Component {
 
         if (error.response && error.response.status === 409) {
             this.props.showAlert(
-                "You have already sent a contact request to this person.",
+                "An invite was already sent to this email address.",
                 "Notice"
             )
             return false
@@ -576,7 +574,9 @@ export default connect(
         theme,
         userId: state.LoginManager.userId,
         token: state.LoginManager.token,
-
+        accountEmail: state.Account.email,
+        accountFirstName: state.Account.firstName,
+        accountLastName: state.Account.lastName,
     }),
     (dispatch) => bindActionCreators({
         setState: ContactsAction.setState,
