@@ -74,7 +74,7 @@ export default compose(
         root: theme.mixins.gutters({
             paddingTop: 16,
             paddingBottom: 16,
-            minWidth: 250,
+            minWidth: 350,
             backgroundColor: theme.palette.secondary.main,
         }),
 
@@ -82,6 +82,7 @@ export default compose(
             borderRadius: 3,
             width: 48,
             height: 48,
+            marginRight: 5,
             border: `1px solid ${theme.palette.secondary.dark}`,
         },
 

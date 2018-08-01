@@ -8,7 +8,7 @@ import Avatar from "@material-ui/core/Avatar"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
-import { formatPaymentAddress } from "../../lib/utils"
+import { ellipsis, formatPaymentAddress } from "../../lib/utils"
 
 
 
@@ -39,6 +39,7 @@ export default compose(
             borderRadius: 3,
             width: 48,
             height: 48,
+            marginRight: 5,
             border: `1px solid ${theme.palette.secondary.dark}`,
         },
 
@@ -66,11 +67,12 @@ export default compose(
                         <div className="f-b">
                             <div className="f-e-col center">
                                 <div className="f-e-col">
-                                    <Typography align="right"
-                                        noWrap
+                                    <Typography
+                                        align="right"
+                                        variant="body1"
                                     >
                                         {data.request_str ?
-                                            data.request_str :
+                                            ellipsis(data.request_str, 16) :
                                             formatPaymentAddress(
                                                 data.alias, data.domain
                                             )}
