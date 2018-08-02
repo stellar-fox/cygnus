@@ -17,6 +17,8 @@ const initState = {
         selectedPaymentId: null,
     },
 
+    savedTxDetails: null,
+
     cursorLeft: null,
     cursorRight: null,
     prevDisabled: false,
