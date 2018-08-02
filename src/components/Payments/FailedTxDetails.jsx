@@ -16,6 +16,7 @@ import {
 } from "../../lib/utils"
 import Button from "../../lib/mui-v1/Button"
 import { resubmitFundingTx } from "../../lib/utils"
+import { action as PaymentsAction } from "../../redux/Payments"
 
 
 
@@ -37,6 +38,7 @@ export default compose(
     }),
     connect(
         (state) => ({
+            txDetails: state.Payments.savedTxDetails,
             userId: state.LoginManager.userId,
             token: state.LoginManager.token,
             publicKey: state.LedgerHQ.publicKey,
@@ -47,7 +49,9 @@ export default compose(
             paymentAddress: state.Account.paymentAddress,
             gravatarHash: state.Account.gravatar,
         }),
-        (dispatch) => bindActionCreators({}, dispatch)
+        (dispatch) => bindActionCreators({
+            setState: PaymentsAction.setState,
+        }, dispatch)
     )
 )(
     class extends Component {
@@ -64,8 +68,8 @@ export default compose(
             errorMessage: emptyString(),
             inProgress: false,
             statusMessage: emptyString(),
-            disabled: false,
         }
+
 
         // ...
         formatTxFailReasons = (reasons) => (decoder => {
@@ -105,7 +109,9 @@ export default compose(
                 this.setState({
                     inProgress: false,
                     statusMessage: "",
-                    disabled: true,
+                })
+                this.props.setState({
+                    savedTxDetails: null,
                 })
             } catch (error) {
                 this.setState({
@@ -118,7 +124,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, data, }) =>
+            ({ classes, txDetails, }) =>
                 <Fragment>
                     <div className="p-t-large p-b">
                         <Typography color="secondary" variant="title">
@@ -129,20 +135,13 @@ export default compose(
                         </Typography>
                     </div>
                     <Paper>
-                        {data.length === 0 ?
-                            <div className={classes.nodata}>
-                                <Typography align="center" color="primary"
-                                    variant="body1"
-                                >
-                                    Select pending transaction to view details here.
-                                </Typography>
-                            </div> :
+                        {txDetails ?
                             <div className={classNames(classes.withdata, "p-t p-l p-b")}>
                                 <Typography color="primary"
                                     variant="body1"
                                 >
                                     Last Transmit Attempt: {
-                                        utcToLocaleDateTime(data.lastAttempt)
+                                        utcToLocaleDateTime(txDetails.lastAttempt)
                                     }
                                 </Typography>
                                 <Typography color="primary"
@@ -151,22 +150,29 @@ export default compose(
                                     Reasons:
                                 </Typography>
 
-                                {this.formatTxFailReasons(data.reason.operations)}
+                                {this.formatTxFailReasons(txDetails.reason.operations)}
 
                                 <Typography color="primary"
                                     variant="body1"
                                 >
-                                    Retry Attempts: {data.retries}
+                                    Retry Attempts: {txDetails.retries}
                                 </Typography>
                                 <Button
                                     color="primary"
-                                    onClick={this.submitTransaction.bind(this, data)}
-                                    disabled={this.props.inProgress || this.state.disabled}
+                                    onClick={this.submitTransaction.bind(this, txDetails)}
+                                    disabled={this.props.inProgress || !this.props.txDetails}
                                 >
                                     {this.state.inProgress ? <CircularProgress
                                         color="secondary" thickness={4} size={20}
                                     /> : "Retry Now"}
                                 </Button>
+                            </div> :
+                            <div className={classes.nodata}>
+                                <Typography align="center" color="primary"
+                                    variant="body1"
+                                >
+                                    Select pending transaction to view details here.
+                                </Typography>
                             </div>
                         }
                     </Paper>

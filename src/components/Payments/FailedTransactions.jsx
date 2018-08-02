@@ -34,6 +34,7 @@ import { transactionFetchLimit } from "../../components/StellarFox/env"
 import { firebaseApp } from "../StellarFox"
 import NumberFormat from "react-number-format"
 import { withAssetManager } from "../AssetManager"
+import { action as PaymentsAction } from "../../redux/Payments"
 
 
 
@@ -223,9 +224,12 @@ export default compose(
             authToken: state.Auth.authToken,
             horizon: state.StellarAccount.horizon,
             publicKey: state.StellarAccount.accountId,
+            savedTx: state.Payments.savedTxDetails,
         }),
         // match dispatch to props.
-        (dispatch) => bindActionCreators({ /* ... */ }, dispatch)
+        (dispatch) => bindActionCreators({
+            setState: PaymentsAction.setState,
+        }, dispatch)
     )
 )(class extends Component {
 
@@ -243,10 +247,8 @@ export default compose(
         error: false,
         errorMessage: emptyString(),
         data: [],
-        detailsData: [],
         cursorRight: "0",
         highestFetched: transactionFetchLimit,
-        selectedRow: null,
         failedTxs: [],
     }
 
@@ -310,7 +312,9 @@ export default compose(
 
     // ...
     handleRowClick = (detailsData) => {
-        this.setState({ detailsData, selectedRow: detailsData.id, })
+        this.props.setState({
+            savedTxDetails: detailsData,
+        })
     }
 
 
@@ -366,7 +370,11 @@ export default compose(
                                         this, n
                                     )}
                                     key={n.id}
-                                    selected={this.state.selectedRow === n.id}
+                                    selected={
+                                        this.props.savedTx ?
+                                            this.props.savedTx.id === n.id :
+                                            false
+                                    }
                                 >
                                     <TableCell
                                         classes={{ root: classes.cell, }}
@@ -454,7 +462,7 @@ export default compose(
                     </TableFooter>
                 </Table>
             </div>
-            <FailedTxDetails data={this.state.detailsData} />
+            <FailedTxDetails />
             </Fragment>)
         }
     )(this.props)
