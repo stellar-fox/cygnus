@@ -12,7 +12,7 @@ export const config = {
         messagingSenderId: "<project_sender_id>",
     },
     stripe: {
-        apiKey: "<stripe_api_key>",
+        apiKey: "<stripe_publishable_api_key>",
     },
     assets: {
         codes: ["EUR", "USD", "AUD", "NZD", "THB", "PLN",],
