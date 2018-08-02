@@ -14,6 +14,7 @@ import {
     CardHeader,
     CardText,
 } from "material-ui/Card"
+import NumberFormat from "react-number-format"
 import Button from "../../lib/mui-v1/Button"
 import AssetList from "./AssetList"
 import { action as AlertAction } from "../../redux/Alert"
@@ -251,12 +252,16 @@ class BalancesCard extends Component {
                                 }
                             </span>
                             <span className="p-l-small">
-                                {
-                                    this.props
+                                <NumberFormat
+                                    value={this.props
                                         .assetManager.convertToAsset(
                                             this.props.StellarAccount.balance
-                                        )
-                                }
+                                        )}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    decimalScale={2}
+                                    fixedDecimalScale={true}
+                                />
                             </span>
 
                             {accountIsLocked(
@@ -291,7 +296,25 @@ class BalancesCard extends Component {
 
                         </div>
                         <div className="fade-extreme micro">
-                            {this.props.StellarAccount.balance} XLM
+                            <NumberFormat
+                                value={this.props.StellarAccount.balance}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                decimalScale={7}
+                                fixedDecimalScale={true}
+                            /> XLM
+                        </div>
+                        <div className="fade-extreme micro">
+                            1 XLM ≈ <NumberFormat
+                                value={this.props.assetManager
+                                    .convertToAsset("1.0000000")
+                                }
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                decimalScale={2}
+                                fixedDecimalScale={true}
+                            /> {this.props.assetManager.getAssetGlyph(
+                                this.props.Account.currency)}
                         </div>
                     </div>
                     <div
@@ -311,18 +334,33 @@ class BalancesCard extends Component {
                                     this.props.Account.currency
                                 )
                             }</span>
-                            <span className="fade">{
-                                this.props.assetManager.convertToAsset(
-                                    currentAccountReserve(
-                                        this.props.StellarAccount.subentryCount
-                                    )
-                                )}</span>
+                            <span className="fade">
+                                <NumberFormat
+                                    value={
+                                        this.props.assetManager.convertToAsset(
+                                            currentAccountReserve(
+                                                this.props.StellarAccount.subentryCount
+                                            )
+                                        )
+                                    }
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    decimalScale={2}
+                                    fixedDecimalScale={true}
+                                />
+                            </span>
                         </Typography>
                         <Typography variant="body1" color="inherit">
                             <span className="fade-extreme micro">
-                                {currentAccountReserve(
-                                    this.props.StellarAccount.subentryCount
-                                )} XLM
+                                <NumberFormat
+                                    value={currentAccountReserve(
+                                        this.props.StellarAccount.subentryCount
+                                    )}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    decimalScale={7}
+                                    fixedDecimalScale={true}
+                                /> XLM
                             </span>
                         </Typography>
                     </div>
