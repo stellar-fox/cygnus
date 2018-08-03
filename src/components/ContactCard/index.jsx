@@ -2,15 +2,20 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import PropTypes from "prop-types"
+import { shorten } from "@xcmats/js-toolbox"
+
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
+
 import { withStyles } from "@material-ui/core/styles"
 import Avatar from "@material-ui/core/Avatar"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
 import {
-    ellipsis, formatFullName, formatPaymentAddress, pubKeyAbbr
+    formatFullName,
+    formatPaymentAddress,
+    pubKeyAbbr,
 } from "../../lib/utils"
 
 
@@ -91,14 +96,14 @@ export default compose(
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
                                 <Typography align="right">
-                                    {ellipsis(formatFullName(
+                                    {shorten(formatFullName(
                                         data.first_name, data.last_name
-                                    ), 22)}
+                                    ), 22, shorten.END)}
                                 </Typography>
                                 <Typography variant="caption" align="right">
-                                    {ellipsis(formatPaymentAddress(
+                                    {shorten(formatPaymentAddress(
                                         data.alias, data.domain
-                                    ), 30)}
+                                    ), 30, shorten.END)}
                                 </Typography>
                             </div>
                             <Typography variant="caption" align="right">

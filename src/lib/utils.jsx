@@ -47,14 +47,6 @@ export const ntoes = (input) => isString(input)  ?  input  :  emptyString()
 
 
 // ...
-export const ellipsis = (string, cutoff) =>
-    (string.length > cutoff) ?
-        string.substring(0, cutoff) + "…" : string
-
-
-
-
-// ...
 export const findContactByPublicKey = (contacts, publicKey) => contacts.find(
     (c) => c.pubkey === publicKey
 )
@@ -75,8 +67,7 @@ export const formatFullName = (firstName, lastName) => (
 // ...
 export const formatPaymentAddress = (alias, domain) => (
     alias && domain ?
-        `${alias}*${domain}` :
-        htmlEntities.Minus()
+        `${alias}*${domain}` : "-"
 )
 
 
@@ -84,7 +75,7 @@ export const formatPaymentAddress = (alias, domain) => (
 
 // ...
 export const formatMemo = (memoType, memo) => (
-    memoType && memo ? memo : htmlEntities.Minus()
+    memoType && memo ? memo :  "-"
 )
 
 

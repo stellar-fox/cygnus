@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { withStyles } from "@material-ui/core/styles"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
-import { emptyString } from "@xcmats/js-toolbox"
+import { emptyString, shorten } from "@xcmats/js-toolbox"
 import ReducedContactSuggester from "./ReducedContactSuggester"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
@@ -17,7 +17,6 @@ import {
     submitTransaction,
 } from "../../lib/stellar-tx"
 import {
-    ellipsis,
     insertPathIndex,
     htmlEntities as he,
     StellarSdk,
@@ -344,7 +343,7 @@ export default compose(
                                 }
                                 />
                                 <Typography align="center" variant="body1" color="primary">
-                                    {ellipsis(payeeFullName, 12)}
+                                    {shorten(payeeFullName, 12, shorten.END)}
                                 </Typography>
                                 <Typography align="center" variant="subheading" color="primary">
                                     {assetManager.getAssetGlyph(

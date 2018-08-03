@@ -3,11 +3,17 @@ import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import debounce from "lodash/debounce"
 import { withStyles } from "@material-ui/core/styles"
+import { shorten } from "@xcmats/js-toolbox"
+import Autosuggest from "react-autosuggest"
+import Fuse from "fuse.js"
+import match from "autosuggest-highlight/match"
+import parse from "autosuggest-highlight/parse"
+
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
 
 import {
-    ellipsis, federationAddressValid, formatFullName, formatPaymentAddress,
+    federationAddressValid, formatFullName, formatPaymentAddress,
     getFederationRecord, htmlEntities as he, invalidPaymentAddressMessage,
     paymentAddress, pubKeyAbbr, publicKeyValid, signatureValid,
 } from "../../lib/utils"
@@ -17,11 +23,6 @@ import {
 } from "../StellarFox/env"
 
 import { loadAccount } from "../../lib/stellar-tx"
-
-import Autosuggest from "react-autosuggest"
-import Fuse from "fuse.js"
-import match from "autosuggest-highlight/match"
-import parse from "autosuggest-highlight/parse"
 
 import Avatar from "@material-ui/core/Avatar"
 import Chip from "@material-ui/core/Chip"
@@ -711,7 +712,7 @@ class ReducedContactSuggester extends Component {
                                         label={
                                             <Typography variant="body1" noWrap>
                                                 <span>
-                                                    {ellipsis(this.state.label, 24)}
+                                                    {shorten(this.state.label, 24, shorten.END)}
                                                 </span><he.Nbsp /><he.Nbsp /><he.Nbsp />
                                                 <span className="tiny fade-strong">
                                                     {this.state.paymentAddress}

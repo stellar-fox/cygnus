@@ -1,14 +1,15 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { withStyles } from "@material-ui/core/styles"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
+import { shorten } from "@xcmats/js-toolbox"
+import { withStyles } from "@material-ui/core/styles"
 import { action as ContactsAction } from "../../redux/Contacts"
 import Avatar from "@material-ui/core/Avatar"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { gravatar, gravatarSize48 } from "../StellarFox/env"
-import { ellipsis, formatPaymentAddress } from "../../lib/utils"
+import { formatPaymentAddress } from "../../lib/utils"
 
 
 
@@ -72,7 +73,7 @@ export default compose(
                                         variant="body1"
                                     >
                                         {data.request_str ?
-                                            ellipsis(data.request_str, 16) :
+                                            shorten(data.request_str, 16, shorten.END) :
                                             formatPaymentAddress(
                                                 data.alias, data.domain
                                             )}
