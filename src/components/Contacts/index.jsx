@@ -29,6 +29,7 @@ import InputLabel from "@material-ui/core/InputLabel"
 import Select from "@material-ui/core/Select"
 import MenuItem from "@material-ui/core/MenuItem"
 import Divider from "../../lib/mui-v1/Divider"
+import { debounce } from "lodash"
 
 
 
@@ -250,9 +251,8 @@ class Contacts extends Component {
 
 
     // ...
-    componentDidMount = () => {
+    componentDidMount = () =>
         this.userContacts(this.state.selectedView)
-    }
 
 
     // ...
@@ -511,8 +511,9 @@ class Contacts extends Component {
 
 
     // ...
-    updateSearchFilter = (event) =>
-        this.setState({ search: event.target.value, })
+    updateSearchFilter = debounce((search) => {
+        this.setState({ search, })
+    }, 300)
 
 
     // ...
@@ -549,7 +550,9 @@ class Contacts extends Component {
                     <div style={{ marginLeft: "2rem", }}>
                         <div className="f-e space-between">
                             <SearchField label="Search Contact Book"
-                                onChange={this.updateSearchFilter}
+                                onChange={e => this.updateSearchFilter(
+                                    e.target.value
+                                )}
                             />
                             <SelectView value={this.state.selectedView}
                                 onChange={this.changeView}

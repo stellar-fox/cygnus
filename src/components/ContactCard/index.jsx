@@ -35,17 +35,23 @@ export default compose(
     withStyles((theme) => ({
         root: theme.mixins.gutters({
             cursor: "pointer",
-            paddingTop: 16,
-            paddingBottom: 16,
+            paddingTop: 12,
+            paddingBottom: 12,
+            paddingLeft: "12px !important",
+            paddingRight: "12px !important",
             minWidth: 250,
+            maxHeight: 96,
         }),
 
         rootAlt: theme.mixins.gutters({
             cursor: "pointer",
-            paddingTop: 16,
-            paddingBottom: 16,
+            paddingTop: 12,
+            paddingBottom: 12,
+            paddingLeft: "12px !important",
+            paddingRight: "12px !important",
             backgroundColor: theme.palette.secondary.light,
             minWidth: 250,
+            maxHeight: 96,
         }),
 
         avatar: {
@@ -95,18 +101,22 @@ export default compose(
                         />
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
-                                <Typography align="right">
+                                <Typography align="right" color="primary">
                                     {shorten(formatFullName(
                                         data.first_name, data.last_name
-                                    ), 22, shorten.END)}
+                                    ), 30, shorten.END)}
                                 </Typography>
-                                <Typography variant="caption" align="right">
+                                <Typography variant="caption" align="right"
+                                    color="primary"
+                                >
                                     {shorten(formatPaymentAddress(
                                         data.alias, data.domain
                                     ), 30, shorten.END)}
                                 </Typography>
                             </div>
-                            <Typography variant="caption" align="right">
+                            <Typography variant="caption" align="right"
+                                color="primary"
+                            >
                                 {pubKeyAbbr(data.pubkey)}
                             </Typography>
                         </div>
