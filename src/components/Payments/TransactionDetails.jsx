@@ -20,6 +20,7 @@ import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize48 } from "../../components/StellarFox/env"
 import md5 from "../../lib/md5"
 import NumberFormat from "react-number-format"
+import BigNumber from "bignumber.js"
 
 
 
@@ -59,10 +60,6 @@ export default compose(
         static propTypes = {
             classes: PropTypes.object.isRequired,
         }
-
-
-        // ...
-        state = {}
 
 
         // ...
@@ -143,13 +140,18 @@ export default compose(
 
 
         // ...
-        opNativeAmount = (operation) => choose(
-            operation.type,
-            {
-                "createAccount": () => operation.startingBalance,
-            },
-            () => operation.amount
-        )
+        opNativeAmount = (operation) => {
+            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+            return choose(
+                operation.type,
+                {
+                    "createAccount": () => new BigNumber(
+                        operation.startingBalance
+                    ).toFixed(7),
+                },
+                () => new BigNumber(operation.amount).toFixed(2)
+            )
+        }
 
 
         // ...
@@ -168,7 +170,6 @@ export default compose(
                 this.props.assetManager.convertToAsset(
                     this.opNativeAmount(operation)
                 ) : this.opNativeAmount(operation)
-
 
 
         // ...
