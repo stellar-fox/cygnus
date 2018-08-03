@@ -127,12 +127,12 @@ export default compose(
             ({ classes, txDetails, }) =>
                 <Fragment>
                     <div className="p-t-large p-b">
-                        <Typography color="secondary" variant="title">
+                        <div className="account-title">
                             Pending Transaction Details
-                        </Typography>
-                        <Typography color="secondary" variant="subheading">
+                        </div>
+                        <div className="account-subtitle">
                             Manage pending transactions here.
-                        </Typography>
+                        </div>
                     </div>
                     <Paper>
                         {txDetails ?

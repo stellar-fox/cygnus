@@ -79,6 +79,7 @@ const styles = (theme) => ({
         borderBottom: `1px solid ${theme.palette.primary.main}`,
         "&:focus": {
             color: theme.palette.primary.main,
+            backgroundColor: theme.palette.secondary.main,
         },
     },
 
@@ -100,6 +101,7 @@ const styles = (theme) => ({
         color: theme.palette.primary.main,
         "&:focus": {
             color: theme.palette.primary.main,
+            backgroundColor: theme.palette.secondary.main,
         },
     },
 

@@ -209,6 +209,10 @@ export default compose(
         pagination: {
             color: theme.palette.secondary.main,
             fontSize: "0.75rem",
+            "&:focus": {
+                color: theme.palette.secondary.main,
+                backgroundColor: theme.palette.primary.main,
+            },
         },
         selectIcon: {
             paddingBottom: "2px",
@@ -345,7 +349,7 @@ export default compose(
 
 
 
-            return (<Fragment><div className={classes.tableWrapper}>
+            return <Fragment><div className={classes.tableWrapper}>
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
@@ -358,112 +362,118 @@ export default compose(
                     <TableBody>
                         {data.slice(
                             page * rowsPerPage, page * rowsPerPage +
-                            rowsPerPage).map(n => {
-
-                            return (
-                                <TableRow
-                                    classes={{
-                                        root: classes.row,
-                                        selected: classes.selectedRow,
-                                    }}
-                                    onClick={this.handleRowClick.bind(
-                                        this, n
-                                    )}
-                                    key={n.id}
-                                    selected={
-                                        this.props.savedTx ?
-                                            this.props.savedTx.id === n.id :
-                                            false
-                                    }
-                                >
-                                    <TableCell
-                                        classes={{ root: classes.cell, }}
-                                    >
-                                        {utcToLocaleDateTime(n.lastAttempt)}
-                                    </TableCell>
-                                    <TableCell
-                                        classes={{ root: classes.cell, }}
-                                    >
-                                        <NumberFormat
-                                            value={n.amount}
-                                            displayType={"text"}
-                                            thousandSeparator
-                                            decimalScale={2}
-                                            fixedDecimalScale
-                                        />
-                                    </TableCell>
-                                    <TableCell
-                                        classes={{ root: classes.cell, }}
-                                    >
-                                        {n.currency.toUpperCase()}
-                                    </TableCell>
-                                    <TableCell
-                                        classes={{ root: classes.cell, }}
-                                    >
-                                        {n.submitted ? "Yes" : "No"}
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        })}
-                        {emptyRows > 0 && (
-                            <TableRow className={classes.row}
-                                style={{ height: 48 * emptyRows, }}
+                            rowsPerPage).map(n =>
+                            <TableRow
+                                classes={{
+                                    root: classes.row,
+                                    selected: classes.selectedRow,
+                                }}
+                                onClick={this.handleRowClick.bind(
+                                    this, n
+                                )}
+                                key={n.id}
+                                selected={
+                                    this.props.savedTx ?
+                                        this.props.savedTx.id === n.id :
+                                        false
+                                }
                             >
-                                <TableCell className={classes.cell} colSpan={4}>
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignContent: "flex-start",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                    }}
-                                    >
-                                        {this.state.loading &&
-                                            <RequestProgress />
-                                        }
-                                        {this.state.error &&
-                                            (<Fragment>
-                                                <Typography variant="title">
-                                                    Hmm. We're having trouble fetching this data.
-                                                </Typography>
-                                                <Typography variant="caption">
-                                                    {this.state.errorMessage}
-                                                </Typography>
-                                            </Fragment>)
-                                        }
-                                    </div>
+                                <TableCell
+                                    classes={{ root: classes.cell, }}
+                                >
+                                    {utcToLocaleDateTime(n.lastAttempt)}
+                                </TableCell>
+                                <TableCell
+                                    classes={{ root: classes.cell, }}
+                                >
+                                    <NumberFormat
+                                        value={n.amount}
+                                        displayType={"text"}
+                                        thousandSeparator
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                    />
+                                </TableCell>
+                                <TableCell
+                                    classes={{ root: classes.cell, }}
+                                >
+                                    {n.currency.toUpperCase()}
+                                </TableCell>
+                                <TableCell
+                                    classes={{ root: classes.cell, }}
+                                >
+                                    {n.submitted ? "Yes" : "No"}
                                 </TableCell>
                             </TableRow>
                         )}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                classes={{
-                                    caption: classes.pagination,
-                                    select: classes.pagination,
-                                    selectIcon: classes.selectIcon,
-                                    toolbar: classes.actions,
+
+                        <TableRow className={classes.row}
+                            style={{ height: 48 * emptyRows, }}
+                        >
+                            <TableCell className={classes.cell} colSpan={4}>
+                                <div style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignContent: "flex-start",
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}
-                                colSpan={5}
-                                count={data.length}
-                                rowsPerPage={rowsPerPage}
-                                rowsPerPageOptions={[5, 10, 15,]}
-                                page={page}
-                                onChangePage={this.handleChangePage}
-                                onChangeRowsPerPage={
-                                    this.handleChangeRowsPerPage
-                                }
-                                ActionsComponent={
-                                    TablePaginationActionsWrapped
-                                }
-                            />
+                                >
+                                    {this.state.loading ?
+                                        <RequestProgress /> :
+                                        data.length === 0 &&
+                                            <Fragment>
+                                                <Typography variant="subheading">
+                                                    There are no saved transactions at the moment.
+                                                </Typography>
+                                            </Fragment>
+                                    }
+
+                                    {this.state.error &&
+                                        <Fragment>
+                                            <Typography variant="subheading">
+                                                Hmm. We're having trouble fetching this data.
+                                            </Typography>
+                                            <Typography variant="caption">
+                                                {this.state.errorMessage}
+                                            </Typography>
+                                        </Fragment>
+                                    }
+                                </div>
+                            </TableCell>
                         </TableRow>
-                    </TableFooter>
+
+                    </TableBody>
+                    {data.length > 0 &&
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    classes={{
+                                        caption: classes.pagination,
+                                        select: classes.pagination,
+                                        selectIcon: classes.selectIcon,
+                                        toolbar: classes.actions,
+                                    }}
+                                    colSpan={5}
+                                    count={data.length}
+                                    rowsPerPage={rowsPerPage}
+                                    rowsPerPageOptions={[5, 10, 15,]}
+                                    page={page}
+                                    onChangePage={this.handleChangePage}
+                                    onChangeRowsPerPage={
+                                        this.handleChangeRowsPerPage
+                                    }
+                                    ActionsComponent={
+                                        TablePaginationActionsWrapped
+                                    }
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    }
                 </Table>
             </div>
-            <FailedTxDetails />
-            </Fragment>)
+            {data.length > 0 && <FailedTxDetails />}
+            </Fragment>
         }
     )(this.props)
 

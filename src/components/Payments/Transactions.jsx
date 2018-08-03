@@ -10,9 +10,9 @@ class Transactions extends Component {
     // ...
     render = () =>
         <Fragment>
-            <div className="account-title">Account Transactions</div>
+            <div className="account-title">Saved/Failed Account Transactions</div>
             <div className="account-subtitle">
-                Newest transactions shown as first.
+                Transactions listed in the table below were not transmitted.
             </div>
             <FailedTransactions />
         </Fragment>

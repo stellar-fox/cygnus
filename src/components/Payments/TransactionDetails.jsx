@@ -318,12 +318,12 @@ export default compose(
             ({ classes, data, }) =>
                 <Fragment>
                     <div className="p-t-large p-b">
-                        <Typography color="secondary" variant="title">
+                        <div className="account-title">
                             Transaction Details
-                        </Typography>
-                        <Typography color="secondary" variant="subheading">
+                        </div>
+                        <div className="account-subtitle">
                             Additional information about selected transaction.
-                        </Typography>
+                        </div>
                     </div>
                     <Paper>
                         {data.length === 0 ?
