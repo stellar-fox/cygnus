@@ -81,9 +81,7 @@ export default compose(
                         <Typography color="primary"
                             variant="body2"
                         >
-                            <span aria-label="cross" role="img">
-                                ❌
-                            </span> {decoder[r]}
+                            <span aria-label="cross" role="img">•</span> {decoder[r]}
                         </Typography>
                     </div>
                 )
@@ -136,29 +134,23 @@ export default compose(
                     </div>
                     <Paper>
                         {txDetails ?
-                            <div className={classNames(classes.withdata, "p-t p-l p-b")}>
-                                <Typography color="primary"
-                                    variant="body1"
-                                >
-                                    Last Transmit Attempt: {
-                                        utcToLocaleDateTime(txDetails.lastAttempt)
-                                    }
+                            <div className={
+                                classNames(classes.withdata, "p-t p-l")
+                            }
+                            >
+                                <Typography color="primary" variant="body1">
+                                    Attempted: {utcToLocaleDateTime(
+                                        txDetails.lastAttempt
+                                    )}
                                 </Typography>
-                                <Typography color="primary"
-                                    variant="body1"
-                                >
-                                    Reasons:
+                                <br />
+                                <Typography color="primary" variant="body1">
+                                    Reasons: {this.formatTxFailReasons(
+                                        txDetails.reason.operations
+                                    )}
                                 </Typography>
-
-                                {this.formatTxFailReasons(txDetails.reason.operations)}
-
-                                <Typography color="primary"
-                                    variant="body1"
-                                >
-                                    Retry Attempts: {txDetails.retries}
-                                </Typography>
-                                <Button
-                                    color="primary"
+                                <br />
+                                <Button color="primary"
                                     onClick={this.submitTransaction.bind(this, txDetails)}
                                     disabled={this.props.inProgress || !this.props.txDetails}
                                 >
