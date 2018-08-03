@@ -111,11 +111,7 @@ export default compose(
                                 </i>
                             </div>
                 )
-        )(
-            this.props.loginManager.isAuthenticated() ?
-                "material-icons badge" :
-                "material-icons"
-        )
+        )("material-icons badge")
 
 
         // ...
@@ -149,7 +145,9 @@ export default compose(
                         operation.startingBalance
                     ).toFixed(7),
                 },
-                () => new BigNumber(operation.amount).toFixed(2)
+                () => this.isNative(operation) ?
+                    new BigNumber(operation.amount).toFixed(7) :
+                    new BigNumber(operation.amount).toString()
             )
         }
 
@@ -287,7 +285,7 @@ export default compose(
                                     decimals={2}
                                 />
                                 <he.Nbsp /><he.Nbsp />
-                                {this.isNative(operation) &&
+                                {this.isNative(operation) ?
                                     <span className="tiny fade-strong">
                                         <NumberFormat
                                             value={this.opAmount(operation)}
@@ -298,6 +296,11 @@ export default compose(
                                         />
                                         <he.Nbsp />
                                         {this.opAssetSymbol(operation)}
+                                        <he.Nbsp /><he.Nbsp />
+                                        (Native Payment)
+                                    </span> :
+                                    <span className="tiny fade-strong">
+                                        (Currency/Asset Payment)
                                     </span>
                                 }
 
@@ -368,6 +371,28 @@ export default compose(
                                         {this.accountInfo(
                                             data.r.source_account
                                         )}
+                                    </Typography>
+                                </div>
+
+                                {data.r.memo_type !== "none" &&
+                                    <div className="p-t">
+                                        <Typography color="primary"
+                                            variant="body2"
+                                        >
+                                            <span className="fade-strong">
+                                                Purpose: <he.Nbsp />{data.r.memo}
+                                            </span>
+                                        </Typography>
+                                    </div>
+                                }
+
+                                <div className="p-t">
+                                    <Typography color="primary"
+                                        variant="body2"
+                                    >
+                                        <span className="fade-strong">
+                                            Fee Paid: <he.Nbsp />{data.r.fee_paid}
+                                        </span>
                                     </Typography>
                                 </div>
 

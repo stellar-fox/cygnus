@@ -338,9 +338,8 @@ export default compose(
 
 
     // ...
-    handleRowClick = (detailsData) => {
+    handleRowClick = (detailsData) =>
         this.setState({ detailsData, selectedRow: detailsData.key, })
-    }
 
 
     // ...
