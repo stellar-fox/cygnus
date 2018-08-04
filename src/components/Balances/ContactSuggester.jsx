@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import debounce from "lodash/debounce"
-import { emptyString } from "@xcmats/js-toolbox"
+import { emptyString, shorten } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
@@ -35,7 +35,7 @@ import Paper from "@material-ui/core/Paper"
 import TextField from "@material-ui/core/TextField"
 import Typography from "@material-ui/core/Typography"
 import { withAssetManager } from "../AssetManager"
-
+import md5 from "../../lib/md5"
 
 
 
@@ -170,19 +170,18 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
                 <div className="f-b-col">
                     <div className="text-primary">
                         {parts.map((part, index) => {
-                            return part.highlight ? (
+                            return part.highlight ?
+                                <span key={String(index)}
+                                    style={{ fontWeight: 600, }}
+                                >
+                                    {shorten(part.text, 15)}
+                                </span> :
                                 <span key={String(index)}
                                     style={{ fontWeight: 400, }}
                                 >
-                                    {part.text}
+                                    {shorten(part.text, 15, shorten.END)}
                                 </span>
-                            ) : (
-                                <span key={String(index)}
-                                    style={{ fontWeight: 100, }}
-                                >
-                                    {part.text}
-                                </span>
-                            )
+
                         })}
                     </div>
                     <div className="f-b micro text-primary fade-strong">
@@ -581,7 +580,7 @@ class ContactSuggester extends Component {
             loading: false,
             error: false,
             errorMessage: emptyString(),
-            emailMD5: contact ? contact.email_md5 : emptyString(),
+            emailMD5: contact ? contact.email_md5 : md5(input),
             label: displayName,
             paymentAddress: displayPaymentAddress.props &&
                 displayPaymentAddress.props.children === "−" ?
@@ -723,12 +722,21 @@ class ContactSuggester extends Component {
                                                 gravatarSize48}&d=robohash`}
                                         />}
                                         label={
-                                            <Typography variant="body1" noWrap>
+                                            <Typography variant="body1">
                                                 <span>
-                                                    {this.state.label}
-                                                </span><he.Nbsp /><he.Nbsp /><he.Nbsp />
+                                                    {shorten(
+                                                        this.state.label,
+                                                        24,
+                                                        shorten.END
+                                                    )}
+                                                </span>
+                                                <he.Nbsp /><he.Nbsp /><he.Nbsp />
                                                 <span className="tiny fade-strong">
-                                                    {this.state.paymentAddress}
+                                                    {shorten(
+                                                        this.state.paymentAddress,
+                                                        30,
+                                                        shorten.END
+                                                    )}
                                                 </span><he.Nbsp /><he.Nbsp />
                                             </Typography>
                                         }

@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import debounce from "lodash/debounce"
 import { withStyles } from "@material-ui/core/styles"
-import { shorten } from "@xcmats/js-toolbox"
+import { emptyString, shorten } from "@xcmats/js-toolbox"
 import Autosuggest from "react-autosuggest"
 import Fuse from "fuse.js"
 import match from "autosuggest-highlight/match"
@@ -35,6 +35,7 @@ import Paper from "@material-ui/core/Paper"
 import TextField from "@material-ui/core/TextField"
 import Typography from "@material-ui/core/Typography"
 import { withAssetManager } from "../AssetManager"
+import md5 from "../../lib/md5"
 
 
 
@@ -171,22 +172,23 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
                                 <span key={String(index)}
                                     style={{ fontWeight: 600, }}
                                 >
-                                    {part.text}
+                                    {shorten(part.text, 15)}
                                 </span>
                             ) : (
                                 <span key={String(index)}
                                     style={{ fontWeight: 400, }}
                                 >
-                                    {part.text}
+                                    {shorten(part.text, 15, shorten.END)}
                                 </span>
                             )
                         })}
                     </div>
                     <div className="f-b micro text-secondary fade">
                         {suggestion.alias && suggestion.domain ?
-                            paymentAddress(
+                            shorten(paymentAddress(
                                 suggestion.alias, suggestion.domain
-                            ) : pubKeyAbbr(suggestion.publicKey)
+                            ), 30, shorten.END) :
+                            pubKeyAbbr(suggestion.publicKey)
                         }
                     </div>
                 </div>
@@ -214,13 +216,13 @@ class ReducedContactSuggester extends Component {
 
 
     state = {
-        value: "",
+        value: emptyString(),
         suggestions: [],
         error: false,
-        errorMessage: "",
-        paymentAddress: "",
-        label: "",
-        emailMD5: "",
+        errorMessage: emptyString(),
+        paymentAddress: emptyString(),
+        label: emptyString(),
+        emailMD5: emptyString(),
         loading: false,
     }
 
@@ -233,11 +235,11 @@ class ReducedContactSuggester extends Component {
         })
 
         suggestion && this.setState({
-            label: "",
-            paymentAddress: "",
-            emailMD5: "",
+            label: emptyString(),
+            paymentAddress: emptyString(),
+            emailMD5: emptyString(),
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
         })
     }
 
@@ -329,9 +331,9 @@ class ReducedContactSuggester extends Component {
             this.setState({
                 error: true,
                 errorMessage,
-                paymentAddress: "",
-                label: "",
-                emailMD5: "",
+                paymentAddress: emptyString(),
+                label: emptyString(),
+                emailMD5: emptyString(),
             })
 
             this.props.setBalancesState({ payee: null, })
@@ -352,7 +354,7 @@ class ReducedContactSuggester extends Component {
                  */
                 const federationRecord = await getFederationRecord(input)
 
-                memo = federationRecord.memo ? federationRecord.memo : ""
+                memo = federationRecord.memo ? federationRecord.memo : emptyString()
 
                 /**
                  * stellar account corresponding to the public key that is
@@ -404,7 +406,7 @@ class ReducedContactSuggester extends Component {
                         )
                         this.props.setBalancesState({
                             memoRequired: false,
-                            payeeMemoText: "",
+                            payeeMemoText: emptyString(),
                         })
                     }
                     /**
@@ -443,16 +445,16 @@ class ReducedContactSuggester extends Component {
                     indicatorStyle: "fade-extreme",
                     sendEnabled: false,
                     memoRequired: false,
-                    memoText: "",
+                    memoText: emptyString(),
                     payeeCurrency: "eur",
-                    payeeCurrencyAmount: "",
-                    payeeMemoText: "",
+                    payeeCurrencyAmount: emptyString(),
+                    payeeMemoText: emptyString(),
                     payeeStellarAccount: null,
                 })
                 this.setState({
-                    label: "",
-                    paymentAddress: "",
-                    emailMD5: "",
+                    label: emptyString(),
+                    paymentAddress: emptyString(),
+                    emailMD5: emptyString(),
                 })
                 return false
             }
@@ -565,7 +567,7 @@ class ReducedContactSuggester extends Component {
              */
             this.props.setBalancesState({
                 memoText: memo ? memo : this.props.payeeMemoText ?
-                    this.props.payeeMemoText : "",
+                    this.props.payeeMemoText : emptyString(),
                 payeeCurrency: contact ?
                     contact.currency : extContact ?
                         extContact.currency : this.props.payeeCurrency,
@@ -576,8 +578,8 @@ class ReducedContactSuggester extends Component {
         this.setState({
             loading: false,
             error: false,
-            errorMessage: "",
-            emailMD5: contact ? contact.email_md5 : "",
+            errorMessage: emptyString(),
+            emailMD5: contact ? contact.email_md5 : md5(input),
             label: displayName,
             paymentAddress: displayPaymentAddress.props &&
                 displayPaymentAddress.props.children === "−" ?
@@ -585,7 +587,7 @@ class ReducedContactSuggester extends Component {
         })
 
         this.props.setBalancesState({
-            payeeEmailMD5: contact ? contact.email_md5 : "",
+            payeeEmailMD5: contact ? contact.email_md5 : emptyString(),
         })
 
 
@@ -625,19 +627,19 @@ class ReducedContactSuggester extends Component {
             indicatorStyle: "fade-extreme",
             sendEnabled: false,
             memoRequired: false,
-            memoText: "",
+            memoText: emptyString(),
             payeeCurrency: "eur",
-            payeeCurrencyAmount: "",
-            payeeMemoText: "",
+            payeeCurrencyAmount: emptyString(),
+            payeeMemoText: emptyString(),
             payeeStellarAccount: null,
-            payeeEmailMD5: "",
-            payeeFullName: "",
+            payeeEmailMD5: emptyString(),
+            payeeFullName: emptyString(),
         })
         this.setState({
-            label: "",
-            paymentAddress: "",
-            emailMD5: "",
-            value: "",
+            label: emptyString(),
+            paymentAddress: emptyString(),
+            emailMD5: emptyString(),
+            value: emptyString(),
         })
     }
 
@@ -710,12 +712,21 @@ class ReducedContactSuggester extends Component {
                                                 gravatarSize48}&d=robohash`}
                                         />}
                                         label={
-                                            <Typography variant="body1" noWrap>
+                                            <Typography variant="body1">
                                                 <span>
-                                                    {shorten(this.state.label, 24, shorten.END)}
-                                                </span><he.Nbsp /><he.Nbsp /><he.Nbsp />
+                                                    {shorten(
+                                                        this.state.label,
+                                                        24,
+                                                        shorten.END
+                                                    )}
+                                                </span>
+                                                <he.Nbsp /><he.Nbsp /><he.Nbsp />
                                                 <span className="tiny fade-strong">
-                                                    {this.state.paymentAddress}
+                                                    {shorten(
+                                                        this.state.paymentAddress,
+                                                        30,
+                                                        shorten.END
+                                                    )}
                                                 </span><he.Nbsp /><he.Nbsp />
                                             </Typography>
                                         }
