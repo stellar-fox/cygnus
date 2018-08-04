@@ -25,6 +25,7 @@ import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import clone from "lodash/clone"
 import BigNumber from "bignumber.js"
 import { gravatar, gravatarSize } from "../StellarFox/env"
+import md5 from "../../lib/md5"
 
 
 // ...
@@ -338,8 +339,10 @@ export default compose(
                                 </Typography>
                                 <Avatar classes={{
                                     root: classes.root, img: classes.img,
-                                }} src={`${gravatar}${payeeEmailMD5}?${
-                                    gravatarSize}&d=robohash`
+                                }} src={`${gravatar}${payeeEmailMD5 ?
+                                    payeeEmailMD5 : this.props.payee ?
+                                        md5(this.props.payee) : emptyString()
+                                }?${gravatarSize}&d=robohash`
                                 }
                                 />
                                 <Typography align="center" variant="body1" color="primary">

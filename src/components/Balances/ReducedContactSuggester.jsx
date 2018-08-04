@@ -579,7 +579,7 @@ class ReducedContactSuggester extends Component {
             loading: false,
             error: false,
             errorMessage: emptyString(),
-            emailMD5: contact ? contact.email_md5 : md5(input),
+            emailMD5: contact ? contact.email_md5 : md5(publicKey),
             label: displayName,
             paymentAddress: displayPaymentAddress.props &&
                 displayPaymentAddress.props.children === "−" ?
