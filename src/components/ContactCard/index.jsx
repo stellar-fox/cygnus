@@ -15,6 +15,7 @@ import { gravatar, gravatarSize48 } from "../StellarFox/env"
 import {
     formatFullName,
     formatPaymentAddress,
+    htmlEntities as he,
     pubKeyAbbr,
 } from "../../lib/utils"
 
@@ -92,7 +93,8 @@ export default compose(
                         this, {contact: data, external,})
                     }
                     elevation={3}
-                    className={external ? classes.rootAlt : classes.root}
+                    className={`${external ? classes.rootAlt : classes.root} ${
+                        external ? "bg-ext-contact" : "bg-contact"}`}
                 >
                     <div className="f-b space-between">
                         <Avatar className={classes.avatar}
@@ -118,6 +120,9 @@ export default compose(
                                 color="primary"
                             >
                                 {pubKeyAbbr(data.pubkey)}
+                                {external && <span className="nano">
+                                    <he.Nbsp /><he.Nbsp /><he.Nbsp />
+                                    FEDERATED</span>}
                             </Typography>
                         </div>
                     </div>

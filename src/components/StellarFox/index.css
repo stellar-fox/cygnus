@@ -90,3 +90,29 @@ a:focus {
 .washed-out {
     opacity: 0.8;
 }
+
+.pattern-secondary {
+    background-image:
+		linear-gradient(to right bottom, rgba(255,255,255,0) 8px, rgb(246, 190, 49) 9px, rgba(255,255,255,0) 10px),
+        linear-gradient(to left bottom, rgba(255,255,255,0) 8px, rgb(246, 190, 49) 9px, rgba(255,255,255,0) 10px);
+	background-repeat: repeat;
+	background-size: 12px 14px, 12px 14px, 12px 11px;
+    background-position: 0 0, 0 0, 0 20px;
+}
+
+.pattern-primary {
+    background-image:
+		linear-gradient(to right bottom, rgba(255,255,255,0) 8px, rgba(36, 65, 98, 0.05) 9px, rgba(255,255,255,0) 10px),
+        linear-gradient(to left bottom, rgba(255,255,255,0) 8px, rgba(36, 65, 98, 0.05) 9px, rgba(255,255,255,0) 10px);
+	background-repeat: repeat;
+	background-size: 12px 14px, 12px 14px, 12px 11px;
+    background-position: 0 0, 0 0, 0 20px;
+}
+
+.bg-contact {
+    background: linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(246, 190, 49) 100%);
+}
+
+.bg-ext-contact {
+    background: linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%);
+}
