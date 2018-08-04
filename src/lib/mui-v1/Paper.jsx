@@ -21,7 +21,7 @@ export default withStyles((theme) => ({
     }),
 
     primaryMaxWidth: {
-        backgroundColor: theme.palette.primary.main,
+        background: "linear-gradient(90deg, #4b6cb7 0%, #182848 100%)",
         maxWidth: "300px",
     },
 

@@ -4,6 +4,7 @@ import { bindActionCreators, compose } from "redux"
 import { BigNumber } from "bignumber.js"
 import NumberFormat from "react-number-format"
 import {
+    assetAvatar,
     htmlEntities as he,
     pubKeyAbbr,
     StellarSdk,
@@ -155,12 +156,19 @@ export default compose(
 
         // ...
         addTrustline = async (baseAsset) => {
+            let asset = {
+                asset_code: baseAsset.code,
+                asset_issuer: baseAsset.issuer,
+            }
+
+            //TODO - wrong method name
+            let assetInfo = await assetAvatar(asset, this.props.horizon)
 
             const newStellarAsset = {
                 asset_code: baseAsset.getCode(),
                 asset_issuer: baseAsset.getIssuer(),
                 asset_type: config.assets.type,
-                avatar: config.assets.avatar,
+                avatar: assetInfo ? assetInfo.avatar : config.assets.avatar,
                 balance: "0.00",
                 decimals: 2,
                 limit: "0.00",
