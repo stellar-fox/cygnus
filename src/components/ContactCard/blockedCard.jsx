@@ -61,8 +61,10 @@ export default compose(
     ),
     withStyles((theme) => ({
         root: theme.mixins.gutters({
-            paddingTop: 16,
-            paddingBottom: 16,
+            paddingTop: 12,
+            paddingBottom: 12,
+            paddingLeft: "12px !important",
+            paddingRight: "12px !important",
             minWidth: 250,
             backgroundColor: theme.palette.secondary.main,
         }),
@@ -131,43 +133,41 @@ export default compose(
         render = () => (
             ({ classes, data, }) =>
                 <Paper elevation={3}
-                    className={classes.root}
+                    className={`${classes.root} pattern-secondary`}
                 >
                     <div className="f-b space-between">
                         <Avatar className={classes.avatar}
                             src={`${gravatar}${data.email_md5}?${
                                 gravatarSize48}&d=robohash`}
                         />
-                        <div className="f-b">
-                            <div className="f-e-col space-between">
-                                <div className="f-e-col">
-                                    <Typography align="right" noWrap>
-                                        {data.first_name} {data.last_name}
-                                    </Typography>
-                                    <Typography variant="caption" align="right"
-                                        noWrap
-                                    >
-                                        {data.alias}*{data.domain}
-                                    </Typography>
-                                </div>
+                        <div className="f-e-col space-between">
+                            <div className="f-e-col">
+                                <Typography align="right" noWrap>
+                                    {data.first_name} {data.last_name}
+                                </Typography>
                                 <Typography variant="caption" align="right"
                                     noWrap
                                 >
-                                    {pubKeyAbbr(data.pubkey)}
+                                    {data.alias}*{data.domain}
                                 </Typography>
                             </div>
-                            <div className="f-e space-between">
-                                <ActionButton
-                                    onClick={this.unblockContact.bind(
-                                        this,
-                                        data.requested_by
-                                    )}
-                                    variant="raised"
-                                    color="danger" size="small"
-                                    label="Unblock"
-                                />
-                            </div>
+                            <Typography variant="caption" align="right"
+                                noWrap
+                            >
+                                {pubKeyAbbr(data.pubkey)}
+                            </Typography>
                         </div>
+                    </div>
+                    <div className="p-t flex-box-row content-flex-end">
+                        <ActionButton
+                            onClick={this.unblockContact.bind(
+                                this,
+                                data.requested_by
+                            )}
+                            variant="raised"
+                            color="danger" size="small"
+                            label="Unblock"
+                        />
                     </div>
                 </Paper>
         )(this.props)

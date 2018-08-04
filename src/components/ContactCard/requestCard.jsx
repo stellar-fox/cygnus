@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { shorten } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
@@ -13,6 +14,8 @@ import {
     approveInternal, rejectInternal, listInternal, listPending, listRequested,
 } from "../Contacts/api"
 import {
+    formatFullName,
+    formatPaymentAddress,
     pubKeyAbbr,
     getUserExternalContacts,
 } from "../../lib/utils"
@@ -30,8 +33,6 @@ const styles = (theme) => ({
             backgroundColor: theme.palette.successHighlight,
             textShadow: `0px 0px 20px ${theme.palette.success}`,
         },
-        marginLeft: "1.2rem",
-        marginRight: "0.5rem",
     },
 
     danger: {
@@ -41,6 +42,7 @@ const styles = (theme) => ({
             backgroundColor: theme.palette.dangerHighlight,
             textShadow: `0px 0px 20px ${theme.palette.danger}`,
         },
+        opacity: 0.9,
     },
 })
 
@@ -72,9 +74,11 @@ export default compose(
     ),
     withStyles((theme) => ({
         root: theme.mixins.gutters({
-            paddingTop: 16,
-            paddingBottom: 16,
-            minWidth: 350,
+            paddingTop: 12,
+            paddingBottom: 12,
+            paddingLeft: "12px !important",
+            paddingRight: "12px !important",
+            minWidth: 250,
             backgroundColor: theme.palette.secondary.main,
         }),
 
@@ -176,46 +180,48 @@ export default compose(
                             src={`${gravatar}${data.email_md5}?${
                                 gravatarSize48}&d=robohash`}
                         />
-                        <div className="f-b">
-                            <div className="f-e-col space-between">
-                                <div className="f-e-col">
-                                    <Typography align="right" noWrap>
-                                        {data.first_name} {data.last_name}
-                                    </Typography>
-                                    <Typography variant="caption" align="right"
-                                        noWrap
-                                    >
-                                        {data.alias}*{data.domain}
-                                    </Typography>
-                                </div>
+
+                        <div className="f-e-col space-between">
+                            <div className="f-e-col">
+                                <Typography align="right" color="primary">
+                                    {shorten(formatFullName(
+                                        data.first_name, data.last_name
+                                    ), 30, shorten.END)}
+                                </Typography>
                                 <Typography variant="caption" align="right"
-                                    noWrap
+                                    color="primary"
                                 >
-                                    {pubKeyAbbr(data.pubkey)}
+                                    {shorten(formatPaymentAddress(
+                                        data.alias, data.domain
+                                    ), 30, shorten.END)}
                                 </Typography>
                             </div>
-                            <div className="f-e space-between">
-                                <ActionButton
-                                    onClick={this.acceptContact.bind(
-                                        this,
-                                        data.requested_by
-                                    )}
-                                    variant="raised"
-                                    color="success" size="small"
-                                    label="Accept"
-                                />
-
-                                <ActionButton
-                                    onClick={this.rejectContact.bind(
-                                        this,
-                                        data.requested_by
-                                    )}
-                                    variant="raised"
-                                    color="danger" size="small"
-                                    label="Block"
-                                />
-                            </div>
+                            <Typography variant="caption" align="right"
+                                color="primary"
+                            >
+                                {pubKeyAbbr(data.pubkey)}
+                            </Typography>
                         </div>
+                    </div>
+                    <div className="p-t flex-box-row space-between">
+                        <ActionButton
+                            onClick={this.rejectContact.bind(
+                                this,
+                                data.requested_by
+                            )}
+                            variant="raised"
+                            color="danger" size="small"
+                            label="Block"
+                        />
+                        <ActionButton
+                            onClick={this.acceptContact.bind(
+                                this,
+                                data.requested_by
+                            )}
+                            variant="raised"
+                            color="success" size="small"
+                            label="Accept"
+                        />
                     </div>
                 </Paper>
         )(this.props)
