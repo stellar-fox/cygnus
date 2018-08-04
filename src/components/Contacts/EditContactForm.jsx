@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators, compose, } from "redux"
 import { connect } from "react-redux"
-import { emptyString } from "@xcmats/js-toolbox"
+import { emptyString, shorten } from "@xcmats/js-toolbox"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize } from "../StellarFox/env"
 import {
@@ -36,6 +36,7 @@ import Badge from "@material-ui/core/Badge"
 import Button from "@material-ui/core/Button"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import Typography from "@material-ui/core/Typography"
+import md5 from "../../lib/md5"
 
 
 
@@ -191,7 +192,7 @@ const ExtContactDetails = withStyles(styles)(
         <div className="f-b space-around p-t-large p-b-large">
             <div className="f-b-col">
                 <Avatar className={classes.avatar}
-                    src={`${gravatar}${details.contact.email_md5}?${
+                    src={`${gravatar}${md5(details.contact.pubkey)}?${
                         gravatarSize}&d=robohash`}
                 />
                 <Badge
@@ -225,15 +226,15 @@ const ExtContactDetails = withStyles(styles)(
             </div>
             <div className="f-b-col">
                 <EditContactInfoTextField id="edit-first-name"
-                    label="Contact First Name"
+                    label="First Name"
                     onChange={updateFirstName} value={firstNameFieldValue}
                 />
                 <EditContactInfoTextField id="edit-last-name"
-                    label="Contact Last Name"
+                    label="Last Name"
                     onChange={updateLastName} value={lastNameFieldValue}
                 />
                 <EditContactInfoTextField id="edit-payment-address"
-                    label="Contact Payment Address"
+                    label="Payment Address"
                     onChange={updatePaymentAddress}
                     value={paymentAddressFieldValue}
                     error={error} helperText={errorMessage}
@@ -294,9 +295,9 @@ const ContactDetails = withStyles(styles)(
             </div>
             <div className="f-b-col">
                 <Typography variant="title" noWrap color="primary">
-                    {formatFullName(
+                    {shorten(formatFullName(
                         details.contact.first_name, details.contact.last_name
-                    )}
+                    ), 30, shorten.END)}
                 </Typography>
                 <Typography classes={{ root: classNames(classes.padded), }}
                     variant="subheading" noWrap color="primary"
@@ -304,9 +305,9 @@ const ContactDetails = withStyles(styles)(
                     <Typography variant="caption" noWrap color="primary">
                         <span className="fade-strong">Payment Address:</span>
                     </Typography>
-                    {formatPaymentAddress(
+                    {shorten(formatPaymentAddress(
                         details.contact.alias, details.contact.domain
-                    )}
+                    ), 30, shorten.END)}
                 </Typography>
                 <Typography variant="body1" noWrap color="primary">
                     <Typography variant="caption" noWrap color="primary">

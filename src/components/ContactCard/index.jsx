@@ -18,6 +18,7 @@ import {
     htmlEntities as he,
     pubKeyAbbr,
 } from "../../lib/utils"
+import md5 from "../../lib/md5"
 
 
 
@@ -98,8 +99,8 @@ export default compose(
                 >
                     <div className="f-b space-between">
                         <Avatar className={classes.avatar}
-                            src={`${gravatar}${data.email_md5}?${
-                                gravatarSize48}&d=robohash`}
+                            src={`${gravatar}${external ? md5(data.pubkey) :
+                                data.email_md5}?${gravatarSize48}&d=robohash`}
                         />
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
@@ -120,9 +121,9 @@ export default compose(
                                 color="primary"
                             >
                                 {pubKeyAbbr(data.pubkey)}
-                                {external && <span className="nano">
+                                {external && <strong>
                                     <he.Nbsp /><he.Nbsp /><he.Nbsp />
-                                    FEDERATED</span>}
+                                    FEDERATED</strong>}
                             </Typography>
                         </div>
                     </div>
