@@ -15,14 +15,11 @@ export default withStyles((theme) => ({
         paddingBottom: 5,
         paddingLeft: "5px !important",
         paddingRight: "15px !important",
-        marginTop: theme.spacing.unit / 2,
-        marginBottom: theme.spacing.unit / 2,
         borderRadius: "3px",
     }),
 
     primaryMaxWidth: {
         background: "linear-gradient(90deg, #4b6cb7 0%, #182848 100%)",
-        maxWidth: 300,
         minWidth: 300,
     },
 

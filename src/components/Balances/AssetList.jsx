@@ -293,8 +293,8 @@ export default compose(
             )
 
 
-            return trustedAsset ? <Grid item key={index} xs={12} sm={12} md={6}
-                lg={6} xl={4}
+            return trustedAsset ? <Grid item key={index}
+                alignContent="flex-start" alignItems="flex-start" zeroMinWidth
             >
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">
@@ -369,8 +369,8 @@ export default compose(
                 }
                 </Paper>
             </Grid> : this.props.loginManager.isAuthenticated() &&
-            <Grid item key={index} xs={12} sm={12} md={6} lg={6}
-                xl={4}
+            <Grid item key={index} alignContent="flex-start"
+                alignItems="flex-start" zeroMinWidth
             >
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">
@@ -458,7 +458,7 @@ export default compose(
                 container
                 alignContent="flex-start"
                 alignItems="center"
-                spacing={0}
+                spacing={16}
             >
                 { this.formatAssets(this.props.assets) }
             </Grid>
