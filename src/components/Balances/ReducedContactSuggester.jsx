@@ -685,7 +685,7 @@ class ReducedContactSuggester extends Component {
                         error: this.state.error,
                         helperText: this.state.errorMessage,
                         disabled: this.props.cancelEnabled ? false : true,
-                        placeholder: "Enter recipient",
+                        placeholder: "Pay to the order of",
                     }}
                     shouldRenderSuggestions={this.shouldRenderSuggestions}
                     focusInputOnSuggestionClick={false}
