@@ -407,7 +407,7 @@ class PaymentCard extends Component {
                             onClick={this.props.onSignTransaction}
                             color="danger"
                             disabled={!this.props.Balances.sendEnabled}
-                        >Sign</Button>
+                        >Sign & Send</Button>
                         <Button
                             onClick={this.hidePaymentCard}
                             color="primary"

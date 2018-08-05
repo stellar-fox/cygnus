@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { connect } from "react-redux"
 import {
     bindActionCreators,
@@ -386,33 +386,39 @@ class BalancesCard extends Component {
             </CardActions>
 
             <CardText expandable={true}>
-                <Fragment>
-                    <div className="assets p-b-small">
-                        Available Currencies:
-                    </div>
-                    <AssetList />
-                    {this.props.loginManager.isAuthenticated() &&
+
+                <Typography variant="subheading" color="primary">
+                    Available Currencies
+                </Typography>
+                <Typography variant="caption" color="primary">
+                    Use slider to enable/disable currency. Click to send payment.
+                </Typography>
+                <br />
+                <AssetList />
+                <br />
+                <Button
+                    color="primary"
+                    onClick={this.signChangeTrust}
+                    disabled={
+                        !this.changeTrustNeedsSignature() ||
+                        this.state.inProgress
+                    }
+                >
+                    {this.state.inProgress ? <CircularProgress
+                        color="primary" thickness={4}
+                        size={20}
+                    /> : "Sign & Save"}
+                </Button>
+                {this.props.loginManager.isAuthenticated() &&
                     <div className="p-t flex-box-col items-flex-start">
-                        <Button
-                            color="primary"
-                            onClick={this.signChangeTrust}
-                            disabled={
-                                !this.changeTrustNeedsSignature() ||
-                                this.state.inProgress
-                            }
-                        >
-                            {this.state.inProgress ? <CircularProgress
-                                color="primary" thickness={4}
-                                size={20}
-                            /> : "Save Changes"}
-                        </Button>
+
                         <Typography variant="caption" color="primary">
                             {this.state.statusMessage ?
                                 this.state.statusMessage : <he.Nbsp />
                             }
                         </Typography>
-                    </div>}
-                </Fragment>
+                    </div>
+                }
             </CardText>
         </Card>
 
