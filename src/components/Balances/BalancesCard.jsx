@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import {
     bindActionCreators,
@@ -386,29 +386,46 @@ class BalancesCard extends Component {
             </CardActions>
 
             <CardText expandable={true}>
-
-                <Typography variant="subheading" color="primary">
-                    Available Currencies
-                </Typography>
-                <Typography variant="caption" color="primary">
-                    Use slider to enable/disable currency. Click to send payment.
-                </Typography>
+                {this.props.loginManager.isPayEnabled() ?
+                    <Fragment>
+                        <Typography variant="subheading" color="primary">
+                            Available Currencies
+                        </Typography>
+                        <Typography variant="caption" color="primary">
+                            Use slider to enable/disable currency. Click to send payment.
+                        </Typography>
+                    </Fragment> :
+                    <Fragment>
+                        <Typography variant="subheading" color="primary">
+                            Account Currency Assets
+                        </Typography>
+                        <Typography variant="caption" color="primary">
+                            This is explore only mode. Login or Signup to make transactions.
+                        </Typography>
+                    </Fragment>
+                }
                 <br />
                 <AssetList />
-                <br />
-                <Button
-                    color="primary"
-                    onClick={this.signChangeTrust}
-                    disabled={
-                        !this.changeTrustNeedsSignature() ||
-                        this.state.inProgress
-                    }
-                >
-                    {this.state.inProgress ? <CircularProgress
-                        color="primary" thickness={4}
-                        size={20}
-                    /> : "Sign & Save"}
-                </Button>
+
+                {this.props.loginManager.isPayEnabled() &&
+                <Fragment>
+                    <br />
+                    <Button
+                        color="primary"
+                        onClick={this.signChangeTrust}
+                        disabled={
+                            !this.changeTrustNeedsSignature() ||
+                            this.state.inProgress
+                        }
+                    >
+                        {this.state.inProgress ? <CircularProgress
+                            color="primary" thickness={4}
+                            size={20}
+                        /> : "Sign & Save"}
+                    </Button>
+                </Fragment>
+                }
+
                 {this.props.loginManager.isAuthenticated() &&
                     <div className="p-t flex-box-col items-flex-start">
 
