@@ -296,13 +296,23 @@ export default compose(
                     {asset &&
                         <div className="flex-box-row space-between">
                             <div className="flex-box-col items-flex-start">
-                                <Typography variant="subheading" color="primary">
-                                Send <span style={{ fontWeight: 600, textShadow: "0px 0px 2px rgba(15, 46, 83, 0.35)",}}>
-                                        {assetManager.getAssetDescription(
-                                            asset.asset_code.toLowerCase()
-                                        )}
-                                    </span> to:
-                                </Typography>
+                                <div className="flex-box-row items-centered">
+                                    <Avatar src={asset.avatar} /><he.Nbsp /><he.Nbsp />
+                                    <Typography variant="subheading" color="primary">
+                                        Send<he.Nbsp />
+                                        <span
+                                            style={{
+                                                fontWeight: 600,
+                                                textShadow: "0px 0px 2px rgba(15, 46, 83, 0.35)",
+                                            }}
+                                        >
+                                            {assetManager.getAssetDescription(
+                                                asset.asset_code.toLowerCase()
+                                            )}
+                                        </span> to:
+                                    </Typography>
+                                </div>
+
                                 <ReducedContactSuggester />
                                 <div className="p-t-large flex-box-row items-flex-end">
                                     <div>
