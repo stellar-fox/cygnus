@@ -119,29 +119,40 @@ export default compose(
 
         // ...
         updateInputValue = (event) => {
-            let availableBalance = new BigNumber(this.props.asset.balance)
-                .minus(event.target.value).toFixed(2)
+
+            const currentBalance = new BigNumber(this.props.asset.balance),
+                availableBalance = new BigNumber(
+                    this.props.asset.balance
+                ).minus(event.target.value)
+
 
             if (!/^(\d+)([.](\d{0,2}))?$/.test(event.target.value)) {
                 this.setState({
                     error: true,
                     errorMessage: "Invalid amount entered.",
-                    availableBalance: new BigNumber(
-                        this.props.asset.balance
-                    ).toFixed(2),
+                    availableBalance: currentBalance.toFixed(2),
                 })
                 this.props.setState({
                     amount: emptyString(),
                     transactionAsset: null,
                 })
             }
-            else if (availableBalance < 0) {
+            else if (availableBalance.isLessThan(0)) {
                 this.setState({
                     error: true,
                     errorMessage: "Not enough funds available.",
-                    availableBalance: new BigNumber(
-                        this.props.asset.balance
-                    ).toFixed(2),
+                    availableBalance: currentBalance.toFixed(2),
+                })
+                this.props.setState({
+                    amount: emptyString(),
+                    transactionAsset: null,
+                })
+            }
+            else if (availableBalance.isEqualTo(currentBalance)) {
+                this.setState({
+                    error: true,
+                    errorMessage: "Amount needs to be greater than 0.00",
+                    availableBalance: currentBalance.toFixed(2),
                 })
                 this.props.setState({
                     amount: emptyString(),
@@ -152,7 +163,7 @@ export default compose(
                 this.setState({
                     error: false,
                     errorMessage: emptyString(),
-                    availableBalance,
+                    availableBalance: availableBalance.toFixed(2),
                 })
                 this.props.setState({
                     amount: event.target.value,

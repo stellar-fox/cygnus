@@ -304,8 +304,20 @@ export default compose(
                         </Typography>
                     </div> :
 
+
                     <div
-                        className="f-b-c space-between"
+                        className={`f-b-c space-between ${
+                            !this.balanceIsZero(trustedAsset) &&
+                            this.props.loginManager.isAuthenticated() &&
+                            "cursor-pointer"
+                        }`}
+                        onClick={
+                            !this.balanceIsZero(trustedAsset) &&
+                            this.props.loginManager.isAuthenticated() &&
+                            this.showAssetDetails.bind(
+                                this, trustedAsset
+                            )
+                        }
                     >
 
                         <div className="p-l-small">
@@ -327,18 +339,7 @@ export default compose(
                             />
                         }
 
-                        <div
-                            onClick={
-                                this.props.loginManager.isAuthenticated() &&
-                                this.showAssetDetails.bind(
-                                    this, trustedAsset
-                                )
-                            }
-                            className={`p-l-small ${
-                                this.props.loginManager.isAuthenticated() &&
-                                "cursor-pointer"
-                            }`}
-                        >
+                        <div className="p-l-small">
                             <div className="p-b-nano">
                                 <Typography variant="caption"
                                     color="secondary"
@@ -361,8 +362,8 @@ export default compose(
                                 Trust Limit:<he.Nbsp /><he.Nbsp />
                                 {this.displayLimit(trustedAsset)}
                             </Typography>
-
                         </div>
+
                     </div>
 
                 }
