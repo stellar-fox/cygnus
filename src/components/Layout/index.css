@@ -48,7 +48,13 @@ div.p-b-small-block::after {
 
 .m-t-large { margin-top: 3rem; }
 
+.m-t-x-large {margin-top: 5rem; }
+
+.m-b-large { margin-bottom: 1.35rem; }
+
 .m-b { margin-bottom: 1rem; }
+
+.m-b-medium { margin-bottom: 8px; }
 
 .m-b-small { margin-bottom: 3px; }
 
