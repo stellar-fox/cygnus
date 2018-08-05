@@ -450,13 +450,6 @@ class Balances extends Component {
                                 this.props.Modal.visible
                             }
                             title=""
-                            actions={[
-                                <Button
-                                    onClick={this.closeAssetDetailsModal}
-                                    color="primary"
-                                    disabled={!this.props.cancelEnabled}
-                                >CLOSE</Button>,
-                            ]}
                         >
                             <AssetDetails assetManager={this.props.assetManager} />
                         </Modal>

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { withStyles } from "@material-ui/core/styles"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
-import { emptyString, shorten } from "@xcmats/js-toolbox"
+import { emptyString } from "@xcmats/js-toolbox"
 import ReducedContactSuggester from "./ReducedContactSuggester"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
@@ -25,8 +25,6 @@ import {
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import clone from "lodash/clone"
 import BigNumber from "bignumber.js"
-import { gravatar, gravatarSize } from "../StellarFox/env"
-import md5 from "../../lib/md5"
 import NumberFormat from "react-number-format"
 
 
@@ -63,11 +61,14 @@ export default compose(
             token: state.LoginManager.token,
             amount: state.Balances.amount,
             amountText: state.Balances.amountText,
+            indicatorMessage: state.Balances.indicatorMessage,
+            indicatorStyle: state.Balances.indicatorStyle,
             payee: state.Balances.payee,
             payeeEmailMD5: state.Balances.payeeEmailMD5,
             payeeFullName: state.Balances.payeeFullName,
             payeeMemoText: state.Balances.payeeMemoText,
             horizon: state.StellarAccount.horizon,
+            sequence: state.StellarAccount.sequence,
             memoText: state.Balances.memoText,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
@@ -79,6 +80,7 @@ export default compose(
             setState: BalancesAction.setState,
             resetState: BalancesAction.resetState,
             showModal: ModalAction.showModal,
+            hideModal: ModalAction.hideModal,
         }, dispatch)
     ),
     withStyles((theme) => ({
@@ -307,9 +309,9 @@ export default compose(
 
         // ...
         render = () => (
-            ({ amount, amountText, asset, assetManager, classes, payeeEmailMD5, payeeFullName, payeeMemoText, }) =>
+            ({ amount, amountText, asset, assetManager, indicatorMessage,
+                indicatorStyle, payeeMemoText, sequence, }) =>
                 <Fragment>
-
                     {asset &&
                     <div className="flex-box-row items-centered">
                         <Avatar src={asset.avatar} /><he.Nbsp /><he.Nbsp />
@@ -380,34 +382,62 @@ export default compose(
                     </div>
                     }
 
+                    <div className="f-e p-t-small">
+                        <div>
+                            <i className="material-icons">lock</i>
+                        </div>
+                        <div className="f-b-col center">
+                            <div className="micro nowrap p-r-small">
+                                Security Features
+                            </div>
+                            <div className="micro nowrap">
+                                <span className={indicatorStyle}>
+                                    {indicatorMessage}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <div className="flex-box-row space-between items-centered">
                         {asset && payeeMemoText.length === 0 ?
-                            <div className="p-t-large">
-                                <InputField
-                                    name="paycheck-memo"
-                                    type="text"
-                                    label="Memo"
-                                    color="primary"
-                                    maxLength={28}
-                                    onChange={this.updateMemoValue}
-                                />
+                            <div className="flex-box-col">
+                                <div className="p-t-large">
+                                    <InputField
+                                        name="paycheck-memo"
+                                        type="text"
+                                        label="Memo"
+                                        color="primary"
+                                        maxLength={28}
+                                        onChange={this.updateMemoValue}
+                                    />
+                                </div>
+                                <div className="nowrap fade-extreme">
+                                    <he.SL /><he.Space />
+                                    {sequence}
+                                </div>
                             </div> :
 
-                            <div className="m-t-x-large m-b-large">
-                                <span
-                                    style={{
-                                        color: "rgba(15,46,83,0.4)",
-                                        paddingBottom: "4px",
-                                        borderBottom: "1px solid rgba(15,46,83,0.4)",
-                                    }}
-                                >
-                                    {payeeMemoText}
-                                    <he.Nbsp />
-                                    <span className="micro text-primary fade-extreme">
-                                        (payee custom defined memo)
+                            <div className="flex-box-col">
+                                <div className="m-t-x-large m-b-large">
+                                    <span
+                                        style={{
+                                            color: "rgba(15,46,83,0.4)",
+                                            paddingBottom: "4px",
+                                            borderBottom: "1px solid rgba(15,46,83,0.4)",
+                                        }}
+                                    >
+                                        {payeeMemoText}
+                                        <he.Nbsp />
+                                        <span className="micro text-primary fade-extreme">
+                                            (payee custom defined memo)
+                                        </span>
                                     </span>
-                                </span>
+                                </div>
+                                <div className="nowrap fade-extreme">
+                                    <he.SL /><he.Space />
+                                    {sequence}
+                                </div>
                             </div>
                         }
                         {asset &&
@@ -416,11 +446,21 @@ export default compose(
                                     <Button
                                         color="primary"
                                         onClick={this.sendAsset}
-                                        disabled={this.props.amount === emptyString() || !this.props.payee}
+                                        disabled={
+                                            this.props.amount === emptyString() ||
+                                                !this.props.payee
+                                        }
                                     >
                                         {this.state.inProgress ? <CircularProgress
                                             color="secondary" thickness={4} size={20}
                                         /> : "Sign & Send"}
+                                    </Button>
+                                    <Button
+                                        color="primary"
+                                        onClick={this.props.hideModal}
+                                        disabled={this.state.inProgress}
+                                    >
+                                        Cancel
                                     </Button>
                                 </div>
                                 <Typography variant="caption" color="primary">
@@ -431,31 +471,6 @@ export default compose(
                             </div>
                         }
                     </div>
-
-                    {/* TODO - reformat this into recipient area on asset paycheck.
-                        <div>
-                            <Typography align="center" variant="body2" color="primary">
-                                Recipient
-                            </Typography>
-                            <Avatar classes={{
-                                root: classes.root, img: classes.img,
-                            }} src={`${gravatar}${payeeEmailMD5 ?
-                                payeeEmailMD5 : this.props.payee ?
-                                    md5(this.props.payee) : emptyString()
-                            }?${gravatarSize}&d=robohash`
-                            }
-                            />
-                            <Typography align="center" variant="body1" color="primary">
-                                {shorten(payeeFullName, 12, shorten.END)}
-                            </Typography>
-                            <Typography align="center" variant="subheading" color="primary">
-                                {assetManager.getAssetGlyph(
-                                    asset.asset_code.toLowerCase()
-                                )} {new BigNumber(amount || 0).toFixed(2)}
-                            </Typography>
-                        </div>
-                    */}
-
                 </Fragment>
         )(this.props)
     }
