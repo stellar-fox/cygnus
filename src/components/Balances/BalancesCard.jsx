@@ -426,9 +426,8 @@ class BalancesCard extends Component {
                 </Fragment>
                 }
 
-                {this.props.loginManager.isAuthenticated() &&
-                    <div className="p-t flex-box-col items-flex-start">
-
+                {this.props.loginManager.isPayEnabled() &&
+                    <div className="flex-box-col items-flex-start">
                         <Typography variant="caption" color="primary">
                             {this.state.statusMessage ?
                                 this.state.statusMessage : <he.Nbsp />
