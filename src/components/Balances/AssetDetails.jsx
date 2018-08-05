@@ -17,6 +17,7 @@ import {
     submitTransaction,
 } from "../../lib/stellar-tx"
 import {
+    amountToText,
     insertPathIndex,
     htmlEntities as he,
     StellarSdk,
@@ -26,6 +27,7 @@ import clone from "lodash/clone"
 import BigNumber from "bignumber.js"
 import { gravatar, gravatarSize } from "../StellarFox/env"
 import md5 from "../../lib/md5"
+import NumberFormat from "react-number-format"
 
 
 // ...
@@ -60,9 +62,11 @@ export default compose(
             userId: state.LoginManager.userId,
             token: state.LoginManager.token,
             amount: state.Balances.amount,
+            amountText: state.Balances.amountText,
             payee: state.Balances.payee,
             payeeEmailMD5: state.Balances.payeeEmailMD5,
             payeeFullName: state.Balances.payeeFullName,
+            payeeMemoText: state.Balances.payeeMemoText,
             horizon: state.StellarAccount.horizon,
             memoText: state.Balances.memoText,
             publicKey: state.LedgerHQ.publicKey,
@@ -134,6 +138,7 @@ export default compose(
                 })
                 this.props.setState({
                     amount: emptyString(),
+                    amountText: emptyString(),
                     transactionAsset: null,
                 })
             }
@@ -145,6 +150,7 @@ export default compose(
                 })
                 this.props.setState({
                     amount: emptyString(),
+                    amountText: emptyString(),
                     transactionAsset: null,
                 })
             }
@@ -156,6 +162,7 @@ export default compose(
                 })
                 this.props.setState({
                     amount: emptyString(),
+                    amountText: emptyString(),
                     transactionAsset: null,
                 })
             }
@@ -167,10 +174,19 @@ export default compose(
                 })
                 this.props.setState({
                     amount: event.target.value,
+                    amountText: amountToText(
+                        new BigNumber(event.target.value).toFixed(2)
+                    ),
                     transactionAsset: clone(this.props.asset),
                 })
             }
         }
+
+
+        // ...
+        updateMemoValue = (event) => this.props.setState({
+            memoText: event.target.value,
+        })
 
 
         // ...
@@ -291,92 +307,155 @@ export default compose(
 
         // ...
         render = () => (
-            ({ amount, asset, assetManager, classes, payeeEmailMD5, payeeFullName, }) =>
+            ({ amount, amountText, asset, assetManager, classes, payeeEmailMD5, payeeFullName, payeeMemoText, }) =>
                 <Fragment>
+
                     {asset &&
-                        <div className="flex-box-row space-between">
-                            <div className="flex-box-col items-flex-start">
-                                <div className="flex-box-row items-centered">
-                                    <Avatar src={asset.avatar} /><he.Nbsp /><he.Nbsp />
-                                    <Typography variant="subheading" color="primary">
-                                        Send<he.Nbsp />
-                                        <span
-                                            style={{
-                                                fontWeight: 600,
-                                                textShadow: "0px 0px 2px rgba(15, 46, 83, 0.35)",
-                                            }}
-                                        >
-                                            {assetManager.getAssetDescription(
-                                                asset.asset_code.toLowerCase()
-                                            )}
-                                        </span> to:
-                                    </Typography>
-                                </div>
-
-                                <ReducedContactSuggester />
-                                <div className="p-t-large flex-box-row items-flex-end">
-                                    <div>
-                                        <InputField
-                                            id="payment-amount"
-                                            type="text"
-                                            label={`${
-                                                assetManager.getAssetGlyph(
-                                                    asset.asset_code.toLowerCase()
-                                                )
-                                            } Amount`}
-                                            color="primary"
-                                            error={this.state.error}
-                                            errorMessage={this.state.errorMessage}
-                                            onChange={this.updateInputValue}
-                                        />
-                                        <Typography variant="caption" color="primary">
-                                        Available Balance: {assetManager.getAssetGlyph(
-                                                asset.asset_code.toLowerCase()
-                                            )} {this.state.availableBalance}
-                                        </Typography>
-                                    </div>
-                                    <div className="p-l-large" style={{ paddingBottom: "1.2rem", }}>
-                                        <Button
-                                            color="primary"
-                                            onClick={this.sendAsset}
-                                            disabled={this.props.amount === emptyString() || !this.props.payee}
-                                        >
-                                            {this.state.inProgress ? <CircularProgress
-                                                color="secondary" thickness={4} size={20}
-                                            /> : "Sign & Send"}
-                                        </Button>
-                                        <Typography variant="caption" color="primary">
-                                            {this.state.statusMessage ?
-                                                this.state.statusMessage : <he.Nbsp />
-                                            }
-                                        </Typography>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <Typography align="center" variant="body2" color="primary">
-                                    Recipient
-                                </Typography>
-                                <Avatar classes={{
-                                    root: classes.root, img: classes.img,
-                                }} src={`${gravatar}${payeeEmailMD5 ?
-                                    payeeEmailMD5 : this.props.payee ?
-                                        md5(this.props.payee) : emptyString()
-                                }?${gravatarSize}&d=robohash`
-                                }
-                                />
-                                <Typography align="center" variant="body1" color="primary">
-                                    {shorten(payeeFullName, 12, shorten.END)}
-                                </Typography>
-                                <Typography align="center" variant="subheading" color="primary">
-                                    {assetManager.getAssetGlyph(
-                                        asset.asset_code.toLowerCase()
-                                    )} {new BigNumber(amount || 0).toFixed(2)}
-                                </Typography>
-                            </div>
-                        </div>
+                    <div className="flex-box-row items-centered">
+                        <Avatar src={asset.avatar} /><he.Nbsp /><he.Nbsp />
+                        <Typography variant="subheading" color="primary">
+                            <span
+                                style={{
+                                    fontWeight: 600,
+                                    textShadow: "0px 0px 2px rgba(15, 46, 83, 0.35)",
+                                }}
+                            >
+                                {assetManager.getAssetDescription(
+                                    asset.asset_code.toLowerCase()
+                                )}
+                            </span>
+                        </Typography>
+                    </div>
                     }
+
+                    {asset &&
+                    <div className="flex-box-row items-centered space-between">
+                        <div style={{ minHeight: 116, }}>
+                            <ReducedContactSuggester />
+                        </div>
+                        <div className="m-b-medium">
+                            <InputField
+                                id="payment-amount"
+                                type="text"
+                                label={`${
+                                    assetManager.getAssetGlyph(
+                                        asset.asset_code.toLowerCase()
+                                    )
+                                } Amount`}
+                                color="primary"
+                                error={this.state.error}
+                                errorMessage={this.state.errorMessage}
+                                onChange={this.updateInputValue}
+                            />
+                            <Typography variant="caption" color="primary">
+                                Available Balance:<he.Nbsp /><he.Nbsp />
+                                {assetManager.getAssetGlyph(
+                                    asset.asset_code.toLowerCase()
+                                )} <NumberFormat
+                                    value={this.state.availableBalance}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    decimalScale={2}
+                                    fixedDecimalScale={true}
+                                />
+                            </Typography>
+                        </div>
+                    </div>
+                    }
+
+                    {asset &&
+                    <div className="f-s space-between verbatim-underlined">
+                        <div>
+                            <Typography variant="body1" align="right" color="primary">
+                                {amount && amountText ? amountText : <he.Nbsp />}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography variant="body1" align="right" color="primary">
+                                {this.props.assetManager.getAssetDenomination(
+                                    asset.asset_code.toLowerCase()
+                                )}
+                            </Typography>
+                        </div>
+                    </div>
+                    }
+
+
+                    <div className="flex-box-row space-between items-centered">
+                        {asset && payeeMemoText.length === 0 ?
+                            <div className="p-t-large">
+                                <InputField
+                                    name="paycheck-memo"
+                                    type="text"
+                                    label="Memo"
+                                    color="primary"
+                                    maxLength={28}
+                                    onChange={this.updateMemoValue}
+                                />
+                            </div> :
+
+                            <div className="m-t-x-large m-b-large">
+                                <span
+                                    style={{
+                                        color: "rgba(15,46,83,0.4)",
+                                        paddingBottom: "4px",
+                                        borderBottom: "1px solid rgba(15,46,83,0.4)",
+                                    }}
+                                >
+                                    {payeeMemoText}
+                                    <he.Nbsp />
+                                    <span className="micro text-primary fade-extreme">
+                                        (payee custom defined memo)
+                                    </span>
+                                </span>
+                            </div>
+                        }
+                        {asset &&
+                            <div className="flex-box-col items-flex-end">
+                                <div style={{ marginTop: 60, }}>
+                                    <Button
+                                        color="primary"
+                                        onClick={this.sendAsset}
+                                        disabled={this.props.amount === emptyString() || !this.props.payee}
+                                    >
+                                        {this.state.inProgress ? <CircularProgress
+                                            color="secondary" thickness={4} size={20}
+                                        /> : "Sign & Send"}
+                                    </Button>
+                                </div>
+                                <Typography variant="caption" color="primary">
+                                    {this.state.statusMessage ?
+                                        this.state.statusMessage : <he.Nbsp />
+                                    }
+                                </Typography>
+                            </div>
+                        }
+                    </div>
+
+                    {/* TODO - reformat this into recipient area on asset paycheck.
+                        <div>
+                            <Typography align="center" variant="body2" color="primary">
+                                Recipient
+                            </Typography>
+                            <Avatar classes={{
+                                root: classes.root, img: classes.img,
+                            }} src={`${gravatar}${payeeEmailMD5 ?
+                                payeeEmailMD5 : this.props.payee ?
+                                    md5(this.props.payee) : emptyString()
+                            }?${gravatarSize}&d=robohash`
+                            }
+                            />
+                            <Typography align="center" variant="body1" color="primary">
+                                {shorten(payeeFullName, 12, shorten.END)}
+                            </Typography>
+                            <Typography align="center" variant="subheading" color="primary">
+                                {assetManager.getAssetGlyph(
+                                    asset.asset_code.toLowerCase()
+                                )} {new BigNumber(amount || 0).toFixed(2)}
+                            </Typography>
+                        </div>
+                    */}
+
                 </Fragment>
         )(this.props)
     }
