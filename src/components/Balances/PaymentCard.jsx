@@ -3,12 +3,11 @@ import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import PropTypes from "prop-types"
 import { emptyString } from "@xcmats/js-toolbox"
-import numberToText from "number-to-text"
 import debounce from "lodash/debounce"
 import { BigNumber } from "bignumber.js"
 import { Card, CardActions, CardText } from "material-ui/Card"
 import DatePicker from "material-ui/DatePicker"
-import { htmlEntities as he } from "../../lib/utils"
+import { amountToText, htmlEntities as he } from "../../lib/utils"
 import { appName, securityMsgPlaceholder, } from "../StellarFox/env"
 import Button from "../../lib/mui-v1/Button"
 import InputField from "../../lib/common/InputField"
@@ -155,7 +154,7 @@ class PaymentCard extends Component {
         this.textInputFieldAmount.setState({ error: emptyString(), })
 
         this.props.setState({
-            amountText: this.amountToText(amount),
+            amountText: amountToText(amount),
             transactionAsset: { asset_code: this.props.Account.currency, },
         })
 
@@ -163,21 +162,6 @@ class PaymentCard extends Component {
     }
 
 
-    // ...
-    amountToText = (amount) => {
-        const grouped = amount.match(
-            /^(\d+)([.](\d{1,2}))?$/
-        )
-        // amount with fractions case
-        if (grouped[3]) {
-            return `${numberToText.convertToText(grouped[1])} and ${
-                grouped[3]}/100`
-        }
-        // whole amount case
-        else if (grouped[1] && !grouped[2]) {
-            return numberToText.convertToText(grouped[1])
-        }
-    }
 
 
     // ...

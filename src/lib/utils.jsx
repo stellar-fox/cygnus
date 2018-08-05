@@ -17,7 +17,7 @@ import BigNumber from "bignumber.js"
 import { loadAccount } from "../lib/stellar-tx"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
-
+import numberToText from "number-to-text"
 
 
 
@@ -160,6 +160,25 @@ export const resubmitFundingTx = async (userId, token, chargeData) => {
             { user_id: userId, token, chargeData, })
     } catch (e) {
         throw new Error(e.message)
+    }
+}
+
+
+
+
+// ...
+export const amountToText = (amount) => {
+    const grouped = amount.match(
+        /^(\d+)([.](\d{1,2}))?$/
+    )
+    // amount with fractions case
+    if (grouped[3]) {
+        return `${numberToText.convertToText(grouped[1])} and ${
+            grouped[3]}/100`
+    }
+    // whole amount case
+    else if (grouped[1] && !grouped[2]) {
+        return numberToText.convertToText(grouped[1])
     }
 }
 
