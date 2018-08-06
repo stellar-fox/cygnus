@@ -9,11 +9,12 @@ import "./index.css"
 // <Modal> component
 export default ({
     title, actions, open, hideModal, children, repositionOnUpdate,
+    paperClassName, titleClassName, bodyClassName,
 }) =>
     <Dialog
-        paperClassName="paper-modal"
-        titleClassName="title-modal"
-        bodyClassName="body-modal"
+        paperClassName={paperClassName || "paper-modal"}
+        titleClassName={titleClassName || "title-modal"}
+        bodyClassName={bodyClassName || "body-modal"}
         title={title}
         actions={actions}
         modal={true}
