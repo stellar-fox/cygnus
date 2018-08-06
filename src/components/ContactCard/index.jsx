@@ -107,7 +107,7 @@ export default compose(
                                 <Typography align="right" color="primary">
                                     {shorten(formatFullName(
                                         data.first_name, data.last_name
-                                    ), 30, shorten.END)}
+                                    ), 24, shorten.END)}
                                 </Typography>
                                 <Typography variant="caption" align="right"
                                     color="primary"
