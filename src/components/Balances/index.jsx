@@ -450,6 +450,8 @@ class Balances extends Component {
                                 this.props.Modal.visible
                             }
                             title=""
+                            paperClassName="paycheck"
+                            bodyClassName="lace"
                         >
                             <AssetDetails assetManager={this.props.assetManager} />
                         </Modal>

@@ -384,7 +384,12 @@ export default compose(
 
                     <div className="f-e p-t-small">
                         <div>
-                            <i className="material-icons">lock</i>
+                            {indicatorMessage === "Payee Verified" ?
+                                <i style={{ color: "rgb(27, 94, 32)", }}
+                                    className="material-icons"
+                                >lock</i> :
+                                <i className="material-icons">lock_open</i>
+                            }
                         </div>
                         <div className="f-b-col center">
                             <div className="micro nowrap p-r-small">
@@ -397,7 +402,6 @@ export default compose(
                             </div>
                         </div>
                     </div>
-
 
                     <div className="flex-box-row space-between items-centered">
                         {asset && payeeMemoText.length === 0 ?
