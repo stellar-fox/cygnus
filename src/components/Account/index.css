@@ -70,6 +70,17 @@
     padding: 1rem;
 }
 
+.border-around {
+    border: 1px solid rgb(15,46,83);
+    border-radius: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.gradiented {
+    background: linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%);
+}
+
 .paper {
     background-color: #f5b71a;
     padding: 1.1rem;
