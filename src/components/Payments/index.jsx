@@ -1,7 +1,8 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
+import { firebaseApp } from "../StellarFox"
 import { Redirect, Route } from "react-router-dom"
 import {
     ConnectedSwitch as Switch,
@@ -157,13 +158,16 @@ class Payments extends Component {
                             value={this.validTabNames[1]}
                         >
                             <div className="tab-content">
-                                <Transactions
-                                    stellarServer={this.stellarServer}
-                                    updateTransactionsCursors={
-                                        this.updateTransactionsCursors
-                                    }
-                                    getTransactions={this.getTransactions}
-                                />
+                                {firebaseApp.auth("session").currentUser ?
+                                    <Transactions /> : <Fragment>
+                                        <div className="account-title">
+                                            This content is available for registered users.
+                                        </div>
+                                        <div className="account-subtitle">
+                                            Please Log-in to the service
+                                            or Sign-up for the account.
+                                        </div>
+                                    </Fragment>}
                             </div>
                         </Tab>
                     </Tabs>
