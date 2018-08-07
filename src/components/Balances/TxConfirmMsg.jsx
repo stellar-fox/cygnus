@@ -3,10 +3,6 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { withStyles } from "@material-ui/core/styles"
 import {
-    List,
-    ListItem,
-} from "material-ui/List"
-import {
     emptyString,
     handleException,
 } from "@xcmats/js-toolbox"
@@ -22,7 +18,7 @@ import {
 import { Typography } from "@material-ui/core"
 import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
-
+import { liveNetAddr } from "../StellarFox/env"
 
 
 
@@ -115,13 +111,19 @@ class TxConfirmMsg extends Component {
     render = () => (
         ({ classes, Account, Balances, }) =>
             <Fragment>
-                <div className="centered">
-                    <Typography align="center" color="primary" variant="body1">
-                        Transaction
+                
+                <div className="p-t p-b flex-box-row space-between">
+                    <Typography align="center" color="primary" variant="body2">
+                        Payment
                     </Typography>
-                    <div style={{alignItems: "center", }}
-                        className="f-b center"
-                    >
+
+                    <Typography align="center" color="primary" variant="body2">
+                        Cost Breakdown
+                    </Typography>
+                </div>
+
+                <div className="flex-box-row space-between">
+                    <div className="flex-box-row items-flex-start">
                         <div className="f-b-col-c">
                             <Avatar classes={{
                                 root: classes.avatar, img: classes.avatarImage,
@@ -147,7 +149,8 @@ class TxConfirmMsg extends Component {
                         </div>
                         <span className="text-primary" style={{
                             padding: "0 2rem", paddingBottom: "3rem",
-                            fontSize: "4rem", }}
+                            fontSize: "4rem",
+                        }}
                         >→</span>
                         <div className="f-b-col-c">
                             <Avatar classes={{
@@ -174,141 +177,184 @@ class TxConfirmMsg extends Component {
                             </Typography>
                         </div>
                     </div>
-                    <Typography align="center" color="primary" variant="body1">
-                        Cost Breakdown
-                    </Typography>
-                    <div style={{ alignItems: "center", }}
-                        className="f-b-col-c"
-                    >
-                        <div style={{width: "60%", marginBottom: "5px", }}
-                            className="f-b space-between"
-                        >
-                            <Typography color="primary" variant="body2">
-                                Exchange Rate:
-                            </Typography>
-                            <Typography color="primary" variant="body2">
-                                {this.exchangeRate()}
-                            </Typography>
+                    <div className="flex-box-col">
+                        <div style={{ paddingBottom: 5, }}>
+                            <div className="flex-box-row space-between">
+                                <Typography color="primary" variant="body2">
+                                    Exchange Rate:<he.Nbsp /><he.Nbsp />
+                                </Typography>
+                                <Typography color="primary" variant="body2">
+                                    {this.exchangeRate()}
+                                </Typography>
+                            </div>
                         </div>
-                        <div style={{ width: "60%", marginBottom: "5px", }}
-                            className="f-b space-between"
-                        >
-                            <Typography color="primary" variant="body2">
-                                You Send:
-                            </Typography>
-                            <Typography color="primary" variant="body2">
-                                {this.sendAmount()}
-                            </Typography>
+                        <div style={{ paddingBottom: 5, }}>
+                            <div className="flex-box-row space-between">
+                                <Typography color="primary" variant="body2">
+                                    You Send:<he.Nbsp /><he.Nbsp />
+                                </Typography>
+                                <Typography color="primary" variant="body2">
+                                    {this.sendAmount()}
+                                </Typography>
+                            </div>
                         </div>
-                        <div style={{ width: "60%", marginBottom: "5px", }}
-                            className="f-b space-between"
-                        >
-                            <Typography color="primary" variant="body2">
-                                Payee Receives:
-                            </Typography>
-                            <Typography color="primary" variant="body2">
-                                {this.receiveAmount()}
-                            </Typography>
+                        <div style={{ paddingBottom: 5, }}>
+                            <div className="flex-box-row space-between">
+                                <Typography color="primary" variant="body2">
+                                    Payee Receives:<he.Nbsp /><he.Nbsp />
+                                </Typography>
+                                <Typography color="primary" variant="body2">
+                                    {this.receiveAmount()}
+                                </Typography>
+                            </div>
                         </div>
-                        <div style={{ width: "60%", marginBottom: "5px", }}
-                            className="f-b space-between"
-                        >
-                            <Typography color="primary" variant="body2">
-                                Service Fee:
-                            </Typography>
-                            <Typography color="primary" variant="body2">
-                                {this.serviceFee()}
-                            </Typography>
+                        <div style={{ paddingBottom: 5, }}>
+                            <div className="flex-box-row space-between">
+                                <Typography color="primary" variant="body2">
+                                    Service Fee:<he.Nbsp /><he.Nbsp />
+                                </Typography>
+                                <Typography color="primary" variant="body2">
+                                    {this.serviceFee()}
+                                </Typography>
+                            </div>
                         </div>
                     </div>
                 </div>
+                
                 <Divider classes={{ root: classes.divider, }} />
+
                 <Typography align="center" color="primary" variant="body2">
                     Please confirm that the following info is the same on your
                     device<he.Apos />s screen:
                 </Typography>
 
-                <div className="f-b space-around">
-                    <List>
-                        <ListItem
-                            disabled={true}
-                            primaryText="Operation Type"
-                            secondaryText={Balances.transactionType}
-                            leftIcon={
+                <div className="f-b p-t space-between">
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
                                 <i className="text-primary material-icons">
                                     style
                                 </i>
-                            }
-                        />
-                        <ListItem
-                            disabled={true}
-                            primaryText="Amount"
-                            secondaryText={`${Balances.amountNative} XLM`}
-                            leftIcon={
+                            </div>
+                            <div>
+                                <Typography color="primary" variant="body1">
+                                    Operation Type
+                                </Typography>
+                                <Typography color="primary" variant="body2">
+                                    {Balances.transactionType}
+                                </Typography>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
                                 <i className="text-primary material-icons">
                                     account_balance_wallet
                                 </i>
-                            }
-                        />
-                        <ListItem
-                            disabled={true}
-                            primaryText="Destination"
-                            secondaryText={
-                                handleException(
-                                    () => pubKeyAbbrLedgerHQ(Balances.payee),
-                                    () => "Not Available"
-                                )
-                            }
-                            leftIcon={
+                            </div>
+                            <div>
+                                <Typography align="center" color="primary"
+                                    variant="body1"
+                                >Amount</Typography>
+                                <Typography align="center" color="primary"
+                                    variant="body2"
+                                >{`${Balances.amountNative} XLM`}</Typography>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
                                 <i className="text-primary material-icons">
                                     gps_fixed
                                 </i>
-                            }
-                        />
-                    </List>
-                    <List>
-                        <ListItem
-                            disabled={true}
-                            primaryText="Memo"
-                            secondaryText={
-                                Balances.memoText === emptyString() ?
-                                    "Empty" : Balances.memoText
-                            }
-                            leftIcon={
+                            </div>
+                            <div>
+                                <Typography align="right" color="primary"
+                                    variant="body1"
+                                >Destination</Typography>
+                                <Typography align="right" color="primary"
+                                    variant="body2"
+                                >{handleException(
+                                        () => pubKeyAbbrLedgerHQ(Balances.payee),
+                                        () => "Not Available")}</Typography>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div className="f-b space-between p-t p-b">
+
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
                                 <i className="text-primary material-icons">
                                     speaker_notes
                                 </i>
-                            }
-                        />
-                        <ListItem
-                            disabled={true}
-                            primaryText="Fee"
-                            secondaryText="0.000001 XLM"
-                            leftIcon={
+                            </div>
+                            <div>
+                                <Typography color="primary" variant="body1">
+                                    Memo
+                                </Typography>
+                                <Typography color="primary" variant="body2">{
+                                    Balances.memoText === emptyString() ?
+                                        "Empty" : Balances.memoText
+                                }</Typography>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
                                 <i className="text-primary material-icons">
                                     credit_card
                                 </i>
-                            }
-                        />
-                        <ListItem
-                            disabled={true}
-                            primaryText="Network"
-                            secondaryText="Test"
-                            leftIcon={
+                            </div>
+                            <div>
+                                <Typography align="center" color="primary"
+                                    variant="body1"
+                                >Fee</Typography>
+                                <Typography align="center" color="primary"
+                                    variant="body2"
+                                >0.000001 XLM</Typography>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
                                 <i className="text-primary material-icons">
                                     public
                                 </i>
-                            }
-                        />
-                    </List>
+                            </div>
+                            <div>
+                                <Typography align="right" color="primary"
+                                    variant="body1"
+                                >Network</Typography>
+                                <Typography align="right" color="primary"
+                                    variant="body2"
+                                >
+                                    {this.props.horizon === liveNetAddr ?
+                                        "Public" : "Test"}
+                                </Typography>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="p-b centered">
+                
+                <Typography align="center" color="primary" variant="body1">
                     When you are sure it is correct press
                     <span className="bigger text-primary">
                         <he.Nbsp /><he.Check />
                     </span>
                     on the device to sign your transaction and send it off.
-                </div>
+                </Typography>
             </Fragment>
     )(this.props)
 }
@@ -321,6 +367,7 @@ export default compose (
             Account: state.Account,
             Balances: state.Balances,
             Contacts: state.Contacts,
+            horizon: state.StellarAccount.horizon,
         })
     )
 )(TxConfirmMsg)
