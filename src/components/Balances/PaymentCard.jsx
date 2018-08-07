@@ -239,7 +239,7 @@ class PaymentCard extends Component {
                         onChange={this.updateDate}
                     />
                 </div>
-                <div className="f-s space-between">
+                <div className="f-s space-between" style={{ minHeight: 130, }}>
                     <div className="payment-header f-s">
                         <div className="p-r leading-label-align nowrap">
                             Pay to the order of:
@@ -310,9 +310,14 @@ class PaymentCard extends Component {
                     </div>
                 </div>
                 <div className="p-t"></div>
-                <div className="f-e">
+                <div className="f-e" style={{ minHeight: 30, }}>
                     <div>
-                        <i className="material-icons">lock</i>
+                        {this.props.Balances.indicatorMessage === "Payee Verified" ?
+                            <i style={{ color: "rgb(27, 94, 32)", }}
+                                className="material-icons"
+                            >lock</i> :
+                            <i className="material-icons">lock_open</i>
+                        }
                     </div>
                     <div className="f-b-col center">
                         <div className="micro nowrap p-r-small">

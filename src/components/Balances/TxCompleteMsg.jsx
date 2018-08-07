@@ -1,6 +1,7 @@
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { appName } from "../StellarFox/env"
+import { shorten } from "@xcmats/js-toolbox"
 import {
     htmlEntities as he,
     pubKeyAbbrLedgerHQ,
@@ -79,7 +80,7 @@ export default connect(
                             Transaction ID:
                         </TableRowColumn>
                         <TableRowColumn className="text-normal fade">
-                            {balances.paymentId}
+                            {shorten(balances.paymentId, 35)}
                         </TableRowColumn>
                     </TableRow>
                     <TableRow className="table-row-primary">

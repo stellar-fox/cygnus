@@ -395,7 +395,7 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "txConfirm" &&
                                 this.props.Modal.visible
                             }
-                            title="Confirm on Hardware Device"
+                            title="About your transaction …"
                         >
                             <TxConfirmMsg assetManager={assetManager} />
                         </Modal>
