@@ -132,21 +132,27 @@ const AddContactModal = withStyles(styles)(
 
 // ...
 const EditContactModal = withStyles(styles)(
-    ({ classes, onClose, modalId, visible, }) =>
+    ({ classes, onClose, modalId, visible, details, }) =>
         <Modal
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
             open={modalId === "editContact" && visible}
             onClose={onClose}
         >
-            <div className={classes.paper}>
-                <Typography variant="subheading" color="primary"
-                    id="modal-title"
-                >
-                    Contact Details
-                </Typography>
-                <EditContactForm />
-            </div>
+            {details && details.external ?
+                <div style={{ background: "linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%)", }} className={classes.paper}>
+                    <Typography variant="subheading" color="primary" id="modal-title">
+                        Federated Contact Details
+                    </Typography>
+                    <EditContactForm />
+                </div> :
+                <div className={classes.paper}>
+                    <Typography variant="subheading" color="primary" id="modal-title">
+                        Contact Details
+                    </Typography>
+                    <EditContactForm />
+                </div>
+            }
         </Modal>
 )
 
@@ -570,6 +576,7 @@ class Contacts extends Component {
 
             <EditContactModal modalId={this.props.Modal.modalId}
                 visible={this.props.Modal.visible} onClose={this.hideModal}
+                details={this.props.contactDetails}
             />
 
             {this.state.selectedView === 0 &&
@@ -680,6 +687,7 @@ export default connect(
         contactsExternal: state.Contacts.external,
         contactRequests: state.Contacts.requests,
         pending: state.Contacts.pending,
+        contactDetails: state.Contacts.details,
     }),
     (dispatch) => bindActionCreators({
         setState: ContactsAction.setState,
