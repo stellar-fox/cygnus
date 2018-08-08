@@ -533,11 +533,17 @@ class ContactSuggester extends Component {
                  * If external contact has custom memo then fill it into the
                  * memo field on the pay check.
                  */
-                this.props.setBalancesState({
-                    contactType: "external",
-                    memoRequired: true,
-                    payeeMemoText: extContact.memo,
-                })
+                if (extContact.memo) {
+                    this.props.setBalancesState({
+                        memoRequired: true,
+                        payeeMemoText: extContact.memo,
+                    })
+                } else {
+                    this.props.setBalancesState({
+                        memoRequired: false,
+                        payeeMemoText: emptyString(),
+                    })
+                }
 
             })() :
             /**

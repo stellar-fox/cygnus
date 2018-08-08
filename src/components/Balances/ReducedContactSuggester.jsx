@@ -519,6 +519,7 @@ class ReducedContactSuggester extends Component {
                 this.props.setBalancesState({
                     contactType: "external",
                     contactId: extContact.id,
+                    payeeFullName: displayName,
                 })
                 displayName = formatFullName(
                     extContact.first_name, extContact.last_name
@@ -531,12 +532,17 @@ class ReducedContactSuggester extends Component {
                  * If external contact has custom memo then fill it into the
                  * memo field on the pay check.
                  */
-                this.props.setBalancesState({
-                    contactType: "external",
-                    memoRequired: true,
-                    payeeMemoText: extContact.memo,
-                    payeeFullName: displayName,
-                })
+                if (extContact.memo) {
+                    this.props.setBalancesState({
+                        memoRequired: true,
+                        payeeMemoText: extContact.memo,
+                    })
+                } else {
+                    this.props.setBalancesState({
+                        memoRequired: false,
+                        payeeMemoText: emptyString(),
+                    })
+                }
 
             })() :
             /**
