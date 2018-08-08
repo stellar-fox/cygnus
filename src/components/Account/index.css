@@ -81,6 +81,18 @@
     background: linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%);
 }
 
+.coin {
+    display: inline-block;
+    background-color: rgb(244, 176, 4);
+    color: rgb(15,46,83);
+    padding: 2px 8px;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.35);
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 1.3rem;
+    margin: 5px 10px;
+}
+
 .paper {
     background-color: #f5b71a;
     padding: 1.1rem;
