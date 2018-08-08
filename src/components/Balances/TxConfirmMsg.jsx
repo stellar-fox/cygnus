@@ -19,6 +19,7 @@ import { Typography } from "@material-ui/core"
 import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
 import { liveNetAddr } from "../StellarFox/env"
+import BigNumber from "bignumber.js"
 
 
 
@@ -96,22 +97,39 @@ class TxConfirmMsg extends Component {
             "N/A"
 
 
-    // ...
-    serviceFee = () =>
-        this.state.contact.currency &&
-            this.state.contact.currency !== this.props.Account.currency ?
-            `${serviceFee} ${serviceFeeCurrency.toUpperCase()} ≈ ${
-                this.props.assetManager.exchangeRate(
-                    serviceFee, this.state.contact.currency
-                )} ${this.state.contact.currency.toUpperCase()}` :
-            `${serviceFee} ${serviceFeeCurrency.toUpperCase()}`
+    /**
+     * Returns service fee string in the following format:
+     * 1.40 THB ≈ 0.55 EUR
+     */
+    serviceFee = (contactCurrency) => {
+        if (contactCurrency) {
+            const rate = new BigNumber(this.props.assetManager.exchangeRate(
+                1.00, contactCurrency))
 
+            const sfee = new BigNumber(serviceFee)
+
+            const rateContact = new BigNumber(
+                this.props.assetManager.exchangeRate(
+                    1.00, this.props.Account.currency
+                )
+            )
+
+            return contactCurrency !== this.props.Account.currency ?
+                `${sfee.dividedBy(rate).toFixed(2)} ${
+                    this.props.Account.currency.toUpperCase()} ≈ ${
+                    sfee.dividedBy(rateContact).toFixed(2)} ${
+                    contactCurrency.toUpperCase()}` :
+                `${serviceFee} ${serviceFeeCurrency.toUpperCase()}`
+        }
+
+        return emptyString()
+    }
 
     // ...
     render = () => (
         ({ classes, Account, Balances, }) =>
             <Fragment>
-                
+
                 <div className="p-t p-b flex-box-row space-between">
                     <Typography align="center" color="primary" variant="body2">
                         Payment
@@ -214,13 +232,15 @@ class TxConfirmMsg extends Component {
                                     Service Fee:<he.Nbsp /><he.Nbsp />
                                 </Typography>
                                 <Typography color="primary" variant="body2">
-                                    {this.serviceFee()}
+                                    {this.serviceFee(
+                                        this.state.contact.currency
+                                    )}
                                 </Typography>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <Divider classes={{ root: classes.divider, }} />
 
                 <Typography align="center" color="primary" variant="body2">
@@ -246,7 +266,11 @@ class TxConfirmMsg extends Component {
                             </div>
                         </div>
                     </div>
-                    
+                    <div className="flex-box-row text-primary"
+                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    >
+                        →
+                    </div>
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-around gradiented">
                             <div>
@@ -264,7 +288,11 @@ class TxConfirmMsg extends Component {
                             </div>
                         </div>
                     </div>
-
+                    <div className="flex-box-row text-primary"
+                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    >
+                        →
+                    </div>
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-around gradiented">
                             <div>
@@ -284,7 +312,7 @@ class TxConfirmMsg extends Component {
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div className="f-b space-between p-t p-b">
@@ -307,7 +335,11 @@ class TxConfirmMsg extends Component {
                             </div>
                         </div>
                     </div>
-
+                    <div className="flex-box-row text-primary"
+                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    >
+                        →
+                    </div>
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-around gradiented">
                             <div>
@@ -325,7 +357,11 @@ class TxConfirmMsg extends Component {
                             </div>
                         </div>
                     </div>
-
+                    <div className="flex-box-row text-primary"
+                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    >
+                        →
+                    </div>
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-around gradiented">
                             <div>
@@ -347,7 +383,7 @@ class TxConfirmMsg extends Component {
                         </div>
                     </div>
                 </div>
-                
+
                 <Typography align="center" color="primary" variant="body1">
                     When you are sure it is correct press
                     <span className="bigger text-primary">
