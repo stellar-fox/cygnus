@@ -195,11 +195,7 @@ const ExtContactDetails = withStyles(styles)(
                     src={`${gravatar}${md5(details.contact.pubkey)}?${
                         gravatarSize}&d=robohash`}
                 />
-                <Badge
-                    badgeContent={
-                        assetManager.getAssetGlyph(currentCurrency)
-                    } classes={{ badge: classes.badge, }}
-                >
+                <div className="flex-box-row items-centered">
                     <Typography classes={{ root: classes.padded, }}
                         variant="body2" noWrap color="primary"
                     >
@@ -212,7 +208,10 @@ const ExtContactDetails = withStyles(styles)(
                             currentCurrency
                         )}
                     </Typography>
-                </Badge>
+                    <div className="coin">
+                        {assetManager.getAssetGlyph(currentCurrency)}
+                    </div>
+                </div>
 
                 <CurrencyPicker defaultCurrency={details.contact.currency}
                     onChange={setCurrency}
@@ -341,7 +340,7 @@ class EditContactForm extends Component {
 
 
     // ...
-    componentDidMount = () => {
+    componentDidMount = () =>
         this.setState({
             memo: ntoes(this.props.details.contact.memo),
             firstName: ntoes(this.props.details.contact.first_name),
@@ -354,7 +353,6 @@ class EditContactForm extends Component {
             ),
             defaultCurrency: this.props.details.contact.currency,
         })
-    }
 
 
     // ...
