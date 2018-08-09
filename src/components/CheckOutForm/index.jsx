@@ -2,17 +2,19 @@ import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import BigNumber from "bignumber.js"
 import { connect } from "react-redux"
+import { CardElement, injectStripe } from "react-stripe-elements"
+import { emptyString } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import Button from "../../lib/mui-v1/Button"
 import { action as SnackbarAction } from "../../redux/Snackbar"
-import { CardElement, injectStripe } from "react-stripe-elements"
 import InputField from "../../lib/mui-v1/InputField"
 import {
-    CircularProgress, FormControl, InputLabel, MenuItem, Select
+    CircularProgress, FormControl, InputLabel, MenuItem, Select,
 } from "@material-ui/core"
 import { htmlEntities as he, pubKeyAbbr } from "../../lib/utils"
 import { fundAccount } from "./api"
 import "./index.css"
+
 
 
 
@@ -108,7 +110,7 @@ class CheckoutForm extends Component {
         this.state = {
             amount: "0",
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
             selectedCurrency: "eur",
             inProgress: false,
         }
@@ -119,7 +121,7 @@ class CheckoutForm extends Component {
     async submit (_ev) {
         this.setState({
             error: false,
-            errorMessage: "",
+            errorMessage: emptyString(),
             inProgress: true,
         })
         try {
@@ -183,7 +185,7 @@ class CheckoutForm extends Component {
         } else {
             this.setState({
                 error: false,
-                errorMessage: "",
+                errorMessage: emptyString(),
                 amount: event.target.value,
             })
         }
