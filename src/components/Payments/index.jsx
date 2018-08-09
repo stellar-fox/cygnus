@@ -11,7 +11,7 @@ import {
     withDynamicRoutes,
     withStaticRouter,
 } from "../StellarRouter"
-import { StellarSdk } from "../../lib/utils"
+import { rgba, StellarSdk, } from "../../lib/utils"
 
 import { action as PaymentsAction } from "../../redux/Payments"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
@@ -34,10 +34,10 @@ const styles = {
     tab: {
         backgroundColor: "#2e5077",
         borderRadius: "3px",
-        color: "rgba(244,176,4,0.9)",
+        color: rgba(244, 176, 4, 0.9),
     },
     inkBar: {
-        backgroundColor: "rgba(244,176,4,0.8)",
+        backgroundColor: rgba(244, 176, 4, 0.8),
     },
     container: {
         backgroundColor: "#2e5077",
@@ -136,7 +136,13 @@ class Payments extends Component {
                     from={this.rr(".")}
                     to={getPath(state.tabSelected)}
                 />
-                <Route exact path={getPath(state.tabSelected)}>
+                <Route
+                    exact
+                    path={
+                        this.validTabNames.indexOf(currentView) !== -1 ?
+                            getPath(currentView) : getPath(state.tabSelected)
+                    }
+                >
                     <Tabs
                         tabItemContainerStyle={styles.container}
                         inkBarStyle={styles.inkBar}
