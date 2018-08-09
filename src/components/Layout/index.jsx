@@ -7,6 +7,7 @@ import {
     Route,
 } from "react-router-dom"
 import raf from "raf"
+import { toBool } from "@xcmats/js-toolbox"
 
 import {
     ConnectedSwitch as Switch,
@@ -33,7 +34,7 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
-            loggedIn: !!state.LedgerHQ.publicKey,
+            loggedIn: toBool(state.LedgerHQ.publicKey),
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({

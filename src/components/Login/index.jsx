@@ -3,12 +3,12 @@ import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
 import { emptyString } from "@xcmats/js-toolbox"
-import { rgb } from "../../lib/utils"
-import { withLoginManager } from "../LoginManager"
 import {
-    emailIsValid,
-    passwordIsValid,
-} from "./helper"
+    emailValid,
+    passwordValid,
+    rgb,
+} from "../../lib/utils"
+import { withLoginManager } from "../LoginManager"
 
 import { withStyles } from "@material-ui/core/styles"
 
@@ -88,7 +88,7 @@ export default compose(
         loginValidator = async () => {
 
             // INVALID EMAIL FORMAT
-            if (!emailIsValid(this.state.emailInputValue)) {
+            if (!emailValid(this.state.emailInputValue)) {
                 this.setState({
                     emailInputError: true,
                     emailInputErrorTextValue: "Invalid email format.",
@@ -102,7 +102,7 @@ export default compose(
             }
 
             // INVALID PASSWORD LENGTH
-            if (!passwordIsValid(this.state.passwordInputValue)) {
+            if (!passwordValid(this.state.passwordInputValue)) {
                 this.setState({
                     passwordInputError: true,
                     passwordInputErrorTextValue: "Invalid password length.",

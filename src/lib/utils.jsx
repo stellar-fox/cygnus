@@ -35,7 +35,9 @@ export const StellarSdk = window.StellarSdk
 
 
 
-// ...
+/**
+ * Holds regular expression used to check the validity of the domain format.
+ */
 const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 
@@ -221,27 +223,37 @@ export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
 
 
 
-// ...
-export const emailValid = (email) => !!(
+/**
+ * Checks the validity of email address format.
+ *
+ * @param {String} email
+ * @returns {Boolean}
+ */
+export const emailValid = (email) => toBool((
     new RegExp([
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))/,
         /@/,
         domainRegex,
     ].map(r => r.source).join(emptyString()))
-).test(email)
+).test(email))
 
 
 
 
-// ...
-export const passwordValid = (password) => !!/^.{8,}$/.test(password)
+/**
+ * Checks the validity of a given password.
+ *
+ * @param {String} password
+ * @returns {Boolean}
+ */
+export const passwordValid = (password) => toBool(/^.{8,}$/.test(password))
 
 
 
 
 // ...
 export const federationIsAliasOnly = (federationAddress) =>
-    !!/^[a-zA-Z\-0-9.@][^*]+$/.test(federationAddress)
+    toBool(/^[a-zA-Z\-0-9.@][^*]+$/.test(federationAddress))
 
 
 
