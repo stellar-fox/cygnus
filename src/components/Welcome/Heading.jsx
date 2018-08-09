@@ -151,11 +151,11 @@ class Heading extends Component {
                             </div>
                             <div className="col-item">
                                 <AccountBalanceIcon className="heading-svg-icon" />
-                                Account activation fee 0.50$.
+                                Account activation fee USD 0.25 ¢
                             </div>
                             <div className="col-item">
                                 <SettingsEthernetIcon className="heading-svg-icon" />
-                                End-to-end transfer fee 0.99$.
+                                End-to-end transfer fee 0.15 %
                             </div>
                             <div className="col-item">
                                 <ReplayIcon className="heading-svg-icon" />
