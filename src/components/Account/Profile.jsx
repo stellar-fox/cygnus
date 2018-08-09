@@ -441,6 +441,7 @@ class Profile extends Component {
                     autoComplete="off"
                     handleChange={this.changeEmail}
                     subLabel={`Email: ${this.props.state.email}`}
+                    disabled
                 />
 
                 {this.props.idSig ?
