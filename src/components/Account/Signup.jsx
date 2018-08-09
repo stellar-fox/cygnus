@@ -30,6 +30,7 @@ import { withStyles } from "@material-ui/core/styles"
 
 import { firebaseApp } from "../../components/StellarFox"
 import connect from "react-redux/lib/connect/connect"
+import { action as AccountAction } from "../../redux/Account"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
 import { subscribeEmail } from "./api"
@@ -170,6 +171,11 @@ class Signup extends Component {
 
                 await this.setState({
                     message: "Your account has been created.",
+                })
+
+                // update Account Redux data
+                this.props.setState({
+                    email: this.state.email,
                 })
 
                 this.props.onComplete({
@@ -441,6 +447,7 @@ class Signup extends Component {
 export default connect(
     null,
     (dispatch) => bindActionCreators({
+        setState: AccountAction.setState,
         showAlert: AlertAction.showAlert,
         hideModal: ModalAction.hideModal,
     }, dispatch)
