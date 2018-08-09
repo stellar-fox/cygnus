@@ -8,6 +8,7 @@ import {
     head,
     isString,
     objectMap,
+    toBool,
     parMap,
     wrap,
 } from "@xcmats/js-toolbox"
@@ -21,6 +22,7 @@ import numberToText from "number-to-text"
 
 
 
+
 // FIXME
 // when using:
 //    import StellarSdk from "stellar-sdk"
@@ -29,7 +31,6 @@ import numberToText from "number-to-text"
 // a following error occurs:
 //     Error: XDR Error:AccountId is already defined
 export const StellarSdk = window.StellarSdk
-
 
 
 
@@ -47,18 +48,21 @@ export const ntoes = (input) => isString(input)  ?  input  :  emptyString()
 
 
 // ...
-export const findContactByPublicKey = (contacts, publicKey) => contacts.find(
-    (c) => c.pubkey === publicKey
-)
+export const findContactByPublicKey = (contacts, publicKey) =>
+    contacts.find((c) => c.pubkey === publicKey)
+
 
 
 
 // ...
 export const formatFullName = (firstName, lastName) => (
-    firstName && lastName ?
+    firstName && lastName  ?
         `${firstName} ${lastName}`  :
-        firstName ? firstName   :
-            lastName ? lastName : "No Name"
+        firstName  ?
+            firstName  :
+            lastName  ?
+                lastName  :
+                "No Name"
 )
 
 
@@ -66,8 +70,8 @@ export const formatFullName = (firstName, lastName) => (
 
 // ...
 export const formatPaymentAddress = (alias, domain) => (
-    alias && domain ?
-        `${alias}*${domain}` : "-"
+    alias && domain  ?
+        `${alias}*${domain}`  :  "-"
 )
 
 
@@ -75,7 +79,7 @@ export const formatPaymentAddress = (alias, domain) => (
 
 // ...
 export const formatMemo = (memoType, memo) => (
-    memoType && memo ? memo :  "-"
+    memoType && memo  ?  memo  :  "-"
 )
 
 
@@ -83,14 +87,12 @@ export const formatMemo = (memoType, memo) => (
 
 // ...
 export const getRegisteredUser = async (publicKey, bip32Path) => {
-    if (publicKey && bip32Path) {
-        try {
-            return await axios.post(
-                `${config.api}/user/ledgerauth/${publicKey}/${bip32Path}`
-            )
-        } catch (e) {
-            return Promise.reject({ error: e.message, })
-        }
+    if (publicKey  &&  bip32Path) {
+        return await axios.post(
+            `${config.api}/user/ledgerauth/${publicKey}/${bip32Path}`
+        )
+    } else {
+        throw new Error("[publicKey && bip32Path] condition not met.")
     }
 }
 
@@ -100,10 +102,12 @@ export const getRegisteredUser = async (publicKey, bip32Path) => {
 // ...
 export const getUserExternalContacts = async (userId, token) => {
     try {
-        return (await axios.post(`${config.apiV2}/contacts/list/federated/`, {
-            user_id: userId,
-            token,
-        })).data
+        return (
+            await axios.post(`${config.apiV2}/contacts/list/federated/`, {
+                user_id: userId,
+                token,
+            })
+        ).data
     } catch (_e) {
         return null
     }
@@ -143,7 +147,9 @@ export const findContact = (contacts, id, external = false) =>
 export const getUserData = async (id, token) => {
     try {
         return (
-            await axios.post(`${config.api}/user/`, { user_id: id, token, })
+            await axios.post(`${config.api}/user/`, {
+                user_id: id, token,
+            })
         ).data.data
     } catch (_e) {
         return null
@@ -156,8 +162,9 @@ export const getUserData = async (id, token) => {
 // ...
 export const resubmitFundingTx = async (userId, token, chargeData) => {
     try {
-        return await axios.post(`${config.apiV2}/account/resubmit-fund/`,
-            { user_id: userId, token, chargeData, })
+        return await axios.post(`${config.apiV2}/account/resubmit-fund/`, {
+            user_id: userId, token, chargeData,
+        })
     } catch (e) {
         throw new Error(e.message)
     }
@@ -240,12 +247,12 @@ export const federationIsAliasOnly = (federationAddress) =>
 
 
 // ...
-export const federationAddressValid = (federationAddress) => !!(
+export const federationAddressValid = (federationAddress) => toBool((
     new RegExp([
         /^[a-zA-Z\-0-9.@]+\*/,
         domainRegex,
     ].map(r => r.source).join(emptyString()))
-).test(federationAddress)
+).test(federationAddress))
 
 
 
@@ -744,7 +751,7 @@ export const accountIsLocked = (signers, publicKey) => {
 
 
 // ...
-export const sortBy = (attr="first_name") => (a, b) => {
+export const sortBy = (attr = "first_name") => (a, b) => {
     let nameA = emptyString(), nameB = emptyString()
 
     if (a[attr]) { nameA = a[attr].toUpperCase() }
