@@ -17,6 +17,7 @@ import {
     withDynamicRoutes,
     withStaticRouter,
 } from "../StellarRouter"
+import { rgba } from "../../lib/utils"
 
 import { action as AccountAction } from "../../redux/Account"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
@@ -43,10 +44,10 @@ const styles = {
     tab: {
         backgroundColor: "#2e5077",
         borderRadius: "3px",
-        color: "rgba(244,176,4,0.9)",
+        color: rgba(244, 176, 4, 0.9),
     },
     inkBar: {
-        backgroundColor: "rgba(244,176,4,0.8)",
+        backgroundColor: rgba(244, 176, 4, 0.8),
     },
     container: {
         backgroundColor: "#2e5077",
@@ -123,7 +124,13 @@ class Account extends Component {
                     from={this.rr(".")}
                     to={getPath(state.tabSelected)}
                 />
-                <Route exact path={getPath(state.tabSelected)}>
+                <Route
+                    exact
+                    path={
+                        this.validTabNames.indexOf(currentView) !== -1 ?
+                            getPath(currentView) : getPath(state.tabSelected)
+                    }
+                >
                     <Fragment>
                         <Modal
                             open={
