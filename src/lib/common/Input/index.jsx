@@ -18,6 +18,7 @@ export default (props) =>
                     autoComplete={props.autoComplete}
                     onKeyPress={props.keyPress}
                     onChange={props.handleChange}
+                    disabled={props.disabled}
                 />
                 <span>{props.subLabel}</span>
             </li>
