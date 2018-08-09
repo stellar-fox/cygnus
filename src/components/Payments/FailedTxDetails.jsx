@@ -106,7 +106,7 @@ export default compose(
                 )
                 this.setState({
                     inProgress: false,
-                    statusMessage: "",
+                    statusMessage: emptyString(),
                 })
                 this.props.setState({
                     savedTxDetails: null,

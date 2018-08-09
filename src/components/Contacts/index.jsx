@@ -33,6 +33,7 @@ import { debounce } from "lodash"
 
 
 
+
 // ...
 const styles = (theme) => ({
 
@@ -109,6 +110,8 @@ const styles = (theme) => ({
 })
 
 
+
+
 // ...
 const AddContactModal = withStyles(styles)(
     ({ classes, onClose, modalId, visible, }) =>
@@ -130,6 +133,8 @@ const AddContactModal = withStyles(styles)(
 )
 
 
+
+
 // ...
 const EditContactModal = withStyles(styles)(
     ({ classes, onClose, modalId, visible, details, }) =>
@@ -140,7 +145,12 @@ const EditContactModal = withStyles(styles)(
             onClose={onClose}
         >
             {details && details.external ?
-                <div style={{ background: "linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%)", }} className={classes.paper}>
+                <div
+                    style={{
+                        background: "linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%)",
+                    }}
+                    className={classes.paper}
+                >
                     <Typography variant="subheading" color="primary" id="modal-title">
                         Federated Contact Details
                     </Typography>
@@ -155,6 +165,8 @@ const EditContactModal = withStyles(styles)(
             }
         </Modal>
 )
+
+
 
 
 // ...
@@ -173,6 +185,8 @@ const AddContactButton = withStyles(styles)(
 )
 
 
+
+
 // ...
 const NoCards = withStyles(styles)(
     ({ classes, title, subtitle, }) =>
@@ -185,6 +199,8 @@ const NoCards = withStyles(styles)(
             </Typography>
         </div>
 )
+
+
 
 
 // ...
@@ -210,6 +226,8 @@ const SearchField = withStyles(styles)(
         }}
     />
 )
+
+
 
 
 // ...
@@ -243,7 +261,7 @@ const SelectView = withStyles(styles)(
 
 
 
-// ...
+// <Contacts> component
 class Contacts extends Component {
 
     // ...
@@ -532,6 +550,7 @@ class Contacts extends Component {
             this.userContacts()
         })
     }
+
 
     // ...
     render = () =>

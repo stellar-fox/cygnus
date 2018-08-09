@@ -353,7 +353,7 @@ class Balances extends Component {
     closeAssetDetailsModal = () => {
         this.props.setAssetsState({ selected: null, })
         this.props.setBalancesState({
-            amount: "",
+            amount: emptyString(),
             payee: null,
             paymentAddress: null,
             payeeStellarAccount: null,
@@ -450,7 +450,7 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "assetDetails" &&
                                 this.props.Modal.visible
                             }
-                            title=""
+                            title={emptyString()}
                             paperClassName="paycheck"
                             bodyClassName="lace"
                         >

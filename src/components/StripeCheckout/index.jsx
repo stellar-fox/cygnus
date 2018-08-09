@@ -1,22 +1,14 @@
-import React, { Component } from "react"
+import React from "react"
 import { config } from "../../config"
 import { Elements, StripeProvider } from "react-stripe-elements"
 import CheckOutForm from "../CheckOutForm"
 
 
 
-// ...
-class StripeCheckout extends Component {
-
-
-    // ...
-    render = () =>
-        <StripeProvider apiKey={config.stripe.apiKey}>
-            <Elements>
-                <CheckOutForm />
-            </Elements>
-        </StripeProvider>
-
-}
-
-export default StripeCheckout
+// <StripeCheckout> component
+export default () =>
+    <StripeProvider apiKey={config.stripe.apiKey}>
+        <Elements>
+            <CheckOutForm />
+        </Elements>
+    </StripeProvider>

@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import hoistStatics from "hoist-non-react-statics"
+import { toBool } from "@xcmats/js-toolbox"
 import { authenticate } from "./api"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
@@ -50,17 +51,19 @@ export default connect(
 
 
         // LEVEL 1 - public ledger browsing
-        isLoggedIn = () => !!this.props.publicKey
+        isLoggedIn = () => toBool(this.props.publicKey)
 
 
         // LEVEL 2 - transactions signing enabled
         isPayEnabled = () =>
-            this.isLoggedIn()  &&  !!this.props.bip32Path
+            this.isLoggedIn()  &&  toBool(this.props.bip32Path)
 
 
         // LEVEL 3 - allows for backend access and transaction signing
         isAuthenticated = () =>
-            !!this.props.token  &&  !!this.props.userId  &&  this.isPayEnabled()
+            toBool(this.props.token)  &&
+            toBool(this.props.userId)  &&
+            this.isPayEnabled()
 
 
         // ...

@@ -31,8 +31,9 @@ import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
-import { delay } from "@xcmats/js-toolbox"
+import { delay, emptyString, timeUnit } from "@xcmats/js-toolbox"
 import { config } from "../../config"
+
 
 
 
@@ -53,7 +54,7 @@ class BalancesCard extends Component {
     // ...
     state = {
         inProgress: false,
-        statusMessage: "",
+        statusMessage: emptyString(),
     }
 
 
@@ -129,7 +130,7 @@ class BalancesCard extends Component {
 
             await this.setState({
                 inProgress: false,
-                statusMessage: "",
+                statusMessage: emptyString(),
             })
 
             await this.props.setAssetsState({
@@ -172,7 +173,7 @@ class BalancesCard extends Component {
     updateAccountTree = async (account) => {
         this.props.setAssetsState({ loading: true, })
         this.props.updateAccountTree(account)
-        delay(300).then(() => {
+        delay(0.3 * timeUnit.second).then(() => {
             augmentAssets(
                 this.props.StellarAccount.assets,
                 this.props.StellarAccount.horizon
