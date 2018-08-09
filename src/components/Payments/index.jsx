@@ -111,7 +111,10 @@ class Payments extends Component {
     handleTabSelect = (value) => {
         this.props.setState({ tabSelected: value, })
         this.props.staticRouter.pushByView(value)
-        if (value === "Transactions") {
+        if (
+            value === "Transactions"  &&
+            firebaseApp.auth("session").currentUser
+        ) {
             this.getTransactions()
         }
     }
@@ -158,16 +161,19 @@ class Payments extends Component {
                             value={this.validTabNames[1]}
                         >
                             <div className="tab-content">
-                                {firebaseApp.auth("session").currentUser ?
-                                    <Transactions /> : <Fragment>
-                                        <div className="account-title">
-                                            This content is available for registered users.
-                                        </div>
-                                        <div className="account-subtitle">
-                                            Please Log-in to the service
-                                            or Sign-up for the account.
-                                        </div>
-                                    </Fragment>}
+                                {
+                                    firebaseApp.auth("session").currentUser ?
+                                        <Transactions /> :
+                                        <Fragment>
+                                            <div className="account-title">
+                                                This content is available for registered users.
+                                            </div>
+                                            <div className="account-subtitle">
+                                                Please Log-in to the service
+                                                or Sign-up for the account.
+                                            </div>
+                                        </Fragment>
+                                }
                             </div>
                         </Tab>
                     </Tabs>
