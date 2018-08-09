@@ -58,11 +58,13 @@ export default compose(
             publicKey: state.LedgerHQ.publicKey,
             firstName: state.Account.firstName,
             lastName: state.Account.lastName,
+            paymentAddress: state.Account.paymentAddress,
         })
     )
 )(
     ({
         classes, publicKey, StellarAccount, firstName, lastName, loginManager,
+        paymentAddress,
     }) =>
         <div className={classes.appBarItems}>
             <div className={classes.appBarTitle}>
@@ -81,20 +83,30 @@ export default compose(
                     }
                 </div>
                 <div className={classes.barSubtitleAccount}>
-                    {
-                        StellarAccount.accountId && StellarAccount.homeDomain ?
-                            <div className={classes.accountHomeDomain}>
-                                {StellarAccount.homeDomain}
-                            </div> :
-                            <div>
-                                {
-                                    handleException(
-                                        () => pubKeyAbbr(publicKey),
-                                        () => unknownPubKeyAbbr
-                                    )
-                                }
-                            </div>
-                    }
+                    <div className="flex-box-col content-centered">
+                        {
+                            StellarAccount.accountId && StellarAccount.homeDomain ?
+                                <div className={classes.accountHomeDomain}>
+                                    {StellarAccount.homeDomain}
+                                </div> :
+                                <div className="flex-box-col content-centered">
+                                    {loginManager.isAuthenticated() ?
+                                        <Typography variant="caption" color="primary">
+                                            {paymentAddress ? paymentAddress :
+                                                handleException(
+                                                    () => pubKeyAbbr(publicKey),
+                                                    () => unknownPubKeyAbbr
+                                                )}
+                                        </Typography> :
+                                        <Typography variant="caption" color="primary">
+                                            {handleException(
+                                                () => pubKeyAbbr(publicKey),
+                                                () => unknownPubKeyAbbr
+                                            )}
+                                        </Typography>}
+                                </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
