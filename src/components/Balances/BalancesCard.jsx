@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { connect } from "react-redux"
 import {
     bindActionCreators,
@@ -237,7 +237,7 @@ class BalancesCard extends Component {
                     </span>
                 }
                 actAsExpander={true}
-                showExpandableButton={true}
+                showExpandableButton={this.props.loginManager.isAuthenticated()}
             />
 
             <CardText>
@@ -386,57 +386,40 @@ class BalancesCard extends Component {
                 }
             </CardActions>
 
+            {this.props.loginManager.isAuthenticated() &&
             <CardText expandable={true}>
-                {this.props.loginManager.isPayEnabled() ?
-                    <Fragment>
-                        <Typography variant="subheading" color="primary">
-                            Available Currencies
-                        </Typography>
-                        <Typography variant="caption" color="primary">
-                            Use slider to enable/disable currency. Click to send payment.
-                        </Typography>
-                    </Fragment> :
-                    <Fragment>
-                        <Typography variant="subheading" color="primary">
-                            Account Currency Assets
-                        </Typography>
-                        <Typography variant="caption" color="primary">
-                            This is explore only mode. Login or Signup to make transactions.
-                        </Typography>
-                    </Fragment>
-                }
+                <Typography variant="subheading" color="primary">
+                    Available Currencies
+                </Typography>
+                <Typography variant="caption" color="primary">
+                    Use slider to enable/disable currency. Click to send payment.
+                </Typography>
                 <br />
                 <AssetList />
+                <br />
+                <Button
+                    color="primary"
+                    onClick={this.signChangeTrust}
+                    disabled={
+                        !this.changeTrustNeedsSignature() ||
+                        this.state.inProgress
+                    }
+                >
+                    {this.state.inProgress ? <CircularProgress
+                        color="primary" thickness={4}
+                        size={20}
+                    /> : "Sign & Save"}
+                </Button>
 
-                {this.props.loginManager.isPayEnabled() &&
-                <Fragment>
-                    <br />
-                    <Button
-                        color="primary"
-                        onClick={this.signChangeTrust}
-                        disabled={
-                            !this.changeTrustNeedsSignature() ||
-                            this.state.inProgress
+                <div className="flex-box-col items-flex-start">
+                    <Typography variant="caption" color="primary">
+                        {this.state.statusMessage ?
+                            this.state.statusMessage : <he.Nbsp />
                         }
-                    >
-                        {this.state.inProgress ? <CircularProgress
-                            color="primary" thickness={4}
-                            size={20}
-                        /> : "Sign & Save"}
-                    </Button>
-                </Fragment>
-                }
-
-                {this.props.loginManager.isPayEnabled() &&
-                    <div className="flex-box-col items-flex-start">
-                        <Typography variant="caption" color="primary">
-                            {this.state.statusMessage ?
-                                this.state.statusMessage : <he.Nbsp />
-                            }
-                        </Typography>
-                    </div>
-                }
+                    </Typography>
+                </div>
             </CardText>
+            }
         </Card>
 
 }
