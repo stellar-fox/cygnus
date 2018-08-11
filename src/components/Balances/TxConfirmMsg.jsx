@@ -102,11 +102,12 @@ class TxConfirmMsg extends Component {
      * 1.40 THB ≈ 0.55 EUR
      */
     serviceFee = (contactCurrency) => {
+
+        const sfee = new BigNumber(serviceFee)
+
         if (contactCurrency) {
             const rate = new BigNumber(this.props.assetManager.exchangeRate(
                 1.00, contactCurrency))
-
-            const sfee = new BigNumber(serviceFee)
 
             const rateContact = new BigNumber(
                 this.props.assetManager.exchangeRate(
@@ -122,12 +123,12 @@ class TxConfirmMsg extends Component {
                 `${serviceFee} ${serviceFeeCurrency.toUpperCase()}`
         }
 
-        return emptyString()
+        return `${serviceFee} ${serviceFeeCurrency.toUpperCase()}`
     }
 
     // ...
     render = () => (
-        ({ classes, Account, Balances, }) =>
+        ({ classes, Account, Balances, publicKey, sequence, }) =>
             <Fragment>
 
                 <div className="p-t p-b flex-box-row space-between">
@@ -249,41 +250,15 @@ class TxConfirmMsg extends Component {
                 </Typography>
 
                 <div className="f-b p-t space-between">
+
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-around gradiented">
-                            <div>
-                                <i className="text-primary material-icons">
-                                    style
-                                </i>
-                            </div>
-                            <div>
-                                <Typography color="primary" variant="body1">
-                                    Operation Type
-                                </Typography>
-                                <Typography color="primary" variant="body2">
-                                    {Balances.transactionType}
-                                </Typography>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex-box-row text-primary"
-                        style={{ maxHeight: 50, fontSize: "2rem", }}
-                    >
-                        →
-                    </div>
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
-                            <div>
-                                <i className="text-primary material-icons">
-                                    account_balance_wallet
-                                </i>
-                            </div>
                             <div>
                                 <Typography align="center" color="primary"
                                     variant="body1"
-                                >Amount</Typography>
+                                >Send</Typography>
                                 <Typography align="center" color="primary"
-                                    variant="body2"
+                                    variant="caption"
                                 >{`${Balances.amountNative} XLM`}</Typography>
                             </div>
                         </div>
@@ -296,19 +271,53 @@ class TxConfirmMsg extends Component {
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-around gradiented">
                             <div>
-                                <i className="text-primary material-icons">
-                                    gps_fixed
-                                </i>
-                            </div>
-                            <div>
-                                <Typography align="right" color="primary"
+                                <Typography align="center" color="primary"
                                     variant="body1"
                                 >Destination</Typography>
-                                <Typography align="right" color="primary"
-                                    variant="body2"
+                                <Typography align="center" color="primary"
+                                    variant="caption"
                                 >{handleException(
                                         () => pubKeyAbbrLedgerHQ(Balances.payee),
                                         () => "Not Available")}</Typography>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-box-row text-primary"
+                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    >
+                        →
+                    </div>
+
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
+                                <Typography color="primary" align="center" variant="body1">
+                                    Memo Text
+                                </Typography>
+                                <Typography color="primary" align="center" variant="caption">{
+                                    Balances.memoText === emptyString() ?
+                                        emptyString() : Balances.memoText
+                                }</Typography>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-box-row text-primary"
+                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    >
+                        →
+                    </div>
+
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
+                                <Typography align="center" color="primary"
+                                    variant="body1"
+                                >Fee</Typography>
+                                <Typography align="center" color="primary"
+                                    variant="caption"
+                                >0.000001 XLM</Typography>
                             </div>
                         </div>
                     </div>
@@ -320,61 +329,11 @@ class TxConfirmMsg extends Component {
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-around gradiented">
                             <div>
-                                <i className="text-primary material-icons">
-                                    speaker_notes
-                                </i>
-                            </div>
-                            <div>
-                                <Typography color="primary" variant="body1">
-                                    Memo
-                                </Typography>
-                                <Typography color="primary" variant="body2">{
-                                    Balances.memoText === emptyString() ?
-                                        "Empty" : Balances.memoText
-                                }</Typography>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex-box-row text-primary"
-                        style={{ maxHeight: 50, fontSize: "2rem", }}
-                    >
-                        →
-                    </div>
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
-                            <div>
-                                <i className="text-primary material-icons">
-                                    credit_card
-                                </i>
-                            </div>
-                            <div>
                                 <Typography align="center" color="primary"
-                                    variant="body1"
-                                >Fee</Typography>
-                                <Typography align="center" color="primary"
-                                    variant="body2"
-                                >0.000001 XLM</Typography>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex-box-row text-primary"
-                        style={{ maxHeight: 50, fontSize: "2rem", }}
-                    >
-                        →
-                    </div>
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
-                            <div>
-                                <i className="text-primary material-icons">
-                                    public
-                                </i>
-                            </div>
-                            <div>
-                                <Typography align="right" color="primary"
                                     variant="body1"
                                 >Network</Typography>
-                                <Typography align="right" color="primary"
-                                    variant="body2"
+                                <Typography align="center" color="primary"
+                                    variant="caption"
                                 >
                                     {this.props.horizon === liveNetAddr ?
                                         "Public" : "Test"}
@@ -382,7 +341,49 @@ class TxConfirmMsg extends Component {
                             </div>
                         </div>
                     </div>
+                    <div className="flex-box-row text-primary"
+                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    >
+                        →
+                    </div>
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
+                                <Typography align="center" color="primary"
+                                    variant="body1"
+                                >Transaction Source</Typography>
+                                <Typography align="center" color="primary"
+                                    variant="caption"
+                                >
+                                    {handleException(
+                                        () => pubKeyAbbrLedgerHQ(publicKey),
+                                        () => "Not Available")}
+                                </Typography>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex-box-row text-primary"
+                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    >
+                        →
+                    </div>
+                    <div className="flex-box-col items-flex-end">
+                        <div className="flex-box-row items-centered border-around gradiented">
+                            <div>
+                                <Typography align="center" color="primary"
+                                    variant="body1"
+                                >Sequence Number</Typography>
+                                <Typography align="center" color="primary"
+                                    variant="caption"
+                                >
+                                    {new BigNumber(sequence).plus(1).toString()}
+                                </Typography>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
 
                 <Typography align="center" color="primary" variant="body1">
                     When you are sure it is correct press
@@ -404,6 +405,8 @@ export default compose (
             Balances: state.Balances,
             Contacts: state.Contacts,
             horizon: state.StellarAccount.horizon,
+            publicKey: state.StellarAccount.accountId,
+            sequence: state.StellarAccount.sequence,
         })
     )
 )(TxConfirmMsg)
