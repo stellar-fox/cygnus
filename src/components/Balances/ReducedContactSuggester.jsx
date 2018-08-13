@@ -261,7 +261,13 @@ class ReducedContactSuggester extends Component {
     fuzzySearchForContact = (value) => {
         let results = new Fuse(
             this.props.Contacts.internal.concat(this.props.Contacts.external), {
-                keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+                keys: [
+                    "first_name",
+                    "last_name",
+                    "alias",
+                    "domain",
+                    "email",
+                    "pubkey",],
             }).search(value)
 
         return results.map((c) => ({
@@ -269,6 +275,7 @@ class ReducedContactSuggester extends Component {
             publicKey: c.pubkey,
             alias: c.alias,
             domain: c.domain,
+            email: c.email,
             emailMD5: c.email_md5,
         }))
     }
