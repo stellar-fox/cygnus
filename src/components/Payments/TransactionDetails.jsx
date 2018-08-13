@@ -29,7 +29,7 @@ import BigNumber from "bignumber.js"
 export default compose(
     withLoginManager,
     withAssetManager,
-    withStyles({
+    withStyles((theme) => ({
         nodata: {
             display: "flex",
             flexDirection: "column",
@@ -41,7 +41,11 @@ export default compose(
         withdata: {
             minHeight: 200,
         },
-    }),
+        avatar: {
+            border: `1px solid ${theme.palette.secondary.dark}`,
+            background: "linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%)",
+        },
+    })),
     connect(
         (state) => ({
             publicKey: state.LedgerHQ.publicKey,
@@ -81,6 +85,9 @@ export default compose(
                                     >
                                         Account Opened
                                     </Typography>
+                                    <i className={`${iconClass} p-l p-r`}>
+                                        forward
+                                    </i>
                                 </div>,
                         "accountMerge": () =>
                             <i className={iconClass}>merge_type</i>,
@@ -177,8 +184,9 @@ export default compose(
                 return (
                     <div className="f-b-c">
                         <span className="p-r-small">
-                            <Avatar src={`${gravatar}${this.props.gravatarHash}?${
-                                gravatarSize48}&d=robohash`}
+                            <Avatar className={this.props.classes.avatar}
+                                src={`${gravatar}${this.props.gravatarHash}?${
+                                    gravatarSize48}&d=robohash`}
                             />
                         </span>
                         <div className="compact">
@@ -186,12 +194,17 @@ export default compose(
                                 {formatFullName(
                                     this.props.firstName,
                                     this.props.lastName
-                                )}
+                                )} <span className="tiny fade">〈You〉</span>
                             </div>
                             <div>
-                                <span className="micro fade-strong">
-                                    {this.props.paymentAddress}
-                                </span>
+                                {this.props.paymentAddress ?
+                                    <span className="micro fade-strong">
+                                        {this.props.paymentAddress}
+                                    </span> :
+                                    <span className="micro fade-strong">
+                                        {pubKeyAbbr(this.props.publicKey)}
+                                    </span>
+                                }
                             </div>
                         </div>
                     </div>
@@ -206,8 +219,9 @@ export default compose(
                 return (
                     <div className="f-b-c">
                         <span className="p-r-small">
-                            <Avatar src={`${gravatar}${contact.email_md5}?${
-                                gravatarSize48}&d=robohash`}
+                            <Avatar className={this.props.classes.avatar}
+                                src={`${gravatar}${contact.email_md5}?${
+                                    gravatarSize48}&d=robohash`}
                             />
                         </span>
                         <div className="compact">
@@ -230,8 +244,9 @@ export default compose(
             return (
                 <div className="f-b-c">
                     <span className="p-r-small">
-                        <Avatar src={`${gravatar}${md5(publicKey)}?${
-                            gravatarSize48}&d=robohash`}
+                        <Avatar className={this.props.classes.avatar}
+                            src={`${gravatar}${md5(publicKey)}?${
+                                gravatarSize48}&d=robohash`}
                         />
                     </span>
                     <Typography variant="body2" color="primary">
@@ -318,14 +333,6 @@ export default compose(
         render = () => (
             ({ classes, data, }) =>
                 <Fragment>
-                    <div className="p-t-large p-b">
-                        <div className="account-title">
-                            Transaction Details
-                        </div>
-                        <div className="account-subtitle">
-                            Additional information about selected transaction.
-                        </div>
-                    </div>
                     <Paper>
                         {data.length === 0 ?
                             <div className={classes.nodata}>
