@@ -484,7 +484,7 @@ class ContactSuggester extends Component {
                 }
 
             } catch (error) {
-                if (error.name === "NotFoundError") {
+                if (error.response.status === 404) {
                     this.setTransactionType("NEW_ACCOUNT")
                     this.updateIndicatorMessage("New Account", "yellow")
                 }
