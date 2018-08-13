@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import {
     bindActionCreators,
@@ -23,7 +23,7 @@ import {
     augmentAssets, insertPathIndex, currentAccountReserve, StellarSdk,
 } from "../../lib/utils"
 import Icon from "@material-ui/core/Icon"
-import { CircularProgress, Typography } from "@material-ui/core"
+import { CircularProgress, Paper, Typography } from "@material-ui/core"
 import {
     buildChangeTrustTx, loadAccount, submitTransaction
 } from "../../lib/stellar-tx"
@@ -33,7 +33,6 @@ import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { delay, emptyString, timeUnit } from "@xcmats/js-toolbox"
 import { config } from "../../config"
-
 
 
 
@@ -221,7 +220,11 @@ class BalancesCard extends Component {
 
     // ...
     render = () =>
-        <Card className="account">
+        <Card className={`account ${accountIsLocked(
+            this.props.StellarAccount.signers,
+            this.props.StellarAccount.accountId
+        ) && "locked"}`}
+        >
             <CardHeader
                 title={
                     <span>
@@ -375,20 +378,42 @@ class BalancesCard extends Component {
             </CardText>
 
             <CardActions>
-                <Button
-                    color="success"
-                    onClick={this.toggleFundCard}
-                >Fund</Button>
-                <Button
-                    color="warning"
-                    onClick={this.showNotImplementedModal}
-                >Request</Button>
-                {
-                    this.props.loginManager.isPayEnabled() ?
+                {accountIsLocked(
+                    this.props.StellarAccount.signers,
+                    this.props.StellarAccount.accountId
+                ) ? <Paper className="paper gradiented-warning" elevation={3}>
+                        <Typography variant="body2">
+                            <span className="error">
+                                Warning!
+                            </span>
+                        </Typography>
+                        <Typography variant="caption" color="inherit">
+                            This account has been locked and this state cannot<he.Nbsp />
+                            be undone.<he.Nbsp />
+                            All remaining funds are frozen and final.
+                        </Typography>
+                        <Typography variant="caption" color="inherit">
+                            <span className="error">DO NOT</span> deposit<he.Nbsp />
+                            anything onto this account as you will never be<he.Nbsp />
+                            able to recover or withdraw those funds.
+                        </Typography>
+                    </Paper> :
+                    <Fragment>
                         <Button
-                            color="danger"
-                            onClick={this.togglePaymentCard}
-                        >Pay</Button> : null
+                            color="success"
+                            onClick={this.toggleFundCard}
+                        >Fund</Button>
+                        <Button
+                            color="warning"
+                            onClick={this.showNotImplementedModal}
+                        >Request</Button>
+                        {this.props.loginManager.isPayEnabled() &&
+                            <Button
+                                color="danger"
+                                onClick={this.togglePaymentCard}
+                            >Pay</Button>
+                        }
+                    </Fragment>
                 }
             </CardActions>
 

@@ -16,6 +16,8 @@ import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as ModalAction } from "../../redux/Modal"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
+import { accountIsLocked } from "../../lib/utils"
+import { Icon, Typography } from "@material-ui/core"
 
 
 
@@ -115,8 +117,23 @@ class Settings extends Component {
             <div className="account-subtitle m-t-small">
                 <span className="bg-green">
                     {this.props.publicKey}
-                </span>
+                </span> {accountIsLocked(
+                    this.props.signers,
+                    this.props.accountId
+                ) && <Icon
+                    style={{
+                        marginLeft: "-0.7rem",
+                        marginBottom: "6px",
+                        fontSize: "24px",
+                    }}
+                >lock</Icon>}
             </div>
+            {accountIsLocked(
+                this.props.signers,
+                this.props.accountId
+            ) && <Typography variant="caption" color="inherit">
+                    Warning: This account is locked!
+            </Typography>}
             <div className="account-title p-t-large">
                 Display Currency:
             </div>
@@ -204,6 +221,8 @@ export default compose(
             publicKey: state.LedgerHQ.publicKey,
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,
+            signers: state.StellarAccount.signers,
+            accountId: state.StellarAccount.accountId,
         }),
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
