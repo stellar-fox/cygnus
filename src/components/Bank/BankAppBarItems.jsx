@@ -75,19 +75,34 @@ export default compose(
                         >
                             {formatFullName(firstName, lastName)}
                         </Typography> : <Typography align="center"
-                            variant="body2"
-                            noWrap color="primary"
-                        >
-                            Account
-                        </Typography>
+                            variant="caption" color="primary"
+                        >Account</Typography>
                     }
                 </div>
                 <div className={classes.barSubtitleAccount}>
                     <div className="flex-box-col content-centered">
                         {
                             StellarAccount.accountId && StellarAccount.homeDomain ?
-                                <div className={classes.accountHomeDomain}>
-                                    {StellarAccount.homeDomain}
+                                <div className="flex-box-col content-centered">
+                                    {loginManager.isAuthenticated() ?
+                                        <Typography variant="caption" color="primary">
+                                            {paymentAddress ? paymentAddress :
+                                                handleException(
+                                                    () => pubKeyAbbr(publicKey),
+                                                    () => unknownPubKeyAbbr
+                                                )}
+                                        </Typography> :
+                                        <Typography variant="caption" color="primary">
+                                            {handleException(
+                                                () => pubKeyAbbr(publicKey),
+                                                () => unknownPubKeyAbbr
+                                            )}
+                                        </Typography>}
+                                    <Typography variant="caption" color="primary">
+                                        <span className="fade-strong">
+                                            {StellarAccount.homeDomain}
+                                        </span>
+                                    </Typography>
                                 </div> :
                                 <div className="flex-box-col content-centered">
                                     {loginManager.isAuthenticated() ?
