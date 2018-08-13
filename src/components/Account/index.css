@@ -81,6 +81,10 @@
     background: linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%);
 }
 
+.gradiented-warning {
+    background: linear-gradient(90deg, rgb(246, 190, 49) 0%, rgba(178, 34, 34,0.5) 100%);
+}
+
 .coin {
     display: inline-block;
     background-color: rgb(244, 176, 4);

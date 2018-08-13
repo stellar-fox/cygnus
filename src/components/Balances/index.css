@@ -10,6 +10,11 @@
     background-clip: padding-box;
 }
 
+.locked {
+    background-color: rgb(178, 34, 34);
+    background-image: repeating-linear-gradient(135deg, transparent, transparent 15px, rgba(178, 34, 34, 0.15) 15px, rgba(178, 34, 34, 0.15) 35px);
+}
+
 .welcome-card {
     margin: 20px;
     color: rgb(15,46,83) !important;
