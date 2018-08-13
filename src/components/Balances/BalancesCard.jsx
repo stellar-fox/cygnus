@@ -60,6 +60,12 @@ class BalancesCard extends Component {
 
     // ...
     componentDidMount = () => {
+        this.props.setAssetsState({
+            awaitingSignature: [],
+        })
+        loadAccount(
+            this.props.publicKey, this.props.horizon
+        ).then((account) => this.updateAccountTree(account))
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
 
