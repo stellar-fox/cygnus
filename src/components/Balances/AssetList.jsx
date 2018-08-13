@@ -293,9 +293,7 @@ export default compose(
             )
 
 
-            return trustedAsset ? <Grid item key={index}
-                alignContent="flex-start" alignItems="flex-start" zeroMinWidth
-            >
+            return trustedAsset ? <Grid item key={index} zeroMinWidth>
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">
                         <RequestProgress />
@@ -313,10 +311,10 @@ export default compose(
                         }`}
                         onClick={
                             !this.balanceIsZero(trustedAsset) &&
-                            this.props.loginManager.isAuthenticated() &&
-                            this.showAssetDetails.bind(
-                                this, trustedAsset
-                            )
+                            this.props.loginManager.isAuthenticated() ?
+                                this.showAssetDetails.bind(
+                                    this, trustedAsset
+                                ) : undefined
                         }
                     >
 
@@ -369,9 +367,7 @@ export default compose(
                 }
                 </Paper>
             </Grid> : this.props.loginManager.isAuthenticated() &&
-            <Grid item key={index} alignContent="flex-start"
-                alignItems="flex-start" zeroMinWidth
-            >
+            <Grid item key={index} zeroMinWidth>
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">
                         <RequestProgress />
