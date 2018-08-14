@@ -160,11 +160,7 @@ export const lastBalance = (initial, next) =>
 // ...
 export const debit = (operations, publicKey) => {
     const balance = operationsBalance(operations, publicKey)
-
-    if (balance.isLessThan(0)) {
-        return balance.toString()
-    }
-
+    if (balance.isLessThan(0)) { return balance.toString() }
     return emptyString()
 }
 
@@ -174,9 +170,7 @@ export const debit = (operations, publicKey) => {
 // ...
 export const credit = (operations, publicKey) => {
     const balance = operationsBalance(operations, publicKey)
-
     if (balance.isGreaterThan(0)) { return balance.toString() }
-
     return emptyString()
 }
 

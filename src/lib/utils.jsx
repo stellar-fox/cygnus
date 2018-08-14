@@ -214,10 +214,20 @@ export const pubKeyAbbrLedgerHQ = (pubKey) => handleException(
 
 // ...
 export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
-    (date) =>
-        includeTime ?
-            `${date.toLocaleDateString()} - ${date.toLocaleTimeString()}` :
-            date.toLocaleDateString()
+    (date) => {
+        const options = {
+            localeMatcher: "best fit",
+            weekday: "short", day: "numeric", month: "short", year: "numeric",
+        }
+
+        if (includeTime) {
+            options.hour = "numeric"
+            options.minute = "numeric"
+            options.second = "numeric"
+        }
+
+        return date.toLocaleDateString(undefined, options)
+    }
 )(utcDateTime ? new Date(utcDateTime) : new Date())
 
 
@@ -755,8 +765,11 @@ export const currentAccountReserve = (accountSubentries) => {
 
 // ...
 export const accountIsLocked = (signers, publicKey) => {
-    let ownerAccount = signers.find((s) => s.public_key === publicKey)
-    return ownerAccount && ownerAccount.weight === 0
+    if (signers) {
+        let ownerAccount = signers.find((s) => s.public_key === publicKey)
+        return ownerAccount && ownerAccount.weight === 0
+    }
+    return false
 }
 
 
