@@ -195,11 +195,11 @@ export default compose(
                             />
                         </span>
                         <div className="compact">
-                            <div className="text-primary">
+                            <div className="text-primary you-badge">
                                 {formatFullName(
                                     this.props.firstName,
                                     this.props.lastName
-                                )} <span className="tiny fade">〈You〉</span>
+                                )}
                             </div>
                             <div>
                                 {this.props.paymentAddress ?
@@ -344,9 +344,11 @@ export default compose(
                         {data.length === 0 ?
                             <div className={classes.nodata}>
                                 <Typography align="center" color="primary"
-                                    variant="body1"
+                                    variant="subheading"
                                 >
-                                    Select transaction to view details here.
+                                    <span className="fade-extreme">
+                                        Select transaction above to view details here.
+                                    </span>
                                 </Typography>
                             </div> :
 
