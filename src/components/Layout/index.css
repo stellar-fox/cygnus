@@ -364,9 +364,9 @@ span.red-badge {
 .cursor-pointer { cursor: pointer; }
 
 .outline {
-    border: 1px solid rgba(244, 176, 4, 0.75);
-    border-radius: 3px;
-    padding: 10px;
+    border: 2px solid rgba(244, 176, 4, 0.55);
+    border-radius: 4px;
+    padding: 8px;
 }
 
 .outline-error {

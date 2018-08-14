@@ -184,7 +184,7 @@ class Settings extends Component {
 
             {this.props.loginManager.isAuthenticated() ? (
 
-                <div className="m-t-large f-b space-between outline">
+                <div className="m-t-large flex-box-row items-centered space-between outline">
                     <div>
                         <div className="account-title">
                             Make Account Discoverable
