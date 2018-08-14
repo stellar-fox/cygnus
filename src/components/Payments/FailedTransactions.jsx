@@ -424,7 +424,9 @@ export default compose(
                                         data.length === 0 &&
                                             <Fragment>
                                                 <Typography variant="subheading">
-                                                    There are no saved transactions at the moment.
+                                                    <span className="fade-extreme">
+                                                        There are no saved transactions at the moment.
+                                                    </span>
                                                 </Typography>
                                             </Fragment>
                                     }
@@ -432,10 +434,14 @@ export default compose(
                                     {this.state.error &&
                                         <Fragment>
                                             <Typography variant="subheading">
-                                                Hmm. We're having trouble fetching this data.
+                                                <span className="fade-extreme">
+                                                    Hmm. We're having trouble fetching this data.
+                                                </span>
                                             </Typography>
-                                            <Typography variant="caption">
-                                                {this.state.errorMessage}
+                                            <Typography variant="body1">
+                                                <span className="fade-extreme">
+                                                    {this.state.errorMessage}
+                                                </span>
                                             </Typography>
                                         </Fragment>
                                     }
