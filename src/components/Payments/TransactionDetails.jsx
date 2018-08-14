@@ -24,6 +24,7 @@ import BigNumber from "bignumber.js"
 
 
 
+
 // <TransactionDetails> component
 export default compose(
     withLoginManager,
