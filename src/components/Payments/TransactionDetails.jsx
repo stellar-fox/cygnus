@@ -24,7 +24,6 @@ import BigNumber from "bignumber.js"
 
 
 
-
 // <TransactionDetails> component
 export default compose(
     withLoginManager,
@@ -85,7 +84,7 @@ export default compose(
                                     >
                                         Account Opened
                                     </Typography>
-                                    <i className={`${iconClass} p-l p-r`}>
+                                    <i className={`${iconClass} p-l p-r fade-extreme`}>
                                         forward
                                     </i>
                                 </div>,
@@ -103,7 +102,7 @@ export default compose(
                                 >
                                     Credit
                                 </Typography>
-                                <i className={`${iconClass} p-l p-r`}>
+                                <i className={`${iconClass} p-l p-r fade-extreme`}>
                                     forward
                                 </i>
                             </div> :
@@ -114,7 +113,7 @@ export default compose(
                                 >
                                     Debit
                                 </Typography>
-                                <i className={`${iconClass} p-l p-r`}>
+                                <i className={`${iconClass} p-l p-r fade-extreme`}>
                                     forward
                                 </i>
                             </div>
@@ -159,14 +158,19 @@ export default compose(
             )
         }
 
+        feeAmount = (fee) => {
+            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+            return new BigNumber(fee).dividedBy(10000000).toFixed(7)
+        }
+
 
         // ...
         opAssetSymbol = (operation) => choose(
             operation.type,
             {
-                "createAccount": () => "XLM",
+                "createAccount": () => <span className="nano">XLM</span>,
             },
-            () => operation.asset.code
+            () => <span className="nano">{operation.asset.code}</span>
         )
 
 
@@ -259,13 +263,15 @@ export default compose(
 
         // ...
         listOperations = (operations) =>
-            <div className="p-t-medium">
-                <Typography color="primary" variant="subheading">
-                    Operations
-                </Typography>
+            <div className="p-t">
+
+                <div className="micro text-primary fade-strong no-margin">
+                    Account operations performed in this transaction:
+                </div>
+
 
                 {operations.map((operation, index) =>
-                    <div className="p-t-medium p-l paper" key={index}>
+                    <div className="p-l paper" key={index}>
 
                         <div className="f-b-c">
                             <Typography color="primary" variant="body2">
@@ -281,7 +287,7 @@ export default compose(
                         </div>
 
                         <div className="p-t">
-                            <Typography color="primary" variant="subheading">
+                            <Typography color="primary" variant="body1">
                                 <span className="fade-strong">
                                     Amount:
                                 </span>
@@ -302,7 +308,7 @@ export default compose(
                                 />
                                 <he.Nbsp /><he.Nbsp />
                                 {this.isNative(operation) ?
-                                    <span className="tiny fade-strong">
+                                    <span className="tiny fade-extreme">
                                         <NumberFormat
                                             value={this.opAmount(operation)}
                                             displayType={"text"}
@@ -331,7 +337,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, data, }) =>
+            ({ assetManager, classes, data, }) =>
                 <Fragment>
                     <Paper>
                         {data.length === 0 ?
@@ -349,30 +355,41 @@ export default compose(
                                     classNames(classes.withdata, "p-t p-l p-b")
                                 }
                             >
-                                <Typography color="primary"
-                                    variant="body2"
-                                >
-                                    <span className="tiny fade-extreme">
-                                        Transaction:
-                                    </span>
-                                    <he.Nbsp /><he.Nbsp />
-                                    <span className="tiny fade-extreme">
-                                        {data.r.id}
-                                    </span>
-                                </Typography>
-
-
-                                <div className="p-t">
+                                <div className="flex-box-row space-between p-r">
                                     <Typography color="primary"
-                                        variant="body2"
+                                        variant="body2" noWrap
+                                    >
+                                        <span className="tiny fade-extreme">
+                                            Transaction:
+                                        </span>
+                                        <he.Nbsp /><he.Nbsp />
+                                        <span className="tiny fade-strong">
+                                            {data.r.id}
+                                        </span>
+                                    </Typography>
+                                    {data.r.memo_type !== "none" &&
+                                    <Typography color="primary"
+                                        variant="body2" noWrap
+                                    >
+                                        <span className="tiny fade-extreme">
+                                            Memo:
+                                        </span>
+                                        <he.Nbsp /><he.Nbsp />
+                                        <span className="tiny fade-strong">
+                                            {data.r.memo}
+                                        </span>
+                                    </Typography>
+                                    }
+                                </div>
+
+                                <div className="p-t flex-box-row items-centered">
+                                    <Typography color="primary"
+                                        variant="body1"
                                     >
                                         <span className="fade-strong">
                                             From:
                                         </span>
-                                    </Typography>
-                                </div>
-
-                                <div className="p-t p-l">
+                                    </Typography><he.Nbsp /><he.Nbsp /><he.Nbsp />
                                     <Typography color="primary"
                                         variant="body2"
                                     >
@@ -382,24 +399,24 @@ export default compose(
                                     </Typography>
                                 </div>
 
-                                {data.r.memo_type !== "none" &&
-                                    <div className="p-t">
-                                        <Typography color="primary"
-                                            variant="body2"
-                                        >
-                                            <span className="fade-strong">
-                                                Purpose: <he.Nbsp />{data.r.memo}
-                                            </span>
-                                        </Typography>
-                                    </div>
-                                }
-
                                 <div className="p-t">
                                     <Typography color="primary"
-                                        variant="body2"
+                                        variant="body1"
                                     >
                                         <span className="fade-strong">
-                                            Fee Paid: <he.Nbsp />{data.r.fee_paid}
+                                            Fee Paid:
+                                        </span>
+                                        <he.Nbsp />
+                                        {this.props.assetManager.getAssetGlyph(
+                                            this.props.currency
+                                        )} {assetManager.convertToAsset(
+                                            this.feeAmount(data.r.fee_paid)
+                                        )}
+                                        <he.Nbsp /><he.Nbsp />
+                                        <span className="tiny fade-extreme">
+                                            {this.feeAmount(data.r.fee_paid)}
+                                            <he.Nbsp />
+                                            <span className="nano">XLM</span>
                                         </span>
                                     </Typography>
                                 </div>

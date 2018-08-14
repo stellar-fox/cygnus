@@ -375,9 +375,9 @@ export default compose(
                         <TableRow>
                             <TableHeaderCell>Date</TableHeaderCell>
                             <TableHeaderCell>
-                                Transaction Details
+                                Transaction Memo
                             </TableHeaderCell>
-                            <TableHeaderCell>Amount</TableHeaderCell>
+                            <TableHeaderCell>Total</TableHeaderCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -403,7 +403,9 @@ export default compose(
                                     <TableCell
                                         classes={{ root: classes.cell, }}
                                     >
-                                        {utcToLocaleDateTime(n.r.created_at)}
+                                        <span className="fade-strong">
+                                            {utcToLocaleDateTime(n.r.created_at)}
+                                        </span>
                                     </TableCell>
                                     <TableCell
                                         classes={{ root: classes.cell, }}

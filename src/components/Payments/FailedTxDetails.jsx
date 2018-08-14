@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
 import {
     bindActionCreators,
@@ -33,7 +33,7 @@ export default compose(
             height: 200,
         },
         withdata: {
-            minHeight: 200,
+            paddingBottom: "1rem",
         },
     }),
     connect(
@@ -123,52 +123,42 @@ export default compose(
         // ...
         render = () => (
             ({ classes, txDetails, }) =>
-                <Fragment>
-                    <div className="p-t-large p-b">
-                        <div className="account-title">
-                            Pending Transaction Details
-                        </div>
-                        <div className="account-subtitle">
-                            Manage pending transactions here.
-                        </div>
-                    </div>
-                    <Paper>
-                        {txDetails ?
-                            <div className={
-                                classNames(classes.withdata, "p-t p-l")
-                            }
-                            >
-                                <Typography color="primary" variant="body1">
-                                    Attempted: {utcToLocaleDateTime(
-                                        txDetails.lastAttempt
-                                    )}
-                                </Typography>
-                                <br />
-                                <Typography color="primary" variant="body1">
-                                    Reasons: {this.formatTxFailReasons(
-                                        txDetails.reason.operations
-                                    )}
-                                </Typography>
-                                <br />
-                                <Button color="primary"
-                                    onClick={this.submitTransaction.bind(this, txDetails)}
-                                    disabled={this.props.inProgress || !this.props.txDetails}
-                                >
-                                    {this.state.inProgress ? <CircularProgress
-                                        color="secondary" thickness={4} size={20}
-                                    /> : "Retry Now"}
-                                </Button>
-                            </div> :
-                            <div className={classes.nodata}>
-                                <Typography align="center" color="primary"
-                                    variant="body1"
-                                >
-                                    Select pending transaction to view details here.
-                                </Typography>
-                            </div>
+                <Paper>
+                    {txDetails ?
+                        <div className={
+                            classNames(classes.withdata, "p-t p-l")
                         }
-                    </Paper>
-                </Fragment>
+                        >
+                            <Typography color="primary" variant="body1">
+                                Attempted: {utcToLocaleDateTime(
+                                    txDetails.lastAttempt
+                                )}
+                            </Typography>
+                            <br />
+                            <Typography color="primary" variant="body1">
+                                Reasons: {this.formatTxFailReasons(
+                                    txDetails.reason.operations
+                                )}
+                            </Typography>
+                            <br />
+                            <Button color="primary"
+                                onClick={this.submitTransaction.bind(this, txDetails)}
+                                disabled={this.props.inProgress || !this.props.txDetails}
+                            >
+                                {this.state.inProgress ? <CircularProgress
+                                    color="secondary" thickness={4} size={20}
+                                /> : "Retry Now"}
+                            </Button>
+                        </div> :
+                        <div className={classes.nodata}>
+                            <Typography align="center" color="primary"
+                                variant="body1"
+                            >
+                                Select pending transaction to view details here.
+                            </Typography>
+                        </div>
+                    }
+                </Paper>
         )(this.props)
 
     }
