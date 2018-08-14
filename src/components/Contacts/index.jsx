@@ -39,6 +39,8 @@ const styles = (theme) => ({
 
     nocards: {
         color: theme.palette.secondary.dark,
+        paddingLeft: "0.5rem",
+        paddingTop: "0.5rem",
     },
 
     paper: {
@@ -369,11 +371,11 @@ class Contacts extends Component {
     showAllContacts = () => {
         if (this.props.contactsInternal.length === 0 &&
             this.props.contactsExternal.length === 0) {
-            return (<Grid item key={0} xs>
+            return (
                 <NoCards title="You have no contacts at the moment."
                     subtitle="Click 'Add New Contact' to add some."
                 />
-            </Grid>)
+            )
         }
 
         let contacts = []
@@ -447,12 +449,12 @@ class Contacts extends Component {
     showAllContactRequests = () => {
         if (this.props.contactRequests.length === 0 &&
             this.props.pending.length === 0) {
-            return (<Grid item key={0} xs={12} sm={12} md={4} lg={3} xl={2}>
+            return (
                 <NoCards title="You have no contact requests at the moment."
                     subtitle="When someone requests you as a contact, it will
                     be listed here."
                 />
-            </Grid>)
+            )
 
         }
         let requests = []
@@ -601,9 +603,7 @@ class Contacts extends Component {
             {this.state.selectedView === 0 &&
                 <Fragment>
                     <div className="m-t-medium">
-                        <Typography noWrap align="center" variant="body2"
-                            color="secondary"
-                        >
+                        <Typography variant="body2" color="secondary">
                             Contacts
                         </Typography>
                         <Divider color="secondary" />
@@ -620,10 +620,8 @@ class Contacts extends Component {
                         }
                     </Grid>
                     <div className="m-t-medium">
-                        <Typography noWrap align="center" variant="body2"
-                            color="secondary"
-                        >
-                            Contact Requests
+                        <Typography variant="body2" color="secondary">
+                            Requests
                         </Typography>
                         <Divider color="secondary" />
                     </div>
@@ -644,9 +642,7 @@ class Contacts extends Component {
             {this.state.selectedView === 1 &&
                 <Fragment>
                     <div className="m-t-medium">
-                        <Typography noWrap align="center" variant="body2"
-                            color="secondary"
-                        >
+                        <Typography variant="body2" color="secondary">
                             Contacts
                         </Typography>
                         <Divider color="secondary" />
@@ -668,10 +664,8 @@ class Contacts extends Component {
             {this.state.selectedView === 2 &&
                 <Fragment>
                     <div className="m-t-medium">
-                        <Typography noWrap align="center" variant="body2"
-                            color="secondary"
-                        >
-                            Contact Requests
+                        <Typography variant="body2" color="secondary">
+                            Requests
                         </Typography>
                         <Divider color="secondary" />
                     </div>
