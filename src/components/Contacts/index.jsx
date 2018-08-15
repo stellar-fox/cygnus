@@ -109,6 +109,18 @@ const styles = (theme) => ({
         },
     },
 
+    selectIcon: {
+        color: theme.palette.primary.main,
+    },
+
+    select: {
+        borderBottom: `1px solid ${theme.palette.primary.main}`,
+    },
+
+    selectRoot: {
+        backgroundColor: `${theme.palette.secondary.main} !important`,
+    },
+
 })
 
 
@@ -238,8 +250,13 @@ const SelectView = withStyles(styles)(
         <FormControl className={classes.formControl}>
             <InputLabel classes={{shrink: classes.inputLabel,}}
                 htmlFor="select-view"
-            >Select Contact View</InputLabel>
+            >⏿ Select View</InputLabel>
             <Select
+                classes={{
+                    icon: classes.selectIcon,
+                    select: classes.select,
+                    root: classes.selectRoot,
+                }}
                 MenuProps={{
                     PopoverClasses: {
                         paper: classes.selectMenu,
@@ -253,9 +270,9 @@ const SelectView = withStyles(styles)(
                     className: classes.input,
                 }}
             >
-                <MenuItem value={0}>All</MenuItem>
-                <MenuItem value={1}>Contacts</MenuItem>
-                <MenuItem value={2}>Requests</MenuItem>
+                <MenuItem value={0}>Everything</MenuItem>
+                <MenuItem value={1}>Contacts Only</MenuItem>
+                <MenuItem value={2}>Requests Only</MenuItem>
             </Select>
         </FormControl>
 )
@@ -414,12 +431,12 @@ class Contacts extends Component {
         }).search(this.state.search)
 
         if (filteredInternal.length === 0 && filteredExternal.length === 0) {
-            return (<Grid item key={0} xs>
+            return (
                 <NoCards title="No contacts found."
                     subtitle="No external contacts were found matching this
                     search."
                 />
-            </Grid>)
+            )
         }
 
         let filteredResults = []
@@ -500,12 +517,12 @@ class Contacts extends Component {
         }).search(this.state.search)
 
         if (searchRequests.length === 0 && searchPending.length === 0) {
-            return (<Grid item key={0} xs>
+            return (
                 <NoCards title="No contact requests found."
                     subtitle="No contact requests were found matching this
                     search."
                 />
-            </Grid>)
+            )
         }
 
         let searchResults = []
@@ -576,7 +593,7 @@ class Contacts extends Component {
 
                     <div style={{ marginLeft: "2rem", }}>
                         <div className="f-e space-between">
-                            <SearchField label="Search Contact Book"
+                            <SearchField label="🔍 Search Contact Book"
                                 onChange={e => this.updateSearchFilter(
                                     e.target.value
                                 )}
