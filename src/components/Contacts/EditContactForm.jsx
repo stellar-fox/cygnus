@@ -27,6 +27,7 @@ import { action as AlertAction } from "../../redux/Alert"
 import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
+import { action as SnackbarAction } from "../../redux/Snackbar"
 import { withStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
 import TextField from "@material-ui/core/TextField"
@@ -399,7 +400,7 @@ class EditContactForm extends Component {
 
         this.props.hideChoiceAlert()
 
-        this.props.showAlert("Contact has been deleted.", "Notice")
+        this.props.popupSnackbar("Contact has been deleted.")
 
         this.updateContacts()
     }
@@ -643,6 +644,7 @@ export default compose(
             showAlert: AlertAction.showAlert,
             showChoiceAlert: AlertChoiceAction.showAlert,
             hideChoiceAlert: AlertChoiceAction.hideAlert,
+            popupSnackbar: SnackbarAction.popupSnackbar,
         }, dispatch)
     )
 )(EditContactForm)
