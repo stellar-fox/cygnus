@@ -123,13 +123,17 @@ class Signup extends Component {
                 await this.setState({
                     message: "Creating your account ...",
                     loading: true,
+                    buttonDisabled: true,
                 })
                 await firebaseApp.auth("session").createUserWithEmailAndPassword(
                     this.state.email,
                     this.state.password
                 )
             } catch (error) {
-                await this.setState({ loading: false, })
+                await this.setState({
+                    loading: false,
+                    buttonDisabled: false,
+                })
                 this.props.hideModal()
                 this.props.showAlert(error.message, "Error")
                 return
@@ -171,31 +175,31 @@ class Signup extends Component {
 
                 await this.setState({
                     message: "Your account has been created.",
+                    loading: false,
                 })
 
-                // update Account Redux data
-                this.props.setState({
-                    email: this.state.email,
-                })
-
-                this.props.onComplete({
+                await this.props.onComplete({
                     publicKey: ledgerData.publicKey,
                     bip32Path: ledgerData.bip32Path,
                     userId: userResp.data.userid,
                     token: authResp.data.token,
                 })
 
+                // update Account Redux data
+                await this.props.setState({
+                    email: this.state.email,
+                    gravatar: md5(this.state.email),
+                    needsRegistration: false,
+                })
+
             } catch (error) {
 
                 this.setState({
                     error: error.message,
-                })
-
-            } finally {
-                this.setState({
                     buttonDisabled: false,
                     loading: false,
                 })
+
             }
         }
     }
