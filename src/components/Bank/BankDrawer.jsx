@@ -148,6 +148,11 @@ export default compose(
             accountExists: toBool(state.StellarAccount.accountId),
             drawerVisible: state.Bank.drawerVisible,
             contactRequests: state.Contacts.requests,
+            needsRegistration: state.Account.needsRegistration,
+            publicKey: state.LedgerHQ.publicKey,
+            bip32Path: state.LedgerHQ.bip32Path,
+            token: state.LoginManager.token,
+            userId: state.LoginManager.userId,
         })
     )
 )(
@@ -162,7 +167,10 @@ export default compose(
 
         // ...
         render = () => (
-            ({ drawerVisible, accountExists, contactRequests, }) =>
+            ({
+                drawerVisible, accountExists, contactRequests,
+                needsRegistration, publicKey, token, bip32Path, userId,
+            }) =>
                 <Drawer
                     containerStyle={bankDrawerStyle}
                     open={drawerVisible}
@@ -172,7 +180,10 @@ export default compose(
                     <AccountNavLink />
                     <Divider />
                     <ContactsNavLink
-                        show={this.props.loginManager.isAuthenticated()}
+                        show={
+                            !needsRegistration && publicKey && token &&
+                            bip32Path && userId
+                        }
                         showBadge={contactRequests.length > 0}
                         badgeContent={contactRequests.length}
                     />

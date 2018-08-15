@@ -71,11 +71,15 @@ class UserMenu extends Component {
     // ...
     render = () => {
         const { anchorEl, } = this.state
-        const { classes, gravatarHash, loginManager, } = this.props
+        const {
+            classes, gravatarHash, needsRegistration,
+            publicKey, token, bip32Path, userId,
+        } = this.props
 
         return (
             <div className="f-b m-l-small">
-                {loginManager.isAuthenticated() ?
+                {!needsRegistration && publicKey && token &&
+                bip32Path && userId ?
                     <Fragment>
                         <IconButton
                             aria-owns={anchorEl ? "user-menu" : null}
@@ -102,7 +106,6 @@ class UserMenu extends Component {
                         </Menu>
                     </Fragment> :
                     <IconButton
-                        // className={classes.logoutButton}
                         color="inherit"
                         aria-label="Logout"
                         onClick={this.logout}
@@ -123,6 +126,11 @@ export default compose(
     connect(
         (state) => ({
             gravatarHash: state.Account.gravatar,
+            needsRegistration: state.Account.needsRegistration,
+            publicKey: state.LedgerHQ.publicKey,
+            bip32Path: state.LedgerHQ.bip32Path,
+            token: state.LoginManager.token,
+            userId: state.LoginManager.userId,
         }),
         (dispatch) => bindActionCreators({
             resetAccountState: AccountAction.resetState,
