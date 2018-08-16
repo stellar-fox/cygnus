@@ -250,7 +250,7 @@ const SelectView = withStyles(styles)(
         <FormControl className={classes.formControl}>
             <InputLabel classes={{shrink: classes.inputLabel,}}
                 htmlFor="select-view"
-            >⏿ Select View</InputLabel>
+            >👁 Select View</InputLabel>
             <Select
                 classes={{
                     icon: classes.selectIcon,
