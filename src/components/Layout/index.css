@@ -355,6 +355,24 @@ span.red-badge {
     opacity: 0.8
 }
 
+.unverified::after {
+    content: "UNVERIFIED";
+    background-color: rgba(178, 34, 34, 0.8);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.95);
+    position: relative;
+    left: 4px;
+    top: -5px;
+    font-size: 9px;
+    padding-top: 2px;
+    padding-bottom: 1px;
+    padding-left: 3px;
+    padding-right: 3px;
+    margin-right: 3px;
+    border-radius: 3px;
+    opacity: 0.8
+}
+
 /* --------- badges --------- */
 
 

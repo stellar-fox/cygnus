@@ -45,6 +45,18 @@ import MsgBadgeError from "./MsgBadgeError"
 import MsgBadgeSuccess from "./MsgBadgeSuccess"
 import MsgBadgeWarning from "./MsgBadgeWarning"
 
+import { CircularProgress, Typography } from "@material-ui/core"
+import { Animated } from "react-animated-css"
+
+
+// ...
+const RequestProgress = ({ color, label, }) =>
+    <div style={{ height: "0px", opacity: "0.75", }}>
+        <div style={{ height: "0px", marginBottom: "-0.65rem", opacity: "0.5", }}>
+            {label}
+        </div>
+        <CircularProgress color={color || "primary"} thickness={4} size={20} />
+    </div>
 
 
 
@@ -59,7 +71,9 @@ class Profile extends Component {
 
     // ...
     state = {
-        verifyEmailDisabled: false,
+        loadingVerifyEmail: false,
+        loadingUpdateProfile: false,
+        loadingUpdatePaymentAddress: false,
     }
 
     // ...
@@ -98,6 +112,7 @@ class Profile extends Component {
          * Update backend with user info data.
          */
         try {
+            this.setState({ loadingUpdateProfile: true, })
             this.props.setState({
                 messageUserData: "Preparing data ...",
             })
@@ -108,12 +123,10 @@ class Profile extends Component {
                 first_name: this.props.state.firstName,
                 last_name: this.props.state.lastName,
             })
-
         } catch (error) {
-
+            this.setState({ loadingUpdateProfile: false, })
             this.props.showAlert(error.message, "Error")
             return
-
         }
 
         /**
@@ -123,6 +136,7 @@ class Profile extends Component {
         if (!this.props.accountId) {
             this.props.popupSnackbar("User data updated without signature.")
             this.props.setState({ messageUserData: emptyString(), })
+            this.setState({ loadingUpdateProfile: false, })
             return
         }
 
@@ -171,11 +185,10 @@ class Profile extends Component {
             this.props.popupSnackbar("User data has been updated.")
 
         } catch (error) {
-
+            this.setState({ loadingUpdateProfile: false, })
             this.props.setState({ messageUserData: emptyString(), })
             this.props.hideModal()
             this.props.showAlert(error.message, "Error")
-
         }
     }
 
@@ -187,6 +200,7 @@ class Profile extends Component {
          * Update backend with user payment data.
          */
         try {
+            this.setState({ loadingUpdatePaymentAddress: true, })
             this.props.setState({
                 messagePaymentData: "Preparing data ...",
             })
@@ -215,7 +229,7 @@ class Profile extends Component {
             })
 
         } catch (error) {
-
+            this.setState({ loadingUpdatePaymentAddress: false, })
             this.props.showAlert(error.message, "Error")
             return
 
@@ -228,6 +242,7 @@ class Profile extends Component {
         if (!this.props.accountId) {
             this.props.popupSnackbar("Payment data updated without signature.")
             this.props.setState({ messagePaymentData: emptyString(), })
+            this.setState({ loadingUpdatePaymentAddress: false, })
             return
         }
 
@@ -272,11 +287,11 @@ class Profile extends Component {
             this.props.updateAccountTree(await loadAccount(
                 this.props.publicKey, this.props.network
             ))
-
+            this.setState({ loadingUpdatePaymentAddress: false, })
             this.props.popupSnackbar("Payment data has been updated.")
 
         } catch (error) {
-
+            this.setState({ loadingUpdatePaymentAddress: false, })
             this.props.setState({ messagePaymentData: emptyString(), })
             this.props.hideModal()
             this.props.showAlert(error.message, "Error")
@@ -340,12 +355,13 @@ class Profile extends Component {
     // ...
     verifyEmail = () => {
         try {
+            this.setState({ loadingVerifyEmail: true, })
             firebaseApp.auth("session").currentUser.sendEmailVerification()
-            this.setState({ verifyEmailDisabled: true, })
+            this.setState({ loadingVerifyEmail: false, })
             this.props.popupSnackbar("Verification email sent.")
         } catch (error) {
             this.props.showAlert(error.message, "Error")
-            this.setState({ verifyEmailDisabled: false, })
+            this.setState({ loadingVerifyEmail: false, })
         }
 
     }
@@ -385,22 +401,20 @@ class Profile extends Component {
             </Modal>
 
             <div className="tab-content">
-                <div className="f-b space-between">
+
+                <div className="flex-box-row space-between">
                     <div>
-                        <h2 className="tab-content-headline">
+                        <Typography variant="title" color="secondary">
                             Account Profile
-                        </h2>
-                        <div className="account-title">
+                        </Typography>
+                        <Typography variant="body1" color="secondary">
                             Manage your profile details.
-                        </div>
-                        <div className="account-subtitle">
-                            The details of your account profile are
-                            confidential and contribute to KYC/AML
-                            compliance. Any changes to the following fields
-                            will require your digital signature.
-                        </div>
+                        </Typography>
+                        <Typography variant="caption" color="secondary">
+                            This information is only visible to your contacts.
+                        </Typography>
                     </div>
-                    <figure style={{ marginRight: "0px", marginBottom: "0px",}}>
+                    <div>
                         <img
                             className="image"
                             src={`${gravatar}${this.props.state.gravatar}?${
@@ -408,11 +422,12 @@ class Profile extends Component {
                             }
                             alt="Gravatar"
                         />
-                    </figure>
+                    </div>
                 </div>
+
                 <Input
                     width="100%"
-                    className="lcars-input p-b p-t-large"
+                    className="lcars-input p-b p-t"
                     value={this.props.state.firstName}
                     label="First Name"
                     inputType="text"
@@ -435,7 +450,7 @@ class Profile extends Component {
                     className="lcars-input p-t p-b"
                     value={this.props.state.email}
                     label={this.props.emailVerified ?
-                        "Email" : "Email - Not Verified"}
+                        "Email" : <span className="unverified">Email</span>}
                     inputType="text"
                     maxLength="100"
                     autoComplete="off"
@@ -456,40 +471,58 @@ class Profile extends Component {
                 }
 
                 <Button
+                    disabled={this.state.loadingUpdateProfile}
                     color="secondary"
                     onClick={this.updateProfile}
-                >Update User Data</Button>
+                >
+                    {this.state.loadingUpdateProfile ?
+                        <RequestProgress
+                            label="Update User Data"
+                            color="secondary"
+                        /> : "Update User Data"
+                    }
+                </Button>
                 <he.Nbsp /><he.Nbsp />
                 {!this.props.emailVerified &&
                     <Button
-                        disabled={this.state.verifyEmailDisabled}
+                        disabled={this.state.loadingVerifyEmail}
                         color="secondary"
                         onClick={this.verifyEmail}
-                    >Verify Email</Button>
+                    >
+                        {this.state.loadingVerifyEmail ?
+                            <RequestProgress label="Verify Email"
+                                color="secondary"
+                            /> : "Verify Email"
+                        }
+                    </Button>
                 }
 
-                <div className="f-b p-t-small tiny">{
+                <div style={{ height: "2rem", }} className="f-b p-t-small tiny">{
                     this.props.state.messageUserData.length > 0 ?
-                        this.props.state.messageUserData : <he.Nbsp />
+                        <Animated animationIn="fadeInDown"
+                            animationOut="fadeOutUp"
+                            isVisible={true}
+                        >{this.props.state.messageUserData}
+                        </Animated> : <he.Nbsp />
                 }</div>
+
                 <Divider color="secondary" />
 
-                <div className="f-b space-between">
+                <div className="p-t flex-box-row">
                     <div>
-                        <h2 className="tab-content-headline">
+                        <Typography variant="title" color="secondary">
                             Payment Address
-                        </h2>
-                        <div className="account-title">
+                        </Typography>
+                        <Typography variant="body1" color="secondary">
                             Manage your payment address details.
-                        </div>
-                        <div className="account-subtitle">
-                            Your payment address is visible
-                            to the public by default. Any changes to the
-                            following settings will require your digital
-                            signature.
-                        </div>
+                        </Typography>
+                        <Typography variant="caption" color="secondary">
+                            This information is published in publically
+                            accessable directory.
+                        </Typography>
                     </div>
                 </div>
+
                 <Input
                     className="lcars-input p-t-large p-b"
                     value={this.props.state.paymentAddress}
@@ -533,12 +566,27 @@ class Profile extends Component {
                     <MsgBadgeWarning />
                 }
 
-                <Button color="secondary" onClick={this.updatePaymentData}>
-                    Update Payment Data
+                <Button
+                    disabled={this.state.loadingUpdatePaymentAddress}
+                    color="secondary"
+                    onClick={this.updatePaymentData}
+                >
+                    {this.state.loadingUpdatePaymentAddress ?
+                        <RequestProgress label="Update Payment Data"
+                            color="secondary"
+                        /> : "Update Payment Data"
+                    }
+
                 </Button>
+
                 <div className="f-b p-t-small tiny">{
                     this.props.state.messagePaymentData.length > 0 ?
-                        this.props.state.messagePaymentData : <he.Nbsp />
+                        <Animated animationIn="fadeInDown"
+                            animationOut="fadeOutUp"
+                            isVisible={true}
+                        >
+                            {this.props.state.messagePaymentData}
+                        </Animated> : <he.Nbsp />
                 }</div>
             </div>
         </Fragment>
