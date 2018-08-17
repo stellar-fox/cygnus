@@ -9,15 +9,56 @@ import Axios from "axios"
 import { config } from "../../config"
 import RadioButtonGroup from "../../lib/mui-v1/RadioButtonGroup"
 import Button from "../../lib/mui-v1/Button"
+import Divider from "../../lib/mui-v1/Divider"
 import Switch from "../../lib/mui-v1/Switch"
 import { appName } from "../StellarFox/env"
 import { action as AccountAction } from "../../redux/Account"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as ModalAction } from "../../redux/Modal"
+import Modal from "../../lib/common/Modal"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { accountIsLocked } from "../../lib/utils"
-import { Icon, Typography } from "@material-ui/core"
+import {
+    Checkbox, CircularProgress, FormControlLabel, Icon, LinearProgress,
+    Typography,
+} from "@material-ui/core"
+import AlertChoiceModal from "../Layout/AlertChoiceModal"
+import { action as AlertAction } from "../../redux/Alert"
+import { action as AlertChoiceAction } from "../../redux/AlertChoice"
+import { withStyles } from "@material-ui/core/styles"
+import { delay } from "lodash"
+import { htmlEntities as he } from "../../lib/utils"
+
+
+
+
+// ...
+const styles = (theme) => ({
+    barRoot: {
+        height: "3px",
+        borderRadius: "2px",
+    },
+
+    colorPrimary: {
+        backgroundColor: theme.palette.secondary.light,
+    },
+
+    barColorPrimary: {
+        backgroundColor: theme.palette.primary.light,
+    },
+})
+
+
+
+// ...
+const RequestProgress = ({ color, label, }) =>
+    <div style={{ height: "0px", opacity: "0.75", }}>
+        <div style={{ height: "0px", marginBottom: "-0.65rem", opacity: "0.5", }}>
+            {label}
+        </div>
+        <CircularProgress color={color || "primary"} thickness={4} size={20} />
+    </div>
 
 
 
@@ -30,6 +71,51 @@ class Settings extends Component {
         setState: PropTypes.func.isRequired,
     }
 
+
+    // ...
+    state = {
+        imploding: false,
+        keepEmail: false,
+        completion: 0,
+        progressMessage: "",
+    }
+
+
+    // ...
+    implodeAccount = () => {
+        this.setState({ imploding: true, keepEmail: false, })
+        this.props.showChoiceAlert("","Warning")
+    }
+
+
+    // ...
+    emailOptOut = (event) => this.setState({ keepEmail: event.target.checked, })
+
+
+    // ...
+    nukeAccount = () => {
+
+        delay(() => this.setState({
+            imploding: false,
+            completion: 10,
+            progressMessage: "Waiting for device …",
+
+        }), 500)
+
+        this.props.hideChoiceAlert()
+        this.props.showModal("implode")
+    }
+
+
+    // ...
+    abortNuke = () => {
+        this.setState({
+            imploding: false, keepEmail: false, completion: 0,
+            progressMessage: "",
+        })
+        this.props.hideChoiceAlert()
+        this.props.hideModal()
+    }
 
     // ...
     showSignupModal = () => this.props.showModal("signup")
@@ -54,15 +140,13 @@ class Settings extends Component {
                         currency,
                     }
                 )
-                .catch((error) => {
-                    // eslint-disable-next-line no-console
-                    console.log(error.message)
+                .then((_) => {
+                    this.props.popupSnackbar(
+                        `Currency has been changed to ${currency.toUpperCase()}`
+                    )
                 })
+                .catch((error) => this.props.showAlert(error.message, "Error"))
         }
-
-        this.props.popupSnackbar(
-            `Currency has been changed to ${currency.toUpperCase()}`
-        )
 
     }
 
@@ -86,10 +170,7 @@ class Settings extends Component {
                             "Account is now hidden from public search."
                     )
                 })
-                .catch((error) => {
-                    // eslint-disable-next-line no-console
-                    console.log(error.message)
-                })
+                .catch((error) => this.props.showAlert(error.message, "Error"))
         }
     }
 
@@ -97,6 +178,107 @@ class Settings extends Component {
     // ...
     render = () =>
         <div className="tab-content">
+            <AlertChoiceModal
+                onYes={this.nukeAccount}
+                onNo={this.abortNuke}
+                labelYes="OK, I understand"
+            >
+                <div className="flex-box-col">
+                    <Typography variant="body2">
+                        <span className="red">
+                            Delete all your data now?
+                        </span>
+                    </Typography>
+                    <Typography color="primary" variant="caption">
+                     Don't worry. All your finances are always safe and
+                     freely inter-transferrable.
+                     Should you choose to do business with us again simply
+                     sign up for the service again. We will delete all your
+                     personal data and references to it that may have
+                     accumulated over time.
+                    </Typography>
+                    <Divider color="primary" />
+                    <Typography color="primary" variant="caption">
+                     Nevertheless, you will loose all your contacts and personal
+                     settings that you configured before. Here is the summary of
+                     what will be deleted:
+                    </Typography>
+                    <Typography color="primary" variant="caption">
+                     • Your contact book.
+                     [You will also be deleted from your contacts contact books.]
+                    </Typography>
+                    <Typography color="primary" variant="caption">
+                     • Preferred currency setting.
+                    </Typography>
+                    <Typography color="primary" variant="caption">
+                     • Profile signature verification on this account.
+                     [This action will require your confirmation signature.]
+                    </Typography>
+                    <Typography color="primary" variant="caption">
+                     • Payment address signature verification on this account.
+                     [This action will require your confirmation signature.]
+                    </Typography>
+                    <Typography color="primary" variant="caption">
+                     • User configuration on our servers.
+                    </Typography>
+                    <Typography color="primary" variant="caption">
+                     • Subscribtion to our emails.
+                    </Typography>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                onChange={this.emailOptOut}
+                                value="keepEmail"
+                                color="primary"
+                            />
+                        }
+                        label={
+                            <Typography color="primary" variant="body1">
+                                Keep me on the mailing list
+                            </Typography>
+                        }
+                    />
+                </div>
+            </AlertChoiceModal>
+
+            <Modal
+                open={
+                    this.props.Modal.modalId === "implode" &&
+                    this.props.Modal.visible
+                }
+                title="Imploding Your Bank"
+                actions={[
+                    <Button
+                        onClick={this.abortNuke}
+                        color="primary"
+                    >
+                        Done
+                    </Button>,
+                ]}
+            >
+                <div className="p-t p-b flex-box-col items-centered">
+                    {/* <Typography variant="body1" color="primary">
+                        Keep Subscription? {this.state.keepEmail ? "YES" : "NO"}
+                    </Typography> */}
+                    <Typography variant="body1" color="primary">
+                        Deleting profile signature data …
+                    </Typography>
+                    <Typography variant="caption" color="primary">
+                        {this.state.progressMessage || <he.Nbsp />}
+                    </Typography>
+                </div>
+
+                <LinearProgress
+                    color="primary"
+                    variant="determinate"
+                    value={this.state.completion}
+                    classes={{
+                        root: this.props.classes.barRoot,
+                        colorPrimary: this.props.classes.colorPrimary,
+                        barColorPrimary: this.props.classes.barColorPrimary,
+                    }}
+                />
+            </Modal>
 
             <div className="flex-box-row">
                 <div>
@@ -209,12 +391,52 @@ class Settings extends Component {
                 </div>
 
             ) : null}
+
+            <div className="p-t-large"></div>
+            <Divider color="secondary" />
+
+            <div className="p-t flex-box-row">
+                <div>
+                    <Typography variant="title" color="secondary">
+                        <span className="error">Implode Account</span>
+                    </Typography>
+                    <Typography variant="body1" color="secondary">
+                        <span className="red">
+                            Delete all your data from our service.
+                        </span>
+                    </Typography>
+                    <Typography variant="caption" color="secondary">
+                        <span className="red">
+                        While your data is nuked, your funds are always safe
+                        and freely transferable to other similar services.
+                        </span>
+                    </Typography>
+                </div>
+            </div>
+
+            <div className="p-t flex-box-row space-between">
+                <Button
+                    disabled={this.state.imploding}
+                    color="awesome"
+                    onClick={this.implodeAccount}
+                >
+                    {this.state.imploding ?
+                        <RequestProgress label="Implode This Account"
+                            color="secondary"
+                        /> : "Implode This Account"
+                    }
+                </Button>
+            </div>
+
+
+
         </div>
 }
 
 
 // ...
 export default compose(
+    withStyles(styles),
     withLoginManager,
     withAssetManager,
     connect(
@@ -226,12 +448,17 @@ export default compose(
             userId: state.LoginManager.userId,
             signers: state.StellarAccount.signers,
             accountId: state.StellarAccount.accountId,
+            Modal: state.Modal,
         }),
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
+            hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
             popupSnackbar: SnackbarAction.popupSnackbar,
+            showAlert: AlertAction.showAlert,
+            showChoiceAlert: AlertChoiceAction.showAlert,
+            hideChoiceAlert: AlertChoiceAction.hideAlert,
         }, dispatch)
     )
 )(Settings)
