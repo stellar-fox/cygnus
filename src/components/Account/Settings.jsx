@@ -28,7 +28,12 @@ import { action as AlertAction } from "../../redux/Alert"
 import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 import { withStyles } from "@material-ui/core/styles"
 import { delay } from "lodash"
-import { htmlEntities as he } from "../../lib/utils"
+import { htmlEntities as he, insertPathIndex, } from "../../lib/utils"
+import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
+import {
+    buildSetDataTx,
+    submitTransaction,
+} from "../../lib/stellar-tx"
 
 
 
@@ -78,9 +83,20 @@ class Settings extends Component {
         imploding: false,
         keepEmail: false,
         completion: 0,
-        progressMessage: "",
+        progressMessage: "Waiting for device …",
+        errorMessage: "",
     }
 
+    // ...
+    buildTransaction = async (name, value) => {
+        const txData = {
+            source: this.props.accountId,
+            network: this.props.network,
+            name,
+            value,
+        }
+        return await buildSetDataTx(txData)
+    }
 
     // ...
     implodeAccount = () => {
@@ -94,17 +110,89 @@ class Settings extends Component {
 
 
     // ...
-    nukeAccount = () => {
-
-        delay(() => this.setState({
-            imploding: false,
-            completion: 10,
-            progressMessage: "Waiting for device …",
-
-        }), 500)
+    nukeAccount = async () => {
 
         this.props.hideChoiceAlert()
         this.props.showModal("implode")
+
+
+        try {
+            await getSoftwareVersion()
+            await this.setState({
+                progressMessage: "Preparing transaction ...",
+                completion: 5,
+            })
+
+            /**
+             * Remove idSig and paySig data entries from the account.
+             */
+            const removeIdSigTx = await this.buildTransaction("idSig", "")
+            const removePaySigTx = await this.buildTransaction("paySig", "")
+
+            await this.setState({
+                progressMessage: "Awaiting signature to remove profile data ...",
+                completion: 10,
+            })
+
+            const signedRemoveIdSigTx = await signTransaction(
+                insertPathIndex(this.props.bip32Path),
+                this.props.publicKey,
+                removeIdSigTx
+            )
+
+            await this.setState({
+                progressMessage: "Removing signature data ...",
+                completion: 20,
+            })
+
+            await this.setState({
+                progressMessage: "Awaiting signature to remove payment address data ...",
+                completion: 25,
+            })
+
+            const signedRemovePaySigTx = await signTransaction(
+                insertPathIndex(this.props.bip32Path),
+                this.props.publicKey,
+                removePaySigTx
+            )
+
+            await this.setState({
+                progressMessage: "Removing profile signature data ...",
+                completion: 30,
+            })
+
+            await this.setState({
+                progressMessage: "Awaiting signature to remove payment address data ...",
+                completion: 40,
+            })
+
+            await this.setState({
+                progressMessage: "Removing signature data ...",
+                completion: 45,
+            })
+
+
+            await this.setState({
+                progressMessage: "Wiping cloud data ...",
+                completion: 60,
+            })
+
+
+            delay(() => this.setState({
+                completion: 100,
+            }), 500)
+
+
+            delay(() => this.setState({
+                imploding: false,
+                progressMessage: "Implosion completed. Good bye.",
+            }), 900)
+
+        } catch (error) {
+            this.setState({
+                errorMessage: error.message,
+            })
+        }
     }
 
 
@@ -112,10 +200,13 @@ class Settings extends Component {
     abortNuke = () => {
         this.setState({
             imploding: false, keepEmail: false, completion: 0,
-            progressMessage: "",
+            progressMessage: "", errorMessage: "",
         })
         this.props.hideChoiceAlert()
         this.props.hideModal()
+        if (this.state.completion === 100) {
+            console.log("redirect to somewhere")
+        }
     }
 
 
@@ -266,7 +357,12 @@ class Settings extends Component {
                         Deleting profile signature data …
                     </Typography>
                     <Typography variant="caption" color="primary">
-                        {this.state.progressMessage || <he.Nbsp />}
+                        {this.state.errorMessage ?
+                            <span className="error">
+                                {this.state.errorMessage}
+                            </span> :
+                            this.state.progressMessage || <he.Nbsp />
+                        }
                     </Typography>
                 </div>
 
@@ -446,6 +542,7 @@ export default compose(
         (state) => ({
             state: state.Account,
             publicKey: state.LedgerHQ.publicKey,
+            network: state.StellarAccount.network,
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,
             signers: state.StellarAccount.signers,
