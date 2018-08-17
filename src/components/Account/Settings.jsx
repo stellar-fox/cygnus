@@ -51,6 +51,7 @@ const styles = (theme) => ({
 
 
 
+
 // ...
 const RequestProgress = ({ color, label, }) =>
     <div style={{ height: "0px", opacity: "0.75", }}>
@@ -116,6 +117,7 @@ class Settings extends Component {
         this.props.hideChoiceAlert()
         this.props.hideModal()
     }
+
 
     // ...
     showSignupModal = () => this.props.showModal("signup")
