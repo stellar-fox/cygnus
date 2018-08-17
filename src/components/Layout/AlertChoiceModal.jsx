@@ -13,7 +13,7 @@ import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 
 // <AlertWithChoice> component
 const AlertWithChoice =
-    ({ open, onYes, onNo, title, content, }) =>
+    ({ open, onYes, onNo, title, content, children, labelYes, labelNo, }) =>
         <Modal
             open={open}
             title={title}
@@ -21,14 +21,16 @@ const AlertWithChoice =
                 <Button
                     color="primary"
                     onClick={onYes}
-                >Yes</Button>,
+                >{labelYes || "Yes"}</Button>,
                 <Button
                     color="primary"
                     onClick={onNo}
-                >Cancel</Button>,
+                >{labelNo || "Cancel"}</Button>,
             ]}
         >
-            <div className="p-t">{ content }</div>
+            <div className="p-t">
+                {children || content}
+            </div>
         </Modal>
 
 
@@ -48,7 +50,6 @@ export default connect(
 
         // ...
         static propTypes = {
-            AlertChoice: PropTypes.object.isRequired,
             showAlert: PropTypes.func.isRequired,
             hideAlert: PropTypes.func.isRequired,
         }
@@ -59,9 +60,12 @@ export default connect(
             <AlertWithChoice
                 open={this.props.AlertChoice.visible}
                 onYes={this.props.onYes}
-                onNo={this.props.hideAlert}
+                onNo={this.props.onNo || this.props.hideAlert}
                 title={this.props.AlertChoice.title}
                 content={this.props.AlertChoice.text}
+                labelYes={this.props.labelYes}
+                labelNo={this.props.labelNo}
+                children={this.props.children}
             />
     }
 )
