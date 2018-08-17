@@ -322,15 +322,14 @@ div.badge-primary { background-color: rgba(15, 46, 83, 0.75); }
 span.red-badge {
     display: inline-block;
     font-size: 0.7rem;
-    line-height: 1rem;
     vertical-align: 0.1rem;
     background-color: rgba(178, 34, 34, 0.8);
     color: rgba(244, 176, 4, 1);
     padding: 2px 6px;
     border-radius: 3px;
-    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.35);
+    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.35);
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding-box;
     background-clip: padding-box;

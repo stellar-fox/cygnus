@@ -20,6 +20,8 @@ export default withStyles((theme) => ({
     },
 
     primary: {
+        fontSize: "0.8rem",
+        fontWeight: 600,
         color: theme.palette.primaryColor,
         "&$checked": {
             color: theme.palette.primaryColor,
@@ -27,6 +29,8 @@ export default withStyles((theme) => ({
     },
 
     secondary: {
+        fontSize: "0.8rem",
+        fontWeight: 600,
         color: theme.palette.secondaryColor,
         "&$checked": {
             color: theme.palette.secondaryColor,

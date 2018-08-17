@@ -1,6 +1,7 @@
 import React from "react"
 import { NotImplementedBadge } from "../StellarFox/env"
 import Switch from "../../lib/mui-v1/Switch"
+import { Typography } from "@material-ui/core"
 
 
 
@@ -8,28 +9,31 @@ import Switch from "../../lib/mui-v1/Switch"
 // <Security> component
 export default  () =>
     <div className="tab-content">
-        <div className="f-b space-between">
+
+        <div className="flex-box-row">
             <div>
-                <h2 className="tab-content-headline">Account Security</h2>
-                <div className="account-title">
+                <Typography variant="title" color="secondary">
+                    Account Security
+                </Typography>
+                <Typography variant="body1" color="secondary">
                     Adjust security settings for your account.
-                </div>
-                <div className="account-subtitle">
+                </Typography>
+                <Typography variant="caption" color="secondary">
                     Protect your account with additional
                     security options.
-                </div>
+                </Typography>
             </div>
         </div>
 
         <div className="m-t-large f-b space-between outline">
             <div>
-                <div className="account-title">
+                <Typography variant="body1" color="secondary">
                     Enable two-factor authentication. (2FA)
-                </div>
-                <div className="account-subtitle">
+                </Typography>
+                <Typography variant="caption" color="secondary">
                     Confirm your account transations
                     with second authentication factor.
-                </div>
+                </Typography>
                 <NotImplementedBadge />
             </div>
             <div>
@@ -44,14 +48,13 @@ export default  () =>
 
         <div className="m-t-large f-b space-between outline">
             <div>
-                <div className="account-title">
+                <Typography variant="body1" color="secondary">
                     Add co-signers to your account.
-                    (Multisignature Verification)
-                </div>
-                <div className="account-subtitle">
+                </Typography>
+                <Typography variant="caption" color="secondary">
                     Multisignature account requires two or
-                    more signatures on every transaction.
-                </div>
+                    more signatures in order to send the transaction.
+                </Typography>
                 <NotImplementedBadge />
             </div>
             <div>

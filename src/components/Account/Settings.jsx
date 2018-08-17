@@ -97,17 +97,20 @@ class Settings extends Component {
     // ...
     render = () =>
         <div className="tab-content">
-            <div className="f-b space-between">
+
+            <div className="flex-box-row">
                 <div>
-                    <h2 className="tab-content-headline">Account Settings</h2>
-                    <div className="account-title">
+                    <Typography variant="title" color="secondary">
+                        Account Settings
+                    </Typography>
+                    <Typography variant="body1" color="secondary">
                         Adjust settings for your account.
-                    </div>
-                    <div className="account-subtitle">
+                    </Typography>
+                    <Typography variant="caption" color="secondary">
                         General account settings. This
                         configuration specifies how the account related
                         views are displayed to the user.
-                    </div>
+                    </Typography>
                 </div>
             </div>
 
@@ -135,10 +138,10 @@ class Settings extends Component {
                     Warning: This account is locked!
             </Typography>}
             <div className="account-title p-t-large">
-                Display Currency:
+                Preferred Currency:
             </div>
             <div className="account-subtitle">
-                Choose the currency you want to use in your
+                Choose the currency that you prefer to use for this
                 account.
             </div>
             <RadioButtonGroup
@@ -186,15 +189,15 @@ class Settings extends Component {
 
                 <div className="m-t-large flex-box-row items-centered space-between outline">
                     <div>
-                        <div className="account-title">
+                        <Typography variant="body1" color="secondary">
                             Make Account Discoverable
-                        </div>
-                        <div className="account-subtitle">
+                        </Typography>
+                        <Typography variant="caption" color="secondary">
                             Your account number will be
                             publicly discoverable and can be
                             found by others via your payment
                             address.
-                        </div>
+                        </Typography>
                     </div>
                     <div>
                         <Switch

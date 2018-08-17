@@ -126,7 +126,7 @@ export const TopBarSecurityMessage = () =>
 
 // ...
 export const NotImplementedBadge = () =>
-    <span className="red-badge">NOT IMPLEMENTED YET</span>
+    <span className="red-badge">NOT YET IMPLEMENTED</span>
 
 
 
