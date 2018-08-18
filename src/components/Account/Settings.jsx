@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import {
     bindActionCreators,
@@ -96,6 +96,8 @@ class Settings extends Component {
         progressMessage: "Waiting for device …",
         errorMessage: emptyString(),
         password: emptyString(),
+        authError: false,
+        authErrorMessage: emptyString(),
     }
 
     // ...
@@ -111,7 +113,7 @@ class Settings extends Component {
 
     // ...
     implodeAccount = () => {
-        this.setState({ imploding: true, keepEmail: false, })
+        this.setState({ keepEmail: false, })
         this.props.showChoiceAlert("","Warning")
     }
 
@@ -122,18 +124,22 @@ class Settings extends Component {
 
     // ...
     nukeAccount = async () => {
+        await this.setState({
+            authError: false,
+            authErrorMessage: emptyString(),
+            imploding: true,
+        })
 
-        this.props.hideChoiceAlert()
-        this.props.showModal("implode")
-
+        if (!this.state.password) {
+            await this.setState({
+                authError: true,
+                authErrorMessage: "Please enter account password.",
+                imploding: false,
+            })
+            return
+        }
 
         try {
-            await getSoftwareVersion()
-            await this.setState({
-                progressMessage: "Preparing transaction ...",
-                completion: 5,
-            })
-
             /**
              * Re-authenticate user with Firebase to confirm password and
              * update user as recently re-authenticated.
@@ -143,6 +149,25 @@ class Settings extends Component {
                 user.email,
                 this.state.password
             )
+        } catch (error) {
+            await this.setState({
+                authError: true,
+                authErrorMessage: error.message,
+                imploding: false,
+            })
+            return
+        }
+
+
+        this.props.hideChoiceAlert()
+        this.props.showModal("implode")
+
+        try {
+            await getSoftwareVersion()
+            await this.setState({
+                progressMessage: "Preparing transaction ...",
+                completion: 5,
+            })
 
             /**
              * Remove idSig data entry from the account.
@@ -194,9 +219,12 @@ class Settings extends Component {
                 progressMessage: "Wiping cloud data ...",
                 completion: 60,
             })
-
             await user.delete()
-            await unsubscribeEmail(this.props.userId, this.props.token, user.email)
+            if (!this.state.keepEmail) {
+                await unsubscribeEmail(
+                    this.props.userId, this.props.token, user.email
+                )
+            }
             await implodeCloudData(this.props.userId, this.props.token)
 
             delay(() => this.setState({
@@ -304,6 +332,7 @@ class Settings extends Component {
     render = () =>
         <div className="tab-content">
             <AlertChoiceModal
+                disabled={this.state.imploding}
                 onYes={this.nukeAccount}
                 onNo={this.abortNuke}
                 labelYes="OK, I understand"
@@ -355,6 +384,8 @@ class Settings extends Component {
                         label="Password"
                         color="primary"
                         onChange={this.updatePassword}
+                        error={this.state.authError}
+                        errorMessage={this.state.authErrorMessage}
                     />
                     <FormControlLabel
                         control={
@@ -389,9 +420,20 @@ class Settings extends Component {
                 ]}
             >
                 <div className="p-t p-b flex-box-col items-centered">
-                    {/* <Typography variant="body1" color="primary">
-                        Keep Subscription? {this.state.keepEmail ? "YES" : "NO"}
-                    </Typography> */}
+                    {this.state.keepEmail &&
+                        <Fragment>
+                            <Typography variant="body1" color="primary">
+                                We're keeping you in the loop!
+                            </Typography>
+                            <Typography variant="caption" color="primary">
+                                You selected to keep your email on the
+                                subscribtion list. We will send you emails
+                                ocasionally about the ongoing improvements
+                                to our project.
+                            </Typography>
+                            <br /><br />
+                        </Fragment>
+                    }
                     <Typography variant="body1" color="primary">
                         Deleting profile signature data …
                     </Typography>
@@ -529,41 +571,43 @@ class Settings extends Component {
 
             ) : null}
 
-            <div className="p-t-large"></div>
-            <Divider color="secondary" />
+            {firebaseApp.auth("session").currentUser && <Fragment>
+                <div className="p-t-large"></div>
+                <Divider color="secondary" />
 
-            <div className="p-t flex-box-row">
-                <div>
-                    <Typography variant="title" color="secondary">
-                        <span className="error">Implode Account</span>
-                    </Typography>
-                    <Typography variant="body1" color="secondary">
-                        <span className="red">
-                            Delete all your data from our service.
-                        </span>
-                    </Typography>
-                    <Typography variant="caption" color="secondary">
-                        <span className="red">
-                        While your data is nuked, your funds are always safe
-                        and freely transferable to other similar services.
-                        </span>
-                    </Typography>
+                <div className="p-t flex-box-row">
+                    <div>
+                        <Typography variant="title" color="secondary">
+                            <span className="error">Implode Account</span>
+                        </Typography>
+                        <Typography variant="body1" color="secondary">
+                            <span className="red">
+                                Delete all your data from our service.
+                            </span>
+                        </Typography>
+                        <Typography variant="caption" color="secondary">
+                            <span className="red">
+                            While your data is nuked, your funds are always safe
+                            and freely transferable to other similar services.
+                            </span>
+                        </Typography>
+                    </div>
                 </div>
-            </div>
 
-            <div className="p-t flex-box-row space-between">
-                <Button
-                    disabled={this.state.imploding}
-                    color="awesome"
-                    onClick={this.implodeAccount}
-                >
-                    {this.state.imploding ?
-                        <RequestProgress label="Implode This Account"
-                            color="secondary"
-                        /> : "Implode This Account"
-                    }
-                </Button>
-            </div>
+                <div className="p-t flex-box-row space-between">
+                    <Button
+                        disabled={this.state.imploding}
+                        color="awesome"
+                        onClick={this.implodeAccount}
+                    >
+                        {this.state.imploding ?
+                            <RequestProgress label="Implode This Account"
+                                color="secondary"
+                            /> : "Implode This Account"
+                        }
+                    </Button>
+                </div>
+            </Fragment>}
 
 
 
