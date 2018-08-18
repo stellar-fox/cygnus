@@ -182,6 +182,8 @@ class Profile extends Component {
                 this.props.publicKey, this.props.network
             ))
 
+            this.setState({ loadingUpdateProfile: false, })
+
             this.props.popupSnackbar("User data has been updated.")
 
         } catch (error) {
