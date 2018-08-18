@@ -15,6 +15,14 @@ import { appName } from "../StellarFox/env"
 import { action as AccountAction } from "../../redux/Account"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as ModalAction } from "../../redux/Modal"
+import { action as AssetsAction } from "../../redux/AssetManager"
+import { action as BalancesAction } from "../../redux/Balances"
+import { action as ContactsAction } from "../../redux/Contacts"
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
+import { action as LoginManagerAction } from "../../redux/LoginManager"
+import { action as StellarAccountAction } from "../../redux/StellarAccount"
+import { action as PaymentsAction } from "../../redux/Payments"
+
 import Modal from "../../lib/common/Modal"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
@@ -28,14 +36,16 @@ import { action as AlertAction } from "../../redux/Alert"
 import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 import { withStyles } from "@material-ui/core/styles"
 import { delay } from "lodash"
-import { htmlEntities as he, insertPathIndex, } from "../../lib/utils"
+import { htmlEntities as he, insertPathIndex } from "../../lib/utils"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
     buildSetDataTx,
     submitTransaction,
 } from "../../lib/stellar-tx"
-
-
+import { implodeCloudData, unsubscribeEmail } from "./api"
+import { firebaseApp } from "../../components/StellarFox"
+import InputField from "../../lib/mui-v1/InputField"
+import { emptyString } from "@xcmats/js-toolbox"
 
 
 // ...
@@ -84,7 +94,8 @@ class Settings extends Component {
         keepEmail: false,
         completion: 0,
         progressMessage: "Waiting for device …",
-        errorMessage: "",
+        errorMessage: emptyString(),
+        password: emptyString(),
     }
 
     // ...
@@ -124,64 +135,73 @@ class Settings extends Component {
             })
 
             /**
-             * Remove idSig and paySig data entries from the account.
+             * Re-authenticate user with Firebase to confirm password and
+             * update user as recently re-authenticated.
              */
-            const removeIdSigTx = await this.buildTransaction("idSig", "")
-            const removePaySigTx = await this.buildTransaction("paySig", "")
-
-            await this.setState({
-                progressMessage: "Awaiting signature to remove profile data ...",
-                completion: 10,
-            })
-
-            const signedRemoveIdSigTx = await signTransaction(
-                insertPathIndex(this.props.bip32Path),
-                this.props.publicKey,
-                removeIdSigTx
+            var user = firebaseApp.auth("session").currentUser
+            await firebaseApp.auth("session").signInWithEmailAndPassword(
+                user.email,
+                this.state.password
             )
 
-            await this.setState({
-                progressMessage: "Removing signature data ...",
-                completion: 20,
-            })
+            /**
+             * Remove idSig data entry from the account.
+             */
+            if (this.props.idSig) {
+                const removeIdSigTx = await this.buildTransaction("idSig", "")
+                await this.setState({
+                    progressMessage: "Awaiting signature to remove profile data ...",
+                    completion: 10,
+                })
+                const signedRemoveIdSigTx = await signTransaction(
+                    insertPathIndex(this.props.bip32Path),
+                    this.props.publicKey,
+                    removeIdSigTx
+                )
+                await this.setState({
+                    progressMessage: "Removing profile signature data ...",
+                    completion: 20,
+                })
+                await submitTransaction(signedRemoveIdSigTx, this.props.network)
+            }
 
-            await this.setState({
-                progressMessage: "Awaiting signature to remove payment address data ...",
-                completion: 25,
-            })
-
-            const signedRemovePaySigTx = await signTransaction(
-                insertPathIndex(this.props.bip32Path),
-                this.props.publicKey,
-                removePaySigTx
-            )
-
-            await this.setState({
-                progressMessage: "Removing profile signature data ...",
-                completion: 30,
-            })
-
-            await this.setState({
-                progressMessage: "Awaiting signature to remove payment address data ...",
-                completion: 40,
-            })
-
-            await this.setState({
-                progressMessage: "Removing signature data ...",
-                completion: 45,
-            })
+            /**
+             * Remove paySig data entry from the account.
+             */
+            if (this.props.paySig) {
+                const removePaySigTx = await this.buildTransaction("paySig", "")
+                await this.setState({
+                    progressMessage: "Awaiting signature to remove payment address data ...",
+                    completion: 35,
+                })
+                const signedRemovePaySigTx = await signTransaction(
+                    insertPathIndex(this.props.bip32Path),
+                    this.props.publicKey,
+                    removePaySigTx
+                )
+                await this.setState({
+                    progressMessage: "Removing payment address signature data ...",
+                    completion: 45,
+                })
+                await submitTransaction(signedRemovePaySigTx, this.props.network)
+            }
 
 
+            /**
+             * Wipe cloud data.
+             */
             await this.setState({
                 progressMessage: "Wiping cloud data ...",
                 completion: 60,
             })
 
+            await user.delete()
+            await unsubscribeEmail(this.props.userId, this.props.token, user.email)
+            await implodeCloudData(this.props.userId, this.props.token)
 
             delay(() => this.setState({
                 completion: 100,
             }), 500)
-
 
             delay(() => this.setState({
                 imploding: false,
@@ -205,7 +225,15 @@ class Settings extends Component {
         this.props.hideChoiceAlert()
         this.props.hideModal()
         if (this.state.completion === 100) {
-            console.log("redirect to somewhere")
+            firebaseApp.auth("session").signOut()
+            this.props.resetAccountState()
+            this.props.resetAssetsState()
+            this.props.resetBalancesState()
+            this.props.resetContactsState()
+            this.props.resetLedgerHQState()
+            this.props.resetLoginManagerState()
+            this.props.resetPaymentsState()
+            this.props.resetStellarAccountState()
         }
     }
 
@@ -269,6 +297,10 @@ class Settings extends Component {
 
 
     // ...
+    updatePassword = (event) => this.setState({ password: event.target.value, })
+
+
+    // ...
     render = () =>
         <div className="tab-content">
             <AlertChoiceModal
@@ -317,6 +349,13 @@ class Settings extends Component {
                     <Typography color="primary" variant="caption">
                      • Subscribtion to our emails.
                     </Typography>
+                    <InputField
+                        name="password"
+                        type="password"
+                        label="Password"
+                        color="primary"
+                        onChange={this.updatePassword}
+                    />
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -542,11 +581,16 @@ export default compose(
         (state) => ({
             state: state.Account,
             publicKey: state.LedgerHQ.publicKey,
+            bip32Path: state.LedgerHQ.bip32Path,
             network: state.StellarAccount.network,
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,
             signers: state.StellarAccount.signers,
             accountId: state.StellarAccount.accountId,
+            idSig: state.StellarAccount.data ?
+                state.StellarAccount.data.idSig : "",
+            paySig: state.StellarAccount.data ?
+                state.StellarAccount.data.paySig : "",
             Modal: state.Modal,
         }),
         // bind dispatch to props.
@@ -558,6 +602,15 @@ export default compose(
             showAlert: AlertAction.showAlert,
             showChoiceAlert: AlertChoiceAction.showAlert,
             hideChoiceAlert: AlertChoiceAction.hideAlert,
+
+            resetAccountState: AccountAction.resetState,
+            resetAssetsState: AssetsAction.resetState,
+            resetBalancesState: BalancesAction.resetState,
+            resetContactsState: ContactsAction.resetState,
+            resetLedgerHQState: LedgerHQAction.resetState,
+            resetLoginManagerState: LoginManagerAction.resetState,
+            resetPaymentsState: PaymentsAction.resetState,
+            resetStellarAccountState: StellarAccountAction.resetState,
         }, dispatch)
     )
 )(Settings)
