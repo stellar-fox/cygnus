@@ -13,12 +13,13 @@ import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 
 // <AlertWithChoice> component
 const AlertWithChoice =
-    ({ open, onYes, onNo, title, content, children, labelYes, labelNo, }) =>
+    ({ open, onYes, onNo, title, content, children, labelYes, labelNo, disabled, }) =>
         <Modal
             open={open}
             title={title}
             actions={[
                 <Button
+                    disabled={disabled}
                     color="primary"
                     onClick={onYes}
                 >{labelYes || "Yes"}</Button>,
@@ -66,6 +67,7 @@ export default connect(
                 labelYes={this.props.labelYes}
                 labelNo={this.props.labelNo}
                 children={this.props.children}
+                disabled={this.props.disabled}
             />
     }
 )
