@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
@@ -161,27 +161,17 @@ class Payments extends Component {
                                 <PaymentsHistory />
                             </div>
                         </Tab>
-                        <Tab
-                            style={styles.tab}
-                            label={this.validTabNames[1]}
-                            value={this.validTabNames[1]}
-                        >
-                            <div className="tab-content">
-                                {
-                                    firebaseApp.auth("session").currentUser ?
-                                        <Transactions /> :
-                                        <Fragment>
-                                            <div className="account-title">
-                                                This content is available for registered users.
-                                            </div>
-                                            <div className="account-subtitle">
-                                                Please Log-in to the service
-                                                or Sign-up for the account.
-                                            </div>
-                                        </Fragment>
-                                }
-                            </div>
-                        </Tab>
+                        {firebaseApp.auth("session").currentUser &&
+                            <Tab
+                                style={styles.tab}
+                                label={this.validTabNames[1]}
+                                value={this.validTabNames[1]}
+                            >
+                                <div className="tab-content">
+                                    <Transactions />
+                                </div>
+                            </Tab>
+                        }
                     </Tabs>
                 </Route>
                 <Redirect to={getPath(state.tabSelected)} />

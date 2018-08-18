@@ -453,11 +453,15 @@ export default compose(
                                         }
                                         {this.state.error &&
                                             (<Fragment>
-                                                <Typography variant="title">
-                                                    Hmm. We're having trouble fetching this data.
+                                                <Typography color="primary" variant="title">
+                                                    <span className="fade-extreme">
+                                                        Hmm. We're having trouble fetching this data.
+                                                    </span>
                                                 </Typography>
-                                                <Typography variant="caption">
-                                                    {this.state.errorMessage}
+                                                <Typography color="primary" variant="caption">
+                                                    <span className="fade-extreme">
+                                                        {this.state.errorMessage}
+                                                    </span>
                                                 </Typography>
                                             </Fragment>)
                                         }
@@ -492,7 +496,9 @@ export default compose(
                     </TableFooter>
                 </Table>
             </div>
-            <TransactionDetails data={this.state.detailsData} />
+            {!this.state.error &&
+                <TransactionDetails data={this.state.detailsData} />
+            }
             </Fragment>)
         }
     )(this.props)
