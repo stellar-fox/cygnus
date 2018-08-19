@@ -463,7 +463,7 @@ class ContactSuggester extends Component {
                  */
                 } else {
                     this.setTransactionType("EXISTING_ACCOUNT")
-                    this.updateIndicatorMessage("Payee Unverified", "yellow")
+                    this.updateIndicatorMessage("Existing Account", "green")
                 }
 
                 publicKey = federationRecord.account_id
