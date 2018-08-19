@@ -14,8 +14,9 @@ import { action as ContactsAction } from "../../redux/Contacts"
 
 import {
     federationAddressValid, formatFullName, formatPaymentAddress,
-    getFederationRecord, htmlEntities as he, invalidPaymentAddressMessage,
-    paymentAddress, pubKeyAbbr, publicKeyValid, signatureValid,
+    getFederationRecord, glyphsDB, htmlEntities as he,
+    invalidPaymentAddressMessage, paymentAddress, pubKeyAbbr, publicKeyValid,
+    signatureValid,
 } from "../../lib/utils"
 
 import {
@@ -365,6 +366,12 @@ class ReducedContactSuggester extends Component {
 
     // ...
     validatePaymentDestination = async (input) => {
+        await this.setState({
+            loading: true,
+            error: false,
+            errorMessage: emptyString(),
+        })
+
         let errorMessage = invalidPaymentAddressMessage(input),
             publicKey = null,
             memo = null
@@ -382,8 +389,6 @@ class ReducedContactSuggester extends Component {
             this.props.setBalancesState({ payee: null, })
             return false
         }
-
-        this.setState({ loading: true, })
 
         /**
          * Differentiate between a valid federation address or a valid
@@ -734,7 +739,6 @@ class ReducedContactSuggester extends Component {
                         value: this.state.value,
                         onChange: this.handleChange,
                         error: this.state.error,
-                        helperText: this.state.errorMessage,
                         disabled: this.props.cancelEnabled ? false : true,
                         placeholder: "Pay to the order of",
                     }}
@@ -790,10 +794,21 @@ class ReducedContactSuggester extends Component {
                                                 classes.chip : classes.chipDisabled,
                                             label: classes.label,
                                         }}
-                                    /> : this.state.loading ?
-                                        <div className="small text-primary fade">
-                                            Loading...
-                                        </div> : <he.Nbsp />
+                                    /> :
+                                    <div style={{width: "200px",}}>
+                                        <Typography variant="caption"
+                                            color="primary"
+                                        >
+                                            {this.state.loading ?
+                                                `Loading ${glyphsDB.ellipsis}` :
+                                                this.state.errorMessage ?
+                                                    <span className="red">
+                                                        {this.state.errorMessage}
+                                                    </span> :
+                                                    emptyString()
+                                            }
+                                        </Typography>
+                                    </div>
                             }
                         />,
                     }}
