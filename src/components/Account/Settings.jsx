@@ -219,13 +219,16 @@ class Settings extends Component {
                 progressMessage: "Wiping cloud data ...",
                 completion: 60,
             })
+            // delete firebase user
             await user.delete()
+            // clean backend data
+            await implodeCloudData(this.props.userId, this.props.token)
+            // unsubscribe from mailing list
             if (!this.state.keepEmail) {
                 await unsubscribeEmail(
                     this.props.userId, this.props.token, user.email
                 )
             }
-            await implodeCloudData(this.props.userId, this.props.token)
 
             delay(() => this.setState({
                 completion: 100,
