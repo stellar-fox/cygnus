@@ -554,6 +554,14 @@ export const emojiDB = {
 
 
 
+// ...
+export const glyphsDB = {
+    "ellipsis": "…",
+}
+
+
+
+
 // emoji components (built on the 'emojiDB' object base)
 export const emoji = objectMap(emojiDB,
     ([k, v,]) => [
