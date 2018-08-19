@@ -117,6 +117,12 @@ const styles = (theme) => ({
             backgroundColor: theme.palette.grey[300],
         },
     },
+    avatarSmall: {
+        width: "36px",
+        height: "36px",
+        border: `1px solid ${theme.palette.secondary.dark}`,
+        background: "linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%)",
+    },
     avatarDisabled: {
         opacity: "0.6",
     },
@@ -160,6 +166,18 @@ const renderInput = (inputProps) => {
 
 
 // ...
+const SuggestionAvatar = withStyles(styles)(
+    ({ classes, emailMD5, }) => <Avatar classes={{
+        root: classes.avatarSmall,
+    }} src={`${gravatar}${emailMD5}?${
+        gravatarSize48}&d=robohash`}
+    />
+)
+
+
+
+
+// ...
 const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
     const matches = match(suggestion.label, query)
     const parts = parse(suggestion.label, matches)
@@ -167,29 +185,45 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
     return (
         <Fragment>
             <MenuItem selected={isHighlighted} component="div">
-                <div className="f-b-col">
-                    <div className="text-primary">
-                        {parts.map((part, index) => {
-                            return part.highlight ?
-                                <span key={String(index)}
-                                    style={{ fontWeight: 600, }}
-                                >
-                                    {shorten(part.text, 15)}
-                                </span> :
-                                <span key={String(index)}
-                                    style={{ fontWeight: 400, }}
-                                >
-                                    {shorten(part.text, 15, shorten.END)}
-                                </span>
+                <div style={{
+                    paddingTop: "1px",
+                }} className="flex-box-row items-centered"
+                >
 
-                        })}
-                    </div>
-                    <div className="f-b micro text-primary fade-strong">
-                        {suggestion.alias && suggestion.domain ?
-                            paymentAddress(
-                                suggestion.alias, suggestion.domain
-                            ) : pubKeyAbbr(suggestion.publicKey)
-                        }
+                    <SuggestionAvatar emailMD5={suggestion.emailMD5 ||
+                        md5(suggestion.publicKey)}
+                    />
+
+                    <div className="flex-box-col" style={{
+                        fontSize: "0.9rem",
+                        lineHeight: "1rem",
+                        paddingLeft: "0.8rem",
+                        paddingTop: "2px",
+                    }}
+                    >
+                        <div className="text-primary">
+                            {parts.map((part, index) => {
+                                return part.highlight ?
+                                    <span key={String(index)}
+                                        style={{ fontWeight: 600, }}
+                                    >
+                                        {shorten(part.text, 15)}
+                                    </span> :
+                                    <span key={String(index)}
+                                        style={{ fontWeight: 400, }}
+                                    >
+                                        {shorten(part.text, 15, shorten.END)}
+                                    </span>
+
+                            })}
+                        </div>
+                        <div className="micro text-primary fade-strong">
+                            {suggestion.alias && suggestion.domain ?
+                                paymentAddress(
+                                    suggestion.alias, suggestion.domain
+                                ) : pubKeyAbbr(suggestion.publicKey)
+                            }
+                        </div>
                     </div>
                 </div>
             </MenuItem>
@@ -580,6 +614,8 @@ class ContactSuggester extends Component {
              * blank.
              */
             this.props.setBalancesState({
+                payeeMemoText: memo ? memo : this.props.payeeMemoText ?
+                    this.props.payeeMemoText : emptyString(),
                 memoText: memo ? memo : this.props.payeeMemoText ?
                     this.props.payeeMemoText : emptyString(),
                 payeeCurrency: contact ?
@@ -793,6 +829,7 @@ export default compose(
             cancelEnabled: state.Balances.cancelEnabled,
             StellarAccount: state.StellarAccount,
             Contacts: state.Contacts,
+            gravatarHash: state.Account.gravatar,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
