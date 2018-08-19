@@ -430,7 +430,7 @@ class Profile extends Component {
                 <Input
                     width="100%"
                     className="lcars-input p-b p-t"
-                    value={this.props.state.firstName}
+                    value={this.props.state.firstName || emptyString()}
                     label="First Name"
                     inputType="text"
                     maxLength="100"
@@ -440,7 +440,7 @@ class Profile extends Component {
                 />
                 <Input
                     className="lcars-input p-b p-t"
-                    value={this.props.state.lastName}
+                    value={this.props.state.lastName || emptyString()}
                     label="Last Name"
                     inputType="text"
                     maxLength="100"
@@ -527,7 +527,7 @@ class Profile extends Component {
 
                 <Input
                     className="lcars-input p-t-large p-b"
-                    value={this.props.state.paymentAddress}
+                    value={this.props.state.paymentAddress || emptyString()}
                     label="Payment Address Alias"
                     inputType="text"
                     maxLength="100"
