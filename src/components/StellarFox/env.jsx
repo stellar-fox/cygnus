@@ -208,7 +208,7 @@ export const privacy = appBasePath + "privacy.txt"
 
 
 // ...
-export const stellarFoxDomain = "stellarfox.net"
+export const appTLD = "stellarfox.net"
 
 
 

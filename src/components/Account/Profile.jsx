@@ -10,7 +10,8 @@ import { emptyString } from "@xcmats/js-toolbox"
 import { config } from "../../config"
 import {
     gravatar,
-    gravatarSize
+    gravatarSize,
+    appTLD
 } from "../StellarFox/env"
 import {
     dataDigest,
@@ -44,19 +45,22 @@ import TxBroadcast from "./TxBroadcast"
 import MsgBadgeError from "./MsgBadgeError"
 import MsgBadgeSuccess from "./MsgBadgeSuccess"
 import MsgBadgeWarning from "./MsgBadgeWarning"
-
 import { CircularProgress, Typography } from "@material-ui/core"
 import { Animated } from "react-animated-css"
+
+
 
 
 // ...
 const RequestProgress = ({ color, label, }) =>
     <div style={{ height: "0px", opacity: "0.75", }}>
-        <div style={{ height: "0px", marginBottom: "-0.65rem", opacity: "0.5", }}>
-            {label}
-        </div>
+        <div style={{
+            height: "0px", marginBottom: "-0.65rem", opacity: "0.5",
+        }}
+        >{label}</div>
         <CircularProgress color={color || "primary"} thickness={4} size={20} />
     </div>
+
 
 
 
@@ -75,6 +79,7 @@ class Profile extends Component {
         loadingUpdateProfile: false,
         loadingUpdatePaymentAddress: false,
     }
+
 
     // ...
     buildTransaction = async (name, value) => {
@@ -212,7 +217,7 @@ class Profile extends Component {
             const
                 alias = this.props.state.paymentAddress.match(/\*/) ?
                     (this.props.state.paymentAddress) :
-                    (`${this.props.state.paymentAddress}*stellarfox.net`),
+                    (`${this.props.state.paymentAddress}*${appTLD}`),
 
                 memo_type = this.props.state.memo.length > 0 ? "text" : null,
 
@@ -225,8 +230,9 @@ class Profile extends Component {
             })
 
             this.props.setState({
-                paymentAddress: federationIsAliasOnly(this.props.state.paymentAddress) ?
-                    `${this.props.state.paymentAddress}*stellarfox.net` :
+                paymentAddress: federationIsAliasOnly(
+                    this.props.state.paymentAddress
+                ) ? `${this.props.state.paymentAddress}*${appTLD}` :
                     this.props.state.paymentAddress,
             })
 
@@ -347,7 +353,7 @@ class Profile extends Component {
     updatePaymentDataFingerprint = () => this.props.setState({
         fingerprintPaymentData: dataDigest({
             paymentAddress: federationIsAliasOnly(this.props.state.paymentAddress) ?
-                `${this.props.state.paymentAddress}*stellarfox.net` :
+                `${this.props.state.paymentAddress}*${appTLD}` :
                 this.props.state.paymentAddress,
             memo: this.props.state.memo,
         }),
@@ -499,14 +505,16 @@ class Profile extends Component {
                     </Button>
                 }
 
-                <div style={{ height: "2rem", }} className="f-b p-t-small tiny">{
-                    this.props.state.messageUserData.length > 0 ?
+                <div style={{ height: "2rem", }}
+                    className="f-b p-t-small tiny"
+                >
+                    {this.props.state.messageUserData.length > 0 ?
                         <Animated animationIn="fadeInDown"
                             animationOut="fadeOutUp"
                             isVisible={true}
                         >{this.props.state.messageUserData}
-                        </Animated> : <he.Nbsp />
-                }</div>
+                        </Animated> : <he.Nbsp />}
+                </div>
 
                 <Divider color="secondary" />
 
@@ -538,7 +546,7 @@ class Profile extends Component {
                             ? `Payment Address: ${
                                 this.props.state
                                     .paymentAddress
-                            }*stellarfox.net`
+                            }*${appTLD}`
                             : `Payment Address: ${
                                 this.props.state
                                     .paymentAddress
@@ -558,8 +566,9 @@ class Profile extends Component {
 
                 {this.props.paySig ?
                     (signatureValid({
-                        paymentAddress: federationIsAliasOnly(this.props.state.paymentAddress) ?
-                            `${this.props.state.paymentAddress}*stellarfox.net` :
+                        paymentAddress: federationIsAliasOnly(
+                            this.props.state.paymentAddress
+                        ) ? `${this.props.state.paymentAddress}*${appTLD}` :
                             this.props.state.paymentAddress,
                         memo: this.props.state.memo,
                     }, this.props.paySig) ?

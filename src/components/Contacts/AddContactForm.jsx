@@ -16,7 +16,7 @@ import {
     toAliasAndDomain,
     publicKeyValid,
 } from "../../lib/utils"
-import { stellarFoxDomain } from "../StellarFox/env"
+import { appTLD } from "../StellarFox/env"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
@@ -266,7 +266,7 @@ class AddContactForm extends Component {
 
             let [alias, domain,] = toAliasAndDomain(this.state.input)
 
-            domain === stellarFoxDomain ?
+            domain === appTLD ?
                 requestByPaymentAddress(
                     this.props.userId, this.props.token, alias, domain
                 )
