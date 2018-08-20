@@ -136,10 +136,11 @@ export default compose(
                             </Typography>
                             <br />
                             <Typography color="primary" variant="body1">
-                                Reasons: {this.formatTxFailReasons(
-                                    txDetails.reason.operations
-                                )}
+                                Reasons:
                             </Typography>
+                            {this.formatTxFailReasons(
+                                txDetails.reason.operations
+                            )}
                             <br />
                             <Button color="primary"
                                 onClick={this.submitTransaction.bind(this, txDetails)}
