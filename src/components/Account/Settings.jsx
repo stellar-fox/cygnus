@@ -574,7 +574,9 @@ class Settings extends Component {
 
             ) : null}
 
-            {firebaseApp.auth("session").currentUser && <Fragment>
+            {firebaseApp.auth("session").currentUser &&
+                this.props.loginManager.isAuthenticated() &&
+            <Fragment>
                 <div className="p-t-large"></div>
                 <Divider color="secondary" />
 

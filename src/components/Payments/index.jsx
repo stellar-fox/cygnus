@@ -113,7 +113,8 @@ class Payments extends Component {
         this.props.staticRouter.pushByView(value)
         if (
             value === "Transactions"  &&
-            firebaseApp.auth("session").currentUser
+            firebaseApp.auth("session").currentUser &&
+            this.props.userId && this.props.token
         ) {
             this.getTransactions()
         }
@@ -162,6 +163,7 @@ class Payments extends Component {
                             </div>
                         </Tab>
                         {firebaseApp.auth("session").currentUser &&
+                            this.props.userId && this.props.token &&
                             <Tab
                                 style={styles.tab}
                                 label={this.validTabNames[1]}
@@ -192,6 +194,8 @@ export default compose(
             transactions: state.StellarAccount.transactions,
             publicKey: state.LedgerHQ.publicKey,
             horizon: state.StellarAccount.horizon,
+            userId: state.LoginManager.userId,
+            token: state.LoginManager.token,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
