@@ -26,17 +26,11 @@ export default createMuiTheme({
 
         secondary: {
             main: rgb(244, 176, 4),
+            // main: rgb(239, 255, 250),
             light: rgb(246, 190, 49),
             dark: rgb(156, 113, 3),
             fade: rgba(244, 176, 4, 0.6),
         },
-
-        primaryColor: rgb(15, 46, 83),
-        secondaryColor: rgb(244, 176, 4),
-        primaryHighlight: rgb(36, 65, 98),
-        secondaryHighlight: rgb(246, 190, 49),
-        primaryLightFade: rgba(15, 46, 83, 0.8),
-        secondaryLightFade: rgba(244, 176, 4, 0.6),
 
         success: rgb(34, 139, 34),
         successHighlight: rgb(10, 38, 10),
@@ -49,6 +43,7 @@ export default createMuiTheme({
         disabledSwitchColor: rgb(110, 80, 3),
 
         background: {
+            // paper: rgb(239, 255, 250),
             paper: rgb(244, 176, 4),
             default: rgb(15, 46, 83),
         },
@@ -59,24 +54,17 @@ export default createMuiTheme({
 
     },
 
-
-
-
     typography: {
-
         caption: {
             fontSize: "0.6rem",
         },
-
+        subheading: {
+            fontSize: "1.1rem",
+        },
     },
 
-
-
-
     zIndex: {
-
         appBar: 1000,
-
     },
 
 })

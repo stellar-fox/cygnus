@@ -59,9 +59,9 @@ const styles = (theme) => ({
     },
 
     raised: {
-        color: theme.palette.secondaryColor,
+        color: theme.palette.secondary.main,
         "&:hover": {
-            backgroundColor: theme.palette.primaryHighlight,
+            backgroundColor: theme.palette.primary.light,
         },
         borderRadius: "3px",
         transition: "text-shadow 350ms ease-out, background-color 350ms ease",

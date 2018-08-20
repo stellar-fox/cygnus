@@ -15,7 +15,7 @@ export default withStyles((theme) => ({
         width: 42,
         height: 42,
     },
-    primary: { backgroundColor: theme.palette.primaryColor, },
+    primary: { backgroundColor: theme.palette.primary.main, },
 
 }))(
     class extends Component {

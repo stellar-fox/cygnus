@@ -442,7 +442,7 @@ class Settings extends Component {
                     </Typography>
                     <Typography variant="caption" color="primary">
                         {this.state.errorMessage ?
-                            <span className="error">
+                            <span className="red">
                                 {this.state.errorMessage}
                             </span> :
                             this.state.progressMessage || <he.Nbsp />
@@ -581,7 +581,7 @@ class Settings extends Component {
                 <div className="p-t flex-box-row">
                     <div>
                         <Typography variant="title" color="secondary">
-                            <span className="error">Implode Account</span>
+                            <span className="red">Implode Account</span>
                         </Typography>
                         <Typography variant="body1" color="secondary">
                             <span className="red">

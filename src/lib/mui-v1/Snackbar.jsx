@@ -13,13 +13,13 @@ import { Snackbar } from "@material-ui/core"
 export default withStyles((theme) => ({
 
     primary: {
-        backgroundColor: theme.palette.primaryColor,
-        color: theme.palette.secondaryColor,
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.secondary.main,
     },
 
     secondary: {
-        backgroundColor: theme.palette.secondaryColor,
-        color: theme.palette.primaryColor,
+        backgroundColor: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
     },
 
 }))(

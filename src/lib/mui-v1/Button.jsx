@@ -15,29 +15,29 @@ export default withStyles((theme) => ({
         color: "white",
         background: "linear-gradient(30deg, rgb(178, 34, 34) 10%, rgb(244, 176, 4) 100%)",
         "&:hover": {
-            backgroundColor: theme.palette.primaryHighlight,
+            backgroundColor: theme.palette.primary.light,
         },
     },
 
     primary: {
-        color: theme.palette.secondaryColor,
-        backgroundColor: theme.palette.primaryColor,
+        color: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.main,
         "&:hover": {
-            backgroundColor: theme.palette.primaryHighlight,
+            backgroundColor: theme.palette.primary.light,
         },
     },
 
     secondary: {
-        color: theme.palette.primaryColor,
-        backgroundColor: theme.palette.secondaryColor,
+        color: theme.palette.primary.main,
+        backgroundColor: theme.palette.secondary.main,
         "&:hover": {
-            backgroundColor: theme.palette.secondaryHighlight,
+            backgroundColor: theme.palette.secondary.light,
         },
     },
 
     success: {
         color: theme.palette.success,
-        backgroundColor: theme.palette.primaryColor,
+        backgroundColor: theme.palette.primary.main,
         "&:hover": {
             backgroundColor: theme.palette.successHighlight,
             textShadow: `0px 0px 20px ${theme.palette.success}`,
@@ -46,7 +46,7 @@ export default withStyles((theme) => ({
 
     warning: {
         color: theme.palette.warning,
-        backgroundColor: theme.palette.primaryColor,
+        backgroundColor: theme.palette.primary.main,
         "&:hover": {
             backgroundColor: theme.palette.warningHighlight,
             textShadow: `0px 0px 40px ${theme.palette.warning}`,
@@ -55,7 +55,7 @@ export default withStyles((theme) => ({
 
     danger: {
         color: theme.palette.danger,
-        backgroundColor: theme.palette.primaryColor,
+        backgroundColor: theme.palette.primary.main,
         "&:hover": {
             backgroundColor: theme.palette.dangerHighlight,
             textShadow: `0px 0px 20px ${theme.palette.danger}`,

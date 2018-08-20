@@ -415,7 +415,7 @@ export default compose(
                                     <TableCell
                                         classes={{ root: classes.cell, }}
                                     >
-                                        <span className="error">
+                                        <span className="red">
                                             <NumberFormat
                                                 value={displayDebit(debitVal)}
                                                 displayType={"text"}
@@ -423,7 +423,7 @@ export default compose(
                                                 fixedDecimalScale={true}
                                             />
                                         </span>
-                                        <span className="success">
+                                        <span className="green">
                                             <NumberFormat
                                                 value={displayCredit(creditVal)}
                                                 displayType={"text"}

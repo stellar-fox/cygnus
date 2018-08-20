@@ -227,32 +227,30 @@ class BalancesCard extends Component {
         >
             <CardHeader
                 title={
-                    <span>
-                        <span>Current Balance </span>
-                        <i className="material-icons">hearing</i>
-                    </span>
+                    <Typography variant="subheading" color="primary">
+                        Current Balance
+                    </Typography>
                 }
                 subtitle={
-                    <span>
-                        <span>
-                            {this.props
-                                .assetManager.getAssetDescription(
-                                    this.props.Account.currency
-                                )}
+                    <Typography variant="body1" color="primary">
+                        {this.props
+                            .assetManager.getAssetDescription(
+                                this.props.Account.currency
+                            )}
+                        <span className="fade-strong currency-iso p-l-medium">
+                            {this.props.Account.currency.toUpperCase()}
                         </span>
-                        <span className="fade currency-iso p-l-small">
-                            ({this.props.Account.currency.toUpperCase()})
-                        </span>
-                    </span>
+                    </Typography>
                 }
                 actAsExpander={true}
                 showExpandableButton={this.props.loginManager.isAuthenticated()}
             />
 
             <CardText>
-                <div className="f-b space-between">
+                <div className="flex-box-row space-between">
+
                     <div>
-                        <div className="balance">
+                        <div className="text-primary">
                             <span className="fade currency-glyph">
                                 {
                                     this.props
@@ -261,7 +259,7 @@ class BalancesCard extends Component {
                                         )
                                 }
                             </span>
-                            <span className="p-l-small">
+                            <span className="p-l-medium balance">
                                 <NumberFormat
                                     value={this.props
                                         .assetManager.convertToAsset(
@@ -277,8 +275,8 @@ class BalancesCard extends Component {
                             {accountIsLocked(
                                 this.props.StellarAccount.signers,
                                 this.props.StellarAccount.accountId
-                            ) ?
-                                <div className="error"
+                            ) &&
+                                <div className="red"
                                     style={{
                                         display: "inline-flex",
                                         alignItems: "center",
@@ -301,11 +299,13 @@ class BalancesCard extends Component {
                                     >
                                         Account Locked
                                     </span>
-                                </div> : null
+                                </div>
                             }
 
                         </div>
-                        <div className="fade-extreme micro">
+                        <Typography color="primary" variant="caption"
+                            className="fade-extreme"
+                        >
                             <NumberFormat
                                 value={this.props.StellarAccount.balance}
                                 displayType={"text"}
@@ -313,8 +313,10 @@ class BalancesCard extends Component {
                                 decimalScale={7}
                                 fixedDecimalScale={true}
                             /> XLM
-                        </div>
-                        <div className="fade-extreme micro">
+                        </Typography>
+                        <Typography color="primary" variant="caption"
+                            className="fade-extreme"
+                        >
                             1 XLM ≈ <NumberFormat
                                 value={this.props.assetManager
                                     .convertToAsset("1.0000000")
@@ -325,8 +327,10 @@ class BalancesCard extends Component {
                                 fixedDecimalScale={true}
                             /> {this.props.assetManager.getAssetGlyph(
                                 this.props.Account.currency)}
-                        </div>
+                        </Typography>
                     </div>
+
+                    {/* Minimum Balance Section */}
                     <div
                         style={{
                             display: "flex",
@@ -335,11 +339,11 @@ class BalancesCard extends Component {
                             alignItems: "flex-end",
                         }}
                     >
-                        <Typography variant="caption" color="inherit">
+                        <Typography variant="caption" color="primary">
                             <span className="fade-strong">Min Balance</span>
                         </Typography>
-                        <Typography variant="body1" color="inherit">
-                            <span className="fade">{
+                        <Typography variant="body1" color="primary">
+                            <span style={{ paddingRight: "3px", }} className="fade">{
                                 this.props.assetManager.getAssetGlyph(
                                     this.props.Account.currency
                                 )
@@ -360,8 +364,8 @@ class BalancesCard extends Component {
                                 />
                             </span>
                         </Typography>
-                        <Typography variant="body1" color="inherit">
-                            <span className="fade-extreme micro">
+                        <Typography variant="caption" color="primary">
+                            <span className="fade-extreme">
                                 <NumberFormat
                                     value={currentAccountReserve(
                                         this.props.StellarAccount.subentryCount
@@ -383,7 +387,7 @@ class BalancesCard extends Component {
                     this.props.StellarAccount.accountId
                 ) ? <Paper className="paper gradiented-warning" elevation={3}>
                         <Typography variant="body2">
-                            <span className="error">
+                            <span className="red">
                                 Warning!
                             </span>
                         </Typography>
@@ -393,7 +397,7 @@ class BalancesCard extends Component {
                             All remaining funds are frozen and final.
                         </Typography>
                         <Typography variant="caption" color="inherit">
-                            <span className="error">DO NOT</span> deposit<he.Nbsp />
+                            <span className="red">DO NOT</span> deposit<he.Nbsp />
                             anything onto this account as you will never be<he.Nbsp />
                             able to recover or withdraw those funds.
                         </Typography>

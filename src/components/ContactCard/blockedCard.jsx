@@ -24,7 +24,7 @@ import {
 const styles = (theme) => ({
     danger: {
         color: theme.palette.danger,
-        backgroundColor: theme.palette.primaryColor,
+        backgroundColor: theme.palette.primary.main,
         "&:hover": {
             backgroundColor: theme.palette.dangerHighlight,
             textShadow: `0px 0px 20px ${theme.palette.danger}`,

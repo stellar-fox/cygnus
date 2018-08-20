@@ -12,11 +12,11 @@ import { Divider } from "@material-ui/core"
 export default withStyles((theme) => ({
 
     primary: {
-        backgroundColor: theme.palette.primaryLightFade,
+        backgroundColor: theme.palette.primary.fade,
     },
 
     secondary: {
-        backgroundColor: theme.palette.secondaryLightFade,
+        backgroundColor: theme.palette.secondary.fade,
     },
 
     common: {

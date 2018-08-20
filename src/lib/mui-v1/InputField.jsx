@@ -26,13 +26,13 @@ export default withStyles((theme) => ({
     },
 
     secondary: {
-        color: theme.palette.secondaryColor,
+        color: theme.palette.secondary.main,
         "&:hover:before": {
-            borderBottomColor: `${theme.palette.secondaryColor} !important`,
+            borderBottomColor: `${theme.palette.secondary.main} !important`,
             borderBottomWidth: "1px !important",
         },
-        "&:before": { borderBottomColor: theme.palette.secondaryColor, },
-        "&:after": { borderBottomColor: theme.palette.secondaryColor, },
+        "&:before": { borderBottomColor: theme.palette.secondary.main, },
+        "&:after": { borderBottomColor: theme.palette.secondary.main, },
     },
 
     root: { color: "rgba(212,228,188,0.6)", },

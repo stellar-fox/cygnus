@@ -15,21 +15,21 @@ export default withStyles((theme) => ({
     checked: {},
 
     primary: {
-        color: theme.palette.primaryColor,
+        color: theme.palette.primary.main,
         "&$checked": {
-            color: theme.palette.primaryColor,
+            color: theme.palette.primary.main,
             "& + $bar": {
-                backgroundColor: theme.palette.primaryHighlight,
+                backgroundColor: theme.palette.primary.light,
             },
         },
     },
 
     secondary: {
-        color: theme.palette.secondaryColor,
+        color: theme.palette.secondary.main,
         "&$checked": {
-            color: theme.palette.secondaryColor,
+            color: theme.palette.secondary.main,
             "& + $bar": {
-                backgroundColor: theme.palette.secondaryHighlight,
+                backgroundColor: theme.palette.secondary.light,
             },
         },
     },
