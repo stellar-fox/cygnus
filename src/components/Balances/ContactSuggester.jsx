@@ -262,6 +262,7 @@ class ContactSuggester extends Component {
         label: emptyString(),
         emailMD5: emptyString(),
         loading: false,
+        currency: emptyString(),
     }
 
 
@@ -271,13 +272,13 @@ class ContactSuggester extends Component {
         this.setState({
             value: suggestion.suggestionValue,
         })
-
         suggestion && this.setState({
             label: emptyString(),
             paymentAddress: emptyString(),
             emailMD5: emptyString(),
             error: false,
             errorMessage: emptyString(),
+            currency: suggestion.suggestion.currency,
         })
     }
 
@@ -315,6 +316,7 @@ class ContactSuggester extends Component {
             domain: c.domain,
             email: c.email,
             emailMD5: c.email_md5,
+            currency: c.currency,
         }))
     }
 
@@ -775,23 +777,37 @@ class ContactSuggester extends Component {
                                                 gravatarSize48}&d=robohash`}
                                         />}
                                         label={
-                                            <Typography variant="body1">
-                                                <span>
-                                                    {shorten(
-                                                        this.state.label,
-                                                        24,
-                                                        shorten.END
-                                                    )}
-                                                </span>
-                                                <he.Nbsp /><he.Nbsp /><he.Nbsp />
-                                                <span className="tiny fade-strong">
-                                                    {shorten(
-                                                        this.state.paymentAddress,
-                                                        30,
-                                                        shorten.END
-                                                    )}
-                                                </span><he.Nbsp /><he.Nbsp />
-                                            </Typography>
+                                            <div className="flex-box-row items-centered">
+                                                <div className="flex-box-col">
+                                                    <Typography style={{
+                                                        paddingTop: "0.3rem",
+                                                        lineHeight: "0.65rem",
+                                                    }} variant="body1" color="primary"
+                                                    >
+                                                        {shorten(
+                                                            this.state.label,
+                                                            24,
+                                                            shorten.END
+                                                        )}
+                                                    </Typography>
+                                                    <Typography variant="caption" color="primary">
+                                                        <span className="fade-strong">
+                                                            {shorten(
+                                                                this.state.paymentAddress,
+                                                                30,
+                                                                shorten.END
+                                                            )}
+                                                        </span>
+                                                    </Typography>
+                                                </div>
+                                                <he.Nbsp /><he.Nbsp />
+                                                <Typography variant="title" color="primary">
+                                                    <span className="fade-extreme">
+                                                        {this.props.assetManager.getAssetGlyph(
+                                                            this.state.currency)}
+                                                    </span>
+                                                </Typography>
+                                            </div>
                                         }
                                         onDelete={this.props.cancelEnabled ?
                                             this.deletePayee : this.doNothing}

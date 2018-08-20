@@ -767,23 +767,49 @@ class ReducedContactSuggester extends Component {
                                                 gravatarSize48}&d=robohash`}
                                         />}
                                         label={
-                                            <Typography variant="body1">
-                                                <span>
-                                                    {shorten(
-                                                        this.state.label,
-                                                        24,
-                                                        shorten.END
-                                                    )}
-                                                </span>
-                                                <he.Nbsp /><he.Nbsp /><he.Nbsp />
-                                                <span className="tiny fade-strong">
-                                                    {shorten(
-                                                        this.state.paymentAddress,
-                                                        30,
-                                                        shorten.END
-                                                    )}
-                                                </span><he.Nbsp /><he.Nbsp />
-                                            </Typography>
+                                            <div className="flex-box-row items-centered">
+                                                <div className="flex-box-col">
+                                                    <Typography style={{
+                                                        paddingTop: "0.3rem",
+                                                        lineHeight: "0.65rem",
+                                                    }} variant="body1" color="primary"
+                                                    >
+                                                        {shorten(
+                                                            this.state.label,
+                                                            24,
+                                                            shorten.END
+                                                        )}
+                                                    </Typography>
+                                                    <Typography variant="caption" color="primary">
+                                                        <span className="fade-strong">
+                                                            {shorten(
+                                                                this.state.paymentAddress,
+                                                                30,
+                                                                shorten.END
+                                                            )}
+                                                        </span>
+                                                    </Typography>
+                                                </div>
+                                            </div>
+
+
+                                            // <Typography variant="body1">
+                                            //     <span>
+                                            //         {shorten(
+                                            //             this.state.label,
+                                            //             24,
+                                            //             shorten.END
+                                            //         )}
+                                            //     </span>
+                                            //     <he.Nbsp /><he.Nbsp /><he.Nbsp />
+                                            //     <span className="tiny fade-strong">
+                                            //         {shorten(
+                                            //             this.state.paymentAddress,
+                                            //             30,
+                                            //             shorten.END
+                                            //         )}
+                                            //     </span><he.Nbsp /><he.Nbsp />
+                                            // </Typography>
                                         }
                                         onDelete={this.props.cancelEnabled ?
                                             this.deletePayee : this.doNothing}
