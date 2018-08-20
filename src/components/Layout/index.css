@@ -34,6 +34,8 @@ div.p-b-small-block::after {
 
 .p-l-large { padding-left: 3rem; }
 
+.p-l-medium {padding-left: 0.4rem; }
+
 .p-l-small { padding-left: 5px; }
 
 .p-r { padding-right: 1rem; }
@@ -140,9 +142,7 @@ strong { color: rgb(212, 228, 188); }
 
 .error { color: rgb(178, 34, 34); }
 
-.success { color: rgb(46, 125, 50); }
-
-.green { color: rgb(27, 94, 32); }
+.green { color: rgb(34, 139, 34); }
 
 .red { color: rgb(211, 47, 47); }
 

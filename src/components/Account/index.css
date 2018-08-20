@@ -8,7 +8,7 @@
 }
 
 .image {
-    border: 2px solid rgba(244,176,4,0.9);
+    border: 2px solid rgba(244, 176, 4, 0.9);
     border-radius: 3px;
 }
 
@@ -22,7 +22,7 @@
 .revers {
     padding-left: 25px;
     padding-bottom: 35px;
-    background: rgb(15,46,83);
+    background: rgb(15, 46, 83);
     border-radius: 3px;
 }
 
@@ -33,7 +33,7 @@
 
 .bg-green {
     display: inline-block;
-    background-color: rgba(34,139,34,0.55);
+    background-color: rgba(34, 139, 34, 0.55);
     color: rgba(255, 255, 255, 0.75);
     font-size: 0.8rem;
     line-height: 1rem;
@@ -51,7 +51,7 @@
 
 .tag-success {
     display: inline-block;
-    background-color: rgba(34,139,34,0.55);
+    background-color: rgba(34, 139, 34, 0.55);
     padding: 2px 6px;
     -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35);
     -moz-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.35);
@@ -65,13 +65,13 @@
 }
 
 .bordered {
-    border: 1px solid rgb(15,46,83);
+    border: 1px solid rgb(15, 46, 83);
     border-radius: 3px;
     padding: 1rem;
 }
 
 .border-around {
-    border: 1px solid rgb(15,46,83);
+    border: 1px solid rgb(15, 46, 83);
     border-radius: 3px;
     padding-left: 3px;
     padding-right: 3px;
@@ -88,7 +88,7 @@
 .coin {
     display: inline-block;
     background-color: rgb(244, 176, 4);
-    color: rgb(15,46,83);
+    color: rgb(15, 46, 83);
     padding: 2px 8px;
     box-shadow: 0 1px 7px rgba(0, 0, 0, 0.35);
     border-radius: 50%;
@@ -98,13 +98,9 @@
 }
 
 .paper {
-    background-color: #f5b71a;
+    background-color: rgb(246, 190, 49);
     padding: 1.1rem;
-    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.4);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding-box;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
     background-clip: padding-box;
     border-radius: 3px;
     margin-top: 15px;
