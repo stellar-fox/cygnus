@@ -55,6 +55,7 @@ const styles = (theme) => ({
         left: 0,
         right: 0,
         backgroundColor: theme.palette.primary.light,
+        boxShadow: "1px 1px 3px rgba(0, 0, 0, 0.2)",
         borderRadius: "3px",
     },
     suggestion: {
@@ -104,7 +105,7 @@ const styles = (theme) => ({
         border: `1px solid ${theme.palette.secondary.fade}`,
         color: theme.palette.primary.light,
         marginBottom: "8px",
-        boxShadow: theme.shadows[4],
+        boxShadow: "1px 1px 3px rgba(0, 0, 0, 0.2)",
         "&:focus": {
             backgroundColor: theme.palette.secondary.light,
         },
@@ -791,25 +792,6 @@ class ReducedContactSuggester extends Component {
                                                     </Typography>
                                                 </div>
                                             </div>
-
-
-                                            // <Typography variant="body1">
-                                            //     <span>
-                                            //         {shorten(
-                                            //             this.state.label,
-                                            //             24,
-                                            //             shorten.END
-                                            //         )}
-                                            //     </span>
-                                            //     <he.Nbsp /><he.Nbsp /><he.Nbsp />
-                                            //     <span className="tiny fade-strong">
-                                            //         {shorten(
-                                            //             this.state.paymentAddress,
-                                            //             30,
-                                            //             shorten.END
-                                            //         )}
-                                            //     </span><he.Nbsp /><he.Nbsp />
-                                            // </Typography>
                                         }
                                         onDelete={this.props.cancelEnabled ?
                                             this.deletePayee : this.doNothing}
