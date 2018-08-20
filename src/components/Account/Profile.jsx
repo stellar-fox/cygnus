@@ -416,10 +416,11 @@ class Profile extends Component {
                             Account Profile
                         </Typography>
                         <Typography variant="body1" color="secondary">
-                            Manage your profile details.
+                            Sign your digital profile identity.
                         </Typography>
                         <Typography variant="caption" color="secondary">
-                            This information is only visible to your contacts.
+                            This information is only visible to your contacts
+                            and requires your cryptographic signature to change.
                         </Typography>
                     </div>
                     <div>
@@ -524,11 +525,11 @@ class Profile extends Component {
                             Payment Address
                         </Typography>
                         <Typography variant="body1" color="secondary">
-                            Manage your payment address details.
+                            Sign your digital payment identity.
                         </Typography>
                         <Typography variant="caption" color="secondary">
-                            This information is published in publically
-                            accessable directory.
+                            This information is published in a global directory
+                            and requires your cryptographic signature to change.
                         </Typography>
                     </div>
                 </div>
