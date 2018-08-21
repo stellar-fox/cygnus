@@ -353,69 +353,71 @@ class Settings extends Component {
                 labelYes="OK, I understand"
             >
                 <div className="flex-box-col">
-                    <Typography variant="body2">
-                        <span className="red">
-                            Delete all your data now?
-                        </span>
+                    <Typography color="primary" variant="subheading">
+                        Delete all your data now?
                     </Typography>
-                    <Typography color="primary" variant="caption">
+                    <br />
+                    <Typography color="primary" variant="body1">
                      Don't worry. All your finances are always safe and
                      freely inter-transferrable.
-                     Should you choose to do business with us again simply
-                     sign up for the service again. We will delete all your
-                     personal data and references to it that may have
-                     accumulated over time.
+                     Should you decide to come back, simply
+                     sign up for the service again.
                     </Typography>
-                    <Divider color="primary" />
-                    <Typography color="primary" variant="caption">
-                     Nevertheless, you will loose all your contacts and personal
-                     settings that you configured before. Here is the summary of
-                     what will be deleted:
+                    <br />
+                    <Typography color="primary" variant="body1">
+                     If you choose to proceed with account deletion,
+                     you will loose all your contacts and personal
+                     settings that you have set up within our service.
+                     Here is the summary of what will be deleted:
                     </Typography>
-                    <Typography color="primary" variant="caption">
-                     • Your contact book.
-                     [You will also be deleted from your contacts contact books.]
-                    </Typography>
-                    <Typography color="primary" variant="caption">
-                     • Preferred currency setting.
-                    </Typography>
-                    <Typography color="primary" variant="caption">
-                     • Profile signature verification on this account.
-                     [This action will require your confirmation signature.]
-                    </Typography>
-                    <Typography color="primary" variant="caption">
-                     • Payment address signature verification on this account.
-                     [This action will require your confirmation signature.]
-                    </Typography>
-                    <Typography color="primary" variant="caption">
-                     • User configuration on our servers.
-                    </Typography>
-                    <Typography color="primary" variant="caption">
-                     • Subscribtion to our emails.
-                    </Typography>
-                    <InputField
-                        name="password"
-                        type="password"
-                        label="Password"
-                        color="primary"
-                        onChange={this.updatePassword}
-                        error={this.state.authError}
-                        errorMessage={this.state.authErrorMessage}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={this.emailOptOut}
-                                value="keepEmail"
+                    <br />
+                    <div className="p-l">
+                        <Typography color="primary" variant="body2">
+                        • Your contact book.
+                        </Typography>
+                        <Typography color="primary" variant="body2">
+                        • Preferred currency setting.
+                        </Typography>
+                        <Typography color="primary" variant="body2">
+                        • Profile signature verification on this account.
+                        </Typography>
+                        <Typography color="primary" variant="body2">
+                        • Payment address signature verification on this account.
+                        </Typography>
+                        <Typography color="primary" variant="body2">
+                        • User configuration on our servers.
+                        </Typography>
+                        <Typography color="primary" variant="body2">
+                        • Subscribtion to our emails.
+                        </Typography>
+                    </div>
+                    <div className="flex-box-col items-flex-end content-flex-end">
+
+                        <div style={{ width: "218px", }}>
+                            <InputField
+                                name="password"
+                                type="password"
+                                label="Password"
                                 color="primary"
+                                onChange={this.updatePassword}
+                                error={this.state.authError}
+                                errorMessage={this.state.authErrorMessage}
                             />
-                        }
-                        label={
-                            <Typography color="primary" variant="body1">
-                                Keep me on the mailing list
-                            </Typography>
-                        }
-                    />
+                        </div>
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox onChange={this.emailOptOut}
+                                    value="keepEmail" color="primary"
+                                />
+                            }
+                            label={
+                                <Typography color="primary" variant="body1">
+                                    Keep me on the mailing list.
+                                </Typography>
+                            }
+                        />
+                    </div>
                 </div>
             </AlertChoiceModal>
 
@@ -437,15 +439,17 @@ class Settings extends Component {
                 <div className="p-t p-b flex-box-col items-centered">
                     {this.state.keepEmail &&
                         <Fragment>
-                            <Typography variant="body1" color="primary">
-                                We're keeping you in the loop!
-                            </Typography>
-                            <Typography variant="caption" color="primary">
-                                You selected to keep your email on the
-                                subscribtion list. We will send you emails
-                                ocasionally about the ongoing improvements
-                                to our project.
-                            </Typography>
+                            <div className="border-primary glass">
+                                <Typography variant="body1" align="center" color="primary">
+                                    We're keeping you in the loop!
+                                </Typography>
+                                <Typography variant="caption" align="center" color="primary">
+                                    You selected to keep your email on the
+                                    subscribtion list. We will send you emails
+                                    ocasionally about the ongoing improvements
+                                    to our project.
+                                </Typography>
+                            </div>
                             <br /><br />
                         </Fragment>
                     }
