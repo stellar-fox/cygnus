@@ -20,7 +20,8 @@ import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
 import { liveNetAddr } from "../StellarFox/env"
 import BigNumber from "bignumber.js"
-
+import ArrowForward from "@material-ui/icons/MoreHorizTwoTone"
+import CheckIcon from "@material-ui/icons/CheckBoxTwoTone"
 
 
 // ...
@@ -252,7 +253,7 @@ class TxConfirmMsg extends Component {
                 <div className="f-b p-t space-between">
 
                     <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
+                        <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
                                     variant="body1"
@@ -263,13 +264,13 @@ class TxConfirmMsg extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-box-row text-primary"
-                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    <div className="flex-box-row text-primary items-centered"
+                        style={{ opacity: "0.3", }}
                     >
-                        →
+                        <ArrowForward style={{ fontSize: "3rem", }} />
                     </div>
                     <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
+                        <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
                                     variant="body1"
@@ -283,34 +284,34 @@ class TxConfirmMsg extends Component {
                         </div>
                     </div>
 
-                    <div className="flex-box-row text-primary"
-                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    <div className="flex-box-row text-primary items-centered"
+                        style={{ opacity: "0.3", }}
                     >
-                        →
+                        <ArrowForward style={{ fontSize: "3rem", }} />
                     </div>
 
                     <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
+                        <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography color="primary" align="center" variant="body1">
                                     Memo Text
                                 </Typography>
                                 <Typography color="primary" align="center" variant="caption">{
                                     Balances.memoText === emptyString() ?
-                                        emptyString() : Balances.memoText
+                                        <he.Nbsp /> : Balances.memoText
                                 }</Typography>
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex-box-row text-primary"
-                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    <div className="flex-box-row text-primary items-centered"
+                        style={{ opacity: "0.3", }}
                     >
-                        →
+                        <ArrowForward style={{ fontSize: "3rem", }} />
                     </div>
 
                     <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
+                        <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
                                     variant="body1"
@@ -327,7 +328,7 @@ class TxConfirmMsg extends Component {
                 <div className="f-b space-between p-t p-b">
 
                     <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
+                        <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
                                     variant="body1"
@@ -341,13 +342,13 @@ class TxConfirmMsg extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-box-row text-primary"
-                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    <div className="flex-box-row text-primary items-centered"
+                        style={{ opacity: "0.3", }}
                     >
-                        →
+                        <ArrowForward style={{ fontSize: "3rem", }} />
                     </div>
                     <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
+                        <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
                                     variant="body1"
@@ -362,13 +363,13 @@ class TxConfirmMsg extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-box-row text-primary"
-                        style={{ maxHeight: 50, fontSize: "2rem", }}
+                    <div className="flex-box-row text-primary items-centered"
+                        style={{ opacity: "0.3", }}
                     >
-                        →
+                        <ArrowForward style={{ fontSize: "3rem", }} />
                     </div>
                     <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-around gradiented">
+                        <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
                                     variant="body1"
@@ -384,14 +385,22 @@ class TxConfirmMsg extends Component {
 
                 </div>
 
+                <div className="badge-error m-b">
+                    Action Required:
+                </div>
 
                 <Typography align="center" color="primary" variant="body1">
-                    When you are sure it is correct press
-                    <span className="bigger text-primary">
-                        <he.Nbsp /><he.Check />
-                    </span>
-                    on the device to sign your transaction and send it off.
+                    When you are sure the info above is correct press
+                    <he.Nbsp />
+                    <CheckIcon
+                        style={{
+                            fontSize: "1.5rem",
+                        }}
+                    />
+                    <he.Nbsp />
+                    on the device to sign and send the transaction.
                 </Typography>
+
             </Fragment>
     )(this.props)
 }
