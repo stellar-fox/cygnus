@@ -387,6 +387,33 @@ span.red-badge {
     padding: 8px;
 }
 
+.border-primary {
+    border: 1px solid rgba(15, 46, 83, 0.6);
+    border-radius: 3px;
+    padding: 0.3rem;
+}
+
+
+.glass{
+	position: relative;
+	display: inline-block;
+	padding: 15px 25px;
+	background-image: linear-gradient(rgba(84, 94, 105, 0.4),rgba(156, 113, 3, 0.8));
+}
+
+
+.glass:after{
+	content: "";
+	position: absolute;
+	top: 1px;
+	left: 1px;
+	width: calc(100% - 1px);
+    height: calc(100% - 5px);
+    filter: blur(3px);
+    opacity: 0.6;
+	background: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+}
+
 .outline-error {
     border: 1px solid #D32F2F;
     border-radius: 3px;
