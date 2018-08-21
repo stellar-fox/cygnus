@@ -22,7 +22,7 @@ import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
 import { listInternal, listRequested, listPending, statusList, } from "./api"
 import {
-    getUserExternalContacts, sortBy,
+    getUserExternalContacts, htmlEntities as he, sortBy,
 } from "../../lib/utils"
 import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
@@ -102,6 +102,7 @@ const styles = (theme) => ({
     },
 
     inputLabel: {
+        opacity: "0.5",
         color: theme.palette.primary.main,
         "&:focus": {
             color: theme.palette.primary.main,
@@ -236,6 +237,7 @@ const SearchField = withStyles(styles)(
             classes: {
                 root: classes.textFieldInput,
                 marginDense: classes.inputMargin,
+                shrink: classes.inputLabel,
             },
         }}
     />
@@ -250,7 +252,7 @@ const SelectView = withStyles(styles)(
         <FormControl className={classes.formControl}>
             <InputLabel classes={{shrink: classes.inputLabel,}}
                 htmlFor="select-view"
-            >👁 Select View</InputLabel>
+            >Select View</InputLabel>
             <Select
                 classes={{
                     icon: classes.selectIcon,
@@ -270,9 +272,21 @@ const SelectView = withStyles(styles)(
                     className: classes.input,
                 }}
             >
-                <MenuItem value={0}>Everything</MenuItem>
-                <MenuItem value={1}>Contacts Only</MenuItem>
-                <MenuItem value={2}>Requests Only</MenuItem>
+                <MenuItem value={0}>
+                    <Typography variant="body1" color="primary">
+                        Everything
+                    </Typography>
+                </MenuItem>
+                <MenuItem value={1}>
+                    <Typography variant="body1" color="primary">
+                        Contacts
+                    </Typography>
+                </MenuItem>
+                <MenuItem value={2}>
+                    <Typography variant="body1" color="primary">
+                        Requests
+                    </Typography>
+                </MenuItem>
             </Select>
         </FormControl>
 )
@@ -575,7 +589,7 @@ class Contacts extends Component {
     render = () =>
         <Fragment>
 
-            <AppBar position="static" color="inherit">
+            <AppBar style={{ borderRadius: "3px", }} position="static" color="inherit">
                 <Toolbar>
 
                     <div style={{flex: 1,}} className="f-b-col m-r">
@@ -583,7 +597,7 @@ class Contacts extends Component {
                             Contact Book
                         </Typography>
                         <Typography noWrap variant="body1" color="primary">
-                                Your financial contacts.
+                                Manage your financial contacts.
                         </Typography>
                     </div>
 
@@ -593,11 +607,16 @@ class Contacts extends Component {
 
                     <div style={{ marginLeft: "2rem", }}>
                         <div className="f-e space-between">
-                            <SearchField label="🔍 Search Contact Book"
+                            <SearchField
+                                label={<Typography variant="body1"
+                                    color="primary"
+                                ><span role="img" aria-label="magnifying glass">
+                                    🔍 Search Contacts</span></Typography>}
                                 onChange={e => this.updateSearchFilter(
                                     e.target.value
                                 )}
                             />
+                            <he.Nbsp /><he.Nbsp />
                             <SelectView value={this.state.selectedView}
                                 onChange={this.changeView}
                             />
