@@ -75,6 +75,10 @@ a:focus {
     justify-content: flex-end;
 }
 
+.content-centered {
+    justify-content: center;
+}
+
 .space-between {
     justify-content: space-between;
 }
@@ -115,4 +119,8 @@ a:focus {
 
 .bg-ext-contact {
     background: linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%);
+}
+
+.em {
+    font-weight: 600;
 }

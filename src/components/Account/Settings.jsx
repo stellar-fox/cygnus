@@ -294,7 +294,11 @@ class Settings extends Component {
                 )
                 .then((_) => {
                     this.props.popupSnackbar(
-                        `Currency has been changed to ${currency.toUpperCase()}`
+                        <Typography variant="body1" color="primary">
+                            Currency has been changed to <span className="em">
+                                {currency.toUpperCase()}
+                            </span>
+                        </Typography>
                     )
                 })
                 .catch((error) => this.props.showAlert(error.message, "Error"))
@@ -318,8 +322,16 @@ class Settings extends Component {
                     this.props.setState({ discoverable: isInputChecked, })
                     this.props.popupSnackbar(
                         isInputChecked ?
-                            "Account is now discoverable." :
-                            "Account is now hidden from public search."
+                            <Typography variant="body1" color="primary">
+                                Account is now <span className="em">
+                                    discoverable
+                                </span>.
+                            </Typography> :
+                            <Typography variant="body1" color="primary">
+                                Account is now <span className="em">
+                                    hidden
+                                </span> from public search.
+                            </Typography>
                     )
                 })
                 .catch((error) => this.props.showAlert(error.message, "Error"))
@@ -554,7 +566,7 @@ class Settings extends Component {
                 <div className="m-t-large flex-box-row items-centered space-between outline">
                     <div>
                         <Typography variant="body1" color="secondary">
-                            Make Account Discoverable
+                            Publish account number and payment address.
                         </Typography>
                         <Typography variant="caption" color="secondary">
                             Your account number will be
@@ -587,7 +599,7 @@ class Settings extends Component {
                         </Typography>
                         <Typography variant="body1" color="secondary">
                             <span className="red">
-                                Delete all your data from our service.
+                                Delete all your data stored with our service.
                             </span>
                         </Typography>
                         <Typography variant="caption" color="secondary">
