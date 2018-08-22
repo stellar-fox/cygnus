@@ -5,12 +5,15 @@ import { withStyles } from "@material-ui/core/styles"
 import {
     emptyString,
     handleException,
+    shorten,
 } from "@xcmats/js-toolbox"
 import {
+    calculateTxFee,
     findContact,
     htmlEntities as he,
     pubKeyAbbrLedgerHQ,
     formatFullName,
+    nextSequenceNumber,
 } from "../../lib/utils"
 import {
     gravatar, gravatarSize, serviceFee, serviceFeeCurrency,
@@ -20,8 +23,7 @@ import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
 import { liveNetAddr } from "../StellarFox/env"
 import BigNumber from "bignumber.js"
-import ArrowForward from "@material-ui/icons/MoreHorizTwoTone"
-import CheckIcon from "@material-ui/icons/CheckBoxTwoTone"
+import CheckIcon from "@material-ui/icons/Check"
 
 
 // ...
@@ -245,80 +247,74 @@ class TxConfirmMsg extends Component {
 
                 <Divider classes={{ root: classes.divider, }} />
 
-                <Typography align="center" color="primary" variant="body2">
+                <Typography align="center" color="primary" variant="body1">
                     Please confirm that the following info is the same on your
                     device<he.Apos />s screen:
                 </Typography>
 
-                <div className="f-b p-t space-between">
+                <div className="p-t flex-box-row space-around">
 
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
-                                    variant="body1"
+                                    variant="caption"
                                 >Send</Typography>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >{`${Balances.amountNative} XLM`}</Typography>
+                                <Typography align="center">
+                                    <span className="glass-text">
+                                        {`${Balances.amountNative} XLM`}
+                                    </span>
+                                </Typography>
                             </div>
                         </div>
                     </div>
-                    <div className="flex-box-row text-primary items-centered"
-                        style={{ opacity: "0.3", }}
-                    >
-                        <ArrowForward style={{ fontSize: "3rem", }} />
-                    </div>
+
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
-                                    variant="body1"
+                                    variant="caption"
                                 >Destination</Typography>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >{handleException(
-                                        () => pubKeyAbbrLedgerHQ(Balances.payee),
-                                        () => "Not Available")}</Typography>
+                                <Typography align="center">
+                                    <span className="glass-text">{
+                                        handleException(
+                                            () => pubKeyAbbrLedgerHQ(Balances.payee),
+                                            () => "Not Available")}
+                                    </span>
+                                </Typography>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="flex-box-row text-primary items-centered"
-                        style={{ opacity: "0.3", }}
-                    >
-                        <ArrowForward style={{ fontSize: "3rem", }} />
                     </div>
 
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-primary glass">
                             <div>
-                                <Typography color="primary" align="center" variant="body1">
+                                <Typography color="primary" align="center"
+                                    variant="caption"
+                                >
                                     Memo Text
                                 </Typography>
-                                <Typography color="primary" align="center" variant="caption">{
-                                    Balances.memoText === emptyString() ?
-                                        <he.Nbsp /> : Balances.memoText
-                                }</Typography>
+                                <Typography align="center">
+                                    <span className="glass-text">{
+                                        Balances.memoText === emptyString() ?
+                                            <he.Nbsp /> : Balances.memoText
+                                    }</span>
+                                </Typography>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="flex-box-row text-primary items-centered"
-                        style={{ opacity: "0.3", }}
-                    >
-                        <ArrowForward style={{ fontSize: "3rem", }} />
                     </div>
 
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
-                                    variant="body1"
-                                >Fee</Typography>
-                                <Typography align="center" color="primary"
                                     variant="caption"
-                                >0.000001 XLM</Typography>
+                                >Fee</Typography>
+                                <Typography align="center">
+                                    <span className="glass-text">
+                                        {calculateTxFee(1)}
+                                    </span>
+                                </Typography>
                             </div>
                         </div>
                     </div>
@@ -331,53 +327,45 @@ class TxConfirmMsg extends Component {
                         <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
-                                    variant="body1"
+                                    variant="caption"
                                 >Network</Typography>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >
-                                    {this.props.horizon === liveNetAddr ?
-                                        "Public" : "Test"}
+                                <Typography align="center">
+                                    <span className="glass-text">
+                                        {this.props.horizon === liveNetAddr ?
+                                            "Public" : "Test"}
+                                    </span>
                                 </Typography>
                             </div>
                         </div>
                     </div>
-                    <div className="flex-box-row text-primary items-centered"
-                        style={{ opacity: "0.3", }}
-                    >
-                        <ArrowForward style={{ fontSize: "3rem", }} />
-                    </div>
+
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
-                                    variant="body1"
+                                    variant="caption"
                                 >Transaction Source</Typography>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >
-                                    {handleException(
-                                        () => pubKeyAbbrLedgerHQ(publicKey),
-                                        () => "Not Available")}
+                                <Typography align="center">
+                                    <span className="glass-text">
+                                        {handleException(
+                                            () => shorten(publicKey, 13),
+                                            () => "Not Available")}
+                                    </span>
                                 </Typography>
                             </div>
                         </div>
                     </div>
-                    <div className="flex-box-row text-primary items-centered"
-                        style={{ opacity: "0.3", }}
-                    >
-                        <ArrowForward style={{ fontSize: "3rem", }} />
-                    </div>
+
                     <div className="flex-box-col items-flex-end">
                         <div className="flex-box-row items-centered border-primary glass">
                             <div>
                                 <Typography align="center" color="primary"
-                                    variant="body1"
-                                >Sequence Number</Typography>
-                                <Typography align="center" color="primary"
                                     variant="caption"
-                                >
-                                    {new BigNumber(sequence).plus(1).toString()}
+                                >Sequence Number</Typography>
+                                <Typography align="center">
+                                    <span className="glass-text">
+                                        {shorten(nextSequenceNumber(sequence), 13)}
+                                    </span>
                                 </Typography>
                             </div>
                         </div>
@@ -385,11 +373,11 @@ class TxConfirmMsg extends Component {
 
                 </div>
 
-                <div className="badge-error m-b">
-                    Action Required:
+                <div className="m-t border-error glass-error glass-error-text">
+                    Action Required
                 </div>
 
-                <Typography align="center" color="primary" variant="body1">
+                <Typography align="center" color="primary" variant="body2">
                     When you are sure the info above is correct press
                     <he.Nbsp />
                     <CheckIcon
