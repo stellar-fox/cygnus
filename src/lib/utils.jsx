@@ -205,7 +205,7 @@ export const pubKeyAbbr = (pubKey) => handleException(
 
 // ...
 export const pubKeyAbbrLedgerHQ = (pubKey) => handleException(
-    () => `${pubKey.slice(0, 12)}-${pubKey.slice(44)}`,
+    () => `${pubKey.slice(0, 12)}..${pubKey.slice(44)}`,
     (_) => { throw new Error("Malformed key.") }
 )
 
@@ -815,3 +815,20 @@ export const rgb = (r, g, b) =>
 // little helper for JSS colors with alpha
 export const rgba = (r, g, b, a) =>
     wrap([r, g, b, a,].join(", "), "rgba(", ")")
+
+
+
+
+// display transaction fee as XLM fraction
+export const calculateTxFee = (opsNum) => {
+    BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+    return (`${new BigNumber(env.transactionFee).times(opsNum)
+        .dividedBy(10000000).toString()} XLM`)
+}
+
+
+
+
+// display sequence number for the next/current??? transaction
+export const nextSequenceNumber = (sequenceNumber) =>
+    new BigNumber(sequenceNumber).plus(1).toString()
