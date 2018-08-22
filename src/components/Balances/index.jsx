@@ -434,7 +434,7 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "txCustomAssetComplete" &&
                                 this.props.Modal.visible
                             }
-                            title="Transaction Complete"
+                            title="Transaction Receipt"
                             actions={[
                                 <Button
                                     onClick={this.props.hideModal}

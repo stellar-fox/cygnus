@@ -2,9 +2,10 @@ import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { appName } from "../StellarFox/env"
 import { handleException, shorten } from "@xcmats/js-toolbox"
+import NumberFormat from "react-number-format"
 import {
     htmlEntities as he,
-    pubKeyAbbrLedgerHQ,
+    pubKeyAbbr,
     rgb,
 } from "../../lib/utils"
 import {
@@ -48,12 +49,24 @@ export default connect(
                                         {assetManager.getAssetGlyph(account.currency)}
                                     </span>
                                     <he.Nbsp />
-                                    {balances.amount}
+                                    <NumberFormat
+                                        value={balances.amount}
+                                        displayType={"text"}
+                                        thousandSeparator={true}
+                                        decimalScale={2}
+                                        fixedDecimalScale={true}
+                                    />
                                     <he.Nbsp /><he.Nbsp />
                                 </Typography>
                                 <Typography variant="caption" color="primary">
                                     <span className="fade-extreme">
-                                        {balances.amountNative} XLM
+                                        <NumberFormat
+                                            value={balances.amountNative}
+                                            displayType={"text"}
+                                            thousandSeparator={true}
+                                            decimalScale={7}
+                                            fixedDecimalScale={true}
+                                        /> XLM
                                     </span>
                                 </Typography>
                             </div>
@@ -67,7 +80,7 @@ export default connect(
                         </TableRowColumn>
                         <TableRowColumn>
                             <Typography variant="body2" color="primary">
-                                {balances.payeeAddress}
+                                {shorten(balances.payeeAddress, 35)}
                             </Typography>
                         </TableRowColumn>
                     </TableRow>
@@ -80,7 +93,7 @@ export default connect(
                         <TableRowColumn>
                             <Typography variant="body2" color="primary">
                                 {handleException(
-                                    () => pubKeyAbbrLedgerHQ(balances.payee),
+                                    () => pubKeyAbbr(balances.payee),
                                     () => "Not Available")
                                 }
                             </Typography>
@@ -105,23 +118,8 @@ export default connect(
                             </Typography>
                         </TableRowColumn>
                         <TableRowColumn>
-                            <Typography variant="body2" color="primary">
-                                {handleException(
-                                    () => shorten(balances.paymentId, 35),
-                                    () => "Not Available")
-                                }
-                            </Typography>
-                        </TableRowColumn>
-                    </TableRow>
-                    <TableRow className="table-row-primary">
-                        <TableRowColumn>
-                            <Typography variant="body1" color="primary">
-                                Ledger Number:
-                            </Typography>
-                        </TableRowColumn>
-                        <TableRowColumn>
-                            <Typography variant="body2" color="primary">
-                                {balances.ledgerId}
+                            <Typography variant="caption" color="primary">
+                                {balances.paymentId}
                             </Typography>
                         </TableRowColumn>
                     </TableRow>
