@@ -394,15 +394,15 @@ span.red-badge {
 }
 
 
-.glass{
+.glass {
 	position: relative;
 	display: inline-block;
-	padding: 15px 25px;
+    padding: 3px 5px;
 	background-image: linear-gradient(rgba(84, 94, 105, 0.4),rgba(156, 113, 3, 0.8));
 }
 
 
-.glass:after{
+.glass:after {
 	content: "";
 	position: absolute;
 	top: 1px;
@@ -414,8 +414,50 @@ span.red-badge {
 	background: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.1));
 }
 
+.glass-text {
+    opacity: 0.8;
+    font-weight: 600;
+    color: rgb(230, 249, 255);
+    font-size: 0.75rem;
+}
+
+
+.border-error {
+    border: 1px solid rgba(124, 29, 29, 0.6);
+    border-radius: 3px;
+    padding: 0.3rem;
+}
+
+
+.glass-error {
+	position: relative;
+	display: inline-block;
+    padding: 3px 5px;
+	background-image: linear-gradient(rgb(211, 47, 47), rgba(167, 38, 38, 0.9));
+}
+
+
+.glass-error:after {
+	content: "";
+	position: absolute;
+	top: 1px;
+	left: 1px;
+	width: calc(100% - 1px);
+    height: calc(100% - 5px);
+    filter: blur(3px);
+    opacity: 0.5;
+	background: linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+}
+
+.glass-error-text {
+    opacity: 0.8;
+    font-weight: 600;
+    color: rgb(255, 230, 230);
+    font-size: 0.75rem;
+}
+
 .outline-error {
-    border: 1px solid #D32F2F;
+    border: 1px solid rgb(211, 47, 47);
     border-radius: 3px;
     padding: 10px;
 }
