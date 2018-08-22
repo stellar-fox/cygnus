@@ -403,7 +403,7 @@ class Profile extends Component {
                     this.props.Modal.modalId === "txBroadcast" &&
                     this.props.Modal.visible
                 }
-                title="Updating ..."
+                title="Lodging ..."
             >
                 <TxBroadcast />
             </Modal>

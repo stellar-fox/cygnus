@@ -1,25 +1,74 @@
-import React, { Fragment } from "react"
+import React, { Component, Fragment } from "react"
+import PropTypes from "prop-types"
 import {
-    rgb,
-    rgba,
-} from "../../lib/utils"
-import LinearProgress from "material-ui/LinearProgress"
+    bindActionCreators,
+    compose,
+} from "redux"
+import { connect } from "react-redux"
+
+import { withStyles } from "@material-ui/core/styles"
+import { LinearProgress, Typography, } from "@material-ui/core"
 
 
 
+// <TxBroadcastMsg> component
+export default compose(
+    withStyles(theme => ({
+        barRoot: {
+            height: "5px",
+            borderRadius: "10px",
+            border: `1px solid ${theme.palette.secondary.dark}`,
+        },
 
-// ...
-export default () =>
-    <Fragment>
-        <div className="bigger-emphasize text-primary">
-            Your money transfer is on its way.
-        </div>
-        <div className="faded p-b">
-            Estimated arrival time: 5 seconds. Thank you for your patience.
-        </div>
-        <LinearProgress
-            style={{ background: rgb(244,176,4), }}
-            color={rgba(15,46,83,0.85)}
-            mode="indeterminate"
-        />
-    </Fragment>
+        colorPrimary: {
+            backgroundColor: theme.palette.secondary.light,
+        },
+
+        barColorPrimary: {
+            backgroundColor: theme.palette.primary.fade,
+        },
+    })),
+    connect(
+        (_state) => ({}),
+        (dispatch) => bindActionCreators({}, dispatch)
+    )
+)(
+    class extends Component {
+
+        // ...
+        static propTypes = {
+            classes: PropTypes.object.isRequired,
+        }
+
+
+        // ...
+        state = {}
+
+
+        // ...
+        render = () => (
+            ({ classes, }) =>
+                <Fragment>
+                    <div className="p-b flex-box-col items-centered">
+                        <Typography variant="body2" color="primary" align="center">
+                            Your money transfer is on its way.
+                        </Typography>
+                        <Typography variant="caption" color="primary" align="center">
+                            Estimated arrival time: 5 seconds. Thank you for your patience.
+                        </Typography>
+                    </div>
+
+                    <LinearProgress
+                        color="primary"
+                        variant="indeterminate"
+                        classes={{
+                            root: classes.barRoot,
+                            colorPrimary: classes.colorPrimary,
+                            barColorPrimary: classes.barColorPrimary,
+                        }}
+                    />
+                </Fragment>
+        )(this.props)
+
+    }
+)
