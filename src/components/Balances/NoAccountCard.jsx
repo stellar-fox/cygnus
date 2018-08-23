@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import {
     bindActionCreators,
     compose,
@@ -15,11 +15,18 @@ import {
 import Button from "../../lib/mui-v1/Button"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as BalancesAction } from "../../redux/Balances"
+import { Typography } from "@material-ui/core"
+import NumberFormat from "react-number-format"
 
 
 
 // <NoAccountCard> component
 class NoAccountCard extends Component {
+
+    // ...
+    componentDidMount = () => {
+        this.props.assetManager.updateExchangeRate(this.props.Account.currency)
+    }
 
     // ...
     showNotImplementedModal = () =>
@@ -37,44 +44,75 @@ class NoAccountCard extends Component {
     render = () => <Card className='account'>
         <CardHeader
             title={
-                <span>
-                    <span>Current Balance&nbsp;</span>
-                    <i className="material-icons">hearing</i>
-                </span>
+                <Typography variant="subheading" color="primary">
+                    Current Balance
+                </Typography>
             }
             subtitle={
-                <span>
-                    <span>
-                        {this.props.assetManager.getAssetDescription(
-                            this.props.Account.currency
-                        )}
-                    </span>
-                    <span className="fade currency-iso p-l-small">
-                        ({this.props.Account.currency.toUpperCase()})
-                    </span>
-                </span>
+                <Fragment>
+                    <Typography variant="body1" color="primary">
+                        {this.props
+                            .assetManager.getAssetDescription(
+                                this.props.Account.currency
+                            )}
+                        <span className="fade-strong currency-iso p-l-medium">
+                            {this.props.Account.currency.toUpperCase()}
+                        </span>
+                    </Typography>
+                    <Typography variant="caption" color="primary">
+                        <span className="fade-extreme">
+                            Account is not activated.
+                        </span>
+                    </Typography>
+                </Fragment>
             }
             actAsExpander={false}
             showExpandableButton={false}
         />
 
         <CardText>
-            <div className='flex-row'>
-                <div>
-                    <div className='balance'>
-                        <span className="fade currency-glyph">
-                            {
-                                this.props.assetManager.getAssetGlyph(
-                                    this.props.Account.currency
-                                )
-                            }
-                        </span> 0.00
-                    </div>
-                    <div className="fade-extreme micro">
-                        0.0000000 XLM
-                    </div>
-                </div>
-                <div></div>
+            <div className="flex-box-row items-flex-end">
+                <Typography color="primary">
+                    <span className="fade currency-glyph">
+                        {
+                            this.props.assetManager.getAssetGlyph(
+                                this.props.Account.currency
+                            )
+                        }
+                    </span>
+                </Typography>
+                <Typography color="primary">
+                    <span className="p-l-medium balance">
+                        0.00
+                    </span>
+                </Typography>
+            </div>
+            <div className="flex-box-col">
+                <Typography color="primary" variant="caption"
+                    className="fade-extreme"
+                >
+                    <NumberFormat
+                        value={0.0000000}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        decimalScale={7}
+                        fixedDecimalScale={true}
+                    /> XLM
+                </Typography>
+                <Typography color="primary" variant="caption"
+                    className="fade-extreme"
+                >
+                    1 XLM ≈ <NumberFormat
+                        value={this.props.assetManager
+                            .convertToAsset("1.0000000")
+                        }
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        decimalScale={2}
+                        fixedDecimalScale={true}
+                    /> {this.props.assetManager.getAssetGlyph(
+                        this.props.Account.currency)}
+                </Typography>
             </div>
         </CardText>
 
