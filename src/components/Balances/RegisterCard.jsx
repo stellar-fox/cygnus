@@ -6,9 +6,9 @@ import {
     CardActions,
     CardText,
 } from "material-ui/Card"
-import { htmlEntities as he } from "../../lib/utils"
 import Button from "../../lib/mui-v1/Button"
 import { action as ModalAction } from "../../redux/Modal"
+import { Typography } from "@material-ui/core"
 
 
 
@@ -24,44 +24,37 @@ class RegisterCard extends Component {
     render = () =>
         <Card className="welcome-card">
             <CardText>
-                <div className="flex-row">
-                    <div>
-                        <div className="balance">Hi there!</div>
-                        <div>
-                            <p>
-                                It looks like this account is not yet
-                                registered with our service. Registered
-                                accounts put you in compliance with local and
-                                international money transmitting laws. You will
-                                also be able to transact easily with anyone and
-                                take advantage of some awesome features that we
-                                offer!
-                            </p>
-                            <p> Here are some of them:</p>
-                            <ul>
-                                <li>One click, pay to contact.</li>
-                                <li>Create multiple escrow accounts.</li>
-                                <li>Customize your payment address.</li>
-                                <li>Create and manage contact book of your payees.</li>
-                                <li>Gain access to powerful account settings.</li>
-                            </ul>
-                            <p>Would you like to open one today?
-                                It<he.Apos />s super easy!</p>
-                        </div>
-                        <div className="fade-extreme small-icon">
-                            <i className="material-icons">blur_on</i>
-                            Registering with our service is free. Forever.
-                            We only charge fractional fees when you choose
-                            to use our remittance service.
-                        </div>
-                    </div>
+                <div className="flex-box-col">
+                    <Typography variant="headline" color="primary">
+                        Hi there,
+                    </Typography>
+                    <br />
+                    <Typography variant="body1" color="primary">
+                        <span className="fade">
+                        Welcome to your bank! It looks like this account has
+                        not been registered with our service yet. Although,
+                        it is possible to use the service now, plase consider
+                        registering this account in order to take the advantage
+                        of many security features that we have to offer and
+                        find yourself on the safe side of transacting.
+                        </span>
+                    </Typography>
+
+
                 </div>
             </CardText>
             <CardActions>
-                <Button
-                    onClick={this.showSignupModal}
-                    color="primary"
-                >Register</Button>
+                <div className="flex-box-row space-between items-flex-end">
+                    <Button
+                        onClick={this.showSignupModal}
+                        color="primary"
+                    >Register</Button>
+                    <Typography variant="caption" color="primary">
+                        <span className="fade-extreme">
+                            Registering with our service is free.
+                        </span>
+                    </Typography>
+                </div>
             </CardActions>
         </Card>
 
