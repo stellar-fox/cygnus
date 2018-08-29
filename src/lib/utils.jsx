@@ -670,7 +670,7 @@ export const devEnv = () =>
 // asynchronously load libraries (used in dev. environment)
 export const dynamicImportLibs = async () => {
     let [
-        StellarFox, apiAccount, apiContacts,
+        StellarFox, apiAccount, apiContacts, apiUser,
         bignumber, jss, ledger, lodash, md5, mui,
         redshift, redux,
         StellarTx,
@@ -679,6 +679,7 @@ export const dynamicImportLibs = async () => {
         import("../../src/components/StellarFox"),
         import("../../src/components/Account/api"),
         import("../../src/components/Contacts/api"),
+        import("../lib/database/user/api"),
         import("bignumber.js"),
         import("jss"),
         import("./ledger"),
@@ -696,6 +697,7 @@ export const dynamicImportLibs = async () => {
             account: apiAccount,
             contacts: apiContacts,
             firebase: StellarFox.firebaseApp,
+            user: apiUser,
         },
         axios,
         BigNumber: bignumber.default,
