@@ -32,6 +32,11 @@ export const appLandingPageLink = "https://stellarfox.net/"
 
 
 
+// CoinHive Capcha script source
+export const coinHiveScriptSrc = "https://coinhive.com/lib/coinhive.min.js"
+
+
+
 // Session Storage application state key (ensure to change every deployment!)
 export const ssAppStateKey = `StellarFox.${appVersion}`
 

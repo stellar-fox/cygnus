@@ -35,6 +35,7 @@ import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
 import { subscribeEmail } from "./api"
 import { Typography } from "@material-ui/core"
+import CoinhiveCapcha from "../CoinhiveCapcha"
 
 
 
@@ -356,6 +357,8 @@ class Signup extends Component {
                             >
                                 {this.state.loading ? <RequestProgress /> : "Next"}
                             </Button>
+
+                            <CoinhiveCapcha />
 
                         </div>
                     </div>

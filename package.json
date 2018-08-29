@@ -40,6 +40,7 @@
         "history": "^4.7.2",
         "hoist-non-react-statics": "^3.0.1",
         "jss": "^9.8.7",
+        "load-script": "^1.0.0",
         "lodash": "^4.17.10",
         "material-ui": "^0.20.2",
         "number-to-text": "^0.3.4",
