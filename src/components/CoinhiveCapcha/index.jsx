@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
-import { Checkbox, Typography } from "@material-ui/core"
+import { Checkbox, LinearProgress, Typography } from "@material-ui/core"
 import { bindActionCreators, compose } from "redux"
 import { coinHiveScriptSrc } from "../StellarFox/env"
 import { connect } from "react-redux"
@@ -12,9 +12,25 @@ import { config } from "../../config"
 
 // <CoinhiveCapcha> component
 export default compose(
-    withStyles({
+    withStyles(theme => ({
+        colorPrimary: {
+            color: theme.palette.primary.main,
+        },
+        disabled: {
+            color: `${theme.palette.primary.disabled} !important`,
+        },
+        barRoot: {
+            width: "100px",
+            height: "18px",
+            borderRadius: "3px",
+            border: `1px solid ${theme.palette.secondary.dark}`,
+        },
 
-    }),
+        barColorPrimary: {
+            backgroundColor: theme.palette.primary.fade,
+        },
+
+    })),
     connect(
         (_state) => ({}),
         (dispatch) => bindActionCreators({}, dispatch)
@@ -38,6 +54,7 @@ export default compose(
             minerRunning: false,
             token: "",
             foundHash: "",
+            progressValue: 0,
         }
 
 
@@ -66,6 +83,7 @@ export default compose(
 
         // ...
         update = () => {
+
             this.setState({
                 hashesPerSecond: this.miner.getHashesPerSecond(),
                 totalHashes: this.miner.getTotalHashes(),
@@ -80,8 +98,7 @@ export default compose(
             this.setState({ disabled: true, })
             this.miner.start()
 
-            this.interval = setInterval(() => this.update(), 200)
-
+            this.interval = setInterval(() => this.update(), 100)
 
             this.miner.on("authed", () => {
                 this.setState({ token: this.miner.getToken(), })
@@ -106,10 +123,26 @@ export default compose(
                 <Fragment>
                     {this.state.scriptLoaded ?
                         <Fragment>
-                            <Checkbox disabled={this.state.disabled}
-                                onChange={this.validate}
-                                color="primary"
-                            />
+                            <div className="flex-box-row items-centered">
+                                <Checkbox disabled={this.state.disabled}
+                                    classes={{
+                                        colorPrimary: classes.colorPrimary,
+                                        disabled: classes.disabled,
+                                    }}
+                                    onChange={this.validate}
+                                    color="primary"
+                                />
+                                <LinearProgress
+                                    color="primary"
+                                    variant="determinate"
+                                    value={this.state.progressValue}
+                                    classes={{
+                                        root: classes.barRoot,
+                                        colorPrimary: classes.colorPrimary,
+                                        barColorPrimary: classes.barColorPrimary,
+                                    }}
+                                />
+                            </div>
                             <Typography variant="caption" color="primary">
                                 {`Status: ${this.state.minerRunning}`}
                             </Typography>
