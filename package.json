@@ -34,6 +34,7 @@
         "axios": "^0.18.0",
         "bignumber.js": "^7.2.1",
         "classnames": "^2.2.6",
+        "cross-env": "^5.2.0",
         "firebase": "^5.4.1",
         "fuse.js": "^3.2.1",
         "history": "^4.7.2",
@@ -100,7 +101,7 @@
         "clean:modules": "rimraf node_modules",
         "eject": "react-scripts eject",
         "lint": "eslint ./src/",
-        "start": "react-scripts start",
+        "start": "cross-env BROWSER=none react-scripts start",
         "test": "react-scripts test --env=jsdom"
     },
     "version": "0.1.47"
