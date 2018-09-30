@@ -48,6 +48,8 @@ import InputField from "../../lib/mui-v1/InputField"
 import { emptyString } from "@xcmats/js-toolbox"
 
 
+
+
 // ...
 const styles = (theme) => ({
     barRoot: {
@@ -100,6 +102,7 @@ class Settings extends Component {
         authErrorMessage: emptyString(),
     }
 
+
     // ...
     buildTransaction = async (name, value) => {
         const txData = {
@@ -111,10 +114,11 @@ class Settings extends Component {
         return await buildSetDataTx(txData)
     }
 
+
     // ...
     implodeAccount = () => {
         this.setState({ keepEmail: false, })
-        this.props.showChoiceAlert("","Warning")
+        this.props.showChoiceAlert(emptyString(),"Warning")
     }
 
 
@@ -173,7 +177,7 @@ class Settings extends Component {
              * Remove idSig data entry from the account.
              */
             if (this.props.idSig) {
-                const removeIdSigTx = await this.buildTransaction("idSig", "")
+                const removeIdSigTx = await this.buildTransaction("idSig", emptyString())
                 await this.setState({
                     progressMessage: "Awaiting signature to remove profile data ...",
                     completion: 10,
@@ -194,7 +198,7 @@ class Settings extends Component {
              * Remove paySig data entry from the account.
              */
             if (this.props.paySig) {
-                const removePaySigTx = await this.buildTransaction("paySig", "")
+                const removePaySigTx = await this.buildTransaction("paySig", emptyString())
                 await this.setState({
                     progressMessage: "Awaiting signature to remove payment address data ...",
                     completion: 35,
@@ -251,7 +255,7 @@ class Settings extends Component {
     abortNuke = () => {
         this.setState({
             imploding: false, keepEmail: false, completion: 0,
-            progressMessage: "", errorMessage: "",
+            progressMessage: emptyString(), errorMessage: emptyString(),
         })
         this.props.hideChoiceAlert()
         this.props.hideModal()
@@ -629,9 +633,6 @@ class Settings extends Component {
                     </Button>
                 </div>
             </Fragment>}
-
-
-
         </div>
 }
 
@@ -653,9 +654,9 @@ export default compose(
             signers: state.StellarAccount.signers,
             accountId: state.StellarAccount.accountId,
             idSig: state.StellarAccount.data ?
-                state.StellarAccount.data.idSig : "",
+                state.StellarAccount.data.idSig : emptyString(),
             paySig: state.StellarAccount.data ?
-                state.StellarAccount.data.paySig : "",
+                state.StellarAccount.data.paySig : emptyString(),
             Modal: state.Modal,
         }),
         // bind dispatch to props.
