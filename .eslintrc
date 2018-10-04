@@ -26,6 +26,7 @@
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double"],
         "semi": ["error", "never"],
+        "no-unexpected-multiline": "error",
         "space-before-function-paren": ["error", "always"],
         "no-unused-vars": [2, {"args": "all", "argsIgnorePattern": "^_"}],
         "comma-dangle": [
