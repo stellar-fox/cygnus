@@ -1,108 +1,110 @@
 {
-    "bugs": {
-        "url": "https://github.com/stellar-fox/cygnus/issues"
+  "bugs": {
+    "url": "https://github.com/stellar-fox/cygnus/issues"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "contributors": [
+    {
+      "name": "syntaxval",
+      "email": "syntaxval@protonmail.com",
+      "url": "https://twitter.com/syntaxval/"
     },
-    "contributors": [
-        {
-            "name": "syntaxval",
-            "email": "syntaxval@protonmail.com",
-            "url": "https://twitter.com/syntaxval/"
-        },
-        {
-            "name": "drmats",
-            "email": "xcmats@protonmail.com",
-            "url": "https://twitter.com/xcmats/"
-        }
-    ],
-    "dependencies": {
-        "@ledgerhq/hw-app-str": "^4.21.0",
-        "@ledgerhq/hw-transport-u2f": "^4.21.0",
-        "@material-ui/core": "^3.1.2",
-        "@material-ui/icons": "^3.0.1",
-        "@stellar-fox/redshift": "^0.3.1",
-        "@types/classnames": "^2.2.6",
-        "@types/history": "^4.7.0",
-        "@types/jss": "^9.5.6",
-        "@types/material-ui": "^0.21.5",
-        "@types/prop-types": "^15.5.6",
-        "@types/react-dom": "^16.0.8",
-        "@types/react-redux": "^6.0.9",
-        "@types/react-router-dom": "^4.3.1",
-        "@types/react-router-redux": "^5.0.16",
-        "@xcmats/js-toolbox": "^0.6.2",
-        "autosuggest-highlight": "^3.1.1",
-        "axios": "^0.18.0",
-        "bignumber.js": "^7.2.1",
-        "classnames": "^2.2.6",
-        "cross-env": "^5.2.0",
-        "firebase": "^5.5.2",
-        "fuse.js": "^3.2.1",
-        "history": "^4.7.2",
-        "hoist-non-react-statics": "^3.0.1",
-        "jss": "^9.8.7",
-        "lodash": "^4.17.11",
-        "material-ui": "^0.20.2",
-        "number-to-text": "^0.3.5",
-        "prop-types": "^15.6.2",
-        "raf": "^3.4.0",
-        "react": "^16.5.2",
-        "react-animated-css": "^1.0.4",
-        "react-autosuggest": "^9.4.2",
-        "react-dom": "^16.5.2",
-        "react-event-listener": "^0.6.4",
-        "react-jss": "^8.6.1",
-        "react-number-format": "^3.6.1",
-        "react-redux": "^5.0.7",
-        "react-router-dom": "^4.3.1",
-        "react-router-redux": "^5.0.0-alpha.9",
-        "react-scripts": "1.1.5",
-        "react-scrollbar-size": "^2.1.0",
-        "react-stripe-elements": "^2.0.1",
-        "react-swipeable-views": "^0.13.0",
-        "redux": "^4.0.0",
-        "redux-devtools-extension": "^2.13.5",
-        "redux-thunk": "^2.3.0",
-        "resolve-pathname": "^2.2.0",
-        "sha.js": "^2.4.11",
-        "stellar-sdk": "^0.11.0",
-        "toml": "^2.3.3",
-        "typeface-roboto": "0.0.54"
-    },
-    "description": "Stellar Fox (frontend)",
-    "devDependencies": {
-        "babel-eslint": "^10.0.1",
-        "eslint": "^5.6.1",
-        "eslint-config-react-app": "^2.1.0",
-        "eslint-plugin-react": "^7.11.1",
-        "rimraf": "^2.6.2"
-    },
-    "engines": {
-        "node": ">=6.0.0",
-        "npm": ">=5.0.0"
-    },
-    "homepage": "/",
-    "keywords": [
-        "bank",
-        "frontend",
-        "remittance",
-        "stellar"
-    ],
-    "license": "Apache-2.0",
-    "main": "src/index.js",
-    "name": "cygnus",
-    "private": true,
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/stellar-fox/cygnus.git"
-    },
-    "scripts": {
-        "build": "react-scripts build",
-        "clean": "rimraf build",
-        "clean:modules": "rimraf node_modules",
-        "eject": "react-scripts eject",
-        "lint": "eslint ./src/",
-        "start": "cross-env BROWSER=none react-scripts start",
-        "test": "react-scripts test --env=jsdom"
-    },
-    "version": "0.1.47"
+    {
+      "name": "drmats",
+      "email": "xcmats@protonmail.com",
+      "url": "https://twitter.com/xcmats/"
+    }
+  ],
+  "dependencies": {
+    "@ledgerhq/hw-app-str": "^4.23.0",
+    "@ledgerhq/hw-transport-u2f": "^4.21.0",
+    "@material-ui/core": "^3.1.2",
+    "@material-ui/icons": "^3.0.1",
+    "@stellar-fox/redshift": "^0.3.1",
+    "@types/classnames": "^2.2.6",
+    "@types/history": "^4.7.0",
+    "@types/jss": "^9.5.6",
+    "@types/material-ui": "^0.21.5",
+    "@types/prop-types": "^15.5.6",
+    "@types/react-dom": "^16.0.8",
+    "@types/react-redux": "^6.0.9",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/react-router-redux": "^5.0.16",
+    "@xcmats/js-toolbox": "^0.6.5",
+    "autosuggest-highlight": "^3.1.1",
+    "axios": "^0.18.0",
+    "bignumber.js": "^7.2.1",
+    "classnames": "^2.2.6",
+    "cross-env": "^5.2.0",
+    "firebase": "^5.5.3",
+    "fuse.js": "^3.2.1",
+    "history": "^4.7.2",
+    "hoist-non-react-statics": "^3.0.1",
+    "jss": "^9.8.7",
+    "lodash": "^4.17.11",
+    "material-ui": "^0.20.2",
+    "number-to-text": "^0.3.5",
+    "prop-types": "^15.6.2",
+    "raf": "^3.4.0",
+    "react": "^16.5.2",
+    "react-animated-css": "^1.0.4",
+    "react-autosuggest": "^9.4.2",
+    "react-dom": "^16.5.2",
+    "react-event-listener": "^0.6.4",
+    "react-jss": "^8.6.1",
+    "react-number-format": "^3.6.1",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "react-scripts": "2.0.4",
+    "react-scrollbar-size": "^2.1.0",
+    "react-stripe-elements": "^2.0.1",
+    "react-swipeable-views": "^0.13.0",
+    "redux": "^4.0.0",
+    "redux-devtools-extension": "^2.13.5",
+    "redux-thunk": "^2.3.0",
+    "resolve-pathname": "^2.2.0",
+    "sha.js": "^2.4.11",
+    "stellar-sdk": "^0.11.0",
+    "toml": "^2.3.3",
+    "typeface-roboto": "0.0.54"
+  },
+  "description": "Stellar Fox (frontend)",
+  "devDependencies": {
+    "rimraf": "^2.6.2"
+  },
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=5.0.0"
+  },
+  "homepage": "/",
+  "keywords": [
+    "bank",
+    "frontend",
+    "remittance",
+    "stellar"
+  ],
+  "license": "Apache-2.0",
+  "main": "src/index.js",
+  "name": "cygnus",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stellar-fox/cygnus.git"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "clean": "rimraf build",
+    "clean:modules": "rimraf node_modules",
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src/",
+    "start": "cross-env BROWSER=none react-scripts start",
+    "test": "react-scripts test --env=jsdom"
+  },
+  "version": "0.1.47"
 }
