@@ -40,7 +40,6 @@
     "axios": "^0.18.0",
     "bignumber.js": "^7.2.1",
     "classnames": "^2.2.6",
-    "cross-env": "^5.2.0",
     "firebase": "^5.5.3",
     "fuse.js": "^3.2.1",
     "history": "^4.7.2",
@@ -76,6 +75,7 @@
   },
   "description": "Stellar Fox (frontend)",
   "devDependencies": {
+    "cross-env": "^5.2.0",
     "rimraf": "^2.6.2"
   },
   "engines": {
