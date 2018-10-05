@@ -10,7 +10,7 @@ import {
     Route,
 } from "react-router-dom"
 import "number-to-text/converters/en-us"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { action as AccountAction } from "../../redux/Account"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as ContactsAction } from "../../redux/Contacts"
@@ -266,7 +266,7 @@ class Balances extends Component {
                 })
             }
 
-            this.props.setStateForBalances({ message: emptyString(), })
+            this.props.setStateForBalances({ message: string.empty(), })
 
             this.props.showModal("txConfirm")
 
@@ -353,7 +353,7 @@ class Balances extends Component {
     closeAssetDetailsModal = () => {
         this.props.setAssetsState({ selected: null, })
         this.props.setBalancesState({
-            amount: emptyString(),
+            amount: string.empty(),
             payee: null,
             paymentAddress: null,
             payeeStellarAccount: null,
@@ -450,7 +450,7 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "assetDetails" &&
                                 this.props.Modal.visible
                             }
-                            title={emptyString()}
+                            title={string.empty()}
                             paperClassName="paycheck"
                             bodyClassName="lace"
                         >

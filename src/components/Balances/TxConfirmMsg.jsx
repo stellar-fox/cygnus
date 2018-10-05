@@ -3,9 +3,8 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { withStyles } from "@material-ui/core/styles"
 import {
-    emptyString,
     handleException,
-    shorten,
+    string,
 } from "@xcmats/js-toolbox"
 import {
     calculateTxFee,
@@ -296,7 +295,7 @@ class TxConfirmMsg extends Component {
                                 </Typography>
                                 <Typography align="center">
                                     <span className="glass-text">{
-                                        Balances.memoText === emptyString() ?
+                                        Balances.memoText === string.empty() ?
                                             <he.Nbsp /> : Balances.memoText
                                     }</span>
                                 </Typography>
@@ -348,7 +347,7 @@ class TxConfirmMsg extends Component {
                                 <Typography align="center">
                                     <span className="glass-text">
                                         {handleException(
-                                            () => shorten(publicKey, 13),
+                                            () => string.shorten(publicKey, 13),
                                             () => "Not Available")}
                                     </span>
                                 </Typography>
@@ -364,7 +363,12 @@ class TxConfirmMsg extends Component {
                                 >Sequence Number</Typography>
                                 <Typography align="center">
                                     <span className="glass-text">
-                                        {shorten(nextSequenceNumber(sequence), 13)}
+                                        {
+                                            string.shorten(
+                                                nextSequenceNumber(sequence),
+                                                13
+                                            )
+                                        }
                                     </span>
                                 </Typography>
                             </div>

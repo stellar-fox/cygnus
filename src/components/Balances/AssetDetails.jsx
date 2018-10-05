@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { withStyles } from "@material-ui/core/styles"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import ReducedContactSuggester from "./ReducedContactSuggester"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
@@ -106,9 +106,9 @@ export default compose(
         // ...
         state = {
             error: false,
-            errorMessage: emptyString(),
+            errorMessage: string.empty(),
             inProgress: false,
-            statusMessage: emptyString(),
+            statusMessage: string.empty(),
         }
 
 
@@ -139,8 +139,8 @@ export default compose(
                     availableBalance: currentBalance.toFixed(2),
                 })
                 this.props.setState({
-                    amount: emptyString(),
-                    amountText: emptyString(),
+                    amount: string.empty(),
+                    amountText: string.empty(),
                     transactionAsset: null,
                 })
             }
@@ -151,8 +151,8 @@ export default compose(
                     availableBalance: currentBalance.toFixed(2),
                 })
                 this.props.setState({
-                    amount: emptyString(),
-                    amountText: emptyString(),
+                    amount: string.empty(),
+                    amountText: string.empty(),
                     transactionAsset: null,
                 })
             }
@@ -163,15 +163,15 @@ export default compose(
                     availableBalance: currentBalance.toFixed(2),
                 })
                 this.props.setState({
-                    amount: emptyString(),
-                    amountText: emptyString(),
+                    amount: string.empty(),
+                    amountText: string.empty(),
                     transactionAsset: null,
                 })
             }
             else {
                 this.setState({
                     error: false,
-                    errorMessage: emptyString(),
+                    errorMessage: string.empty(),
                     availableBalance: availableBalance.toFixed(2),
                 })
                 this.props.setState({
@@ -276,7 +276,7 @@ export default compose(
 
                     await this.setState({
                         inProgress: false,
-                        statusMessage: emptyString(),
+                        statusMessage: string.empty(),
                     })
 
                     this.props.showModal("txCustomAssetComplete")
@@ -451,7 +451,7 @@ export default compose(
                                         color="primary"
                                         onClick={this.sendAsset}
                                         disabled={
-                                            this.props.amount === emptyString() ||
+                                            this.props.amount === string.empty() ||
                                                 !this.props.payee
                                         }
                                     >

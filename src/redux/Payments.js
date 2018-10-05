@@ -1,6 +1,6 @@
 import {
     createReducer,
-    emptyString,
+    string,
 } from "@xcmats/js-toolbox"
 
 
@@ -12,7 +12,7 @@ const initState = {
     paymentDetails: {
         txid: null,
         created_at: null,
-        memo: emptyString(),
+        memo: string.empty(),
         effects: [],
         selectedPaymentId: null,
     },

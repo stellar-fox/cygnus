@@ -31,7 +31,11 @@ import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
-import { delay, emptyString, timeUnit } from "@xcmats/js-toolbox"
+import {
+    delay,
+    string,
+    timeUnit,
+} from "@xcmats/js-toolbox"
 import { config } from "../../config"
 
 
@@ -53,7 +57,7 @@ class BalancesCard extends Component {
     // ...
     state = {
         inProgress: false,
-        statusMessage: emptyString(),
+        statusMessage: string.empty(),
     }
 
 
@@ -135,7 +139,7 @@ class BalancesCard extends Component {
 
             await this.setState({
                 inProgress: false,
-                statusMessage: emptyString(),
+                statusMessage: string.empty(),
             })
 
             await this.props.setAssetsState({

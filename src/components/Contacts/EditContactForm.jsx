@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators, compose, } from "redux"
 import { connect } from "react-redux"
-import { emptyString, shorten } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize } from "../StellarFox/env"
 import {
@@ -295,9 +295,9 @@ const ContactDetails = withStyles(styles)(
             </div>
             <div className="f-b-col">
                 <Typography variant="title" noWrap color="primary">
-                    {shorten(formatFullName(
+                    {string.shorten(formatFullName(
                         details.contact.first_name, details.contact.last_name
-                    ), 30, shorten.END)}
+                    ), 30, string.shorten.END)}
                 </Typography>
                 <Typography classes={{ root: classNames(classes.padded), }}
                     variant="subheading" noWrap color="primary"
@@ -305,9 +305,9 @@ const ContactDetails = withStyles(styles)(
                     <Typography variant="caption" noWrap color="primary">
                         <span className="fade-strong">Payment Address:</span>
                     </Typography>
-                    {shorten(formatPaymentAddress(
+                    {string.shorten(formatPaymentAddress(
                         details.contact.alias, details.contact.domain
-                    ), 30, shorten.END)}
+                    ), 30, string.shorten.END)}
                 </Typography>
                 <Typography variant="body1" noWrap color="primary">
                     <Typography variant="caption" noWrap color="primary">
@@ -327,16 +327,16 @@ const ContactDetails = withStyles(styles)(
 class EditContactForm extends Component {
 
     state = {
-        memo: emptyString(),
-        firstName: emptyString(),
-        lastName: emptyString(),
-        alias: emptyString(),
-        domain: emptyString(),
-        paymentAddress: emptyString(),
+        memo: string.empty(),
+        firstName: string.empty(),
+        lastName: string.empty(),
+        alias: string.empty(),
+        domain: string.empty(),
+        paymentAddress: string.empty(),
         defaultCurrency: "eur",
         inProgress: false,
         error: false,
-        errorMessage: emptyString(),
+        errorMessage: string.empty(),
     }
 
 
@@ -422,7 +422,7 @@ class EditContactForm extends Component {
 
         await this.setState({
             error: false,
-            errorMessage: emptyString(),
+            errorMessage: string.empty(),
             inProgress: true,
         })
 
@@ -471,7 +471,7 @@ class EditContactForm extends Component {
 
             await this.setState({
                 error: false,
-                errorMessage: emptyString(),
+                errorMessage: string.empty(),
                 inProgress: true,
             })
         }
@@ -576,8 +576,8 @@ class EditContactForm extends Component {
             })
         } else {
             this.setState({
-                alias: emptyString(),
-                domain: emptyString(),
+                alias: string.empty(),
+                domain: string.empty(),
                 paymentAddress: event.target.value,
             })
         }
