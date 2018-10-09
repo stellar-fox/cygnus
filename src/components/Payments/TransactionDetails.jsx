@@ -338,7 +338,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ assetManager, classes, data, }) =>
+            ({ assetManager, classes, data, publicKey, }) =>
                 <Fragment>
                     <Paper>
                         {data.length === 0 ?
@@ -424,7 +424,10 @@ export default compose(
                                     </Typography>
                                 </div>
 
-                                {this.listOperations(data.operations)}
+                                {this.listOperations(data.operations.filter(
+                                    (op) => (op.destination === publicKey ||
+                                        (!op.source))
+                                ))}
 
                             </div>
                         }

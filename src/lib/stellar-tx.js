@@ -179,7 +179,11 @@ export const credit = (operations, publicKey) => {
 
 // ...
 export const operationsBalance = (operations, publicKey) => {
-    const parsedOps = operations.map((op) => operationParse(op, publicKey))
+
+    const parsedOps = operations.filter((op) => (
+        op.destination === publicKey || (!op.source)))
+        .map((op) => operationParse(op, publicKey))
+
     let balance = new BigNumber("0.0000000")
 
     parsedOps.forEach((op) => {
