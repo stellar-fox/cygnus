@@ -500,3 +500,9 @@ span.red-badge {
 }
 
 /* --------- misc --------- */
+
+/* -------- colors -------- */
+
+.color-primary {
+    color: rgba(15, 46, 83, 0.95);
+}

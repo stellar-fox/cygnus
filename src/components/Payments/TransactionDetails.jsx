@@ -119,7 +119,7 @@ export default compose(
                                 </i>
                             </div>
                 )
-        )("material-icons badge")
+        )("material-icons badge color-primary")
 
 
         // ...
@@ -275,16 +275,11 @@ export default compose(
                     <div className="p-l paper" key={index}>
 
                         <div className="f-b-c">
-                            <Typography color="primary" variant="body2">
-                                <span className="smaller">
-                                    {this.operationType(operation)}
-                                </span>
-                            </Typography><he.Nbsp />
-                            <Typography color="primary"
-                                variant="body2"
-                            >
-                                {this.accountInfo(operation.destination)}
-                            </Typography>
+                            <span className="smaller">
+                                {this.operationType(operation)}
+                            </span>
+                            <he.Nbsp />
+                            {this.accountInfo(operation.destination)}
                         </div>
 
                         <div className="p-t">
@@ -393,13 +388,9 @@ export default compose(
                                             From:
                                         </span>
                                     </Typography><he.Nbsp /><he.Nbsp /><he.Nbsp />
-                                    <Typography color="primary"
-                                        variant="body2"
-                                    >
-                                        {this.accountInfo(
-                                            data.r.source_account
-                                        )}
-                                    </Typography>
+                                    {this.accountInfo(
+                                        data.r.source_account
+                                    )}
                                 </div>
 
                                 <div className="p-t">
