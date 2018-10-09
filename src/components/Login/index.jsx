@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import {
     emailValid,
     passwordValid,
@@ -59,19 +59,19 @@ export default compose(
         state = {
             buttonDisabled: false,
             progressBarOpacity: 0,
-            emailInputValue: emptyString(),
+            emailInputValue: string.empty(),
             emailInputError: false,
-            emailInputErrorTextValue: emptyString(),
-            passwordInputValue: emptyString(),
+            emailInputErrorTextValue: string.empty(),
+            passwordInputValue: string.empty(),
             passwordInputError: false,
-            passwordInputErrorTextValue: emptyString(),
+            passwordInputErrorTextValue: string.empty(),
         }
 
 
         // ...
         updateEmailInputValue = (event) => this.setState({
             emailInputValue: event.target.value,
-            emailInputErrorTextValue: emptyString(),
+            emailInputErrorTextValue: string.empty(),
             emailInputError: false,
         })
 
@@ -79,7 +79,7 @@ export default compose(
         // ...
         updatePasswordInputValue = (event) => this.setState({
             passwordInputValue: event.target.value,
-            passwordInputErrorTextValue: emptyString(),
+            passwordInputErrorTextValue: string.empty(),
             passwordInputError: false,
         })
 
@@ -97,7 +97,7 @@ export default compose(
             } else {
                 this.setState({
                     emailInputError: false,
-                    emailInputErrorTextValue: emptyString(),
+                    emailInputErrorTextValue: string.empty(),
                 })
             }
 
@@ -111,7 +111,7 @@ export default compose(
             } else {
                 this.setState({
                     passwordInputError: false,
-                    passwordInputErrorTextValue: emptyString(),
+                    passwordInputErrorTextValue: string.empty(),
                 })
             }
 

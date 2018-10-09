@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux"
 import BigNumber from "bignumber.js"
 import { connect } from "react-redux"
 import { CardElement, injectStripe } from "react-stripe-elements"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import Button from "../../lib/mui-v1/Button"
 import { action as SnackbarAction } from "../../redux/Snackbar"
@@ -110,7 +110,7 @@ class CheckoutForm extends Component {
         this.state = {
             amount: "0",
             error: false,
-            errorMessage: emptyString(),
+            errorMessage: string.empty(),
             selectedCurrency: "eur",
             inProgress: false,
         }
@@ -121,7 +121,7 @@ class CheckoutForm extends Component {
     async submit (_ev) {
         this.setState({
             error: false,
-            errorMessage: emptyString(),
+            errorMessage: string.empty(),
             inProgress: true,
         })
         try {
@@ -185,7 +185,7 @@ class CheckoutForm extends Component {
         } else {
             this.setState({
                 error: false,
-                errorMessage: emptyString(),
+                errorMessage: string.empty(),
                 amount: event.target.value,
             })
         }

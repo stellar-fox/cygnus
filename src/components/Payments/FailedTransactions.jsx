@@ -5,7 +5,7 @@ import {
     compose,
 } from "redux"
 import { connect } from "react-redux"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import {
     utcToLocaleDateTime,
@@ -249,7 +249,7 @@ export default compose(
         rowsPerPage: 5,
         loading: true,
         error: false,
-        errorMessage: emptyString(),
+        errorMessage: string.empty(),
         data: [],
         cursorRight: "0",
         highestFetched: transactionFetchLimit,

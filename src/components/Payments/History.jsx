@@ -5,7 +5,7 @@ import {
     compose,
 } from "redux"
 import { connect } from "react-redux"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import {
     credit,
     debit,
@@ -243,7 +243,7 @@ export default compose(
         rowsPerPage: 5,
         loading: true,
         error: false,
-        errorMessage: emptyString(),
+        errorMessage: string.empty(),
         data: [],
         detailsData: [],
         cursorRight: "0",

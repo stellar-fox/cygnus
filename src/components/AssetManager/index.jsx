@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import Axios from "axios"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import hoistStatics from "hoist-non-react-statics"
 import { BigNumber } from "bignumber.js"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
@@ -101,7 +101,7 @@ class AssetManager extends Component {
     // ...
     convertToNative = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
-        return this.props.state[this.props.Account.currency] && amount !== emptyString() ?
+        return this.props.state[this.props.Account.currency] && amount !== string.empty() ?
             new BigNumber(amount).dividedBy(
                 this.props.state[this.props.Account.currency].rate
             ).toString() : "0.0000000"
@@ -111,7 +111,7 @@ class AssetManager extends Component {
     // ...
     convertToAsset = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
-        return this.props.state[this.props.Account.currency] && amount !== emptyString() ?
+        return this.props.state[this.props.Account.currency] && amount !== string.empty() ?
             new BigNumber(amount).multipliedBy(
                 this.props.state[this.props.Account.currency].rate
             ).toFixed(2) : "0.00"
@@ -121,7 +121,7 @@ class AssetManager extends Component {
     // ...
     convertToPayeeCurrency = (amount) => {
         BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
-        return this.props.state[this.props.payeeCurrency] && amount !== emptyString() ?
+        return this.props.state[this.props.payeeCurrency] && amount !== string.empty() ?
             new BigNumber(amount).multipliedBy(
                 this.props.state[this.props.payeeCurrency].rate
             ).toFixed(2) : "0.00"

@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import {
     fedToPub,
     htmlEntities as he,
@@ -32,8 +32,8 @@ class PanelExplorer extends Component {
 
     state = {
         error: false,
-        errorMessage: emptyString(),
-        inputValue: emptyString(),
+        errorMessage: string.empty(),
+        inputValue: string.empty(),
     }
 
 
@@ -46,13 +46,13 @@ class PanelExplorer extends Component {
 
     // ...
     compoundFederationValidator = () => (
-        (addressValidity) => addressValidity !== emptyString() ?
+        (addressValidity) => addressValidity !== string.empty() ?
             this.setState({
                 errorMessage: addressValidity,
                 error: true,
             }) :
             this.setState({
-                errorMessage: emptyString(),
+                errorMessage: string.empty(),
                 error: false,
             }, () => {
                 this.enterExplorer()

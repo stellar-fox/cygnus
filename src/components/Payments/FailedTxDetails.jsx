@@ -6,7 +6,7 @@ import {
 } from "redux"
 import classNames from "classnames"
 import { connect } from "react-redux"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import {
     CircularProgress, Paper, Typography,
@@ -65,9 +65,9 @@ export default compose(
         // ...
         state = {
             error: false,
-            errorMessage: emptyString(),
+            errorMessage: string.empty(),
             inProgress: false,
-            statusMessage: emptyString(),
+            statusMessage: string.empty(),
         }
 
 
@@ -106,7 +106,7 @@ export default compose(
                 )
                 this.setState({
                     inProgress: false,
-                    statusMessage: emptyString(),
+                    statusMessage: string.empty(),
                 })
                 this.props.setState({
                     savedTxDetails: null,

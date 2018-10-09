@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import {
     rgb,
     rgba,
@@ -49,7 +49,7 @@ export default class InputField extends Component {
     // ...
     state = {
         error: null,
-        value: emptyString(),
+        value: string.empty(),
     }
 
 

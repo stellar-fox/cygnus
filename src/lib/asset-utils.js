@@ -1,4 +1,4 @@
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 
 /**
  * Returns utf-8 currency symbol for given asset code
@@ -7,7 +7,7 @@ import { emptyString } from "@xcmats/js-toolbox"
  */
 export const assetGlyph = (assetCode) => (
     (codes) => codes[assetCode.toLowerCase()] ?
-        codes[assetCode.toLowerCase()] : emptyString()
+        codes[assetCode.toLowerCase()] : string.empty()
 )({ eur: "€", usd: "$", aud: "$", nzd: "$", thb: "฿", pln: "zł", xlm: "⩙", })
 
 
@@ -20,7 +20,7 @@ export const assetGlyph = (assetCode) => (
  */
 export const assetDescription = (assetCode) => (
     (codes) => codes[assetCode.toLowerCase()] ?
-        codes[assetCode.toLowerCase()] : emptyString()
+        codes[assetCode.toLowerCase()] : string.empty()
 )({
     eur: "European Union Euro", usd: "United States Dollar",
     aud: "Australian Dollar", nzd: "New Zealand Dollar",

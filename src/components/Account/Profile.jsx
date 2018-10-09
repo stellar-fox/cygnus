@@ -6,7 +6,7 @@ import {
 } from "redux"
 import { connect } from "react-redux"
 import Axios from "axios"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { config } from "../../config"
 import {
     gravatar,
@@ -97,7 +97,7 @@ class Profile extends Component {
     showError = (message) => {
         this.props.hideModal()
         this.props.showAlert(message, "Error")
-        this.props.setState({ message: emptyString(), })
+        this.props.setState({ message: string.empty(), })
     }
 
 
@@ -140,7 +140,7 @@ class Profile extends Component {
          */
         if (!this.props.accountId) {
             this.props.popupSnackbar("User data updated without signature.")
-            this.props.setState({ messageUserData: emptyString(), })
+            this.props.setState({ messageUserData: string.empty(), })
             this.setState({ loadingUpdateProfile: false, })
             return
         }
@@ -167,7 +167,7 @@ class Profile extends Component {
 
             this.props.showModal("txConfirmProfile")
 
-            this.props.setState({ messageUserData: emptyString(), })
+            this.props.setState({ messageUserData: string.empty(), })
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
@@ -193,7 +193,7 @@ class Profile extends Component {
 
         } catch (error) {
             this.setState({ loadingUpdateProfile: false, })
-            this.props.setState({ messageUserData: emptyString(), })
+            this.props.setState({ messageUserData: string.empty(), })
             this.props.hideModal()
             this.props.showAlert(error.message, "Error")
         }
@@ -249,7 +249,7 @@ class Profile extends Component {
          */
         if (!this.props.accountId) {
             this.props.popupSnackbar("Payment data updated without signature.")
-            this.props.setState({ messagePaymentData: emptyString(), })
+            this.props.setState({ messagePaymentData: string.empty(), })
             this.setState({ loadingUpdatePaymentAddress: false, })
             return
         }
@@ -276,7 +276,7 @@ class Profile extends Component {
 
             this.props.showModal("txConfirmPay")
 
-            this.props.setState({ messagePaymentData: emptyString(), })
+            this.props.setState({ messagePaymentData: string.empty(), })
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
@@ -300,7 +300,7 @@ class Profile extends Component {
 
         } catch (error) {
             this.setState({ loadingUpdatePaymentAddress: false, })
-            this.props.setState({ messagePaymentData: emptyString(), })
+            this.props.setState({ messagePaymentData: string.empty(), })
             this.props.hideModal()
             this.props.showAlert(error.message, "Error")
 
@@ -437,7 +437,7 @@ class Profile extends Component {
                 <Input
                     width="100%"
                     className="lcars-input p-b p-t"
-                    value={this.props.state.firstName || emptyString()}
+                    value={this.props.state.firstName || string.empty()}
                     label="First Name"
                     inputType="text"
                     maxLength="100"
@@ -447,7 +447,7 @@ class Profile extends Component {
                 />
                 <Input
                     className="lcars-input p-b p-t"
-                    value={this.props.state.lastName || emptyString()}
+                    value={this.props.state.lastName || string.empty()}
                     label="Last Name"
                     inputType="text"
                     maxLength="100"
@@ -536,7 +536,7 @@ class Profile extends Component {
 
                 <Input
                     className="lcars-input p-t-large p-b"
-                    value={this.props.state.paymentAddress || emptyString()}
+                    value={this.props.state.paymentAddress || string.empty()}
                     label="Payment Address Alias"
                     inputType="text"
                     maxLength="100"

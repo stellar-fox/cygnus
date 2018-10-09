@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { liveNetAddr, testNetAddr } from "../components/StellarFox/env"
 import { StellarSdk } from "./utils"
 
@@ -138,14 +138,14 @@ export const displayLastBalance = (balance) => {
 
 // ...
 export const displayDebit = (debit) =>
-    debit ? `- ${new BigNumber(debit).abs().toString()}` : emptyString()
+    debit ? `- ${new BigNumber(debit).abs().toString()}` : string.empty()
 
 
 
 
 // ...
 export const displayCredit = (credit) =>
-    credit ? `+ ${new BigNumber(credit).abs().toString()}` : emptyString()
+    credit ? `+ ${new BigNumber(credit).abs().toString()}` : string.empty()
 
 
 
@@ -161,7 +161,7 @@ export const lastBalance = (initial, next) =>
 export const debit = (operations, publicKey) => {
     const balance = operationsBalance(operations, publicKey)
     if (balance.isLessThan(0)) { return balance.toString() }
-    return emptyString()
+    return string.empty()
 }
 
 
@@ -171,7 +171,7 @@ export const debit = (operations, publicKey) => {
 export const credit = (operations, publicKey) => {
     const balance = operationsBalance(operations, publicKey)
     if (balance.isGreaterThan(0)) { return balance.toString() }
-    return emptyString()
+    return string.empty()
 }
 
 
@@ -179,7 +179,11 @@ export const credit = (operations, publicKey) => {
 
 // ...
 export const operationsBalance = (operations, publicKey) => {
-    const parsedOps = operations.map((op) => operationParse(op, publicKey))
+
+    const parsedOps = operations.filter((op) => (
+        op.destination === publicKey || (!op.source)))
+        .map((op) => operationParse(op, publicKey))
+
     let balance = new BigNumber("0.0000000")
 
     parsedOps.forEach((op) => {
