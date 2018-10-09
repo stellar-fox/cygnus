@@ -1,6 +1,6 @@
 import {
     createReducer,
-    emptyString,
+    string,
 } from "@xcmats/js-toolbox"
 
 
@@ -10,7 +10,7 @@ import {
 const initState = {
 
     visible: false,
-    text: emptyString(),
+    text: string.empty(),
 
 }
 
@@ -59,7 +59,7 @@ export const reducer = createReducer(initState)({
     [LOADING_MODAL_HIDE]: (state) => ({
         ...state,
         visible: false,
-        text: emptyString(),
+        text: string.empty(),
     }),
 
 })

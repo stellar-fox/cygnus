@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import Axios from "axios"
 
 import { bindActionCreators } from "redux"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 
 import md5 from "../../lib/md5"
 import {
@@ -88,8 +88,8 @@ class Signup extends Component {
     // ...
     state = {
         stepIndex: 0,
-        message: emptyString(),
-        error: emptyString(),
+        message: string.empty(),
+        error: string.empty(),
         email: null,
         password: null,
         buttonDisabled: false,
@@ -209,21 +209,21 @@ class Signup extends Component {
     // ...
     emailValidator = () => {
         emailValid(this.textInputFieldEmail.state.value) &&
-        this.textInputFieldEmail.setState({ error: emptyString(), })
+        this.textInputFieldEmail.setState({ error: string.empty(), })
     }
 
 
     // ...
     passwordValidator = () =>
         !passwordValid(this.textInputFieldPassword.state.value) &&
-        this.textInputFieldPassword.setState({ error: emptyString(), })
+        this.textInputFieldPassword.setState({ error: string.empty(), })
 
 
     // ...
     passwordMatchValidator = () =>
         (this.textInputFieldPassword.state.value ===
             this.textInputFieldPasswordConf.state.value) &&
-        this.textInputFieldPasswordConf.setState({ error: emptyString(), })
+        this.textInputFieldPasswordConf.setState({ error: string.empty(), })
 
 
     // ...

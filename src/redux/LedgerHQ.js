@@ -1,6 +1,6 @@
 import {
     createReducer,
-    emptyString,
+    string,
 } from "@xcmats/js-toolbox"
 import { getSoftwareVersion as ledgerGetSoftwareVersion } from "../lib/ledger"
 
@@ -11,7 +11,7 @@ import { getSoftwareVersion as ledgerGetSoftwareVersion } from "../lib/ledger"
 const initState = {
     connected: false,
     version: "unknown",
-    status: emptyString(),
+    status: string.empty(),
     publicKey: null,
     bip32Path: null,
 }

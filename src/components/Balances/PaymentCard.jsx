@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import PropTypes from "prop-types"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import debounce from "lodash/debounce"
 import { BigNumber } from "bignumber.js"
 import { Card, CardActions, CardText } from "material-ui/Card"
@@ -37,23 +37,23 @@ class PaymentCard extends Component {
         this.props.setState({
             today: now,
             payDate: now,
-            amount: emptyString(),
-            amountNative: emptyString(),
-            amountText: emptyString(),
+            amount: string.empty(),
+            amountNative: string.empty(),
+            amountText: string.empty(),
             amountIsValid: false,
             payee: null,
             newAccount: false,
             memoRequired: false,
-            memoText: emptyString(),
-            payeeMemoText: emptyString(),
+            memoText: string.empty(),
+            payeeMemoText: string.empty(),
             payeeCurrency: "eur",
-            payeeCurrencyAmount: emptyString(),
+            payeeCurrencyAmount: string.empty(),
             sendEnabled: false,
             cancelEnabled: true,
             message: null,
             indicatorMessage: securityMsgPlaceholder,
             indicatorStyle: "fade-extreme",
-            error: emptyString(),
+            error: string.empty(),
         })
     }
 
@@ -98,10 +98,10 @@ class PaymentCard extends Component {
                 error: "Invalid amount entered.",
             })
             this.props.setState({
-                amount: emptyString(),
-                amountNative: emptyString(),
+                amount: string.empty(),
+                amountNative: string.empty(),
                 amountIsValid: false,
-                amountText: emptyString(),
+                amountText: string.empty(),
             })
             this.toggleSignButton()
             return false
@@ -117,10 +117,10 @@ class PaymentCard extends Component {
                 error: "Amount needs to be greater than zero.",
             })
             this.props.setState({
-                amount: emptyString(),
-                amountNative: emptyString(),
+                amount: string.empty(),
+                amountNative: string.empty(),
                 amountIsValid: false,
-                amountText: emptyString(),
+                amountText: string.empty(),
             })
             this.toggleSignButton()
             return false
@@ -151,7 +151,7 @@ class PaymentCard extends Component {
             amountIsValid: true,
         })
 
-        this.textInputFieldAmount.setState({ error: emptyString(), })
+        this.textInputFieldAmount.setState({ error: string.empty(), })
 
         this.props.setState({
             amountText: amountToText(amount),

@@ -9,8 +9,8 @@ import {
 import hoistStatics from "hoist-non-react-statics"
 import resolvePathname from "resolve-pathname"
 import {
-    emptyString,
     findDuplicates,
+    string,
     swap,
 } from "@xcmats/js-toolbox"
 
@@ -105,7 +105,7 @@ export const StaticRouter = connect(
 
 
         // takes static path and returns associated view name
-        static getView = (path, map) => path in map ? map[path] : emptyString()
+        static getView = (path, map) => path in map ? map[path] : string.empty()
 
 
         // takes view name and returns stored static path

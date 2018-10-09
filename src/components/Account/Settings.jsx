@@ -45,7 +45,9 @@ import {
 import { implodeCloudData, unsubscribeEmail } from "./api"
 import { firebaseApp } from "../../components/StellarFox"
 import InputField from "../../lib/mui-v1/InputField"
-import { emptyString } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
+
+
 
 
 // ...
@@ -94,11 +96,12 @@ class Settings extends Component {
         keepEmail: false,
         completion: 0,
         progressMessage: "Waiting for device …",
-        errorMessage: emptyString(),
-        password: emptyString(),
+        errorMessage: string.empty(),
+        password: string.empty(),
         authError: false,
-        authErrorMessage: emptyString(),
+        authErrorMessage: string.empty(),
     }
+
 
     // ...
     buildTransaction = async (name, value) => {
@@ -111,10 +114,11 @@ class Settings extends Component {
         return await buildSetDataTx(txData)
     }
 
+
     // ...
     implodeAccount = () => {
         this.setState({ keepEmail: false, })
-        this.props.showChoiceAlert("","Warning")
+        this.props.showChoiceAlert(string.empty(),"Warning")
     }
 
 
@@ -126,7 +130,7 @@ class Settings extends Component {
     nukeAccount = async () => {
         await this.setState({
             authError: false,
-            authErrorMessage: emptyString(),
+            authErrorMessage: string.empty(),
             imploding: true,
         })
 
@@ -173,7 +177,7 @@ class Settings extends Component {
              * Remove idSig data entry from the account.
              */
             if (this.props.idSig) {
-                const removeIdSigTx = await this.buildTransaction("idSig", "")
+                const removeIdSigTx = await this.buildTransaction("idSig", string.empty())
                 await this.setState({
                     progressMessage: "Awaiting signature to remove profile data ...",
                     completion: 10,
@@ -194,7 +198,7 @@ class Settings extends Component {
              * Remove paySig data entry from the account.
              */
             if (this.props.paySig) {
-                const removePaySigTx = await this.buildTransaction("paySig", "")
+                const removePaySigTx = await this.buildTransaction("paySig", string.empty())
                 await this.setState({
                     progressMessage: "Awaiting signature to remove payment address data ...",
                     completion: 35,
@@ -251,7 +255,7 @@ class Settings extends Component {
     abortNuke = () => {
         this.setState({
             imploding: false, keepEmail: false, completion: 0,
-            progressMessage: "", errorMessage: "",
+            progressMessage: string.empty(), errorMessage: string.empty(),
         })
         this.props.hideChoiceAlert()
         this.props.hideModal()
@@ -629,9 +633,6 @@ class Settings extends Component {
                     </Button>
                 </div>
             </Fragment>}
-
-
-
         </div>
 }
 
@@ -653,9 +654,9 @@ export default compose(
             signers: state.StellarAccount.signers,
             accountId: state.StellarAccount.accountId,
             idSig: state.StellarAccount.data ?
-                state.StellarAccount.data.idSig : "",
+                state.StellarAccount.data.idSig : string.empty(),
             paySig: state.StellarAccount.data ?
-                state.StellarAccount.data.paySig : "",
+                state.StellarAccount.data.paySig : string.empty(),
             Modal: state.Modal,
         }),
         // bind dispatch to props.

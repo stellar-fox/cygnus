@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import debounce from "lodash/debounce"
-import { emptyString, shorten } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
@@ -209,12 +209,17 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
                                     <span key={String(index)}
                                         style={{ fontWeight: 600, }}
                                     >
-                                        {shorten(part.text, 15)}
+                                        {string.shorten(part.text, 15)}
                                     </span> :
                                     <span key={String(index)}
                                         style={{ fontWeight: 400, }}
                                     >
-                                        {shorten(part.text, 15, shorten.END)}
+                                        {
+                                            string.shorten(
+                                                part.text, 15,
+                                                string.shorten.END
+                                            )
+                                        }
                                     </span>
 
                             })}
@@ -255,15 +260,15 @@ const renderSuggestionsContainer = (options) => {
 class ContactSuggester extends Component {
 
     state = {
-        value: emptyString(),
+        value: string.empty(),
         suggestions: [],
         error: false,
-        errorMessage: emptyString(),
-        paymentAddress: emptyString(),
-        label: emptyString(),
-        emailMD5: emptyString(),
+        errorMessage: string.empty(),
+        paymentAddress: string.empty(),
+        label: string.empty(),
+        emailMD5: string.empty(),
         loading: false,
-        currency: emptyString(),
+        currency: string.empty(),
     }
 
 
@@ -274,11 +279,11 @@ class ContactSuggester extends Component {
             value: suggestion.suggestionValue,
         })
         suggestion && this.setState({
-            label: emptyString(),
-            paymentAddress: emptyString(),
-            emailMD5: emptyString(),
+            label: string.empty(),
+            paymentAddress: string.empty(),
+            emailMD5: string.empty(),
             error: false,
-            errorMessage: emptyString(),
+            errorMessage: string.empty(),
             currency: suggestion.suggestion.currency,
         })
     }
@@ -373,7 +378,7 @@ class ContactSuggester extends Component {
         await this.setState({
             loading: true,
             error: false,
-            errorMessage: emptyString(),
+            errorMessage: string.empty(),
         })
 
         let errorMessage = invalidPaymentAddressMessage(input),
@@ -385,9 +390,9 @@ class ContactSuggester extends Component {
             this.setState({
                 error: true,
                 errorMessage,
-                paymentAddress: emptyString(),
-                label: emptyString(),
-                emailMD5: emptyString(),
+                paymentAddress: string.empty(),
+                label: string.empty(),
+                emailMD5: string.empty(),
             })
 
             this.props.setBalancesState({ payee: null, })
@@ -406,7 +411,7 @@ class ContactSuggester extends Component {
                  */
                 const federationRecord = await getFederationRecord(input)
 
-                memo = federationRecord.memo ? federationRecord.memo : emptyString()
+                memo = federationRecord.memo ? federationRecord.memo : string.empty()
 
                 /**
                  * stellar account corresponding to the public key that is
@@ -458,7 +463,7 @@ class ContactSuggester extends Component {
                         )
                         this.props.setBalancesState({
                             memoRequired: false,
-                            payeeMemoText: emptyString(),
+                            payeeMemoText: string.empty(),
                         })
                     }
                 /**
@@ -497,16 +502,16 @@ class ContactSuggester extends Component {
                     indicatorStyle: "fade-extreme",
                     sendEnabled: false,
                     memoRequired: false,
-                    memoText: emptyString(),
+                    memoText: string.empty(),
                     payeeCurrency: "eur",
-                    payeeCurrencyAmount: emptyString(),
-                    payeeMemoText: emptyString(),
+                    payeeCurrencyAmount: string.empty(),
+                    payeeMemoText: string.empty(),
                     payeeStellarAccount: null,
                 })
                 this.setState({
-                    label: emptyString(),
-                    paymentAddress: emptyString(),
-                    emailMD5: emptyString(),
+                    label: string.empty(),
+                    paymentAddress: string.empty(),
+                    emailMD5: string.empty(),
                 })
                 return false
             }
@@ -590,7 +595,7 @@ class ContactSuggester extends Component {
                 } else {
                     this.props.setBalancesState({
                         memoRequired: false,
-                        payeeMemoText: emptyString(),
+                        payeeMemoText: string.empty(),
                     })
                 }
 
@@ -623,9 +628,9 @@ class ContactSuggester extends Component {
              */
             this.props.setBalancesState({
                 payeeMemoText: memo ? memo : this.props.payeeMemoText ?
-                    this.props.payeeMemoText : emptyString(),
+                    this.props.payeeMemoText : string.empty(),
                 memoText: memo ? memo : this.props.payeeMemoText ?
-                    this.props.payeeMemoText : emptyString(),
+                    this.props.payeeMemoText : string.empty(),
                 payeeCurrency: contact ?
                     contact.currency : extContact ?
                         extContact.currency : this.props.payeeCurrency,
@@ -636,7 +641,7 @@ class ContactSuggester extends Component {
         this.setState({
             loading: false,
             error: false,
-            errorMessage: emptyString(),
+            errorMessage: string.empty(),
             emailMD5: contact ? contact.email_md5 : md5(publicKey),
             label: displayName,
             paymentAddress: displayPaymentAddress.props &&
@@ -698,18 +703,18 @@ class ContactSuggester extends Component {
             indicatorStyle: "fade-extreme",
             sendEnabled: false,
             memoRequired: false,
-            memoText: emptyString(),
+            memoText: string.empty(),
             payeeCurrency: "eur",
-            payeeCurrencyAmount: emptyString(),
-            payeeMemoText: emptyString(),
+            payeeCurrencyAmount: string.empty(),
+            payeeMemoText: string.empty(),
             payeeStellarAccount: null,
             transactionAsset: null,
         })
         this.setState({
-            label: emptyString(),
-            paymentAddress: emptyString(),
-            emailMD5: emptyString(),
-            value: emptyString(),
+            label: string.empty(),
+            paymentAddress: string.empty(),
+            emailMD5: string.empty(),
+            value: string.empty(),
         })
     }
 
@@ -785,18 +790,18 @@ class ContactSuggester extends Component {
                                                         lineHeight: "0.65rem",
                                                     }} variant="body1" color="primary"
                                                     >
-                                                        {shorten(
+                                                        {string.shorten(
                                                             this.state.label,
                                                             24,
-                                                            shorten.END
+                                                            string.shorten.END
                                                         )}
                                                     </Typography>
                                                     <Typography variant="caption" color="primary">
                                                         <span className="fade-strong">
-                                                            {shorten(
+                                                            {string.shorten(
                                                                 this.state.paymentAddress,
                                                                 30,
-                                                                shorten.END
+                                                                string.shorten.END
                                                             )}
                                                         </span>
                                                     </Typography>
@@ -830,7 +835,7 @@ class ContactSuggester extends Component {
                                                     <span className="red">
                                                         {this.state.errorMessage}
                                                     </span> :
-                                                    emptyString()
+                                                    string.empty()
                                             }
                                         </Typography>
                                     </div>

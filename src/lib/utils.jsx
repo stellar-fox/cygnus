@@ -2,15 +2,12 @@ import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
 import {
-    capitalize,
-    emptyString,
     handleException,
     head,
-    isString,
     objectMap,
-    toBool,
     parMap,
-    wrap,
+    string,
+    type,
 } from "@xcmats/js-toolbox"
 import MD5 from "../lib/md5"
 import shajs from "sha.js"
@@ -44,7 +41,7 @@ const domainRegex = /((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-
 
 
 // ...
-export const ntoes = (input) => isString(input)  ?  input  :  emptyString()
+export const ntoes = (input) => type.isString(input)  ?  input  :  string.empty()
 
 
 
@@ -239,12 +236,12 @@ export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
  * @param {String} email
  * @returns {Boolean}
  */
-export const emailValid = (email) => toBool((
+export const emailValid = (email) => type.toBool((
     new RegExp([
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))/,
         /@/,
         domainRegex,
-    ].map(r => r.source).join(emptyString()))
+    ].map(r => r.source).join(string.empty()))
 ).test(email))
 
 
@@ -256,24 +253,24 @@ export const emailValid = (email) => toBool((
  * @param {String} password
  * @returns {Boolean}
  */
-export const passwordValid = (password) => toBool(/^.{8,}$/.test(password))
+export const passwordValid = (password) => type.toBool(/^.{8,}$/.test(password))
 
 
 
 
 // ...
 export const federationIsAliasOnly = (federationAddress) =>
-    toBool(/^[a-zA-Z\-0-9.@][^*]+$/.test(federationAddress))
+    type.toBool(/^[a-zA-Z\-0-9.@][^*]+$/.test(federationAddress))
 
 
 
 
 // ...
-export const federationAddressValid = (federationAddress) => toBool((
+export const federationAddressValid = (federationAddress) => type.toBool((
     new RegExp([
         /^[a-zA-Z\-0-9.@]+\*/,
         domainRegex,
-    ].map(r => r.source).join(emptyString()))
+    ].map(r => r.source).join(string.empty()))
 ).test(federationAddress))
 
 
@@ -283,7 +280,7 @@ export const federationAddressValid = (federationAddress) => toBool((
 export const paymentAddress = (alias, domain) => (
     federationAddressValid(`${alias}*${domain}`)  ?
         `${alias}*${domain}`  :
-        emptyString()
+        string.empty()
 )
 
 
@@ -307,11 +304,11 @@ export const publicKeyValid = (publicKey) =>
 export const invalidPaymentAddressMessage = (address) => {
     // Valid federation address. Return empty string for error message.
     if (federationAddressValid(address)) {
-        return emptyString()
+        return string.empty()
     }
     // Valid public key. Return empty string for error message.
     if (publicKeyValid(address)) {
-        return emptyString()
+        return string.empty()
     }
     // Looks like something totally invalid for this field.
     if (!address.match(/\*/) && !address.match(/^G/)) {
@@ -346,7 +343,7 @@ export const invalidFederationAddressMessage = (address) => {
     if (address && address.match(/\*/) && !federationAddressValid(address)) {
         return "Invalid payment address."
     }
-    return emptyString()
+    return string.empty()
 }
 
 
@@ -565,7 +562,7 @@ export const glyphsDB = {
 // emoji components (built on the 'emojiDB' object base)
 export const emoji = objectMap(emojiDB,
     ([k, v,]) => [
-        capitalize(k),
+        string.capitalize(k),
         () => React.createElement(Fragment, null, v),
     ]
 )
@@ -575,7 +572,7 @@ export const emoji = objectMap(emojiDB,
 
 // construct emoji string based on given emoji names
 export const emojis = (...args) =>
-    args.map((en) => emojiDB[en]).join(emptyString())
+    args.map((en) => emojiDB[en]).join(string.empty())
 
 
 
@@ -674,6 +671,7 @@ export const dynamicImportLibs = async () => {
         bignumber, jss, ledger, lodash, md5, mui,
         redshift, redux,
         StellarTx,
+        sjcl,
         toolbox, utils,
     ] = await Promise.all([
         import("../../src/components/StellarFox"),
@@ -689,6 +687,7 @@ export const dynamicImportLibs = async () => {
         import("@stellar-fox/redshift"),
         import("redux"),
         import("../lib/stellar-tx"),
+        import("sjcl"),
         import("@xcmats/js-toolbox"),
         import("./utils"),
     ])
@@ -704,6 +703,7 @@ export const dynamicImportLibs = async () => {
         jss, ledger, lodash, md5: md5.default, mui,
         redshift, redux,
         StellarSdk, StellarTx,
+        sjcl,
         toolbox, utils,
     }
 }
@@ -787,7 +787,7 @@ export const accountIsLocked = (signers, publicKey) => {
 
 // ...
 export const sortBy = (attr = "first_name") => (a, b) => {
-    let nameA = emptyString(), nameB = emptyString()
+    let nameA = string.empty(), nameB = string.empty()
 
     if (a[attr]) { nameA = a[attr].toUpperCase() }
     if (b[attr]) { nameB = b[attr].toUpperCase() }
@@ -802,21 +802,21 @@ export const sortBy = (attr = "first_name") => (a, b) => {
 
 
 // little helper for JSS urls
-export const url = (x) => wrap(x, "url(", ")")
+export const url = (x) => string.wrap(x, "url(", ")")
 
 
 
 
 // little helper for JSS colors
 export const rgb = (r, g, b) =>
-    wrap([r, g, b,].join(", "), "rgb(", ")")
+    string.wrap([r, g, b,].join(", "), "rgb(", ")")
 
 
 
 
 // little helper for JSS colors with alpha
 export const rgba = (r, g, b, a) =>
-    wrap([r, g, b, a,].join(", "), "rgba(", ")")
+    string.wrap([r, g, b, a,].join(", "), "rgba(", ")")
 
 
 
