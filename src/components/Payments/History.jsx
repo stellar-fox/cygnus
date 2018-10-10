@@ -1,43 +1,23 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import {
-    bindActionCreators,
-    compose,
-} from "redux"
+import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
-import { string } from "@xcmats/js-toolbox"
-import {
-    credit,
-    debit,
-    displayCredit,
-    displayDebit,
-} from "../../lib/stellar-tx"
-import {
-    StellarSdk,
-    utcToLocaleDateTime,
-} from "../../lib/utils"
+import { choose, string } from "@xcmats/js-toolbox"
+import { credit, debit, displayCredit, displayDebit } from "../../lib/stellar-tx"
+import { htmlEntities as he, StellarSdk, utcToLocaleDateTime } from "../../lib/utils"
 import { withStyles } from "@material-ui/core/styles"
 import {
-    CircularProgress,
-    Table,
-    TableBody,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TablePagination,
-    TableRow,
-    IconButton,
-    Typography,
+    CircularProgress, Table, TableBody, TableCell, TableFooter, TableHead,
+    TablePagination, TableRow, IconButton, Typography,
 } from "@material-ui/core"
-import {
-    KeyboardArrowLeft,
-    KeyboardArrowRight,
-} from "@material-ui/icons"
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@material-ui/icons"
 import FirstPageIcon from "@material-ui/icons/FirstPage"
 import LastPageIcon from "@material-ui/icons/LastPage"
 import TransactionDetails from "./TransactionDetails"
 import { transactionFetchLimit } from "../../components/StellarFox/env"
 import NumberFormat from "react-number-format"
+import BigNumber from "bignumber.js"
+import { withAssetManager } from "../AssetManager"
 
 
 
@@ -179,8 +159,9 @@ const RequestProgress = withStyles(styles)(
 
 
 
-// <UserGroupList> component
+// <History> component
 export default compose(
+    withAssetManager,
     withStyles((theme) => ({
         table: {
             minWidth: 500,
@@ -223,6 +204,7 @@ export default compose(
         // map state to props.
         (state) => ({
             authToken: state.Auth.authToken,
+            currency: state.Account.currency,
             horizon: state.StellarAccount.horizon,
             publicKey: state.StellarAccount.accountId,
         }),
@@ -361,8 +343,49 @@ export default compose(
 
 
     // ...
+    isNative = (operation) =>
+        (operation.asset && operation.asset.code === "XLM")
+            || operation.startingBalance
+
+
+    // ...
+    displayAmount = (operation) =>
+        this.isNative(operation) ?
+            this.props.assetManager.convertToAsset(
+                this.opNativeAmount(operation)
+            ) : this.opNativeAmount(operation)
+
+
+    // ...
+    opAssetSymbol = (operation) => choose(
+        operation.type,
+        {
+            "createAccount": () => <span className="nano">XLM</span>,
+        },
+        () => <span className="nano">{operation.asset.code}</span>
+    )
+
+
+    // ...
+    opNativeAmount = (operation) => {
+        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+        return choose(
+            operation.type,
+            {
+                "createAccount": () => new BigNumber(
+                    operation.startingBalance
+                ).toFixed(7),
+            },
+            () => this.isNative(operation) ?
+                new BigNumber(operation.amount).toFixed(7) :
+                new BigNumber(operation.amount).toString()
+        )
+    }
+
+
+    // ...
     render = () => (
-        ({ classes, }) => {
+        ({ classes, publicKey, }) => {
             const { rowsPerPage, page, data, } = this.state
             const emptyRows = rowsPerPage - Math.min(
                 rowsPerPage, data.length - page * rowsPerPage)
@@ -385,12 +408,17 @@ export default compose(
                             page * rowsPerPage, page * rowsPerPage +
                             rowsPerPage).map(n => {
 
-                            let debitVal = debit(
-                                n.operations, this.props.publicKey
-                            )
-                            let creditVal = credit(
-                                n.operations, this.props.publicKey
-                            )
+                            let myOperations = n.operations
+                                    .filter(
+                                        (op) => (op.destination === publicKey ||
+                                            !op.source || op.source === publicKey)
+                                    ),
+                                debitVal = debit(
+                                    myOperations, this.props.publicKey
+                                ),
+                                creditVal = credit(
+                                    myOperations, this.props.publicKey
+                                )
 
                             return (
                                 <TableRow classes={{root: classes.row, selected: classes.selectedRow,}}
@@ -415,22 +443,76 @@ export default compose(
                                     <TableCell
                                         classes={{ root: classes.cell, }}
                                     >
-                                        <span className="red">
-                                            <NumberFormat
-                                                value={displayDebit(debitVal)}
-                                                displayType={"text"}
-                                                thousandSeparator={true}
-                                                fixedDecimalScale={true}
-                                            />
-                                        </span>
-                                        <span className="green">
-                                            <NumberFormat
-                                                value={displayCredit(creditVal)}
-                                                displayType={"text"}
-                                                thousandSeparator={true}
-                                                fixedDecimalScale={true}
-                                            />
-                                        </span>
+                                        <div className="flex-box-col">
+                                            <Typography variant="body1">
+                                                {displayDebit(debitVal) ?
+                                                    <Fragment>
+                                                        {this.isNative(myOperations[0]) ?
+                                                            <span className="red">
+                                                                {this.props.assetManager.getAssetGlyph(
+                                                                    this.props.currency
+                                                                )}
+                                                            </span> :
+                                                            <span className="red">
+                                                                {this.opAssetSymbol(myOperations[0])}
+                                                            </span>
+                                                        }
+                                                        <he.Nbsp />
+                                                        <span className="red">
+                                                            <NumberFormat
+                                                                value={this.props.assetManager.convertToAsset(debitVal)}
+                                                                displayType={"text"}
+                                                                thousandSeparator={true}
+                                                                fixedDecimalScale={true}
+                                                                decimals={2}
+                                                            />
+                                                        </span>
+                                                    </Fragment> :
+                                                    <Fragment>
+                                                        {this.isNative(myOperations[0]) ?
+                                                            <span className="green">
+                                                                {this.props.assetManager.getAssetGlyph(
+                                                                    this.props.currency
+                                                                )}
+                                                            </span> :
+                                                            <span className="green">
+                                                                {this.opAssetSymbol(myOperations[0])}
+                                                            </span>
+                                                        }
+                                                        <he.Nbsp />
+                                                        <span className="green">
+                                                            <NumberFormat
+                                                                value={this.props.assetManager.convertToAsset(creditVal)}
+                                                                displayType={"text"}
+                                                                thousandSeparator={true}
+                                                                fixedDecimalScale={true}
+                                                                decimals={2}
+                                                            />
+                                                        </span>
+                                                    </Fragment>}
+                                            </Typography>
+                                            {this.isNative(myOperations[0]) &&
+                                            <div>{displayDebit(debitVal) ?
+                                                <span className="tiny fade-extreme">
+                                                    <NumberFormat
+                                                        value={displayDebit(debitVal)}
+                                                        displayType={"text"}
+                                                        thousandSeparator={true}
+                                                        fixedDecimalScale={true}
+                                                    /> XLM
+                                                </span> :
+                                                <span className="tiny fade-extreme">
+                                                    <NumberFormat
+                                                        value={displayCredit(creditVal)}
+                                                        displayType={"text"}
+                                                        thousandSeparator={true}
+                                                        fixedDecimalScale={true}
+                                                    /> XLM
+                                                </span>}
+                                            </div>
+                                            }
+                                        </div>
+
                                     </TableCell>
                                 </TableRow>
                             )

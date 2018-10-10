@@ -387,7 +387,8 @@ export default compose(
                                         <span className="fade-strong">
                                             From:
                                         </span>
-                                    </Typography><he.Nbsp /><he.Nbsp /><he.Nbsp />
+                                    </Typography>
+                                    <he.Nbsp /><he.Nbsp /><he.Nbsp />
                                     {this.accountInfo(
                                         data.r.source_account
                                     )}
@@ -417,7 +418,7 @@ export default compose(
 
                                 {this.listOperations(data.operations.filter(
                                     (op) => (op.destination === publicKey ||
-                                        (!op.source))
+                                        !op.source || op.source === publicKey)
                                 ))}
 
                             </div>
