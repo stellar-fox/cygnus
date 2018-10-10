@@ -214,7 +214,10 @@ export const utcToLocaleDateTime = (utcDateTime, includeTime = true) => (
     (date) => {
         const options = {
             localeMatcher: "best fit",
-            weekday: "short", day: "numeric", month: "short", year: "numeric",
+            weekday: "short",
+            day: "numeric",
+            month: "short",
+            year: "numeric",
         }
 
         if (includeTime) {
@@ -253,7 +256,8 @@ export const emailValid = (email) => type.toBool((
  * @param {String} password
  * @returns {Boolean}
  */
-export const passwordValid = (password) => type.toBool(/^.{8,}$/.test(password))
+export const passwordValid = (password) =>
+    type.toBool(/^.{8,}$/.test(password))
 
 
 
@@ -650,16 +654,6 @@ export const shallowEquals = (objA, objB) => {
             return false
     return true
 }
-
-
-
-
-// determine runtime environment
-// devEnv() -> true/false
-export const devEnv = () =>
-    Object.prototype.hasOwnProperty.call(sessionStorage, "dev")  ||
-    // eslint-disable-next-line
-    process.env.NODE_ENV !== "production"
 
 
 
