@@ -21,7 +21,7 @@ import { withAssetManager } from "../AssetManager"
 
 
 // flying airplane
-import { payments } from "../../lib/stellar/payments"
+import { getAmount, getPlusMinus, payments } from "../../lib/stellar/payments"
 
 
 // ...
@@ -234,6 +234,7 @@ export default compose(
         cursorRight: "0",
         highestFetched: transactionFetchLimit,
         selectedRow: null,
+        payments: [],
     }
 
 
@@ -243,6 +244,7 @@ export default compose(
         payments(this.props.publicKey).then((records) => {
             console.log("%c PAYMENTS", "font-weight: bold; color: orange;")
             console.log(records)
+            this.setState({ payments: records })
         })
 
         new StellarSdk.Server(this.props.horizon)
@@ -395,7 +397,7 @@ export default compose(
     // ...
     render = () => (
         ({ classes, publicKey }) => {
-            const { rowsPerPage, page, data } = this.state
+            const { rowsPerPage, page, data, payments } = this.state
             const emptyRows = rowsPerPage - Math.min(
                 rowsPerPage, data.length - page * rowsPerPage)
 
@@ -406,13 +408,34 @@ export default compose(
                     <TableHead>
                         <TableRow>
                             <TableHeaderCell>Date</TableHeaderCell>
-                            <TableHeaderCell>
-                                Transaction Memo
-                            </TableHeaderCell>
+                            <TableHeaderCell>Type</TableHeaderCell>
                             <TableHeaderCell>Total</TableHeaderCell>
                         </TableRow>
                     </TableHead>
+
                     <TableBody>
+                        {payments.records && payments.records.map((record) =>
+                            <TableRow classes={{
+                                root: classes.row,
+                                selected: classes.selectedRow,
+                            }}
+                            >
+                                <TableCell classes={{ root: classes.cell }}>
+                                    {utcToLocaleDateTime(record.created_at)}
+                                </TableCell>
+                                <TableCell classes={{ root: classes.cell }}>
+                                    {record.type}
+                                </TableCell>
+                                <TableCell classes={{ root: classes.cell }}>
+                                    {getPlusMinus(record, publicKey)}
+                                    <he.Nbsp />
+                                    {getAmount(record)}
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+
+                    {/* <TableBody>
                         {data.slice(
                             page * rowsPerPage, page * rowsPerPage +
                             rowsPerPage).map(n => {
@@ -560,7 +583,7 @@ export default compose(
                                 </TableCell>
                             </TableRow>
                         )}
-                    </TableBody>
+                    </TableBody> */}
                     <TableFooter>
                         <TableRow>
                             <TablePagination
