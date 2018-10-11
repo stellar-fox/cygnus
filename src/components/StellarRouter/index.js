@@ -59,7 +59,7 @@ export const resolvePath = (base) => (path) =>
 
 // redux-connected <Switch>
 export const ConnectedSwitch = connect(
-    (state) => ({ location: state.Router.location, })
+    (state) => ({ location: state.Router.location })
 )(Switch)
 
 
@@ -93,14 +93,14 @@ export const StaticRouter = connect(
 
 
         // ...
-        state = { initialized: false, }
+        state = { initialized: false }
 
 
         // ...
         componentDidMount = () => {
-            let { staticPaths, pathToView, } = this.props.getStatics()
-            this._staticPaths = { ...this._staticPaths, ...staticPaths, }
-            this._pathToViewMap = { ...this._pathToViewMap, ...pathToView, }
+            let { staticPaths, pathToView } = this.props.getStatics()
+            this._staticPaths = { ...this._staticPaths, ...staticPaths }
+            this._pathToViewMap = { ...this._pathToViewMap, ...pathToView }
         }
 
 
@@ -162,7 +162,7 @@ export const StaticRouter = connect(
                     duplicates.join(", ")
                 )
             }
-            this._staticPaths = { ...this._staticPaths, ...paths, }
+            this._staticPaths = { ...this._staticPaths, ...paths }
             this._pathToViewMap = swap(this._staticPaths)
             this.props.addStaticPaths(paths)
             return this._staticPaths
@@ -176,11 +176,11 @@ export const StaticRouter = connect(
         // ...
         render = () => (
             (
-                { addPaths, getPath, pushByView, },
-                { children, push, }
+                { addPaths, getPath, pushByView },
+                { children, push }
             ) =>
                 React.createElement(StaticRouterContext.Provider, {
-                    value: { addPaths, getPath, push, pushByView, },
+                    value: { addPaths, getPath, push, pushByView },
                 }, children)
         )(this, this.props)
 
@@ -242,7 +242,7 @@ export const withStaticRouter = (WrappedComponent) => {
         // ...
         forwardRef = (props, ref) =>
             React.createElement(WithStaticRouter,
-                { ...props, forwardedRef: ref, }
+                { ...props, forwardedRef: ref }
             )
 
     // ...
@@ -280,7 +280,7 @@ export const withDynamicRoutes = connect(
 export function routerMiddleware (history) {
     return () => next => action => {
         if (action.type === CALL_HISTORY_METHOD) {
-            const { payload: { method, args, }, } = action
+            const { payload: { method, args } } = action
             history[method](...args)
         }
         return next(action)

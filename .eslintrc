@@ -21,24 +21,22 @@
     },
     "plugins": ["react"],
     "rules": {
-        "strict": 0,
-        "indent": ["error", 4, { "SwitchCase": 1 }],
-        "linebreak-style": ["error", "unix"],
-        "quotes": ["error", "double"],
-        "semi": ["error", "never"],
-        "no-unexpected-multiline": "error",
-        "space-before-function-paren": ["error", "always"],
-        "no-unused-vars": [2, {"args": "all", "argsIgnorePattern": "^_"}],
         "comma-dangle": [
             "error",
             {
-                "arrays": "always",
-                "objects": "always",
+                "arrays": "always-multiline",
+                "objects": "always-multiline",
                 "imports": "ignore",
                 "exports": "ignore",
                 "functions": "ignore"
             }
         ],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "linebreak-style": ["error", "unix"],
+        "no-console": "warn",
+        "no-unexpected-multiline": "error",
+        "no-unused-vars": [2, {"args": "all", "argsIgnorePattern": "^_"}],
+        "quotes": ["error", "double"],
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": "error",
         "react/jsx-closing-bracket-location": [2, "line-aligned"],
@@ -63,6 +61,9 @@
                 "/^render.+$/",
                 "render"
             ]
-        }]
+        }],
+        "semi": ["error", "never"],
+        "space-before-function-paren": ["error", "always"],
+        "strict": 0
     }
 }
