@@ -66,7 +66,7 @@ class Payments extends Component {
         this.rr = resolvePath(this.props.match.path)
 
         // ...
-        this.validTabNames = ["History", "Transactions", ]
+        this.validTabNames = ["History", "Transactions" ]
 
         // static paths
         this.props.staticRouter.addPaths(
@@ -109,7 +109,7 @@ class Payments extends Component {
 
     // ...
     handleTabSelect = (value) => {
-        this.props.setState({ tabSelected: value, })
+        this.props.setState({ tabSelected: value })
         this.props.staticRouter.pushByView(value)
         if (
             value === "Transactions"  &&
@@ -131,7 +131,7 @@ class Payments extends Component {
 
     // ...
     render = () => (
-        ({ currentView, staticRouter: { getPath, }, state, }) =>
+        ({ currentView, staticRouter: { getPath }, state }) =>
             <Switch>
                 <Redirect exact
                     from={this.rr(".")}

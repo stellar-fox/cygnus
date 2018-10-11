@@ -496,7 +496,7 @@ export const ConditionalRender = (props) => (
 
 
 // React.Fragment can only receive 'key' and 'children' as props, so...
-export const RenderGroup = ({ children, }) => children
+export const RenderGroup = ({ children }) => children
 
 
 
@@ -508,7 +508,7 @@ export const Null = () => null
 
 
 // inject props "p" into component "C"
-export const inject = (C, p) => (props) => <C {...{ ...props, ...p, }} />
+export const inject = (C, p) => (props) => <C {...{ ...props, ...p }} />
 
 
 
@@ -565,7 +565,7 @@ export const glyphsDB = {
 
 // emoji components (built on the 'emojiDB' object base)
 export const emoji = objectMap(emojiDB,
-    ([k, v,]) => [
+    ([k, v]) => [
         string.capitalize(k),
         () => React.createElement(Fragment, null, v),
     ]
@@ -757,7 +757,7 @@ export const signatureValid = (dataObj, signature) =>
 
 // ...
 export const currentAccountReserve = (accountSubentries) => {
-    BigNumber.config({ DECIMAL_PLACES: 1, ROUNDING_MODE: 4, })
+    BigNumber.config({ DECIMAL_PLACES: 1, ROUNDING_MODE: 4 })
     const baseReserve = new BigNumber(env.baseReserve)
     return baseReserve.times(2 + parseInt(accountSubentries, 10)).toFixed(2)
 }
@@ -801,21 +801,21 @@ export const url = (x) => string.wrap(x, "url(", ")")
 
 // little helper for JSS colors
 export const rgb = (r, g, b) =>
-    string.wrap([r, g, b,].join(", "), "rgb(", ")")
+    string.wrap([r, g, b].join(", "), "rgb(", ")")
 
 
 
 
 // little helper for JSS colors with alpha
 export const rgba = (r, g, b, a) =>
-    string.wrap([r, g, b, a,].join(", "), "rgba(", ")")
+    string.wrap([r, g, b, a].join(", "), "rgba(", ")")
 
 
 
 
 // display transaction fee as XLM fraction
 export const calculateTxFee = (opsNum) => {
-    BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+    BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
     return (`${new BigNumber(env.transactionFee).times(opsNum)
         .dividedBy(10000000).toString()} XLM`)
 }

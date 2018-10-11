@@ -64,14 +64,14 @@ class CurrencyPicker extends Component {
 
     // ...
     handleChange = (event) => {
-        this.setState({ currency: event.target.value, })
+        this.setState({ currency: event.target.value })
         this.props.onChange(event.target.value)
     }
 
 
     // ...
     render = () => (
-        ({ classes, }) =>
+        ({ classes }) =>
             <FormControl margin="normal" component="fieldset">
                 <FormLabel
                     classes={{
@@ -90,7 +90,7 @@ class CurrencyPicker extends Component {
                     onChange={this.handleChange}
                 >
                     <FormControlLabel value="eur"
-                        classes={{ label: classes.formControlLabel, }}
+                        classes={{ label: classes.formControlLabel }}
                         control={
                             <Radio
                                 classes={{
@@ -101,7 +101,7 @@ class CurrencyPicker extends Component {
                         } label="Euro [EUR]"
                     />
                     <FormControlLabel value="usd"
-                        classes={{ label: classes.formControlLabel, }}
+                        classes={{ label: classes.formControlLabel }}
                         control={
                             <Radio
                                 classes={{
@@ -112,7 +112,7 @@ class CurrencyPicker extends Component {
                         } label="U.S. Dollar [USD]"
                     />
                     <FormControlLabel value="aud"
-                        classes={{ label: classes.formControlLabel, }}
+                        classes={{ label: classes.formControlLabel }}
                         control={
                             <Radio
                                 classes={{
@@ -123,7 +123,7 @@ class CurrencyPicker extends Component {
                         } label="Australian Dollar [AUD]"
                     />
                     <FormControlLabel value="nzd"
-                        classes={{ label: classes.formControlLabel, }}
+                        classes={{ label: classes.formControlLabel }}
                         control={
                             <Radio
                                 classes={{
@@ -134,7 +134,7 @@ class CurrencyPicker extends Component {
                         } label="New Zealand Dollar [NZD]"
                     />
                     <FormControlLabel value="pln"
-                        classes={{ label: classes.formControlLabel, }}
+                        classes={{ label: classes.formControlLabel }}
                         control={
                             <Radio
                                 classes={{
@@ -145,7 +145,7 @@ class CurrencyPicker extends Component {
                         } label="Polish Złoty [PLN]"
                     />
                     <FormControlLabel value="thb"
-                        classes={{ label: classes.formControlLabel, }}
+                        classes={{ label: classes.formControlLabel }}
                         control={
                             <Radio
                                 classes={{
