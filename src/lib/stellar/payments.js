@@ -10,7 +10,7 @@ import { config } from "../../config"
  * @property {Any} [cursor] Paging token, specifying where to start returning records from.
  */
 /**
- * @typedef {Object} RecordsObject
+ * @typedef {Object} PageObject
  * @property {Function} [next] Returns next records.
  * @property {Function} [prev] Returns previous records.
  * @property {Array} [records] Array of record objects.
@@ -22,10 +22,10 @@ import { config } from "../../config"
  * "account_merge"
  *
  * @async
- * @function transactions
+ * @function payments
  * @param {String} [accountId] Stellar account id. [G...]
  * @param {FetchOptions} [opts={}]
- * @returns {Promise.<RecordsObject>}
+ * @returns {Promise.<PageObject>}
  */
 export const payments = (
     accountId,
@@ -40,3 +40,51 @@ export const payments = (
     .order(order)
     .limit(limit)
     .call()
+
+
+
+
+/**
+ * @typedef {Object} Record
+ * @property {Function} [next] Returns next records.
+ * @property {Function} [prev] Returns previous records.
+ * @property {Array} [records] Array of record objects.
+ */
+/**
+ * Returns the amount of the payment based on the type of payment record.
+ *
+ * @function getAmount
+ * @param {Record} [record] Payment record.
+ * @returns {String} Amount in native currency (XLM).
+ */
+export const getAmount = (record) => {
+    if (["payment", "path_payment"].some(
+        (element) => element === record.type)
+    ) { return record.amount }
+
+    if (record.type === "create_account") {
+        return record.starting_balance
+    }
+}
+
+
+
+
+// ...
+export const getPlusMinus = (record, accountId) => {
+    if (["payment", "path_payment"].some(
+        (element) => element === record.type)
+    ) {
+        if (record.to === accountId) {
+            return "+"
+        }
+    }
+
+    if (record.type === "create_account") {
+        if (record.account === accountId) {
+            return "+"
+        }
+    }
+
+    return "-"
+}
