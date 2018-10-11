@@ -15,7 +15,7 @@ export const config = {
         apiKey: "<stripe_publishable_api_key>",
     },
     assets: {
-        codes: ["EUR", "USD", "AUD", "NZD", "THB", "PLN",],
+        codes: ["EUR", "USD", "AUD", "NZD", "THB", "PLN"],
         issuer: "<issuing_account_public_key>",
         avatar: "https://example.com/.well-known/logo.png",
         type: "asset_type_string",

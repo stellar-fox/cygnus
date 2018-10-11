@@ -10,15 +10,15 @@ export const authenticate = async (email, password) => (
         try {
             return (await Axios.post(
                 `${config.api}/user/authenticate/`,
-                { email, password, }
+                { email, password }
             )).data
         } catch (error) {
             if (error.response.status >= 500) {
-                return { authenticated: false, error: error.message, }
+                return { authenticated: false, error: error.message }
             }
             return error.response ?
                 error.response.data :
-                { authenticated: false, error: error.message, }
+                { authenticated: false, error: error.message }
         }
     }
 )(email, password)

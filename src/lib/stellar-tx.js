@@ -224,7 +224,7 @@ export const operationParse = (operation, publicKey) => ((sign) => {
 
 // ...
 export const creditOrDebit = (operation, publicKey) => {
-    if ([ "createAccount", "payment", ].includes(operation.type)) {
+    if (["createAccount", "payment"].includes(operation.type)) {
         return operation.destination === publicKey ? "+" : "-"
     }
 }

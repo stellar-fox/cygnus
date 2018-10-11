@@ -66,8 +66,8 @@ export const action = {
     // ...
     getStatics: () =>
         (_dispatch, getState) => {
-            let { staticPaths, pathToView, } = getState().Router
-            return { staticPaths, pathToView, }
+            let { staticPaths, pathToView } = getState().Router
+            return { staticPaths, pathToView }
         },
 
 }

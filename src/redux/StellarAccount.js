@@ -61,7 +61,7 @@ export const action = {
     }),
 
     // ...
-    resetState: () => ({ type: RESET_STATE, }),
+    resetState: () => ({ type: RESET_STATE }),
 
 }
 
@@ -115,7 +115,7 @@ export const reducer = createReducer(initState)({
         ...action.state,
     }),
 
-    
+
     // ...
     [RESET_STATE]: () => initState,
 
