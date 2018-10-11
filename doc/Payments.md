@@ -41,6 +41,14 @@ should have either destination account as current account (in case of
 credit payment) or source account as current account (in case of debit
 payment)
 
+## Payments
+
+There is a helper in _stellar-sdk_ to get only those transations where
+operation type is either of the four listed above in bold.
+
+`stellar.payments("accountId")` will return 5 payments in descending
+order.
+
 #### Getting transactions for the account
 
 The table will display (as default) first 5 transactions in descending
