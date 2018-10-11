@@ -35,6 +35,7 @@
         "@types/react-redux": "^6.0.9",
         "@types/react-router-dom": "^4.3.1",
         "@types/react-router-redux": "^5.0.16",
+        "@types/stellar-sdk": "^0.10.2",
         "@xcmats/js-toolbox": "^0.6.6",
         "autosuggest-highlight": "^3.1.1",
         "axios": "^0.18.0",
