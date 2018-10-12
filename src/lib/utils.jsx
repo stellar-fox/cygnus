@@ -666,7 +666,7 @@ export const dynamicImportLibs = async () => {
         redshift, redux,
         StellarTx,
         sjcl,
-        toolbox, utils, payments,
+        toolbox, utils, payments, server,
     ] = await Promise.all([
         import("../../src/components/StellarFox"),
         import("../../src/components/Account/api"),
@@ -684,6 +684,7 @@ export const dynamicImportLibs = async () => {
         import("@xcmats/js-toolbox"),
         import("./utils"),
         import("./stellar/payments"),
+        import("./stellar/server"),
     ])
     return {
         api: {
@@ -697,7 +698,7 @@ export const dynamicImportLibs = async () => {
         redshift, redux,
         StellarSdk, StellarTx,
         sjcl,
-        toolbox, utils, payments,
+        toolbox, utils, payments, server,
     }
 }
 

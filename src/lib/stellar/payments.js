@@ -1,5 +1,21 @@
-import server from "./server"
-import { config } from "../../config"
+import { server, testNet } from "./server"
+
+
+
+
+// ...
+const getPlusMinus = (record, accountId) => {
+    if (["payment", "path_payment"].some(
+        (element) => element === record.type)
+    ) {
+        if (record.to === accountId) {
+            return "+"
+        }
+    }
+    return "-"
+}
+
+
 
 
 
@@ -8,6 +24,7 @@ import { config } from "../../config"
  * @property {Number} [limit] Number of transactions returned.
  * @property {String} [order] Order of returned rows.
  * @property {Any} [cursor] Paging token, specifying where to start returning records from.
+ * @property {String} [horizon] Horizon API endpoint.
  */
 /**
  * @typedef {Object} PageObject
@@ -32,9 +49,10 @@ export const payments = (
     {
         limit = 5,
         order = "desc",
+        horizon = testNet,
 
     } = {}
-) => server(config.horizon)
+) => server(horizon)
     .payments()
     .forAccount(accountId)
     .order(order)
@@ -53,38 +71,47 @@ export const payments = (
 /**
  * Returns the amount of the payment based on the type of payment record.
  *
- * @function getAmount
+ * @async
+ * @function getAmountWithSign
  * @param {Record} [record] Payment record.
- * @returns {String} Amount in native currency (XLM).
+ * @returns {Object} Amount in native currency (XLM) along with the arithmetic sign +-.
  */
-export const getAmount = (record) => {
-    if (["payment", "path_payment"].some(
-        (element) => element === record.type)
-    ) { return record.amount }
-
-    if (record.type === "create_account") {
-        return record.starting_balance
-    }
-}
-
-
-
-
-// ...
-export const getPlusMinus = (record, accountId) => {
+export const getAmountWithSign = (record, accountId) => {
     if (["payment", "path_payment"].some(
         (element) => element === record.type)
     ) {
-        if (record.to === accountId) {
-            return "+"
-        }
+        return Promise.resolve({
+            sign: getPlusMinus(record, accountId),
+            value: record.amount,
+        })
     }
 
     if (record.type === "create_account") {
-        if (record.account === accountId) {
-            return "+"
-        }
+        return Promise.resolve({
+            sign: record.account === accountId ? "+" : "-",
+            value: record.starting_balance,
+        })
     }
 
-    return "-"
+    if (record.type === "account_merge") {
+        return record.effects().then((effects) => {
+            let value = ""
+            let sign = ""
+            effects.records.forEach((record) => {
+                if (record.account === accountId) {
+                    if (record.type === "account_debited") {
+                        value = record.amount
+                        sign = "-"
+                        return
+                    }
+                    if (record.type === "account_credited") {
+                        value = record.amount
+                        sign = "+"
+                        return
+                    }
+                }
+            })
+            return { sign, value }
+        })
+    }
 }

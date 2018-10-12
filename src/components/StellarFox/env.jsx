@@ -232,7 +232,7 @@ export const baseReserve = "0.5"
 
 
 // ...
-export const transactionFetchLimit = 100
+export const transactionFetchLimit = 20
 
 
 
