@@ -628,7 +628,7 @@ export default compose(
                                         }
                                         {this.state.error &&
                                             (<Fragment>
-                                                <Typography color="primary" variant="title">
+                                                <Typography color="primary" variant="h6">
                                                     <span className="fade-extreme">
                                                         Hmm. We're having trouble fetching this data.
                                                     </span>

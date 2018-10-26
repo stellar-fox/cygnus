@@ -42,19 +42,19 @@ import { Typography } from "@material-ui/core"
 // ...
 const signupStyles = {
 
-    stepLabel: { fontSize: "1rem", },
+    stepLabel: { fontSize: "1rem" },
 
-    errorStyle: { color: "#912d35", },
+    errorStyle: { color: "#912d35" },
 
-    underlineStyle: { borderColor: rgba(15, 46, 83, 0.9), },
+    underlineStyle: { borderColor: rgba(15, 46, 83, 0.9) },
 
-    underlineFocusStyle: { borderColor: rgba(15, 46, 83, 0.7), },
+    underlineFocusStyle: { borderColor: rgba(15, 46, 83, 0.7) },
 
-    floatingLabelStyle: { color: rgba(15, 46, 83, 0.7), },
+    floatingLabelStyle: { color: rgba(15, 46, 83, 0.7) },
 
-    floatingLabelFocusStyle: { color: rgba(15, 46, 83, 0.4), },
+    floatingLabelFocusStyle: { color: rgba(15, 46, 83, 0.4) },
 
-    inputStyle: { color: rgb(15, 46, 83), },
+    inputStyle: { color: rgb(15, 46, 83) },
 
 }
 
@@ -71,7 +71,7 @@ const styles = (_theme) => ({
 
 // ...
 const RequestProgress = withStyles(styles)(
-    ({ classes, color, }) =>
+    ({ classes, color }) =>
         <CircularProgress color={color || "secondary"}
             className={classes.progress}
             thickness={4} size={20}
@@ -98,7 +98,7 @@ class Signup extends Component {
 
     // ...
     handleButtonAction = async (action) => {
-        const { stepIndex, } = this.state
+        const { stepIndex } = this.state
 
         if (stepIndex === 0  &&  !this.validateInput()) {
             return
@@ -208,21 +208,21 @@ class Signup extends Component {
     // ...
     emailValidator = () => {
         emailValid(this.textInputFieldEmail.state.value) &&
-        this.textInputFieldEmail.setState({ error: string.empty(), })
+        this.textInputFieldEmail.setState({ error: string.empty() })
     }
 
 
     // ...
     passwordValidator = () =>
         !passwordValid(this.textInputFieldPassword.state.value) &&
-        this.textInputFieldPassword.setState({ error: string.empty(), })
+        this.textInputFieldPassword.setState({ error: string.empty() })
 
 
     // ...
     passwordMatchValidator = () =>
         (this.textInputFieldPassword.state.value ===
             this.textInputFieldPasswordConf.state.value) &&
-        this.textInputFieldPasswordConf.setState({ error: string.empty(), })
+        this.textInputFieldPasswordConf.setState({ error: string.empty() })
 
 
     // ...
@@ -347,7 +347,7 @@ class Signup extends Component {
                                 validator={this.passwordMatchValidator}
                                 action={this.validateInput}
                                 ref={(self) => { this.textInputFieldPasswordConf = self }}
-                                style={{ marginBottom: "15px", }}
+                                style={{ marginBottom: "15px" }}
                             />
 
                             <Button
@@ -364,7 +364,7 @@ class Signup extends Component {
 
             <Step>
                 <StepLabel
-                    style={{ fontSize: "1rem", }}
+                    style={{ fontSize: "1rem" }}
                     icon={<i className="material-icons">verified_user</i>}
                     iconContainerStyle={{
                         transform: "scale(1.4)",
@@ -427,16 +427,16 @@ class Signup extends Component {
                             <Fragment>
                                 <RequestProgress color="primary" />
                                 <he.Nbsp /><he.Nbsp /><he.Nbsp /><he.Nbsp />
-                                <Typography variant="body2" color="primary">
+                                <Typography variant="body1" color="primary">
                                     {this.state.message}
                                 </Typography>
                             </Fragment> : this.state.error ?
-                                <Typography variant="body2">
+                                <Typography variant="body1">
                                     <span className="error">
                                         {this.state.error}
                                     </span>
                                 </Typography> :
-                                <Typography variant="body2" color="primary">
+                                <Typography variant="body1" color="primary">
                                     {this.state.message}<he.Nbsp />
                                 </Typography>
                         }

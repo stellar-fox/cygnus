@@ -72,8 +72,8 @@ const styles = (theme) => ({
             borderBottomColor: `${theme.palette.primary.main} !important`,
             borderBottomWidth: "1px !important",
         },
-        "&:before": { borderBottomColor: theme.palette.primary.main, },
-        "&:after": { borderBottomColor: theme.palette.primary.main, },
+        "&:before": { borderBottomColor: theme.palette.primary.main },
+        "&:after": { borderBottomColor: theme.palette.primary.main },
     },
     inputTag: {
         marginTop: "-8px",
@@ -169,7 +169,7 @@ const renderInput = (inputProps) => {
 
 // ...
 const SuggestionAvatar = withStyles(styles)(
-    ({ classes, emailMD5, }) => <Avatar classes={{
+    ({ classes, emailMD5 }) => <Avatar classes={{
         root: classes.avatarSmall,
     }} src={`${gravatar}${emailMD5}?${
         gravatarSize48}&d=robohash`}
@@ -180,7 +180,7 @@ const SuggestionAvatar = withStyles(styles)(
 
 
 // ...
-const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
+const renderSuggestion = (suggestion, { query, isHighlighted }) => {
     const matches = match(suggestion.label, query)
     const parts = parse(suggestion.label, matches)
 
@@ -207,12 +207,12 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
                             {parts.map((part, index) => {
                                 return part.highlight ?
                                     <span key={String(index)}
-                                        style={{ fontWeight: 600, }}
+                                        style={{ fontWeight: 600 }}
                                     >
                                         {string.shorten(part.text, 15)}
                                     </span> :
                                     <span key={String(index)}
-                                        style={{ fontWeight: 400, }}
+                                        style={{ fontWeight: 400 }}
                                     >
                                         {
                                             string.shorten(
@@ -244,7 +244,7 @@ const renderSuggestion = (suggestion, { query, isHighlighted, }) => {
 
 // ...
 const renderSuggestionsContainer = (options) => {
-    const { containerProps, children, } = options
+    const { containerProps, children } = options
 
     return (
         <Paper {...containerProps}>
@@ -299,7 +299,7 @@ class ContactSuggester extends Component {
 
     // ...
     setTransactionType = (tt) =>
-        this.props.setBalancesState({ newAccount: tt === "NEW_ACCOUNT", })
+        this.props.setBalancesState({ newAccount: tt === "NEW_ACCOUNT" })
 
 
     // ...
@@ -312,11 +312,12 @@ class ContactSuggester extends Component {
                     "alias",
                     "domain",
                     "email",
-                    "pubkey",],
+                    "pubkey",
+                ],
             }).search(value)
 
         return results.map((c) => ({
-            label: [c.first_name, c.last_name,].join(" "),
+            label: [c.first_name, c.last_name].join(" "),
             publicKey: c.pubkey,
             alias: c.alias,
             domain: c.domain,
@@ -328,7 +329,7 @@ class ContactSuggester extends Component {
 
 
     // ...
-    handleSuggestionsFetchRequested = ({ value, }) => {
+    handleSuggestionsFetchRequested = ({ value }) => {
         this.setState({
             suggestions: this.fuzzySearchForContact(value),
         })
@@ -344,8 +345,8 @@ class ContactSuggester extends Component {
 
 
     // ...
-    handleChange = (_event, { newValue, }) => {
-        this.setState({ value: newValue, }, () => {
+    handleChange = (_event, { newValue }) => {
+        this.setState({ value: newValue }, () => {
             if (!invalidPaymentAddressMessage(newValue)) {
                 this.validatePaymentDestination(newValue)
             }
@@ -395,7 +396,7 @@ class ContactSuggester extends Component {
                 emailMD5: string.empty(),
             })
 
-            this.props.setBalancesState({ payee: null, })
+            this.props.setBalancesState({ payee: null })
             return false
         }
 
@@ -477,7 +478,7 @@ class ContactSuggester extends Component {
                 publicKey = federationRecord.account_id
 
             } catch (ex) {
-                this.setState({ loading: false, })
+                this.setState({ loading: false })
 
                 if (!ex.response) {
                     this.setState({
@@ -686,12 +687,12 @@ class ContactSuggester extends Component {
 
     // ...
     enableSignButton = () =>
-        this.props.setBalancesState({ sendEnabled: true, })
+        this.props.setBalancesState({ sendEnabled: true })
 
 
     // ...
     disableSignButton = () =>
-        this.props.setBalancesState({ sendEnabled: false, })
+        this.props.setBalancesState({ sendEnabled: false })
 
 
     // ...
@@ -729,7 +730,7 @@ class ContactSuggester extends Component {
 
     // ...
     render = () => {
-        const { classes, } = this.props
+        const { classes } = this.props
 
         return (
             <div className="f-b-col">
@@ -807,7 +808,7 @@ class ContactSuggester extends Component {
                                                     </Typography>
                                                 </div>
                                                 <he.Nbsp /><he.Nbsp />
-                                                <Typography variant="title" color="primary">
+                                                <Typography variant="h6" color="primary">
                                                     <span className="fade-extreme">
                                                         {this.props.assetManager.getAssetGlyph(
                                                             this.state.currency)}
@@ -825,7 +826,7 @@ class ContactSuggester extends Component {
                                             label: classes.label,
                                         }}
                                     /> :
-                                    <div style={{ width: "200px", }}>
+                                    <div style={{ width: "200px" }}>
                                         <Typography variant="caption"
                                             color="primary"
                                         >

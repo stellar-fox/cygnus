@@ -93,8 +93,8 @@ const styles = (theme) => ({
             borderBottomColor: `${theme.palette.primary.main} !important`,
             borderBottomWidth: "1px !important",
         },
-        "&:before": { borderBottomColor: theme.palette.primary.main, },
-        "&:after": { borderBottomColor: theme.palette.primary.main, },
+        "&:before": { borderBottomColor: theme.palette.primary.main },
+        "&:after": { borderBottomColor: theme.palette.primary.main },
     },
 
     inputMargin: {
@@ -129,7 +129,7 @@ const styles = (theme) => ({
 
 // ...
 const AddContactModal = withStyles(styles)(
-    ({ classes, onClose, modalId, visible, }) =>
+    ({ classes, onClose, modalId, visible }) =>
         <Modal
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
@@ -137,7 +137,7 @@ const AddContactModal = withStyles(styles)(
             onClose={onClose}
         >
             <div className={classes.paper}>
-                <Typography variant="subheading" color="primary"
+                <Typography variant="subtitle1" color="primary"
                     id="modal-title"
                 >
                     Request New Contact
@@ -152,7 +152,7 @@ const AddContactModal = withStyles(styles)(
 
 // ...
 const EditContactModal = withStyles(styles)(
-    ({ classes, onClose, modalId, visible, details, }) =>
+    ({ classes, onClose, modalId, visible, details }) =>
         <Modal
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
@@ -166,13 +166,13 @@ const EditContactModal = withStyles(styles)(
                     }}
                     className={classes.paper}
                 >
-                    <Typography variant="subheading" color="primary" id="modal-title">
+                    <Typography variant="subtitle1" color="primary" id="modal-title">
                         Federated Contact Details
                     </Typography>
                     <EditContactForm />
                 </div> :
                 <div className={classes.paper}>
-                    <Typography variant="subheading" color="primary" id="modal-title">
+                    <Typography variant="subtitle1" color="primary" id="modal-title">
                         Contact Details
                     </Typography>
                     <EditContactForm />
@@ -186,11 +186,11 @@ const EditContactModal = withStyles(styles)(
 
 // ...
 const AddContactButton = withStyles(styles)(
-    ({ classes, onClick, }) =>
-        <Button onClick={onClick} variant="raised"
+    ({ classes, onClick }) =>
+        <Button onClick={onClick} variant="contained"
             color="primary" size="small" className={classes.raised}
         >
-            <Icon style={{ marginRight: "3px", }}>
+            <Icon style={{ marginRight: "3px" }}>
                 add_box
             </Icon>
             <Typography noWrap variant="caption" color="inherit">
@@ -204,9 +204,9 @@ const AddContactButton = withStyles(styles)(
 
 // ...
 const NoCards = withStyles(styles)(
-    ({ classes, title, subtitle, }) =>
+    ({ classes, title, subtitle }) =>
         <div className={classes.nocards}>
-            <Typography noWrap  variant="body2" color="inherit">
+            <Typography noWrap  variant="body1" color="inherit">
                 {title}
             </Typography>
             <Typography noWrap  variant="caption" color="inherit">
@@ -220,7 +220,7 @@ const NoCards = withStyles(styles)(
 
 // ...
 const SearchField = withStyles(styles)(
-    ({ classes, label, onChange, value, }) => <TextField
+    ({ classes, label, onChange, value }) => <TextField
         id="seach-by"
         label={label}
         value={value}
@@ -248,9 +248,9 @@ const SearchField = withStyles(styles)(
 
 // ...
 const SelectView = withStyles(styles)(
-    ({ classes, value, onChange, }) =>
-        <FormControl className={classes.formControl}>
-            <InputLabel classes={{shrink: classes.inputLabel,}}
+    ({ classes, value, onChange }) =>
+        <FormControl className={ classes.formControl }>
+            <InputLabel classes={{ shrink: classes.inputLabel }}
                 htmlFor="select-view"
             >Select View</InputLabel>
             <Select
@@ -435,12 +435,12 @@ class Contacts extends Component {
     // ...
     showFilteredContacts = () => {
         let filteredInternal = new Fuse(this.props.contactsInternal, {
-            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey"],
             threshold: "0.2",
         }).search(this.state.search)
 
         let filteredExternal = new Fuse(this.props.contactsExternal, {
-            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey"],
             threshold: "0.2",
         }).search(this.state.search)
 
@@ -521,12 +521,12 @@ class Contacts extends Component {
     showFilteredContactRequests = () => {
 
         let searchRequests = new Fuse(this.props.contactRequests, {
-            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey"],
             threshold: "0.2",
         }).search(this.state.search)
 
         let searchPending = new Fuse(this.props.pending, {
-            keys: ["first_name", "last_name", "alias", "domain", "pubkey",],
+            keys: ["first_name", "last_name", "alias", "domain", "pubkey"],
             threshold: "0.2",
         }).search(this.state.search)
 
@@ -569,7 +569,7 @@ class Contacts extends Component {
 
     // ...
     updateSearchFilter = debounce((search) => {
-        this.setState({ search, })
+        this.setState({ search })
     }, 300)
 
 
@@ -579,7 +579,7 @@ class Contacts extends Component {
 
     // ...
     changeView = (event) => {
-        this.setState({ selectedView: event.target.value, }, () => {
+        this.setState({ selectedView: event.target.value }, () => {
             this.userContacts()
         })
     }
@@ -589,11 +589,11 @@ class Contacts extends Component {
     render = () =>
         <Fragment>
 
-            <AppBar style={{ borderRadius: "3px", }} position="static" color="inherit">
+            <AppBar style={{ borderRadius: "3px" }} position="static" color="inherit">
                 <Toolbar>
 
-                    <div style={{flex: 1,}} className="f-b-col m-r">
-                        <Typography noWrap variant="title" color="primary">
+                    <div style={{ flex: 1 }} className="f-b-col m-r">
+                        <Typography noWrap variant="h6" color="primary">
                             Contact Book
                         </Typography>
                         <Typography noWrap variant="body1" color="primary">
@@ -605,7 +605,7 @@ class Contacts extends Component {
                     <AddContactButton onClick={this.showModal} />
 
 
-                    <div style={{ marginLeft: "2rem", }}>
+                    <div style={{ marginLeft: "2rem" }}>
                         <div className="f-e space-between">
                             <SearchField
                                 label={<Typography variant="body1"
@@ -639,7 +639,7 @@ class Contacts extends Component {
             {this.state.selectedView === 0 &&
                 <Fragment>
                     <div className="m-t-medium">
-                        <Typography variant="body2" color="secondary">
+                        <Typography variant="body1" color="secondary">
                             Contacts
                         </Typography>
                         <Divider color="secondary" />
@@ -656,7 +656,7 @@ class Contacts extends Component {
                         }
                     </Grid>
                     <div className="m-t-medium">
-                        <Typography variant="body2" color="secondary">
+                        <Typography variant="body1" color="secondary">
                             Requests
                         </Typography>
                         <Divider color="secondary" />
@@ -678,7 +678,7 @@ class Contacts extends Component {
             {this.state.selectedView === 1 &&
                 <Fragment>
                     <div className="m-t-medium">
-                        <Typography variant="body2" color="secondary">
+                        <Typography variant="body1" color="secondary">
                             Contacts
                         </Typography>
                         <Divider color="secondary" />
@@ -700,7 +700,7 @@ class Contacts extends Component {
             {this.state.selectedView === 2 &&
                 <Fragment>
                     <div className="m-t-medium">
-                        <Typography variant="body2" color="secondary">
+                        <Typography variant="body1" color="secondary">
                             Requests
                         </Typography>
                         <Divider color="secondary" />

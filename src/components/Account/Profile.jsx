@@ -52,8 +52,8 @@ import { Animated } from "react-animated-css"
 
 
 // ...
-const RequestProgress = ({ color, label, }) =>
-    <div style={{ height: "0px", opacity: "0.75", }}>
+const RequestProgress = ({ color, label }) =>
+    <div style={{ height: "0px", opacity: "0.75" }}>
         <div style={{
             height: "0px", marginBottom: "-0.65rem", opacity: "0.5",
         }}
@@ -97,7 +97,7 @@ class Profile extends Component {
     showError = (message) => {
         this.props.hideModal()
         this.props.showAlert(message, "Error")
-        this.props.setState({ message: string.empty(), })
+        this.props.setState({ message: string.empty() })
     }
 
 
@@ -117,7 +117,7 @@ class Profile extends Component {
          * Update backend with user info data.
          */
         try {
-            this.setState({ loadingUpdateProfile: true, })
+            this.setState({ loadingUpdateProfile: true })
             this.props.setState({
                 messageUserData: "Preparing data ...",
             })
@@ -129,7 +129,7 @@ class Profile extends Component {
                 last_name: this.props.state.lastName,
             })
         } catch (error) {
-            this.setState({ loadingUpdateProfile: false, })
+            this.setState({ loadingUpdateProfile: false })
             this.props.showAlert(error.message, "Error")
             return
         }
@@ -140,8 +140,8 @@ class Profile extends Component {
          */
         if (!this.props.accountId) {
             this.props.popupSnackbar("User data updated without signature.")
-            this.props.setState({ messageUserData: string.empty(), })
-            this.setState({ loadingUpdateProfile: false, })
+            this.props.setState({ messageUserData: string.empty() })
+            this.setState({ loadingUpdateProfile: false })
             return
         }
 
@@ -167,7 +167,7 @@ class Profile extends Component {
 
             this.props.showModal("txConfirmProfile")
 
-            this.props.setState({ messageUserData: string.empty(), })
+            this.props.setState({ messageUserData: string.empty() })
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
@@ -187,13 +187,13 @@ class Profile extends Component {
                 this.props.publicKey, this.props.network
             ))
 
-            this.setState({ loadingUpdateProfile: false, })
+            this.setState({ loadingUpdateProfile: false })
 
             this.props.popupSnackbar("User data has been updated.")
 
         } catch (error) {
-            this.setState({ loadingUpdateProfile: false, })
-            this.props.setState({ messageUserData: string.empty(), })
+            this.setState({ loadingUpdateProfile: false })
+            this.props.setState({ messageUserData: string.empty() })
             this.props.hideModal()
             this.props.showAlert(error.message, "Error")
         }
@@ -207,7 +207,7 @@ class Profile extends Component {
          * Update backend with user payment data.
          */
         try {
-            this.setState({ loadingUpdatePaymentAddress: true, })
+            this.setState({ loadingUpdatePaymentAddress: true })
             this.props.setState({
                 messagePaymentData: "Preparing data ...",
             })
@@ -237,7 +237,7 @@ class Profile extends Component {
             })
 
         } catch (error) {
-            this.setState({ loadingUpdatePaymentAddress: false, })
+            this.setState({ loadingUpdatePaymentAddress: false })
             this.props.showAlert(error.message, "Error")
             return
 
@@ -249,8 +249,8 @@ class Profile extends Component {
          */
         if (!this.props.accountId) {
             this.props.popupSnackbar("Payment data updated without signature.")
-            this.props.setState({ messagePaymentData: string.empty(), })
-            this.setState({ loadingUpdatePaymentAddress: false, })
+            this.props.setState({ messagePaymentData: string.empty() })
+            this.setState({ loadingUpdatePaymentAddress: false })
             return
         }
 
@@ -276,7 +276,7 @@ class Profile extends Component {
 
             this.props.showModal("txConfirmPay")
 
-            this.props.setState({ messagePaymentData: string.empty(), })
+            this.props.setState({ messagePaymentData: string.empty() })
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
@@ -295,12 +295,12 @@ class Profile extends Component {
             this.props.updateAccountTree(await loadAccount(
                 this.props.publicKey, this.props.network
             ))
-            this.setState({ loadingUpdatePaymentAddress: false, })
+            this.setState({ loadingUpdatePaymentAddress: false })
             this.props.popupSnackbar("Payment data has been updated.")
 
         } catch (error) {
-            this.setState({ loadingUpdatePaymentAddress: false, })
-            this.props.setState({ messagePaymentData: string.empty(), })
+            this.setState({ loadingUpdatePaymentAddress: false })
+            this.props.setState({ messagePaymentData: string.empty() })
             this.props.hideModal()
             this.props.showAlert(error.message, "Error")
 
@@ -310,22 +310,22 @@ class Profile extends Component {
 
     // ...
     changeFirstName = (event) =>
-        this.props.setState({ firstName: event.target.value, })
+        this.props.setState({ firstName: event.target.value })
 
 
     // ...
     changeLastName = (event) =>
-        this.props.setState({ lastName: event.target.value, })
+        this.props.setState({ lastName: event.target.value })
 
 
     // ...
     changePaymentAddress = (event) =>
-        this.props.setState({paymentAddress: event.target.value,})
+        this.props.setState({ paymentAddress: event.target.value })
 
 
     // ...
     changeMemo = (event) =>
-        this.props.setState({ memo: event.target.value, })
+        this.props.setState({ memo: event.target.value })
 
 
     // ...
@@ -335,7 +335,7 @@ class Profile extends Component {
                 gravatarPath: this.setGravatarPath(event.target.value),
             })
         }
-        this.props.setState({ email: event.target.value, })
+        this.props.setState({ email: event.target.value })
     }
 
 
@@ -363,13 +363,13 @@ class Profile extends Component {
     // ...
     verifyEmail = () => {
         try {
-            this.setState({ loadingVerifyEmail: true, })
+            this.setState({ loadingVerifyEmail: true })
             firebaseApp.auth("session").currentUser.sendEmailVerification()
-            this.setState({ loadingVerifyEmail: false, })
+            this.setState({ loadingVerifyEmail: false })
             this.props.popupSnackbar("Verification email sent.")
         } catch (error) {
             this.props.showAlert(error.message, "Error")
-            this.setState({ loadingVerifyEmail: false, })
+            this.setState({ loadingVerifyEmail: false })
         }
 
     }
@@ -412,7 +412,7 @@ class Profile extends Component {
 
                 <div className="flex-box-row space-between">
                     <div>
-                        <Typography variant="title" color="secondary">
+                        <Typography variant="h6" color="secondary">
                             Account Profile
                         </Typography>
                         <Typography variant="body1" color="secondary">
@@ -506,7 +506,7 @@ class Profile extends Component {
                     </Button>
                 }
 
-                <div style={{ height: "2rem", }}
+                <div style={{ height: "2rem" }}
                     className="f-b p-t-small tiny"
                 >
                     {this.props.state.messageUserData.length > 0 ?
@@ -521,7 +521,7 @@ class Profile extends Component {
 
                 <div className="p-t flex-box-row">
                     <div>
-                        <Typography variant="title" color="secondary">
+                        <Typography variant="h6" color="secondary">
                             Payment Address
                         </Typography>
                         <Typography variant="body1" color="secondary">

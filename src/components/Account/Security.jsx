@@ -12,7 +12,7 @@ export default  () =>
 
         <div className="flex-box-row">
             <div>
-                <Typography variant="title" color="secondary">
+                <Typography variant="h6" color="secondary">
                     Account Security
                 </Typography>
                 <Typography variant="body1" color="secondary">

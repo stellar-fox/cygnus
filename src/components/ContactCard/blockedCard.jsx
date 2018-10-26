@@ -35,8 +35,8 @@ const styles = (theme) => ({
 
 // ...
 const ActionButton = withStyles(styles)(
-    ({ classes, onClick, color, label, }) =>
-        <Button onClick={onClick} variant="raised"
+    ({ classes, onClick, color, label }) =>
+        <Button onClick={onClick} variant="contained"
             size="small" className={classes[color]}
         >
             <Typography noWrap variant="button" color="inherit">
@@ -131,7 +131,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, data, }) =>
+            ({ classes, data }) =>
                 <Paper elevation={3}
                     className={`${classes.root} pattern-secondary`}
                 >
@@ -164,7 +164,7 @@ export default compose(
                                 this,
                                 data.requested_by
                             )}
-                            variant="raised"
+                            variant="contained"
                             color="danger" size="small"
                             label="Unblock"
                         />

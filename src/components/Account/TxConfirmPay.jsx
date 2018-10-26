@@ -24,9 +24,9 @@ export default connect(
         sequence: state.StellarAccount.sequence,
     })
 )(
-    ({ fingerprintPaymentData, horizon, publicKey, sequence, }) =>
+    ({ fingerprintPaymentData, horizon, publicKey, sequence }) =>
         <Fragment>
-            <Typography style={{ paddingTop: "0.5rem", }} variant="body1"
+            <Typography style={{ paddingTop: "0.5rem" }} variant="body1"
                 color="primary" align="center"
             >
                 The following fingerprint will be lodged within this account:
@@ -35,9 +35,9 @@ export default connect(
                 This fingerprint corresponds to your payment profile data and
                 ensures that your data is tamper proof.
             </Typography>
-            <Typography style={{ paddingTop: "0.5rem", }} align="center">
+            <Typography style={{ paddingTop: "0.5rem" }} align="center">
                 <span style={{ opacity: "0.8", fontWeight: 600, color: "white",
-                    fontSize: "0.7rem", }} className="border-primary glass"
+                    fontSize: "0.7rem" }} className="border-primary glass"
                 >
                     {btoa(fingerprintPaymentData)}
                 </span>
@@ -162,7 +162,7 @@ export default connect(
                 Action Required
             </div>
 
-            <Typography align="center" color="primary" variant="body2">
+            <Typography align="center" color="primary" variant="body1">
                 When you are sure the info above is correct press
                 <he.Nbsp />
                 <CheckIcon

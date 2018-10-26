@@ -47,10 +47,10 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, }) =>
+            ({ classes }) =>
                 <Fragment>
                     <div className="p-b flex-box-col items-centered">
-                        <Typography variant="body2" color="primary" align="center">
+                        <Typography variant="body1" color="primary" align="center">
                             Digital fingerprint is being lodged.
                         </Typography>
                         <Typography variant="caption" color="primary" align="center">

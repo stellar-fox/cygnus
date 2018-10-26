@@ -80,7 +80,7 @@ export default compose(
                                     <i className={iconClass}>
                                         account_balance
                                     </i>
-                                    <Typography variant="subheading"
+                                    <Typography variant="subtitle1"
                                         color="primary"
                                     >
                                         Account Opened
@@ -98,7 +98,7 @@ export default compose(
                                 <i className={iconClass}>
                                     account_balance_wallet
                                 </i>
-                                <Typography variant="subheading"
+                                <Typography variant="subtitle1"
                                     color="primary"
                                 >
                                     Credit
@@ -109,7 +109,7 @@ export default compose(
                             </div> :
                             <div className="f-b-c">
                                 <i className={iconClass}>payment</i>
-                                <Typography variant="subheading"
+                                <Typography variant="subtitle1"
                                     color="primary"
                                 >
                                     Debit
@@ -145,7 +145,7 @@ export default compose(
 
         // ...
         opNativeAmount = (operation) => {
-            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
             return choose(
                 operation.type,
                 {
@@ -160,7 +160,7 @@ export default compose(
         }
 
         feeAmount = (fee) => {
-            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
             return new BigNumber(fee).dividedBy(10000000).toFixed(7)
         }
 
@@ -254,7 +254,7 @@ export default compose(
                                 gravatarSize48}&d=robohash`}
                         />
                     </span>
-                    <Typography variant="body2" color="primary">
+                    <Typography variant="body1" color="primary">
                         {pubKeyAbbr(publicKey)}
                     </Typography>
                 </div>
@@ -333,13 +333,13 @@ export default compose(
 
         // ...
         render = () => (
-            ({ assetManager, classes, data, publicKey, }) =>
+            ({ assetManager, classes, data, publicKey }) =>
                 <Fragment>
                     <Paper>
                         {data.length === 0 ?
                             <div className={classes.nodata}>
                                 <Typography align="center" color="primary"
-                                    variant="subheading"
+                                    variant="subtitle1"
                                 >
                                     <span className="fade-extreme">
                                         Select transaction above to view details here.
@@ -355,7 +355,7 @@ export default compose(
                             >
                                 <div className="flex-box-row space-between p-r">
                                     <Typography color="primary"
-                                        variant="body2" noWrap
+                                        variant="body1" noWrap
                                     >
                                         <span className="tiny fade-extreme">
                                             Transaction:
@@ -367,7 +367,7 @@ export default compose(
                                     </Typography>
                                     {data.r.memo_type !== "none" &&
                                     <Typography color="primary"
-                                        variant="body2" noWrap
+                                        variant="body1" noWrap
                                     >
                                         <span className="tiny fade-extreme">
                                             Memo:
