@@ -9,6 +9,9 @@
 # production
 /build
 
+# jsdoc
+/jsdoc
+
 # misc
 .DS_Store
 .env.local

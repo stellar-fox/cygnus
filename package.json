@@ -77,6 +77,8 @@
     "description": "Stellar Fox (frontend)",
     "devDependencies": {
         "cross-env": "^5.2.0",
+        "jsdoc": "^3.5.5",
+        "minami": "^1.2.3",
         "rimraf": "^2.6.2"
     },
     "engines": {
@@ -100,9 +102,11 @@
     },
     "scripts": {
         "build": "react-scripts build",
-        "clean": "rimraf build",
+        "clean": "rimraf build && npm run clean:jsdoc",
+        "clean:jsdoc": "rimraf ./jsdoc",
         "clean:modules": "rimraf node_modules",
         "eject": "react-scripts eject",
+        "jsdoc": "echo \"Generating jsdoc ...\" && jsdoc -c ./jsdoc.json -R ./README.md -r ./src/ -d ./jsdoc/",
         "lint": "eslint ./src/",
         "start": "cross-env BROWSER=none react-scripts start",
         "test": "react-scripts test --env=jsdom"
