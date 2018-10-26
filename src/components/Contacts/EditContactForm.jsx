@@ -160,7 +160,7 @@ const RequestProgress = withStyles(styles)(
 // ...
 const ModalButton = withStyles(styles)(
     ({ classes, onClick, label, style }) =>
-        <Button variant="raised" color="primary" onClick={onClick}
+        <Button variant="contained" color="primary" onClick={onClick}
             style={style}
             className={classNames(classes.buttonDone, classes.primaryRaised)}
         >
@@ -174,7 +174,7 @@ const ModalButton = withStyles(styles)(
 // ...
 const DeleteContactButton = withStyles(styles)(
     ({ classes, onClick }) =>
-        <Button variant="raised" size="small" onClick={onClick}
+        <Button variant="contained" size="small" onClick={onClick}
             className={classNames(classes.buttonDanger)}
         >
             Delete Contact

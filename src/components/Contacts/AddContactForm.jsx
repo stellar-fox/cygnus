@@ -59,8 +59,8 @@ const styles = (theme) => ({
             borderBottomColor: `${theme.palette.primary.main} !important`,
             borderBottomWidth: "1px !important",
         },
-        "&:before": { borderBottomColor: theme.palette.primary.main, },
-        "&:after": { borderBottomColor: theme.palette.primary.main, },
+        "&:before": { borderBottomColor: theme.palette.primary.main },
+        "&:after": { borderBottomColor: theme.palette.primary.main },
     },
 
     inputMargin: {
@@ -79,7 +79,7 @@ const styles = (theme) => ({
 
 // ...
 const RequestProgress = withStyles(styles)(
-    ({ classes, }) =>
+    ({ classes }) =>
         <CircularProgress color="primary" className={classes.progress}
             thickness={3} size={25}
         />
@@ -90,8 +90,8 @@ const RequestProgress = withStyles(styles)(
 
 // ...
 const SearchButton = withStyles(styles)(
-    ({ classes, buttonText, color, disabled, onClick, }) =>
-        <Button variant="raised" disabled={disabled}
+    ({ classes, buttonText, color, disabled, onClick }) =>
+        <Button variant="contained" disabled={disabled}
             color={color} onClick={onClick}
             className={classNames(classes.button, classes.primaryRaised)}
         >
@@ -104,8 +104,8 @@ const SearchButton = withStyles(styles)(
 
 // ...
 const DoneButton = withStyles(styles)(
-    ({ classes, onClick, }) =>
-        <Button variant="raised" color="primary" onClick={onClick}
+    ({ classes, onClick }) =>
+        <Button variant="contained" color="primary" onClick={onClick}
             className={classNames(classes.buttonDone, classes.primaryRaised)}
         >
             Done
@@ -117,7 +117,7 @@ const DoneButton = withStyles(styles)(
 
 // ...
 const SearchInput = withStyles(styles)(
-    ({ classes, label, onChange, value, error, errorMessage, }) => <TextField
+    ({ classes, label, onChange, value, error, errorMessage }) => <TextField
         id="seach-by"
         label={errorMessage || label}
         value={value}
@@ -147,7 +147,7 @@ const SearchInput = withStyles(styles)(
 
 // ...
 const ChoiceTabs = withStyles(styles)(
-    ({ onChange, value, }) => <Tabs
+    ({ onChange, value }) => <Tabs
         value={ value }
         onChange={ onChange }
         textColor="primary"
@@ -165,8 +165,8 @@ const ChoiceTabs = withStyles(styles)(
 
 // ...
 const TabContainer = withStyles(styles)(
-    ({ children, dir, }) =>
-        <Typography component="div" dir={dir} style={{ paddingTop: "2rem", }}>
+    ({ children, dir }) =>
+        <Typography component="div" dir={dir} style={{ paddingTop: "2rem" }}>
             {children}
         </Typography>
 )
@@ -264,7 +264,7 @@ class AddContactForm extends Component {
         // try adding a contact based on payment address
         else if (this.state.tabSelected === 1) {
 
-            let [alias, domain,] = toAliasAndDomain(this.state.input)
+            let [alias, domain] = toAliasAndDomain(this.state.input)
 
             domain === appTLD ?
                 requestByPaymentAddress(
@@ -533,13 +533,13 @@ class AddContactForm extends Component {
 
             {!this.state.showProgress && !this.state.showRequestSent &&
                 <div className="p-t"
-                    style={{ height: "150px", paddingLeft: "20px", }}
+                    style={{ height: "150px", paddingLeft: "20px" }}
                 ></div>
             }
 
 
             {this.state.showProgress &&
-                <div className="f-b center p-t" style={{ height: "150px", }}>
+                <div className="f-b center p-t" style={{ height: "150px" }}>
                     <RequestProgress />
                     <Typography noWrap variant="body2" color="primary">
                         Sending request ...
@@ -549,7 +549,7 @@ class AddContactForm extends Component {
 
 
             {this.state.showRequestSent &&
-                <div className="p-t" style={{ height: "150px", }}>
+                <div className="p-t" style={{ height: "150px" }}>
                     <div className="f-b center">
                         <Typography noWrap variant="body1" color="primary">
                             Request sent to:
