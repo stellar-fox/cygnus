@@ -55,12 +55,17 @@ export default createMuiTheme({
     },
 
     typography: {
+
+        useNextVariants: true,
+
         caption: {
             fontSize: "0.6rem",
         },
+
         subheading: {
             fontSize: "1.1rem",
         },
+
     },
 
     zIndex: {

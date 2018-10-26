@@ -70,9 +70,9 @@ const styles = (theme) => ({
 
 
 // ...
-const RequestProgress = ({ color, label, }) =>
-    <div style={{ height: "0px", opacity: "0.75", }}>
-        <div style={{ height: "0px", marginBottom: "-0.65rem", opacity: "0.5", }}>
+const RequestProgress = ({ color, label }) =>
+    <div style={{ height: "0px", opacity: "0.75" }}>
+        <div style={{ height: "0px", marginBottom: "-0.65rem", opacity: "0.5" }}>
             {label}
         </div>
         <CircularProgress color={color || "primary"} thickness={4} size={20} />
@@ -117,13 +117,13 @@ class Settings extends Component {
 
     // ...
     implodeAccount = () => {
-        this.setState({ keepEmail: false, })
+        this.setState({ keepEmail: false })
         this.props.showChoiceAlert(string.empty(),"Warning")
     }
 
 
     // ...
-    emailOptOut = (event) => this.setState({ keepEmail: event.target.checked, })
+    emailOptOut = (event) => this.setState({ keepEmail: event.target.checked })
 
 
     // ...
@@ -280,7 +280,7 @@ class Settings extends Component {
     // ...
     changeCurrency = (event) => {
         this.props.assetManager.updateExchangeRate(event.target.value)
-        this.props.setState({ currency: event.target.value, })
+        this.props.setState({ currency: event.target.value })
         this.saveCurrency(event.target.value)
     }
 
@@ -323,7 +323,7 @@ class Settings extends Component {
                     }
                 )
                 .then((_) => {
-                    this.props.setState({ discoverable: isInputChecked, })
+                    this.props.setState({ discoverable: isInputChecked })
                     this.props.popupSnackbar(
                         isInputChecked ?
                             <Typography variant="body1" color="primary">
@@ -344,7 +344,7 @@ class Settings extends Component {
 
 
     // ...
-    updatePassword = (event) => this.setState({ password: event.target.value, })
+    updatePassword = (event) => this.setState({ password: event.target.value })
 
 
     // ...
@@ -397,7 +397,7 @@ class Settings extends Component {
                     </div>
                     <div className="flex-box-col items-flex-end content-flex-end">
 
-                        <div style={{ width: "218px", }}>
+                        <div style={{ width: "218px" }}>
                             <InputField
                                 name="password"
                                 type="password"
@@ -484,7 +484,7 @@ class Settings extends Component {
 
             <div className="flex-box-row">
                 <div>
-                    <Typography variant="title" color="secondary">
+                    <Typography variant="h6" color="secondary">
                         Account Settings
                     </Typography>
                     <Typography variant="body1" color="secondary">
@@ -533,9 +533,9 @@ class Settings extends Component {
                 value={this.props.state.currency}
                 onChange={this.changeCurrency}
                 children={[
-                    { value: "eur", label: "Euro [EUR]", color:"secondary", },
-                    { value: "usd", label: "U.S. Dollar [USD]", color: "secondary", },
-                    { value: "aud", label: "Australian Dollar [AUD]", color: "secondary", },
+                    { value: "eur", label: "Euro [EUR]", color:"secondary" },
+                    { value: "usd", label: "U.S. Dollar [USD]", color: "secondary" },
+                    { value: "aud", label: "Australian Dollar [AUD]", color: "secondary" },
                 ]}
             >
             </RadioButtonGroup>
@@ -545,9 +545,9 @@ class Settings extends Component {
                 value={this.props.state.currency}
                 onChange={this.changeCurrency}
                 children={[
-                    { value: "nzd", label: "New Zealand Dollar [NZD]", color: "secondary", },
-                    { value: "pln", label: "Polish Złoty [PLN]", color: "secondary", },
-                    { value: "thb", label: "Thai Baht [THB]", color: "secondary", },
+                    { value: "nzd", label: "New Zealand Dollar [NZD]", color: "secondary" },
+                    { value: "pln", label: "Polish Złoty [PLN]", color: "secondary" },
+                    { value: "thb", label: "Thai Baht [THB]", color: "secondary" },
                 ]}
             >
             </RadioButtonGroup>
@@ -602,7 +602,7 @@ class Settings extends Component {
 
                 <div className="p-t flex-box-row">
                     <div>
-                        <Typography variant="title" color="secondary">
+                        <Typography variant="h6" color="secondary">
                             <span className="red">Implode Account</span>
                         </Typography>
                         <Typography variant="body1" color="secondary">

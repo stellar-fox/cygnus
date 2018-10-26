@@ -30,13 +30,13 @@ export default compose(
 
         appbar: {
             backgroundColor: "#F4B004",
-            "@global h1": { color: "#0F2E53", },
+            "@global h1": { color: "#0F2E53" },
             "@global svg": {
-                fill: ["rgba(15, 46, 83, 0.45)", "!important",],
+                fill: ["rgba(15, 46, 83, 0.45)", "!important"],
             },
         },
 
-        flex: { flex: 1, },
+        flex: { flex: 1 },
 
         menuButton: {
             marginLeft: -12,
@@ -67,7 +67,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, currentView, toggleDrawer, }) =>
+            ({ classes, currentView, toggleDrawer }) =>
                 <AppBar className={classes.appbar}>
                     <Toolbar>
                         <IconButton
@@ -79,7 +79,7 @@ export default compose(
                             <MenuIcon />
                         </IconButton>
                         <Typography
-                            variant="title"
+                            variant="h6"
                             color="inherit"
                             className={classes.flex}
                         >

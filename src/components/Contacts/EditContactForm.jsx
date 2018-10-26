@@ -74,8 +74,8 @@ const styles = (theme) => ({
             borderBottomColor: `${theme.palette.primary.main} !important`,
             borderBottomWidth: "1px !important",
         },
-        "&:before": { borderBottomColor: theme.palette.primary.main, },
-        "&:after": { borderBottomColor: theme.palette.primary.main, },
+        "&:before": { borderBottomColor: theme.palette.primary.main },
+        "&:after": { borderBottomColor: theme.palette.primary.main },
     },
 
     inputMargin: {
@@ -118,7 +118,7 @@ const styles = (theme) => ({
 
 // ...
 const EditContactInfoTextField = withStyles(styles)(
-    ({ classes, label, id, onChange, value, error, helperText, }) =>
+    ({ classes, label, id, onChange, value, error, helperText }) =>
         <TextField
             id={id}
             label={label}
@@ -148,7 +148,7 @@ const EditContactInfoTextField = withStyles(styles)(
 
 // ...
 const RequestProgress = withStyles(styles)(
-    ({ classes, }) =>
+    ({ classes }) =>
         <CircularProgress color="primary" className={classes.progress}
             thickness={3} size={25}
         />
@@ -159,7 +159,7 @@ const RequestProgress = withStyles(styles)(
 
 // ...
 const ModalButton = withStyles(styles)(
-    ({ classes, onClick, label, style, }) =>
+    ({ classes, onClick, label, style }) =>
         <Button variant="raised" color="primary" onClick={onClick}
             style={style}
             className={classNames(classes.buttonDone, classes.primaryRaised)}
@@ -173,7 +173,7 @@ const ModalButton = withStyles(styles)(
 
 // ...
 const DeleteContactButton = withStyles(styles)(
-    ({ classes, onClick, }) =>
+    ({ classes, onClick }) =>
         <Button variant="raised" size="small" onClick={onClick}
             className={classNames(classes.buttonDanger)}
         >
@@ -189,7 +189,7 @@ const ExtContactDetails = withStyles(styles)(
     ({ classes, details, assetManager, deleteAction, setCurrency, updateMemo,
         memoFieldValue, updateFirstName, firstNameFieldValue, updateLastName,
         lastNameFieldValue, updatePaymentAddress,
-        paymentAddressFieldValue, currentCurrency, error, errorMessage, }) =>
+        paymentAddressFieldValue, currentCurrency, error, errorMessage }) =>
         <div className="f-b space-around p-t-large p-b-large">
             <div className="f-b-col">
                 <Avatar className={classes.avatar}
@@ -197,7 +197,7 @@ const ExtContactDetails = withStyles(styles)(
                         gravatarSize}&d=robohash`}
                 />
                 <div className="flex-box-row items-centered">
-                    <Typography classes={{ root: classes.padded, }}
+                    <Typography classes={{ root: classes.padded }}
                         variant="body2" noWrap color="primary"
                     >
                         <Typography variant="caption" noWrap color="primary">
@@ -258,7 +258,7 @@ const ExtContactDetails = withStyles(styles)(
 
 // ...
 const ContactDetails = withStyles(styles)(
-    ({ classes, details, assetManager, deleteAction, }) =>
+    ({ classes, details, assetManager, deleteAction }) =>
         <div className="f-b space-around p-t-large p-b-large">
             <div className="f-b-col">
                 <Avatar className={classes.avatar}
@@ -269,9 +269,9 @@ const ContactDetails = withStyles(styles)(
                 <Badge
                     badgeContent={
                         assetManager.getAssetGlyph(details.contact.currency)
-                    } classes={{ badge: classes.badge, }}
+                    } classes={{ badge: classes.badge }}
                 >
-                    <Typography classes={{ root: classes.padded, }}
+                    <Typography classes={{ root: classes.padded }}
                         variant="body2" noWrap color="primary"
                     >
                         <Typography variant="caption" noWrap color="primary">
@@ -294,12 +294,12 @@ const ContactDetails = withStyles(styles)(
                 </Typography>
             </div>
             <div className="f-b-col">
-                <Typography variant="title" noWrap color="primary">
+                <Typography variant="h6" noWrap color="primary">
                     {string.shorten(formatFullName(
                         details.contact.first_name, details.contact.last_name
                     ), 30, string.shorten.END)}
                 </Typography>
-                <Typography classes={{ root: classNames(classes.padded), }}
+                <Typography classes={{ root: classNames(classes.padded) }}
                     variant="subheading" noWrap color="primary"
                 >
                     <Typography variant="caption" noWrap color="primary">
@@ -358,7 +358,7 @@ class EditContactForm extends Component {
 
     // ...
     setExtContactDefaultCurrency = (currency) => {
-        this.setState({ defaultCurrency: currency, })
+        this.setState({ defaultCurrency: currency })
     }
 
 
@@ -495,7 +495,7 @@ class EditContactForm extends Component {
             results ? this.props.setState({
                 details: Object.assign(this.props.details, {
                     contact: Object.assign(this.props.details.contact,
-                        {currency: this.state.defaultCurrency,}
+                        {currency: this.state.defaultCurrency}
                     ),
                 }),
             }) : this.props.setState({
@@ -509,11 +509,11 @@ class EditContactForm extends Component {
             })
 
             this.updateContacts()
-            await this.setState({ inProgress: false, })
+            await this.setState({ inProgress: false })
             this.hideDetails()
 
         } catch (error) {
-            await this.setState({ inProgress: false, })
+            await this.setState({ inProgress: false })
             this.props.showAlert("Unable to update contact info.", "Error")
         }
     }
@@ -552,23 +552,23 @@ class EditContactForm extends Component {
 
     // ...
     updateFirstName = (event) =>
-        this.setState({ firstName: event.target.value, })
+        this.setState({ firstName: event.target.value })
 
 
     // ...
     updateLastName = (event) =>
-        this.setState({ lastName: event.target.value, })
+        this.setState({ lastName: event.target.value })
 
 
     // ...
     updateMemo = (event) =>
-        this.setState({ memo: event.target.value, })
+        this.setState({ memo: event.target.value })
 
 
     // ...
     updatePaymentAddress = (event) => {
         if (federationAddressValid(event.target.value)) {
-            let [alias, domain,] = toAliasAndDomain(event.target.value)
+            let [alias, domain] = toAliasAndDomain(event.target.value)
             this.setState({
                 alias,
                 domain,
@@ -586,7 +586,7 @@ class EditContactForm extends Component {
 
     // ...
     render = () => (
-        ({ details, assetManager, }) =>
+        ({ details, assetManager }) =>
             <Fragment>
                 <AlertChoiceModal onYes={this.deleteContact} />
 
@@ -615,7 +615,7 @@ class EditContactForm extends Component {
                 <div className="f-e">
                     { this.state.inProgress ? <RequestProgress /> : null }
                     { details.external &&
-                        <ModalButton style={{ marginRight: "0.5rem", }}
+                        <ModalButton style={{ marginRight: "0.5rem" }}
                             onClick={this.updateContactInfo} label="Update"
                         />
                     }

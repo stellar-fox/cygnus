@@ -25,7 +25,7 @@ class RegisterCard extends Component {
         <Card className="welcome-card">
             <CardText>
                 <div className="flex-box-col">
-                    <Typography variant="headline" color="primary">
+                    <Typography variant="h5" color="primary">
                         Hi there,
                     </Typography>
                     <br />
