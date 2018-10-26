@@ -7,15 +7,19 @@
     </a>
 </p>
 
-> Next generation, personal micro finance service, which offers nearly instant and extremely low fee remittance service.
+> Next generation, personal micro finance solution, which offers nearly instant and extremely low fee remittance service.
 
 <br />
+
+
 
 
 # Stellar Fox (frontend)
 Moving Value at the Speed of Light
 
 <br />
+
+
 
 
 ## Introductory videos
@@ -40,6 +44,10 @@ Moving Value at the Speed of Light
 <br />
 
 
+
+
 ## Support
 
-    GAUWLOIHFR2E52DYNEYDO6ZADIDVWZKK3U77V7PMFBNOIOBNREQBHBRR
+```
+GAUWLOIHFR2E52DYNEYDO6ZADIDVWZKK3U77V7PMFBNOIOBNREQBHBRR
+```
