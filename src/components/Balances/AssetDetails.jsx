@@ -302,7 +302,7 @@ export default compose(
                 cancelEnabled: true,
             })
 
-            return Promise.resolve({ ok: true, })
+            return Promise.resolve({ ok: true })
         }
 
 
@@ -310,12 +310,12 @@ export default compose(
         // ...
         render = () => (
             ({ amount, amountText, asset, assetManager, indicatorMessage,
-                indicatorStyle, payeeMemoText, sequence, }) =>
+                indicatorStyle, payeeMemoText, sequence }) =>
                 <Fragment>
                     {asset &&
                     <div className="flex-box-row items-centered">
                         <Avatar src={asset.avatar} /><he.Nbsp /><he.Nbsp />
-                        <Typography variant="subheading" color="primary">
+                        <Typography variant="subtitle1" color="primary">
                             <span
                                 style={{
                                     fontWeight: 600,
@@ -332,7 +332,7 @@ export default compose(
 
                     {asset &&
                     <div className="flex-box-row items-centered space-between">
-                        <div style={{ minHeight: 116, }}>
+                        <div style={{ minHeight: 116 }}>
                             <ReducedContactSuggester />
                         </div>
                         <div className="m-b-medium">
@@ -385,7 +385,7 @@ export default compose(
                     <div className="f-e p-t-small">
                         <div>
                             {indicatorMessage === "Payee Verified" ?
-                                <i style={{ color: "rgb(27, 94, 32)", }}
+                                <i style={{ color: "rgb(27, 94, 32)" }}
                                     className="material-icons"
                                 >lock</i> :
                                 <i className="material-icons">lock_open</i>
@@ -446,7 +446,7 @@ export default compose(
                         }
                         {asset &&
                             <div className="flex-box-col items-flex-end">
-                                <div style={{ marginTop: 60, }}>
+                                <div style={{ marginTop: 60 }}>
                                     <Button
                                         color="primary"
                                         onClick={this.sendAsset}

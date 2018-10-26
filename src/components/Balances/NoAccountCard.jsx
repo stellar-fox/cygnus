@@ -44,7 +44,7 @@ class NoAccountCard extends Component {
     render = () => <Card className='account'>
         <CardHeader
             title={
-                <Typography variant="subheading" color="primary">
+                <Typography variant="subtitle1" color="primary">
                     Current Balance
                 </Typography>
             }

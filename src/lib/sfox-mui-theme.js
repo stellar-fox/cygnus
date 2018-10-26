@@ -62,7 +62,7 @@ export default createMuiTheme({
             fontSize: "0.6rem",
         },
 
-        subheading: {
+        subtitle1: {
             fontSize: "1.1rem",
         },
 

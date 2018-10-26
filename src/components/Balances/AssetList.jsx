@@ -51,7 +51,7 @@ const styles = theme => ({
 
 // ...
 const RequestProgress = withStyles(styles)(
-    ({ classes, }) =>
+    ({ classes }) =>
         <CircularProgress className={classes.progress}
             thickness={4} size={40}
         />
@@ -123,7 +123,7 @@ export default compose(
                     asset.asset_issuer === baseAsset.getIssuer()
             )
 
-            await this.props.setStellarAccountState({ assets: stellarAssets, })
+            await this.props.setStellarAccountState({ assets: stellarAssets })
 
             // ================================================================
 
@@ -138,8 +138,8 @@ export default compose(
                     asset => asset.code === baseAsset.getCode() &&
                         asset.issuer === baseAsset.getIssuer()
                 )
-                await this.props.setState({ awaitingSignature, })
-                return Promise.resolve({ ok: true, })
+                await this.props.setState({ awaitingSignature })
+                return Promise.resolve({ ok: true })
             }
 
             // 2.
@@ -147,9 +147,9 @@ export default compose(
                 let awaitingSignature = clone(this.props.awaitingSignature)
                 baseAsset.trustLimit = "0"
                 awaitingSignature.push(baseAsset)
-                await this.props.setState({ awaitingSignature, })
+                await this.props.setState({ awaitingSignature })
             }
-            return Promise.resolve({ ok: true, })
+            return Promise.resolve({ ok: true })
 
         }
 
@@ -177,7 +177,7 @@ export default compose(
 
             let stellarAssets = clone(this.props.assets)
             stellarAssets.push(newStellarAsset)
-            await this.props.setStellarAccountState({ assets: stellarAssets, })
+            await this.props.setStellarAccountState({ assets: stellarAssets })
 
             // ================================================================
 
@@ -192,8 +192,8 @@ export default compose(
                     asset => asset.code === baseAsset.getCode() &&
                         asset.issuer === baseAsset.getIssuer()
                 )
-                await this.props.setState({ awaitingSignature, })
-                return Promise.resolve({ok: true,})
+                await this.props.setState({ awaitingSignature })
+                return Promise.resolve({ ok: true })
             }
 
 
@@ -206,9 +206,9 @@ export default compose(
                 let awaitingSignature = clone(this.props.awaitingSignature)
                 delete baseAsset.trustLimit
                 awaitingSignature.push(baseAsset)
-                await this.props.setState({ awaitingSignature, })
+                await this.props.setState({ awaitingSignature })
             }
-            return Promise.resolve({ok: true,})
+            return Promise.resolve({ ok: true })
 
         }
 
@@ -347,7 +347,7 @@ export default compose(
                                 </Typography>
                             </div>
 
-                            <Typography variant="subheading" color="secondary">
+                            <Typography variant="subtitle1" color="secondary">
                                 <span className="asset-balance">
                                     {this.displayBalance(trustedAsset)}
                                 </span>
@@ -419,7 +419,7 @@ export default compose(
                                 </Typography>
                             </div>
 
-                            <Typography variant="subheading" color="secondary">
+                            <Typography variant="subtitle1" color="secondary">
                                 <span className="asset-balance">
                                     0.00
                                 </span>
@@ -443,7 +443,7 @@ export default compose(
 
         // ...
         showAssetDetails = (asset, _event) => {
-            this.props.setState({ selected: asset, })
+            this.props.setState({ selected: asset })
             this.props.showModal("assetDetails")
         }
 

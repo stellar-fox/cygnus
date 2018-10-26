@@ -42,7 +42,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, publicKey, }) => <Card className='account'>
+            ({ classes, publicKey }) => <Card className='account'>
                 <CardHeader
                     title={
                         <span>
@@ -58,7 +58,7 @@ export default compose(
                     {this.props.loginManager.isAuthenticated() &&
                         this.props.horizon === testNetAddr &&
                         <Fragment>
-                            <Typography variant="subheading" color="inherit">
+                            <Typography variant="subtitle1" color="inherit">
                                 Fund with Credit Card.
                                 <Typography variant="caption" color="inherit">
                                     Minimum amount is an equivalent of 0.50 €.
@@ -71,7 +71,7 @@ export default compose(
                             </div>
                         </Fragment>
                     }
-                    <Typography variant="subheading" color="inherit">
+                    <Typography variant="subtitle1" color="inherit">
                         Fund with Stellar Lumens.
                         <Typography variant="caption" color="inherit">
                             Send any amount of Stellar Lumens to the
@@ -83,7 +83,7 @@ export default compose(
                     </div>
                 </CardText>
 
-                <CardActions classes={{ root: classes.cardActions, }}>
+                <CardActions classes={{ root: classes.cardActions }}>
                     <div className="f-e">
                         <Button color="primary" onClick={this.toggleFundCard}>
                             Done

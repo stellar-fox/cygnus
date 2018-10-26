@@ -180,7 +180,7 @@ class BalancesCard extends Component {
 
     // ...
     updateAccountTree = async (account) => {
-        this.props.setAssetsState({ loading: true, })
+        this.props.setAssetsState({ loading: true })
         this.props.updateAccountTree(account)
         delay(0.3 * timeUnit.second).then(() => {
             augmentAssets(
@@ -190,7 +190,7 @@ class BalancesCard extends Component {
                 this.props.setStellarAccountState({
                     assets: augmentedAssets,
                 })
-                this.props.setAssetsState({ loading: false, })
+                this.props.setAssetsState({ loading: false })
             })
 
         })
@@ -231,7 +231,7 @@ class BalancesCard extends Component {
         >
             <CardHeader
                 title={
-                    <Typography variant="subheading" color="primary">
+                    <Typography variant="subtitle1" color="primary">
                         Current Balance
                     </Typography>
                 }
@@ -347,7 +347,7 @@ class BalancesCard extends Component {
                             <span className="fade-strong">Min Balance</span>
                         </Typography>
                         <Typography variant="body1" color="primary">
-                            <span style={{ paddingRight: "3px", }} className="fade">{
+                            <span style={{ paddingRight: "3px" }} className="fade">{
                                 this.props.assetManager.getAssetGlyph(
                                     this.props.Account.currency
                                 )
@@ -427,7 +427,7 @@ class BalancesCard extends Component {
 
             {this.props.loginManager.isAuthenticated() &&
             <CardText expandable={true}>
-                <Typography variant="subheading" color="primary">
+                <Typography variant="subtitle1" color="primary">
                     Available Currencies
                 </Typography>
                 <Typography variant="caption" color="primary">

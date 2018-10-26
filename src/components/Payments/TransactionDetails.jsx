@@ -80,7 +80,7 @@ export default compose(
                                     <i className={iconClass}>
                                         account_balance
                                     </i>
-                                    <Typography variant="subheading"
+                                    <Typography variant="subtitle1"
                                         color="primary"
                                     >
                                         Account Opened
@@ -98,7 +98,7 @@ export default compose(
                                 <i className={iconClass}>
                                     account_balance_wallet
                                 </i>
-                                <Typography variant="subheading"
+                                <Typography variant="subtitle1"
                                     color="primary"
                                 >
                                     Credit
@@ -109,7 +109,7 @@ export default compose(
                             </div> :
                             <div className="f-b-c">
                                 <i className={iconClass}>payment</i>
-                                <Typography variant="subheading"
+                                <Typography variant="subtitle1"
                                     color="primary"
                                 >
                                     Debit
@@ -145,7 +145,7 @@ export default compose(
 
         // ...
         opNativeAmount = (operation) => {
-            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
             return choose(
                 operation.type,
                 {
@@ -160,7 +160,7 @@ export default compose(
         }
 
         feeAmount = (fee) => {
-            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+            BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
             return new BigNumber(fee).dividedBy(10000000).toFixed(7)
         }
 
@@ -333,13 +333,13 @@ export default compose(
 
         // ...
         render = () => (
-            ({ assetManager, classes, data, publicKey, }) =>
+            ({ assetManager, classes, data, publicKey }) =>
                 <Fragment>
                     <Paper>
                         {data.length === 0 ?
                             <div className={classes.nodata}>
                                 <Typography align="center" color="primary"
-                                    variant="subheading"
+                                    variant="subtitle1"
                                 >
                                     <span className="fade-extreme">
                                         Select transaction above to view details here.

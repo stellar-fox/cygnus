@@ -300,7 +300,7 @@ const ContactDetails = withStyles(styles)(
                     ), 30, string.shorten.END)}
                 </Typography>
                 <Typography classes={{ root: classNames(classes.padded) }}
-                    variant="subheading" noWrap color="primary"
+                    variant="subtitle1" noWrap color="primary"
                 >
                     <Typography variant="caption" noWrap color="primary">
                         <span className="fade-strong">Payment Address:</span>

@@ -85,7 +85,7 @@ class TablePaginationActions extends React.Component {
 
     // ...
     render () {
-        const { classes, count, page, rowsPerPage, theme, } = this.props
+        const { classes, count, page, rowsPerPage, theme } = this.props
 
         return (
             <div className={classes.root}>
@@ -145,7 +145,7 @@ TablePaginationActions.propTypes = {
 // ...
 const TablePaginationActionsWrapped = withStyles(
     styles,
-    { withTheme: true, }
+    { withTheme: true }
 )(TablePaginationActions)
 
 
@@ -168,7 +168,7 @@ const TableHeaderCell = withStyles((theme) => ({
 
 // ...
 const RequestProgress = withStyles(styles)(
-    ({ classes, }) =>
+    ({ classes }) =>
         <CircularProgress className={classes.progress}
             thickness={4} size={40}
         />
@@ -264,7 +264,7 @@ export default compose(
             .on("value", txs => {
                 this.setState({
                     data: txs.val() ? Object.keys(txs.val()).map(
-                        (k) => { return { ...txs.val()[k], id: k, } }
+                        (k) => { return { ...txs.val()[k], id: k } }
                     ) : [],
                     loading: false,
                 })
@@ -276,7 +276,7 @@ export default compose(
     handleChangePage = (_event, page) => {
         if ((page * this.state.rowsPerPage + this.state.rowsPerPage) %
             this.state.highestFetched === 0) {
-            this.setState({ loading: true, })
+            this.setState({ loading: true })
             this.pageRight().then((accountResult) => {
                 const data = accountResult.records.map((r, key) => {
                     let transaction = StellarSdk.xdr.Transaction.fromXDR(
@@ -292,7 +292,7 @@ export default compose(
                         (op) => StellarSdk.Operation.fromXDRObject(op)
                     )
 
-                    return { key, transaction, operations, meta, txresult, r, }
+                    return { key, transaction, operations, meta, txresult, r }
                 })
                 this.setState({
                     loading: false,
@@ -305,13 +305,13 @@ export default compose(
                 })
             })
         }
-        this.setState({ page, })
+        this.setState({ page })
     }
 
 
     // ...
     handleChangeRowsPerPage = (event) =>
-        this.setState({ rowsPerPage: event.target.value, })
+        this.setState({ rowsPerPage: event.target.value })
 
 
     // ...
@@ -342,8 +342,8 @@ export default compose(
 
     // ...
     render = () => (
-        ({ classes, }) => {
-            const { rowsPerPage, page, data, } = this.state
+        ({ classes }) => {
+            const { rowsPerPage, page, data } = this.state
             const emptyRows = rowsPerPage - Math.min(
                 rowsPerPage, data.length - page * rowsPerPage)
 
@@ -379,12 +379,12 @@ export default compose(
                                 }
                             >
                                 <TableCell
-                                    classes={{ root: classes.cell, }}
+                                    classes={{ root: classes.cell }}
                                 >
                                     {utcToLocaleDateTime(n.lastAttempt)}
                                 </TableCell>
                                 <TableCell
-                                    classes={{ root: classes.cell, }}
+                                    classes={{ root: classes.cell }}
                                 >
                                     <NumberFormat
                                         value={n.amount}
@@ -395,12 +395,12 @@ export default compose(
                                     />
                                 </TableCell>
                                 <TableCell
-                                    classes={{ root: classes.cell, }}
+                                    classes={{ root: classes.cell }}
                                 >
                                     {n.currency.toUpperCase()}
                                 </TableCell>
                                 <TableCell
-                                    classes={{ root: classes.cell, }}
+                                    classes={{ root: classes.cell }}
                                 >
                                     {n.submitted ? "Yes" : "No"}
                                 </TableCell>
@@ -408,7 +408,7 @@ export default compose(
                         )}
 
                         <TableRow className={classes.row}
-                            style={{ height: 48 * emptyRows, }}
+                            style={{ height: 48 * emptyRows }}
                         >
                             <TableCell className={classes.cell} colSpan={4}>
                                 <div style={{
@@ -423,7 +423,7 @@ export default compose(
                                         <RequestProgress /> :
                                         data.length === 0 &&
                                             <Fragment>
-                                                <Typography variant="subheading">
+                                                <Typography variant="subtitle1">
                                                     <span className="fade-extreme">
                                                         There are no saved transactions at the moment.
                                                     </span>
@@ -433,7 +433,7 @@ export default compose(
 
                                     {this.state.error &&
                                         <Fragment>
-                                            <Typography variant="subheading">
+                                            <Typography variant="subtitle1">
                                                 <span className="fade-extreme">
                                                     Hmm. We're having trouble fetching this data.
                                                 </span>
@@ -463,7 +463,7 @@ export default compose(
                                     colSpan={5}
                                     count={data.length}
                                     rowsPerPage={rowsPerPage}
-                                    rowsPerPageOptions={[5, 10, 15,]}
+                                    rowsPerPageOptions={[5, 10, 15]}
                                     page={page}
                                     onChangePage={this.handleChangePage}
                                     onChangeRowsPerPage={

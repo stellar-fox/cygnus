@@ -357,7 +357,7 @@ class Settings extends Component {
                 labelYes="OK, I understand"
             >
                 <div className="flex-box-col">
-                    <Typography color="primary" variant="subheading">
+                    <Typography color="primary" variant="subtitle1">
                         Delete all your data now?
                     </Typography>
                     <br />

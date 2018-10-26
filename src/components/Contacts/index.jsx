@@ -137,7 +137,7 @@ const AddContactModal = withStyles(styles)(
             onClose={onClose}
         >
             <div className={classes.paper}>
-                <Typography variant="subheading" color="primary"
+                <Typography variant="subtitle1" color="primary"
                     id="modal-title"
                 >
                     Request New Contact
@@ -166,13 +166,13 @@ const EditContactModal = withStyles(styles)(
                     }}
                     className={classes.paper}
                 >
-                    <Typography variant="subheading" color="primary" id="modal-title">
+                    <Typography variant="subtitle1" color="primary" id="modal-title">
                         Federated Contact Details
                     </Typography>
                     <EditContactForm />
                 </div> :
                 <div className={classes.paper}>
-                    <Typography variant="subheading" color="primary" id="modal-title">
+                    <Typography variant="subtitle1" color="primary" id="modal-title">
                         Contact Details
                     </Typography>
                     <EditContactForm />
