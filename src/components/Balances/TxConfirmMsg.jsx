@@ -130,15 +130,15 @@ class TxConfirmMsg extends Component {
 
     // ...
     render = () => (
-        ({ classes, Account, Balances, publicKey, sequence, }) =>
+        ({ classes, Account, Balances, publicKey, sequence }) =>
             <Fragment>
 
                 <div className="p-t p-b flex-box-row space-between">
-                    <Typography align="center" color="primary" variant="body2">
+                    <Typography align="center" color="primary" variant="body1">
                         Payment
                     </Typography>
 
-                    <Typography align="center" color="primary" variant="body2">
+                    <Typography align="center" color="primary" variant="body1">
                         Cost Breakdown
                     </Typography>
                 </div>
@@ -160,7 +160,7 @@ class TxConfirmMsg extends Component {
                                 )}
                             </Typography>
                             <Typography align="center" color="primary"
-                                variant="body2"
+                                variant="body1"
                             >
                                 Sends: {this.sendAmount()}
                                 <div className="micro text-primary fade-extreme">
@@ -189,7 +189,7 @@ class TxConfirmMsg extends Component {
                                 )}
                             </Typography>
                             <Typography align="center" color="primary"
-                                variant="body2"
+                                variant="body1"
                             >
                                 Receives: {this.receiveAmount()}
                                 <div className="micro text-primary fade-extreme">
@@ -199,42 +199,42 @@ class TxConfirmMsg extends Component {
                         </div>
                     </div>
                     <div className="flex-box-col">
-                        <div style={{ paddingBottom: 5, }}>
+                        <div style={{ paddingBottom: 5 }}>
                             <div className="flex-box-row space-between">
-                                <Typography color="primary" variant="body2">
+                                <Typography color="primary" variant="body1">
                                     Exchange Rate:<he.Nbsp /><he.Nbsp />
                                 </Typography>
-                                <Typography color="primary" variant="body2">
+                                <Typography color="primary" variant="body1">
                                     {this.exchangeRate()}
                                 </Typography>
                             </div>
                         </div>
-                        <div style={{ paddingBottom: 5, }}>
+                        <div style={{ paddingBottom: 5 }}>
                             <div className="flex-box-row space-between">
-                                <Typography color="primary" variant="body2">
+                                <Typography color="primary" variant="body1">
                                     You Send:<he.Nbsp /><he.Nbsp />
                                 </Typography>
-                                <Typography color="primary" variant="body2">
+                                <Typography color="primary" variant="body1">
                                     {this.sendAmount()}
                                 </Typography>
                             </div>
                         </div>
-                        <div style={{ paddingBottom: 5, }}>
+                        <div style={{ paddingBottom: 5 }}>
                             <div className="flex-box-row space-between">
-                                <Typography color="primary" variant="body2">
+                                <Typography color="primary" variant="body1">
                                     Payee Receives:<he.Nbsp /><he.Nbsp />
                                 </Typography>
-                                <Typography color="primary" variant="body2">
+                                <Typography color="primary" variant="body1">
                                     {this.receiveAmount()}
                                 </Typography>
                             </div>
                         </div>
-                        <div style={{ paddingBottom: 5, }}>
+                        <div style={{ paddingBottom: 5 }}>
                             <div className="flex-box-row space-between">
-                                <Typography color="primary" variant="body2">
+                                <Typography color="primary" variant="body1">
                                     Service Fee:<he.Nbsp /><he.Nbsp />
                                 </Typography>
-                                <Typography color="primary" variant="body2">
+                                <Typography color="primary" variant="body1">
                                     {this.serviceFee(
                                         this.state.contact.currency
                                     )}
@@ -244,7 +244,7 @@ class TxConfirmMsg extends Component {
                     </div>
                 </div>
 
-                <Divider classes={{ root: classes.divider, }} />
+                <Divider classes={{ root: classes.divider }} />
 
                 <Typography align="center" color="primary" variant="body1">
                     Please confirm that the following info is the same on your
@@ -381,7 +381,7 @@ class TxConfirmMsg extends Component {
                     Action Required
                 </div>
 
-                <Typography align="center" color="primary" variant="body2">
+                <Typography align="center" color="primary" variant="body1">
                     When you are sure the info above is correct press
                     <he.Nbsp />
                     <CheckIcon

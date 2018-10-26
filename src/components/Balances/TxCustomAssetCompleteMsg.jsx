@@ -21,9 +21,9 @@ import { Typography } from "@material-ui/core"
 // ...
 export default connect(
     // map state to props.
-    (state) => ({ balances: state.Balances, account: state.Account, })
+    (state) => ({ balances: state.Balances, account: state.Account })
 )(
-    ({ balances, }) =>
+    ({ balances }) =>
         <Fragment>
             <Table
                 style={{
@@ -42,8 +42,8 @@ export default connect(
                         </TableRowColumn>
                         <TableRowColumn>
                             <div className="flex-box-row items-flex-end">
-                                <Typography style={{ lineHeight: "1rem", }}
-                                    variant="body2" color="primary"
+                                <Typography style={{ lineHeight: "1rem" }}
+                                    variant="body1" color="primary"
                                 >
                                     <span className="small fade">
                                         {handleException(
@@ -70,7 +70,7 @@ export default connect(
                             </Typography>
                         </TableRowColumn>
                         <TableRowColumn>
-                            <Typography variant="body2" color="primary">
+                            <Typography variant="body1" color="primary">
                                 {shorten(balances.payeeAddress, 35)}
                             </Typography>
                         </TableRowColumn>
@@ -82,7 +82,7 @@ export default connect(
                             </Typography>
                         </TableRowColumn>
                         <TableRowColumn>
-                            <Typography variant="body2" color="primary">
+                            <Typography variant="body1" color="primary">
                                 {handleException(
                                     () => pubKeyAbbrLedgerHQ(balances.payee),
                                     () => "Not Available")
@@ -97,7 +97,7 @@ export default connect(
                             </Typography>
                         </TableRowColumn>
                         <TableRowColumn>
-                            <Typography variant="body2" color="primary">
+                            <Typography variant="body1" color="primary">
                                 {balances.memoText}
                             </Typography>
                         </TableRowColumn>

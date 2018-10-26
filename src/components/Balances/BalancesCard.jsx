@@ -390,7 +390,7 @@ class BalancesCard extends Component {
                     this.props.StellarAccount.signers,
                     this.props.StellarAccount.accountId
                 ) ? <Paper className="paper gradiented-warning" elevation={3}>
-                        <Typography variant="body2">
+                        <Typography variant="body1">
                             <span className="red">
                                 Warning!
                             </span>

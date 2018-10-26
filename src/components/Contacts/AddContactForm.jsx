@@ -434,7 +434,7 @@ class AddContactForm extends Component {
     render = () =>
         <Fragment>
             <div className="f-b center p-t-medium">
-                <Typography noWrap variant="body2" color="primary">
+                <Typography noWrap variant="body1" color="primary">
                     Request contact using the following categories:
                 </Typography>
             </div>
@@ -541,7 +541,7 @@ class AddContactForm extends Component {
             {this.state.showProgress &&
                 <div className="f-b center p-t" style={{ height: "150px" }}>
                     <RequestProgress />
-                    <Typography noWrap variant="body2" color="primary">
+                    <Typography noWrap variant="body1" color="primary">
                         Sending request ...
                     </Typography>
                 </div>
@@ -557,7 +557,7 @@ class AddContactForm extends Component {
                     </div>
                     <div className="f-b center">
                         <div className="tag-success">
-                            <Typography noWrap variant="body2"
+                            <Typography noWrap variant="body1"
                                 color="secondary"
                             >
                                 {this.state.lastInput}

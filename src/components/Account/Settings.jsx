@@ -376,22 +376,22 @@ class Settings extends Component {
                     </Typography>
                     <br />
                     <div className="p-l">
-                        <Typography color="primary" variant="body2">
+                        <Typography color="primary" variant="body1">
                         • Your contact book.
                         </Typography>
-                        <Typography color="primary" variant="body2">
+                        <Typography color="primary" variant="body1">
                         • Preferred currency setting.
                         </Typography>
-                        <Typography color="primary" variant="body2">
+                        <Typography color="primary" variant="body1">
                         • Profile signature verification on this account.
                         </Typography>
-                        <Typography color="primary" variant="body2">
+                        <Typography color="primary" variant="body1">
                         • Payment address signature verification on this account.
                         </Typography>
-                        <Typography color="primary" variant="body2">
+                        <Typography color="primary" variant="body1">
                         • User configuration on our servers.
                         </Typography>
-                        <Typography color="primary" variant="body2">
+                        <Typography color="primary" variant="body1">
                         • Subscribtion to our emails.
                         </Typography>
                     </div>

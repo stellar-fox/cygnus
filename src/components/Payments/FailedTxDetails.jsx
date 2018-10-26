@@ -79,7 +79,7 @@ export default compose(
                         className="f-b-c p-l-small"
                     >
                         <Typography color="primary"
-                            variant="body2"
+                            variant="body1"
                         >
                             <span aria-label="cross" role="img">•</span> {decoder[r]}
                         </Typography>
@@ -122,7 +122,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, txDetails, }) =>
+            ({ classes, txDetails }) =>
                 <Paper>
                     {txDetails ?
                         <div className={

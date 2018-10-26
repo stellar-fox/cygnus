@@ -198,7 +198,7 @@ const ExtContactDetails = withStyles(styles)(
                 />
                 <div className="flex-box-row items-centered">
                     <Typography classes={{ root: classes.padded }}
-                        variant="body2" noWrap color="primary"
+                        variant="body1" noWrap color="primary"
                     >
                         <Typography variant="caption" noWrap color="primary">
                             <span className="fade-strong">
@@ -272,7 +272,7 @@ const ContactDetails = withStyles(styles)(
                     } classes={{ badge: classes.badge }}
                 >
                     <Typography classes={{ root: classes.padded }}
-                        variant="body2" noWrap color="primary"
+                        variant="body1" noWrap color="primary"
                     >
                         <Typography variant="caption" noWrap color="primary">
                             <span className="fade-strong">

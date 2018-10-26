@@ -254,7 +254,7 @@ export default compose(
                                 gravatarSize48}&d=robohash`}
                         />
                     </span>
-                    <Typography variant="body2" color="primary">
+                    <Typography variant="body1" color="primary">
                         {pubKeyAbbr(publicKey)}
                     </Typography>
                 </div>
@@ -355,7 +355,7 @@ export default compose(
                             >
                                 <div className="flex-box-row space-between p-r">
                                     <Typography color="primary"
-                                        variant="body2" noWrap
+                                        variant="body1" noWrap
                                     >
                                         <span className="tiny fade-extreme">
                                             Transaction:
@@ -367,7 +367,7 @@ export default compose(
                                     </Typography>
                                     {data.r.memo_type !== "none" &&
                                     <Typography color="primary"
-                                        variant="body2" noWrap
+                                        variant="body1" noWrap
                                     >
                                         <span className="tiny fade-extreme">
                                             Memo:

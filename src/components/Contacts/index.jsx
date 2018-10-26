@@ -206,7 +206,7 @@ const AddContactButton = withStyles(styles)(
 const NoCards = withStyles(styles)(
     ({ classes, title, subtitle }) =>
         <div className={classes.nocards}>
-            <Typography noWrap  variant="body2" color="inherit">
+            <Typography noWrap  variant="body1" color="inherit">
                 {title}
             </Typography>
             <Typography noWrap  variant="caption" color="inherit">
@@ -639,7 +639,7 @@ class Contacts extends Component {
             {this.state.selectedView === 0 &&
                 <Fragment>
                     <div className="m-t-medium">
-                        <Typography variant="body2" color="secondary">
+                        <Typography variant="body1" color="secondary">
                             Contacts
                         </Typography>
                         <Divider color="secondary" />
@@ -656,7 +656,7 @@ class Contacts extends Component {
                         }
                     </Grid>
                     <div className="m-t-medium">
-                        <Typography variant="body2" color="secondary">
+                        <Typography variant="body1" color="secondary">
                             Requests
                         </Typography>
                         <Divider color="secondary" />
@@ -678,7 +678,7 @@ class Contacts extends Component {
             {this.state.selectedView === 1 &&
                 <Fragment>
                     <div className="m-t-medium">
-                        <Typography variant="body2" color="secondary">
+                        <Typography variant="body1" color="secondary">
                             Contacts
                         </Typography>
                         <Divider color="secondary" />
@@ -700,7 +700,7 @@ class Contacts extends Component {
             {this.state.selectedView === 2 &&
                 <Fragment>
                     <div className="m-t-medium">
-                        <Typography variant="body2" color="secondary">
+                        <Typography variant="body1" color="secondary">
                             Requests
                         </Typography>
                         <Divider color="secondary" />

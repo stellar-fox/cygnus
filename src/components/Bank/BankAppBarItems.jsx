@@ -21,7 +21,7 @@ export default compose(
     withLoginManager,
     withStyles({
 
-        accountHomeDomain: { fontVariant: "small-caps", },
+        accountHomeDomain: { fontVariant: "small-caps" },
 
         appBarItems: {
             display: "block",
@@ -70,7 +70,7 @@ export default compose(
             <div className={classes.appBarTitle}>
                 <div className={classes.barTitleAccount}>
                     {loginManager.isAuthenticated() ?
-                        <Typography align="center" variant="body2"
+                        <Typography align="center" variant="body1"
                             noWrap color="primary"
                         >
                             {formatFullName(firstName, lastName)}
