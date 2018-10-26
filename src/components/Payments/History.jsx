@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
 import { choose, asyncMap, string } from "@xcmats/js-toolbox"
-import { credit, debit, displayCredit, displayDebit } from "../../lib/stellar-tx"
+// import { credit, debit, displayCredit, displayDebit } from "../../lib/stellar-tx"
 import { htmlEntities as he, StellarSdk, utcToLocaleDateTime } from "../../lib/utils"
 import { withStyles } from "@material-ui/core/styles"
 import {
@@ -16,14 +16,14 @@ import FirstPageIcon from "@material-ui/icons/FirstPage"
 import LastPageIcon from "@material-ui/icons/LastPage"
 import TransactionDetails from "./TransactionDetails"
 import { transactionFetchLimit } from "../../components/StellarFox/env"
-import NumberFormat from "react-number-format"
+// import NumberFormat from "react-number-format"
 import BigNumber from "bignumber.js"
 import { withAssetManager } from "../AssetManager"
 
 
 // flying airplane
-import { getAmountWithSign, payments } from "../../lib/stellar/payments"
-import { transactions } from "../../lib/stellar/transactions"
+import { getAmountWithSign, getPayments } from "../../lib/stellar/payments"
+// import { transactions } from "../../lib/stellar/transactions"
 
 
 // ...
@@ -241,7 +241,7 @@ export default compose(
     // ...
     componentDidMount = () => {
 
-        payments(this.props.publicKey, {
+        getPayments(this.props.publicKey, {
             horizon: this.props.horizon,
         }).then((page) => {
             asyncMap(page.records, (record) =>
@@ -412,8 +412,8 @@ export default compose(
 
     // ...
     render = () => (
-        ({ classes, publicKey }) => {
-            const { rowsPerPage, page, data, tableRowData } = this.state
+        ({ classes /*publicKey*/ }) => {
+            const { rowsPerPage, page, /*data,*/ tableRowData } = this.state
             const emptyRows = rowsPerPage - Math.min(
                 rowsPerPage, tableRowData.length - page * rowsPerPage)
 
@@ -445,7 +445,7 @@ export default compose(
                             <TableRow classes={{
                                 root: classes.row,
                                 selected: classes.selectedRow,
-                            }}
+                            }} key={row.pagingToken}
                             >
                                 <TableCell classes={{ root: classes.cell }}>
                                     {utcToLocaleDateTime(row.dateTime)}

@@ -1,10 +1,37 @@
+/**
+ * Stellar payments processing.
+ *
+ * @module payments
+ * @license Apache-2.0
+ */
+
+
+
+
 import { server, testNet } from "./server"
 
 
 
 
-// ...
-const getPlusMinus = (record, accountId) => {
+/**
+ * @typedef {Object} PaymentRecord
+ * @property {Function} next Returns next records.
+ * @property {Function} prev Returns previous records.
+ * @property {Array} records Array of record objects.
+ */
+
+
+
+
+/**
+ * Returns sign of the record (is it credit or debit).
+ *
+ * @function getSign
+ * @param {PaymentRecord} record Payment record.
+ * @param {String} accountId Stellar account ID.
+ * @returns {String}
+ */
+const getSign = (record, accountId) => {
     if (["payment", "path_payment"].some(
         (element) => element === record.type)
     ) {
@@ -21,16 +48,17 @@ const getPlusMinus = (record, accountId) => {
 
 /**
  * @typedef {Object} FetchOptions
- * @property {Number} [limit] Number of transactions returned.
- * @property {String} [order] Order of returned rows.
- * @property {Any} [cursor] Paging token, specifying where to start returning records from.
- * @property {String} [horizon] Horizon API endpoint.
+ * @property {Number} limit Number of transactions returned.
+ * @property {String} order Order of returned rows.
+ * @property {*} cursor Paging token, specifying where to start
+ *      returning records from.
+ * @property {String} horizon Horizon API endpoint.
  */
 /**
  * @typedef {Object} PageObject
- * @property {Function} [next] Returns next records.
- * @property {Function} [prev] Returns previous records.
- * @property {Array} [records] Array of record objects.
+ * @property {Function} next Returns next records.
+ * @property {Function} prev Returns previous records.
+ * @property {Array} records Array of record objects.
  */
 /**
  * Return payments for the Stellar Account.
@@ -39,12 +67,12 @@ const getPlusMinus = (record, accountId) => {
  * "account_merge"
  *
  * @async
- * @function payments
- * @param {String} [accountId] Stellar account id. [G...]
+ * @function getPayments
+ * @param {String} accountId Stellar account id. [G...]
  * @param {FetchOptions} [opts={}]
  * @returns {Promise.<PageObject>}
  */
-export const payments = (
+export const getPayments = (
     accountId,
     {
         limit = 5,
@@ -52,36 +80,33 @@ export const payments = (
         horizon = testNet,
 
     } = {}
-) => server(horizon)
-    .payments()
-    .forAccount(accountId)
-    .order(order)
-    .limit(limit)
-    .call()
+) =>
+    server(horizon)
+        .payments()
+        .forAccount(accountId)
+        .order(order)
+        .limit(limit)
+        .call()
 
 
 
 
-/**
- * @typedef {Object} Record
- * @property {Function} [next] Returns next records.
- * @property {Function} [prev] Returns previous records.
- * @property {Array} [records] Array of record objects.
- */
 /**
  * Returns the amount of the payment based on the type of payment record.
  *
  * @async
  * @function getAmountWithSign
- * @param {Record} [record] Payment record.
- * @returns {Object} Amount in native currency (XLM) along with the arithmetic sign +-.
+ * @param {PaymentRecord} record Payment record.
+ * @param {String} accountId Stellar account ID.
+ * @returns {Object} Amount in native currency (XLM)
+ *      along with the arithmetic sign `+-`.
  */
 export const getAmountWithSign = (record, accountId) => {
     if (["payment", "path_payment"].some(
         (element) => element === record.type)
     ) {
         return Promise.resolve({
-            sign: getPlusMinus(record, accountId),
+            sign: getSign(record, accountId),
             value: record.amount,
         })
     }
@@ -95,8 +120,7 @@ export const getAmountWithSign = (record, accountId) => {
 
     if (record.type === "account_merge") {
         return record.effects().then((effects) => {
-            let value = ""
-            let sign = ""
+            let value = "", sign = ""
             effects.records.forEach((record) => {
                 if (record.account === accountId) {
                     if (record.type === "account_debited") {
