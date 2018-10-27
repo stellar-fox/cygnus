@@ -20,7 +20,8 @@ import {
     Tab,
     Tabs,
 } from "material-ui/Tabs"
-import PaymentsHistory from "./PaymentsHistory"
+// import PaymentsHistory from "./PaymentsHistory"
+import PaymentsTable from "../PaymentsTable"
 import Transactions from "./Transactions"
 
 import "./index.css"
@@ -159,7 +160,7 @@ class Payments extends Component {
                             value={this.validTabNames[0]}
                         >
                             <div className="tab-content">
-                                <PaymentsHistory />
+                                <PaymentsTable />
                             </div>
                         </Tab>
                         {firebaseApp.auth("session").currentUser &&

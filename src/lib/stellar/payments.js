@@ -75,6 +75,7 @@ const getSign = (record, accountId) => {
 export const getPayments = (
     accountId,
     {
+        cursor = "now",
         limit = 5,
         order = "desc",
         horizon = testNet,
@@ -84,10 +85,10 @@ export const getPayments = (
     server(horizon)
         .payments()
         .forAccount(accountId)
+        .cursor(cursor)
         .order(order)
         .limit(limit)
         .call()
-
 
 
 

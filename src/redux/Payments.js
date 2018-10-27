@@ -4,10 +4,13 @@ import {
 } from "@xcmats/js-toolbox"
 
 
-
-
 // <Payments> component state
 const initState = {
+
+
+    page: 0, // current "page" of data (we will operate on 5 rows pages - for now)
+    cursorRight: null, // cursor to use when fetching consecutive page of data
+
 
     paymentDetails: {
         txid: null,
@@ -20,7 +23,7 @@ const initState = {
     savedTxDetails: null,
 
     cursorLeft: null,
-    cursorRight: null,
+
     prevDisabled: false,
     nextDisabled: false,
 
@@ -45,7 +48,7 @@ const initState = {
 // ...
 export const SET_STATE = "@Payments/SET_STATE"
 export const RESET_STATE = "@Payments/RESET_STATE"
-
+export const SET_CURSOR_RIGHT = "@Payments/SET_CURSOR_RIGHT"
 
 
 
@@ -53,11 +56,18 @@ export const RESET_STATE = "@Payments/RESET_STATE"
 export const action = {
 
     // ...
+    setCursorRight: (cursorRight) => (dispatch, _getState) =>
+        dispatch(action.setState({ cursorRight })),
+
+    // ...
+    setPage: (page) => (dispatch, _getState) =>
+        dispatch(action.setState({ page })),
+
+    // ...
     setState: (state) => ({
         type: SET_STATE,
         state,
     }),
-
 
     // ...
     resetState: () => ({ type: RESET_STATE }),
