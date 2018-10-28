@@ -42,6 +42,8 @@ div.p-b-small-block::after {
 
 .p-r-small { padding-right: 0.5rem; }
 
+.p-r-tiny { padding-right: 0.3em; }
+
 .m-t { margin-top: 1rem; }
 
 .m-t-medium { margin-top: 2rem; }
