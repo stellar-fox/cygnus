@@ -103,15 +103,25 @@ export const getPayments = (
  *      along with the arithmetic sign `+-`.
  */
 export const getAmountWithSign = (record, accountId) => {
+
+    /**
+     * Any asset can be used for `payment` and `path_payment` operation types.
+     */
     if (["payment", "path_payment"].some(
         (element) => element === record.type)
     ) {
         return Promise.resolve({
             sign: getSign(record, accountId),
             value: record.amount,
+            assetType: record.asset_type,
+            assetCode: record.asset_code,
+            assetIssuer: record.asset_issuer,
         })
     }
 
+    /**
+     * This type of operation can happen with native currency of the network
+     */
     if (record.type === "create_account") {
         return Promise.resolve({
             sign: record.account === accountId ? "+" : "-",
@@ -119,6 +129,10 @@ export const getAmountWithSign = (record, accountId) => {
         })
     }
 
+    /**
+     * Merge can happen with native currency of the network when no other
+     * account subentries are present.
+     */
     if (record.type === "account_merge") {
         return record.effects().then((effects) => {
             let value = "", sign = ""

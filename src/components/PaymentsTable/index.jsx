@@ -7,33 +7,17 @@ import {
     CircularProgress, Paper, Table, TableBody, TableCell, TableHead, TableRow,
     Typography,
 } from "@material-ui/core"
-
+import {
+    CardGiftcardRounded, MergeTypeRounded, PaymentRounded, TimelineRounded
+} from "@material-ui/icons"
 import TableFooter from "@material-ui/core/TableFooter"
 import TablePagination from "@material-ui/core/TablePagination"
-
-
 import PaginatorActions from "./PaginatorActions"
 import { action as PaymentsActions } from "../../redux/Payments"
-
 import { getAmountWithSign, getPayments } from "../../lib/stellar/payments"
 import { asyncMap } from "@xcmats/js-toolbox"
 import { utcToLocaleDateTime } from "../../lib/utils"
-
-// let id = 0
-// function createData (name, calories, fat, carbs, protein) {
-//     id += 1
-//     return { id, name, calories, fat, carbs, protein }
-// }
-
-// const rows = [
-//     createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-//     createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-//     createData("Eclair", 262, 16.0, 24, 6.0),
-//     createData("Cupcake", 305, 3.7, 67, 4.3),
-//     createData("Gingerbread", 356, 16.0, 49, 3.9),
-//     createData("Grzybnia", 3536, 116.0, 429, 35.9),
-// ]
-
+import { withAssetManager } from "../AssetManager"
 
 
 // ...
@@ -56,6 +40,7 @@ const CustomTableCell = withStyles((theme) => ({
 
 // <PaymentsTable> component
 export default compose(
+    withAssetManager,
     withStyles((theme) => ({
         root: {
             width: "100%",
@@ -91,6 +76,7 @@ export default compose(
             page: state.Payments.page,
             horizon: state.StellarAccount.horizon,
             publicKey: state.StellarAccount.accountId,
+            preferredCurrency: state.Balances.payeeCurrency,
         }),
         (dispatch) => bindActionCreators({
             setCursorRight: PaymentsActions.setCursorRight,
@@ -110,7 +96,7 @@ export default compose(
         state = {
             rows: [],
             rowsPerPage: 5,
-            loading: false,
+            loading: true,
             error: false,
             lastPageFetched: 0,
         }
@@ -128,11 +114,14 @@ export default compose(
                             type: record.type,
                             amount,
                             pagingToken: record.paging_token,
+                            transactionHash: record.transaction_hash,
                         }))
                 ).then((rows) => {
                     this.setState({
                         rows,
                         loading: false,
+                        error: false,
+                        lastPageFetched: this.props.page + 1,
                     })
                     this.props.setCursorRight(rows[rows.length - 1].pagingToken)
                     if (rows.length >= 5) {
@@ -157,11 +146,13 @@ export default compose(
                             type: record.type,
                             amount,
                             pagingToken: record.paging_token,
+                            transactionHash: record.transaction_hash,
                         }))
                 ).then((rows) => {
                     this.setState({
                         rows: this.state.rows.concat(rows),
                         loading: false,
+                        error: false,
                         lastPageFetched: this.props.page + 1,
                     })
                     this.props.setCursorRight(rows[rows.length - 1].pagingToken)
@@ -188,6 +179,42 @@ export default compose(
 
 
         // ...
+        titleizeType = (typeStr) => (
+            (t) => t[typeStr]
+        )({
+            payment: <div className="flex-box-row items-centered">
+                <PaymentRounded />
+                <div className="p-l-small">Payment</div>
+            </div>,
+            create_account: <div className="flex-box-row items-centered">
+                <CardGiftcardRounded />
+                <div className="p-l-small">Create Account</div>
+            </div>,
+            path_payment: <div className="flex-box-row items-centered">
+                <TimelineRounded />
+                <div className="p-l-small">Path Payment</div>
+            </div>,
+            account_merge: <div className="flex-box-row items-centered">
+                <MergeTypeRounded />
+                <div className="p-l-small">Account Merge</div>
+            </div>,
+        })
+
+
+        // ...
+        colorize = (amount) =>
+            amount.sign === "+" ?
+                <span className="green">
+                    <span className="p-r-tiny">{amount.sign}</span>
+                    {amount.value}
+                </span> :
+                <span className="red">
+                    <span className="p-r-tiny">{amount.sign}</span>
+                    {amount.value}
+                </span>
+
+
+        // ...
         render = () => (
             ({ classes, page }, { rows, rowsPerPage }) => {
 
@@ -207,9 +234,46 @@ export default compose(
                             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                                 return (
                                     <TableRow className={classes.row} key={row.pagingToken}>
-                                        <CustomTableCell>{row.dateTime}</CustomTableCell>
-                                        <CustomTableCell>{row.type}</CustomTableCell>
-                                        <CustomTableCell numeric>{row.amount.sign}{row.amount.value}</CustomTableCell>
+                                        <CustomTableCell>
+                                            {row.dateTime}
+                                        </CustomTableCell>
+                                        <CustomTableCell>
+                                            <div className="flex-box-col">
+                                                {this.titleizeType(row.type)}
+                                                <span className="tiny fade-extreme">
+                                                    {row.transactionHash}
+                                                </span>
+                                            </div>
+                                        </CustomTableCell>
+                                        <CustomTableCell numeric>
+                                            {row.amount.assetCode ?
+                                                <div className={row.amount.sign === "+" ? "green" : "red"}>
+                                                    {this.colorize(row.amount)}
+                                                    <span className="p-l-small">
+                                                        {row.amount.assetCode}
+                                                    </span>
+                                                </div> :
+                                                <div className="flex-box-col">
+                                                    <div className={row.amount.sign === "+" ? "green" : "red"}>
+                                                        <span className="p-r-tiny">
+                                                            {row.amount.sign}
+                                                        </span>
+                                                        {this.props.assetManager.convertToPayeeCurrency(
+                                                            row.amount.value
+                                                        )}
+                                                        <span className="p-l-small">
+                                                            {this.props.preferredCurrency.toUpperCase()}
+                                                        </span>
+                                                    </div>
+                                                    <div className="tiny fade-strong">
+                                                        {this.colorize(row.amount)}
+                                                        <span className="p-l-small">
+                                                            XLM
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </CustomTableCell>
                                     </TableRow>
                                 )
                             })}
@@ -245,6 +309,14 @@ export default compose(
                                                     </Typography>
                                                 </Fragment>)
                                             }
+                                            {!this.state.error && !this.state.loading &&
+                                            <Typography color="primary" variant="h6">
+                                                <span className="fade-extreme">
+                                                    That's it. No more data.
+                                                </span>
+                                            </Typography>
+                                            }
+
                                         </div>
                                     </CustomTableCell>
                                 </TableRow>
@@ -258,6 +330,7 @@ export default compose(
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     onChangePage={this.handleChangePage}
+                                    rowsPerPageOptions={[ 5, 10, 15 ]}
                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                     ActionsComponent={PaginatorActions}
                                     labelDisplayedRows={
