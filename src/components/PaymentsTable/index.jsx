@@ -76,7 +76,7 @@ export default compose(
             page: state.Payments.page,
             horizon: state.StellarAccount.horizon,
             publicKey: state.StellarAccount.accountId,
-            preferredCurrency: state.Balances.payeeCurrency,
+            preferredCurrency: state.Account.currency,
         }),
         (dispatch) => bindActionCreators({
             setCursorRight: PaymentsActions.setCursorRight,
@@ -272,7 +272,7 @@ export default compose(
                                                         <span className="p-r-tiny">
                                                             {row.amount.sign}
                                                         </span>
-                                                        {this.props.assetManager.convertToPayeeCurrency(
+                                                        {this.props.assetManager.convertToAsset(
                                                             row.amount.value
                                                         )}
                                                         <span className="p-l-small">
