@@ -14,7 +14,7 @@ import TableFooter from "@material-ui/core/TableFooter"
 import TablePagination from "@material-ui/core/TablePagination"
 import PaginatorActions from "./PaginatorActions"
 import { action as PaymentsActions } from "../../redux/Payments"
-import { getAmountWithSign, getPayments } from "../../lib/stellar/payments"
+import { getArithmeticAmount, getPayments } from "../../lib/stellar/payments"
 import { asyncMap } from "@xcmats/js-toolbox"
 import { utcToLocaleDateTime } from "../../lib/utils"
 import { withAssetManager } from "../AssetManager"
@@ -107,11 +107,14 @@ export default compose(
                 horizon: this.props.horizon,
             }).then((dataPage) => {
                 asyncMap(dataPage.records, (record) =>
-                    getAmountWithSign(record, this.props.publicKey)
+                    getArithmeticAmount(record, this.props.publicKey)
                         .then((amount) => ({
                             dateTime: utcToLocaleDateTime(record.created_at),
                             type: record.type,
                             amount,
+                            assetType: record.asset_type,
+                            assetCode: record.asset_code,
+                            assetIssuer: record.asset_issuer,
                             pagingToken: record.paging_token,
                             transactionHash: record.transaction_hash,
                         }))
@@ -139,11 +142,14 @@ export default compose(
                 limit: this.state.rowsPerPage,
             }).then((dataPage) => {
                 asyncMap(dataPage.records, (record) =>
-                    getAmountWithSign(record, this.props.publicKey)
+                    getArithmeticAmount(record, this.props.publicKey)
                         .then((amount) => ({
                             dateTime: utcToLocaleDateTime(record.created_at),
                             type: record.type,
                             amount,
+                            assetType: record.asset_type,
+                            assetCode: record.asset_code,
+                            assetIssuer: record.asset_issuer,
                             pagingToken: record.paging_token,
                             transactionHash: record.transaction_hash,
                         }))
@@ -260,11 +266,11 @@ export default compose(
                                             </div>
                                         </CustomTableCell>
                                         <CustomTableCell numeric>
-                                            {row.amount.assetCode ?
+                                            {row.assetCode ?
                                                 <div className={row.amount.sign === "+" ? "green" : "red"}>
                                                     {this.colorize(row.amount)}
                                                     <span className="p-l-small">
-                                                        {row.amount.assetCode}
+                                                        {row.assetCode}
                                                     </span>
                                                 </div> :
                                                 <div className="flex-box-col">
@@ -326,7 +332,7 @@ export default compose(
                                             {!this.state.error && !this.state.loading &&
                                             <Typography color="primary" variant="h6">
                                                 <span className="fade-extreme">
-                                                    That's it. No more data.
+                                                    That's it. No more records.
                                                 </span>
                                             </Typography>
                                             }

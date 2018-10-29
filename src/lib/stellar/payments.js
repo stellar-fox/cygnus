@@ -1,5 +1,5 @@
 /**
- * Stellar payments processing.
+ * Stellar payments helper. Provides wrappers for payment operation querying
  *
  * @module payments
  * @license Apache-2.0
@@ -14,34 +14,42 @@ import { server, testNet } from "./server"
 
 
 /**
- * @typedef {Object} PaymentRecord
- * @property {Function} next Returns next records.
- * @property {Function} prev Returns previous records.
- * @property {Array} records Array of record objects.
+ * @typedef {Object} Page
+ * @property {Function} next Returns next page of records.
+ * @property {Function} prev Returns previous page of records.
+ * @property {Array} records Array of payment records.
  */
-
-
-
 
 /**
- * Returns sign of the record (is it credit or debit).
- *
- * @function getSign
- * @param {PaymentRecord} record Payment record.
- * @param {String} accountId Stellar account ID.
- * @returns {String}
+ * @typedef {Object} OperationRecord
+ * @property {String} [account] New account that was funed if operation type is
+ * `create_account`.
+ * @property {String} [amount] Amount sent in native currency.
+ * @property {String} [asset_type] Can be either `native` | `alphanum4` |
+ * `alphanum12` if operation type is `payment`.
+ * @property {String} [asset_code] Code of the destination asset. Appears in
+ * `payment` type only.
+ * @property {String} [asset_issuer] Account ID of the issuing account of the
+ * asset. Appears in `payment` type only.
+ * @property {String} created_at Date and time ledger in which this operation
+ * happened.
+ * @property {String} [from] Account ID of the account where the payment was
+ * sent from if operation type is `payment`.
+ * @property {String} [funder] Account ID of the funding account if operation
+ * type is `create_account`.
+ * @property {Number|String} id Canonical ID of the operation.
+ * @property {String} [into] Account ID where funds of deleted account were
+ * transferred. Appears only in `account_merge` type only.
+ * @property {Number|String} paging_token Paging token to be used as cursor
+ * parameter.
+ * @property {String} source_account Account ID of the acccount that paid
+ * for this operation.
+ * @property {String} starting_balance Amount the account was funded with.
+ * @property {String} transaction_hash Hash of the transaction in which this
+ * operation happened.
+ * @property {Number} type_i Operation type expressed as integer.
+ * @property {String} type Operation type expressed as string.
  */
-const getSign = (record, accountId) => {
-    if (["payment", "path_payment"].some(
-        (element) => element === record.type)
-    ) {
-        if (record.to === accountId) {
-            return "+"
-        }
-    }
-    return "-"
-}
-
 
 
 
@@ -50,27 +58,23 @@ const getSign = (record, accountId) => {
  * @typedef {Object} FetchOptions
  * @property {Number} limit Number of transactions returned.
  * @property {String} order Order of returned rows.
- * @property {*} cursor Paging token, specifying where to start
- *      returning records from.
+ * @property {String|Number} cursor Paging token, specifying where to start
+ * returning records from.
  * @property {String} horizon Horizon API endpoint.
  */
 /**
- * @typedef {Object} PageObject
- * @property {Function} next Returns next records.
- * @property {Function} prev Returns previous records.
- * @property {Array} records Array of record objects.
- */
-/**
- * Return payments for the Stellar Account.
+ * Payments for the Stellar Account as most recent first. Limited by default to
+ * five records only.
  * The operation falls under "Payments" category if its type is in one of the
  * following categories: "create_account", "payment", "path_payment" or
  * "account_merge"
  *
  * @async
  * @function getPayments
- * @param {String} accountId Stellar account id. [G...]
+ * @param {String} accountId Stellar account ID.
  * @param {FetchOptions} [opts={}]
- * @returns {Promise.<PageObject>}
+ * @returns {Promise.<Page>} Promise containing `Page` object when resolved
+ * successfully.
  */
 export const getPayments = (
     accountId,
@@ -93,16 +97,17 @@ export const getPayments = (
 
 
 /**
- * Returns the amount of the payment based on the type of payment record.
+ * Amount value of the operation along with arithmetic sign. The sign
+ * signifies whether the amount was debited or credited to the account.
  *
  * @async
- * @function getAmountWithSign
- * @param {PaymentRecord} record Payment record.
+ * @function getArithmeticAmount
+ * @param {OperationRecord} record Single payment record.
  * @param {String} accountId Stellar account ID.
- * @returns {Object} Amount in native currency (XLM)
- *      along with the arithmetic sign `+-`.
+ * @returns {Promise.<String>} Promise containing object with arithmetic sign
+ * `+|-` along with amount when resolved successfully.
  */
-export const getAmountWithSign = (record, accountId) => {
+export const getArithmeticAmount = async (record, accountId) => {
 
     /**
      * Any asset can be used for `payment` and `path_payment` operation types.
@@ -111,11 +116,8 @@ export const getAmountWithSign = (record, accountId) => {
         (element) => element === record.type)
     ) {
         return Promise.resolve({
-            sign: getSign(record, accountId),
+            sign: record.to === accountId ? "+" : "-",
             value: record.amount,
-            assetType: record.asset_type,
-            assetCode: record.asset_code,
-            assetIssuer: record.asset_issuer,
         })
     }
 
@@ -136,21 +138,21 @@ export const getAmountWithSign = (record, accountId) => {
     if (record.type === "account_merge") {
         return record.effects().then((effects) => {
             let value = "", sign = ""
-            effects.records.forEach((record) => {
-                if (record.account === accountId) {
-                    if (record.type === "account_debited") {
-                        value = record.amount
+            effects.records.forEach((effect) => {
+                if (effect.account === accountId) {
+                    if (effect.type === "account_debited") {
+                        value = effect.amount
                         sign = "-"
                         return
                     }
-                    if (record.type === "account_credited") {
-                        value = record.amount
+                    if (effect.type === "account_credited") {
+                        value = effect.amount
                         sign = "+"
                         return
                     }
                 }
             })
-            return { sign, value }
+            return Promise.resolve({ sign, value })
         })
     }
 }
