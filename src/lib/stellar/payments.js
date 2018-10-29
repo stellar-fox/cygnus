@@ -55,7 +55,7 @@ import { server, testNet } from "./server"
 
 
 /**
- * @typedef {Object} FetchOptions
+ * @typedef {Object} PageOptions
  * @property {Number} limit Number of transactions returned.
  * @property {String} order Order of returned rows.
  * @property {String|Number} cursor Paging token, specifying where to start
@@ -72,7 +72,7 @@ import { server, testNet } from "./server"
  * @async
  * @function getPayments
  * @param {String} accountId Stellar account ID.
- * @param {FetchOptions} [opts={}]
+ * @param {PageOptions} [opts={}]
  * @returns {Promise.<Page>} Promise containing `Page` object when resolved
  * successfully.
  */
