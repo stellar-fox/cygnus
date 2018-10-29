@@ -98,7 +98,6 @@ export default compose(
             rowsPerPage: 5,
             loading: true,
             error: false,
-            lastPageFetched: 0,
         }
 
 
@@ -121,10 +120,9 @@ export default compose(
                         rows,
                         loading: false,
                         error: false,
-                        lastPageFetched: this.props.page + 1,
                     })
                     this.props.setCursorRight(rows[rows.length - 1].pagingToken)
-                    if (rows.length >= 5) {
+                    if (rows.length >= this.state.rows.length % this.state.rowsPerPage) {
                         this.fetchNextRecords(rows[rows.length - 1].pagingToken)
                     }
                 })
@@ -138,6 +136,7 @@ export default compose(
             getPayments(this.props.publicKey, {
                 horizon: this.props.horizon,
                 cursor,
+                limit: this.state.rowsPerPage,
             }).then((dataPage) => {
                 asyncMap(dataPage.records, (record) =>
                     getAmountWithSign(record, this.props.publicKey)
@@ -153,7 +152,6 @@ export default compose(
                         rows: this.state.rows.concat(rows),
                         loading: false,
                         error: false,
-                        lastPageFetched: this.props.page + 1,
                     })
                     this.props.setCursorRight(rows[rows.length - 1].pagingToken)
 
@@ -164,18 +162,34 @@ export default compose(
 
 
         // ...
-        handleChangePage = (_event, page) => {
-            this.props.setPage(page)
-            if (this.state.rows.length % this.state.rowsPerPage === 0 &&
-                this.state.lastPageFetched === page) {
+        handleChangePage = async (_event, page) => {
+            await this.props.setPage(page)
+
+            if (
+                this.state.rows.length <= (
+                    page * this.state.rowsPerPage + this.state.rowsPerPage
+                )
+            ) {
+                await this.setState({ loading: true })
                 this.fetchNextRecords(this.props.cursorRight)
             }
         }
 
 
         // ...
-        handleChangeRowsPerPage = (event) =>
-            this.setState({ rowsPerPage: event.target.value })
+        handleChangeRowsPerPage = async (event) => {
+            await this.setState({ rowsPerPage: event.target.value})
+
+            if (
+                this.state.rows.length <= (
+                    this.props.page * this.state.rowsPerPage +
+                    this.state.rowsPerPage
+                )
+            ) {
+                await this.setState({ loading: true })
+                this.fetchNextRecords(this.props.cursorRight)
+            }
+        }
 
 
         // ...
