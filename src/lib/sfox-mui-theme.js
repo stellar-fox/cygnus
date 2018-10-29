@@ -58,14 +58,6 @@ export default createMuiTheme({
 
         useNextVariants: true,
 
-        caption: {
-            fontSize: "0.6rem",
-        },
-
-        subtitle1: {
-            fontSize: "1.1rem",
-        },
-
     },
 
     zIndex: {

@@ -5,25 +5,16 @@ import { connect } from "react-redux"
 import { firebaseApp } from "../StellarFox"
 import { Redirect, Route } from "react-router-dom"
 import {
-    ConnectedSwitch as Switch,
-    ensureTrailingSlash,
-    resolvePath,
-    withDynamicRoutes,
-    withStaticRouter,
+    ConnectedSwitch as Switch, ensureTrailingSlash, resolvePath,
+    withDynamicRoutes, withStaticRouter,
 } from "../StellarRouter"
 import { rgba, StellarSdk, } from "../../lib/utils"
-
 import { action as PaymentsAction } from "../../redux/Payments"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
-
-import {
-    Tab,
-    Tabs,
-} from "material-ui/Tabs"
-// import PaymentsHistory from "./PaymentsHistory"
+import { Tab, Tabs } from "material-ui/Tabs"
 import PaymentsTable from "../PaymentsTable"
 import Transactions from "./Transactions"
-
+import { Typography } from "@material-ui/core"
 import "./index.css"
 
 
@@ -160,6 +151,12 @@ class Payments extends Component {
                             value={this.validTabNames[0]}
                         >
                             <div className="tab-content">
+                                <Typography variant="body1" color="secondary">
+                                    Payment History
+                                </Typography>
+                                <Typography variant="caption" color="secondary">
+                                    Newest transactions shown as first.
+                                </Typography>
                                 <PaymentsTable />
                             </div>
                         </Tab>
