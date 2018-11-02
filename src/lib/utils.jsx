@@ -116,26 +116,6 @@ export const getUserExternalContacts = async (userId, token) => {
 
 
 // ...
-export const changeContactStatus = async (
-    userId, token, status, requested_by
-) => {
-    try {
-        return await axios.post(`${config.api}/contact/update/`, {
-            user_id: userId,
-            token,
-            status,
-            contact_id: userId,
-            requested_by,
-        })
-    } catch (_e) {
-        return null
-    }
-}
-
-
-
-
-// ...
 export const findContact = (contacts, id, external = false) =>
     contacts.find((c) => external ? id === c.id : id === c.contact_id)
 

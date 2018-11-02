@@ -8,7 +8,7 @@
 
 
 
-import { server, testNet } from "./server"
+import { createServer, testNet } from "./server"
 
 
 
@@ -86,7 +86,7 @@ export const getPayments = (
 
     } = {}
 ) =>
-    server(horizon)
+    createServer(horizon)
         .payments()
         .forAccount(accountId)
         .cursor(cursor)
