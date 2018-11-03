@@ -236,7 +236,7 @@ class BalancesCard extends Component {
                     </Typography>
                 }
                 subtitle={
-                    <Typography variant="body1" color="primary">
+                    <Typography variant="subtitle2" color="primary">
                         {this.props
                             .assetManager.getAssetDescription(
                                 this.props.Account.currency
@@ -307,7 +307,7 @@ class BalancesCard extends Component {
                             }
 
                         </div>
-                        <Typography color="primary" variant="caption"
+                        <Typography color="primary" variant="h3"
                             className="fade-extreme"
                         >
                             <NumberFormat
@@ -318,7 +318,7 @@ class BalancesCard extends Component {
                                 fixedDecimalScale={true}
                             /> XLM
                         </Typography>
-                        <Typography color="primary" variant="caption"
+                        <Typography color="primary" variant="h3"
                             className="fade-extreme"
                         >
                             1 XLM ≈ <NumberFormat
@@ -368,7 +368,7 @@ class BalancesCard extends Component {
                                 />
                             </span>
                         </Typography>
-                        <Typography variant="caption" color="primary">
+                        <Typography variant="h3" color="primary">
                             <span className="fade-extreme">
                                 <NumberFormat
                                     value={currentAccountReserve(
@@ -427,10 +427,10 @@ class BalancesCard extends Component {
 
             {this.props.loginManager.isAuthenticated() &&
             <CardText expandable={true}>
-                <Typography variant="subtitle1" color="primary">
+                <Typography variant="h6" color="primary">
                     Available Currencies
                 </Typography>
-                <Typography variant="caption" color="primary">
+                <Typography variant="subtitle1" color="primary">
                     Use slider to enable/disable currency. Click to send payment.
                 </Typography>
                 <br />

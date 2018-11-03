@@ -234,7 +234,7 @@ export default compose(
                         <VerifiedUser
                             className="svg-success m-l-small"
                         />
-                        <Typography variant="caption" color="secondary">
+                        <Typography variant="h2" color="secondary">
                             Verified
                         </Typography>
                     </div>
@@ -297,7 +297,7 @@ export default compose(
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">
                         <RequestProgress />
-                        <Typography variant="caption" color="secondary">
+                        <Typography variant="subtitle2" color="secondary">
                             Updating ...
                         </Typography>
                     </div> :
@@ -339,15 +339,13 @@ export default compose(
 
                         <div className="p-l-small">
                             <div className="p-b-nano">
-                                <Typography variant="caption"
-                                    color="secondary"
-                                >
+                                <Typography variant="h2"color="secondary">
                                     Issuer:<he.Nbsp /><he.Nbsp />
                                     {pubKeyAbbr(trustedAsset.asset_issuer)}
                                 </Typography>
                             </div>
 
-                            <Typography variant="subtitle1" color="secondary">
+                            <Typography variant="subtitle2" color="secondary">
                                 <span className="asset-balance">
                                     {this.displayBalance(trustedAsset)}
                                 </span>
@@ -356,7 +354,7 @@ export default compose(
                                 </span>
                             </Typography>
 
-                            <Typography variant="caption" color="secondary">
+                            <Typography variant="h2" color="secondary">
                                 Trust Limit:<he.Nbsp /><he.Nbsp />
                                 {this.displayLimit(trustedAsset)}
                             </Typography>
@@ -371,7 +369,7 @@ export default compose(
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">
                         <RequestProgress />
-                        <Typography variant="caption" color="secondary">
+                        <Typography variant="subtitle2" color="secondary">
                             Updating ...
                         </Typography>
                     </div> :
@@ -390,9 +388,7 @@ export default compose(
                                     <VerifiedUser
                                         className="svg-success m-l-small"
                                     />
-                                    <Typography variant="caption"
-                                        color="secondary"
-                                    >
+                                    <Typography variant="h2" color="secondary">
                                         Verified
                                     </Typography>
                                 </div>
@@ -411,15 +407,13 @@ export default compose(
 
                         <div className="p-l-small washed-out-strong">
                             <div className="p-b-nano">
-                                <Typography variant="caption"
-                                    color="secondary"
-                                >
+                                <Typography variant="h2" color="secondary">
                                     Issuer:<he.Nbsp /><he.Nbsp />
                                     {pubKeyAbbr(config.assets.issuer)}
                                 </Typography>
                             </div>
 
-                            <Typography variant="subtitle1" color="secondary">
+                            <Typography variant="subtitle2" color="secondary">
                                 <span className="asset-balance">
                                     0.00
                                 </span>
@@ -428,7 +422,7 @@ export default compose(
                                 </span>
                             </Typography>
 
-                            <Typography variant="caption" color="secondary">
+                            <Typography variant="h2" color="secondary">
                                 Trust Limit:<he.Nbsp /><he.Nbsp />None
                             </Typography>
                         </div>

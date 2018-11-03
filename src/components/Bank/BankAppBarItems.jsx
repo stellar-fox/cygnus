@@ -75,7 +75,7 @@ export default compose(
                         >
                             {formatFullName(firstName, lastName)}
                         </Typography> : <Typography align="center"
-                            variant="caption" color="primary"
+                            variant="h3" color="primary"
                         >Account</Typography>
                     }
                 </div>
@@ -85,20 +85,20 @@ export default compose(
                             StellarAccount.accountId && StellarAccount.homeDomain ?
                                 <div className="flex-box-col content-centered">
                                     {loginManager.isAuthenticated() ?
-                                        <Typography variant="caption" color="primary">
+                                        <Typography variant="h3" color="primary">
                                             {paymentAddress ? paymentAddress :
                                                 handleException(
                                                     () => pubKeyAbbr(publicKey),
                                                     () => unknownPubKeyAbbr
                                                 )}
                                         </Typography> :
-                                        <Typography variant="caption" color="primary">
+                                        <Typography variant="h3" color="primary">
                                             {handleException(
                                                 () => pubKeyAbbr(publicKey),
                                                 () => unknownPubKeyAbbr
                                             )}
                                         </Typography>}
-                                    <Typography variant="caption" color="primary">
+                                    <Typography variant="h3" color="primary">
                                         <span className="fade-strong">
                                             {StellarAccount.homeDomain}
                                         </span>
@@ -106,14 +106,14 @@ export default compose(
                                 </div> :
                                 <div className="flex-box-col content-centered">
                                     {loginManager.isAuthenticated() ?
-                                        <Typography variant="caption" color="primary">
+                                        <Typography variant="h3" color="primary">
                                             {paymentAddress ? paymentAddress :
                                                 handleException(
                                                     () => pubKeyAbbr(publicKey),
                                                     () => unknownPubKeyAbbr
                                                 )}
                                         </Typography> :
-                                        <Typography variant="caption" color="primary">
+                                        <Typography variant="h3" color="primary">
                                             {handleException(
                                                 () => pubKeyAbbr(publicKey),
                                                 () => unknownPubKeyAbbr

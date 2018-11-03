@@ -26,7 +26,6 @@ export default createMuiTheme({
 
         secondary: {
             main: rgb(244, 176, 4),
-            // main: rgb(239, 255, 250),
             light: rgb(246, 190, 49),
             dark: rgb(156, 113, 3),
             fade: rgba(244, 176, 4, 0.6),
@@ -43,7 +42,6 @@ export default createMuiTheme({
         disabledSwitchColor: rgb(110, 80, 3),
 
         background: {
-            // paper: rgb(239, 255, 250),
             paper: rgb(244, 176, 4),
             default: rgb(15, 46, 83),
         },
@@ -57,7 +55,12 @@ export default createMuiTheme({
     typography: {
 
         useNextVariants: true,
-
+        h3: {
+            fontSize: 12,
+        },
+        h2: {
+            fontSize: 9,
+        },
     },
 
     zIndex: {

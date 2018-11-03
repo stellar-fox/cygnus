@@ -88,10 +88,10 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, data, external, }) =>
+            ({ classes, data, external }) =>
                 <Paper
                     onClick={this.showContactDetails.bind(
-                        this, {contact: data, external,})
+                        this, {contact: data, external})
                     }
                     elevation={3}
                     className={`${external ? classes.rootAlt : classes.root} ${
@@ -109,7 +109,7 @@ export default compose(
                                         data.first_name, data.last_name
                                     ), 24, shorten.END)}
                                 </Typography>
-                                <Typography variant="caption" align="right"
+                                <Typography variant="h3" align="right"
                                     color="primary"
                                 >
                                     {shorten(formatPaymentAddress(
@@ -117,7 +117,7 @@ export default compose(
                                     ), 30, shorten.END)}
                                 </Typography>
                             </div>
-                            <Typography variant="caption" align="right"
+                            <Typography variant="h2" align="right"
                                 color="primary"
                             >
                                 {pubKeyAbbr(data.pubkey)}

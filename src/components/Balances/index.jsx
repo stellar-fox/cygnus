@@ -139,7 +139,7 @@ class Balances extends Component {
 
     // ...
     updateAccountTree = (account) => {
-        this.props.setAssetsState({ loading: true, })
+        this.props.setAssetsState({ loading: true })
         this.props.updateAccountTree(account)
         delay(300).then(() => {
             augmentAssets(
@@ -149,7 +149,7 @@ class Balances extends Component {
                 this.props.setStellarAccountState({
                     assets: augmentedAssets,
                 })
-                this.props.setAssetsState({ loading: false, })
+                this.props.setAssetsState({ loading: false })
             })
 
         })
@@ -221,7 +221,7 @@ class Balances extends Component {
                 user.currency
             )
         } catch (_error) {
-            this.props.setState({ needsRegistration: true, })
+            this.props.setState({ needsRegistration: true })
         }
     }
 
@@ -233,9 +233,9 @@ class Balances extends Component {
                 this.props.publicKey, this.props.horizon
             )
             this.updateAccountTree(account)
-            this.props.setState({ exists: true, })
+            this.props.setState({ exists: true })
         } catch (error) {
-            this.props.setState({ exists: false, })
+            this.props.setState({ exists: false })
         } finally {
             this.props.hideLoadingModal()
         }
@@ -266,7 +266,7 @@ class Balances extends Component {
                 })
             }
 
-            this.props.setStateForBalances({ message: string.empty(), })
+            this.props.setStateForBalances({ message: string.empty() })
 
             this.props.showModal("txConfirm")
 
@@ -343,7 +343,7 @@ class Balances extends Component {
     // ...
     completeRegistration = (loginObj) => {
         this.changeButtonText()
-        this.props.setState({ needsRegistration: false, })
+        this.props.setState({ needsRegistration: false })
         this.props.setApiToken(loginObj.token)
         this.props.setUserId(loginObj.userId)
     }
@@ -351,7 +351,7 @@ class Balances extends Component {
 
     // ...
     closeAssetDetailsModal = () => {
-        this.props.setAssetsState({ selected: null, })
+        this.props.setAssetsState({ selected: null })
         this.props.setBalancesState({
             amount: string.empty(),
             payee: null,
@@ -365,7 +365,7 @@ class Balances extends Component {
 
     // ...
     render = () => (
-        ({Balances, bip32Path, assetManager, loginManager, publicKey, }) =>
+        ({Balances, bip32Path, assetManager, loginManager, publicKey }) =>
             <Switch>
                 <Route exact path={this.rr(".")}>
                     <Fragment>
