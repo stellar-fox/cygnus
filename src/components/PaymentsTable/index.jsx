@@ -159,7 +159,11 @@ export default compose(
                         loading: false,
                         error: false,
                     })
-                    this.props.setCursorRight(rows[rows.length - 1].pagingToken)
+                    if (rows[rows.length - 1]) {
+                        this.props.setCursorRight(
+                            rows[rows.length - 1].pagingToken
+                        )
+                    }
 
                 })
 
