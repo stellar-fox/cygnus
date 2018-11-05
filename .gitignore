@@ -12,6 +12,9 @@
 # jsdoc
 /jsdoc
 
+# dev.
+src/lib/shambhala.client.js
+
 # misc
 .DS_Store
 .env.local
