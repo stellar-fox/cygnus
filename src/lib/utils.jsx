@@ -828,7 +828,7 @@ export const shambhala = (() => {
     // dynamically import client library
     that.importClient = async () => {
         if (!type.toBool(context.Shambhala)) {
-            that.log("Imporing...")
+            that.log("Importing...")
             context.Shambhala = (await import("./shambhala.client")).default
             if (type.isObject(window.sf)) {
                 window.sf.Shambhala = context.Shambhala
