@@ -2,11 +2,14 @@ import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
 import {
+    async,
+    func,
     handleException,
     head,
     objectMap,
     parMap,
     string,
+    timeUnit,
     type,
 } from "@xcmats/js-toolbox"
 import MD5 from "../lib/md5"
@@ -805,3 +808,208 @@ export const calculateTxFee = (opsNum) => {
 // display sequence number for the next/current??? transaction
 export const nextSequenceNumber = (sequenceNumber) =>
     new BigNumber(sequenceNumber).plus(1).toString()
+
+
+
+
+// dev. only (!)
+// shambhala.client integration testing
+export const shambhala = (() => {
+
+    let
+        context = {},
+        that = {}
+
+
+    // eslint-disable-next-line no-console
+    that.log = console.log
+
+
+    // dynamically import client library
+    that.importClient = async () => {
+        if (!type.toBool(context.Shambhala)) {
+            that.log("Imporing...")
+            context.Shambhala = (await import("./shambhala.client")).default
+            if (type.isObject(window.sf)) {
+                window.sf.Shambhala = context.Shambhala
+            }
+        }
+        that.log("Shambhala client library imported.")
+    }
+
+
+    // instantiate client
+    that.instantiate = async (
+        url = "https://secrets.localhost/shambhala/shambhala.html"
+    ) => {
+        await that.importClient()
+        if (!type.isObject(context.shambhala)) {
+            context.shambhala = new context.Shambhala(url)
+            if (type.isObject(window.sf)) {
+                window.sf.shambhala = context.shambhala
+            }
+        }
+        that.log(`Instance pointing to ${string.quote(url)} created.`)
+    }
+
+
+    // choose network and _stellar_ horizon server
+    that.setTestEnv = async () => {
+        StellarSdk.Network.use(StellarSdk.Networks.TESTNET)
+        context.server = new StellarSdk.Server(
+            "https://horizon-testnet.stellar.org/"
+        )
+        await async.delay(0.1 * timeUnit.second)
+        that.log("StellarSDK.Server testnet insance created.")
+    }
+
+
+    // address generation
+    // https://bit.ly/shambhalagenaccount
+    that.generateAddress = async () => {
+        that.log("Requesting address generation...")
+        context.G_PUBLIC = await context.shambhala.generateAddress()
+        that.log("Got it:", context.G_PUBLIC)
+        return context.G_PUBLIC
+    }
+
+
+    // signing keys generation
+    // https://bit.ly/shambhalagensig
+    that.generateSigningKeys = async (G_PUBLIC = context.G_PUBLIC) => {
+        that.log("Requesting signing keys generation...")
+        context.keys = await context.shambhala.generateSigningKeys(G_PUBLIC)
+        that.log(
+            "Got them:",
+            string.shorten(context.keys.C_PUBLIC, 11),
+            string.shorten(context.keys.S_PUBLIC, 11)
+        )
+        return context.keys
+    }
+
+
+    // account creation, initial funding
+    // and finding sequence number
+    // http://bit.ly/stellarseqnumber
+    that.createAccountOnLedger = async (G_PUBLIC = context.G_PUBLIC) => {
+        that.log("Requesting account generation and initial funds...")
+        let friendbotResponse =
+            await axios.get("https://friendbot.stellar.org/", {
+                params: { addr: G_PUBLIC },
+            })
+        that.log(
+            "Got it:",
+            func.compose(
+                string.quote,
+                (op) => `${op.type}: ${op.startingBalance} XLM`,
+                (tx) => tx.operations[0],
+                (xdr64) => new StellarSdk.Transaction(xdr64)
+            )(friendbotResponse.data.envelope_xdr)
+        )
+
+        that.log("Getting account sequence...")
+        context.account = await context.server.loadAccount(G_PUBLIC)
+        context.sequence = context.account.sequenceNumber()
+        that.log("It's:", string.quote(context.sequence))
+
+        return context.account
+    }
+
+
+    // automatic keys association
+    // http://bit.ly/shambhalaautokeyassoc
+    that.generateSignedKeyAssocTX = async (
+        G_PUBLIC = context.G_PUBLIC,
+        sequence = context.sequence,
+        network = StellarSdk.Networks.TESTNET
+    ) => {
+        that.log("Requesting transaction associating keys with account...")
+        context.tx = await context.shambhala.generateSignedKeyAssocTX(
+            G_PUBLIC, sequence, network
+        )
+        that.log(
+            "It came:",
+            func.compose(
+                string.quote,
+                (opTypes) => opTypes.join(string.space()),
+                (ops) => ops.map((op) => op.type)
+            )(context.tx.operations)
+        )
+        return context.tx
+    }
+
+
+    // send transaction to the network
+    // https://bit.ly/stellarsubmittx
+    that.submitTransaction = async (tx = context.tx) => {
+        that.log("Sending transaction to the stellar network.")
+        await context.server.submitTransaction(tx)
+        that.log("Sent.")
+    }
+
+
+    // backup (test)
+    that.backup = async (G_PUBLIC = context.G_PUBLIC) => {
+        that.log(`Requesting encrypted backup for ${G_PUBLIC}.`)
+        context.backup = await context.shambhala.backup(G_PUBLIC)
+        that.log("Here it is:", context.backup)
+    }
+
+
+    // restore (test)
+    that.restore = async (
+        G_PUBLIC = context.G_PUBLIC,
+        backup = context.backup
+    ) => {
+        that.log(`Trying to restore backup for ${G_PUBLIC}.`)
+        await context.shambhala.restore(
+            G_PUBLIC, backup
+        )
+        that.log("All good.")
+    }
+
+
+    // ...
+    that.testAccountCreation = async () => {
+        that.log("Account Creation Test BEGIN")
+        // eslint-disable-next-line no-console
+        console.time("testAccountCreation")
+
+        await that.instantiate()
+        await that.setTestEnv()
+        await that.generateAddress()
+        await that.generateSigningKeys()
+        await that.createAccountOnLedger()
+        await that.generateSignedKeyAssocTX()
+        await that.submitTransaction()
+
+        that.log("Account Creation Test END")
+        // eslint-disable-next-line no-console
+        console.timeEnd("testAccountCreation")
+
+        return context
+    }
+
+
+    // ...
+    that.testBackupRestore = async () => {
+        that.log("Backup-Restore Test BEGIN")
+        // eslint-disable-next-line no-console
+        console.time("testBackupRestore")
+
+        await that.instantiate()
+        await that.setTestEnv()
+        await that.backup()
+        await that.restore()
+
+        that.log("Backup-Restore Test END")
+        // eslint-disable-next-line no-console
+        console.timeEnd("testBackupRestore")
+
+        return context
+    }
+
+
+    return Object.freeze(that)
+
+})()
