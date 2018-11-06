@@ -855,7 +855,9 @@ export const shambhala = (() => {
 
     // choose network and _stellar_ horizon server
     that.setTestEnv = async () => {
-        StellarSdk.Network.use(StellarSdk.Networks.TESTNET)
+        StellarSdk.Network.use(
+            new StellarSdk.Network(StellarSdk.Networks.TESTNET)
+        )
         context.server = new StellarSdk.Server(
             "https://horizon-testnet.stellar.org/"
         )
