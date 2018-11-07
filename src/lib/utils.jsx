@@ -2,14 +2,14 @@ import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
 import {
-    async,
+    array,
     func,
     handleException,
+    handleRejection,
     head,
     objectMap,
     parMap,
     string,
-    timeUnit,
     type,
 } from "@xcmats/js-toolbox"
 import MD5 from "../lib/md5"
@@ -31,6 +31,7 @@ import numberToText from "number-to-text"
 // a following error occurs:
 //     Error: XDR Error:AccountId is already defined
 export const StellarSdk = window.StellarSdk
+
 
 
 
@@ -814,11 +815,14 @@ export const nextSequenceNumber = (sequenceNumber) =>
 
 // dev. only (!)
 // shambhala.client integration testing
+//
+// this is almost exact copy of shambhala/src/host/index.js:testPieces
+// with some minor tweaks related to cygnus weirdness/heritage...
 export const shambhala = (() => {
 
     let
         context = {},
-        that = {}
+        that = { scenario: {} }
 
 
     // eslint-disable-next-line no-console
@@ -827,6 +831,7 @@ export const shambhala = (() => {
 
     // dynamically import client library
     that.importClient = async () => {
+
         if (!type.toBool(context.Shambhala)) {
             that.log("Importing...")
             context.Shambhala = (await import("./shambhala.client")).default
@@ -834,7 +839,9 @@ export const shambhala = (() => {
                 window.sf.Shambhala = context.Shambhala
             }
         }
+
         that.log("Shambhala client library imported.")
+
     }
 
 
@@ -842,51 +849,73 @@ export const shambhala = (() => {
     that.instantiate = async (
         url = "https://secrets.localhost/shambhala/shambhala.html"
     ) => {
+
         await that.importClient()
+
         if (!type.isObject(context.shambhala)) {
             context.shambhala = new context.Shambhala(url)
+            context.shambhalaUrl = url
             if (type.isObject(window.sf)) {
                 window.sf.shambhala = context.shambhala
+                window.sf.shambhalaContext = context
             }
         }
+
         that.log(`Instance pointing to ${string.quote(url)} created.`)
+
     }
 
 
     // choose network and _stellar_ horizon server
-    that.setTestEnv = async () => {
-        StellarSdk.Network.use(
-            new StellarSdk.Network(StellarSdk.Networks.TESTNET)
-        )
-        context.server = new StellarSdk.Server(
-            "https://horizon-testnet.stellar.org/"
-        )
-        await async.delay(0.1 * timeUnit.second)
-        that.log("StellarSDK.Server testnet insance created.")
+    that.setEnv = async ({
+        network = StellarSdk.Networks.TESTNET,
+        horizonUrl = "https://horizon-testnet.stellar.org/",
+    } = {}) => {
+
+        StellarSdk.Network.use(new StellarSdk.Network(network))
+        context.network = network
+
+        context.server = new StellarSdk.Server(horizonUrl)
+        context.horizonUrl = horizonUrl
+
+        that.log(`Network: ${string.quote(network)}`)
+        that.log(` Server: ${horizonUrl}`)
+
     }
 
 
     // address generation
     // https://bit.ly/shambhalagenaccount
     that.generateAddress = async () => {
+
         that.log("Requesting address generation...")
+
         context.G_PUBLIC = await context.shambhala.generateAddress()
+
         that.log("Got it:", context.G_PUBLIC)
         return context.G_PUBLIC
+
     }
 
 
     // signing keys generation
     // https://bit.ly/shambhalagensig
     that.generateSigningKeys = async (G_PUBLIC = context.G_PUBLIC) => {
+
         that.log("Requesting signing keys generation...")
-        context.keys = await context.shambhala.generateSigningKeys(G_PUBLIC)
+
+        let { C_PUBLIC, S_PUBLIC } =
+            await context.shambhala.generateSigningKeys(G_PUBLIC)
+        context.C_PUBLIC = C_PUBLIC
+        context.S_PUBLIC = S_PUBLIC
+
         that.log(
             "Got them:",
-            string.shorten(context.keys.C_PUBLIC, 11),
-            string.shorten(context.keys.S_PUBLIC, 11)
+            string.shorten(C_PUBLIC, 11),
+            string.shorten(S_PUBLIC, 11)
         )
         return context.keys
+
     }
 
 
@@ -894,11 +923,14 @@ export const shambhala = (() => {
     // and finding sequence number
     // http://bit.ly/stellarseqnumber
     that.createAccountOnLedger = async (G_PUBLIC = context.G_PUBLIC) => {
+
         that.log("Requesting account generation and initial funds...")
+
         let friendbotResponse =
             await axios.get("https://friendbot.stellar.org/", {
                 params: { addr: G_PUBLIC },
             })
+
         that.log(
             "Got it:",
             func.compose(
@@ -910,11 +942,14 @@ export const shambhala = (() => {
         )
 
         that.log("Getting account sequence...")
+
         context.account = await context.server.loadAccount(G_PUBLIC)
         context.sequence = context.account.sequenceNumber()
+
         that.log("It's:", string.quote(context.sequence))
 
         return context.account
+
     }
 
 
@@ -923,12 +958,15 @@ export const shambhala = (() => {
     that.generateSignedKeyAssocTX = async (
         G_PUBLIC = context.G_PUBLIC,
         sequence = context.sequence,
-        network = StellarSdk.Networks.TESTNET
+        network = context.network
     ) => {
+
         that.log("Requesting transaction associating keys with account...")
+
         context.tx = await context.shambhala.generateSignedKeyAssocTX(
             G_PUBLIC, sequence, network
         )
+
         that.log(
             "It came:",
             func.compose(
@@ -938,23 +976,111 @@ export const shambhala = (() => {
             )(context.tx.operations)
         )
         return context.tx
+
     }
 
 
     // send transaction to the network
     // https://bit.ly/stellarsubmittx
     that.submitTransaction = async (tx = context.tx) => {
+
         that.log("Sending transaction to the stellar network.")
+
         await context.server.submitTransaction(tx)
+
         that.log("Sent.")
+
+    }
+
+
+    // build transaction sending >>value<< from `source` to `destination`
+    // if `destination` doesn't exists it'll be created
+    that.transferMoney = async (
+        source, destination, amount,
+        memoText = "https://bit.ly/shambhalasrc"
+    ) => {
+
+        that.log(
+            "Building test transaction:\n",
+            "[",
+            string.quote(string.shorten(source, 11)),
+            "->",
+            string.quote(string.shorten(destination, 11)),
+            "],",
+            `amount: ${amount} XLM,`,
+            `memo: ${string.quote(memoText)}`
+        )
+
+        let
+            // try loading `sourceAccount`
+            // if it doesn't exist - let the exception propagate out
+            // as nothing can be done in such case
+            sourceAccount = await context.server.loadAccount(source),
+
+            // try loading `destinationAccount`, but handle
+            // the eventual rejection - if there is no `destination`
+            // then it shall be created,
+            // so `destinationAccount` can be set to null
+            destinationAccount = await handleRejection(
+                context.server.loadAccount.bind(context.server, destination),
+                () => null
+            ),
+
+            tx = func.compose(
+
+                // build the transaction
+                (tb) => tb.build(),
+
+                // add memo
+                (tb) => tb.addMemo(StellarSdk.Memo.text(memoText)),
+
+                destinationAccount ?
+
+                    // if `destination` exists - create payment
+                    (tb) => tb.addOperation(StellarSdk.Operation.payment({
+                        destination,
+                        asset: StellarSdk.Asset.native(),
+                        amount: String(amount),
+                    })) :
+
+                    // if `destination` doesn't exist - create account
+                    (tb) => tb.addOperation(StellarSdk.Operation.createAccount({
+                        destination,
+                        startingBalance: String(amount),
+                    }))
+
+            )(new StellarSdk.TransactionBuilder(sourceAccount))
+
+        context.tx = tx
+        that.log("Transaction built.")
+
+        return tx
+
+    }
+
+
+    // sign the transaction `tx` on behalf of an `accountId`
+    // https://bit.ly/shambhalasigning
+    that.sign = async (accountId = context.G_PUBLIC, tx = context.tx) => {
+
+        that.log("Request transaction to be signed by shambhala.")
+
+        await context.shambhala.signTransaction(accountId, tx)
+
+        that.log("Success!")
+
     }
 
 
     // backup (test)
     that.backup = async (G_PUBLIC = context.G_PUBLIC) => {
+
         that.log(`Requesting encrypted backup for ${G_PUBLIC}.`)
+
         context.backup = await context.shambhala.backup(G_PUBLIC)
+
         that.log("Here it is:", context.backup)
+
     }
 
 
@@ -963,54 +1089,104 @@ export const shambhala = (() => {
         G_PUBLIC = context.G_PUBLIC,
         backup = context.backup
     ) => {
+
         that.log(`Trying to restore backup for ${G_PUBLIC}.`)
+
         await context.shambhala.restore(
             G_PUBLIC, backup
         )
+
         that.log("All good.")
+
     }
 
 
     // ...
-    that.testAccountCreation = async () => {
+    that.scenario.accountCreation = async () => {
+
         that.log("Account Creation Test BEGIN")
         // eslint-disable-next-line no-console
-        console.time("testAccountCreation")
+        console.time("Account Creation")
 
         await that.instantiate()
-        await that.setTestEnv()
+        await that.setEnv()
         await that.generateAddress()
         await that.generateSigningKeys()
         await that.createAccountOnLedger()
         await that.generateSignedKeyAssocTX()
         await that.submitTransaction()
 
-        that.log("Account Creation Test END")
         // eslint-disable-next-line no-console
-        console.timeEnd("testAccountCreation")
-
+        console.timeEnd("Account Creation")
+        that.log("Account Creation Test END")
         return context
+
     }
 
 
     // ...
-    that.testBackupRestore = async () => {
+    that.scenario.backupRestore = async () => {
+
         that.log("Backup-Restore Test BEGIN")
         // eslint-disable-next-line no-console
         console.time("testBackupRestore")
 
         await that.instantiate()
-        await that.setTestEnv()
+        await that.setEnv()
         await that.backup()
         await that.restore()
 
-        that.log("Backup-Restore Test END")
         // eslint-disable-next-line no-console
-        console.timeEnd("testBackupRestore")
-
+        console.timeEnd("Backup-Restore")
+        that.log("Backup-Restore Test END")
         return context
+
     }
 
+
+    // ...
+    that.scenario.wasteSomeMoney = async (
+        source = context.G_PUBLIC,
+        destination = null,
+        amount = null,
+        memoText = "https://bit.ly/cygnussrc"
+    ) => {
+
+        that.log("Transaction-Signing Test BEGIN")
+        // eslint-disable-next-line no-console
+        console.time("Transaction-Signing")
+
+        let randomDestination = null
+
+        if (!destination) {
+            randomDestination = StellarSdk.Keypair.random()
+            that.log("Using some random, ad-hoc generated destination.")
+        }
+
+        await that.instantiate()
+        await that.setEnv()
+        await that.transferMoney(
+            source,
+            destination || randomDestination.publicKey(),
+            amount || array.head(array.sparse(10, 100, 1)),
+            memoText
+        )
+        await that.sign(source)
+        await that.submitTransaction()
+
+        if (!destination) {
+            that.log(
+                "Here's destination SECRET:",
+                randomDestination.secret()
+            )
+        }
+
+        // eslint-disable-next-line no-console
+        console.timeEnd("Transaction-Signing")
+        that.log("Transaction-Signing Test END")
+        return context
+
+    }
 
     return Object.freeze(that)
 
