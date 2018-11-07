@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react"
 import { withStyles } from "@material-ui/core/styles"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
+import { Asset } from "stellar-sdk"
 import { string } from "@xcmats/js-toolbox"
 import ReducedContactSuggester from "./ReducedContactSuggester"
 import InputField from "../../lib/mui-v1/InputField"
@@ -20,12 +21,13 @@ import {
     amountToText,
     insertPathIndex,
     htmlEntities as he,
-    StellarSdk,
 } from "../../lib/utils"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import clone from "lodash/clone"
 import BigNumber from "bignumber.js"
 import NumberFormat from "react-number-format"
+
+
 
 
 // ...
@@ -47,6 +49,7 @@ const styles = (theme) => ({
         border: `3px solid ${theme.palette.secondary.light}`,
     },
 })
+
 
 
 
@@ -219,7 +222,7 @@ export default compose(
                 this.props.payee, this.props.horizon
             )
 
-            const asset = new StellarSdk.Asset(
+            const asset = new Asset(
                 this.props.asset.asset_code,
                 this.props.asset.asset_issuer
             )

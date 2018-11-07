@@ -12,6 +12,18 @@ import {
     string,
     type,
 } from "@xcmats/js-toolbox"
+import {
+    Asset,
+    Keypair,
+    Memo,
+    Network,
+    Networks,
+    Operation,
+    Server,
+    StrKey,
+    Transaction,
+    TransactionBuilder,
+} from "stellar-sdk"
 import MD5 from "../lib/md5"
 import shajs from "sha.js"
 import BigNumber from "bignumber.js"
@@ -19,19 +31,6 @@ import { loadAccount } from "../lib/stellar-tx"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
 import numberToText from "number-to-text"
-
-
-
-
-// FIXME
-// when using:
-//    import StellarSdk from "stellar-sdk"
-// or
-//    import { Network, Server, ... } from "stellar-sdk"
-// a following error occurs:
-//     Error: XDR Error:AccountId is already defined
-export const StellarSdk = window.StellarSdk
-
 
 
 
@@ -283,7 +282,7 @@ export const toAliasAndDomain = (paymentAddress) => paymentAddress.split("*")
 // Validates given public key (string)
 // returns true/false  (valid/invalid key).
 export const publicKeyValid = (publicKey) =>
-    StellarSdk.StrKey.isValidEd25519PublicKey(publicKey)
+    StrKey.isValidEd25519PublicKey(publicKey)
 
 
 
@@ -648,7 +647,7 @@ export const dynamicImportLibs = async () => {
         StellarFox, apiAccount, apiContacts,
         bignumber, jss, ledger, lodash, md5, mui,
         redshift, redux,
-        StellarTx,
+        stellar, StellarTx,
         toolbox, utils, payments, server,
     ] = await Promise.all([
         import("../../src/components/StellarFox"),
@@ -662,6 +661,7 @@ export const dynamicImportLibs = async () => {
         import("@material-ui/core"),
         import("@stellar-fox/redshift"),
         import("redux"),
+        import("stellar-sdk"),
         import("../lib/stellar-tx"),
         import("@xcmats/js-toolbox"),
         import("./utils"),
@@ -678,7 +678,7 @@ export const dynamicImportLibs = async () => {
         BigNumber: bignumber.default,
         jss, ledger, lodash, md5: md5.default, mui,
         redshift, redux,
-        StellarSdk, StellarTx,
+        stellar, StellarTx,
         toolbox, utils, payments, server,
     }
 }
@@ -868,14 +868,14 @@ export const shambhala = (() => {
 
     // choose network and _stellar_ horizon server
     that.setEnv = async ({
-        network = StellarSdk.Networks.TESTNET,
+        network = Networks.TESTNET,
         horizonUrl = "https://horizon-testnet.stellar.org/",
     } = {}) => {
 
-        StellarSdk.Network.use(new StellarSdk.Network(network))
+        Network.use(new Network(network))
         context.network = network
 
-        context.server = new StellarSdk.Server(horizonUrl)
+        context.server = new Server(horizonUrl)
         context.horizonUrl = horizonUrl
 
         that.log(`Network: ${string.quote(network)}`)
@@ -937,7 +937,7 @@ export const shambhala = (() => {
                 string.quote,
                 (op) => `${op.type}: ${op.startingBalance} XLM`,
                 (tx) => tx.operations[0],
-                (xdr64) => new StellarSdk.Transaction(xdr64)
+                (xdr64) => new Transaction(xdr64)
             )(friendbotResponse.data.envelope_xdr)
         )
 
@@ -1032,24 +1032,24 @@ export const shambhala = (() => {
                 (tb) => tb.build(),
 
                 // add memo
-                (tb) => tb.addMemo(StellarSdk.Memo.text(memoText)),
+                (tb) => tb.addMemo(Memo.text(memoText)),
 
                 destinationAccount ?
 
                     // if `destination` exists - create payment
-                    (tb) => tb.addOperation(StellarSdk.Operation.payment({
+                    (tb) => tb.addOperation(Operation.payment({
                         destination,
-                        asset: StellarSdk.Asset.native(),
+                        asset: Asset.native(),
                         amount: String(amount),
                     })) :
 
                     // if `destination` doesn't exist - create account
-                    (tb) => tb.addOperation(StellarSdk.Operation.createAccount({
+                    (tb) => tb.addOperation(Operation.createAccount({
                         destination,
                         startingBalance: String(amount),
                     }))
 
-            )(new StellarSdk.TransactionBuilder(sourceAccount))
+            )(new TransactionBuilder(sourceAccount))
 
         context.tx = tx
         that.log("Transaction built.")
@@ -1129,7 +1129,7 @@ export const shambhala = (() => {
 
         that.log("Backup-Restore Test BEGIN")
         // eslint-disable-next-line no-console
-        console.time("testBackupRestore")
+        console.time("Backup-Restore")
 
         await that.instantiate()
         await that.setEnv()
@@ -1159,7 +1159,7 @@ export const shambhala = (() => {
         let randomDestination = null
 
         if (!destination) {
-            randomDestination = StellarSdk.Keypair.random()
+            randomDestination = Keypair.random()
             that.log("Using some random, ad-hoc generated destination.")
         }
 

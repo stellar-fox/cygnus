@@ -6,11 +6,12 @@ import {
 } from "redux"
 import { connect } from "react-redux"
 import { string } from "@xcmats/js-toolbox"
-import { withStyles } from "@material-ui/core/styles"
 import {
-    utcToLocaleDateTime,
-    StellarSdk,
-} from "../../lib/utils"
+    Operation,
+    Server,
+    xdr,
+} from "stellar-sdk"
+import { utcToLocaleDateTime } from "../../lib/utils"
 import {
     CircularProgress,
     Table,
@@ -27,6 +28,7 @@ import {
     KeyboardArrowLeft,
     KeyboardArrowRight,
 } from "@material-ui/icons"
+import { withStyles } from "@material-ui/core/styles"
 import FirstPageIcon from "@material-ui/icons/FirstPage"
 import LastPageIcon from "@material-ui/icons/LastPage"
 import FailedTxDetails from "./FailedTxDetails"
@@ -279,17 +281,17 @@ export default compose(
             this.setState({ loading: true })
             this.pageRight().then((accountResult) => {
                 const data = accountResult.records.map((r, key) => {
-                    let transaction = StellarSdk.xdr.Transaction.fromXDR(
+                    let transaction = xdr.Transaction.fromXDR(
                         r.envelope_xdr, "base64"
                     )
-                    let meta = StellarSdk.xdr.TransactionMeta.fromXDR(
+                    let meta = xdr.TransactionMeta.fromXDR(
                         r.result_meta_xdr, "base64"
                     )
-                    let txresult = StellarSdk.xdr.TransactionResult.fromXDR(
+                    let txresult = xdr.TransactionResult.fromXDR(
                         r.result_xdr, "base64"
                     )
                     let operations = transaction.operations().map(
-                        (op) => StellarSdk.Operation.fromXDRObject(op)
+                        (op) => Operation.fromXDRObject(op)
                     )
 
                     return { key, transaction, operations, meta, txresult, r }
@@ -323,7 +325,7 @@ export default compose(
 
 
     // ...
-    pageRight = async () => await new StellarSdk.Server(this.props.horizon)
+    pageRight = async () => await new Server(this.props.horizon)
         .transactions()
         .forAccount(this.props.publicKey)
         .cursor(this.props.cursorRight)

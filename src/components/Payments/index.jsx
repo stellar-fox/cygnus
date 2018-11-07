@@ -2,13 +2,14 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
-import { firebaseApp } from "../StellarFox"
+import { Server } from "stellar-sdk"
 import { Redirect, Route } from "react-router-dom"
 import {
     ConnectedSwitch as Switch, ensureTrailingSlash, resolvePath,
     withDynamicRoutes, withStaticRouter,
 } from "../StellarRouter"
-import { rgba, StellarSdk, } from "../../lib/utils"
+import { rgba } from "../../lib/utils"
+import { firebaseApp } from "../StellarFox"
 import { action as PaymentsAction } from "../../redux/Payments"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { Tab, Tabs } from "material-ui/Tabs"
@@ -69,7 +70,7 @@ class Payments extends Component {
         )
 
         // ...
-        this.stellarServer = new StellarSdk.Server(this.props.horizon)
+        this.stellarServer = new Server(this.props.horizon)
     }
 
 

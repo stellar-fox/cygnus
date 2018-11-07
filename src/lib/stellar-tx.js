@@ -1,7 +1,14 @@
 import BigNumber from "bignumber.js"
+import {
+    Asset,
+    Memo,
+    Network,
+    Operation,
+    Server,
+    TransactionBuilder,
+} from "stellar-sdk"
 import { string } from "@xcmats/js-toolbox"
 import { liveNetAddr, testNetAddr } from "../components/StellarFox/env"
-import { StellarSdk } from "./utils"
 
 
 
@@ -9,11 +16,11 @@ import { StellarSdk } from "./utils"
 // ...
 export const server = (network) => {
     if (network === liveNetAddr) {
-        StellarSdk.Network.usePublicNetwork()
-        return new StellarSdk.Server(liveNetAddr)
+        Network.usePublicNetwork()
+        return new Server(liveNetAddr)
     }
-    StellarSdk.Network.useTestNetwork()
-    return new StellarSdk.Server(testNetAddr)
+    Network.useTestNetwork()
+    return new Server(testNetAddr)
 }
 
 
@@ -42,9 +49,9 @@ export const operations = (network) =>
 
 // ...
 export const buildSetDataTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.manageData({
+    ).addOperation(Operation.manageData({
         name: txData.name,
         value: txData.value,
     })).build()
@@ -54,20 +61,20 @@ export const buildSetDataTx = async (txData) =>
 
 // ...
 export const buildChangeTrustTx = async (txData) => {
-    let txBuilder = new StellarSdk.TransactionBuilder(
+    let txBuilder = new TransactionBuilder(
         await loadAccount(txData.source, txData.network)
     )
 
     txData.assets.forEach(asset => {
 
         if (asset.trustLimit) {
-            txBuilder.addOperation(StellarSdk.Operation.changeTrust({
-                asset: new StellarSdk.Asset(asset.code, asset.issuer),
+            txBuilder.addOperation(Operation.changeTrust({
+                asset: new Asset(asset.code, asset.issuer),
                 limit: asset.trustLimit,
             }))
         } else {
-            txBuilder.addOperation(StellarSdk.Operation.changeTrust({
-                asset: new StellarSdk.Asset(asset.code, asset.issuer),
+            txBuilder.addOperation(Operation.changeTrust({
+                asset: new Asset(asset.code, asset.issuer),
             }))
         }
 
@@ -81,38 +88,38 @@ export const buildChangeTrustTx = async (txData) => {
 
 // ...
 export const buildCreateAccountTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.createAccount({
+    ).addOperation(Operation.createAccount({
         destination: txData.destination,
         startingBalance: txData.amount,
-    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
+    })).addMemo(Memo.text(txData.memo)).build()
 
 
 
 
 // ...
 export const buildPaymentTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.payment({
+    ).addOperation(Operation.payment({
         destination: txData.destination,
-        asset: StellarSdk.Asset.native(),
+        asset: Asset.native(),
         amount: txData.amount,
-    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
+    })).addMemo(Memo.text(txData.memo)).build()
 
 
 
 
 // ...
 export const buildAssetPaymentTx = async (txData) =>
-    new StellarSdk.TransactionBuilder(
+    new TransactionBuilder(
         await loadAccount(txData.source, txData.network)
-    ).addOperation(StellarSdk.Operation.payment({
+    ).addOperation(Operation.payment({
         destination: txData.destination,
-        asset: new StellarSdk.Asset(txData.assetCode, txData.assetIssuer),
+        asset: new Asset(txData.assetCode, txData.assetIssuer),
         amount: txData.amount,
-    })).addMemo(StellarSdk.Memo.text(txData.memo)).build()
+    })).addMemo(Memo.text(txData.memo)).build()
 
 
 

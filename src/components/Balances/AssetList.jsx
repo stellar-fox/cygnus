@@ -3,11 +3,11 @@ import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import { BigNumber } from "bignumber.js"
 import NumberFormat from "react-number-format"
+import { Asset } from "stellar-sdk"
 import {
     assetAvatar,
     htmlEntities as he,
     pubKeyAbbr,
-    StellarSdk,
 } from "../../lib/utils"
 import { maximumTrustLimit } from "../StellarFox/env"
 import { withStyles } from "@material-ui/core/styles"
@@ -30,11 +30,13 @@ import { config } from "../../config"
 
 // ...
 const baseAssets = config.assets.codes.map(
-    assetCode => new StellarSdk.Asset(
+    assetCode => new Asset(
         assetCode,
         config.assets.issuer
     )
 )
+
+
 
 
 // ...
@@ -49,6 +51,8 @@ const styles = theme => ({
 })
 
 
+
+
 // ...
 const RequestProgress = withStyles(styles)(
     ({ classes }) =>
@@ -56,6 +60,8 @@ const RequestProgress = withStyles(styles)(
             thickness={4} size={40}
         />
 )
+
+
 
 
 // <AssetList> component

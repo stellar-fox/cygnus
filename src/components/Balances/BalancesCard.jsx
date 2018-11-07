@@ -4,10 +4,24 @@ import {
     bindActionCreators,
     compose,
 } from "redux"
+import { Asset } from "stellar-sdk"
+import {
+    delay,
+    string,
+    timeUnit,
+} from "@xcmats/js-toolbox"
+import {
+    buildChangeTrustTx,
+    loadAccount,
+    submitTransaction,
+} from "../../lib/stellar-tx"
+import {
+    signTransaction,
+    getSoftwareVersion,
+} from "../../lib/ledger"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { notImplementedText } from "../StellarFox/env"
-import { accountIsLocked, htmlEntities as he } from "../../lib/utils"
 import {
     Card,
     CardActions,
@@ -20,29 +34,27 @@ import AssetList from "./AssetList"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as BalancesAction } from "../../redux/Balances"
 import {
-    augmentAssets, insertPathIndex, currentAccountReserve, StellarSdk,
+    accountIsLocked,
+    augmentAssets,
+    htmlEntities as he,
+    insertPathIndex,
+    currentAccountReserve,
 } from "../../lib/utils"
 import Icon from "@material-ui/core/Icon"
 import { CircularProgress, Paper, Typography } from "@material-ui/core"
-import {
-    buildChangeTrustTx, loadAccount, submitTransaction
-} from "../../lib/stellar-tx"
-import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
+
 import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
-import {
-    delay,
-    string,
-    timeUnit,
-} from "@xcmats/js-toolbox"
+
 import { config } from "../../config"
+
 
 
 
 // ...
 const baseAssets = config.assets.codes.map(
-    assetCode => new StellarSdk.Asset(
+    assetCode => new Asset(
         assetCode,
         config.assets.issuer
     )
