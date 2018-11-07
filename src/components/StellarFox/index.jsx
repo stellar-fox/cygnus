@@ -40,6 +40,7 @@ import reducers from "../../redux"
 import {
     dynamicImportLibs,
     dynamicImportReducers,
+    to_,
 } from "../../lib/utils"
 import * as env from "./env"
 
@@ -137,13 +138,16 @@ export default () =>
 
 // expose 'sf' dev. namespace only in dev. environment
 if (devEnv()  &&  isObject(window)) {
-    (async () => { window.sf = {
-        env, history, store, React,
-        dispatch: store.dispatch,
-        ...await dynamicImportLibs(),
-        process: getProcess(),
-        r: await dynamicImportReducers(),
-    }})()
+    (async () => {
+        window.sf = {
+            env, history, store, React,
+            dispatch: store.dispatch,
+            ...await dynamicImportLibs(),
+            process: getProcess(),
+            r: await dynamicImportReducers(),
+        }
+        window.to_ = to_
+    })()
 }
 
 

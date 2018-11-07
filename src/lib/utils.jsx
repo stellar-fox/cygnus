@@ -1191,3 +1191,20 @@ export const shambhala = (() => {
     return Object.freeze(that)
 
 })()
+
+
+
+
+/**
+ * Assign argument to the global object.
+ * Async-console-dev-helper.
+ *
+ * @function to_
+ * @param {*}
+ * @returns {*}
+ */
+export const to_ = (name = "_") =>
+    (_) => {
+        (window || this)[name] = _
+        return _
+    }
