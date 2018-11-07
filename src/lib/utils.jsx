@@ -856,8 +856,8 @@ export const shambhala = (() => {
             context.shambhala = new context.Shambhala(url)
             context.shambhalaUrl = url
             if (type.isObject(window.sf)) {
-                window.sf.shambhala = context.shambhala
-                window.sf.shambhalaContext = context
+                window.sf.context = context
+                window.sf.testing = that
             }
         }
 
