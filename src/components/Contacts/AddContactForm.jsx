@@ -332,7 +332,7 @@ class AddContactForm extends Component {
 
         if (error.response && error.response.status === 409) {
             this.props.showAlert(
-                "An invite was already sent to this email address.",
+                "An invite was already sent to this address.",
                 "Notice"
             )
             return false
