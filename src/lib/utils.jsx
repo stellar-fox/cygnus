@@ -2,6 +2,7 @@ import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
 import {
+    devEnv,
     handleException,
     head,
     objectMap,
@@ -14,7 +15,7 @@ import BigNumber from "bignumber.js"
 import numberToText from "number-to-text"
 import shajs from "sha.js"
 import MD5 from "./md5"
-import { testPieces } from "./shambhala-testing"
+import shambhalaTestingModule from "./shambhala-testing"
 import { loadAccount } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
@@ -801,7 +802,9 @@ export const nextSequenceNumber = (sequenceNumber) =>
 
 
 // dev. only (!)
-export const shambhalaTesting = testPieces({}, console)
+export const shambhalaTesting = devEnv() ?
+    shambhalaTestingModule({}, console) :
+    { init: () => { throw new Error("Not in production mode.") } }
 
 
 

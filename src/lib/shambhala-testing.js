@@ -1,3 +1,11 @@
+/**
+ * Cygnus.
+ *
+ * @module shambhala-testing-lib
+ * @license Apache-2.0
+ */
+
+
 import axios from "axios"
 import {
     array,
@@ -22,13 +30,15 @@ import {
 
 
 
-// dev. only (!)
-// ===========================================================================
-// shambhala.client integration testing
-//
-// this is almost exact copy of shambhala/src/host/index.js:testPieces
-// with some minor tweaks related to cygnus weirdness/heritage...
-export const testPieces = (context, logger) => {
+/**
+ * shambhala.client integration testing
+ *
+ * @function shambhalaTestingModule
+ * @param {Object} context
+ * @param {Object} logger
+ * @returns {Object} Test functions and scenarios.
+ */
+export default function shambhalaTestingModule (context, logger) {
 
     let
         that = { scenario: {} },
@@ -53,47 +63,7 @@ export const testPieces = (context, logger) => {
             ).join("\n ")
         )
 
-    }
-
-
-
-
-    // dynamically import client library
-    that.importClient = async () => {
-
-        if (!type.toBool(Shambhala)) {
-            logger.info("Importing...")
-            Shambhala = (await import("./shambhala.client")).default
-            if (type.isObject(window.sf)) {
-                window.sf.Shambhala = Shambhala
-            }
-            logger.info("Shambhala client library imported.")
-        }
-
-
-
-    }
-
-
-
-
-    // instantiate client
-    that.instantiate = async (
-        url = "https://secrets.localhost/shambhala/shambhala.html"
-    ) => {
-
-        await that.importClient()
-
-        if (!type.isObject(context.shambhala)) {
-            context.shambhala = new Shambhala(url)
-            context.shambhalaUrl = url
-            if (type.isObject(window.sf)) {
-                window.sf.context = context
-                window.sf.testing = that
-            }
-        }
-
-        logger.info(`Instance pointing to ${string.quote(url)} created.`)
+        return context
 
     }
 
@@ -115,6 +85,51 @@ export const testPieces = (context, logger) => {
         logger.info(`Network: ${string.quote(network)}`)
         logger.info(` Server: ${horizonUrl}`)
 
+        return context
+
+    }
+
+
+
+
+    // dynamically import client library
+    that.importClient = async () => {
+
+        if (!type.toBool(Shambhala)) {
+            logger.info("Importing...")
+            Shambhala = (await import("./shambhala.client")).default
+            if (type.isObject(window.sf)) {
+                window.sf.Shambhala = Shambhala
+            }
+            logger.info("Shambhala client library imported.")
+        }
+
+        return context
+
+    }
+
+
+
+
+    // instantiate client
+    that.instantiate = async (
+        url = "https://secrets.localhost/shambhala/shambhala.html"
+    ) => {
+
+        await that.importClient()
+
+        if (!type.isObject(context.shambhala)) {
+            context.shambhala = new Shambhala(url)
+            context.shambhalaUrl = url
+            if (type.isObject(window.sf)) {
+                window.sf.context = context
+                window.sf.testing = that
+            }
+            logger.info(`Instance pointing to ${string.quote(url)} created.`)
+        }
+
+        return context
+
     }
 
 
@@ -129,6 +144,7 @@ export const testPieces = (context, logger) => {
         context.G_PUBLIC = await context.shambhala.generateAddress()
 
         logger.info("Got it:", context.G_PUBLIC)
+
         return context.G_PUBLIC
 
     }
@@ -152,7 +168,8 @@ export const testPieces = (context, logger) => {
             string.shorten(C_PUBLIC, 11),
             string.shorten(S_PUBLIC, 11)
         )
-        return context.keys
+
+        return { C_PUBLIC, S_PUBLIC }
 
     }
 
@@ -217,6 +234,7 @@ export const testPieces = (context, logger) => {
                 (ops) => ops.map((op) => op.type)
             )(context.tx.operations)
         )
+
         return context.tx
 
     }
@@ -230,9 +248,11 @@ export const testPieces = (context, logger) => {
 
         logger.info("Sending transaction to the stellar network.")
 
-        await context.server.submitTransaction(tx)
+        let resp = await context.server.submitTransaction(tx)
 
         logger.info("Sent.")
+
+        return resp
 
     }
 
@@ -325,6 +345,8 @@ export const testPieces = (context, logger) => {
 
         logger.info("Success!")
 
+        return tx
+
     }
 
 
@@ -338,6 +360,8 @@ export const testPieces = (context, logger) => {
         context.backup = await context.shambhala.backup(G_PUBLIC)
 
         logger.info("Here it is:", context.backup)
+
+        return context.backup
 
     }
 
@@ -358,12 +382,14 @@ export const testPieces = (context, logger) => {
 
         logger.info("All good.")
 
+        return context
+
     }
 
 
 
 
-    // ...
+    // try account creation
     that.scenario.createAccount = async () => {
 
         logger.info("Account Creation Test BEGIN")
@@ -379,13 +405,14 @@ export const testPieces = (context, logger) => {
         // eslint-disable-next-line no-console
         console.timeEnd("Account Creation")
         logger.info("Account Creation Test END")
+
         return context
 
     }
 
 
 
-    // ...
+    // perform backup and then restore
     that.scenario.backupRestore = async () => {
 
         logger.info("Backup-Restore Test BEGIN")
@@ -398,6 +425,7 @@ export const testPieces = (context, logger) => {
         // eslint-disable-next-line no-console
         console.timeEnd("Backup-Restore")
         logger.info("Backup-Restore Test END")
+
         return context
 
     }
@@ -405,7 +433,7 @@ export const testPieces = (context, logger) => {
 
 
 
-    // ...
+    // try some money transferring
     that.scenario.transferMoney = async (
         source = context.G_PUBLIC,
         destination = null,
@@ -443,6 +471,7 @@ export const testPieces = (context, logger) => {
         // eslint-disable-next-line no-console
         console.timeEnd("Transaction-Signing")
         logger.info("Transaction-Signing Test END")
+
         return context
 
     }
