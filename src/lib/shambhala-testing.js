@@ -8,13 +8,6 @@
 
 import axios from "axios"
 import {
-    array,
-    func,
-    handleRejection,
-    string,
-    type,
-} from "@xcmats/js-toolbox"
-import {
     Asset,
     Keypair,
     Memo,
@@ -26,7 +19,15 @@ import {
     TransactionBuilder,
     xdr,
 } from "stellar-sdk"
-
+import { newAddress } from "@stellar-fox/redshift"
+import {
+    array,
+    codec,
+    func,
+    handleRejection,
+    string,
+    type,
+} from "@xcmats/js-toolbox"
 
 
 
@@ -152,6 +153,23 @@ export default function shambhalaTestingModule (context, logger) {
 
 
 
+    // address association
+    // https://bit.ly/shambhalaassocacount
+    that.associateAddress = async (G_PUBLIC) => {
+
+        logger.info("Requesting address association...")
+
+        context.G_PUBLIC = await context.shambhala.associateAddress(G_PUBLIC)
+
+        logger.info("Successfully associated!")
+
+        return context.G_PUBLIC
+
+    }
+
+
+
+
     // signing keys generation
     // https://bit.ly/shambhalagensig
     that.generateSigningKeys = async (G_PUBLIC = context.G_PUBLIC) => {
@@ -186,6 +204,7 @@ export default function shambhalaTestingModule (context, logger) {
             await axios.get("https://friendbot.stellar.org/", {
                 params: { addr: G_PUBLIC },
             })
+        context.G_PUBLIC = G_PUBLIC
 
         logger.info(
             "Got it:",
@@ -234,8 +253,10 @@ export default function shambhalaTestingModule (context, logger) {
             "Requesting signed transaction associating keys with account..."
         )
 
-        context.tx = await context.shambhala.generateSignedKeyAssocTX(
-            G_PUBLIC, sequence, network
+        context.tx = new Transaction(
+            await context.shambhala.generateSignedKeyAssocTX(
+                G_PUBLIC, sequence, network
+            )
         )
 
         logger.info(
@@ -265,8 +286,10 @@ export default function shambhalaTestingModule (context, logger) {
             "Requesting unsigned transaction associating keys with account..."
         )
 
-        context.tx = await context.shambhala.generateKeyAssocTX(
-            G_PUBLIC, sequence, network
+        context.tx = new Transaction(
+            await context.shambhala.generateKeyAssocTX(
+                G_PUBLIC, sequence, network
+            )
         )
 
         logger.info(
@@ -431,6 +454,18 @@ export default function shambhalaTestingModule (context, logger) {
 
 
     // try account creation
+    //
+    // * shambhala is responsible for:
+    //     - paper-wallet generation through redshift library
+    //         (24-word mnemonic + passphrase),
+    //     - `account id` derivation (_stellar_ public G...)
+    //     - signing keys generation,
+    //     - generating SIGNED transaction associating keys with `account id`
+    // * host application is responsible for:
+    //     - creating account on ledger (e.g. through friendbot),
+    //     - getting current `sequence number` for generated account,
+    //     - submitting signed transaction associating keys with account
+    //         to stellar network,
     that.scenario.createAccount = async () => {
 
         logger.info("Account Creation Test BEGIN")
@@ -447,6 +482,58 @@ export default function shambhalaTestingModule (context, logger) {
         // eslint-disable-next-line no-console
         console.timeEnd("Account Creation")
         logger.info("Account Creation Test END")
+
+        return context
+
+    }
+
+
+
+
+    // try account association
+    //
+    // * shambhala is responsible for:
+    //     - signing keys generation,
+    //     - generating UNSIGNED transaction associating keys with `account id`
+    // * host application is responsible for:
+    //     - providing already existing `account id` to shambhala
+    //     - getting current `sequence number` for generated account,
+    //     - signing transaction association keys with account,
+    //     - submitting signed transaction associating keys with account
+    //         to stellar network,
+    that.scenario.associateAccount = async () => {
+
+        logger.info("Account Association Test BEGIN")
+        // eslint-disable-next-line no-console
+        console.time("Account Association")
+
+        let addr = newAddress("TstHostGen")
+
+        logger.info(
+            `(${string.quote(addr.mnemonic)},`,
+            `${string.quote(addr.passphrase)})`
+        )
+
+        await that.createAccountOnLedger(addr.keypair.publicKey())
+        await that.associateAddress(addr.keypair.publicKey())
+        await that.generateSigningKeys()
+        await that.getSequenceNumber()
+
+        let tx = await that.generateKeyAssocTX()
+
+        logger.info("Signing received transaction.")
+
+        tx.sign(addr.keypair)
+
+        logger.info(
+            "OK:", codec.b64enc(array.head(tx.signatures).toXDR())
+        )
+
+        await that.submitTransaction()
+
+        // eslint-disable-next-line no-console
+        console.timeEnd("Account Association")
+        logger.info("Account Association Test END")
 
         return context
 
