@@ -22,7 +22,6 @@ import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
 import { liveNetAddr } from "../StellarFox/env"
 import BigNumber from "bignumber.js"
-import CheckIcon from "@material-ui/icons/Check"
 
 
 // ...
@@ -72,7 +71,7 @@ class TxConfirmMsg extends Component {
 
     // ...
     sendAmount = () =>
-        `${this.props.Balances.amount} ${
+        `${this.props.Balances.amount || "0.00"} ${
             this.props.Account.currency.toUpperCase()}`
 
 
@@ -84,7 +83,7 @@ class TxConfirmMsg extends Component {
                 this.props.Balances.amount, this.state.contact.currency
             )
             } ${this.state.contact.currency.toUpperCase()}` : `${
-                this.props.Balances.amount} ${
+                this.props.Balances.amount || "0.00"} ${
                 this.props.Account.currency.toUpperCase()}`
 
 
@@ -146,12 +145,14 @@ class TxConfirmMsg extends Component {
                 <div className="flex-box-row space-between">
                     <div className="flex-box-row items-flex-start">
                         <div className="f-b-col-c">
+
                             <Avatar classes={{
                                 root: classes.avatar, img: classes.avatarImage,
                             }} src={`${gravatar}${Account.gravatar}?${
                                 gravatarSize}&d=robohash`
                             }
                             />
+
                             <Typography align="center" color="primary"
                                 variant="body1"
                             >
@@ -159,27 +160,34 @@ class TxConfirmMsg extends Component {
                                     Account.firstName, Account.lastName
                                 )}
                             </Typography>
+
                             <Typography align="center" color="primary"
                                 variant="body1"
                             >
                                 Sends: {this.sendAmount()}
-                                <div className="micro text-primary fade-extreme">
-                                    {Balances.amountNative} XLM
-                                </div>
+
                             </Typography>
+
+                            <div className="micro text-primary fade-extreme p-b-small">
+                                {Balances.amountNative || "0.0000000"} XLM
+                            </div>
+
                         </div>
+
                         <span className="text-primary" style={{
                             padding: "0 2rem", paddingBottom: "3rem",
                             fontSize: "4rem",
                         }}
                         >→</span>
                         <div className="f-b-col-c">
+
                             <Avatar classes={{
                                 root: classes.avatar, img: classes.avatarImage,
                             }} src={`${gravatar}${
                                 this.state.contact.email_md5}?${
                                 gravatarSize}&d=robohash`}
                             />
+
                             <Typography align="center" color="primary"
                                 variant="body1"
                             >
@@ -188,14 +196,17 @@ class TxConfirmMsg extends Component {
                                     this.state.contact.last_name
                                 )}
                             </Typography>
+
                             <Typography align="center" color="primary"
                                 variant="body1"
                             >
                                 Receives: {this.receiveAmount()}
-                                <div className="micro text-primary fade-extreme">
-                                    {Balances.amountNative} XLM
-                                </div>
                             </Typography>
+
+                            <div className="micro text-primary fade-extreme p-b-small">
+                                {Balances.amountNative || "0.0000000"} XLM
+                            </div>
+
                         </div>
                     </div>
                     <div className="flex-box-col">
@@ -377,21 +388,18 @@ class TxConfirmMsg extends Component {
 
                 </div>
 
-                <div className="m-t border-error glass-error glass-error-text">
-                    Action Required
+                <div className="flex-box-row items-centered m-t">
+                    <div className="border-error glass-error glass-error-text">
+                        Action Required
+                    </div>
+                    <he.Nbsp /><he.Nbsp />
+                    <Typography style={{fontWeight: 600}} color="primary" variant="h3">
+                        When you are sure the info above is correct
+                        press <span style={{fontSize: "1rem"}}>✓</span>
+                        on the device to sign and send the transaction.
+                    </Typography>
                 </div>
 
-                <Typography align="center" color="primary" variant="body1">
-                    When you are sure the info above is correct press
-                    <he.Nbsp />
-                    <CheckIcon
-                        style={{
-                            fontSize: "1.5rem",
-                        }}
-                    />
-                    <he.Nbsp />
-                    on the device to sign and send the transaction.
-                </Typography>
 
             </Fragment>
     )(this.props)
