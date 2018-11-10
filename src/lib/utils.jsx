@@ -636,7 +636,7 @@ export const dynamicImportLibs = async () => {
         bignumber, jss, ledger, lodash, md5, mui,
         redshift, redux,
         stellar, StellarTx,
-        toolbox, utils, payments, server,
+        toolbox, utils, offers, payments, server,
     ] = await Promise.all([
         import("../../src/components/StellarFox"),
         import("../../src/components/Account/api"),
@@ -653,6 +653,7 @@ export const dynamicImportLibs = async () => {
         import("../lib/stellar-tx"),
         import("@xcmats/js-toolbox"),
         import("./utils"),
+        import("./stellar/offers"),
         import("./stellar/payments"),
         import("./stellar/server"),
     ])
@@ -667,7 +668,7 @@ export const dynamicImportLibs = async () => {
         jss, ledger, lodash, md5: md5.default, mui,
         redshift, redux,
         stellar, StellarTx,
-        toolbox, utils, payments, server,
+        toolbox, utils, offers, payments, server,
     }
 }
 
