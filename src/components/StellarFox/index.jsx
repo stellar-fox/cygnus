@@ -18,6 +18,7 @@ import {
     devEnv,
     getProcess,
     isObject,
+    to_,
 } from "@xcmats/js-toolbox"
 
 import throttle from "lodash/throttle"
@@ -40,7 +41,6 @@ import reducers from "../../redux"
 import {
     dynamicImportLibs,
     dynamicImportReducers,
-    to_,
 } from "../../lib/utils"
 import * as env from "./env"
 

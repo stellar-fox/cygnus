@@ -208,12 +208,12 @@ export default function shambhalaTestingModule (context, logger) {
 
         logger.info(
             "Got it:",
-            func.compose(
-                string.quote,
-                (op) => `${op.type}: ${op.startingBalance} XLM`,
+            func.pipe(friendbotResponse.data.envelope_xdr)(
+                (xdr64) => new Transaction(xdr64),
                 (tx) => tx.operations[0],
-                (xdr64) => new Transaction(xdr64)
-            )(friendbotResponse.data.envelope_xdr)
+                (op) => `${op.type}: ${op.startingBalance} XLM`,
+                string.quote
+            )
         )
 
         return context
@@ -261,11 +261,11 @@ export default function shambhalaTestingModule (context, logger) {
 
         logger.info(
             "It came:",
-            func.compose(
-                string.quote,
+            func.pipe(context.tx.operations)(
+                (ops) => ops.map((op) => op.type),
                 (opTypes) => opTypes.join(string.space()),
-                (ops) => ops.map((op) => op.type)
-            )(context.tx.operations)
+                string.quote
+            )
         )
 
         return context.tx
@@ -294,11 +294,11 @@ export default function shambhalaTestingModule (context, logger) {
 
         logger.info(
             "It came:",
-            func.compose(
-                string.quote,
+            func.pipe(context.tx.operations)(
+                (ops) => ops.map((op) => op.type),
                 (opTypes) => opTypes.join(string.space()),
-                (ops) => ops.map((op) => op.type)
-            )(context.tx.operations)
+                string.quote
+            )
         )
 
         return context.tx
@@ -332,7 +332,7 @@ export default function shambhalaTestingModule (context, logger) {
     ) => {
 
         logger.info(
-            "Building test transaction:\n",
+            `Building test transaction:${string.nl()}`,
             "[",
             string.quote(string.shorten(source, 11)),
             "->",
@@ -357,30 +357,32 @@ export default function shambhalaTestingModule (context, logger) {
                 () => null
             ),
 
-            tx = func.compose(
+            tx = func.pipe(new TransactionBuilder(sourceAccount))(
 
-                // build the transaction
-                (tb) => tb.build(),
-
-                // add memo
-                (tb) => tb.addMemo(Memo.text(memoText)),
-
+                // first ...
                 destinationAccount ?
 
-                    // if `destination` exists - create payment
+                    // ... if `destination` exists - create payment or ...
                     (tb) => tb.addOperation(Operation.payment({
                         destination,
                         asset: Asset.native(),
                         amount: String(amount),
                     })) :
 
-                    // if `destination` doesn't exist - create account
+                    // ... if `destination` doesn't exist - create account ...
                     (tb) => tb.addOperation(Operation.createAccount({
                         destination,
                         startingBalance: String(amount),
-                    }))
+                    })),
 
-            )(new TransactionBuilder(sourceAccount))
+
+                // ... and then add memo ...
+                (tb) => tb.addMemo(Memo.text(memoText)),
+
+                // ... and finally build the transaction
+                (tb) => tb.build(),
+
+            )
 
         context.tx = tx
 
