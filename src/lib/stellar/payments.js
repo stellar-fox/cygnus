@@ -9,6 +9,8 @@
 
 
 import { createServer, testNet } from "./server"
+import { Asset } from "stellar-sdk"
+import { getOffers } from "./offers"
 
 
 
@@ -104,10 +106,17 @@ export const getPayments = (
  * @function getArithmeticAmount
  * @param {OperationRecord} record Single payment record.
  * @param {String} accountId Stellar account ID.
+ * @param {PageOptions} [opts={}]
  * @returns {Promise.<String>} Promise containing object with arithmetic sign
  * `+|-` along with amount when resolved successfully.
  */
-export const getArithmeticAmount = async (record, accountId) => {
+export const getArithmeticAmount = async (
+    record,
+    accountId,
+    {
+        horizon = testNet,
+    } = {}
+) => {
 
     /**
      * Any asset can be used for `payment` and `path_payment` operation types.
@@ -115,10 +124,29 @@ export const getArithmeticAmount = async (record, accountId) => {
     if (["payment", "path_payment"].some(
         (element) => element === record.type)
     ) {
-        return Promise.resolve({
-            sign: record.to === accountId ? "+" : "-",
-            value: record.amount,
-        })
+
+        let retVal = {}
+
+        if (record.asset_code) {
+            const bids = (await getOffers(
+                new Asset(record.asset_code, record.asset_issuer),
+                new Asset.native(),
+                {horizon}
+            )).bids
+
+            if (bids[0]) {
+                retVal.bestBid = bids[0].price
+            } else {
+                retVal.bestBid = "0.0000000"
+            }
+        }
+
+        retVal.sign = record.to === accountId ? "+" : "-"
+        retVal.value = record.amount
+
+
+        return Promise.resolve(retVal)
+
     }
 
     /**

@@ -18,6 +18,7 @@ import { getArithmeticAmount, getPayments } from "../../lib/stellar/payments"
 import { asyncMap } from "@xcmats/js-toolbox"
 import { utcToLocaleDateTime } from "../../lib/utils"
 import { withAssetManager } from "../AssetManager"
+import BigNumber from "bignumber.js"
 
 
 // ...
@@ -107,7 +108,11 @@ export default compose(
                 horizon: this.props.horizon,
             }).then((dataPage) => {
                 asyncMap(dataPage.records, (record) =>
-                    getArithmeticAmount(record, this.props.publicKey)
+                    getArithmeticAmount(
+                        record,
+                        this.props.publicKey,
+                        {horizon: this.props.horizon}
+                    )
                         .then((amount) => ({
                             dateTime: utcToLocaleDateTime(record.created_at),
                             type: record.type,
@@ -142,7 +147,11 @@ export default compose(
                 limit: this.state.rowsPerPage,
             }).then((dataPage) => {
                 asyncMap(dataPage.records, (record) =>
-                    getArithmeticAmount(record, this.props.publicKey)
+                    getArithmeticAmount(
+                        record,
+                        this.props.publicKey,
+                        {horizon: this.props.horizon}
+                    )
                         .then((amount) => ({
                             dateTime: utcToLocaleDateTime(record.created_at),
                             type: record.type,
@@ -242,6 +251,8 @@ export default compose(
         render = () => (
             ({ classes, page }, { rows, rowsPerPage }) => {
 
+                BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
+
                 let emptyRows = rowsPerPage - Math.min(
                     rowsPerPage, rows.length - page * rowsPerPage)
 
@@ -271,11 +282,34 @@ export default compose(
                                         </CustomTableCell>
                                         <CustomTableCell numeric>
                                             {row.assetCode ?
-                                                <div className={row.amount.sign === "+" ? "green" : "red"}>
-                                                    {this.colorize(row.amount)}
-                                                    <span className="p-l-small">
-                                                        {row.assetCode}
-                                                    </span>
+                                                <div className="flex-box-col">
+                                                    { new BigNumber(row.amount.bestBid).isEqualTo(0) ?
+                                                        <div className="tiny fade-strong">
+                                                            Price Not Available
+                                                        </div> :
+
+                                                        <div className={row.amount.sign === "+" ? "green" : "red"}>
+                                                            <span className="p-r-tiny">
+                                                                {row.amount.sign}
+                                                            </span>
+                                                            {
+                                                                this.props.assetManager.convertToAsset(
+                                                                    new BigNumber(row.amount.bestBid).times(row.amount.value).toFixed(2)
+                                                                )
+                                                            }
+                                                            <span className="p-l-small">
+                                                                {this.props.preferredCurrency.toUpperCase()}
+                                                            </span>
+                                                        </div>
+                                                    }
+
+
+                                                    <div className="tiny fade-strong">
+                                                        {this.colorize(row.amount)}
+                                                        <span className="p-l-small">
+                                                            {row.assetCode}
+                                                        </span>
+                                                    </div>
                                                 </div> :
                                                 <div className="flex-box-col">
                                                     <div className={row.amount.sign === "+" ? "green" : "red"}>
