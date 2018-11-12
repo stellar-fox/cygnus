@@ -50,18 +50,13 @@ class NoAccountCard extends Component {
             }
             subtitle={
                 <Fragment>
-                    <Typography variant="body1" color="primary">
+                    <Typography variant="subtitle2" color="primary">
                         {this.props
                             .assetManager.getAssetDescription(
                                 this.props.Account.currency
                             )}
                         <span className="fade-strong currency-iso p-l-medium">
                             {this.props.Account.currency.toUpperCase()}
-                        </span>
-                    </Typography>
-                    <Typography variant="caption" color="primary">
-                        <span className="fade-extreme">
-                            Account is not activated.
                         </span>
                     </Typography>
                 </Fragment>
@@ -71,8 +66,8 @@ class NoAccountCard extends Component {
         />
 
         <CardText>
-            <div className="flex-box-row items-flex-end">
-                <Typography color="primary">
+            <div className="flex-box-row">
+                <div className="text-primary">
                     <span className="fade currency-glyph">
                         {
                             this.props.assetManager.getAssetGlyph(
@@ -80,40 +75,39 @@ class NoAccountCard extends Component {
                             )
                         }
                     </span>
-                </Typography>
-                <Typography color="primary">
                     <span className="p-l-medium balance">
                         0.00
                     </span>
-                </Typography>
+                </div>
             </div>
-            <div className="flex-box-col">
-                <Typography color="primary" variant="caption"
-                    className="fade-extreme"
-                >
-                    <NumberFormat
-                        value={0.0000000}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        decimalScale={7}
-                        fixedDecimalScale={true}
-                    /> XLM
-                </Typography>
-                <Typography color="primary" variant="caption"
-                    className="fade-extreme"
-                >
-                    1 XLM ≈ <NumberFormat
-                        value={this.props.assetManager
-                            .convertToAsset("1.0000000")
-                        }
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        decimalScale={2}
-                        fixedDecimalScale={true}
-                    /> {this.props.assetManager.getAssetGlyph(
-                        this.props.Account.currency)}
-                </Typography>
-            </div>
+
+
+            <Typography color="primary" variant="h3"
+                className="fade-extreme"
+            >
+                <NumberFormat
+                    value={0.0000000}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    decimalScale={7}
+                    fixedDecimalScale={true}
+                /> XLM
+            </Typography>
+            <Typography color="primary" variant="h3"
+                className="fade-extreme"
+            >
+                1 XLM ≈ <NumberFormat
+                    value={this.props.assetManager
+                        .convertToAsset("1.0000000")
+                    }
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                /> {this.props.assetManager.getAssetGlyph(
+                    this.props.Account.currency)}
+            </Typography>
+
         </CardText>
 
         <CardActions>
