@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import debounce from "lodash/debounce"
-import { string } from "@xcmats/js-toolbox"
+import { shorten, string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
@@ -128,6 +128,10 @@ const styles = (theme) => ({
     avatarDisabled: {
         opacity: "0.6",
     },
+    avatar: {
+        border: `1px solid ${theme.palette.secondary.dark}`,
+        background: "linear-gradient(90deg, rgb(244, 176, 4) 0%, rgb(138, 151, 175) 100%)",
+    },
     label: {
         color: theme.palette.primary.main,
     },
@@ -209,17 +213,12 @@ const renderSuggestion = (suggestion, { query, isHighlighted }) => {
                                     <span key={String(index)}
                                         style={{ fontWeight: 600 }}
                                     >
-                                        {string.shorten(part.text, 15)}
+                                        {shorten(part.text, 15)}
                                     </span> :
                                     <span key={String(index)}
                                         style={{ fontWeight: 400 }}
                                     >
-                                        {
-                                            string.shorten(
-                                                part.text, 15,
-                                                string.shorten.END
-                                            )
-                                        }
+                                        {shorten(part.text, 15, shorten.END)}
                                     </span>
 
                             })}
@@ -276,7 +275,9 @@ class ContactSuggester extends Component {
     onSuggestionSelected = (_event, suggestion) => {
         this.validatePaymentDestination(suggestion.suggestionValue)
         this.setState({
-            value: suggestion.suggestionValue,
+            value: publicKeyValid(suggestion.suggestionValue) ?
+                shorten(suggestion.suggestionValue, 13) :
+                suggestion.suggestionValue,
         })
         suggestion && this.setState({
             label: string.empty(),
@@ -784,35 +785,9 @@ class ContactSuggester extends Component {
                                                 gravatarSize48}&d=robohash`}
                                         />}
                                         label={
-                                            <div className="flex-box-row items-centered">
-                                                <div className="flex-box-col">
-                                                    <Typography style={{
-                                                        paddingTop: "0.3rem",
-                                                        lineHeight: "0.65rem",
-                                                    }} variant="body1" color="primary"
-                                                    >
-                                                        {string.shorten(
-                                                            this.state.label,
-                                                            24,
-                                                            string.shorten.END
-                                                        )}
-                                                    </Typography>
-                                                    <Typography variant="caption" color="primary">
-                                                        <span className="fade-strong">
-                                                            {string.shorten(
-                                                                this.state.paymentAddress,
-                                                                30,
-                                                                string.shorten.END
-                                                            )}
-                                                        </span>
-                                                    </Typography>
-                                                </div>
-                                                <he.Nbsp /><he.Nbsp />
-                                                <Typography variant="h6" color="primary">
-                                                    <span className="fade-extreme">
-                                                        {this.props.assetManager.getAssetGlyph(
-                                                            this.state.currency)}
-                                                    </span>
+                                            <div className="flex-box-row items-centered p-r-small">
+                                                <Typography variant="body1" color="primary">
+                                                    {shorten(this.state.label, 24, shorten.END)}
                                                 </Typography>
                                             </div>
                                         }

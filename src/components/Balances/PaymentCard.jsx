@@ -59,11 +59,11 @@ class PaymentCard extends Component {
 
 
     // ...
-    resetPayee = () => this.props.setState({ payee: null, })
+    resetPayee = () => this.props.setState({ payee: null })
 
 
     // ...
-    updateDate = (date) => this.props.setState({ payDate: date, })
+    updateDate = (date) => this.props.setState({ payDate: date })
 
 
     // ...
@@ -80,11 +80,11 @@ class PaymentCard extends Component {
 
 
     // ...
-    enableSignButton = () => this.props.setState({ sendEnabled: true, })
+    enableSignButton = () => this.props.setState({ sendEnabled: true })
 
 
     // ...
-    disableSignButton = () => this.props.setState({ sendEnabled: false, })
+    disableSignButton = () => this.props.setState({ sendEnabled: false })
 
 
     // ...
@@ -107,7 +107,7 @@ class PaymentCard extends Component {
             return false
         }
 
-        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4 })
         const amountAsBigNumber = new BigNumber(
             this.textInputFieldAmount.state.value)
         const amount = amountAsBigNumber.toFixed(2)
@@ -151,11 +151,11 @@ class PaymentCard extends Component {
             amountIsValid: true,
         })
 
-        this.textInputFieldAmount.setState({ error: string.empty(), })
+        this.textInputFieldAmount.setState({ error: string.empty() })
 
         this.props.setState({
             amountText: amountToText(amount),
-            transactionAsset: { asset_code: this.props.Account.currency, },
+            transactionAsset: { asset_code: this.props.Account.currency },
         })
 
         this.toggleSignButton()
@@ -222,7 +222,7 @@ class PaymentCard extends Component {
                     <div>
                         <div>
                             <img
-                                style={{ opacity: "0.2", }}
+                                style={{ opacity: "0.2" }}
                                 src={sflogo}
                                 width="140px"
                                 alt={appName}
@@ -239,7 +239,7 @@ class PaymentCard extends Component {
                         onChange={this.updateDate}
                     />
                 </div>
-                <div className="f-s space-between" style={{ minHeight: 130, }}>
+                <div className="f-s space-between" style={{ minHeight: 130 }}>
                     <div className="payment-header f-s">
                         <div className="p-r leading-label-align nowrap">
                             Pay to the order of:
@@ -247,7 +247,7 @@ class PaymentCard extends Component {
                         <div className="p-r m-b-large">
                             <ContactSuggester />
                         </div>
-                        <div style={{ marginBottom: "7.5rem",}}></div>
+                        <div style={{ marginBottom: "7.5rem" }}></div>
                     </div>
                     <div className="payment-header f-s">
                         <div
@@ -291,16 +291,14 @@ class PaymentCard extends Component {
                                 this.props.Balances.amountText : <he.Nbsp />
                         }
                     </div>
-                    <div>
-
-                        <Typography variant="body1" align="right"
-                            noWrap
-                        >
+                    <div className="flex-box-row items-flex-end content-flex-end">
+                        <Typography noWrap>
                             {this.props.assetManager.getAssetDenomination(
                                 this.props.Account.currency
                             )}
-                            <he.Nbsp /><he.Nbsp />
-                            <span className="tiny text-primary fade-strong">
+                        </Typography>
+                        <Typography noWrap>
+                            <span className="p-l fade-extreme">
                                 {this.props.Account.currency !==
                                 this.props.Balances.payeeCurrency &&
                                     this.displayPayeeAmount()
@@ -310,10 +308,10 @@ class PaymentCard extends Component {
                     </div>
                 </div>
                 <div className="p-t"></div>
-                <div className="f-e" style={{ minHeight: 30, }}>
+                <div className="f-e" style={{ minHeight: 30 }}>
                     <div>
                         {this.props.Balances.indicatorMessage === "Payee Verified" ?
-                            <i style={{ color: "rgb(27, 94, 32)", }}
+                            <i style={{ color: "rgb(27, 94, 32)" }}
                                 className="material-icons"
                             >lock</i> :
                             <i className="material-icons">lock_open</i>
