@@ -25,7 +25,7 @@
         "@ledgerhq/hw-transport-u2f": "^4.28.0",
         "@material-ui/core": "^3.4.0",
         "@material-ui/icons": "^3.0.1",
-        "@stellar-fox/redshift": "^0.4.4",
+        "@stellar-fox/redshift": "^0.4.5",
         "@types/classnames": "^2.2.6",
         "@types/history": "^4.7.2",
         "@types/jss": "^9.5.7",
