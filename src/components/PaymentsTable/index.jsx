@@ -19,6 +19,7 @@ import { asyncMap } from "@xcmats/js-toolbox"
 import { utcToLocaleDateTime } from "../../lib/utils"
 import { withAssetManager } from "../AssetManager"
 import BigNumber from "bignumber.js"
+import NumberFormat from "react-number-format"
 
 
 // ...
@@ -239,11 +240,22 @@ export default compose(
             amount.sign === "+" ?
                 <span className="green">
                     <span className="p-r-tiny">{amount.sign}</span>
-                    {amount.value}
-                </span> :
-                <span className="red">
+                    <NumberFormat
+                        value={amount.value}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        decimalScale={7}
+                        fixedDecimalScale={true}
+                    />
+                </span> : <span className="red">
                     <span className="p-r-tiny">{amount.sign}</span>
-                    {amount.value}
+                    <NumberFormat
+                        value={amount.value}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        decimalScale={7}
+                        fixedDecimalScale={true}
+                    />
                 </span>
 
 
@@ -292,11 +304,15 @@ export default compose(
                                                             <span className="p-r-tiny">
                                                                 {row.amount.sign}
                                                             </span>
-                                                            {
-                                                                this.props.assetManager.convertToAsset(
+                                                            {<NumberFormat
+                                                                value={this.props.assetManager.convertToAsset(
                                                                     new BigNumber(row.amount.bestBid).times(row.amount.value).toFixed(2)
-                                                                )
-                                                            }
+                                                                )}
+                                                                displayType={"text"}
+                                                                thousandSeparator={true}
+                                                                decimalScale={2}
+                                                                fixedDecimalScale={true}
+                                                            />}
                                                             <span className="p-l-small">
                                                                 {this.props.preferredCurrency.toUpperCase()}
                                                             </span>
@@ -316,9 +332,15 @@ export default compose(
                                                         <span className="p-r-tiny">
                                                             {row.amount.sign}
                                                         </span>
-                                                        {this.props.assetManager.convertToAsset(
-                                                            row.amount.value
-                                                        )}
+                                                        {<NumberFormat
+                                                            value={this.props.assetManager.convertToAsset(
+                                                                row.amount.value
+                                                            )}
+                                                            displayType={"text"}
+                                                            thousandSeparator={true}
+                                                            decimalScale={2}
+                                                            fixedDecimalScale={true}
+                                                        />}
                                                         <span className="p-l-small">
                                                             {this.props.preferredCurrency.toUpperCase()}
                                                         </span>
