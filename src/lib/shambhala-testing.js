@@ -545,14 +545,14 @@ export default function shambhalaTestingModule (context, logger) {
 
 
     // perform backup and then restore
-    that.scenario.backupRestore = async () => {
+    that.scenario.backupRestore = async (G_PUBLIC = context.G_PUBLIC) => {
 
         logger.info("Backup-Restore Test BEGIN")
         // eslint-disable-next-line no-console
         console.time("Backup-Restore")
 
-        await that.backup()
-        await that.restore()
+        await that.backup(G_PUBLIC)
+        await that.restore(G_PUBLIC)
 
         // eslint-disable-next-line no-console
         console.timeEnd("Backup-Restore")
