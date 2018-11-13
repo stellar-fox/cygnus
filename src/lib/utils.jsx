@@ -15,7 +15,6 @@ import BigNumber from "bignumber.js"
 import numberToText from "number-to-text"
 import shajs from "sha.js"
 import MD5 from "./md5"
-import shambhalaTestingModule from "./shambhala-testing"
 import { loadAccount } from "./stellar-tx"
 import { env } from "../components/StellarFox"
 import { config } from "../config"
@@ -802,7 +801,44 @@ export const nextSequenceNumber = (sequenceNumber) =>
 
 
 
-// dev. only (!)
-export const shambhalaTesting = devEnv() ?
-    shambhalaTestingModule({}, console) :
-    { init: () => { throw new Error("Not in production mode.") } }
+// dev. only - shambhala integration testing
+export const shambhalaTesting = devEnv() ? {
+    init: async () => {
+        let
+            logger = console,
+            context = {},
+            {
+                Shambhala,
+                shambhalaTestingModule,
+            } = await import("./shambhala.client"),
+            testing = shambhalaTestingModule(logger, context)
+
+        // expose to dev. namespace
+        if (type.isObject(window.sf)) {
+            window.sf.Shambhala = Shambhala
+            window.sf.context = context
+            window.sf.testing = testing
+        }
+
+        // prepare test environment
+        await testing.setEnv()
+        await testing.instantiate(
+            "https://secrets.localhost/shambhala/shambhala.html"
+        )
+        await context.shambhala._openShambhala()
+
+        // instruct what to do next
+        logger.info(
+            "Try one of these:\n",
+            Object.keys(testing.scenario).map(
+                (n) => `sf.testing.scenario.${n}()`
+            ).join("\n ")
+        )
+
+        return { Shambhala, context, testing }
+    },
+} : {
+    init: () => {
+        throw new Error("Sorry. Not in the production.")
+    },
+}
