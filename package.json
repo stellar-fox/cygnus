@@ -104,7 +104,7 @@
         "build": "react-scripts build",
         "clean": "rimraf build && npm run clean:jsdoc",
         "clean:jsdoc": "rimraf ./jsdoc",
-        "clean:modules": "rimraf node_modules",
+        "clean:modules": "rimraf node_modules && rimraf package-lock.json",
         "eject": "react-scripts eject",
         "jsdoc": "echo \"Generating jsdoc ...\" && jsdoc -c ./jsdoc.json -R ./README.md -r ./src/ -d ./jsdoc/",
         "lint": "eslint ./src/",
