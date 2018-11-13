@@ -108,6 +108,7 @@
         "eject": "react-scripts eject",
         "jsdoc": "echo \"Generating jsdoc ...\" && jsdoc -c ./jsdoc.json -R ./README.md -r ./src/ -d ./jsdoc/",
         "lint": "eslint ./src/",
+        "shambhala:link": "rimraf ./src/lib/shambhala.client.js && ln -s ../../../shambhala/dist.lib/shambhala.client.js ./src/lib/shambhala.client.js",
         "start": "cross-env BROWSER=none react-scripts start",
         "test": "react-scripts test --env=jsdom"
     },
