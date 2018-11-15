@@ -2,7 +2,11 @@ import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
-import { choose, asyncMap, string } from "@xcmats/js-toolbox"
+import {
+    async,
+    func,
+    string
+} from "@xcmats/js-toolbox"
 import {
     Operation,
     Server,
@@ -248,8 +252,8 @@ export default compose(
 
         getPayments(this.props.publicKey, {
             horizon: this.props.horizon,
-        }).then((page) => {
-            asyncMap(page.records, (record) =>
+        })
+            .then((page) => async.map(page.records, (record) =>
                 getAmountWithSign(record, this.props.publicKey)
                     .then((amount) => ({
                         dateTime: utcToLocaleDateTime(record.created_at),
@@ -257,15 +261,12 @@ export default compose(
                         amount,
                         pagingToken: record.paging_token,
                     }))
-            ).then((tableRowData) => this.setState({
+            ))
+            .then((tableRowData) => this.setState({
                 tableRowData,
                 cursorRight: tableRowData[tableRowData.length - 1].pagingToken,
                 loading: false,
             }))
-
-        })
-
-
 
 
         // new Server(this.props.horizon)
@@ -389,7 +390,7 @@ export default compose(
 
 
     // ...
-    opAssetSymbol = (operation) => choose(
+    opAssetSymbol = (operation) => func.choose(
         operation.type,
         {
             "createAccount": () => <span className="nano">XLM</span>,
@@ -401,7 +402,7 @@ export default compose(
     // ...
     opNativeAmount = (operation) => {
         BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
-        return choose(
+        return func.choose(
             operation.type,
             {
                 "createAccount": () => new BigNumber(

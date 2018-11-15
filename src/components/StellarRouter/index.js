@@ -9,9 +9,9 @@ import {
 import hoistStatics from "hoist-non-react-statics"
 import resolvePathname from "resolve-pathname"
 import {
-    findDuplicates,
+    array,
     string,
-    swap,
+    struct,
 } from "@xcmats/js-toolbox"
 
 import {
@@ -125,23 +125,23 @@ export const StaticRouter = connect(
         // check for all possible (and not wanted) duplicates
         duplicates = (paths) => {
             let
-                valDuplicates = findDuplicates(Object.values(paths)),
+                valDuplicates = array.findDuplicates(Object.values(paths)),
                 keyOverlaps = null,
                 swappedPaths = null,
                 valOverlaps = null
 
             if (valDuplicates.length) { return valDuplicates }
 
-            keyOverlaps = findDuplicates([
+            keyOverlaps = array.findDuplicates([
                 ...Object.keys(paths),
                 ...Object.keys(this._staticPaths),
             ]).filter((k) => paths[k] !== this._staticPaths[k])
 
             if (keyOverlaps.length) { return keyOverlaps }
 
-            swappedPaths = swap(paths)
+            swappedPaths = struct.swap(paths)
 
-            valOverlaps = findDuplicates([
+            valOverlaps = array.findDuplicates([
                 ...Object.keys(swappedPaths),
                 ...Object.keys(this._pathToViewMap),
             ]).filter((v) => swappedPaths[v] !== this._pathToViewMap[v])
@@ -163,7 +163,7 @@ export const StaticRouter = connect(
                 )
             }
             this._staticPaths = { ...this._staticPaths, ...paths }
-            this._pathToViewMap = swap(this._staticPaths)
+            this._pathToViewMap = struct.swap(this._staticPaths)
             this.props.addStaticPaths(paths)
             return this._staticPaths
         }

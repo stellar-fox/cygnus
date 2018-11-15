@@ -1,7 +1,7 @@
 import {
     createReducer,
     string,
-    swap,
+    struct,
 } from "@xcmats/js-toolbox"
 
 import {
@@ -93,7 +93,7 @@ export const reducer = createReducer(initState)({
                 ...state.staticPaths,
                 ...action.payload,
             },
-            newPathToView = swap(newPaths),
+            newPathToView = struct.swap(newPaths),
             newView = StaticRouter.getView(
                 state.location.pathname, newPathToView
             )

@@ -8,7 +8,10 @@ import {
 } from "../../lib/utils"
 import { liveNetAddr } from "../StellarFox/env"
 import { Typography } from "@material-ui/core"
-import { handleException, shorten } from "@xcmats/js-toolbox"
+import {
+    handleException,
+    string,
+} from "@xcmats/js-toolbox"
 import CheckIcon from "@material-ui/icons/Check"
 
 
@@ -71,7 +74,12 @@ export default connect(
                             >Data Value</Typography>
                             <Typography align="center">
                                 <span className="glass-text">
-                                    {shorten(btoa(fingerprintPaymentData), 25)}
+                                    {
+                                        string.shorten(
+                                            btoa(fingerprintPaymentData),
+                                            25
+                                        )
+                                    }
                                 </span>
                             </Typography>
                         </div>
@@ -133,9 +141,11 @@ export default connect(
                             >Transaction Source</Typography>
                             <Typography align="center">
                                 <span className="glass-text">
-                                    {handleException(
-                                        () => shorten(publicKey, 13),
-                                        () => "Not Available")}
+                                    {
+                                        handleException(
+                                            () => string.shorten(publicKey, 13),
+                                            () => "Not Available")
+                                    }
                                 </span>
                             </Typography>
                         </div>
@@ -150,7 +160,12 @@ export default connect(
                             >Sequence Number</Typography>
                             <Typography align="center">
                                 <span className="glass-text">
-                                    {shorten(nextSequenceNumber(sequence), 13)}
+                                    {
+                                        string.shorten(
+                                            nextSequenceNumber(sequence),
+                                            13
+                                        )
+                                    }
                                 </span>
                             </Typography>
                         </div>

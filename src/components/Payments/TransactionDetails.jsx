@@ -14,7 +14,7 @@ import {
     formatPaymentAddress, pubKeyAbbr,
 } from "../../lib/utils"
 import classNames from "classnames"
-import { choose } from "@xcmats/js-toolbox"
+import { func } from "@xcmats/js-toolbox"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize48 } from "../../components/StellarFox/env"
@@ -70,7 +70,7 @@ export default compose(
         // ...
         operationType = (operation) => (
             (iconClass) =>
-                choose(
+                func.choose(
                     operation.type,
                     {
                         "createAccount": () =>
@@ -129,7 +129,7 @@ export default compose(
 
 
         // ...
-        opAmount = (operation) => choose(
+        opAmount = (operation) => func.choose(
             operation.type,
             {
                 // createAccount is always in native currency
@@ -146,7 +146,7 @@ export default compose(
         // ...
         opNativeAmount = (operation) => {
             BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
-            return choose(
+            return func.choose(
                 operation.type,
                 {
                     "createAccount": () => new BigNumber(
@@ -166,7 +166,7 @@ export default compose(
 
 
         // ...
-        opAssetSymbol = (operation) => choose(
+        opAssetSymbol = (operation) => func.choose(
             operation.type,
             {
                 "createAccount": () => <span className="nano">XLM</span>,

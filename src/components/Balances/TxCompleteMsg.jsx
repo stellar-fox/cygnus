@@ -1,7 +1,10 @@
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { appName } from "../StellarFox/env"
-import { handleException, shorten } from "@xcmats/js-toolbox"
+import {
+    handleException,
+    string,
+} from "@xcmats/js-toolbox"
 import NumberFormat from "react-number-format"
 import {
     htmlEntities as he,
@@ -80,7 +83,7 @@ export default connect(
                         </TableRowColumn>
                         <TableRowColumn>
                             <Typography variant="body1" color="primary">
-                                {shorten(balances.payeeAddress, 35)}
+                                {string.shorten(balances.payeeAddress, 35)}
                             </Typography>
                         </TableRowColumn>
                     </TableRow>

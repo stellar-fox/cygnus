@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
-import { shorten } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { action as ContactsAction } from "../../redux/Contacts"
 import Avatar from "@material-ui/core/Avatar"
@@ -59,7 +59,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, data, }) =>
+            ({ classes, data }) =>
                 <Paper elevation={0} className={classes.root}>
                     <div className="f-b space-between">
                         <Avatar className={classes.avatar}
@@ -74,8 +74,8 @@ export default compose(
                             <Typography variant="body1" align="right"
                                 color="primary"
                             >
-                                {data.request_str ? shorten(
-                                    data.request_str, 16, shorten.END
+                                {data.request_str ? string.shorten(
+                                    data.request_str, 16, string.shorten.END
                                 ) : formatPaymentAddress(
                                     data.alias, data.domain
                                 )}

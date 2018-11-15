@@ -2,12 +2,12 @@ import React, { Fragment } from "react"
 import axios from "axios"
 import toml from "toml"
 import {
+    array,
+    async,
     devEnv,
     handleException,
-    head,
-    objectMap,
-    parMap,
     string,
+    struct,
     type,
 } from "@xcmats/js-toolbox"
 import { StrKey } from "stellar-sdk"
@@ -356,7 +356,7 @@ export const endpointLookup = (federationAddress) => (
         if (domain) {
             return toml.parse(
                 (await axios.get(
-                    env.federationEndpoint(head(domain)))
+                    env.federationEndpoint(array.head(domain)))
                 ).data
             ).FEDERATION_SERVER
         }
@@ -380,7 +380,7 @@ export const assetLookup = async (domain) =>
 
 // ...
 export const augmentAssets = (assets, horizon) =>
-    parMap(
+    async.parMap(
         assets,
         (asset) => assetAvatar(asset, horizon)
     )
@@ -457,7 +457,7 @@ export const insertPathIndex = (index) => `${env.bip32Prefix}${index}'`
 
 // declarative conditional rendering in JSX
 export const ConditionalRender = (props) => (
-    (cn) => Array.isArray(cn) ?
+    (cn) => type.isArray(cn) ?
         cn.filter((c) => c.props.display) :
         cn.props.display ? cn : null
 )(props.children)
@@ -534,7 +534,7 @@ export const glyphsDB = {
 
 
 // emoji components (built on the 'emojiDB' object base)
-export const emoji = objectMap(emojiDB,
+export const emoji = struct.objectMap(emojiDB,
     ([k, v]) => [
         string.capitalize(k),
         () => React.createElement(Fragment, null, v),

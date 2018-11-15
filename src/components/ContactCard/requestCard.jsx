@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { shorten } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
@@ -184,16 +184,16 @@ export default compose(
                         <div className="f-e-col space-between">
                             <div className="f-e-col">
                                 <Typography align="right" color="primary">
-                                    {shorten(formatFullName(
+                                    {string.shorten(formatFullName(
                                         data.first_name, data.last_name
-                                    ), 30, shorten.END)}
+                                    ), 30, string.shorten.END)}
                                 </Typography>
                                 <Typography variant="caption" align="right"
                                     color="primary"
                                 >
-                                    {shorten(formatPaymentAddress(
+                                    {string.shorten(formatPaymentAddress(
                                         data.alias, data.domain
-                                    ), 30, shorten.END)}
+                                    ), 30, string.shorten.END)}
                                 </Typography>
                             </div>
                             <Typography variant="caption" align="right"

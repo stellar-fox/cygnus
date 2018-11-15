@@ -15,7 +15,7 @@ import TablePagination from "@material-ui/core/TablePagination"
 import PaginatorActions from "./PaginatorActions"
 import { action as PaymentsActions } from "../../redux/Payments"
 import { getArithmeticAmount, getPayments } from "../../lib/stellar/payments"
-import { asyncMap } from "@xcmats/js-toolbox"
+import { async } from "@xcmats/js-toolbox"
 import { utcToLocaleDateTime } from "../../lib/utils"
 import { withAssetManager } from "../AssetManager"
 import BigNumber from "bignumber.js"
@@ -108,7 +108,7 @@ export default compose(
             getPayments(this.props.publicKey, {
                 horizon: this.props.horizon,
             }).then((dataPage) => {
-                asyncMap(dataPage.records, (record) =>
+                async.map(dataPage.records, (record) =>
                     getArithmeticAmount(
                         record,
                         this.props.publicKey,
@@ -147,7 +147,7 @@ export default compose(
                 cursor,
                 limit: this.state.rowsPerPage,
             }).then((dataPage) => {
-                asyncMap(dataPage.records, (record) =>
+                async.map(dataPage.records, (record) =>
                     getArithmeticAmount(
                         record,
                         this.props.publicKey,

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import debounce from "lodash/debounce"
-import { shorten, string } from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
@@ -213,12 +213,17 @@ const renderSuggestion = (suggestion, { query, isHighlighted }) => {
                                     <span key={String(index)}
                                         style={{ fontWeight: 600 }}
                                     >
-                                        {shorten(part.text, 15)}
+                                        {string.shorten(part.text, 15)}
                                     </span> :
                                     <span key={String(index)}
                                         style={{ fontWeight: 400 }}
                                     >
-                                        {shorten(part.text, 15, shorten.END)}
+                                        {
+                                            string.shorten(
+                                                part.text, 15,
+                                                string.shorten.END
+                                            )
+                                        }
                                     </span>
 
                             })}
@@ -276,7 +281,7 @@ class ContactSuggester extends Component {
         this.validatePaymentDestination(suggestion.suggestionValue)
         this.setState({
             value: publicKeyValid(suggestion.suggestionValue) ?
-                shorten(suggestion.suggestionValue, 13) :
+                string.shorten(suggestion.suggestionValue, 13) :
                 suggestion.suggestionValue,
         })
         suggestion && this.setState({
@@ -787,7 +792,12 @@ class ContactSuggester extends Component {
                                         label={
                                             <div className="flex-box-row items-centered p-r-small">
                                                 <Typography variant="body1" color="primary">
-                                                    {shorten(this.state.label, 24, shorten.END)}
+                                                    {
+                                                        string.shorten(
+                                                            this.state.label, 24,
+                                                            string.shorten.END
+                                                        )
+                                                    }
                                                 </Typography>
                                             </div>
                                         }
@@ -824,6 +834,8 @@ class ContactSuggester extends Component {
     }
 
 }
+
+
 
 
 // ...
