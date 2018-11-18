@@ -57,7 +57,7 @@ class LedgerAuthenticator extends Component {
             })
             return false
         }
-        this.setState({ status: `Connected. Version: ${softwareVersion}`, })
+        this.setState({ status: `Connected. Version: ${softwareVersion}` })
         this.props.onConnected.call(this, {
             publicKey,
             softwareVersion,
@@ -100,7 +100,7 @@ class LedgerAuthenticator extends Component {
         if (isNaN(event.target.value)) {
             return false
         } else {
-            this.setState({ derivationPath: event.target.value, })
+            this.setState({ derivationPath: event.target.value })
         }
     }
 
@@ -114,7 +114,7 @@ class LedgerAuthenticator extends Component {
         })
         // reset derivation path to 0
         if (event.target.checked) {
-            this.setState({ derivationPath: "0", })
+            this.setState({ derivationPath: "0" })
         }
     }
 
@@ -170,7 +170,7 @@ class LedgerAuthenticator extends Component {
                                     }${this.state.derivationPath}']`}
                                 />
                             </Fragment> :
-                            <div style={{width: "256px",}}></div>
+                            <div style={{ width: "256px" }}></div>
                     }
                     <div className="p-t" />
                     <Button
@@ -187,7 +187,7 @@ class LedgerAuthenticator extends Component {
                 </div>
             </div>
 
-            <div style={{ marginTop: "2px", }} className="p-t-small">
+            <div style={{ marginTop: "2px" }} className="p-t-small">
                 <div className="tiny placeholder-tiny">
                     { this.state.status }
                 </div>
