@@ -163,7 +163,7 @@ export const amountToText = (amount) => {
 
 // ...
 export const pubKeyAbbr = (pubKey) => handleException(
-    () => `${pubKey.slice(0, 6)}-${pubKey.slice(50)}`,
+    () => `${array.take(6)(pubKey)}-${array.drop(50)(pubKey)}`,
     (_) => { throw new Error("Malformed key.") }
 )
 
@@ -172,7 +172,7 @@ export const pubKeyAbbr = (pubKey) => handleException(
 
 // ...
 export const pubKeyAbbrLedgerHQ = (pubKey) => handleException(
-    () => `${pubKey.slice(0, 12)}..${pubKey.slice(44)}`,
+    () => `${array.take(12)(pubKey)}..${array.drop(44)(pubKey)}`,
     (_) => { throw new Error("Malformed key.") }
 )
 
@@ -633,7 +633,7 @@ export const dynamicImportLibs = async () => {
     let [
         StellarFox, apiAccount, apiContacts,
         bignumber, jss, ledger, lodash, md5, mui,
-        redshift, redux,
+        cryptops, redshift, redux,
         stellar, StellarTx,
         toolbox, utils, offers, payments, server,
     ] = await Promise.all([
@@ -646,6 +646,7 @@ export const dynamicImportLibs = async () => {
         import("lodash"),
         import("./md5"),
         import("@material-ui/core"),
+        import("@stellar-fox/cryptops"),
         import("@stellar-fox/redshift"),
         import("redux"),
         import("stellar-sdk"),
@@ -665,7 +666,7 @@ export const dynamicImportLibs = async () => {
         axios,
         BigNumber: bignumber.default,
         jss, ledger, lodash, md5: md5.default, mui,
-        redshift, redux,
+        cryptops, redshift, redux,
         stellar, StellarTx,
         toolbox, utils, offers, payments, server,
     }
