@@ -809,6 +809,8 @@ export const shambhalaTesting = devEnv() ? {
             logger = console,
             context = {},
             {
+                inspectTSP,
+                signTSP,
                 Shambhala,
                 shambhalaTestingModule,
             } = await import("./shambhala.client"),
@@ -819,6 +821,7 @@ export const shambhalaTesting = devEnv() ? {
             window.sf.Shambhala = Shambhala
             window.sf.context = context
             window.sf.testing = testing
+            window.sf.txops = { inspectTSP, signTSP }
         }
 
         // prepare test environment
