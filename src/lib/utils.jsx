@@ -829,7 +829,7 @@ export const shambhalaTesting = devEnv() ? {
         await testing.instantiate(
             "https://secrets.localhost/shambhala/shambhala.html"
         )
-        await context.shambhala._openShambhala()
+        await context.shambhala.open()
 
         // instruct what to do next
         logger.info(
