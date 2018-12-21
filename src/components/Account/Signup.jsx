@@ -2,7 +2,10 @@ import React, { Component, Fragment } from "react"
 import Axios from "axios"
 
 import { bindActionCreators } from "redux"
-import { string } from "@xcmats/js-toolbox"
+import {
+    math,
+    string
+} from "@xcmats/js-toolbox"
 
 import md5 from "../../lib/md5"
 import {
@@ -106,7 +109,7 @@ class Signup extends Component {
 
         await this.setState({
             stepIndex: action === "next" ?
-                (stepIndex + 1) : (stepIndex - 1),
+                math.inc(stepIndex) : math.dec(stepIndex),
         })
 
     }
