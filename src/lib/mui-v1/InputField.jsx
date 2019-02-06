@@ -90,7 +90,7 @@ export default withStyles((theme) => ({
                         onChange={onChange}
                         fullWidth={fullWidth}
                         placeholder={placeholder}
-                        inputProps={{ maxLength, }}
+                        inputProps={{ maxLength }}
                     />
                     <FormHelperText id="name-error-text">
                         { errorMessage }

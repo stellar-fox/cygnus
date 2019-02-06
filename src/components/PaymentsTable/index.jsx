@@ -274,7 +274,7 @@ export default compose(
                             <TableRow>
                                 <CustomTableCell>Date</CustomTableCell>
                                 <CustomTableCell>Transaction Details</CustomTableCell>
-                                <CustomTableCell numeric>Amount</CustomTableCell>
+                                <CustomTableCell align="right">Amount</CustomTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -292,7 +292,7 @@ export default compose(
                                                 </span>
                                             </div>
                                         </CustomTableCell>
-                                        <CustomTableCell numeric>
+                                        <CustomTableCell align="right">
                                             {row.assetCode ?
                                                 <div className="flex-box-col">
                                                     { new BigNumber(row.amount.bestBid).isEqualTo(0) ?

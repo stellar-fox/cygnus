@@ -171,7 +171,7 @@ export default compose(
         // ...
         render = () =>
             <Fragment>
-                <div className="blockcenter" style={{ width: 256, }}>
+                <div className="blockcenter" style={{ width: 256 }}>
                     <InputField
                         id="email-input"
                         type="email"
@@ -199,7 +199,7 @@ export default compose(
                             colorPrimary: this.props.classes.colorPrimary,
                             barColorPrimary: this.props.classes.barColorPrimary,
                         }}
-                        style={{ opacity: this.state.progressBarOpacity, }}
+                        style={{ opacity: this.state.progressBarOpacity }}
                     />
                     <Button
                         onClick={this.loginValidator}

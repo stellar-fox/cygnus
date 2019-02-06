@@ -152,7 +152,7 @@ const ChoiceTabs = withStyles(styles)(
         onChange={ onChange }
         textColor="primary"
         indicatorColor="primary"
-        fullWidth
+        variant="fullWidth"
     >
         <Tab disableRipple label="Email Address" />
         <Tab disableRipple label="Payment Address" />

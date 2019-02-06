@@ -21,9 +21,9 @@ import "./index.css"
 // <Welcome> component
 export default withStyles({
 
-    considerFooter: { paddingBottom: 26, },
+    considerFooter: { paddingBottom: 26 },
 
-    noScrollBarFix: { padding: 16, },
+    noScrollBarFix: { padding: 16 },
 
     paper: {
         background: "linear-gradient(45deg, #091b31 0%, rgb(15, 46, 83) 50%)",
@@ -48,7 +48,7 @@ export default withStyles({
 
         // ...
         setModalButtonText = (text) =>
-            this.setState({ modalButtonText: text, })
+            this.setState({ modalButtonText: text })
 
 
         // ...
@@ -61,7 +61,7 @@ export default withStyles({
 
         // ...
         render = () => (
-            ({ classes, }) =>
+            ({ classes }) =>
                 <div className={classes.considerFooter}>
                     <Heading />
                     <div className={classes.noScrollBarFix}>

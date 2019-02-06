@@ -1,23 +1,21 @@
 import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-
 import { TopBarSecurityMessage } from "../StellarFox/env"
-
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance"
-import AlarmOnIcon from "@material-ui/icons/AlarmOn"
-import EmailIcon from "@material-ui/icons/Email"
-import FingerprintIcon from "@material-ui/icons/Fingerprint"
-import LanguageIcon from "@material-ui/icons/Language"
-import LocationOffIcon from "@material-ui/icons/LocationOff"
-import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar"
-import ReplayIcon from "@material-ui/icons/Replay"
-import SettingsEthernetIcon from "@material-ui/icons/SettingsEthernet"
-
+import {
+    AccountBalance,
+    AlarmOn,
+    Email,
+    Fingerprint,
+    Language,
+    LocationOff,
+    PermContactCalendar,
+    Replay,
+    SettingsEthernet,
+} from "@material-ui/icons"
 import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
-
 import { action as AccountAction } from "../../redux/Account"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
@@ -53,7 +51,7 @@ class Heading extends Component {
     // ...
     login = () => {
         this.props.hideModal()
-        this.props.setState({ needsRegistration: false, })
+        this.props.setState({ needsRegistration: false })
         this.props.setLedgerBip32Path(this.state.loginObj.bip32Path)
         this.props.setLedgerPublicKey(this.state.loginObj.publicKey)
         this.props.setApiToken(this.state.loginObj.token)
@@ -116,15 +114,15 @@ class Heading extends Component {
                         <div className="column">
                             <div className="col-header">True Freedom</div>
                             <div className="col-item">
-                                <AlarmOnIcon className="heading-svg-icon" />
+                                <AlarmOn className="heading-svg-icon" />
                                 Transaction settlement in seconds.
                             </div>
                             <div className="col-item">
-                                <LocationOffIcon className="heading-svg-icon" />
+                                <LocationOff className="heading-svg-icon" />
                                 Location independent.
                             </div>
                             <div className="col-item">
-                                <LanguageIcon className="heading-svg-icon" />
+                                <Language className="heading-svg-icon" />
                                 Global, permissionless transacting.
                             </div>
                         </div>
@@ -133,15 +131,15 @@ class Heading extends Component {
                                 Easy and Secure Transactions
                             </div>
                             <div className="col-item">
-                                <FingerprintIcon className="heading-svg-icon" />
+                                <Fingerprint className="heading-svg-icon" />
                                 Security by design.
                             </div>
                             <div className="col-item">
-                                <PermContactCalendarIcon className="heading-svg-icon" />
+                                <PermContactCalendar className="heading-svg-icon" />
                                 Pay to address book contacts.
                             </div>
                             <div className="col-item">
-                                <EmailIcon className="heading-svg-icon" />
+                                <Email className="heading-svg-icon" />
                                 Use email as payment address.
                             </div>
                         </div>
@@ -150,15 +148,15 @@ class Heading extends Component {
                                 Fractional Cost
                             </div>
                             <div className="col-item">
-                                <AccountBalanceIcon className="heading-svg-icon" />
+                                <AccountBalance className="heading-svg-icon" />
                                 Account activation fee USD 0.25 ¢
                             </div>
                             <div className="col-item">
-                                <SettingsEthernetIcon className="heading-svg-icon" />
+                                <SettingsEthernet className="heading-svg-icon" />
                                 End-to-end transfer fee 0.15 %
                             </div>
                             <div className="col-item">
-                                <ReplayIcon className="heading-svg-icon" />
+                                <Replay className="heading-svg-icon" />
                                 Free recurring payments.
                             </div>
                         </div>
@@ -172,7 +170,7 @@ class Heading extends Component {
 // ...
 export default connect(
     // map state to props.
-    (state) => ({ Modal: state.Modal, }),
+    (state) => ({ Modal: state.Modal }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         setState: AccountAction.setState,
