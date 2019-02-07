@@ -61,8 +61,8 @@
         "redux-thunk": "^2.3.0",
         "resolve-pathname": "^3.0.0",
         "sha.js": "^2.4.11",
-        "stellar-sdk": "^0.11.0",
-        "toml": "^2.3.3",
+        "stellar-sdk": "^0.13.0",
+        "toml": "^3.0.0",
         "typeface-roboto": "0.0.54"
     },
     "description": "Stellar Fox (frontend)",
@@ -76,7 +76,7 @@
         "@types/react-redux": "^6.0.10",
         "@types/react-router-dom": "^4.3.1",
         "@types/react-router-redux": "^5.0.17",
-        "@types/stellar-sdk": "^0.10.4",
+        "@types/stellar-sdk": "^0.11.1",
         "cross-env": "^5.2.0",
         "jsdoc": "^3.5.5",
         "minami": "^1.2.3",
@@ -113,5 +113,5 @@
         "start": "cross-env BROWSER=none react-scripts start",
         "test": "react-scripts test --env=jsdom"
     },
-    "version": "0.1.48"
+    "version": "0.1.49"
 }
