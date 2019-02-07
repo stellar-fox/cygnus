@@ -7,7 +7,10 @@ import {
     Server,
     TransactionBuilder,
 } from "stellar-sdk"
-import { string } from "@xcmats/js-toolbox"
+import {
+    string,
+    timeUnit,
+} from "@xcmats/js-toolbox"
 import { liveNetAddr, testNetAddr } from "../components/StellarFox/env"
 
 
@@ -54,7 +57,7 @@ export const buildSetDataTx = async (txData) =>
     ).addOperation(Operation.manageData({
         name: txData.name,
         value: txData.value,
-    })).build()
+    })).setTimeout(10 * timeUnit.second).build()
 
 
 
@@ -80,7 +83,7 @@ export const buildChangeTrustTx = async (txData) => {
 
     })
 
-    return txBuilder.build()
+    return txBuilder.setTimeout(10 * timeUnit.second).build()
 }
 
 
@@ -93,7 +96,7 @@ export const buildCreateAccountTx = async (txData) =>
     ).addOperation(Operation.createAccount({
         destination: txData.destination,
         startingBalance: txData.amount,
-    })).addMemo(Memo.text(txData.memo)).build()
+    })).addMemo(Memo.text(txData.memo)).setTimeout(10 * timeUnit.second).build()
 
 
 
@@ -106,7 +109,7 @@ export const buildPaymentTx = async (txData) =>
         destination: txData.destination,
         asset: Asset.native(),
         amount: txData.amount,
-    })).addMemo(Memo.text(txData.memo)).build()
+    })).addMemo(Memo.text(txData.memo)).setTimeout(10 * timeUnit.second).build()
 
 
 
@@ -119,7 +122,7 @@ export const buildAssetPaymentTx = async (txData) =>
         destination: txData.destination,
         asset: new Asset(txData.assetCode, txData.assetIssuer),
         amount: txData.amount,
-    })).addMemo(Memo.text(txData.memo)).build()
+    })).addMemo(Memo.text(txData.memo)).setTimeout(10 * timeUnit.second).build()
 
 
 
