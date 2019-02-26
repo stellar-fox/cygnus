@@ -61,7 +61,7 @@ export const signTransaction = async (bip32Path, publicKey, transaction) => {
     const
         transport = await Transport.create(),
         str = new Str(transport),
-        signature = await str.signTransaction(
+        txSigningResult = await str.signTransaction(
             bip32Path,
             transaction.signatureBase()
         ),
@@ -69,16 +69,10 @@ export const signTransaction = async (bip32Path, publicKey, transaction) => {
         hint = keyPair.signatureHint(),
         decorated = new xdr.DecoratedSignature({
             hint: hint,
-            signature: signature.signature,
-            /**
-             * signature.signature does not render "XDR Write Error: not a number"
-             * upon submission to Horizon (as opposed to using "signature" only
-             * and as stated in documentation).
-             * TODO: consult with Ledger.
-             */
+            signature: txSigningResult.signature,
+
         })
-
-    transaction.signatures.push(decorated)
-
+    transaction.signatures.push(decorated)    
+    
     return transaction
 }

@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js"
 import {
     Asset,
+    BASE_FEE,
     Memo,
     Network,
     Operation,
@@ -53,7 +54,7 @@ export const operations = (network) =>
 // ...
 export const buildSetDataTx = async (txData) =>
     new TransactionBuilder(
-        await loadAccount(txData.source, txData.network)
+        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
     ).addOperation(Operation.manageData({
         name: txData.name,
         value: txData.value,
@@ -65,7 +66,7 @@ export const buildSetDataTx = async (txData) =>
 // ...
 export const buildChangeTrustTx = async (txData) => {
     let txBuilder = new TransactionBuilder(
-        await loadAccount(txData.source, txData.network)
+        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
     )
 
     txData.assets.forEach(asset => {
@@ -92,7 +93,7 @@ export const buildChangeTrustTx = async (txData) => {
 // ...
 export const buildCreateAccountTx = async (txData) =>
     new TransactionBuilder(
-        await loadAccount(txData.source, txData.network)
+        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
     ).addOperation(Operation.createAccount({
         destination: txData.destination,
         startingBalance: txData.amount,
@@ -102,22 +103,22 @@ export const buildCreateAccountTx = async (txData) =>
 
 
 // ...
-export const buildPaymentTx = async (txData) =>
-    new TransactionBuilder(
-        await loadAccount(txData.source, txData.network)
+export const buildPaymentTx = async (txData) => {
+    return new TransactionBuilder(
+        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
     ).addOperation(Operation.payment({
         destination: txData.destination,
         asset: Asset.native(),
         amount: txData.amount,
     })).addMemo(Memo.text(txData.memo)).setTimeout(10 * timeUnit.second).build()
-
+}
 
 
 
 // ...
 export const buildAssetPaymentTx = async (txData) =>
     new TransactionBuilder(
-        await loadAccount(txData.source, txData.network)
+        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
     ).addOperation(Operation.payment({
         destination: txData.destination,
         asset: new Asset(txData.assetCode, txData.assetIssuer),
