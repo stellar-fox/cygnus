@@ -59,7 +59,7 @@ class PanelLedger extends Component {
 
     // ...
     render = () =>
-        <Panel title="Transact">
+        <Panel title="Login with Ledger Nano S">
             <div className="panel-logo-container">
                 <div className="panel-logo">
                     <img

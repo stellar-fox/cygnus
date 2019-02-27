@@ -96,7 +96,7 @@ class PanelExplorer extends Component {
 
     // ...
     render = () =>
-        <Panel title="Explore">
+        <Panel title="Read only access">
             <div className="panel-logo-container">
                 <div className="panel-logo">
                     <img

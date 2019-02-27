@@ -12,7 +12,7 @@ import sflogo from "../StellarFox/static/sf-logo.svg"
 
 // <PanelLogin> component
 export default () =>
-    <Panel title="Customize">
+    <Panel title="Login with email/password">
         <div className="panel-logo-container">
             <div className="panel-logo">
                 <img
