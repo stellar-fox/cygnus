@@ -6,6 +6,7 @@ import { reducer as AuthReducer } from "./Auth"
 import { reducer as BalancesReducer } from "./Balances"
 import { reducer as BankReducer } from "./Bank"
 import { reducer as ContactsReducer } from "./Contacts"
+import { reducer as ExchangeRatesReducer } from "./ExchangeRates"
 import { reducer as LedgerHQReducer } from "./LedgerHQ"
 import { reducer as LoadingModalReducer } from "./LoadingModal"
 import { reducer as LoginMangerReducer } from "./LoginManager"
@@ -28,6 +29,7 @@ export default {
     Balances: BalancesReducer,
     Bank: BankReducer,
     Contacts: ContactsReducer,
+    ExchangeRates: ExchangeRatesReducer,
     LedgerHQ: LedgerHQReducer,
     LoadingModal: LoadingModalReducer,
     LoginManager: LoginMangerReducer,

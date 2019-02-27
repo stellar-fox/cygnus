@@ -100,7 +100,7 @@ class AssetManager extends Component {
 
     // ...
     convertToNative = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4, })
+        BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
         return this.props.state[this.props.Account.currency] && amount !== string.empty() ?
             new BigNumber(amount).dividedBy(
                 this.props.state[this.props.Account.currency].rate
@@ -110,7 +110,7 @@ class AssetManager extends Component {
 
     // ...
     convertToAsset = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4 })
         return this.props.state[this.props.Account.currency] && amount !== string.empty() ?
             new BigNumber(amount).multipliedBy(
                 this.props.state[this.props.Account.currency].rate
@@ -120,7 +120,7 @@ class AssetManager extends Component {
 
     // ...
     convertToPayeeCurrency = (amount) => {
-        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4 })
         return this.props.state[this.props.payeeCurrency] && amount !== string.empty() ?
             new BigNumber(amount).multipliedBy(
                 this.props.state[this.props.payeeCurrency].rate
@@ -130,7 +130,7 @@ class AssetManager extends Component {
 
     // ...
     exchangeRate = (amount, assetCode) => {
-        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4, })
+        BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4 })
         return new BigNumber(this.convertToNative(amount)).multipliedBy(
             this.props.state[assetCode].rate
         ).toFixed(2)
@@ -199,7 +199,7 @@ export const withAssetManager = (WrappedComponent) => {
         // ...
         forwardRef = (props, ref) =>
             React.createElement(WithAssetManager,
-                { ...props, forwardedRef: ref, }
+                { ...props, forwardedRef: ref }
             )
 
     // ...

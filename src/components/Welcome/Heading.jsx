@@ -20,6 +20,9 @@ import { action as AccountAction } from "../../redux/Account"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as ModalAction } from "../../redux/Modal"
+import { getExchangeRate } from "../../thunks/assets"
+import { nativeToAsset } from "../../logic/assets"
+import { baseReserve } from "../StellarFox/env"
 
 
 
@@ -33,6 +36,10 @@ class Heading extends Component {
         loginObj: null,
     }
 
+
+    // ...
+    componentDidMount = () => this.props.getExchangeRate("usd")
+    
 
     // ...
     showSignupModal = () => {
@@ -149,11 +156,11 @@ class Heading extends Component {
                             </div>
                             <div className="col-item">
                                 <AccountBalance className="heading-svg-icon" />
-                                Account activation fee USD 0.25 ¢
+                                Account activation fee USD {this.props.usd}
                             </div>
                             <div className="col-item">
                                 <SettingsEthernet className="heading-svg-icon" />
-                                End-to-end transfer fee 0.15 %
+                                Flat transaction fee less than USD 0.01
                             </div>
                             <div className="col-item">
                                 <Replay className="heading-svg-icon" />
@@ -170,9 +177,15 @@ class Heading extends Component {
 // ...
 export default connect(
     // map state to props.
-    (state) => ({ Modal: state.Modal }),
+    (state) => ({
+        Modal: state.Modal,
+        usd: nativeToAsset(
+            parseFloat(baseReserve) * 2, state.ExchangeRates.usd.rate
+        ),
+    }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
+        getExchangeRate,
         setState: AccountAction.setState,
         setLedgerPublicKey: LedgerHQAction.setPublicKey,
         setLedgerBip32Path: LedgerHQAction.setBip32Path,
