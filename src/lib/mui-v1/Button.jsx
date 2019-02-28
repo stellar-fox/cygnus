@@ -88,7 +88,7 @@ export default withStyles((theme) => ({
 
         // ...
         render = () => (
-            ({ children, classes, color, disabled, fullWidth, onClick }) =>
+            ({ children, classes, color, disabled, fullWidth, onClick, style }) =>
                 <Button
                     variant="contained"
                     className={
@@ -100,6 +100,7 @@ export default withStyles((theme) => ({
                     onClick={onClick}
                     disabled={disabled}
                     fullWidth={fullWidth}
+                    style={style}
 
                 >
                     { children ? children : "Button" }

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
@@ -170,28 +170,33 @@ export default compose(
 
         // ...
         render = () =>
-            <Fragment>
-                <div className="blockcenter" style={{ width: 256 }}>
-                    <InputField
-                        id="email-input"
-                        type="email"
-                        label="Email"
+            <div className="flex-box-col items-centered content-centered">
+                <InputField
+                    id="email-input"
+                    type="email"
+                    label="Email"
+                    color="secondary"
+                    error={this.state.emailInputError}
+                    errorMessage={this.state.emailInputErrorTextValue}
+                    onChange={this.updateEmailInputValue}
+                />
+                <InputField
+                    id="password-input"
+                    type="password"
+                    label="Password"
+                    color="secondary"
+                    error={this.state.passwordInputError}
+                    errorMessage={this.state.passwordInputErrorTextValue}
+                    onChange={this.updatePasswordInputValue}
+                />
+                
+                <div>
+                    <Button
+                        onClick={this.loginValidator}
+                        disabled={this.state.buttonDisabled}
                         color="secondary"
-                        error={this.state.emailInputError}
-                        errorMessage={this.state.emailInputErrorTextValue}
-                        onChange={this.updateEmailInputValue}
-                        fullWidth
-                    />
-                    <InputField
-                        id="password-input"
-                        type="password"
-                        label="Password"
-                        color="secondary"
-                        error={this.state.passwordInputError}
-                        errorMessage={this.state.passwordInputErrorTextValue}
-                        onChange={this.updatePasswordInputValue}
-                        fullWidth
-                    />
+                        style={{ marginRight: "0px" }}
+                    >Login</Button>
                     <LinearProgress
                         variant="indeterminate"
                         classes={{
@@ -199,16 +204,15 @@ export default compose(
                             colorPrimary: this.props.classes.colorPrimary,
                             barColorPrimary: this.props.classes.barColorPrimary,
                         }}
-                        style={{ opacity: this.state.progressBarOpacity }}
+                        style={{
+                            opacity: this.state.progressBarOpacity,
+                            width: "100%",
+                        }}
                     />
-                    <Button
-                        onClick={this.loginValidator}
-                        disabled={this.state.buttonDisabled}
-                        fullWidth={true}
-                        color="secondary"
-                    >Login</Button>
                 </div>
-            </Fragment>
+                
+            </div>
+            
 
     }
 )

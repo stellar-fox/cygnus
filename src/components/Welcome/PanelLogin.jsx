@@ -1,36 +1,39 @@
 import React from "react"
-
-import { appName } from "../StellarFox/env"
-
 import Login from "../Login"
 import Panel from "../../lib/mui-v1/Panel"
+import { Typography } from "@material-ui/core"
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
+import { action as ModalAction } from "../../redux/Modal"
 
-import sflogo from "../StellarFox/static/sf-logo.svg"
 
 
 
+const LoginComponent = ({ showModal }) => {
+    
+    const signUp = () => showModal("signup")
 
-// <PanelLogin> component
-export default () =>
-    <Panel title="Login with email/password">
-        <div className="panel-logo-container">
-            <div className="panel-logo">
-                <img
-                    className="img-logo"
-                    src={sflogo}
-                    width="160px"
-                    alt={appName}
-                />
-            </div>
-        </div>
+    return <Panel title="Login with email/password">
         <div className="panel-title">
-            Manage your account<br />
-            <em>with ease</em>.
+            Sign-in by authenticating with your credentials.
         </div>
-        <div className="title-small p-t">
-            Once you have opened your
-            account you can log in here
-            to your banking terminal.
-        </div>
+        <Typography align="center" variant="caption" color="secondary">
+            Don't have an account yet? <span style={{ cursor: "pointer" }} onClick={signUp}><b>Sign up!</b></span>
+        </Typography>
         <Login />
     </Panel>
+}
+
+
+
+
+export default connect (
+    // map state to props.
+    (state) => ({
+        Modal: state.Modal,
+    }),
+    // map dispatch to props.
+    (dispatch) => bindActionCreators({
+        showModal: ModalAction.showModal,
+    }, dispatch)
+)(LoginComponent)
