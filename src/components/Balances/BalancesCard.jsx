@@ -21,7 +21,6 @@ import {
 } from "../../lib/ledger"
 import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
-import { notImplementedText } from "../StellarFox/env"
 import {
     Card,
     CardActions,
@@ -179,11 +178,6 @@ class BalancesCard extends Component {
 
 
     }
-
-
-    // ...
-    showNotImplementedModal = () =>
-        this.props.showAlert(notImplementedText, "Not Yet Implemented")
 
 
     // ...
@@ -423,10 +417,6 @@ class BalancesCard extends Component {
                             color="success"
                             onClick={this.toggleFundCard}
                         >Fund</Button>
-                        <Button
-                            color="warning"
-                            onClick={this.showNotImplementedModal}
-                        >Request</Button>
                         {this.props.loginManager.isPayEnabled() &&
                             <Button
                                 color="danger"

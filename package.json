@@ -54,7 +54,6 @@
         "react-router-redux": "^5.0.0-alpha.9",
         "react-scripts": "2.1.5",
         "react-scrollbar-size": "^2.1.0",
-        "react-stripe-elements": "^2.0.3",
         "react-swipeable-views": "^0.13.1",
         "redux": "^4.0.1",
         "redux-devtools-extension": "^2.13.8",
@@ -69,7 +68,7 @@
     "devDependencies": {
         "@types/classnames": "^2.2.7",
         "@types/history": "^4.7.2",
-        "@types/jss": "^9.5.7",
+        "@types/jss": "^9.5.8",
         "@types/material-ui": "^0.21.6",
         "@types/prop-types": "^15.5.9",
         "@types/react-dom": "^16.8.2",

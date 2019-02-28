@@ -1,14 +1,11 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import { Typography, withStyles } from "@material-ui/core"
 import { action as BalancesAction } from "../../redux/Balances"
-import StripeCheckout from "../StripeCheckout"
 import { Card, CardActions, CardHeader, CardText } from "material-ui/Card"
 import Button from "../../lib/mui-v1/Button"
-import Divider from "../../lib/mui-v1/Divider"
 import { withLoginManager } from "../LoginManager"
-import { testNetAddr } from "../StellarFox/env"
 
 
 
@@ -55,22 +52,6 @@ export default compose(
                 />
 
                 <CardText>
-                    {this.props.loginManager.isAuthenticated() &&
-                        this.props.horizon === testNetAddr &&
-                        <Fragment>
-                            <Typography variant="subtitle1" color="inherit">
-                                Fund with Credit Card.
-                                <Typography variant="caption" color="inherit">
-                                    Minimum amount is an equivalent of 0.50 €.
-                                </Typography>
-                            </Typography>
-                            <div className="p-t"></div>
-                            <StripeCheckout />
-                            <div className="p-t p-b">
-                                <Divider />
-                            </div>
-                        </Fragment>
-                    }
                     <Typography variant="subtitle1" color="inherit">
                         Fund with Stellar Lumens.
                         <Typography variant="caption" color="inherit">
@@ -93,4 +74,3 @@ export default compose(
             </Card>)(this.props)
     }
 )
-

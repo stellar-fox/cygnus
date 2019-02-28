@@ -21,7 +21,7 @@ export const appVersion = version
 
 
 // active development period
-export const appCopyDates = "2017-2018"
+export const appCopyDates = "2017-2019"
 
 
 

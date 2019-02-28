@@ -38,7 +38,7 @@ export default withStyles({
     },
 
 })(
-    ({ classes, }) =>
+    ({ classes }) =>
         <div className={classes.footer}>
             <div className="flex-row-space-between">
                 <div>

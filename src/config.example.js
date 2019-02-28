@@ -11,9 +11,6 @@ export const config = {
         storageBucket: "<firebase_project_storage_bucket>",
         messagingSenderId: "<project_sender_id>",
     },
-    stripe: {
-        apiKey: "<stripe_publishable_api_key>",
-    },
     assets: {
         codes: ["EUR", "USD", "AUD", "NZD", "THB", "PLN"],
         issuer: "<issuing_account_public_key>",
