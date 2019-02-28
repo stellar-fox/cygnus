@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { string } from "@xcmats/js-toolbox"
-
+import { Typography } from "@material-ui/core"
 import { bip32Prefix } from "../StellarFox/env"
 import { getPublicKey } from "../../lib/ledger"
 
@@ -121,78 +121,61 @@ class LedgerAuthenticator extends Component {
 
     // ...
     render = () =>
-        <Fragment>
-            <div className="m-t f-b space-between">
-                <div>
-                    <div className="account-title">
-                        Use default account
-                    </div>
-                    <div
-                        className={
-                            (
-                                this.props.className.match(/reverse/) ?
-                                    "text-primary" : "text-secondary"
-                            ) + " account-subtitle"
-                        }
-                    >
-                        You can specify an account index for transactions.
-                    </div>
-                </div>
-                <div>
-                    <Switch
-                        checked={this.state.useDefaultAccount}
-                        onChange={this.handleCheckboxClick}
-                        color={
-                            this.props.className.match(/reverse/) ?
-                                "primary" : "secondary"
-                        }
-                    />
-                </div>
-            </div>
-
-            <div className="f-b">
-                <div className="blockcenter">
-                    {
-                        this.state.pathEditable ?
-                            <Fragment>
-                                <div className="p-t" />
-                                <Input
-                                    className={this.props.className}
-                                    width="256px"
-                                    label="Account Index"
-                                    inputType="text"
-                                    maxLength="5"
-                                    autoComplete="off"
-                                    value={this.state.derivationPath}
-                                    handleChange={this.handlePathChange}
-                                    subLabel={`Account Derivation Path: [${
-                                        bip32Prefix
-                                    }${this.state.derivationPath}']`}
-                                />
-                            </Fragment> :
-                            <div style={{ width: "256px" }}></div>
+        <div className="flex-box-col items-centered content-centered">
+            <div className="m-t m-b flex-box-row items-centered content-centered">
+                <Typography variant="body2" color={
+                    this.props.className.match(/reverse/) ?
+                        "primary" : "secondary"
+                }
+                >
+                    Use default account
+                </Typography>
+                <Switch
+                    checked={this.state.useDefaultAccount}
+                    onChange={this.handleCheckboxClick}
+                    color={
+                        this.props.className.match(/reverse/) ?
+                            "primary" : "secondary"
                     }
-                    <div className="p-t" />
-                    <Button
-                        disabled={this.state.buttonDisabled}
-                        onClick={this.initQueryDevice}
-                        color={
-                            this.props.className.match(/reverse/) ?
-                                "primary" : "secondary"
-                        }
-                        fullWidth={true}
-                    >
-                        Authenticate
-                    </Button>
-                </div>
+                />
             </div>
 
-            <div style={{ marginTop: "2px" }} className="p-t-small">
-                <div className="tiny placeholder-tiny">
-                    { this.state.status }
-                </div>
-            </div>
-        </Fragment>
+            { this.state.pathEditable &&
+                <Input
+                    style={{ marginBottom: "1rem" }}
+                    className={this.props.className}
+                    label="Account Index"
+                    inputType="text"
+                    maxLength="5"
+                    autoComplete="off"
+                    value={this.state.derivationPath}
+                    handleChange={this.handlePathChange}
+                    subLabel={`Account Derivation Path: [${
+                        bip32Prefix
+                    }${this.state.derivationPath}']`}
+                />
+            }
+
+            <Button
+                disabled={this.state.buttonDisabled}
+                onClick={this.initQueryDevice}
+                color={
+                    this.props.className.match(/reverse/) ?
+                        "primary" : "secondary"
+                }
+            >
+                Authenticate
+            </Button>
+
+            
+            <Typography style={{marginTop: "0.5rem"}} variant="caption" color={
+                this.props.className.match(/reverse/) ?
+                    "primary" : "secondary"
+            }
+            >{this.state.status}</Typography>
+            
+        </div>
+
 
 }
 

@@ -1,18 +1,9 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-
 import { withStyles } from "@material-ui/core/styles"
-import {
-    Grid,
-    Paper,
-} from "@material-ui/core"
-
 import Heading from "./Heading"
-import PanelLedger from "./PanelLedger"
-import PanelLogin from "./PanelLogin"
-import PanelExplorer from "./PanelExplorer"
+import LoginChoices from "./LoginChoices"
 import Footer from "../Layout/Footer"
-
 import "./index.css"
 
 
@@ -64,25 +55,7 @@ export default withStyles({
             ({ classes }) =>
                 <div className={classes.considerFooter}>
                     <Heading />
-                    <div className={classes.noScrollBarFix}>
-                        <Grid container spacing={16}>
-                            <Grid item xs>
-                                <Paper className={classes.paper}>
-                                    <PanelLedger />
-                                </Paper>
-                            </Grid>
-                            <Grid item xs>
-                                <Paper className={classes.paper}>
-                                    <PanelLogin />
-                                </Paper>
-                            </Grid>
-                            <Grid item xs>
-                                <Paper className={classes.paper}>
-                                    <PanelExplorer />
-                                </Paper>
-                            </Grid>
-                        </Grid>
-                    </div>
+                    <LoginChoices />
                     <Footer />
                 </div>
         )(this.props)

@@ -7,7 +7,7 @@ import "./index.css"
 
 // <Input> component
 export default (props) =>
-    <div style={{ width: props.width, }} className={props.className}>
+    <div style={props.style} className={props.className}>
         <ul>
             <li>
                 <label htmlFor="name">{props.label}</label>

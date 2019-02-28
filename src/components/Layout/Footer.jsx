@@ -14,7 +14,7 @@ import {
 // <Footer> component
 export default withStyles({
 
-    emoji: { color: "white", },
+    emoji: { color: "white" },
 
     footer: {
         backgroundColor: "#091b31",
@@ -40,10 +40,9 @@ export default withStyles({
 })(
     ({ classes }) =>
         <div className={classes.footer}>
-            <div className="flex-row-space-between">
+            <div className="flex-box-row space-between">
                 <div>
-                    <he.Nbsp /><he.Nbsp />
-                    <he.Copy /><he.Nbsp /><he.Nbsp />
+                    <he.Copy /><he.Nbsp />
                     <a target="_blank"
                         rel="noopener noreferrer"
                         href={env.appLandingPageLink}
@@ -52,24 +51,22 @@ export default withStyles({
                     </a>
                     <he.Nbsp /><he.Nbsp />
                     <b>{env.appCopyDates}</b>.
-                    <he.Nbsp /><he.Nbsp /><he.Nbsp /><he.Nbsp />
-                    <he.Nbsp /><he.Nbsp /><he.Nbsp /><he.Nbsp />
+                    <he.Nbsp /><he.Nbsp />
                     <a
-                        className={classes.tiny}
+                        style={{ fontSize: "9px" }}
                         target="_blank"
                         rel="noopener noreferrer"
                         href={env.tos}
                     >
-                        <b>Terms Of Service</b>
-                    </a>
-                    <he.Nbsp /><he.Nbsp /><b>|</b><he.Nbsp /><he.Nbsp />
+                        TOS
+                    </a>|
                     <a
-                        className={classes.tiny}
+                        style={{ fontSize: "9px" }}
                         target="_blank"
                         rel="noopener noreferrer"
                         href={env.privacy}
                     >
-                        <b>Privacy</b>
+                        Privacy
                     </a>
                 </div>
                 <div>
@@ -77,7 +74,6 @@ export default withStyles({
                     <b>{env.appVersion}</b>
                     <he.Nbsp /><he.Nbsp />
                     <span className={classes.emoji}><emoji.Rocket /></span>
-                    <he.Nbsp /><he.Nbsp />
                 </div>
             </div>
         </div>

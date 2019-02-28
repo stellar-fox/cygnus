@@ -25,6 +25,7 @@
         "@ledgerhq/hw-transport-u2f": "^4.41.1",
         "@material-ui/core": "^3.9.2",
         "@material-ui/icons": "^3.0.2",
+        "@material-ui/styles": "^3.0.0-alpha.10",
         "@stellar-fox/cryptops": "^1.0.4",
         "@stellar-fox/redshift": "^1.0.2",
         "@xcmats/js-toolbox": "^0.8.0",
