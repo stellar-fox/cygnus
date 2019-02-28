@@ -188,15 +188,8 @@ const EditContactModal = withStyles(styles)(
 const AddContactButton = withStyles(styles)(
     ({ classes, onClick }) =>
         <Button onClick={onClick} variant="contained"
-            color="primary" size="small" className={classes.raised}
-        >
-            <Icon style={{ marginRight: "3px" }}>
-                add_box
-            </Icon>
-            <Typography noWrap variant="caption" color="inherit">
-                Request New Contact
-            </Typography>
-        </Button>
+            color="primary" className={classes.raised}
+        >Request New Contact</Button>
 )
 
 

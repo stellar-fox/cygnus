@@ -51,9 +51,7 @@ export default withStyles({
                         <b>{env.appName}</b>
                     </a>
                     <he.Nbsp /><he.Nbsp />
-                    <span className={classes.emoji}><emoji.Fox /></span>
-                    <he.Nbsp /><he.Nbsp />
-                    {env.appCopyDates}.
+                    <b>{env.appCopyDates}</b>.
                     <he.Nbsp /><he.Nbsp /><he.Nbsp /><he.Nbsp />
                     <he.Nbsp /><he.Nbsp /><he.Nbsp /><he.Nbsp />
                     <a

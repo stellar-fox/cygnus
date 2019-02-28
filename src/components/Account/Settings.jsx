@@ -430,7 +430,7 @@ class Settings extends Component {
                     this.props.Modal.modalId === "implode" &&
                     this.props.Modal.visible
                 }
-                title="Imploding Your Bank"
+                title="Imploding Your User Account"
                 actions={[
                     <Button
                         onClick={this.abortNuke}
@@ -597,42 +597,41 @@ class Settings extends Component {
             {firebaseApp.auth("session").currentUser &&
                 this.props.loginManager.isAuthenticated() &&
             <Fragment>
-                <div className="p-t-large"></div>
-                <Divider color="secondary" />
-
-                <div className="p-t flex-box-row">
+                <div style={{marginTop: "1rem"}} className="flex-box-row">
+                    <Typography variant="h6" color="secondary">
+                        <span className="red">Danger Zone</span>
+                    </Typography>
+                </div>
+                <div className="flex-box-row items-centered space-between outline">
                     <div>
-                        <Typography variant="h6" color="secondary">
-                            <span className="red">Implode Account</span>
-                        </Typography>
                         <Typography variant="body1" color="secondary">
-                            <span className="red">
-                                Delete all your data stored with our service.
-                            </span>
+                            Delete all your data and contact book stored on
+                            our servers.
                         </Typography>
                         <Typography variant="caption" color="secondary">
-                            <span className="red">
-                            While your data is nuked, your funds are always safe
-                            and freely transferable to other similar services.
-                            </span>
+                            While your personal data is nuked, your funds are
+                            always safe and freely transferable to other similar
+                            services.
                         </Typography>
                     </div>
+                    <div>
+                        <Button
+                            disabled={this.state.imploding}
+                            color="awesome"
+                            onClick={this.implodeAccount}
+                        >
+                            {this.state.imploding ?
+                                <RequestProgress label="Implode"
+                                    color="secondary"
+                                /> : "Implode"
+                            }
+                        </Button>
+                    </div>
                 </div>
+            </Fragment>
 
-                <div className="p-t flex-box-row space-between">
-                    <Button
-                        disabled={this.state.imploding}
-                        color="awesome"
-                        onClick={this.implodeAccount}
-                    >
-                        {this.state.imploding ?
-                            <RequestProgress label="Implode This Account"
-                                color="secondary"
-                            /> : "Implode This Account"
-                        }
-                    </Button>
-                </div>
-            </Fragment>}
+            
+            }
         </div>
 }
 
