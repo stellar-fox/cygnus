@@ -27,8 +27,7 @@ TabContainer.propTypes = {
 
 
 const useStyles = makeStyles(() => ({
-    root: {
-        padding: "0 0.5rem",
+    root: {  
         flexGrow: 0,
         backgroundColor: theme.palette.primary.main,
     },

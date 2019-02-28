@@ -58,7 +58,7 @@ export default withStyles({
                         rel="noopener noreferrer"
                         href={env.tos}
                     >
-                        TOS
+                        Terms
                     </a>|
                     <a
                         style={{ fontSize: "9px" }}

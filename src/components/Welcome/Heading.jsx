@@ -99,7 +99,7 @@ class Heading extends Component {
             <div className="faded-image cash">
                 <div className="hero">
                     <div className="title">
-                        Welcome to the money revolution.
+                        Join the financial revolution.
                     </div>
                     <div className="subtitle">
                         Open your <b>own lifetime bank</b> today and

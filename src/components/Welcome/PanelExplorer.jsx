@@ -2,27 +2,23 @@ import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { string } from "@xcmats/js-toolbox"
+import { Typography } from "@material-ui/core"
 import {
     fedToPub,
-    htmlEntities as he,
     invalidPaymentAddressMessage,
 } from "../../lib/utils"
 import {
     liveNetAddr,
     testNetAddr,
-    stellarFoundationLink,
 } from "../StellarFox/env"
-
 import Panel from "../../lib/mui-v1/Panel"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
-import Switch from "../../lib/mui-v1/Switch"
-
+// import Switch from "../../lib/mui-v1/Switch"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoadingModalAction } from "../../redux/LoadingModal"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 
-import stellarlogo from "../StellarFox/static/stellar-logo.svg"
 
 
 
@@ -96,29 +92,18 @@ class PanelExplorer extends Component {
 
     // ...
     render = () =>
-        <Panel title="Read only access">
-            <div className="panel-logo-container">
-                <div className="panel-logo">
-                    <img
-                        className="img-logo"
-                        src={stellarlogo}
-                        width="120px"
-                        alt="Stellar"
-                    />
-                </div>
+        <Panel title="View-only access">
+            <div className="m-t-small panel-title">
+                To access transparent account information enter <em>
+                Payment Address</em> or <em>Public Key</em>.
             </div>
-            <div className="panel-title">
-                To access ledger explorer<br />
-                enter your<he.Nbsp />
-                <em>Payment Address</em>.
-            </div>
-            <div className="title-small p-t p-b">
-                Your account operations are
-                publicly visible on the
-                global ledger.
-            </div>
+            <Typography align="center" variant="caption" color="secondary">
+                Account transactions and balances are
+                always publicly visible on the
+                globally distributed ledger.
+            </Typography>
 
-            <div className="m-t f-b space-between">
+            {/* <div className="m-t f-b space-between">
                 <div>
                     <div className="account-title">
                         Use live network
@@ -134,38 +119,28 @@ class PanelExplorer extends Component {
                         color="secondary"
                     />
                 </div>
+            </div> */}
+
+            <div className="flex-box-col items-centered content-centered">
+                <InputField
+                    id="payment-address-input"
+                    type="text"
+                    label="Payment Address"
+                    color="secondary"
+                    error={this.state.error}
+                    errorMessage={this.state.errorMessage}
+                    onChange={this.updateInputValue}
+                />
+                <Button
+                    onClick={this.compoundFederationValidator}
+                    color="secondary"
+                    style={{ marginRight: "0px" }}
+                >
+                    Check
+                </Button>
             </div>
 
-            <div className="f-b">
-                <div className="blockcenter">
-                    <InputField
-                        id="payment-address-input"
-                        type="text"
-                        label="Payment Address"
-                        color="secondary"
-                        error={this.state.error}
-                        errorMessage={this.state.errorMessage}
-                        onChange={this.updateInputValue}
-                        fullWidth
-                    />
-                    <Button
-                        onClick={this.compoundFederationValidator}
-                        color="secondary"
-                        fullWidth={true}
-                    >
-                        Check
-                    </Button>
-                </div>
-            </div>
-            <div>&nbsp;</div>
-            <div className="micro-font">
-                “Stellar” is a trademark of the<he.Nbsp />
-                <a href={stellarFoundationLink} target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Stellar Development Foundation
-                </a>.
-            </div>
+            
         </Panel>
 
 }

@@ -49,7 +49,7 @@ export default compose(
         })
     )
 )(
-    ({ classes, horizon, ledgerConnected, viewName, }) =>
+    ({ classes, horizon, ledgerConnected, viewName }) =>
         <div>
             <div className={classes.appBarTitle}>
                 <div className={classes.barTitle}>{appName}</div>

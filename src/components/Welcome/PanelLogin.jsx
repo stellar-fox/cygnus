@@ -14,13 +14,13 @@ const LoginComponent = ({ showModal }) => {
     const signUp = () => showModal("signup")
 
     return <Panel title="Login with email/password">
-        <div className="panel-title">
+        <div className="m-t-small panel-title">
             Sign-in by authenticating with your credentials.
         </div>
-        <Typography align="center" variant="caption" color="secondary">
+        <Login />
+        <Typography style={{ marginTop: "1rem" }} align="center" variant="caption" color="secondary">
             Don't have an account yet? <span style={{ cursor: "pointer" }} onClick={signUp}><b>Sign up!</b></span>
         </Typography>
-        <Login />
     </Panel>
 }
 

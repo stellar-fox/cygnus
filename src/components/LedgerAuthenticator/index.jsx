@@ -163,6 +163,7 @@ class LedgerAuthenticator extends Component {
                     this.props.className.match(/reverse/) ?
                         "primary" : "secondary"
                 }
+                style={{ marginRight: "0px" }}
             >
                 Authenticate
             </Button>

@@ -55,12 +55,16 @@ export default createMuiTheme({
     typography: {
 
         useNextVariants: true,
+        h4: {
+            fontSize: 24,
+        },
         h3: {
             fontSize: 12,
         },
         h2: {
             fontSize: 9,
         },
+
     },
 
     zIndex: {
