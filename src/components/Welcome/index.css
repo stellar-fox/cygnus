@@ -122,6 +122,13 @@
     filter: drop-shadow(0px 0px 7px rgba(0, 0, 0, 0.6));
 }
 
+.footnote-logo {
+    display: block;
+    opacity: 0.4;
+    width: 72px;
+    margin: 0.5rem 0;
+}
+
 .navy {
     color: rgb(15, 46, 83);
     font-size: 1.2rem;

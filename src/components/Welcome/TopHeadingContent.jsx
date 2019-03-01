@@ -6,6 +6,7 @@ import { action as ModalAction } from "../../redux/Modal"
 import { Typography } from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
+import { Link } from "react-router-dom"
 
 
 
@@ -49,7 +50,7 @@ const TopHeadingContent = ({ showModal }) => {
         </div>
         <div className="flex-box-row">
             <div className="hero">
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" component={Link} to="#login">
                     Login
                 </Button>
             </div>
