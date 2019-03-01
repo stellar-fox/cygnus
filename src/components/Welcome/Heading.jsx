@@ -2,17 +2,7 @@ import React, { Component, Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { TopBarSecurityMessage } from "../StellarFox/env"
-import {
-    AccountBalance,
-    AlarmOn,
-    Email,
-    Fingerprint,
-    Language,
-    LocationOff,
-    PermContactCalendar,
-    Replay,
-    SettingsEthernet,
-} from "@material-ui/icons"
+import { Typography } from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import Signup from "../Account/Signup"
@@ -21,8 +11,8 @@ import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as ModalAction } from "../../redux/Modal"
 import { getExchangeRate } from "../../thunks/assets"
-import { nativeToAsset } from "../../logic/assets"
-import { baseReserve } from "../StellarFox/env"
+import BottomHeadingContent from "./BottomHeadingContent"
+import TopHeadingContent from "./TopHeadingContent"
 
 
 
@@ -97,13 +87,18 @@ class Heading extends Component {
             <TopBarSecurityMessage />
 
             <div className="faded-image cash">
-                <div className="hero">
+                <TopHeadingContent />
+
+                <div className="m-t-large hero">
+                    <Typography variant="h1" color="secondary">
+                        Welcome to Cygnus.
+                    </Typography>
                     <div className="title">
-                        Join the financial revolution.
+                        Join the financial inclusion.
                     </div>
                     <div className="subtitle">
-                        Open your <b>own lifetime bank</b> today and
-                        reserve personalized payment address.
+                        Open your <b>own</b> bank today and
+                        reserve secure and personalized payment address.
                     </div>
                 </div>
 
@@ -112,62 +107,12 @@ class Heading extends Component {
                         color="awesome"
                         onClick={this.showSignupModal}
                     >
-                        Get Started
+                        Open Free Account
                     </Button>
                 </div>
 
-                <div className="container">
-                    <div className="columns">
-                        <div className="column">
-                            <div className="col-header">True Freedom</div>
-                            <div className="col-item">
-                                <AlarmOn className="heading-svg-icon" />
-                                Transaction settlement in seconds.
-                            </div>
-                            <div className="col-item">
-                                <LocationOff className="heading-svg-icon" />
-                                Location independent.
-                            </div>
-                            <div className="col-item">
-                                <Language className="heading-svg-icon" />
-                                Global, permissionless transacting.
-                            </div>
-                        </div>
-                        <div className="column">
-                            <div className="col-header">
-                                Easy and Secure Transactions
-                            </div>
-                            <div className="col-item">
-                                <Fingerprint className="heading-svg-icon" />
-                                Security by design.
-                            </div>
-                            <div className="col-item">
-                                <PermContactCalendar className="heading-svg-icon" />
-                                Pay to address book contacts.
-                            </div>
-                            <div className="col-item">
-                                <Email className="heading-svg-icon" />
-                                Use email as payment address.
-                            </div>
-                        </div>
-                        <div className="column">
-                            <div className="col-header">
-                                Fractional Cost
-                            </div>
-                            <div className="col-item">
-                                <AccountBalance className="heading-svg-icon" />
-                                Account activation fee USD {this.props.usd}
-                            </div>
-                            <div className="col-item">
-                                <SettingsEthernet className="heading-svg-icon" />
-                                Flat transaction fee less than USD 0.01
-                            </div>
-                            <div className="col-item">
-                                <Replay className="heading-svg-icon" />
-                                Free recurring payments.
-                            </div>
-                        </div>
-                    </div>
+                <div className="container m-t-large m-b">
+                    <BottomHeadingContent />
                 </div>
             </div>
         </Fragment>
@@ -179,9 +124,6 @@ export default connect(
     // map state to props.
     (state) => ({
         Modal: state.Modal,
-        usd: nativeToAsset(
-            parseFloat(baseReserve) * 2, state.ExchangeRates.usd.rate
-        ),
     }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
