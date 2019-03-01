@@ -129,10 +129,10 @@
 
 .heading-svg-icon {
     fill: rgb(248, 255, 237) !important;
-    margin-left: 16px;
     margin-right: 10px;
     margin-bottom: -0.3rem;
     filter: drop-shadow(0px 0px 7px rgba(0, 0, 0, 0.8));
+    font-size: 18px !important;
 }
 
 .svg-success {

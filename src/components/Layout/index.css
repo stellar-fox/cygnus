@@ -480,11 +480,19 @@ span.red-badge {
 
 .alert-message {
     padding: 2px 0px 2px 0px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-variant: small-caps;
-    background: rgba(178, 34, 34, 0.8);
+    background: rgba(170, 22, 22, 0.8);
     color: rgba(244, 176, 4, 1.0);
     text-align: center;
+    line-height: 1.5rem;
+}
+
+.alert-message-flat {
+    padding: 2px;
+    font-variant: small-caps;
+    background: rgba(170, 22, 22, 0.8);
+    color: rgba(244, 176, 4, 1.0);
 }
 
 .placeholder-1rem {

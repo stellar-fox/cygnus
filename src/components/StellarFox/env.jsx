@@ -4,7 +4,7 @@ import {
     version,
 } from "../../../package.json"
 import { timeUnit } from "@xcmats/js-toolbox"
-
+import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
 
 
 
@@ -107,19 +107,23 @@ export const ledgerSupportLink =
 
 
 // ...
-export const TopBarSecurityMessage = () =>
-    <div className="alert-message">
-        <span>we will <u>never</u> ask you for your secret key.</span>
-        &nbsp;&nbsp;
-        <span>
+export const TopBarSecurityMessage = () => {
+    const isMobile = useMediaQuery("(max-width:960px)")
+
+    return <div className={ isMobile ? "flex-box-col items-centered content-centered alert-message-flat" : "flex-box-row content-centered alert-message"}>
+        <div className={isMobile && "tiny"}>
+            we will <u>never</u> ask you for your secret key.
+        </div>
+        <div className={isMobile && "tiny"}>
             please read this <a target="_blank"
                 rel="noopener noreferrer"
                 href={securityGuideLink}
             >
                 <strong>short guide</strong>
             </a> to keep your finances secure.
-        </span>
+        </div>
     </div>
+}
 
 
 
