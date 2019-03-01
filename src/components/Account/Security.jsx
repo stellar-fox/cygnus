@@ -12,11 +12,8 @@ export default  () =>
 
         <div className="flex-box-row">
             <div>
-                <Typography variant="h6" color="secondary">
-                    Account Security
-                </Typography>
                 <Typography variant="body1" color="secondary">
-                    Adjust security settings for your account.
+                    Secure your account even further.
                 </Typography>
                 <Typography variant="caption" color="secondary">
                     Protect your account with additional

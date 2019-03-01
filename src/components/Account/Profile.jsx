@@ -412,9 +412,6 @@ class Profile extends Component {
 
                 <div className="flex-box-row space-between">
                     <div>
-                        <Typography variant="h6" color="secondary">
-                            Account Profile
-                        </Typography>
                         <Typography variant="body1" color="secondary">
                             Sign your digital profile identity.
                         </Typography>

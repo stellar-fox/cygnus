@@ -483,9 +483,6 @@ class Settings extends Component {
 
             <div className="flex-box-row">
                 <div>
-                    <Typography variant="h6" color="secondary">
-                        Account Settings
-                    </Typography>
                     <Typography variant="body1" color="secondary">
                         Adjust settings for your account.
                     </Typography>

@@ -5,7 +5,7 @@ import { rgb } from "../../lib/utils"
 import { withStyles } from "@material-ui/core/styles"
 
 import {
-    appName,
+    appCodeName,
     liveNetAddr,
 } from "../StellarFox/env"
 
@@ -24,7 +24,7 @@ export default compose(
 
         barTitle: {
             lineHeight: "45px",
-            fontSize: "1.1em",
+            fontSize: "1.3rem",
         },
 
         barSubtitle: {
@@ -52,7 +52,7 @@ export default compose(
     ({ classes, horizon, ledgerConnected, viewName }) =>
         <div>
             <div className={classes.appBarTitle}>
-                <div className={classes.barTitle}>{appName}</div>
+                <div className={classes.barTitle}>{appCodeName}</div>
                 <div className={classes.barSubtitle}>{viewName}</div>
             </div>
             <div className={classes.indicatorSetCol}>

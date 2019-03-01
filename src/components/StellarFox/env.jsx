@@ -14,6 +14,12 @@ export const appName = "Stellar Fox"
 
 
 
+// application code name
+export const appCodeName = "Cygnus™"
+
+
+
+
 // application version - taken from package.json
 export const appVersion = version
 

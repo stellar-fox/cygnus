@@ -585,10 +585,10 @@ class Contacts extends Component {
                 <Toolbar>
 
                     <div style={{ flex: 1 }} className="f-b-col m-r">
-                        <Typography noWrap variant="h6" color="primary">
+                        <Typography noWrap variant="body1" color="primary">
                             Contact Book
                         </Typography>
-                        <Typography noWrap variant="body1" color="primary">
+                        <Typography noWrap variant="h5" color="primary">
                                 Manage your financial contacts.
                         </Typography>
                     </div>
