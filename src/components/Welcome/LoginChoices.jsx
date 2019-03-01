@@ -29,7 +29,9 @@ TabContainer.propTypes = {
 const useStyles = makeStyles(() => ({
     root: {  
         flexGrow: 0,
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.light,
+        borderRadius: "3px",
+
     },
 }))
 
@@ -43,29 +45,39 @@ const LoginChoices = () => {
     }
 
     return (
-        <div className={classes.root}>
-            <AppBar position="static">
-                <Tabs value={value} onChange={handleChange}>
-                    <Tab icon={<img
-                        className="img-logo"
-                        src={ledgerhqlogo}
-                        width="72px"
-                        alt="LedgerHQ"
-                    />}
-                    />
-                    <Tab label="Email/Password" />
-                    <Tab label="View Only" />
-                </Tabs>
-            </AppBar>
-            {value === 0 && <TabContainer>
-                <PanelLedger />
-            </TabContainer>}
-            {value === 1 && <TabContainer>
-                <PanelLogin />
-            </TabContainer>}
-            {value === 2 && <TabContainer>
-                <PanelExplorer />
-            </TabContainer>}
+        <div className="flex-box-col content-centered items-centered m-b-large">
+            <div className="flex-box-col content-centered items-centered m-t-large m-b-large">
+                <Typography variant="h4" color="secondary">
+                    Log in and bank!
+                </Typography>
+                <Typography variant="h5" color="secondary">
+                    Plase choose one of available login methods:
+                </Typography>
+            </div>
+            <div className={classes.root}>
+                <AppBar position="static">
+                    <Tabs value={value} onChange={handleChange}>
+                        <Tab icon={<img
+                            className="img-logo"
+                            src={ledgerhqlogo}
+                            width="72px"
+                            alt="LedgerHQ"
+                        />}
+                        />
+                        <Tab label="Email/Password" />
+                        <Tab label="View Only" />
+                    </Tabs>
+                </AppBar>
+                {value === 0 && <TabContainer>
+                    <PanelLedger />
+                </TabContainer>}
+                {value === 1 && <TabContainer>
+                    <PanelLogin />
+                </TabContainer>}
+                {value === 2 && <TabContainer>
+                    <PanelExplorer />
+                </TabContainer>}
+            </div>
         </div>
     )
 }
