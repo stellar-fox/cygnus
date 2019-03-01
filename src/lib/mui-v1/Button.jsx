@@ -89,8 +89,8 @@ export default withStyles((theme) => ({
         // ...
         render = () => (
             ({
-                children, classes, color, disabled, fullWidth, onClick, style,
-                size, variant,
+                children, classes, color, component, disabled, fullWidth,
+                onClick, style, size, to, variant,
             }) =>
                 <Button
                     variant={variant || "contained"}
@@ -100,12 +100,13 @@ export default withStyles((theme) => ({
                             classes.common,
                         )
                     }
+                    component={component}
                     onClick={onClick}
                     disabled={disabled}
                     fullWidth={fullWidth}
                     size={size}
                     style={style}
-
+                    to={to}
                 >
                     { children ? children : "Button" }
                 </Button>

@@ -31,13 +31,13 @@ const AboutContent = ({ classes }) => {
     const isMobile = useMediaQuery("(max-width:960px)")
 
     return <Fragment>
-        {!isMobile && <div className={`p-t p-b ${classes.bgLight}`}>
+        {!isMobile && <div className={`p-t p-b ${classes.bg}`}>
             <div className={`flex-box-row content-centered items-centered ${classes.hr}`}></div>
         </div>}
         <div className={
             isMobile ?
-                `flex-box-col content-centered items-centered container ${classes.bgLight} ${classes.considerFooter}` :
-                `flex-box-row space-around container ${classes.bgLight}`}
+                `flex-box-col content-centered items-centered container ${classes.bg} ${classes.considerFooter}` :
+                `flex-box-row space-around container ${classes.bg}`}
         >
 
             <div className={`flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
@@ -85,8 +85,8 @@ export default func.compose(
         considerFooter: {
             paddingBottom: 26,
         },
-        bgLight: {
-            backgroundColor: theme.palette.primary.light,
+        bg: {
+            backgroundColor: theme.palette.primary.main,
         },
         disclaimer: {
             padding: "0.2rem 0",

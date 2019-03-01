@@ -13,9 +13,9 @@ const LoginComponent = ({ showModal }) => {
     
     const signUp = () => showModal("signup")
 
-    return <Panel title="Login with email/password">
+    return <Panel title="Sign in with your email.">
         <div className="m-t-small panel-title">
-            Provide your login credentials below.
+            Provide your credentials below.
         </div>
         <Login />
         <Typography style={{ marginTop: "1rem" }} align="center" variant="caption" color="secondary">

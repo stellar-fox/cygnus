@@ -68,10 +68,10 @@ const LoginChoices = () => {
         <div style={{ paddingBottom: "3rem" }} className="flex-box-col content-centered items-centered">
             <div className="flex-box-col content-centered items-centered m-t-large m-b-large">
                 <Typography variant="h4" color="secondary">
-                    Log in and bank!
+                    Sign in and bank!
                 </Typography>
                 <Typography variant="h5" color="secondary">
-                    Plase choose one of available login methods:
+                    Plase choose one of available access methods:
                 </Typography>
             </div>
             <div className={isMobile ? classes.rootMobile : classes.root}>

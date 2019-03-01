@@ -594,7 +594,9 @@ class Settings extends Component {
                 this.props.loginManager.isAuthenticated() &&
             <Fragment>
                 <div style={{marginTop: "1rem"}} className="flex-box-row">
-                    <Typography variant="h6" color="secondary">
+                    <Typography style={{ padding: "0.5rem 0"}} variant="h5"
+                        color="secondary"
+                    >
                         <span className="red">Danger Zone</span>
                     </Typography>
                 </div>

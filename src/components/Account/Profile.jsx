@@ -518,9 +518,6 @@ class Profile extends Component {
 
                 <div className="p-t flex-box-row">
                     <div>
-                        <Typography variant="h6" color="secondary">
-                            Payment Address
-                        </Typography>
                         <Typography variant="body1" color="secondary">
                             Sign your digital payment identity.
                         </Typography>

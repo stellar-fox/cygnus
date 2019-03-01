@@ -48,10 +48,10 @@ const TopHeadingContent = ({ showModal }) => {
                 Support
             </Typography>
         </div>
-        <div className="flex-box-row">
+        <div className={isMobile ? "flex-box-col" : "flex-box-row"}>
             <div className="hero">
-                <Button size="small" color="primary" component={Link} to="#login">
-                    Login
+                <Button size="small" color="primary" component={Link} to="/login">
+                    Sign In
                 </Button>
             </div>
             <div className="hero">
@@ -60,7 +60,7 @@ const TopHeadingContent = ({ showModal }) => {
                     color="secondary"
                     onClick={showSignupModal}
                 >
-                    Signup
+                    Create Account
                 </Button>
             </div>
         </div>

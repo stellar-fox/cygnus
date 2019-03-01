@@ -429,7 +429,7 @@ class BalancesCard extends Component {
 
             {this.props.loginManager.isAuthenticated() &&
             <CardText expandable={true}>
-                <Typography variant="h6" color="primary">
+                <Typography variant="h5" color="primary">
                     Available Currencies
                 </Typography>
                 <Typography variant="subtitle1" color="primary">
