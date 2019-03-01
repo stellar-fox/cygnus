@@ -82,7 +82,7 @@ class NoAccountCard extends Component {
             </div>
 
 
-            <Typography color="primary" variant="h3"
+            <Typography color="primary" variant="h5"
                 className="fade-extreme"
             >
                 <NumberFormat
@@ -93,7 +93,7 @@ class NoAccountCard extends Component {
                     fixedDecimalScale={true}
                 /> XLM
             </Typography>
-            <Typography color="primary" variant="h3"
+            <Typography color="primary" variant="h5"
                 className="fade-extreme"
             >
                 1 XLM ≈ <NumberFormat

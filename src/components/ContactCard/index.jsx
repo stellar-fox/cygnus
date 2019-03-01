@@ -109,7 +109,7 @@ export default compose(
                                         data.first_name, data.last_name
                                     ), 24, string.shorten.END)}
                                 </Typography>
-                                <Typography variant="h3" align="right"
+                                <Typography variant="h5" align="right"
                                     color="primary"
                                 >
                                     {string.shorten(formatPaymentAddress(
@@ -117,7 +117,7 @@ export default compose(
                                     ), 30, string.shorten.END)}
                                 </Typography>
                             </div>
-                            <Typography variant="h2" align="right"
+                            <Typography variant="h6" align="right"
                                 color="primary"
                             >
                                 {pubKeyAbbr(data.pubkey)}

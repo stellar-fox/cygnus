@@ -393,7 +393,7 @@ class TxConfirmMsg extends Component {
                         Action Required
                     </div>
                     <he.Nbsp /><he.Nbsp />
-                    <Typography style={{fontWeight: 600}} color="primary" variant="h3">
+                    <Typography style={{fontWeight: 600}} color="primary" variant="h5">
                         When you are sure the info above is correct
                         press <span style={{fontSize: "1rem"}}>✓</span>
                         on the device to sign and send the transaction.

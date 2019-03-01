@@ -313,7 +313,7 @@ class BalancesCard extends Component {
                             }
 
                         </div>
-                        <Typography color="primary" variant="h3"
+                        <Typography color="primary" variant="h5"
                             className="fade-extreme"
                         >
                             <NumberFormat
@@ -324,7 +324,7 @@ class BalancesCard extends Component {
                                 fixedDecimalScale={true}
                             /> XLM
                         </Typography>
-                        <Typography color="primary" variant="h3"
+                        <Typography color="primary" variant="h5"
                             className="fade-extreme"
                         >
                             1 XLM ≈ <NumberFormat
@@ -374,7 +374,7 @@ class BalancesCard extends Component {
                                 />
                             </span>
                         </Typography>
-                        <Typography variant="h3" color="primary">
+                        <Typography variant="h5" color="primary">
                             <span className="fade-extreme">
                                 <NumberFormat
                                     value={currentAccountReserve(

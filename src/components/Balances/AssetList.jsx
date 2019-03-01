@@ -240,7 +240,7 @@ export default compose(
                         <VerifiedUser
                             className="svg-success m-l-small"
                         />
-                        <Typography variant="h2" color="secondary">
+                        <Typography variant="h6" color="secondary">
                             Verified
                         </Typography>
                     </div>
@@ -345,7 +345,7 @@ export default compose(
 
                         <div className="p-l-small">
                             <div className="p-b-nano">
-                                <Typography variant="h2"color="secondary">
+                                <Typography variant="h6"color="secondary">
                                     Issuer:<he.Nbsp /><he.Nbsp />
                                     {pubKeyAbbr(trustedAsset.asset_issuer)}
                                 </Typography>
@@ -360,7 +360,7 @@ export default compose(
                                 </span>
                             </Typography>
 
-                            <Typography variant="h2" color="secondary">
+                            <Typography variant="h6" color="secondary">
                                 Trust Limit:<he.Nbsp /><he.Nbsp />
                                 {this.displayLimit(trustedAsset)}
                             </Typography>
@@ -394,7 +394,7 @@ export default compose(
                                     <VerifiedUser
                                         className="svg-success m-l-small"
                                     />
-                                    <Typography variant="h2" color="secondary">
+                                    <Typography variant="h6" color="secondary">
                                         Verified
                                     </Typography>
                                 </div>
@@ -413,7 +413,7 @@ export default compose(
 
                         <div className="p-l-small washed-out-strong">
                             <div className="p-b-nano">
-                                <Typography variant="h2" color="secondary">
+                                <Typography variant="h6" color="secondary">
                                     Issuer:<he.Nbsp /><he.Nbsp />
                                     {pubKeyAbbr(config.assets.issuer)}
                                 </Typography>
@@ -428,7 +428,7 @@ export default compose(
                                 </span>
                             </Typography>
 
-                            <Typography variant="h2" color="secondary">
+                            <Typography variant="h6" color="secondary">
                                 Trust Limit:<he.Nbsp /><he.Nbsp />None
                             </Typography>
                         </div>
