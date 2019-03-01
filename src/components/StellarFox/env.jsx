@@ -117,10 +117,10 @@ export const TopBarSecurityMessage = () => {
     const isMobile = useMediaQuery("(max-width:960px)")
 
     return <div className={ isMobile ? "flex-box-col items-centered content-centered alert-message-flat" : "flex-box-row content-centered alert-message"}>
-        <div className={isMobile && "tiny"}>
+        <div className={isMobile ? "tiny" : ""}>
             we will <u>never</u> ask you for your secret key.
         </div>
-        <div className={isMobile && "tiny"}>
+        <div className={isMobile ? "tiny" : ""}>
             please read this <a target="_blank"
                 rel="noopener noreferrer"
                 href={securityGuideLink}
