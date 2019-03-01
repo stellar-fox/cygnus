@@ -38,6 +38,9 @@ const TopHeadingContent = ({ showModal }) => {
                 Why Cygnus
             </Typography>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
+                Features
+            </Typography>
+            <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
                 Prices
             </Typography>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">

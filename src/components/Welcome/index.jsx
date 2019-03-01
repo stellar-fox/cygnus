@@ -1,8 +1,10 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
+import AboutContent from "./AboutContent"
 import Heading from "./Heading"
 import LoginChoices from "./LoginChoices"
+import SummaryContent from "./SummaryContent"
 import Footer from "../Layout/Footer"
 import "./index.css"
 
@@ -56,6 +58,8 @@ export default withStyles({
                 <div className={classes.considerFooter}>
                     <Heading />
                     <LoginChoices />
+                    <SummaryContent />
+                    <AboutContent />
                     <Footer />
                 </div>
         )(this.props)
