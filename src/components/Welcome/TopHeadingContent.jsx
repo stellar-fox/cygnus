@@ -34,7 +34,7 @@ const TopHeadingContent = ({ showModal }) => {
         isMobile = useMediaQuery("(max-width:960px)")
 
     return <div className="flex-box-row space-between">
-        <div className={isMobile ? "flex-box-col" : "flex-box-row"}>
+        <div className={isMobile ? "flex-box-col" : "flex-box-row hero"}>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
                 Why Cygnus
             </Typography>
@@ -50,7 +50,7 @@ const TopHeadingContent = ({ showModal }) => {
         </div>
         <div className={isMobile ? "flex-box-col" : "flex-box-row"}>
             <div className="hero">
-                <Button size="small" color="primary" component={Link} to="/login">
+                <Button size="small" color="primaryLight" component={Link} to="/login">
                     Sign In
                 </Button>
             </div>
