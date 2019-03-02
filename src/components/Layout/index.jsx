@@ -22,6 +22,7 @@ import AlertModal from "./AlertModal"
 import ConnectedSnackbar from "./ConnectedSnackbar"
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
+import LoginView from "../LoginView"
 
 import "./index.css"
 
@@ -63,12 +64,13 @@ export default compose(
             this.props.staticRouter.addPaths({
                 "Welcome": this.rr("."),
                 "Bank": this.rr("bank/"),
+                "LoginView": this.rr("login/"),
             })
         }
 
 
         // ...
-        state = { Bank: Null, }
+        state = { Bank: Null }
 
 
         // ...
@@ -85,7 +87,7 @@ export default compose(
 
             import("../Bank")
                 .then((B) => this.setState(
-                    () => ({ Bank: B.default, })
+                    () => ({ Bank: B.default })
                 ))
         })
 
@@ -103,6 +105,12 @@ export default compose(
                 <this.state.Bank {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Welcome")} />
 
+        // ...
+        renderLoginView = (routeProps) =>
+            !this.props.loggedIn ?
+                <LoginView {...routeProps} /> :
+                <Redirect to={this.props.staticRouter.getPath("Bank")} />
+
 
         // ...
         render = () => (
@@ -117,6 +125,9 @@ export default compose(
                         </Route>
                         <Route path={getPath("Bank")}>
                             { this.renderBank }
+                        </Route>
+                        <Route path={getPath("LoginView")}>
+                            { this.renderLoginView }
                         </Route>
                         <Redirect to={getPath("Welcome")} />
                     </Switch>

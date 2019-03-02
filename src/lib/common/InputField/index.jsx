@@ -55,7 +55,7 @@ export default class InputField extends Component {
 
     // ...
     handleChange = (event) => {
-        this.setState({ value: event.target.value, }, () => {
+        this.setState({ value: event.target.value }, () => {
             if (this.props.validator) {
                 this.props.validator.call(this)
             }

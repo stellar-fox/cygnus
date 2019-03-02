@@ -32,7 +32,7 @@ export default withStyles({
     },
 
 })(
-    ({ children, classes, title, }) =>
+    ({ children, classes, title }) =>
         <article className={classes.root}>
             <div className={classes.header}>
                 <p className={classes.title}>{ title }</p>

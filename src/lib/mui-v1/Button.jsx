@@ -34,6 +34,38 @@ export default withStyles((theme) => ({
         },
     },
 
+    secondaryLight: {
+        color: theme.palette.primary.light,
+        backgroundColor: theme.palette.secondary.light,
+        "&:hover": {
+            backgroundColor: theme.palette.secondary.main,
+        },
+    },
+
+    secondaryDark: {
+        color: theme.palette.primary.main,
+        backgroundColor: theme.palette.secondary.dark,
+        "&:hover": {
+            backgroundColor: theme.palette.secondary.main,
+        },
+    },
+
+    primaryLight: {
+        color: theme.palette.secondary.light,
+        backgroundColor: theme.palette.primary.light,
+        "&:hover": {
+            backgroundColor: theme.palette.primary.main,
+        },
+    },
+
+    primaryDark: {
+        color: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.dark,
+        "&:hover": {
+            backgroundColor: theme.palette.primary.main,
+        },
+    },
+
     success: {
         color: theme.palette.success,
         backgroundColor: theme.palette.primary.main,
@@ -96,7 +128,7 @@ export default withStyles((theme) => ({
                     variant={variant || "contained"}
                     className={
                         classNames(
-                            disabled ? classes.disabled : classes[color],
+                            disabled ? classes.disabled : color && classes[color],
                             classes.common,
                         )
                     }
