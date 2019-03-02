@@ -93,17 +93,18 @@ class PanelExplorer extends Component {
     // ...
     render = () =>
         <Panel title="View-only access">
-            <div className="m-t-small panel-title">
-                To access transparent account information enter <em>
-                Payment Address</em> or <em>Public Key</em>.
-            </div>
-            <Typography align="center" variant="caption" color="secondary">
-                Account transactions and balances are
-                always publicly visible on the
-                globally distributed ledger.
-            </Typography>
+            <div style={{ height: "300px" }}>
+                <div className="m-t-small panel-title">
+                    To access transparent account information enter <em>
+                    Payment Address</em> or <em>Public Key</em>.
+                </div>
+                <Typography align="center" variant="caption" color="secondary">
+                    Account transactions and balances are
+                    always publicly visible on the
+                    globally distributed ledger.
+                </Typography>
 
-            {/* <div className="m-t f-b space-between">
+                {/* <div className="m-t f-b space-between">
                 <div>
                     <div className="account-title">
                         Use live network
@@ -121,25 +122,25 @@ class PanelExplorer extends Component {
                 </div>
             </div> */}
 
-            <div className="flex-box-col items-centered content-centered">
-                <InputField
-                    id="payment-address-input"
-                    type="text"
-                    label="Payment Address"
-                    color="secondary"
-                    error={this.state.error}
-                    errorMessage={this.state.errorMessage}
-                    onChange={this.updateInputValue}
-                />
-                <Button
-                    onClick={this.compoundFederationValidator}
-                    color="secondary"
-                    style={{ marginRight: "0px" }}
-                >
-                    Check
-                </Button>
+                <div className="flex-box-col items-centered content-centered">
+                    <InputField
+                        id="payment-address-input"
+                        type="text"
+                        label="Payment Address"
+                        color="secondary"
+                        error={this.state.error}
+                        errorMessage={this.state.errorMessage}
+                        onChange={this.updateInputValue}
+                    />
+                    <Button
+                        onClick={this.compoundFederationValidator}
+                        color="secondary"
+                        style={{ marginRight: "0px" }}
+                    >
+                        Check
+                    </Button>
+                </div>
             </div>
-
             
         </Panel>
 

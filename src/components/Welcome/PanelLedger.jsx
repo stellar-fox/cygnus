@@ -55,19 +55,21 @@ class PanelLedger extends Component {
     // ...
     render = () =>
         <Panel title="Login with Ledger Nano S">
-            <div className="m-t-small panel-title">
-                Sign-in by authenticating with your <em>Ledger device</em>.
+            <div style={{ height: "300px" }}>
+                <div className="m-t-small panel-title">
+                    Sign-in by authenticating with your <em>Ledger device</em>.
+                </div>
+                <Typography align="center" variant="caption" color="secondary">
+                    Connect your Ledger Nano S device and select <i>Stellar</i> application.
+                    Need help? Visit <a target="_blank" rel="noopener noreferrer" href={ledgerSupportLink}>
+                        Ledger Support
+                    </a>.
+                </Typography>
+                <LedgerAuthenticator
+                    onConnected={this.logInViaLedger}
+                    className="welcome-lcars-input"
+                />
             </div>
-            <Typography align="center" variant="caption" color="secondary">
-                Connect your Ledger Nano S device and select <i>Stellar</i> application.
-                Need help? Visit <a target="_blank" rel="noopener noreferrer" href={ledgerSupportLink}>
-                    Ledger Support
-                </a>.
-            </Typography>
-            <LedgerAuthenticator
-                onConnected={this.logInViaLedger}
-                className="welcome-lcars-input"
-            />
         </Panel>
 }
 
