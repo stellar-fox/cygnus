@@ -3,7 +3,6 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { func } from "@xcmats/js-toolbox"
 import { Typography } from "@material-ui/core"
-import Button from "../../lib/mui-v1/Button"
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
 import { withStyles } from "@material-ui/core/styles"
 
