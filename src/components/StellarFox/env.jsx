@@ -120,7 +120,7 @@ export const TopBarSecurityMessage = () => {
         <div className={isMobile ? "tiny" : ""}>
             we will <u>never</u> ask you for your secret key.
         </div>
-        <div className={isMobile ? "tiny" : ""}>
+        <div className={isMobile ? "tiny" : "p-l"}>
             please read this <a target="_blank"
                 rel="noopener noreferrer"
                 href={securityGuideLink}
