@@ -27,7 +27,7 @@ export default withStyles({
     },
 
     body: {
-        margin: "0.5rem 1.5rem 1.5rem 1.5rem",
+        margin: "0.5rem",
         textAlign: "left",
     },
 

@@ -14,7 +14,7 @@ const LoginComponent = ({ showModal }) => {
     const signUp = () => showModal("signup")
 
     return <Panel title="Sign in with your email.">
-        <div style={{ height: "300px" }}>
+        <div style={{ minHeight: "310px" }}>
             <div className="m-t-small panel-title">
                 Provide your credentials below.
             </div>

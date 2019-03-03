@@ -17,28 +17,32 @@ export default withStyles((theme) => ({
 
     primary: {
         color: theme.palette.primary.main,
+        width: "220px !important",
         "&:hover:before": {
             borderBottomColor: `${theme.palette.primary.main} !important`,
             borderBottomWidth: "1px !important",
         },
-        "&:before": { borderBottomColor: theme.palette.primary.main, },
-        "&:after": { borderBottomColor: theme.palette.primary.main, },
+        "&:before": { borderBottomColor: theme.palette.primary.main },
+        "&:after": { borderBottomColor: theme.palette.primary.main },
     },
 
     secondary: {
         color: theme.palette.secondary.main,
+        width: "220px !important",
         "&:hover:before": {
             borderBottomColor: `${theme.palette.secondary.main} !important`,
             borderBottomWidth: "1px !important",
         },
-        "&:before": { borderBottomColor: theme.palette.secondary.main, },
-        "&:after": { borderBottomColor: theme.palette.secondary.main, },
+        "&:before": { borderBottomColor: theme.palette.secondary.main },
+        "&:after": { borderBottomColor: theme.palette.secondary.main },
     },
 
-    root: { color: "rgba(212,228,188,0.6)", },
-    shrink: { color: "rgba(212,228,188,0.4) !important", },
-    rootPrimary: { color: "rgba(15, 46, 83, 0.8)", },
-    shrinkPrimary: { color: "rgba(15, 46, 83, 0.4) !important", },
+    root: {
+        color: "rgba(212,228,188,0.6)",
+    },
+    shrink: { color: "rgba(212,228,188,0.4) !important" },
+    rootPrimary: { color: "rgba(15, 46, 83, 0.8)" },
+    shrinkPrimary: { color: "rgba(15, 46, 83, 0.4) !important" },
 
     focused: {
         "&$root": {
@@ -90,7 +94,9 @@ export default withStyles((theme) => ({
                         onChange={onChange}
                         fullWidth={fullWidth}
                         placeholder={placeholder}
-                        inputProps={{ maxLength }}
+                        inputProps={{
+                            maxLength,
+                        }}
                     />
                     <FormHelperText id="name-error-text">
                         { errorMessage }

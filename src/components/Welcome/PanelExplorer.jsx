@@ -93,10 +93,10 @@ class PanelExplorer extends Component {
     // ...
     render = () =>
         <Panel title="View-only access">
-            <div style={{ height: "300px" }}>
+            <div style={{ minHeight: "310px" }}>
                 <div className="m-t-small panel-title">
-                    To access transparent account information enter <em>
-                    Payment Address</em> or <em>Public Key</em>.
+                    To view public account record enter <em>
+                    Payment Address</em> or <em>Account Number</em>.
                 </div>
                 <Typography align="center" variant="caption" color="secondary">
                     Account transactions and balances are

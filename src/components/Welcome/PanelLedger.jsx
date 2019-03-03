@@ -55,7 +55,7 @@ class PanelLedger extends Component {
     // ...
     render = () =>
         <Panel title="Login with Ledger Nano S">
-            <div style={{ height: "300px" }}>
+            <div style={{ minHeight: "310px" }}>
                 <div className="m-t-small panel-title">
                     Sign-in by authenticating with your <em>Ledger device</em>.
                 </div>
