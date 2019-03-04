@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { bindActionCreators, compose } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import { string } from "@xcmats/js-toolbox"
 import {
@@ -9,9 +12,7 @@ import {
     rgb,
 } from "../../lib/utils"
 import { withLoginManager } from "../LoginManager"
-
 import { withStyles } from "@material-ui/core/styles"
-
 import { LinearProgress } from "@material-ui/core"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"

@@ -4,8 +4,8 @@ import { connect } from "react-redux"
 import { func } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import AboutContent from "../Welcome/AboutContent"
-import LoginChoices from "../Welcome/LoginChoices"
 import TopHeadingContent from "../Welcome/TopHeadingContent"
+import Signup from "../Signup"
 
 
 
@@ -13,7 +13,7 @@ import TopHeadingContent from "../Welcome/TopHeadingContent"
 /**
  * Cygnus.
  *
- * Renders stand-alone login view.
+ * Renders stand-alone signup view.
  *
  * @module client-ui-components
  * @license Apache-2.0
@@ -23,21 +23,23 @@ import TopHeadingContent from "../Welcome/TopHeadingContent"
 
 
 /**
- * `<LoginView>` component.
+ * `<SignupView>` component.
  *
- * @function LoginView
+ * @function SignupView
  * @returns {React.ReactElement}
  */
-const LoginView = ({ classes }) =>
+const SignupView = ({ classes }) =>
+
     <Fragment>
         <div className={classes.bg}>
             <TopHeadingContent />
         </div>
         <div className="hero-no-shadow">
-            <LoginChoices />
+            <Signup />
         </div>
         <AboutContent />
     </Fragment>
+
 
 
 
@@ -53,4 +55,4 @@ export default func.compose(
         (_state) => ({}),
         (dispatch) => bindActionCreators({}, dispatch),
     ),
-)(LoginView)
+)(SignupView)

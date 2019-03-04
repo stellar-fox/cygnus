@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import { compose, bindActionCreators } from "redux"
+import {
+    compose,
+    bindActionCreators,
+} from "redux"
 import { connect } from "react-redux"
 import {
     Redirect,
@@ -8,7 +11,6 @@ import {
 } from "react-router-dom"
 import raf from "raf"
 import { toBool } from "@xcmats/js-toolbox"
-
 import {
     ConnectedSwitch as Switch,
     resolvePath,
@@ -17,13 +19,12 @@ import {
 import { Null } from "../../lib/utils"
 import { firebaseApp } from "../../components/StellarFox"
 import { action as AuthAction } from "../../redux/Auth"
-
 import AlertModal from "./AlertModal"
 import ConnectedSnackbar from "./ConnectedSnackbar"
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import LoginView from "../LoginView"
-
+import SignupView from "../SignupView"
 import "./index.css"
 
 
@@ -65,6 +66,7 @@ export default compose(
                 "Welcome": this.rr("."),
                 "Bank": this.rr("bank/"),
                 "LoginView": this.rr("login/"),
+                "SignupView" : this.rr("signup/"),
             })
         }
 
@@ -105,10 +107,18 @@ export default compose(
                 <this.state.Bank {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Welcome")} />
 
+
         // ...
         renderLoginView = (routeProps) =>
             !this.props.loggedIn ?
                 <LoginView {...routeProps} /> :
+                <Redirect to={this.props.staticRouter.getPath("Bank")} />
+
+
+        // ...
+        renderSignupView = (routeProps) =>
+            !this.props.loggedIn ?
+                <SignupView {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
 
 
@@ -128,6 +138,9 @@ export default compose(
                         </Route>
                         <Route path={getPath("LoginView")}>
                             { this.renderLoginView }
+                        </Route>
+                        <Route path={getPath("SignupView")}>
+                            {this.renderSignupView}
                         </Route>
                         <Redirect to={getPath("Welcome")} />
                     </Switch>
