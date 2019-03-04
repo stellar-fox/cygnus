@@ -10,7 +10,7 @@ import { actions as ErrorsActions } from "../redux/Errors"
  * @param {String} tickerSymbol Lower case currency ticker symbol (i.e. usd)
  * @returns {Function} thunk action
  */
-export const signUpNewUser = (accountId, email, password) =>
+export const signUpNewUser = (_accountId, email, password) =>
     async (dispatch, _getState) => {
 
         await dispatch(ErrorsActions.clearEmailInputError())

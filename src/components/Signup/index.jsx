@@ -148,7 +148,6 @@ const Signup = ({
                                 <div>
                                     <Button
                                         onClick={signUp}
-                                        // disabled={this.state.buttonDisabled}
                                         color="secondary"
                                         style={{ marginRight: "0px" }}
                                     >Sign Up</Button>
@@ -160,7 +159,6 @@ const Signup = ({
                                             barColorPrimary: classes.barColorPrimary,
                                         }}
                                         style={{
-                                            // opacity: this.state.progressBarOpacity,
                                             width: "100%",
                                         }}
                                     />
