@@ -22,7 +22,9 @@ import { ledgerSupportLink } from "../StellarFox/env"
 import { LinearProgress } from "@material-ui/core"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
-import { signUpNewUser } from "../../thunks/users"
+import { signUpNewUser, clearInputErrorMessages } from "../../thunks/users"
+import ErrorMessage from "../ErrorMessage"
+
 
 
 
@@ -54,13 +56,14 @@ TabContainer.propTypes = {
  * @returns {React.ReactElement}
  */
 const Signup = ({
-    classes, emailInputError, emailInputErrorMessage, passwordInputError,
-    passwordInputErrorMessage, signUpNewUser,
+    classes, clearInputErrorMessages, signUpNewUser, emailInputError,
+    passwordInputError,
 }) => {
     const isMobile = useMediaQuery("(max-width:960px)"),
 
         [value, setValue] = React.useState(0),
         [visible, setVisible] = React.useState(false),
+        [account, setAccount] = React.useState(0),
         [accountId, setAccountId] = React.useState(string.empty()),
         [email, setEmail] = React.useState(string.empty()),
         [password, setPassword] = React.useState(string.empty()),
@@ -70,16 +73,18 @@ const Signup = ({
         },
 
         authViaLedger = async (ledgerData) => {
+            await clearInputErrorMessages()
             if (ledgerData.errorMessage) {
                 return false
             }
             if (!ledgerData.errorCode) {
+                setAccount(ledgerData.bip32Path)
                 setAccountId(ledgerData.publicKey)
                 setVisible(true)
             }
         },
 
-        signUp = () => signUpNewUser(accountId, email, password),
+        signUp = () => signUpNewUser(accountId, account, email, password),
 
         updateEmailInputValue = (event) => setEmail(event.target.value),
 
@@ -132,7 +137,6 @@ const Signup = ({
                                     label="Email"
                                     color="secondary"
                                     error={emailInputError}
-                                    errorMessage={emailInputErrorMessage}
                                     onChange={updateEmailInputValue}
                                 />
                                 <InputField
@@ -141,7 +145,6 @@ const Signup = ({
                                     label="Password"
                                     color="secondary"
                                     error={passwordInputError}
-                                    errorMessage={passwordInputErrorMessage}
                                     onChange={updatePasswordInputValue}
                                 />
 
@@ -163,6 +166,7 @@ const Signup = ({
                                         }}
                                     />
                                 </div>
+                                <ErrorMessage className="m-t" />
 
                             </div>
                         </div> :
@@ -242,10 +246,9 @@ export default func.compose(
         (state) => ({
             emailInputError: state.Errors.emailInputError,
             emailInputErrorMessage: state.Errors.emailInputErrorMessage,
-            passwordInputError: state.Errors.passwordInputError,
-            passwordInputErrorMessage: state.Errors.passwordInputErrorMessage,
         }),
         (dispatch) => bindActionCreators({
+            clearInputErrorMessages,
             signUpNewUser,
         }, dispatch),
     ),
