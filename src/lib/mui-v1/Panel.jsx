@@ -24,6 +24,7 @@ export default withStyles({
         margin: "3px 5px 3px 15px",
         color: "rgba(15, 46, 83, 1.0)",
         fontSize: "1.2em",
+        textAlign: "left",
     },
 
     body: {
