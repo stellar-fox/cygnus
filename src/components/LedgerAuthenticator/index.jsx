@@ -1,16 +1,22 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { string } from "@xcmats/js-toolbox"
-import { Typography } from "@material-ui/core"
+import {
+    func,
+    string,
+} from "@xcmats/js-toolbox"
+import {
+    LinearProgress,
+    Typography,
+} from "@material-ui/core"
+import { withStyles } from "@material-ui/core/styles"
 import { bip32Prefix } from "../StellarFox/env"
 import { getPublicKey } from "../../lib/ledger"
-
 import Input from "../../lib/common/Input"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
-
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
+import { actions as ProgressActions } from "../../redux/Progress"
 
 
 
@@ -41,6 +47,7 @@ class LedgerAuthenticator extends Component {
             buttonDisabled: true,
             status: "Waiting for device ...",
         })
+        this.props.toggleProgress("ledgerauth", true)
         try {
             softwareVersion = await this.props.getSoftwareVersion()
             publicKey = await getPublicKey(bip32Path)
@@ -49,6 +56,7 @@ class LedgerAuthenticator extends Component {
                 buttonDisabled: false,
                 status: `${ex.message}`,
             })
+            this.props.toggleProgress("ledgerauth", false)
             this.props.onConnected.call(this, {
                 publicKey: null,
                 softwareVersion: null,
@@ -120,7 +128,7 @@ class LedgerAuthenticator extends Component {
 
 
     // ...
-    render = () =>
+    render = () => (({ classes, inProgress }) =>
         <div className="flex-box-col items-centered content-centered">
             <div className="m-t m-b flex-box-row items-centered content-centered">
                 <Typography variant="body2" color={
@@ -155,18 +163,31 @@ class LedgerAuthenticator extends Component {
                     }${this.state.derivationPath}']`}
                 />
             }
-
-            <Button
-                disabled={this.state.buttonDisabled}
-                onClick={this.initQueryDevice}
-                color={
-                    this.props.className.match(/reverse/) ?
-                        "primary" : "secondary"
-                }
-                style={{ marginRight: "0px" }}
-            >
-                Authenticate
-            </Button>
+            
+            <div className="flex-box-col items-centered content-centered">
+                <Button
+                    disabled={this.state.buttonDisabled}
+                    onClick={this.initQueryDevice}
+                    color={
+                        this.props.className.match(/reverse/) ?
+                            "primary" : "secondary"
+                    }
+                    style={{ marginRight: "0px" }}
+                >
+                    Authenticate
+                </Button>
+                <LinearProgress
+                    variant="indeterminate"
+                    classes={{
+                        colorPrimary: classes.linearColorPrimary,
+                        barColorPrimary: classes.linearBarColorPrimary,
+                    }}
+                    style={{
+                        width: "100%",
+                        opacity: inProgress ? 1 : 0,
+                    }}
+                />
+            </div>
 
             
             <Typography style={{marginTop: "0.5rem"}} variant="caption" color={
@@ -175,21 +196,38 @@ class LedgerAuthenticator extends Component {
             }
             >{this.state.status}</Typography>
             
-        </div>
+        </div>)(this.props)
 
 
 }
 
 
 // ...
-export default connect(
-    // map state to props.
-    (state) => ({
-        LedgerHQ: state.LedgerHQ,
-    }),
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        getSoftwareVersion: LedgerHQAction.getSoftwareVersion,
-        resetLedgerState: LedgerHQAction.resetState,
-    }, dispatch)
+export default func.compose(
+    withStyles((theme) => ({
+        
+        linearColorPrimary: {
+            marginTop: "2px",
+            backgroundColor: theme.palette.secondary.light,
+            borderRadius: "3px",
+        },
+        linearBarColorPrimary: {
+            backgroundColor: theme.palette.secondary.dark,
+            borderRadius: "3px",
+        },
+    })),
+
+    connect(
+        // map state to props.
+        (state) => ({
+            LedgerHQ: state.LedgerHQ,
+            inProgress: state.Progress.ledgerauth.inProgress,
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            getSoftwareVersion: LedgerHQAction.getSoftwareVersion,
+            resetLedgerState: LedgerHQAction.resetState,
+            toggleProgress: ProgressActions.toggleProgress,
+        }, dispatch)
+    ),
 )(LedgerAuthenticator)

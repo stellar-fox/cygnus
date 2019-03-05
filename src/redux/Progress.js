@@ -8,6 +8,9 @@ const initState = {
     signup: {
         inProgress: false,
     },
+    ledgerauth: {
+        inProgress: false,
+    },
 }
 
 
