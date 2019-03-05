@@ -13,6 +13,7 @@ import { reducer as LoadingModalReducer } from "./LoadingModal"
 import { reducer as LoginMangerReducer } from "./LoginManager"
 import { reducer as ModalReducer } from "./Modal"
 import { reducer as PaymentsReducer } from "./Payments"
+import { reducer as ProgressReducer } from "./Progress"
 import { reducer as StellarAccountReducer } from "./StellarAccount"
 import { reducer as RouterReducer } from "./StellarRouter"
 import { reducer as SnackbarReducer } from "./Snackbar"
@@ -37,6 +38,7 @@ export default {
     LoginManager: LoginMangerReducer,
     Modal: ModalReducer,
     Payments: PaymentsReducer,
+    Progress: ProgressReducer,
     Router: RouterReducer,
     StellarAccount: StellarAccountReducer,
     Snackbar: SnackbarReducer,
