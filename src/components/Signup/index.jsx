@@ -56,8 +56,8 @@ TabContainer.propTypes = {
  * @returns {React.ReactElement}
  */
 const Signup = ({
-    classes, clearInputErrorMessages, signUpNewUser, emailInputError,
-    passwordInputError,
+    classes, clearInputErrorMessages, inProgress,
+    signUpNewUser, emailInputError, passwordInputError,
 }) => {
     const isMobile = useMediaQuery("(max-width:960px)"),
 
@@ -153,16 +153,17 @@ const Signup = ({
                                         onClick={signUp}
                                         color="secondary"
                                         style={{ marginRight: "0px" }}
+                                        disabled={inProgress}
                                     >Sign Up</Button>
                                     <LinearProgress
                                         variant="indeterminate"
                                         classes={{
-                                            root: classes.barRoot,
-                                            colorPrimary: classes.colorPrimary,
-                                            barColorPrimary: classes.barColorPrimary,
+                                            colorPrimary: classes.linearColorPrimary,
+                                            barColorPrimary: classes.linearBarColorPrimary,
                                         }}
                                         style={{
                                             width: "100%",
+                                            opacity: inProgress ? 1 : 0,
                                         }}
                                     />
                                 </div>
@@ -215,6 +216,15 @@ export default func.compose(
         bg: {
             backgroundColor: theme.palette.primary.main,
         },
+        linearColorPrimary: {
+            marginTop: "2px",
+            backgroundColor: theme.palette.secondary.light,
+            borderRadius: "3px",
+        },
+        linearBarColorPrimary: {
+            backgroundColor: theme.palette.secondary.dark,
+            borderRadius: "3px",
+        },
         root: {
             flexGrow: 1,
             backgroundColor: theme.palette.primary.light,
@@ -222,30 +232,18 @@ export default func.compose(
             maxWidth: "485px",
             minWidth: "485px",
         },
-
         rootMobile: {
             flexGrow: 2,
             margin: "0  0.5rem",
             backgroundColor: theme.palette.primary.light,
             borderRadius: "3px",
         },
-        barRoot: {
-            height: "1px",
-            marginBottom: "6px",
-        },
-
-        colorPrimary: {
-            backgroundColor: theme.palette.primary.main,
-        },
-
-        barColorPrimary: {
-            backgroundColor: theme.palette.primary.main,
-        },
     })),
     connect(
         (state) => ({
             emailInputError: state.Errors.emailInputError,
             emailInputErrorMessage: state.Errors.emailInputErrorMessage,
+            inProgress: state.Progress.signup.inProgress,
         }),
         (dispatch) => bindActionCreators({
             clearInputErrorMessages,

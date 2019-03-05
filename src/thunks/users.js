@@ -1,5 +1,6 @@
 import { firebaseApp } from "../components/StellarFox"
 import { actions as ErrorsActions } from "../redux/Errors"
+import { actions as ProgressActions } from "../redux/Progress"
 import Axios from "axios"
 import { config } from "../config"
 import md5 from "../lib/md5"
@@ -25,6 +26,7 @@ export const signUpNewUser = (accountId, account, email, password) =>
     async (dispatch, _getState) => {
 
         await clearInputErrorMessages()
+        await dispatch(ProgressActions.toggleProgress("signup", true))
 
         try {
 
@@ -65,6 +67,8 @@ export const signUpNewUser = (accountId, account, email, password) =>
                 .currentUser.sendEmailVerification()
 
         } catch (error) {
+            await dispatch(ProgressActions.toggleProgress("signup", false))
+
             if (error.code === "auth/invalid-email") {
                 await dispatch(ErrorsActions.setEmailInputError(error.message))
                 return
