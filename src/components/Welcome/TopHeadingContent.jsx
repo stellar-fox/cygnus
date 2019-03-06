@@ -2,7 +2,10 @@ import React from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { func } from "@xcmats/js-toolbox"
-import { Typography } from "@material-ui/core"
+import {
+    Link as MuiLink,
+    Typography,
+} from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
 import { Link } from "react-router-dom"
@@ -34,16 +37,24 @@ const TopHeadingContent = () => {
     return <div className="flex-box-row space-between">
         <div className={isMobile ? "flex-box-col" : "flex-box-row hero"}>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
-                Why Cygnus
+                <MuiLink href={"#"} underline="none" color="secondary">
+                    Why Cygnus
+                </MuiLink>
             </Typography>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
-                Features
+                <MuiLink href={"#"} underline="none" color="secondary">
+                    Features
+                </MuiLink>
             </Typography>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
-                Prices
+                <MuiLink href={"#"} underline="none" color="secondary">
+                    Prices
+                </MuiLink>
             </Typography>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
-                Support
+                <MuiLink href={"#"} underline="none" color="secondary">
+                    Support
+                </MuiLink>
             </Typography>
         </div>
         <div className={isMobile ? "flex-box-col" : "flex-box-row"}>
