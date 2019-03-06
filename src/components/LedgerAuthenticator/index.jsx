@@ -16,7 +16,6 @@ import Input from "../../lib/common/Input"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
-import { actions as ProgressActions } from "../../redux/Progress"
 
 
 
@@ -31,6 +30,7 @@ class LedgerAuthenticator extends Component {
         useDefaultAccount: true,
         buttonDisabled: false,
         status: string.empty(),
+        inProgress: false,
     }
 
 
@@ -43,20 +43,26 @@ class LedgerAuthenticator extends Component {
         let bip32Path = this.formBip32Path(),
             softwareVersion = null,
             publicKey = null
-        this.setState({
-            buttonDisabled: true,
-            status: "Waiting for device ...",
-        })
-        this.props.toggleProgress("ledgerauth", true)
+        
         try {
+            await this.setState({
+                buttonDisabled: true,
+                status: "Waiting for device ...",
+                inProgress: true,
+            })
             softwareVersion = await this.props.getSoftwareVersion()
+            await this.setState({
+                buttonDisabled: true,
+                status: "Fetching account ...",
+                inProgress: true,
+            })
             publicKey = await getPublicKey(bip32Path)
         } catch (ex) {
-            this.setState({
+            await this.setState({
                 buttonDisabled: false,
                 status: `${ex.message}`,
+                inProgress: false,
             })
-            this.props.toggleProgress("ledgerauth", false)
             this.props.onConnected.call(this, {
                 publicKey: null,
                 softwareVersion: null,
@@ -65,7 +71,10 @@ class LedgerAuthenticator extends Component {
             })
             return false
         }
-        this.setState({ status: `Connected. Version: ${softwareVersion}` })
+        await this.setState({
+            status: `Connected. Version: ${softwareVersion}`,
+            inProgress: false,
+        })
         this.props.onConnected.call(this, {
             publicKey,
             softwareVersion,
@@ -128,7 +137,7 @@ class LedgerAuthenticator extends Component {
 
 
     // ...
-    render = () => (({ classes, inProgress }) =>
+    render = () => (({ classes }) =>
         <div className="flex-box-col items-centered content-centered">
             <div className="m-t m-b flex-box-row items-centered content-centered">
                 <Typography variant="body2" color={
@@ -184,7 +193,7 @@ class LedgerAuthenticator extends Component {
                     }}
                     style={{
                         width: "100%",
-                        opacity: inProgress ? 1 : 0,
+                        opacity: this.state.inProgress ? 1 : 0,
                     }}
                 />
             </div>
@@ -221,13 +230,11 @@ export default func.compose(
         // map state to props.
         (state) => ({
             LedgerHQ: state.LedgerHQ,
-            inProgress: state.Progress.ledgerauth.inProgress,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             getSoftwareVersion: LedgerHQAction.getSoftwareVersion,
             resetLedgerState: LedgerHQAction.resetState,
-            toggleProgress: ProgressActions.toggleProgress,
         }, dispatch)
     ),
 )(LedgerAuthenticator)
