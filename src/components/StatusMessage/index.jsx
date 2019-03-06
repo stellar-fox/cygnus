@@ -29,9 +29,11 @@ const StatusMessage = ({
     className,
     emailInputError,
     emailInputErrorMessage,
+    ledgerauthInProgress,
     ledgerauthStatusMessage,
     passwordInputError,
     passwordInputErrorMessage,
+    signupInProgress,
     signupStatusMessage,
     style,
 }) => <div style={style} className={`flex-box-row space-around ${className}`}>
@@ -46,11 +48,11 @@ const StatusMessage = ({
             <span className="red">{passwordInputErrorMessage}</span>
         </Typography>}
     
-    {ledgerauthStatusMessage && <Typography color="secondary" variant="caption">
+    {ledgerauthInProgress && <Typography color="secondary" variant="caption">
         {ledgerauthStatusMessage}
     </Typography>}
 
-    {signupStatusMessage && <Typography color="secondary" variant="caption">
+    {signupInProgress && <Typography color="secondary" variant="caption">
         {signupStatusMessage}
     </Typography>}
 </div>
@@ -66,7 +68,9 @@ export default func.compose(
             emailInputErrorMessage: state.Errors.emailInputErrorMessage,
             passwordInputError: state.Errors.passwordInputError,
             passwordInputErrorMessage: state.Errors.passwordInputErrorMessage,
+            signupInProgress: state.Progress.signup.inProgress,
             signupStatusMessage: state.Progress.signup.statusMessage,
+            ledgerauthInProgress: state.Progress.ledgerauth.inProgress,
             ledgerauthStatusMessage: state.Progress.ledgerauth.statusMessage,
         }),
         (dispatch) => bindActionCreators({}, dispatch),

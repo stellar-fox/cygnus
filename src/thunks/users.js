@@ -5,6 +5,9 @@ import Axios from "axios"
 import { config } from "../config"
 import md5 from "../lib/md5"
 import { subscribeEmail } from "../components/Account/api"
+import { string } from "@xcmats/js-toolbox"
+
+
 
 
 export const clearInputErrorMessages = () =>
@@ -26,10 +29,11 @@ export const signUpNewUser = (accountId, account, email, password) =>
     async (dispatch, _getState) => {
 
         await clearInputErrorMessages()
-        await dispatch(ProgressActions.toggleProgress("signup", true))
+        
 
         try {
-
+            await dispatch(ProgressActions.toggleProgress("signup", "Creating user account ..."))
+            
             await firebaseApp.auth("session").createUserWithEmailAndPassword(
                 email, password
             )
@@ -65,9 +69,10 @@ export const signUpNewUser = (accountId, account, email, password) =>
 
             await firebaseApp.auth("session")
                 .currentUser.sendEmailVerification()
+            await dispatch(ProgressActions.toggleProgress("signup", string.empty()))
 
         } catch (error) {
-            await dispatch(ProgressActions.toggleProgress("signup", false))
+            await dispatch(ProgressActions.toggleProgress("signup", string.empty()))
 
             if (error.code === "auth/invalid-email") {
                 await dispatch(ErrorsActions.setEmailInputError(error.message))
