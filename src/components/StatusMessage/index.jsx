@@ -10,7 +10,7 @@ import { Typography } from "@material-ui/core"
 /**
  * Cygnus.
  *
- * Renders error message.
+ * Renders status message of specified type.
  *
  * @module client-ui-components
  * @license Apache-2.0
@@ -20,31 +20,40 @@ import { Typography } from "@material-ui/core"
 
 
 /**
- * `<ErrorMessage>` component.
+ * `<StatusMessage>` component.
  *
- * @function ErrorMessage
+ * @function StatusMessage
  * @returns {React.ReactElement}
  */
-const ErrorMessage = ({
+const StatusMessage = ({
     className,
     emailInputError,
     emailInputErrorMessage,
+    ledgerauthStatusMessage,
     passwordInputError,
     passwordInputErrorMessage,
+    signupStatusMessage,
     style,
-}) => {
-
-    return <div style={style} className={`flex-box-row space-around ${className}`}>
-        {emailInputError &&
+}) => <div style={style} className={`flex-box-row space-around ${className}`}>
+    
+    {emailInputError &&
         <Typography variant="caption">
             <span className="red">{emailInputErrorMessage}</span>
         </Typography>}
-        {passwordInputError &&
+    
+    {passwordInputError &&
         <Typography variant="caption">
             <span className="red">{passwordInputErrorMessage}</span>
         </Typography>}
-    </div>
-}
+    
+    {ledgerauthStatusMessage && <Typography color="secondary" variant="caption">
+        {ledgerauthStatusMessage}
+    </Typography>}
+
+    {signupStatusMessage && <Typography color="secondary" variant="caption">
+        {signupStatusMessage}
+    </Typography>}
+</div>
 
 
 
@@ -57,7 +66,9 @@ export default func.compose(
             emailInputErrorMessage: state.Errors.emailInputErrorMessage,
             passwordInputError: state.Errors.passwordInputError,
             passwordInputErrorMessage: state.Errors.passwordInputErrorMessage,
+            signupStatusMessage: state.Progress.signup.statusMessage,
+            ledgerauthStatusMessage: state.Progress.ledgerauth.statusMessage,
         }),
         (dispatch) => bindActionCreators({}, dispatch),
     ),
-)(ErrorMessage)
+)(StatusMessage)

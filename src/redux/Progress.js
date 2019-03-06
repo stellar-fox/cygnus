@@ -1,4 +1,7 @@
-import { createReducer } from "@xcmats/js-toolbox"
+import {
+    createReducer,
+    string,
+} from "@xcmats/js-toolbox"
 
 
 
@@ -7,9 +10,11 @@ import { createReducer } from "@xcmats/js-toolbox"
 const initState = {
     signup: {
         inProgress: false,
+        statusMessage: string.empty(),
     },
     ledgerauth: {
         inProgress: false,
+        statusMessage: string.empty(),
     },
 }
 
@@ -17,7 +22,7 @@ const initState = {
 
 
 // ...
-export const TOGGLE_SIGNUP_PROGRESS = "@Progress/TOGGLE_SIGNUP_PROGRESS"
+export const TOGGLE_PROGRESS = "@Progress/TOGGLE_PROGRESS"
 export const SET_STATE = "@Progress/SET_STATE"
 export const RESET_STATE = "@Progress/RESET_STATE"
 
@@ -28,10 +33,10 @@ export const RESET_STATE = "@Progress/RESET_STATE"
 export const actions = {
 
     // ...
-    toggleProgress: (key, inProgress) => ({
-        type: TOGGLE_SIGNUP_PROGRESS,
+    toggleProgress: (key, statusMessage) => ({
+        type: TOGGLE_PROGRESS,
         key,
-        inProgress,
+        statusMessage,
     }),
 
     // ...
@@ -52,9 +57,12 @@ export const actions = {
 export const reducer = createReducer(initState)({
 
     // ...
-    [TOGGLE_SIGNUP_PROGRESS]: (state, action) => ({
+    [TOGGLE_PROGRESS]: (state, action) => ({
         ...state,
-        [action.key]: {inProgress: action.inProgress},
+        [action.key]: {
+            inProgress: action.statusMessage ? true : false,
+            statusMessage: action.statusMessage,
+        },
     }),
 
     // ...

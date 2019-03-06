@@ -23,7 +23,7 @@ import { LinearProgress } from "@material-ui/core"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
 import { signUpNewUser, clearInputErrorMessages } from "../../thunks/users"
-import ErrorMessage from "../ErrorMessage"
+import StatusMessage from "../StatusMessage"
 
 
 
@@ -167,7 +167,7 @@ const Signup = ({
                                         }}
                                     />
                                 </div>
-                                <ErrorMessage className="m-t" />
+                                <StatusMessage className="m-t" />
 
                             </div>
                         </div> :
