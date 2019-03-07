@@ -8,6 +8,7 @@ import Avatar from "@material-ui/core/Avatar"
 
 import { action as AccountAction } from "../../redux/Account"
 import { action as AssetsAction } from "../../redux/AssetManager"
+import { action as AuthAction } from "../../redux/Auth"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
@@ -43,13 +44,13 @@ class UserMenu extends Component {
 
     // ...
     openMenu = (event) => {
-        this.setState({ anchorEl: event.currentTarget, })
+        this.setState({ anchorEl: event.currentTarget })
     }
 
 
     // ...
     handleClose = (_event, action) => {
-        this.setState({ anchorEl: null, })
+        this.setState({ anchorEl: null })
         typeof action === "function" && action()
     }
 
@@ -59,6 +60,7 @@ class UserMenu extends Component {
         firebaseApp.auth("session").signOut()
         this.props.resetAccountState()
         this.props.resetAssetsState()
+        this.props.resetAuthState()
         this.props.resetBalancesState()
         this.props.resetContactsState()
         this.props.resetLedgerHQState()
@@ -70,7 +72,7 @@ class UserMenu extends Component {
 
     // ...
     render = () => {
-        const { anchorEl, } = this.state
+        const { anchorEl } = this.state
         const {
             classes, gravatarHash, needsRegistration,
             publicKey, token, bip32Path, userId,
@@ -93,13 +95,13 @@ class UserMenu extends Component {
                             />
                         </IconButton>
                         <Menu
-                            classes={{ paper: classes.menu, }}
+                            classes={{ paper: classes.menu }}
                             id="user-menu"
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
                             onClose={this.handleClose}
                         >
-                            <MenuItem classes={{ root: classes.menuItem, }}
+                            <MenuItem classes={{ root: classes.menuItem }}
                                 onClick={(event) =>
                                     this.handleClose(event, this.logout)}
                             >Logout</MenuItem>
@@ -135,6 +137,7 @@ export default compose(
         (dispatch) => bindActionCreators({
             resetAccountState: AccountAction.resetState,
             resetAssetsState: AssetsAction.resetState,
+            resetAuthState: AuthAction.resetState,
             resetBalancesState: BalancesAction.resetState,
             resetContactsState: ContactsAction.resetState,
             resetLedgerHQState: LedgerHQAction.resetState,

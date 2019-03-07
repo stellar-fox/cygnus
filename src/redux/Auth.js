@@ -6,14 +6,18 @@ import { createReducer } from "@xcmats/js-toolbox"
 // ...
 const initState = {
     authenticated: false,
+    signupInProgress: false,
+    signupComplete: false,
 }
 
 
 
 
 // ...
-export const SET_STATE = "Auth/SET_USER_ID"
-export const RESET_STATE = "Auth/RESET_STATE"
+export const SET_SIGNUP_COMPLETE = "@Auth/SET_SIGNUP_COMPLETE"
+export const SET_STATE = "@Auth/SET_USER_ID"
+export const RESET_STATE = "@Auth/RESET_STATE"
+export const TOGGLE_SIGNUP_PROGRESS = "@Auth/TOGGLE_SIGNUP_PROGRESS"
 
 
 
@@ -30,6 +34,20 @@ export const action = {
 
     // ...
     resetState: () => ({ type: RESET_STATE }),
+
+
+    // ...
+    setSignupComplete: (state) => ({
+        type: SET_SIGNUP_COMPLETE,
+        state,
+    }),
+
+
+    // ...
+    toggleSignupProgress: (inProgress) => ({
+        type: TOGGLE_SIGNUP_PROGRESS,
+        inProgress,
+    }),
 
 }
 
@@ -48,5 +66,19 @@ export const reducer = createReducer(initState)({
 
     // ...
     [RESET_STATE]: () => initState,
+
+
+    // ...
+    [SET_SIGNUP_COMPLETE]: (state) => ({
+        ...state,
+        signupComplete: true,
+    }), 
+
+
+    // ...
+    [TOGGLE_SIGNUP_PROGRESS]: (state, action) => ({
+        ...state,
+        signupInProgress: action.inProgress,
+    }),
 
 })

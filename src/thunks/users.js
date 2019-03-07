@@ -1,4 +1,5 @@
 import { firebaseApp } from "../components/StellarFox"
+import { action as AuthActions } from "../redux/Auth"
 import { actions as ErrorsActions } from "../redux/Errors"
 import { actions as ProgressActions } from "../redux/Progress"
 import Axios from "axios"
@@ -32,6 +33,7 @@ export const signUpNewUser = (accountId, account, email, password) =>
         
 
         try {
+            await dispatch(AuthActions.toggleSignupProgress(true))
             await dispatch(ProgressActions.toggleProgress("signup", "Creating user account ..."))
             
             await firebaseApp.auth("session").createUserWithEmailAndPassword(
@@ -70,7 +72,7 @@ export const signUpNewUser = (accountId, account, email, password) =>
             await firebaseApp.auth("session")
                 .currentUser.sendEmailVerification()
             await dispatch(ProgressActions.toggleProgress("signup", string.empty()))
-
+            await dispatch(AuthActions.setSignupComplete())
         } catch (error) {
             await dispatch(ProgressActions.toggleProgress("signup", string.empty()))
 
@@ -98,6 +100,8 @@ export const signUpNewUser = (accountId, account, email, password) =>
             await dispatch(ErrorsActions.setEmailInputError(error.code))
             await dispatch(ErrorsActions.setPasswordInputError(error.message))
 
+        } finally {
+            await dispatch(AuthActions.toggleSignupProgress(false))
         }
         
 

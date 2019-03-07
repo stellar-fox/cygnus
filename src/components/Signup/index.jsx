@@ -28,6 +28,7 @@ import StatusMessage from "../StatusMessage"
 
 
 
+
 /**
  * Cygnus.
  *
@@ -56,15 +57,13 @@ TabContainer.propTypes = {
  * @returns {React.ReactElement}
  */
 const Signup = ({
-    classes, clearInputErrorMessages, inProgress,
+    account, accountId, classes, clearInputErrorMessages, inProgress,
     signUpNewUser, emailInputError, passwordInputError,
 }) => {
     const isMobile = useMediaQuery("(max-width:960px)"),
 
         [value, setValue] = React.useState(0),
         [visible, setVisible] = React.useState(false),
-        [account, setAccount] = React.useState(0),
-        [accountId, setAccountId] = React.useState(string.empty()),
         [email, setEmail] = React.useState(string.empty()),
         [password, setPassword] = React.useState(string.empty()),
         
@@ -78,8 +77,6 @@ const Signup = ({
                 return false
             }
             if (!ledgerData.errorCode) {
-                setAccount(ledgerData.bip32Path)
-                setAccountId(ledgerData.publicKey)
                 setVisible(true)
             }
         },
@@ -241,6 +238,8 @@ export default func.compose(
     })),
     connect(
         (state) => ({
+            accountId: state.LedgerHQ.publicKey,
+            account: state.LedgerHQ.bip32Path,
             emailInputError: state.Errors.emailInputError,
             emailInputErrorMessage: state.Errors.emailInputErrorMessage,
             inProgress: state.Progress.signup.inProgress,

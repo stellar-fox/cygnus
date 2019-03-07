@@ -75,6 +75,10 @@ class LedgerAuthenticator extends Component {
             status: `Connected. Version: ${softwareVersion}`,
             inProgress: false,
         })
+        
+        await this.props.setAccountId(publicKey)
+        await this.props.setAccount(this.state.derivationPath)
+        
         this.props.onConnected.call(this, {
             publicKey,
             softwareVersion,
@@ -148,6 +152,7 @@ class LedgerAuthenticator extends Component {
                     Use default account
                 </Typography>
                 <Switch
+                    disabled={this.state.inProgress}
                     checked={this.state.useDefaultAccount}
                     onChange={this.handleCheckboxClick}
                     color={
@@ -234,6 +239,8 @@ export default func.compose(
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             getSoftwareVersion: LedgerHQAction.getSoftwareVersion,
+            setAccountId: LedgerHQAction.setPublicKey,
+            setAccount: LedgerHQAction.setBip32Path,
             resetLedgerState: LedgerHQAction.resetState,
         }, dispatch)
     ),

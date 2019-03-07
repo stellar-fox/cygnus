@@ -49,7 +49,7 @@ export default withStyles((theme) => ({
 
         // ...
         render = () => (
-            ({ classes, checked, onChange, value, color, disabled, }) =>
+            ({ classes, checked, onChange, value, color, disabled }) =>
                 <Switch
                     checked={checked}
                     onChange={onChange}

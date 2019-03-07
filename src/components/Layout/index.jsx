@@ -36,7 +36,9 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
+            authenticated: toBool(state.Auth.authenticated),
             loggedIn: toBool(state.LedgerHQ.publicKey),
+            signupComplete: toBool(state.Auth.signupComplete),
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
@@ -117,7 +119,7 @@ export default compose(
 
         // ...
         renderSignupView = (routeProps) =>
-            !this.props.loggedIn ?
+            !this.props.signupComplete ?
                 <SignupView {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
 
