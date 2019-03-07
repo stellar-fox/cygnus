@@ -28,7 +28,7 @@ export const clearInputErrorMessages = () =>
 export const signUpNewUser = (accountId, account, email, password) =>
     async (dispatch, _getState) => {
 
-        await clearInputErrorMessages()
+        await dispatch(clearInputErrorMessages())
         
 
         try {
@@ -60,7 +60,7 @@ export const signUpNewUser = (accountId, account, email, password) =>
                     email,
                     password,
                 })
-
+            await dispatch(ProgressActions.toggleProgress("signup", "Almost done ..."))
             await subscribeEmail(
                 userResp.data.userid,
                 authResp.data.token,
