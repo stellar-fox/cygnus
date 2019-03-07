@@ -11,14 +11,12 @@ import {
     pubKeyAbbr,
 } from "../../lib/utils"
 import { unknownPubKeyAbbr } from "../StellarFox/env"
-import { withLoginManager } from "../LoginManager"
 
 
 
 
 // <BankAppBarItems> component
 export default compose(
-    withLoginManager,
     withStyles({
 
         accountHomeDomain: { fontVariant: "small-caps" },
@@ -54,6 +52,7 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
+            authenticated: state.Auth.authenticated,
             StellarAccount: state.StellarAccount,
             publicKey: state.LedgerHQ.publicKey,
             firstName: state.Account.firstName,
@@ -63,13 +62,13 @@ export default compose(
     )
 )(
     ({
-        classes, publicKey, StellarAccount, firstName, lastName, loginManager,
+        authenticated, classes, publicKey, StellarAccount, firstName, lastName,
         paymentAddress,
     }) =>
         <div className={classes.appBarItems}>
             <div className={classes.appBarTitle}>
                 <div className={classes.barTitleAccount}>
-                    {loginManager.isAuthenticated() ?
+                    {authenticated ?
                         <Typography align="center" variant="body1"
                             noWrap color="primary"
                         >
@@ -84,7 +83,7 @@ export default compose(
                         {
                             StellarAccount.accountId && StellarAccount.homeDomain ?
                                 <div className="flex-box-col content-centered">
-                                    {loginManager.isAuthenticated() ?
+                                    {authenticated ?
                                         <Typography variant="h5" color="primary">
                                             {paymentAddress ? paymentAddress :
                                                 handleException(
@@ -105,7 +104,7 @@ export default compose(
                                     </Typography>
                                 </div> :
                                 <div className="flex-box-col content-centered">
-                                    {loginManager.isAuthenticated() ?
+                                    {authenticated ?
                                         <Typography variant="h5" color="primary">
                                             {paymentAddress ? paymentAddress :
                                                 handleException(

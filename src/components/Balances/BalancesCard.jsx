@@ -253,7 +253,7 @@ class BalancesCard extends Component {
                     </Typography>
                 }
                 actAsExpander={true}
-                showExpandableButton={this.props.loginManager.isAuthenticated()}
+                showExpandableButton={this.props.authenticated}
             />
 
             <CardText>
@@ -427,7 +427,7 @@ class BalancesCard extends Component {
                 }
             </CardActions>
 
-            {this.props.loginManager.isAuthenticated() &&
+            {this.props.authenticated &&
             <CardText expandable={true}>
                 <Typography variant="h5" color="primary">
                     Available Currencies
@@ -473,6 +473,7 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
+            authenticated: state.Auth.authenticated,
             Balances: state.Balances,
             Account: state.Account,
             Assets: state.Assets,

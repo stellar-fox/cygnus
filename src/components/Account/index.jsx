@@ -5,7 +5,6 @@ import {
     compose,
 } from "redux"
 import { connect } from "react-redux"
-import { withLoginManager } from "../LoginManager"
 import {
     Redirect,
     Route,
@@ -76,7 +75,7 @@ class Account extends Component {
         this.rr = resolvePath(this.props.match.path)
 
         // ...
-        this.validTabNames = ["Settings", "Profile", "Security", ]
+        this.validTabNames = ["Settings", "Profile", "Security" ]
 
         // static paths
         this.props.staticRouter.addPaths(
@@ -89,13 +88,13 @@ class Account extends Component {
 
 
     // ...
-    state = { modalButtonText: "CANCEL", }
+    state = { modalButtonText: "CANCEL" }
 
 
     // ...
     completeRegistration = (loginObj) => {
         this.changeButtonText()
-        this.props.setState({ needsRegistration: false, })
+        this.props.setState({ needsRegistration: false })
         this.props.setApiToken(loginObj.token)
         this.props.setUserId(loginObj.userId)
     }
@@ -103,21 +102,20 @@ class Account extends Component {
 
     // ...
     handleTabSelect = (value) => {
-        this.props.setState({ tabSelected: value, })
+        this.props.setState({ tabSelected: value })
         this.props.staticRouter.pushByView(value)
     }
 
 
     // ...
-    changeButtonText = () => this.setState({ modalButtonText: "DONE", })
+    changeButtonText = () => this.setState({ modalButtonText: "DONE" })
 
 
     // ...
     render = () => (
-        ({
-            publicKey, bip32Path,
-            loginManager, currentView,
-            staticRouter: { getPath, }, state,
+        ({ 
+            authenticated, publicKey, bip32Path, currentView,
+            staticRouter: { getPath }, state,
         }) =>
             <Switch>
                 <Redirect exact
@@ -175,7 +173,7 @@ class Account extends Component {
                                 <Settings />
                             </Tab>
                             {
-                                loginManager.isAuthenticated() ?
+                                authenticated ?
                                     <Tab
                                         style={styles.tab}
                                         label={this.validTabNames[1]}
@@ -185,7 +183,7 @@ class Account extends Component {
                                     </Tab> : null
                             }
                             {
-                                loginManager.isAuthenticated() ?
+                                authenticated ?
                                     <Tab
                                         style={styles.tab}
                                         label={this.validTabNames[2]}
@@ -206,12 +204,12 @@ class Account extends Component {
 
 // ...
 export default compose(
-    withLoginManager,
     withStaticRouter,
     withDynamicRoutes,
     connect(
         // map state to props.
         (state) => ({
+            authenticated: state.Auth.authenticated,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
             state: state.Account,

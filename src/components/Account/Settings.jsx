@@ -286,7 +286,7 @@ class Settings extends Component {
 
     // ...
     saveCurrency = (currency) => {
-        if (this.props.loginManager.isAuthenticated()) {
+        if (this.props.authenticated) {
             Axios
                 .post(
                     `${config.api}/account/update/`, {
@@ -312,7 +312,7 @@ class Settings extends Component {
 
     // ...
     changeAccountDiscoverability = (_event, isInputChecked) => {
-        if (this.props.loginManager.isAuthenticated()) {
+        if (this.props.authenticated) {
             Axios
                 .post(
                     `${config.api}/account/update/`, {
@@ -565,7 +565,7 @@ class Settings extends Component {
                     >Register</Button>
                 </div> : null}
 
-            {this.props.loginManager.isAuthenticated() ? (
+            {this.props.authenticated ? (
 
                 <div className="m-t-large flex-box-row items-centered space-between outline">
                     <div>
@@ -591,7 +591,7 @@ class Settings extends Component {
             ) : null}
 
             {firebaseApp.auth("session").currentUser &&
-                this.props.loginManager.isAuthenticated() &&
+                this.props.authenticated &&
             <Fragment>
                 <div style={{marginTop: "1rem"}} className="flex-box-row">
                     <Typography style={{ padding: "0.5rem 0"}} variant="h5"
@@ -642,6 +642,7 @@ export default compose(
     connect(
         // bind state to props.
         (state) => ({
+            authenticated: state.Auth.authenticated,
             state: state.Account,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,

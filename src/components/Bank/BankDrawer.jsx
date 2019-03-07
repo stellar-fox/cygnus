@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { compose } from "redux"
 import { connect } from "react-redux"
-import { withLoginManager } from "../LoginManager"
 import { NavLink } from "react-router-dom"
 import { toBool } from "@xcmats/js-toolbox"
 import {
@@ -36,8 +35,8 @@ const NavBadge = compose(
         },
     }))
 )(
-    ({ classes, children, badgeContent, }) =>
-        <Badge classes={{badge: classes.badge, }} color="secondary"
+    ({ classes, children, badgeContent }) =>
+        <Badge classes={{badge: classes.badge }} color="secondary"
             badgeContent={badgeContent}
         >
             {children}
@@ -69,7 +68,7 @@ const NavLinkTemplate = compose(
     ({
         classes,
         currentPath,
-        staticRouter: { pushByView, getPath, },
+        staticRouter: { pushByView, getPath },
         to, icon,
     }) =>
         <NavLink
@@ -98,7 +97,7 @@ const BalancesNavLink = () =>
 
 
 // <PaymentsNavLink> component
-const PaymentsNavLink = ({ show, }) =>
+const PaymentsNavLink = ({ show }) =>
     show ? <NavLinkTemplate to="Payments" icon="payment" /> : <Null />
 
 
@@ -112,7 +111,7 @@ const AccountNavLink = () =>
 
 
 // <ContactsLink> component
-const ContactsNavLink = ({ show, showBadge, badgeContent, }) =>
+const ContactsNavLink = ({ show, showBadge, badgeContent }) =>
     show ?
         showBadge ?
             <NavBadge badgeContent={badgeContent}>
@@ -141,18 +140,16 @@ const bankDrawerStyle = {
 
 // <BankDrawer> component
 export default compose(
-    withLoginManager,
     connect(
         // map state to props.
         (state) => ({
+            authenticated: state.Auth.authenticated,
             accountExists: toBool(state.StellarAccount.accountId),
             drawerVisible: state.Bank.drawerVisible,
             contactRequests: state.Contacts.requests,
             needsRegistration: state.Account.needsRegistration,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
-            token: state.LoginManager.token,
-            userId: state.LoginManager.userId,
         })
     )
 )(
@@ -167,10 +164,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({
-                drawerVisible, accountExists, contactRequests,
-                needsRegistration, publicKey, token, bip32Path, userId,
-            }) =>
+            ({ authenticated, drawerVisible, accountExists, contactRequests }) =>
                 <Drawer
                     containerStyle={bankDrawerStyle}
                     open={drawerVisible}
@@ -180,10 +174,7 @@ export default compose(
                     <AccountNavLink />
                     <Divider />
                     <ContactsNavLink
-                        show={
-                            !needsRegistration && publicKey && token &&
-                            bip32Path && userId
-                        }
+                        show={authenticated}
                         showBadge={contactRequests.length > 0}
                         badgeContent={contactRequests.length}
                     />

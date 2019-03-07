@@ -71,6 +71,7 @@ export default compose(
     connect(
         // map state to props
         (state) => ({
+            authenticated: state.Auth.authenticated,
             awaitingSignature: state.Assets.awaitingSignature,
             awaitingTrust: state.Assets.awaitingTrust,
             loading: state.Assets.loading,
@@ -312,12 +313,12 @@ export default compose(
                     <div
                         className={`f-b-c space-between ${
                             !this.balanceIsZero(trustedAsset) &&
-                            this.props.loginManager.isAuthenticated() &&
+                            this.props.authenticated &&
                             "cursor-pointer"
                         }`}
                         onClick={
                             !this.balanceIsZero(trustedAsset) &&
-                            this.props.loginManager.isAuthenticated() ?
+                            this.props.authenticated ?
                                 this.showAssetDetails.bind(
                                     this, trustedAsset
                                 ) : undefined
@@ -370,7 +371,7 @@ export default compose(
 
                 }
                 </Paper>
-            </Grid> : this.props.loginManager.isAuthenticated() &&
+            </Grid> : this.props.authenticated &&
             <Grid item key={index} zeroMinWidth>
                 <Paper color="primaryMaxWidth">{this.props.loading ?
                     <div className="f-b-c">

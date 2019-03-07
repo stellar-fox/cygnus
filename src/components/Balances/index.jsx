@@ -210,7 +210,7 @@ class Balances extends Component {
              * When user authenticates check for new contact requests so the badge
              * indicator can be activated upon new requests.
              */
-            this.props.loginManager.isAuthenticated() &&
+            this.props.authenticated &&
                 this.updateContacts()
 
             this.props.setState({
@@ -499,6 +499,7 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
+            authenticated: state.Auth.authenticated,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
             Account: state.Account,
