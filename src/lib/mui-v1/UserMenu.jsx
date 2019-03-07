@@ -73,15 +73,11 @@ class UserMenu extends Component {
     // ...
     render = () => {
         const { anchorEl } = this.state
-        const {
-            classes, gravatarHash, needsRegistration,
-            publicKey, token, bip32Path, userId,
-        } = this.props
+        const { authenticated, classes, gravatarHash } = this.props
 
         return (
             <div className="f-b m-l-small">
-                {!needsRegistration && publicKey && token &&
-                bip32Path && userId ?
+                {authenticated ?
                     <Fragment>
                         <IconButton
                             aria-owns={anchorEl ? "user-menu" : null}
@@ -127,6 +123,7 @@ class UserMenu extends Component {
 export default compose(
     connect(
         (state) => ({
+            authenticated: state.Auth.authenticated,
             gravatarHash: state.Account.gravatar,
             needsRegistration: state.Account.needsRegistration,
             publicKey: state.LedgerHQ.publicKey,
