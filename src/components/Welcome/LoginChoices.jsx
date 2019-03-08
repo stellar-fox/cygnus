@@ -96,7 +96,7 @@ const LoginChoices = () => {
                                 root: isMobile ? classes.labelSmall :
                                     classes.label,
                             }}
-                            label="View Only"
+                            label="Account Viewer"
                         />
                     </Tabs>
                 </AppBar>
