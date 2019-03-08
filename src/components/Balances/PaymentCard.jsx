@@ -259,6 +259,7 @@ class PaymentCard extends Component {
                         </div>
                         <div>
                             <InputField
+                                autoComplete="off"
                                 name="paycheck-payment-amount"
                                 type="text"
                                 validator={
@@ -334,6 +335,7 @@ class PaymentCard extends Component {
                             <span className="payment-header">
                                 <span className="p-r">For:</span>
                                 <InputField
+                                    autoComplete="off"
                                     name="paycheck-memo"
                                     type="text"
                                     placeholder="Memo"
