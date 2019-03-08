@@ -736,7 +736,7 @@ class ContactSuggester extends Component {
 
     // ...
     render = () => {
-        const { classes } = this.props
+        const { classes, authenticated } = this.props
 
         return (
             <div className="f-b-col">
@@ -780,7 +780,7 @@ class ContactSuggester extends Component {
                         startAdornment: <InputAdornment position="start"
                             children={
                                 this.props.payee ?
-                                    <Chip
+                                    authenticated && (<Chip
                                         avatar={<Avatar
                                             className={this.props.cancelEnabled ?
                                                 classes.avatar :
@@ -810,7 +810,7 @@ class ContactSuggester extends Component {
                                                 classes.chip : classes.chipDisabled,
                                             label: classes.label,
                                         }}
-                                    /> :
+                                    />) :
                                     <div style={{ width: "200px" }}>
                                         <Typography variant="caption"
                                             color="primary"
@@ -844,6 +844,7 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
+            authenticated: state.authenticated,
             currency: state.Account.currency,
             amountNative: state.Balances.amountNative,
             contacts: state.Contacts,
