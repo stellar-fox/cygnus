@@ -74,6 +74,8 @@ export default class InputField extends Component {
     // ...
     render = () =>
         <TextField
+            autoComplete={this.props.autoComplete}
+
             style={this.props.style}
 
             name={this.props.name}
