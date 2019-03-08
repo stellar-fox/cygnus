@@ -129,20 +129,6 @@ export const getUserData = async (id, token) => {
 
 
 // ...
-export const resubmitFundingTx = async (userId, token, chargeData) => {
-    try {
-        return await axios.post(`${config.apiV2}/account/resubmit-fund/`, {
-            user_id: userId, token, chargeData,
-        })
-    } catch (e) {
-        throw new Error(e.message)
-    }
-}
-
-
-
-
-// ...
 export const amountToText = (amount) => {
     const grouped = amount.match(
         /^(\d+)([.](\d{1,2}))?$/

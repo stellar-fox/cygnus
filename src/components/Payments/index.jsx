@@ -1,21 +1,29 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { bindActionCreators, compose } from "redux"
-import { connect } from "react-redux"
-import { Server } from "stellar-sdk"
-import { Redirect, Route } from "react-router-dom"
 import {
-    ConnectedSwitch as Switch, ensureTrailingSlash, resolvePath,
-    withDynamicRoutes, withStaticRouter,
+    bindActionCreators,
+    compose,
+} from "redux"
+import { connect } from "react-redux"
+import {
+    Redirect,
+    Route
+} from "react-router-dom"
+import {
+    ConnectedSwitch as Switch,
+    ensureTrailingSlash,
+    resolvePath,
+    withDynamicRoutes,
+    withStaticRouter,
 } from "../StellarRouter"
 import { rgba } from "../../lib/utils"
-import { firebaseApp } from "../StellarFox"
-import { action as PaymentsAction } from "../../redux/Payments"
-import { action as StellarAccountAction } from "../../redux/StellarAccount"
-import { Tab, Tabs } from "material-ui/Tabs"
+import {
+    Tab,
+    Tabs,
+} from "material-ui/Tabs"
 import PaymentsTable from "../PaymentsTable"
-import Transactions from "./Transactions"
 import { Typography } from "@material-ui/core"
+import { func } from "@xcmats/js-toolbox"
 import "./index.css"
 
 
@@ -59,7 +67,7 @@ class Payments extends Component {
         this.rr = resolvePath(this.props.match.path)
 
         // ...
-        this.validTabNames = ["History", "Transactions" ]
+        this.validTabNames = ["History"]
 
         // static paths
         this.props.staticRouter.addPaths(
@@ -68,73 +76,26 @@ class Payments extends Component {
                 [tn]: this.rr(ensureTrailingSlash(tn.toLowerCase())),
             }), {})
         )
-
-        // ...
-        this.stellarServer = new Server(this.props.horizon)
     }
 
 
     // ...
-    getTransactions = () => {
-        if (
-            (this.props.state.txCursorLeft === null  &&
-            this.props.state.txCursorRight === null)  ||
-            !this.props.transactions
-        ) {
-            return this.stellarServer
-                .transactions()
-                .forAccount(this.props.publicKey)
-                .order("desc")
-                .limit(5)
-                .call()
-                .then((transactionsResult) => {
-                    this.props.setTransactions(transactionsResult.records)
-                    this.updateTransactionsCursors(transactionsResult.records)
-                })
-                .catch(function (err) {
-                    // eslint-disable-next-line no-console
-                    console.log(err)
-                })
-        }
-        return Promise.resolve()
-    }
-
-
-    // ...
-    handleTabSelect = (value) => {
-        this.props.setState({ tabSelected: value })
-        this.props.staticRouter.pushByView(value)
-        if (
-            value === "Transactions"  &&
-            firebaseApp.auth("session").currentUser &&
-            this.props.userId && this.props.token
-        ) {
-            this.getTransactions()
-        }
-    }
-
-
-    // ...
-    updateTransactionsCursors = (records) =>
-        this.props.setState({
-            txCursorLeft: records[0].paging_token,
-            txCursorRight: records[records.length - 1].paging_token,
-        })
+    handleTabSelect = (value) => func.identity(value)
 
 
     // ...
     render = () => (
-        ({ currentView, staticRouter: { getPath }, state }) =>
+        ({ currentView, staticRouter: { getPath }, tabSelected }) =>
             <Switch>
                 <Redirect exact
                     from={this.rr(".")}
-                    to={getPath(state.tabSelected)}
+                    to={getPath(tabSelected)}
                 />
                 <Route
                     exact
                     path={
                         this.validTabNames.indexOf(currentView) !== -1 ?
-                            getPath(currentView) : getPath(state.tabSelected)
+                            getPath(currentView) : getPath(tabSelected)
                     }
                 >
                     <Tabs
@@ -142,7 +103,7 @@ class Payments extends Component {
                         inkBarStyle={styles.inkBar}
                         value={
                             this.validTabNames.indexOf(currentView) !== -1 ?
-                                currentView : state.tabSelected
+                                currentView : tabSelected
                         }
                         onChange={this.handleTabSelect}
                     >
@@ -161,21 +122,9 @@ class Payments extends Component {
                                 <PaymentsTable />
                             </div>
                         </Tab>
-                        {firebaseApp.auth("session").currentUser &&
-                            this.props.userId && this.props.token &&
-                            <Tab
-                                style={styles.tab}
-                                label={this.validTabNames[1]}
-                                value={this.validTabNames[1]}
-                            >
-                                <div className="tab-content">
-                                    <Transactions />
-                                </div>
-                            </Tab>
-                        }
                     </Tabs>
                 </Route>
-                <Redirect to={getPath(state.tabSelected)} />
+                <Redirect to={getPath(tabSelected)} />
             </Switch>
     )(this.props)
 
@@ -189,17 +138,10 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
-            state: state.Payments,
-            transactions: state.StellarAccount.transactions,
-            publicKey: state.LedgerHQ.publicKey,
-            horizon: state.StellarAccount.horizon,
-            userId: state.LoginManager.userId,
-            token: state.LoginManager.token,
+            tabSelected: state.Payments.tabSelected,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
-            setState: PaymentsAction.setState,
-            setTransactions: StellarAccountAction.setTransactions,
         }, dispatch)
     ),
 )(Payments)
