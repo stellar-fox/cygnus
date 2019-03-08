@@ -1,5 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { compose, bindActionCreators } from "redux"
+import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
 import AboutContent from "./AboutContent"
 import Heading from "./Heading"
@@ -7,23 +9,35 @@ import LoginChoices from "./LoginChoices"
 import SummaryContent from "./SummaryContent"
 import Footer from "../Layout/Footer"
 import "./index.css"
+import Loader from "../Loader"
+import { setLoaded } from "../../thunks/main"
 
 
 
 
 // <Welcome> component
-export default withStyles({
+export default compose(
+    withStyles({
+        considerFooter: { paddingBottom: 26 },
 
-    considerFooter: { paddingBottom: 26 },
+        noScrollBarFix: { padding: 16 },
 
-    noScrollBarFix: { padding: 16 },
-
-    paper: {
-        background: "linear-gradient(45deg, #091b31 0%, rgb(15, 46, 83) 50%)",
-        height: "100%",
-    },
-
-})(
+        paper: {
+            background: "linear-gradient(45deg, #091b31 0%, rgb(15, 46, 83) 50%)",
+            height: "100%",
+        },
+    }),
+    connect(
+        // map state to props.
+        (state) => ({
+            loading: state.App.loading,
+        }),
+        // map actions to props.
+        (dispatch) => bindActionCreators({
+            setLoaded,
+        }, dispatch)
+    )
+)(
     class extends Component {
 
         // ...
@@ -37,6 +51,10 @@ export default withStyles({
             modalShown: false,
             modalButtonText: "CANCEL",
         }
+
+
+        // ...
+        componentDidMount = () => setTimeout(this.props.setLoaded, 1000)
 
 
         // ...
@@ -54,14 +72,15 @@ export default withStyles({
 
         // ...
         render = () => (
-            ({ classes }) =>
-                <div className={classes.considerFooter}>
-                    <Heading />
-                    <LoginChoices />
-                    <SummaryContent />
-                    <AboutContent />
-                    <Footer />
-                </div>
+            ({ classes, loading }) =>
+                loading ? <Loader infoMessage="Loading ..." /> :
+                    <div className={classes.considerFooter}>
+                        <Heading />
+                        <LoginChoices />
+                        <SummaryContent />
+                        <AboutContent />
+                        <Footer />
+                    </div>
         )(this.props)
 
     }

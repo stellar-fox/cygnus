@@ -24,6 +24,13 @@ import {
 } from "./lib/state-persistence"
 import reducers from "./redux"
 import { routerMiddleware } from "../src/components/StellarRouter"
+import {
+    setLoading,
+    setScreenDimensions
+} from "./thunks/main"
+
+
+
 
 window.addEventListener("load", () => {
     
@@ -56,13 +63,23 @@ window.addEventListener("load", () => {
         return s
     })()
 
+
+    // add available window-dimensions event listener
+    window.addEventListener(
+        "resize",
+        () => store.dispatch(setScreenDimensions())
+    )
+
+
+    // surface page loading spinner while everything else finishes loading
+    store.dispatch(setLoading())
+
+
     // render application's root into the DOM
     ReactDOM.render(
         React.createElement(StellarFox, {history, store}),
         document.getElementById(env.appRootDomId)
     )
-
-
 
 
     // https://bit.ly/oocache
