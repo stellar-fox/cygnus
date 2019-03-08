@@ -269,7 +269,7 @@ class BalancesCard extends Component {
                                         )
                                 }
                             </span>
-                            <span className="p-l-medium balance">
+                            <span className="p-l-medium balance tabular-nums">
                                 <NumberFormat
                                     value={this.props
                                         .assetManager.convertToAsset(
@@ -314,7 +314,7 @@ class BalancesCard extends Component {
 
                         </div>
                         <Typography color="primary" variant="h5"
-                            className="fade-extreme"
+                            className="fade-extreme tabular-nums"
                         >
                             <NumberFormat
                                 value={this.props.StellarAccount.balance}
@@ -325,7 +325,7 @@ class BalancesCard extends Component {
                             /> XLM
                         </Typography>
                         <Typography color="primary" variant="h5"
-                            className="fade-extreme"
+                            className="fade-extreme tabular-nums"
                         >
                             1 XLM ≈ <NumberFormat
                                 value={this.props.assetManager
@@ -358,7 +358,7 @@ class BalancesCard extends Component {
                                     this.props.Account.currency
                                 )
                             }</span>
-                            <span className="fade">
+                            <span className="fade tabular-nums">
                                 <NumberFormat
                                     value={
                                         this.props.assetManager.convertToAsset(
@@ -375,7 +375,7 @@ class BalancesCard extends Component {
                             </span>
                         </Typography>
                         <Typography variant="h5" color="primary">
-                            <span className="fade-extreme">
+                            <span className="fade-extreme tabular-nums">
                                 <NumberFormat
                                     value={currentAccountReserve(
                                         this.props.StellarAccount.subentryCount

@@ -381,6 +381,8 @@ span.red-badge {
 
 /* --------- misc --------- */
 
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
 .cursor-pointer { cursor: pointer; }
 
 .outline {
