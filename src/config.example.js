@@ -1,8 +1,8 @@
 export const config = {
-    api: "https://localhost:4001/api/v1",
-    apiV2: "https://localhost:4001/api/v2",
-    horizon: "https://horizon-testnet.stellar.org",
-    reserve: "1",
+    api: "<deneb_api_uri>",
+    apiV2: "<deneb_api_v2_uri>",
+    horizon: "<horizon_uri>",
+    network: "<network_passphrase>",
     firebase: {
         apiKey: "<firebase_api_key>",
         authDomain: "<firebase_auth_domain>",
