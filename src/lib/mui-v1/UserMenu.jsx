@@ -5,21 +5,9 @@ import { withStyles } from "@material-ui/core/styles"
 import { IconButton, Menu, MenuItem } from "@material-ui/core"
 import { gravatar, gravatarSize48 } from "../../components/StellarFox/env"
 import Avatar from "@material-ui/core/Avatar"
-import { action as AccountAction } from "../../redux/Account"
-import { actions as AppActions } from "../../redux/App"
-import { action as AssetsAction } from "../../redux/AssetManager"
-import { action as AuthAction } from "../../redux/Auth"
-import { action as BalancesAction } from "../../redux/Balances"
-import { action as BankAction } from "../../redux/Bank"
-import { action as ContactsAction } from "../../redux/Contacts"
-import { action as LedgerHQAction } from "../../redux/LedgerHQ"
-import { action as LoginManagerAction } from "../../redux/LoginManager"
-import { action as StellarAccountAction } from "../../redux/StellarAccount"
-import { action as PaymentsAction } from "../../redux/Payments"
-import { firebaseApp } from "../../components/StellarFox"
 import { withLoginManager } from "../../components/LoginManager"
 import PowerIcon from "@material-ui/icons/PowerSettingsNew"
-
+import { signOut } from "../../thunks/users"
 
 
 
@@ -58,20 +46,7 @@ class UserMenu extends Component {
 
 
     // ...
-    logout = () => {
-        firebaseApp.auth("session").signOut()
-        this.props.resetAccountState()
-        this.props.resetAppState()
-        this.props.resetAssetsState()
-        this.props.resetAuthState()
-        this.props.resetBalancesState()
-        this.props.resetBankState()
-        this.props.resetContactsState()
-        this.props.resetLedgerHQState()
-        this.props.resetLoginManagerState()
-        this.props.resetPaymentsState()
-        this.props.resetStellarAccountState()
-    }
+    logout = () => this.props.signOut()
 
 
     // ...
@@ -135,17 +110,7 @@ export default compose(
             userId: state.LoginManager.userId,
         }),
         (dispatch) => bindActionCreators({
-            resetAccountState: AccountAction.resetState,
-            resetAppState: AppActions.resetState,
-            resetAssetsState: AssetsAction.resetState,
-            resetAuthState: AuthAction.resetState,
-            resetBalancesState: BalancesAction.resetState,
-            resetBankState: BankAction.resetState,
-            resetContactsState: ContactsAction.resetState,
-            resetLedgerHQState: LedgerHQAction.resetState,
-            resetLoginManagerState: LoginManagerAction.resetState,
-            resetPaymentsState: PaymentsAction.resetState,
-            resetStellarAccountState: StellarAccountAction.resetState,
+            signOut,
         }, dispatch)
     ),
     withStyles(styles),

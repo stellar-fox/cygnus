@@ -11,6 +11,7 @@ import Footer from "../Layout/Footer"
 import "./index.css"
 import Loader from "../Loader"
 import { setLoaded } from "../../thunks/main"
+import Snacky from "../../lib/mui-v1/Snacky"
 
 
 
@@ -75,6 +76,7 @@ export default compose(
             ({ classes, loading }) =>
                 loading ? <Loader infoMessage="Loading ..." /> :
                     <div className={classes.considerFooter}>
+                        <Snacky />
                         <Heading />
                         <LoginChoices />
                         <SummaryContent />

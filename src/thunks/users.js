@@ -7,15 +7,64 @@ import { config } from "../config"
 import md5 from "../lib/md5"
 import { subscribeEmail } from "../components/Account/api"
 import { string } from "@xcmats/js-toolbox"
+import { action as SnackyActions } from "../redux/Snacky"
+import { action as AccountAction } from "../redux/Account"
+import { actions as AppActions } from "../redux/App"
+import { action as AssetsAction } from "../redux/AssetManager"
+import { action as AuthAction } from "../redux/Auth"
+import { action as BalancesAction } from "../redux/Balances"
+import { action as BankAction } from "../redux/Bank"
+import { action as ContactsAction } from "../redux/Contacts"
+import { action as LedgerHQAction } from "../redux/LedgerHQ"
+import { action as LoginManagerAction } from "../redux/LoginManager"
+import { action as PaymentsAction } from "../redux/Payments"
+import { action as StellarAccountAction } from "../redux/StellarAccount"
 
 
 
 
+/**
+ * Signs user out of the session and clears Redux tree.
+ * 
+ * @function signOut
+ * @returns {Function} thunk action
+ */
+export const signOut = () =>
+    async (dispatch, _getState) => {
+        await firebaseApp.auth("session").signOut()
+        await dispatch(AccountAction.resetState())
+        await dispatch(AppActions.resetState())
+        await dispatch(AssetsAction.resetState())
+        await dispatch(AuthAction.resetState())
+        await dispatch(BalancesAction.resetState())
+        await dispatch(BankAction.resetState())
+        await dispatch(ContactsAction.resetState())
+        await dispatch(LedgerHQAction.resetState())
+        await dispatch(LoginManagerAction.resetState())
+        await dispatch(PaymentsAction.resetState())
+        await dispatch(StellarAccountAction.resetState())
+        await dispatch(SnackyActions.setColor("success"))
+        await dispatch(SnackyActions.setMessage(
+            "You were signed out of your account."
+        ))
+        await dispatch(SnackyActions.showSnacky())
+    }
+
+
+
+
+/**
+ * Clears errors from email/password inputs.
+ * 
+ * @function clearInputErrorMessages
+ * @returns {Function} thunk action
+ */
 export const clearInputErrorMessages = () =>
     async (dispatch, _getState) => {
         await dispatch(ErrorsActions.clearEmailInputError())
         await dispatch(ErrorsActions.clearPasswordInputError())
     }
+
 
 
 
@@ -104,5 +153,4 @@ export const signUpNewUser = (accountId, account, email, password) =>
             await dispatch(AuthActions.toggleSignupProgress(false))
         }
         
-
     }
