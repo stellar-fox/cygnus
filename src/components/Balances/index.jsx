@@ -13,6 +13,7 @@ import "number-to-text/converters/en-us"
 import { string } from "@xcmats/js-toolbox"
 import { action as AccountAction } from "../../redux/Account"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
+import { action as BankActions } from "../../redux/Bank"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as BalancesAction } from "../../redux/Balances"
@@ -365,7 +366,10 @@ class Balances extends Component {
 
     // ...
     render = () => (
-        ({Balances, bip32Path, assetManager, loginManager, publicKey }) =>
+        ({
+            Balances, bip32Path, assetManager, loginManager, publicKey,
+            signupHintVisible,
+        }) =>
             <Switch>
                 <Route exact path={this.rr(".")}>
                     <Fragment>
@@ -459,8 +463,8 @@ class Balances extends Component {
 
                         {
                             this.props.Account.needsRegistration  &&
-                            loginManager.isPayEnabled() ?
-                                <RegisterCard /> : null
+                            (loginManager.isPayEnabled() && signupHintVisible) &&
+                                <RegisterCard />
                         }
 
                         {
@@ -511,6 +515,7 @@ export default compose(
             horizon: state.StellarAccount.horizon,
             assets: state.Assets,
             cancelEnabled: state.Balances.cancelEnabled,
+            signupHintVisible: state.Bank.signupHintVisible,
         }),
         // match dispatch to props.
         (dispatch) => bindActionCreators({
@@ -530,6 +535,7 @@ export default compose(
             showAlert: AlertAction.showAlert,
             showLoadingModal: LoadingModalAction.showLoadingModal,
             hideLoadingModal: LoadingModalAction.hideLoadingModal,
+            toggleSignupHint: BankActions.toggleSignupHint,
         }, dispatch)
     )
 )(Balances)

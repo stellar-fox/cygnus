@@ -1,5 +1,5 @@
 .account {
-    margin: 20px;
+    margin: 20px 0px;
     color: rgb(15,46,83) !important;
     background-color: rgb(244,176,4) !important;
     -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
@@ -16,15 +16,19 @@
 }
 
 .welcome-card {
-    margin: 20px;
-    color: rgb(15,46,83) !important;
-    background-color: #eceff1 !important;
+    margin: 0px;
+    color: rgb(244,176,4) !important;
+    background-color: #2e5077 !important;
     -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding-box;
     background-clip: padding-box;
+}
+
+.bank-drawer {
+    background-color: #2e5077;
 }
 
 .assets { font-size: 1rem; }
