@@ -15,8 +15,12 @@ import {
 import {
     composeWithDevTools as composeWithDevTools_dev
 } from "redux-devtools-extension"
-import { devEnv } from "@xcmats/js-toolbox"
-
+import {
+    devEnv,
+    getProcess,
+    isObject,
+    to_,
+} from "@xcmats/js-toolbox"
 import throttle from "lodash/throttle"
 import {
     loadState,
@@ -28,7 +32,10 @@ import {
     setLoading,
     setScreenDimensions
 } from "./thunks/main"
-
+import {
+    dynamicImportLibs,
+    dynamicImportReducers,
+} from "./lib/utils"
 
 
 
@@ -74,6 +81,20 @@ window.addEventListener("load", () => {
     // surface page loading spinner while everything else finishes loading
     store.dispatch(setLoading())
 
+
+    // expose 'sf' dev. namespace only in dev. environment
+    if (devEnv() && isObject(window)) {
+        (async () => {
+            window.sf = {
+                env, history, store, React,
+                dispatch: store.dispatch,
+                ...await dynamicImportLibs(),
+                process: getProcess(),
+                r: await dynamicImportReducers(),
+            }
+            window.to_ = to_
+        })()
+    }
 
     // render application's root into the DOM
     ReactDOM.render(
