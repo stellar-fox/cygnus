@@ -35,13 +35,22 @@ import AlertChoiceModal from "../Layout/AlertChoiceModal"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 import { withStyles } from "@material-ui/core/styles"
-import { htmlEntities as he, insertPathIndex } from "../../lib/utils"
-import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
+import {
+    htmlEntities as he,
+    insertPathIndex
+} from "../../lib/utils"
+import {
+    signTransaction,
+    getSoftwareVersion
+} from "../../lib/ledger"
 import {
     buildSetDataTx,
     submitTransaction,
 } from "../../lib/stellar-tx"
-import { implodeCloudData, unsubscribeEmail } from "./api"
+import {
+    implodeCloudData,
+    unsubscribeEmail,
+} from "./api"
 import { firebaseApp } from "../../components/StellarFox"
 import InputField from "../../lib/mui-v1/InputField"
 import {
@@ -304,6 +313,14 @@ class Settings extends Component {
                     )
                 })
                 .catch((error) => this.props.showAlert(error.message, "Error"))
+        } else {
+            this.props.popupSnackbar(
+                <Typography variant="body1" color="primary">
+                    Currency has been changed to <span className="em">
+                        {currency.toUpperCase()}
+                    </span>
+                </Typography>
+            )
         }
 
     }
