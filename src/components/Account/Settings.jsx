@@ -10,7 +10,6 @@ import { config } from "../../config"
 import RadioButtonGroup from "../../lib/mui-v1/RadioButtonGroup"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
-import { appName } from "../StellarFox/env"
 import { action as AccountAction } from "../../redux/Account"
 import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as ModalAction } from "../../redux/Modal"
@@ -21,20 +20,21 @@ import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as PaymentsAction } from "../../redux/Payments"
-
 import Modal from "../../lib/common/Modal"
-import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import { accountIsLocked } from "../../lib/utils"
 import {
-    Checkbox, CircularProgress, FormControlLabel, Icon, LinearProgress,
+    Checkbox,
+    CircularProgress,
+    FormControlLabel,
+    Icon,
+    LinearProgress,
     Typography,
 } from "@material-ui/core"
 import AlertChoiceModal from "../Layout/AlertChoiceModal"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 import { withStyles } from "@material-ui/core/styles"
-import { delay } from "lodash"
 import { htmlEntities as he, insertPathIndex } from "../../lib/utils"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import {
@@ -44,7 +44,10 @@ import {
 import { implodeCloudData, unsubscribeEmail } from "./api"
 import { firebaseApp } from "../../components/StellarFox"
 import InputField from "../../lib/mui-v1/InputField"
-import { string } from "@xcmats/js-toolbox"
+import {
+    delay,
+    string,
+} from "@xcmats/js-toolbox"
 
 
 
@@ -233,14 +236,14 @@ class Settings extends Component {
                 )
             }
 
-            delay(() => this.setState({
+            delay(500).then(() => this.setState({
                 completion: 100,
-            }), 500)
+            }))
 
-            delay(() => this.setState({
+            delay(900).then(() => this.setState({
                 imploding: false,
                 progressMessage: "Implosion completed. Good bye.",
-            }), 900)
+            }))
 
         } catch (error) {
             this.setState({
@@ -270,10 +273,6 @@ class Settings extends Component {
             this.props.resetStellarAccountState()
         }
     }
-
-
-    // ...
-    showSignupModal = () => this.props.showModal("signup")
 
 
     // ...
@@ -526,7 +525,7 @@ class Settings extends Component {
             </div>
             <RadioButtonGroup
                 name="currencySelect"
-                value={this.props.state.currency}
+                value={this.props.currency}
                 onChange={this.changeCurrency}
                 children={[
                     { value: "eur", label: "Euro [EUR]", color:"secondary" },
@@ -538,7 +537,7 @@ class Settings extends Component {
 
             <RadioButtonGroup
                 name="currencySelect"
-                value={this.props.state.currency}
+                value={this.props.currency}
                 onChange={this.changeCurrency}
                 children={[
                     { value: "nzd", label: "New Zealand Dollar [NZD]", color: "secondary" },
@@ -547,26 +546,8 @@ class Settings extends Component {
                 ]}
             >
             </RadioButtonGroup>
-            {this.props.state.needsRegistration
-                && this.props.loginManager.isPayEnabled() ?
-                <div>
-                    <div className="p-t p-b" />
-                    <div className="account-title p-t">
-                        Register this account with {appName}:
-                    </div>
-                    <div className="account-subtitle">
-                        Get access to unique services and
-                        remittance service.
-                    </div>
-                    <div className="p-b" />
-                    <Button
-                        color="secondary"
-                        onClick={this.showSignupModal}
-                    >Register</Button>
-                </div> : null}
 
-            {this.props.authenticated ? (
-
+            {this.props.authenticated &&
                 <div className="m-t-large flex-box-row items-centered space-between outline">
                     <div>
                         <Typography variant="body1" color="secondary">
@@ -581,17 +562,15 @@ class Settings extends Component {
                     </div>
                     <div>
                         <Switch
-                            checked={this.props.state.discoverable}
+                            checked={this.props.discoverable}
                             onChange={this.changeAccountDiscoverability}
                             color="secondary"
                         />
                     </div>
                 </div>
+            }
 
-            ) : null}
-
-            {firebaseApp.auth("session").currentUser &&
-                this.props.authenticated &&
+            {this.props.authenticated &&
             <Fragment>
                 <div style={{marginTop: "1rem"}} className="flex-box-row">
                     <Typography style={{ padding: "0.5rem 0"}} variant="h5"
@@ -627,8 +606,6 @@ class Settings extends Component {
                     </div>
                 </div>
             </Fragment>
-
-            
             }
         </div>
 }
@@ -637,13 +614,13 @@ class Settings extends Component {
 // ...
 export default compose(
     withStyles(styles),
-    withLoginManager,
     withAssetManager,
     connect(
         // bind state to props.
         (state) => ({
             authenticated: state.Auth.authenticated,
-            state: state.Account,
+            currency: state.Account.currency,
+            discoverable: state.Account.discoverable,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
             network: state.StellarAccount.network,
@@ -666,7 +643,6 @@ export default compose(
             showAlert: AlertAction.showAlert,
             showChoiceAlert: AlertChoiceAction.showAlert,
             hideChoiceAlert: AlertChoiceAction.hideAlert,
-
             resetAccountState: AccountAction.resetState,
             resetAssetsState: AssetsAction.resetState,
             resetBalancesState: BalancesAction.resetState,

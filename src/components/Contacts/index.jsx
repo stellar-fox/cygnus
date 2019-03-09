@@ -28,7 +28,7 @@ import InputLabel from "@material-ui/core/InputLabel"
 import Select from "@material-ui/core/Select"
 import MenuItem from "@material-ui/core/MenuItem"
 import Divider from "../../lib/mui-v1/Divider"
-import { debounce } from "lodash"
+import debounce from "lodash/debounce"
 
 
 
