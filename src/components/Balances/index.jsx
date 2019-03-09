@@ -476,15 +476,12 @@ class Balances extends Component {
                         }
 
                         {
-                            Balances.payCardVisible ?
-                                <PaymentCard
-                                    onSignTransaction={this.sendPayment}
-                                /> : null
+                            Balances.fundCardVisible && <FundCard />
                         }
 
                         {
-                            Balances.fundCardVisible ?
-                                <FundCard /> : null
+                            Balances.payCardVisible &&
+                            <PaymentCard onSignTransaction={this.sendPayment} />
                         }
 
                     </Fragment>

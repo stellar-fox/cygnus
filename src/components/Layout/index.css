@@ -290,9 +290,6 @@ strong { color: rgb(212, 228, 188); }
 /* --------- badges --------- */
 
 div.badge-error, div.badge-success, div.badge-primary {
-    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
-    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding-box;
     background-clip: padding-box;
@@ -300,10 +297,11 @@ div.badge-error, div.badge-success, div.badge-primary {
     padding: 3px 5px 3px 5px;
     border-radius: 3px;
     font-size: 0.8rem;
-    font-weight: bold;
+    opacity: 0.85;
+    border: 1px solid rgba(248, 221, 153, 0.2);
 }
 
-div.badge-error { background-color: rgba(178, 34, 34, 1.0); }
+div.badge-error { background-color: rgba(178, 34, 34, 0.9); }
 
 div.badge-success { background-color: rgba(27, 94, 32, 1.0); }
 
