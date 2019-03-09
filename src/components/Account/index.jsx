@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
 import {
     bindActionCreators,
@@ -17,22 +17,15 @@ import {
     withStaticRouter,
 } from "../StellarRouter"
 import { rgba } from "../../lib/utils"
-
 import { action as AccountAction } from "../../redux/Account"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
-import { action as ModalAction } from "../../redux/Modal"
-
 import {
     Tab,
     Tabs,
 } from "material-ui/Tabs"
-import Button from "../../lib/mui-v1/Button"
-import Modal from "../../lib/common/Modal"
-import Signup from "../Account/Signup"
 import Profile from "./Profile"
 import Settings from "./Settings"
 import Security from "./Security"
-
 import "./index.css"
 
 
@@ -88,19 +81,6 @@ class Account extends Component {
 
 
     // ...
-    state = { modalButtonText: "CANCEL" }
-
-
-    // ...
-    completeRegistration = (loginObj) => {
-        this.changeButtonText()
-        this.props.setState({ needsRegistration: false })
-        this.props.setApiToken(loginObj.token)
-        this.props.setUserId(loginObj.userId)
-    }
-
-
-    // ...
     handleTabSelect = (value) => {
         this.props.setState({ tabSelected: value })
         this.props.staticRouter.pushByView(value)
@@ -108,94 +88,64 @@ class Account extends Component {
 
 
     // ...
-    changeButtonText = () => this.setState({ modalButtonText: "DONE" })
-
-
-    // ...
     render = () => (
         ({ 
-            authenticated, publicKey, bip32Path, currentView,
-            staticRouter: { getPath }, state,
+            authenticated, currentView, staticRouter: { getPath }, tabSelected,
         }) =>
             <Switch>
                 <Redirect exact
                     from={this.rr(".")}
-                    to={getPath(state.tabSelected)}
+                    to={getPath(tabSelected)}
                 />
                 <Route
                     exact
                     path={
                         this.validTabNames.indexOf(currentView) !== -1 ?
-                            getPath(currentView) : getPath(state.tabSelected)
+                            getPath(currentView) : getPath(tabSelected)
                     }
                 >
-                    <Fragment>
-                        <Modal
-                            open={
-                                this.props.Modal.modalId === "signup" &&
-                                this.props.Modal.visible
-                            }
-                            title="Opening Your Bank - Register Account"
-                            actions={[
-                                <Button
-                                    onClick={this.props.hideModal}
-                                    color="primary"
-                                >{this.state.modalButtonText}</Button>,
-                            ]}
+                    <Tabs
+                        tabItemContainerStyle={styles.container}
+                        inkBarStyle={styles.inkBar}
+                        value={
+                            this.validTabNames
+                                .indexOf(currentView) !== -1 ?
+                                currentView :
+                                tabSelected
+                        }
+                        onChange={this.handleTabSelect}
+                        className="tabs-container"
+                    >
+                        <Tab
+                            style={styles.tab}
+                            label={this.validTabNames[0]}
+                            value={this.validTabNames[0]}
                         >
-                            <Signup
-                                onComplete={this.completeRegistration}
-                                config={{
-                                    useAsRegistrationForm: true,
-                                    publicKey,
-                                    bip32Path,
-                                }}
-                            />
-                        </Modal>
-
-                        <Tabs
-                            tabItemContainerStyle={styles.container}
-                            inkBarStyle={styles.inkBar}
-                            value={
-                                this.validTabNames
-                                    .indexOf(currentView) !== -1 ?
-                                    currentView :
-                                    state.tabSelected
-                            }
-                            onChange={this.handleTabSelect}
-                            className="tabs-container"
-                        >
-                            <Tab
-                                style={styles.tab}
-                                label={this.validTabNames[0]}
-                                value={this.validTabNames[0]}
-                            >
-                                <Settings />
-                            </Tab>
-                            {
-                                authenticated ?
-                                    <Tab
-                                        style={styles.tab}
-                                        label={this.validTabNames[1]}
-                                        value={this.validTabNames[1]}
-                                    >
-                                        <Profile />
-                                    </Tab> : null
-                            }
-                            {
-                                authenticated ?
-                                    <Tab
-                                        style={styles.tab}
-                                        label={this.validTabNames[2]}
-                                        value={this.validTabNames[2]}
-                                    >
-                                        <Security />
-                                    </Tab> : null
-                            }
-                        </Tabs>
-                    </Fragment>
+                            <Settings />
+                        </Tab>
+                        {
+                            authenticated ?
+                                <Tab
+                                    style={styles.tab}
+                                    label={this.validTabNames[1]}
+                                    value={this.validTabNames[1]}
+                                >
+                                    <Profile />
+                                </Tab> : null
+                        }
+                        {
+                            authenticated ?
+                                <Tab
+                                    style={styles.tab}
+                                    label={this.validTabNames[2]}
+                                    value={this.validTabNames[2]}
+                                >
+                                    <Security />
+                                </Tab> : null
+                        }
+                    </Tabs>
                 </Route>
-                <Redirect exact to={getPath(state.tabSelected)} />
+                <Redirect exact to={getPath(tabSelected)} />
             </Switch>
     )(this.props)
 
@@ -212,15 +162,13 @@ export default compose(
             authenticated: state.Auth.authenticated,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
-            state: state.Account,
-            Modal: state.Modal,
+            tabSelected: state.Account.tabSelected,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
             setApiToken: LoginManagerAction.setApiToken,
             setUserId: LoginManagerAction.setUserId,
-            hideModal: ModalAction.hideModal,
         }, dispatch)
     )
 )(Account)

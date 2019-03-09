@@ -147,7 +147,6 @@ export default compose(
             accountExists: toBool(state.StellarAccount.accountId),
             drawerVisible: state.Bank.drawerVisible,
             contactRequests: state.Contacts.requests,
-            needsRegistration: state.Account.needsRegistration,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
         })

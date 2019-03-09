@@ -129,7 +129,6 @@ export default compose(
         (state) => ({
             authenticated: state.Auth.authenticated,
             gravatarHash: state.Account.gravatar,
-            needsRegistration: state.Account.needsRegistration,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
             token: state.LoginManager.token,

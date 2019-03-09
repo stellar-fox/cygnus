@@ -5,7 +5,6 @@ import {
 } from "redux"
 import { connect } from "react-redux"
 import { withAssetManager } from "../AssetManager"
-import { notImplementedText } from "../StellarFox/env"
 import {
     Card,
     CardActions,
@@ -13,7 +12,6 @@ import {
     CardText,
 } from "material-ui/Card"
 import Button from "../../lib/mui-v1/Button"
-import { action as AlertAction } from "../../redux/Alert"
 import { action as BalancesAction } from "../../redux/Balances"
 import { Typography } from "@material-ui/core"
 import NumberFormat from "react-number-format"
@@ -27,10 +25,6 @@ class NoAccountCard extends Component {
     componentDidMount = () => {
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
-
-    // ...
-    showNotImplementedModal = () =>
-        this.props.showAlert(notImplementedText, "Not Yet Implemented")
 
 
     // ...
@@ -115,10 +109,6 @@ class NoAccountCard extends Component {
                 onClick={this.toggleFundCard}
                 color="success"
             >Fund</Button>
-            <Button
-                onClick={this.showNotImplementedModal}
-                color="warning"
-            >Request</Button>
         </CardActions>
     </Card>
 
@@ -137,7 +127,6 @@ export default compose(
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             setState: BalancesAction.setState,
-            showAlert: AlertAction.showAlert,
         }, dispatch)
     )
 )(NoAccountCard)
