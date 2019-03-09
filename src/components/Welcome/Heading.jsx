@@ -4,15 +4,10 @@ import { connect } from "react-redux"
 import { TopBarSecurityMessage } from "../StellarFox/env"
 import { Typography } from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
-import Modal from "../../lib/common/Modal"
-import Signup from "../Account/Signup"
-import { action as AccountAction } from "../../redux/Account"
-import { action as LedgerHQAction } from "../../redux/LedgerHQ"
-import { action as LoginManagerAction } from "../../redux/LoginManager"
-import { action as ModalAction } from "../../redux/Modal"
 import { getExchangeRate } from "../../thunks/assets"
 import BottomHeadingContent from "./BottomHeadingContent"
 import TopHeadingContent from "./TopHeadingContent"
+import { Link } from "react-router-dom"
 
 
 
@@ -29,60 +24,11 @@ class Heading extends Component {
 
     // ...
     componentDidMount = () => this.props.getExchangeRate("usd")
-    
-
-    // ...
-    showSignupModal = () => {
-        this.props.showModal("signup")
-    }
-
-
-    // ...
-    enableLogin = (loginObj) =>
-        this.setState({
-            loginButtonDisabled: false,
-            loginObj,
-        })
-
-
-    // ...
-    login = () => {
-        this.props.hideModal()
-        this.props.setState({ needsRegistration: false })
-        this.props.setLedgerBip32Path(this.state.loginObj.bip32Path)
-        this.props.setLedgerPublicKey(this.state.loginObj.publicKey)
-        this.props.setApiToken(this.state.loginObj.token)
-        this.props.setUserId(this.state.loginObj.userId)
-    }
 
 
     // ...
     render = () =>
         <Fragment>
-            <Modal
-                open={
-                    this.props.Modal.modalId === "signup" &&
-                    this.props.Modal.visible
-                }
-                title="Opening Your Bank"
-                actions={[
-                    <Button
-                        onClick={this.login}
-                        disabled={this.state.loginButtonDisabled}
-                        color="primary"
-                    >
-                        Login
-                    </Button>,
-                    <Button
-                        onClick={this.props.hideModal}
-                        color="primary"
-                    >
-                        Cancel
-                    </Button>,
-                ]}
-            >
-                <Signup onComplete={this.enableLogin} />
-            </Modal>
 
             <TopBarSecurityMessage />
 
@@ -105,7 +51,8 @@ class Heading extends Component {
                 <div className="flex-row-centered">
                     <Button
                         color="awesome"
-                        onClick={this.showSignupModal}
+                        component={Link}
+                        to="/signup"
                     >
                         Open Free Account
                     </Button>
@@ -122,18 +69,9 @@ class Heading extends Component {
 // ...
 export default connect(
     // map state to props.
-    (state) => ({
-        Modal: state.Modal,
-    }),
+    (_state) => ({}),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         getExchangeRate,
-        setState: AccountAction.setState,
-        setLedgerPublicKey: LedgerHQAction.setPublicKey,
-        setLedgerBip32Path: LedgerHQAction.setBip32Path,
-        setApiToken: LoginManagerAction.setApiToken,
-        setUserId: LoginManagerAction.setUserId,
-        showModal: ModalAction.showModal,
-        hideModal: ModalAction.hideModal,
     }, dispatch)
 )(Heading)
