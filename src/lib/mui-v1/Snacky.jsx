@@ -22,7 +22,6 @@ export default compose(
         },
         error: {
             backgroundColor: theme.palette.danger,
-            // color: theme.palette.error.contrastText,
         },
     })),
     connect(
