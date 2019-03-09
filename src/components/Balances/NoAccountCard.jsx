@@ -41,7 +41,7 @@ class NoAccountCard extends Component {
 
 
     // ...
-    render = () => <Card className='account'>
+    render = () => <Card className="account">
         <CardHeader
             title={
                 <Typography variant="subtitle1" color="primary">
@@ -75,7 +75,7 @@ class NoAccountCard extends Component {
                             )
                         }
                     </span>
-                    <span className="p-l-medium balance">
+                    <span className="p-l-medium balance tabular-nums">
                         0.00
                     </span>
                 </div>

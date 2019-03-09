@@ -84,12 +84,14 @@ const LoginChoices = () => {
                             }}
                             label="Email/Password"
                         />
-                        <Tab style={{ padding: "0 0.5rem" }} icon={<img
-                            className="img-logo"
-                            src={ledgerhqlogo}
-                            width="72px"
-                            alt="LedgerHQ"
-                        />}
+                        <Tab
+                            style={{ padding: "0 0.5rem" }}
+                            icon={<img
+                                className="img-logo"
+                                src={ledgerhqlogo}
+                                width="72px"
+                                alt="LedgerHQ"
+                            />}
                         />
                         <Tab
                             classes={{

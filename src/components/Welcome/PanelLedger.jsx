@@ -57,7 +57,8 @@ class PanelLedger extends Component {
         <Panel title="Login with Ledger Nano S">
             <div style={{ minHeight: "310px" }}>
                 <div className="m-t-small panel-title">
-                    Sign-in by authenticating with your <em>Ledger device</em>.
+                    Use the light-weight client to transact
+                    by using your <em>Ledger</em> device.
                 </div>
                 <Typography align="center" variant="caption" color="secondary">
                     Connect your Ledger Nano S device and select <i>Stellar</i> application.
