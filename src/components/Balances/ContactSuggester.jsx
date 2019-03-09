@@ -425,8 +425,7 @@ class ContactSuggester extends Component {
                  * currently mapped in to the federation address input
                  */
                 const payeeStellarAccount = await loadAccount(
-                    federationRecord.account_id,
-                    this.props.StellarAccount.horizon
+                    federationRecord.account_id
                 )
 
                 /**
@@ -530,7 +529,6 @@ class ContactSuggester extends Component {
             try {
                 const payeeStellarAccount = await loadAccount(
                     publicKey,
-                    this.props.StellarAccount.horizon
                 )
                 if (payeeStellarAccount.account_id === publicKey) {
                     this.setTransactionType("EXISTING_ACCOUNT")

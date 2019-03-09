@@ -219,7 +219,7 @@ export default compose(
             }
 
             const account = await loadAccount(
-                this.props.payee, this.props.horizon
+                this.props.payee
             )
 
             const asset = new Asset(
@@ -267,9 +267,7 @@ export default compose(
                         statusMessage: "Sending transaction ...",
                     })
 
-                    const broadcast = await submitTransaction(
-                        signedTx, this.props.horizon
-                    )
+                    const broadcast = await submitTransaction(signedTx)
 
                     await this.props.setState({
                         paymentId: broadcast.hash,

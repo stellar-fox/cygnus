@@ -78,7 +78,7 @@ class BalancesCard extends Component {
             awaitingSignature: [],
         })
         loadAccount(
-            this.props.publicKey, this.props.horizon
+            this.props.publicKey
         ).then((account) => this.updateAccountTree(account))
         this.props.assetManager.updateExchangeRate(this.props.Account.currency)
     }
@@ -139,9 +139,7 @@ class BalancesCard extends Component {
                 statusMessage: "Sending transaction ...",
             })
 
-            const broadcast = await submitTransaction(
-                signedTx, this.props.horizon
-            )
+            const broadcast = await submitTransaction(signedTx)
 
             this.props.setState({
                 txId: broadcast.hash,
@@ -160,7 +158,7 @@ class BalancesCard extends Component {
             this.props.popupSnackbar("Trustlines updated.")
 
             const account = await loadAccount(
-                this.props.publicKey, this.props.horizon
+                this.props.publicKey
             )
 
             await this.updateAccountTree(account)
@@ -190,8 +188,7 @@ class BalancesCard extends Component {
         this.props.updateAccountTree(account)
         delay(0.3 * timeUnit.second).then(() => {
             augmentAssets(
-                this.props.StellarAccount.assets,
-                this.props.StellarAccount.horizon
+                this.props.StellarAccount.assets
             ).then((augmentedAssets) => {
                 this.props.setStellarAccountState({
                     assets: augmentedAssets,

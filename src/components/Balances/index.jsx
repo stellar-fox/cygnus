@@ -38,7 +38,6 @@ import {
     buildPaymentTx,
     submitTransaction,
 } from "../../lib/stellar-tx"
-import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import {
     ConnectedSwitch as Switch,
@@ -47,7 +46,6 @@ import {
 import { action as LoadingModalAction } from "../../redux/LoadingModal"
 import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
-import Signup from "../Account/Signup"
 import RegisterCard from "./RegisterCard"
 import BalancesCard from "./BalancesCard"
 import NoAccountCard from "./NoAccountCard"
@@ -60,10 +58,10 @@ import {
     operationsStreamer,
     paymentsStreamer
 } from "../Streamers"
-
 import "./index.css"
 import FundCard from "./FundCard"
 import AssetDetails from "./AssetDetails"
+
 
 
 
@@ -144,8 +142,7 @@ class Balances extends Component {
         this.props.updateAccountTree(account)
         delay(300).then(() => {
             augmentAssets(
-                this.props.StellarAccount.assets,
-                this.props.StellarAccount.horizon
+                this.props.StellarAccount.assets
             ).then((augmentedAssets) => {
                 this.props.setStellarAccountState({
                     assets: augmentedAssets,
@@ -192,35 +189,42 @@ class Balances extends Component {
     // ...
     checkForRegisteredAccount = async (publicKey, bip32Path) => {
         try {
-            const
-                auth = await getRegisteredUser(publicKey, bip32Path),
-                user = await getUserData(auth.data.user_id, auth.data.token)
+            if (this.props.authenticated) {
+                const
+                    auth = await getRegisteredUser(publicKey, bip32Path),
+                    user = await getUserData(auth.data.user_id, auth.data.token)
 
-            this.props.setState({
-                firstName: user.first_name,
-                lastName: user.last_name,
-                email: user.email,
-                gravatar: user.email_md5,
-                paymentAddress: paymentAddress(user.alias, user.domain),
-                memo: user.memo,
-                discoverable: user.visible,
-                currency: user.currency,
-            })
+                this.props.setState({
+                    firstName: user.first_name,
+                    lastName: user.last_name,
+                    email: user.email,
+                    gravatar: user.email_md5,
+                    paymentAddress: paymentAddress(user.alias, user.domain),
+                    memo: user.memo,
+                    discoverable: user.visible,
+                    currency: user.currency,
+                })
 
-            /**
-             * When user authenticates check for new contact requests so the badge
-             * indicator can be activated upon new requests.
-             */
-            this.props.authenticated &&
+                /**
+                 * When user authenticates check for new contact requests so the badge
+                 * indicator can be activated upon new requests.
+                 */
+
                 this.updateContacts()
 
-            this.props.setState({
-                currency: user.currency,
-                needsRegistration: false,
-            })
-            this.props.assetManager.updateExchangeRate(
-                user.currency
-            )
+                this.props.setState({
+                    currency: user.currency,
+                    needsRegistration: false,
+                })
+
+                this.props.assetManager.updateExchangeRate(
+                    user.currency
+                )
+            } else {
+                this.props.setState({ needsRegistration: true })
+            }
+
+            
         } catch (_error) {
             this.props.setState({ needsRegistration: true })
         }
@@ -231,7 +235,7 @@ class Balances extends Component {
     _tmpQueryHorizon = async () => {
         try {
             const account = await loadAccount(
-                this.props.publicKey, this.props.horizon
+                this.props.publicKey
             )
             this.updateAccountTree(account)
             this.props.setState({ exists: true })
@@ -279,9 +283,7 @@ class Balances extends Component {
 
             this.props.showModal("txBroadcast")
 
-            const broadcast = await submitTransaction(
-                signedTx, this.props.horizon
-            )
+            const broadcast = await submitTransaction(signedTx)
 
             this.props.setStateForBalances({
                 paymentId: broadcast.hash,
@@ -335,22 +337,6 @@ class Balances extends Component {
 
 
     // ...
-    changeButtonText = () =>
-        this.setState({
-            modalButtonText: "DONE",
-        })
-
-
-    // ...
-    completeRegistration = (loginObj) => {
-        this.changeButtonText()
-        this.props.setState({ needsRegistration: false })
-        this.props.setApiToken(loginObj.token)
-        this.props.setUserId(loginObj.userId)
-    }
-
-
-    // ...
     closeAssetDetailsModal = () => {
         this.props.setAssetsState({ selected: null })
         this.props.setBalancesState({
@@ -366,34 +352,10 @@ class Balances extends Component {
 
     // ...
     render = () => (
-        ({
-            Balances, bip32Path, assetManager, loginManager, publicKey,
-            signupHintVisible,
-        }) =>
+        ({ Balances, assetManager, signupHintVisible }) =>
             <Switch>
                 <Route exact path={this.rr(".")}>
                     <Fragment>
-                        <Modal
-                            open={
-                                this.props.Modal.modalId === "signup" &&
-                                this.props.Modal.visible
-                            }
-                            title="Opening Your Bank - Register Account"
-                            actions={[
-                                <Button
-                                    onClick={this.props.hideModal}
-                                    color="primary"
-                                >{this.state.modalButtonText}</Button>,
-                            ]}
-                        >
-                            <Signup onComplete={this.completeRegistration}
-                                config={{
-                                    useAsRegistrationForm: true,
-                                    publicKey,
-                                    bip32Path,
-                                }}
-                            />
-                        </Modal>
 
                         <Modal
                             open={
@@ -462,17 +424,13 @@ class Balances extends Component {
                         </Modal>
 
                         {
-                            this.props.Account.needsRegistration  &&
-                            (loginManager.isPayEnabled() && signupHintVisible) &&
-                                <RegisterCard />
+                            this.props.Account.needsRegistration &&
+                            signupHintVisible && <RegisterCard />
                         }
 
                         {
                             this.props.StellarAccount.accountId ?
-                                <BalancesCard
-                                    notImplemented={this.handleOpen}
-                                /> :
-                                <NoAccountCard />
+                                <BalancesCard /> : <NoAccountCard />
                         }
 
                         {
@@ -496,7 +454,6 @@ class Balances extends Component {
 // ...
 export default compose(
     withAssetManager,
-    withLoginManager,
     connect(
         // map state to props.
         (state) => ({

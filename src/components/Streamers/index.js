@@ -29,12 +29,12 @@ export const paymentsStreamer = (
             ]
 
             RECEIVED.some(el => el) && popupSnackbar("Payment received.") &&
-                loadAccount(publicKey, network).then(
+                loadAccount(publicKey).then(
                     account => updateAccountTree(account)
                 )
 
             SENT.some(el => el) && popupSnackbar("Payment sent.") &&
-                loadAccount(publicKey, network).then(
+                loadAccount(publicKey).then(
                     account => updateAccountTree(account)
                 )
         },
@@ -65,13 +65,13 @@ export const operationsStreamer = (
 
             HOME_DOMAIN_UPDATE.some(el => el) &&
             popupSnackbar("Account domain updated.") &&
-            loadAccount(publicKey, network).then(
+            loadAccount(publicKey).then(
                 account => updateAccountTree(account)
             )
 
             HOME_DOMAIN_REMOVE.some(el => el) &&
             popupSnackbar("Account domain removed.") &&
-            loadAccount(publicKey, network).then(
+            loadAccount(publicKey).then(
                 account => updateAccountTree(account)
             )
         },

@@ -365,10 +365,10 @@ export const assetLookup = async (domain) =>
 
 
 // ...
-export const augmentAssets = (assets, horizon) =>
+export const augmentAssets = (assets) =>
     async.parMap(
         assets,
-        (asset) => assetAvatar(asset, horizon)
+        (asset) => assetAvatar(asset)
     )
         .then(
             (results) => {
@@ -388,9 +388,9 @@ export const augmentAssets = (assets, horizon) =>
 
 
 // ...
-export const assetAvatar = async (asset, horizon) => {
+export const assetAvatar = async (asset) => {
     let issuingAccount = await loadAccount(
-        asset.asset_issuer, horizon
+        asset.asset_issuer
     )
 
     if (issuingAccount.home_domain) {

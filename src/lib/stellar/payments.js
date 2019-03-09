@@ -8,8 +8,16 @@
 
 
 
-import { createServer, testNet } from "./server"
-import { Asset } from "stellar-sdk"
+import { config } from "../../config"
+import {
+    createServer,
+    testNet,
+    liveNet,
+} from "./server"
+import {
+    Asset,
+    Networks,
+} from "stellar-sdk"
 import { getOffers } from "./offers"
 
 
@@ -84,8 +92,7 @@ export const getPayments = (
         cursor = "now",
         limit = 5,
         order = "desc",
-        horizon = testNet,
-
+        horizon = config.network === Networks.PUBLIC ? liveNet : testNet,
     } = {}
 ) =>
     createServer(horizon)

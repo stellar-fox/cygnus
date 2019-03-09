@@ -3,50 +3,47 @@ import {
     Asset,
     BASE_FEE,
     Memo,
-    Network,
+    Networks,
     Operation,
-    Server,
     TransactionBuilder,
 } from "stellar-sdk"
 import {
     string,
     timeUnit,
 } from "@xcmats/js-toolbox"
-import { liveNetAddr, testNetAddr } from "../components/StellarFox/env"
+import {
+    createServer,
+    testNet,
+    liveNet,
+} from "./stellar/server"
+import { config } from "../config"
 
 
 
 
 // ...
-export const server = (network) => {
-    if (network === liveNetAddr) {
-        Network.usePublicNetwork()
-        return new Server(liveNetAddr)
-    }
-    Network.useTestNetwork()
-    return new Server(testNetAddr)
-}
+export const loadAccount = async (publicKey) =>
+    createServer(
+        config.network === Networks.PUBLIC ? liveNet : testNet
+    ).loadAccount(publicKey)
 
 
 
 
 // ...
-export const loadAccount = async (publicKey, network) =>
-    await server(network).loadAccount(publicKey)
+export const payments = () =>
+    createServer(
+        config.network === Networks.PUBLIC ? liveNet : testNet
+    ).payments().cursor("now")
 
 
 
 
 // ...
-export const payments = (network) =>
-    server(network).payments().cursor("now")
-
-
-
-
-// ...
-export const operations = (network) =>
-    server(network).operations().cursor("now")
+export const operations = () =>
+    createServer(
+        config.network === Networks.PUBLIC ? liveNet : testNet
+    ).operations().cursor("now")
 
 
 
@@ -54,7 +51,7 @@ export const operations = (network) =>
 // ...
 export const buildSetDataTx = async (txData) =>
     new TransactionBuilder(
-        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
+        await loadAccount(txData.source), { fee: BASE_FEE }
     ).addOperation(Operation.manageData({
         name: txData.name,
         value: txData.value,
@@ -66,7 +63,7 @@ export const buildSetDataTx = async (txData) =>
 // ...
 export const buildChangeTrustTx = async (txData) => {
     let txBuilder = new TransactionBuilder(
-        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
+        await loadAccount(txData.source), { fee: BASE_FEE }
     )
 
     txData.assets.forEach(asset => {
@@ -93,7 +90,7 @@ export const buildChangeTrustTx = async (txData) => {
 // ...
 export const buildCreateAccountTx = async (txData) =>
     new TransactionBuilder(
-        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
+        await loadAccount(txData.source), { fee: BASE_FEE }
     ).addOperation(Operation.createAccount({
         destination: txData.destination,
         startingBalance: txData.amount,
@@ -105,7 +102,7 @@ export const buildCreateAccountTx = async (txData) =>
 // ...
 export const buildPaymentTx = async (txData) => {
     return new TransactionBuilder(
-        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
+        await loadAccount(txData.source), { fee: BASE_FEE }
     ).addOperation(Operation.payment({
         destination: txData.destination,
         asset: Asset.native(),
@@ -118,7 +115,7 @@ export const buildPaymentTx = async (txData) => {
 // ...
 export const buildAssetPaymentTx = async (txData) =>
     new TransactionBuilder(
-        await loadAccount(txData.source, txData.network), { fee: BASE_FEE }
+        await loadAccount(txData.source), { fee: BASE_FEE }
     ).addOperation(Operation.payment({
         destination: txData.destination,
         asset: new Asset(txData.assetCode, txData.assetIssuer),
@@ -129,8 +126,10 @@ export const buildAssetPaymentTx = async (txData) =>
 
 
 // ...
-export const submitTransaction = async (signedTx, network) =>
-    server(network).submitTransaction(signedTx)
+export const submitTransaction = async (signedTx) =>
+    createServer(
+        config.network === Networks.PUBLIC ? liveNet : testNet
+    ).submitTransaction(signedTx)
 
 
 

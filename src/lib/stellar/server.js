@@ -22,6 +22,9 @@ import { Network, Server } from "stellar-sdk"
  */
 export const liveNet = "https://horizon.stellar.org"
 
+
+
+
 /**
  * Horizon end point for accessing _test net_. If you run your own node
  * then you need to adjust this endpoint accordingly.

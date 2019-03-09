@@ -190,7 +190,7 @@ class Settings extends Component {
                     progressMessage: "Removing profile signature data ...",
                     completion: 20,
                 })
-                await submitTransaction(signedRemoveIdSigTx, this.props.network)
+                await submitTransaction(signedRemoveIdSigTx)
             }
 
             /**
@@ -211,7 +211,7 @@ class Settings extends Component {
                     progressMessage: "Removing payment address signature data ...",
                     completion: 45,
                 })
-                await submitTransaction(signedRemovePaySigTx, this.props.network)
+                await submitTransaction(signedRemovePaySigTx)
             }
 
 

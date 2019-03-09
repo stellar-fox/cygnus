@@ -177,14 +177,12 @@ class Profile extends Component {
 
             this.props.showModal("txBroadcast")
 
-            await submitTransaction(
-                signedTx, this.props.network
-            )
+            await submitTransaction(signedTx)
 
             this.props.hideModal()
 
             this.props.updateAccountTree(await loadAccount(
-                this.props.publicKey, this.props.network
+                this.props.publicKey
             ))
 
             this.setState({ loadingUpdateProfile: false })
@@ -286,14 +284,12 @@ class Profile extends Component {
 
             this.props.showModal("txBroadcast")
 
-            await submitTransaction(
-                signedTx, this.props.network
-            )
+            await submitTransaction(signedTx)
 
             this.props.hideModal()
 
             this.props.updateAccountTree(await loadAccount(
-                this.props.publicKey, this.props.network
+                this.props.publicKey
             ))
             this.setState({ loadingUpdatePaymentAddress: false })
             this.props.popupSnackbar("Payment data has been updated.")

@@ -9,8 +9,16 @@
 
 
 
-import { createServer, testNet } from "./server"
-import { Asset } from "stellar-sdk"
+import { config } from "../../config"
+import {
+    createServer,
+    liveNet,
+    testNet,
+} from "./server"
+import {
+    Asset,
+    Networks,
+} from "stellar-sdk"
 import BigNumber from "bignumber.js"
 
 
@@ -33,7 +41,7 @@ export const getOffers = (
     counterAsset = new Asset.native(),
     {
         limit = 1,
-        horizon = testNet,
+        horizon = config.network === Networks.PUBLIC ? liveNet : testNet,
     } = {}
 ) =>
     createServer(horizon)
