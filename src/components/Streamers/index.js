@@ -9,7 +9,7 @@ import {
 
 // ...
 export const paymentsStreamer = (
-    publicKey, network, popupSnackbar, updateAccountTree
+    surfaceSnacky, publicKey, network, updateAccountTree
 ) =>
     payments(network).stream({
         onmessage: (message) => {
@@ -28,12 +28,14 @@ export const paymentsStreamer = (
                     message.from === publicKey),
             ]
 
-            RECEIVED.some(el => el) && popupSnackbar("Payment received.") &&
+            RECEIVED.some(el => el) &&
+                surfaceSnacky("success", "Payment received.") &&
                 loadAccount(publicKey).then(
                     account => updateAccountTree(account)
                 )
 
-            SENT.some(el => el) && popupSnackbar("Payment sent.") &&
+            SENT.some(el => el) &&
+                surfaceSnacky("success", "Payment sent.") &&
                 loadAccount(publicKey).then(
                     account => updateAccountTree(account)
                 )
@@ -45,7 +47,7 @@ export const paymentsStreamer = (
 
 // ...
 export const operationsStreamer = (
-    publicKey, network, popupSnackbar, updateAccountTree
+    surfaceSnacky, publicKey, network, updateAccountTree
 ) =>
     operations(network).stream({
         onmessage: (message) => {
@@ -64,15 +66,15 @@ export const operationsStreamer = (
             ]
 
             HOME_DOMAIN_UPDATE.some(el => el) &&
-            popupSnackbar("Account domain updated.") &&
-            loadAccount(publicKey).then(
-                account => updateAccountTree(account)
-            )
+                surfaceSnacky("success", "Account domain updated.") &&
+                    loadAccount(publicKey).then(
+                        account => updateAccountTree(account)
+                    )
 
             HOME_DOMAIN_REMOVE.some(el => el) &&
-            popupSnackbar("Account domain removed.") &&
-            loadAccount(publicKey).then(
-                account => updateAccountTree(account)
-            )
+                surfaceSnacky("success", "Account domain removed.") &&
+                    loadAccount(publicKey).then(
+                        account => updateAccountTree(account)
+                    )
         },
     })

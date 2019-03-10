@@ -20,12 +20,12 @@ import { Null } from "../../lib/utils"
 import { firebaseApp } from "../../components/StellarFox"
 import { action as AuthAction } from "../../redux/Auth"
 import AlertModal from "./AlertModal"
-import ConnectedSnackbar from "./ConnectedSnackbar"
 import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import LoginView from "../LoginView"
 import SignupView from "../SignupView"
 import "./index.css"
+import Snacky from "../../lib/mui-v1/Snacky"
 
 
 
@@ -128,9 +128,9 @@ export default compose(
         render = () => (
             (getPath) =>
                 <Fragment>
+                    <Snacky />
                     <AlertModal />
                     <LoadingModal />
-                    <ConnectedSnackbar />
                     <Switch>
                         <Route exact path={getPath("Welcome")}>
                             { this.renderWelcome }

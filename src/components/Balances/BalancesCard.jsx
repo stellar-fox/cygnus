@@ -41,12 +41,10 @@ import {
 } from "../../lib/utils"
 import Icon from "@material-ui/core/Icon"
 import { CircularProgress, Paper, Typography } from "@material-ui/core"
-
 import { action as AssetManagerAction } from "../../redux/AssetManager"
-import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
-
 import { config } from "../../config"
+import { surfaceSnacky } from "../../thunks/main"
 
 
 
@@ -155,7 +153,10 @@ class BalancesCard extends Component {
                 awaitingSignature: [],
             })
 
-            this.props.popupSnackbar("Trustlines updated.")
+            this.props.surfaceSnacky(
+                "success",
+                "Trustlines updated."
+            )
 
             const account = await loadAccount(
                 this.props.publicKey
@@ -485,8 +486,8 @@ export default compose(
             setAssetsState: AssetManagerAction.setState,
             setStellarAccountState: StellarAccountAction.setState,
             showAlert: AlertAction.showAlert,
-            popupSnackbar: SnackbarAction.popupSnackbar,
             updateAccountTree: StellarAccountAction.loadStellarAccount,
+            surfaceSnacky,
         }, dispatch)
     )
 )(BalancesCard)

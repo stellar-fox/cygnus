@@ -666,7 +666,7 @@ export const dynamicImportReducers = async () => {
     let [
         Account, Alert, AssetManager, Balances, Bank,
         LedgerHQ, LoadingModal, LoginManager, Modal, Payments,
-        Snackbar, StellarAccount, StellarRouter,
+        Snacky, StellarAccount, StellarRouter,
     ] = await Promise.all([
         import("../redux/Account"),
         import("../redux/Alert"),
@@ -678,14 +678,14 @@ export const dynamicImportReducers = async () => {
         import("../redux/LoginManager"),
         import("../redux/Modal"),
         import("../redux/Payments"),
-        import("../redux/Snackbar"),
+        import("../redux/Snacky"),
         import("../redux/StellarAccount"),
         import("../redux/StellarRouter"),
     ])
     return {
         Account, Alert, AssetManager, Balances, Bank,
         LedgerHQ, LoadingModal, LoginManager, Modal, Payments,
-        Snackbar, StellarAccount, StellarRouter,
+        Snacky, StellarAccount, StellarRouter,
     }
 }
 

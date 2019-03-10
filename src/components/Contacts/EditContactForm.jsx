@@ -27,18 +27,16 @@ import { action as AlertAction } from "../../redux/Alert"
 import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
-import { action as SnackbarAction } from "../../redux/Snackbar"
 import { withStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
 import TextField from "@material-ui/core/TextField"
-
 import Avatar from "@material-ui/core/Avatar"
 import Badge from "@material-ui/core/Badge"
 import Button from "@material-ui/core/Button"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import Typography from "@material-ui/core/Typography"
 import md5 from "../../lib/md5"
-
+import { surfaceSnacky } from "../../thunks/main"
 
 
 
@@ -400,7 +398,7 @@ class EditContactForm extends Component {
 
         this.props.hideChoiceAlert()
 
-        this.props.popupSnackbar("Contact has been deleted.")
+        surfaceSnacky("success", "Contact has been deleted.")
 
         this.updateContacts()
     }
@@ -644,7 +642,7 @@ export default compose(
             showAlert: AlertAction.showAlert,
             showChoiceAlert: AlertChoiceAction.showAlert,
             hideChoiceAlert: AlertChoiceAction.hideAlert,
-            popupSnackbar: SnackbarAction.popupSnackbar,
+            surfaceSnacky,
         }, dispatch)
     )
 )(EditContactForm)

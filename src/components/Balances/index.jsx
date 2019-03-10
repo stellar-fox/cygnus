@@ -18,7 +18,6 @@ import { action as ContactsAction } from "../../redux/Contacts"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
-import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as AlertAction } from "../../redux/Alert"
 import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
@@ -61,8 +60,7 @@ import {
 import "./index.css"
 import FundCard from "./FundCard"
 import AssetDetails from "./AssetDetails"
-
-
+import { surfaceSnacky } from "../../thunks/main"
 
 
 // <Balances> component
@@ -96,15 +94,15 @@ class Balances extends Component {
     componentDidMount = () => {
         this.setState({
             paymentsStreamer: paymentsStreamer(
+                this.props.surfaceSnacky,
                 this.props.publicKey,
                 this.props.horizon,
-                this.props.popupSnackbar,
                 this.updateAccountTree,
             ),
             operationsStreamer: operationsStreamer(
+                this.props.surfaceSnacky,
                 this.props.publicKey,
                 this.props.horizon,
-                this.props.popupSnackbar,
                 this.updateAccountTree,
             ),
         })
@@ -483,13 +481,13 @@ export default compose(
             resetBalancesState: BalancesAction.resetState,
             setApiToken: LoginManagerAction.setApiToken,
             setUserId: LoginManagerAction.setUserId,
-            popupSnackbar: SnackbarAction.popupSnackbar,
             hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
             showAlert: AlertAction.showAlert,
             showLoadingModal: LoadingModalAction.showLoadingModal,
             hideLoadingModal: LoadingModalAction.hideLoadingModal,
             toggleSignupHint: BankActions.toggleSignupHint,
+            surfaceSnacky,
         }, dispatch)
     )
 )(Balances)

@@ -33,7 +33,6 @@ import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { action as AccountAction } from "../../redux/Account"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
-import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import Input from "../../lib/common/Input"
 import Button from "../../lib/mui-v1/Button"
@@ -47,6 +46,7 @@ import MsgBadgeSuccess from "./MsgBadgeSuccess"
 import MsgBadgeWarning from "./MsgBadgeWarning"
 import { CircularProgress, Typography } from "@material-ui/core"
 import { Animated } from "react-animated-css"
+import { surfaceSnacky } from "../../thunks/main"
 
 
 
@@ -139,7 +139,10 @@ class Profile extends Component {
          * lodge the signature, hence, return from the function at this point.
          */
         if (!this.props.accountId) {
-            this.props.popupSnackbar("User data updated without signature.")
+            this.props.surfaceSnacky(
+                "warning",
+                "User data updated without signature."
+            )
             this.props.setState({ messageUserData: string.empty() })
             this.setState({ loadingUpdateProfile: false })
             return
@@ -187,7 +190,10 @@ class Profile extends Component {
 
             this.setState({ loadingUpdateProfile: false })
 
-            this.props.popupSnackbar("User data has been updated.")
+            this.props.surfaceSnacky(
+                "success",
+                "User data has been updated."
+            )
 
         } catch (error) {
             this.setState({ loadingUpdateProfile: false })
@@ -246,7 +252,10 @@ class Profile extends Component {
          * lodge the signature, hence, return from the function at this point.
          */
         if (!this.props.accountId) {
-            this.props.popupSnackbar("Payment data updated without signature.")
+            this.props.surfaceSnacky(
+                "warning",
+                "Payment data updated without signature."
+            )
             this.props.setState({ messagePaymentData: string.empty() })
             this.setState({ loadingUpdatePaymentAddress: false })
             return
@@ -292,7 +301,11 @@ class Profile extends Component {
                 this.props.publicKey
             ))
             this.setState({ loadingUpdatePaymentAddress: false })
-            this.props.popupSnackbar("Payment data has been updated.")
+
+            this.props.surfaceSnacky(
+                "success",
+                "Payment data has been updated."
+            )
 
         } catch (error) {
             this.setState({ loadingUpdatePaymentAddress: false })
@@ -362,7 +375,10 @@ class Profile extends Component {
             this.setState({ loadingVerifyEmail: true })
             firebaseApp.auth("session").currentUser.sendEmailVerification()
             this.setState({ loadingVerifyEmail: false })
-            this.props.popupSnackbar("Verification email sent.")
+            this.props.surfaceSnacky(
+                "success",
+                "Verification email sent."
+            )
         } catch (error) {
             this.props.showAlert(error.message, "Error")
             this.setState({ loadingVerifyEmail: false })
@@ -620,11 +636,11 @@ export default compose(
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
             setState: AccountAction.setState,
-            popupSnackbar: SnackbarAction.popupSnackbar,
             showAlert: AlertAction.showAlert,
             hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
             updateAccountTree: StellarAccountAction.loadStellarAccount,
+            surfaceSnacky,
         }, dispatch)
     )
 )(Profile)

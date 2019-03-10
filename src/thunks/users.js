@@ -1,25 +1,24 @@
 import { firebaseApp } from "../components/StellarFox"
-import { action as AuthActions } from "../redux/Auth"
-import { actions as ErrorsActions } from "../redux/Errors"
-import { actions as ProgressActions } from "../redux/Progress"
 import Axios from "axios"
 import { config } from "../config"
 import md5 from "../lib/md5"
 import { subscribeEmail } from "../components/Account/api"
 import { string } from "@xcmats/js-toolbox"
-import { action as SnackyActions } from "../redux/Snacky"
 import { action as AccountAction } from "../redux/Account"
+import { action as AuthActions } from "../redux/Auth"
 import { actions as AppActions } from "../redux/App"
 import { action as AssetsAction } from "../redux/AssetManager"
 import { action as AuthAction } from "../redux/Auth"
 import { action as BalancesAction } from "../redux/Balances"
 import { action as BankAction } from "../redux/Bank"
 import { action as ContactsAction } from "../redux/Contacts"
+import { actions as ErrorsActions } from "../redux/Errors"
 import { action as LedgerHQAction } from "../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../redux/LoginManager"
 import { action as PaymentsAction } from "../redux/Payments"
+import { actions as ProgressActions } from "../redux/Progress"
 import { action as StellarAccountAction } from "../redux/StellarAccount"
-
+import { surfaceSnacky } from "../thunks/main"
 
 
 
@@ -43,11 +42,10 @@ export const signOut = () =>
         await dispatch(LoginManagerAction.resetState())
         await dispatch(PaymentsAction.resetState())
         await dispatch(StellarAccountAction.resetState())
-        await dispatch(SnackyActions.setColor("success"))
-        await dispatch(SnackyActions.setMessage(
+        await dispatch(surfaceSnacky(
+            "success",
             "You were signed out of your account."
         ))
-        await dispatch(SnackyActions.showSnacky())
     }
 
 

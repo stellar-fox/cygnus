@@ -11,7 +11,6 @@ import RadioButtonGroup from "../../lib/mui-v1/RadioButtonGroup"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
 import { action as AccountAction } from "../../redux/Account"
-import { action as SnackbarAction } from "../../redux/Snackbar"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as AssetsAction } from "../../redux/AssetManager"
 import { action as BalancesAction } from "../../redux/Balances"
@@ -57,6 +56,7 @@ import {
     delay,
     string,
 } from "@xcmats/js-toolbox"
+import { surfaceSnacky } from "../../thunks/main"
 
 
 
@@ -304,7 +304,8 @@ class Settings extends Component {
                     }
                 )
                 .then((_) => {
-                    this.props.popupSnackbar(
+                    this.props.surfaceSnacky(
+                        "success",
                         <Typography variant="body1" color="primary">
                             Currency has been changed to <span className="em">
                                 {currency.toUpperCase()}
@@ -314,7 +315,8 @@ class Settings extends Component {
                 })
                 .catch((error) => this.props.showAlert(error.message, "Error"))
         } else {
-            this.props.popupSnackbar(
+            this.props.surfaceSnacky(
+                "success",
                 <Typography variant="body1" color="primary">
                     Currency has been changed to <span className="em">
                         {currency.toUpperCase()}
@@ -339,7 +341,9 @@ class Settings extends Component {
                 )
                 .then((_) => {
                     this.props.setState({ discoverable: isInputChecked })
-                    this.props.popupSnackbar(
+                    
+                    this.props.surfaceSnacky(
+                        "success",
                         isInputChecked ?
                             <Typography variant="body1" color="primary">
                                 Account is now <span className="em">
@@ -352,6 +356,7 @@ class Settings extends Component {
                                 </span> from public search.
                             </Typography>
                     )
+
                 })
                 .catch((error) => this.props.showAlert(error.message, "Error"))
         }
@@ -656,7 +661,6 @@ export default compose(
             setState: AccountAction.setState,
             hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
-            popupSnackbar: SnackbarAction.popupSnackbar,
             showAlert: AlertAction.showAlert,
             showChoiceAlert: AlertChoiceAction.showAlert,
             hideChoiceAlert: AlertChoiceAction.hideAlert,
@@ -668,6 +672,7 @@ export default compose(
             resetLoginManagerState: LoginManagerAction.resetState,
             resetPaymentsState: PaymentsAction.resetState,
             resetStellarAccountState: StellarAccountAction.resetState,
+            surfaceSnacky,
         }, dispatch)
     )
 )(Settings)

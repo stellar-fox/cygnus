@@ -11,6 +11,7 @@
 
 
 import { actions as AppActions } from "../redux/App"
+import { action as SnackyActions } from "../redux/Snacky"
 
 
 
@@ -41,4 +42,15 @@ export const setLoading = () =>
 export const setLoaded = () =>
     async (dispatch, _getState) => {
         await dispatch(AppActions.toggleLoading(false))
+    }
+
+
+
+
+// ...
+export const surfaceSnacky = (color, message) =>
+    async (dispatch, _getState) => {
+        await dispatch(SnackyActions.setColor(color))
+        await dispatch(SnackyActions.setMessage(message))
+        await dispatch(SnackyActions.showSnacky())
     }
