@@ -15,9 +15,9 @@ const initState = {
 
 
 // ...
-export const SET_API_TOKEN = "LoginManager/SET_API_TOKEN"
-export const SET_USER_ID = "LoginManager/SET_USER_ID"
-export const RESET_STATE = "LoginManager/RESET_STATE"
+export const SET_API_TOKEN = "@LoginManager/SET_API_TOKEN"
+export const SET_USER_ID = "@LoginManager/SET_USER_ID"
+export const RESET_STATE = "@LoginManager/RESET_STATE"
 
 
 

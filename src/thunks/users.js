@@ -24,7 +24,7 @@ import { surfaceSnacky } from "../thunks/main"
 
 /**
  * Signs user out of the session and clears Redux tree.
- * 
+ *
  * @function signOut
  * @returns {Function} thunk action
  */
@@ -53,7 +53,7 @@ export const signOut = () =>
 
 /**
  * Clears errors from email/password inputs.
- * 
+ *
  * @function clearInputErrorMessages
  * @returns {Function} thunk action
  */
@@ -68,7 +68,7 @@ export const clearInputErrorMessages = () =>
 
 /**
  * Signs up a new user via _Firebase_
- * 
+ *
  * @function signUpNewUser
  * @param {String} tickerSymbol Lower case currency ticker symbol (i.e. usd)
  * @returns {Function} thunk action
@@ -77,12 +77,12 @@ export const signUpNewUser = (accountId, account, email, password) =>
     async (dispatch, _getState) => {
 
         await dispatch(clearInputErrorMessages())
-        
+
 
         try {
             await dispatch(AuthActions.toggleSignupProgress(true))
             await dispatch(ProgressActions.toggleProgress("signup", "Creating user account ..."))
-            
+
             await firebaseApp.auth("session").createUserWithEmailAndPassword(
                 email, password
             )
@@ -109,6 +109,10 @@ export const signUpNewUser = (accountId, account, email, password) =>
                     email,
                     password,
                 })
+
+            await dispatch(LoginManagerAction.setUserId(userResp.data.userid))
+            await dispatch(LoginManagerAction.setApiToken(authResp.data.token))
+
             await dispatch(ProgressActions.toggleProgress("signup", "Almost done ..."))
             await subscribeEmail(
                 userResp.data.userid,
@@ -150,5 +154,5 @@ export const signUpNewUser = (accountId, account, email, password) =>
         } finally {
             await dispatch(AuthActions.toggleSignupProgress(false))
         }
-        
+
     }
