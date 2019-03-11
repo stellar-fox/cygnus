@@ -2,10 +2,8 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-
 import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
-
 import { action as AlertAction } from "../../redux/Alert"
 
 
@@ -13,7 +11,7 @@ import { action as AlertAction } from "../../redux/Alert"
 
 // <AlertWithDismiss> component
 const AlertWithDismiss =
-    ({ open, onDismiss, title, content, }) =>
+    ({ open, onDismiss, title, content }) =>
         <Modal
             open={open}
             title={title}
@@ -33,7 +31,7 @@ const AlertWithDismiss =
 // <AlertModal> component
 export default connect(
     // map state to props.
-    (state) => ({ Alert: state.Alert, }),
+    (state) => ({ Alert: state.Alert }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         showAlert: AlertAction.showAlert,

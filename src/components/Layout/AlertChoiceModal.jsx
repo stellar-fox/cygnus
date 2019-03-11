@@ -2,10 +2,8 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-
 import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
-
 import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 
 
@@ -13,7 +11,7 @@ import { action as AlertChoiceAction } from "../../redux/AlertChoice"
 
 // <AlertWithChoice> component
 const AlertWithChoice =
-    ({ open, onYes, onNo, title, content, children, labelYes, labelNo, disabled, }) =>
+    ({ open, onYes, onNo, title, content, children, labelYes, labelNo, disabled }) =>
         <Modal
             open={open}
             title={title}
@@ -40,7 +38,7 @@ const AlertWithChoice =
 // <AlertChoiceModal> component
 export default connect(
     // map state to props.
-    (state) => ({ AlertChoice: state.AlertChoice, }),
+    (state) => ({ AlertChoice: state.AlertChoice }),
     // map dispatch to props.
     (dispatch) => bindActionCreators({
         showAlert: AlertChoiceAction.showAlert,
