@@ -174,3 +174,34 @@
     border-bottom: none !important;
     border-top: none !important;
 }
+
+.pay-to-the-order-of {
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    color: rgb(15,46,83);
+    opacity: 0.8;
+}
+
+.currency-glyph {
+    margin-right: 10px;
+    font-size: 24px;
+    color: rgb(15,46,83);
+    opacity: 0.8;
+}
+
+.padlock-icon {
+    padding-top: 3px;
+}
+
+.memo-for {
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    color: rgb(15,46,83);
+    opacity: 0.8;
+}
+
+.custom-memo {
+    margin-top: 10px;
+}

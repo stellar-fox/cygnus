@@ -45,7 +45,6 @@ const styles = (theme) => ({
     container: {
         flexGrow: 1,
         position: "relative",
-        marginTop: "32px",
     },
     suggestionsContainerOpen: {
         position: "absolute",
@@ -76,7 +75,7 @@ const styles = (theme) => ({
         "&:after": { borderBottomColor: theme.palette.primary.main },
     },
     inputTag: {
-        marginTop: "-8px",
+        marginTop: "-6px",
         width: "400px",
         color: theme.palette.secondary.main,
         "&:hover:before": {

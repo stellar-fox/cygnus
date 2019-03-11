@@ -3,20 +3,23 @@ import { connect } from "react-redux"
 import { bindActionCreators, compose } from "redux"
 import PropTypes from "prop-types"
 import { string } from "@xcmats/js-toolbox"
-import debounce from "lodash/debounce"
 import { BigNumber } from "bignumber.js"
 import { Card, CardActions, CardText } from "material-ui/Card"
 import DatePicker from "material-ui/DatePicker"
 import { amountToText, htmlEntities as he } from "../../lib/utils"
 import { appName, securityMsgPlaceholder, } from "../StellarFox/env"
 import Button from "../../lib/mui-v1/Button"
-import InputField from "../../lib/common/InputField"
 import { withAssetManager } from "../AssetManager"
 import { action as BalancesAction } from "../../redux/Balances"
 import sflogo from "../StellarFox/static/sf-logo.svg"
 import ContactSuggester from "./ContactSuggester"
-import { Typography } from "@material-ui/core"
+import {
+    TextField,
+    Typography,
+} from "@material-ui/core"
 import NumberFormat from "react-number-format"
+import { withStyles } from "@material-ui/core/styles"
+import { fade } from "@material-ui/core/styles/colorManipulator"
 
 
 
@@ -27,6 +30,13 @@ class PaymentCard extends Component {
     // ...
     static propTypes = {
         setState: PropTypes.func.isRequired,
+    }
+
+
+    // ...
+    state = {
+        error: false,
+        errorMessage: string.empty(),
     }
 
 
@@ -67,19 +77,6 @@ class PaymentCard extends Component {
 
 
     // ...
-    paymentValid = () =>
-        this.props.Balances.payee  &&
-        this.props.Balances.amountIsValid  &&
-        this.memoValid()
-
-
-    // ...
-    toggleSignButton = () =>
-        this.paymentValid() ?
-            this.enableSignButton() : this.disableSignButton()
-
-
-    // ...
     enableSignButton = () => this.props.setState({ sendEnabled: true })
 
 
@@ -88,33 +85,33 @@ class PaymentCard extends Component {
 
 
     // ...
-    amountValidator = () => {
-        if (
-            !/^(\d+)([.](\d{1,2}))?$/.test(
-                this.textInputFieldAmount.state.value
-            )
-        ) {
-            this.textInputFieldAmount.setState({
-                error: "Invalid amount entered.",
+    amountValidator = (event) => {
+        const inputValue = event.target.value
+
+        if (!/^(\d+)([.](\d{1,2}))?$/.test(inputValue)) {
+            this.setState({
+                error: true,
+                errorMessage: "Invalid amount entered.",
             })
+
             this.props.setState({
                 amount: string.empty(),
                 amountNative: string.empty(),
                 amountIsValid: false,
                 amountText: string.empty(),
             })
-            this.toggleSignButton()
+            this.disableSignButton()
             return false
         }
 
         BigNumber.config({ DECIMAL_PLACES: 4, ROUNDING_MODE: 4 })
-        const amountAsBigNumber = new BigNumber(
-            this.textInputFieldAmount.state.value)
+        const amountAsBigNumber = new BigNumber(inputValue)
         const amount = amountAsBigNumber.toFixed(2)
 
         if (amountAsBigNumber.isEqualTo(0)) {
-            this.textInputFieldAmount.setState({
-                error: "Amount needs to be greater than zero.",
+            this.setState({
+                error: true,
+                errorMessage: "Amount needs to be greater than zero.",
             })
             this.props.setState({
                 amount: string.empty(),
@@ -122,7 +119,7 @@ class PaymentCard extends Component {
                 amountIsValid: false,
                 amountText: string.empty(),
             })
-            this.toggleSignButton()
+            this.disableSignButton()
             return false
         }
 
@@ -151,14 +148,17 @@ class PaymentCard extends Component {
             amountIsValid: true,
         })
 
-        this.textInputFieldAmount.setState({ error: string.empty() })
+        this.setState({
+            error: false,
+            errorMessage: string.empty(),
+        })
 
         this.props.setState({
             amountText: amountToText(amount),
             transactionAsset: { asset_code: this.props.Account.currency },
         })
 
-        this.toggleSignButton()
+        this.enableSignButton()
     }
 
 
@@ -166,7 +166,7 @@ class PaymentCard extends Component {
 
     // ...
     displayPayeeAmount = () =>
-        this.props.Balances.amount ? (() =>
+        this.props.Balances.amount && (() =>
             <Fragment>
                 <NumberFormat
                     value={new BigNumber(
@@ -183,29 +183,24 @@ class PaymentCard extends Component {
                     )}
                 </span>
             </Fragment>
-        )() : null
+        )()
 
 
-    // ...
-    memoValid = () => {
-        if (this.props.Balances.memoRequired &&
-            !this.props.Balances.memoText &&
-            !this.props.Balances.payeeMemoText) {
-            return false
-        }
-        return true
-    }
+
 
 
     // ...
-    memoValidator = () => {
+    memoValidator = (event) => {
+        const memoValue = event.target.value
+
         this.props.setState({
             memoText: this.props.Balances.payeeMemoText.length > 0 ?
                 this.props.Balances.payeeMemoText :
-                this.textInputFieldMemo.state.value,
+                memoValue,
         })
-        this.toggleSignButton()
     }
+
+
 
 
     // ...
@@ -214,11 +209,13 @@ class PaymentCard extends Component {
     })
 
 
+
+
     // ...
     render = () =>
         <Card className="payment-card">
             <CardText>
-                <div className="f-e space-between">
+                <div className="flex-box-row space-between">
                     <div>
                         <div>
                             <img
@@ -239,51 +236,49 @@ class PaymentCard extends Component {
                         onChange={this.updateDate}
                     />
                 </div>
-                <div className="f-s space-between" style={{ minHeight: 130 }}>
-                    <div className="payment-header f-s">
-                        <div className="p-r leading-label-align nowrap">
+
+
+                <div className="m-t-medium flex-box-row space-between">
+
+                    <div className="flex-box-row">
+                        <div className="pay-to-the-order-of">
                             Pay to the order of:
                         </div>
-                        <div className="p-r m-b-large">
+                        <div>
                             <ContactSuggester />
                         </div>
-                        <div style={{ marginBottom: "7.5rem" }}></div>
                     </div>
-                    <div className="payment-header f-s">
-                        <div
-                            className="p-r leading-label-align payment-currency"
-                        >
+
+                    <div className="flex-box-row">
+                        <div className="currency-glyph">
                             {this.props.assetManager.getAssetGlyph(
                                 this.props.Account.currency
                             )}
                         </div>
                         <div>
-                            <InputField
+                            <TextField
                                 autoComplete="off"
+                                InputProps={{
+                                    classes: {
+                                        underline: this.props.classes.underline,
+                                    },
+                                }}
+                                inputProps={{
+                                    maxLength: 10,
+                                }}
+                                error={this.state.error}
+                                helperText={this.state.errorMessage}
                                 name="paycheck-payment-amount"
                                 type="text"
-                                validator={
-                                    debounce(this.amountValidator, 500)
-                                }
-                                ref={(self) => {
-                                    this.textInputFieldAmount = self
-                                }}
-                                placeholder="Amount"
-                                underlineStyle={{
-                                    borderColor: "rgba(15, 46, 83, 0.5)",
-                                }}
-                                underlineFocusStyle={{
-                                    borderColor: "rgba(15, 46, 83, 0.8)",
-                                }}
-                                inputStyle={{
-                                    color: "rgba(15, 46, 83, 0.8)",
-                                }}
+                                onChange={this.amountValidator}
                             />
                         </div>
                     </div>
+
                 </div>
-                <div className="p-t"></div>
-                <div className="f-s space-between verbatim-underlined">
+
+
+                <div className="m-t-medium flex-box-row space-between verbatim-underlined">
                     <div>
                         {
                             this.props.Balances.amount  &&
@@ -308,9 +303,10 @@ class PaymentCard extends Component {
                         </Typography>
                     </div>
                 </div>
-                <div className="p-t"></div>
-                <div className="f-e" style={{ minHeight: 30 }}>
-                    <div>
+
+
+                <div className="m-t flex-box-row content-flex-end">
+                    <div className="padlock-icon">
                         {this.props.Balances.indicatorMessage === "Payee Verified" ?
                             <i style={{ color: "rgb(27, 94, 32)" }}
                                 className="material-icons"
@@ -318,7 +314,7 @@ class PaymentCard extends Component {
                             <i className="material-icons">lock_open</i>
                         }
                     </div>
-                    <div className="f-b-col center">
+                    <div className="flex-box-col content-centered">
                         <div className="micro nowrap p-r-small">
                             Security Features
                         </div>
@@ -329,58 +325,43 @@ class PaymentCard extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="p-t f-b space-between">
-                    {this.props.Balances.payeeMemoText.length === 0 ?
-                        <div>
-                            <span className="payment-header">
-                                <span className="p-r">For:</span>
-                                <InputField
-                                    autoComplete="off"
-                                    name="paycheck-memo"
-                                    type="text"
-                                    placeholder="Memo"
-                                    underlineStyle={{
-                                        borderColor: "rgba(15, 46, 83, 0.5)",
-                                    }}
-                                    underlineFocusStyle={{
-                                        borderColor: "rgba(15, 46, 83, 0.8)",
-                                    }}
-                                    inputStyle={{
-                                        color: "rgba(15, 46, 83, 0.8)",
-                                    }}
-                                    ref={(self) => {
-                                        this.textInputFieldMemo = self
-                                    }}
-                                    validator={
-                                        debounce(this.memoValidator, 500)
-                                    }
-                                    maxLength={28}
-                                />
-                            </span>
-                        </div> :
-                        <div
-                            style={{
-                                paddingTop: "41px",
-                                fontSize: "1rem",
-                                paddingBottom: "12px",
-                            }}
-                        >
-                            <span className="p-r">For: </span>
-                            <span
+
+                <div className="m-t-medium flex-box-row">
+
+                    <div className="memo-for">For:</div>
+                    <div>
+                        {this.props.Balances.payeeMemoText.length === 0 ?
+                            <TextField
+                                autoComplete="off"
+                                InputProps={{
+                                    classes: {
+                                        underline: this.props.classes.underline,
+                                    },
+                                }}
+                                inputProps={{
+                                    maxLength: 28,
+                                }}
+                                name="paycheck-payment-amount"
+                                type="text"
+                                onChange={this.memoValidator}
+                            /> :
+                            <div
                                 style={{
                                     color: "rgba(15,46,83,0.4)",
                                     paddingBottom: "4px",
                                     borderBottom: "1px solid rgba(15,46,83,0.4)",
                                 }}
+                                className="custom-memo"
                             >
                                 {this.props.Balances.payeeMemoText}
                                 <he.Nbsp />
                                 <span className="micro text-primary fade-extreme">
                                     (payee custom defined memo)
                                 </span>
-                            </span>
-                        </div>
-                    }
+                            </div>
+                        }
+                    </div>
+
                 </div>
             </CardText>
             <CardActions>
@@ -394,7 +375,7 @@ class PaymentCard extends Component {
                     <div>
                         <Button
                             onClick={this.props.onSignTransaction}
-                            color="danger"
+                            color="success"
                             disabled={!this.props.Balances.sendEnabled}
                         >Sign & Send</Button>
                         <Button
@@ -417,6 +398,16 @@ class PaymentCard extends Component {
 
 // ...
 export default compose(
+    withStyles((theme) => ({
+        underline: {
+            "&:hover:before": {
+                borderBottomColor: `${theme.palette.primary.main} !important`,
+                borderBottomWidth: "1px !important",
+            },
+            "&:before": { borderBottomColor: fade(theme.palette.primary.main, 0.5) },
+            "&:after": { borderBottomColor: theme.palette.primary.main },
+        },
+    })),
     withAssetManager,
     connect(
         // map state to props.
