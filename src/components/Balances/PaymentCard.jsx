@@ -262,10 +262,11 @@ class PaymentCard extends Component {
                                     classes: {
                                         underline: this.props.classes.underline,
                                     },
+                                    inputProps: {
+                                        maxLength: 10,
+                                    },
                                 }}
-                                inputProps={{
-                                    maxLength: 10,
-                                }}
+
                                 error={this.state.error}
                                 helperText={this.state.errorMessage}
                                 name="paycheck-payment-amount"
@@ -337,10 +338,11 @@ class PaymentCard extends Component {
                                     classes: {
                                         underline: this.props.classes.underline,
                                     },
+                                    inputProps: {
+                                        maxLength: 28,
+                                    },
                                 }}
-                                inputProps={{
-                                    maxLength: 28,
-                                }}
+
                                 name="paycheck-payment-amount"
                                 type="text"
                                 onChange={this.memoValidator}
