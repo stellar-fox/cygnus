@@ -12,7 +12,7 @@ import {
 import { withStyles } from "@material-ui/core/styles"
 import { bip32Prefix } from "../StellarFox/env"
 import { getPublicKey } from "../../lib/ledger"
-import Input from "../../lib/common/Input"
+import LCARSInput from "../../lib/common/LCARSInput"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
@@ -43,7 +43,7 @@ class LedgerAuthenticator extends Component {
         let bip32Path = this.formBip32Path(),
             softwareVersion = null,
             publicKey = null
-        
+
         try {
             await this.setState({
                 buttonDisabled: true,
@@ -75,10 +75,10 @@ class LedgerAuthenticator extends Component {
             status: `Connected. Version: ${softwareVersion}`,
             inProgress: false,
         })
-        
+
         await this.props.setAccountId(publicKey)
         await this.props.setAccount(this.state.derivationPath)
-        
+
         this.props.onConnected.call(this, {
             publicKey,
             softwareVersion,
@@ -163,7 +163,8 @@ class LedgerAuthenticator extends Component {
             </div>
 
             { this.state.pathEditable &&
-                <Input
+                <LCARSInput
+                    autoFocus={true}
                     style={{ marginBottom: "1rem" }}
                     className={this.props.className}
                     label="Account Index"
@@ -177,7 +178,7 @@ class LedgerAuthenticator extends Component {
                     }${this.state.derivationPath}']`}
                 />
             }
-            
+
             <div className="flex-box-col items-centered content-centered">
                 <Button
                     disabled={this.state.buttonDisabled}
@@ -203,13 +204,13 @@ class LedgerAuthenticator extends Component {
                 />
             </div>
 
-            
+
             <Typography style={{marginTop: "0.5rem"}} variant="caption" color={
                 this.props.className.match(/reverse/) ?
                     "primary" : "secondary"
             }
             >{this.state.status}</Typography>
-            
+
         </div>)(this.props)
 
 
@@ -219,7 +220,7 @@ class LedgerAuthenticator extends Component {
 // ...
 export default func.compose(
     withStyles((theme) => ({
-        
+
         linearColorPrimary: {
             marginTop: "2px",
             backgroundColor: theme.palette.secondary.light,

@@ -34,7 +34,7 @@ import { action as AccountAction } from "../../redux/Account"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
-import Input from "../../lib/common/Input"
+import LCARSInput from "../../lib/common/LCARSInput"
 import Button from "../../lib/mui-v1/Button"
 import Divider from "../../lib/mui-v1/Divider"
 import Modal from "../../lib/common/Modal"
@@ -443,7 +443,7 @@ class Profile extends Component {
                     </div>
                 </div>
 
-                <Input
+                <LCARSInput
                     width="100%"
                     className="lcars-input p-b p-t"
                     value={this.props.state.firstName || string.empty()}
@@ -454,7 +454,7 @@ class Profile extends Component {
                     handleChange={this.changeFirstName}
                     subLabel={`First Name: ${this.props.state.firstName}`}
                 />
-                <Input
+                <LCARSInput
                     className="lcars-input p-b p-t"
                     value={this.props.state.lastName || string.empty()}
                     label="Last Name"
@@ -464,7 +464,7 @@ class Profile extends Component {
                     handleChange={this.changeLastName}
                     subLabel={`Last Name: ${this.props.state.lastName}`}
                 />
-                <Input
+                <LCARSInput
                     className="lcars-input p-t p-b"
                     value={this.props.state.email}
                     label={this.props.emailVerified ?
@@ -540,7 +540,7 @@ class Profile extends Component {
                     </div>
                 </div>
 
-                <Input
+                <LCARSInput
                     className="lcars-input p-t-large p-b"
                     value={this.props.state.paymentAddress || string.empty()}
                     label="Payment Address Alias"
@@ -560,7 +560,7 @@ class Profile extends Component {
                             }`
                     }
                 />
-                <Input
+                <LCARSInput
                     className="lcars-input p-t p-b"
                     value={ntoes(this.props.state.memo)}
                     label="Memo"
