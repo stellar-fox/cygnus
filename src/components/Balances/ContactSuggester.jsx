@@ -842,7 +842,7 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
-            authenticated: state.authenticated,
+            authenticated: state.Auth.authenticated,
             currency: state.Account.currency,
             amountNative: state.Balances.amountNative,
             contacts: state.Contacts,
