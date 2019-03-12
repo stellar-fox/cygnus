@@ -1,6 +1,7 @@
 export const config = {
     api: "<deneb_api_uri>",
     apiV2: "<deneb_api_v2_uri>",
+    federation: "<federation_server_domain i.e. localhost (dev only)>",
     horizon: "<horizon_uri>",
     network: "<network_passphrase>",
     firebase: {

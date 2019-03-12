@@ -337,12 +337,15 @@ export const getFederationRecord = async (fedAddress) =>
 
 // Based on given 'federationAddress' (name*domain)
 // returns federation server URL for that domain.
+// Check if DEV_ENV then get "federation" key from config
 export const endpointLookup = (federationAddress) => (
     async (domain) => {
         if (domain) {
             return toml.parse(
                 (await axios.get(
-                    env.federationEndpoint(array.head(domain)))
+                    env.federationEndpoint(
+                        devEnv() ? config.federation : array.head(domain)
+                    ))
                 ).data
             ).FEDERATION_SERVER
         }
