@@ -44,22 +44,12 @@ import TxBroadcast from "./TxBroadcast"
 import MsgBadgeError from "./MsgBadgeError"
 import MsgBadgeSuccess from "./MsgBadgeSuccess"
 import MsgBadgeWarning from "./MsgBadgeWarning"
-import { CircularProgress, Typography } from "@material-ui/core"
+import {
+    CircularProgress,
+    Typography,
+} from "@material-ui/core"
 import { Animated } from "react-animated-css"
 import { surfaceSnacky } from "../../thunks/main"
-
-
-
-
-// ...
-const RequestProgress = ({ color, label }) =>
-    <div style={{ height: "0px", opacity: "0.75" }}>
-        <div style={{
-            height: "0px", marginBottom: "-0.65rem", opacity: "0.5",
-        }}
-        >{label}</div>
-        <CircularProgress color={color || "primary"} thickness={4} size={20} />
-    </div>
 
 
 
@@ -370,17 +360,20 @@ class Profile extends Component {
 
 
     // ...
-    verifyEmail = () => {
+    verifyEmail = async () => {
         try {
-            this.setState({ loadingVerifyEmail: true })
-            firebaseApp.auth("session").currentUser.sendEmailVerification()
-            this.setState({ loadingVerifyEmail: false })
+            await this.setState({ loadingVerifyEmail: true })
+            await firebaseApp.auth("session").currentUser.sendEmailVerification()
+            await this.setState({ loadingVerifyEmail: false })
             this.props.surfaceSnacky(
                 "success",
                 "Verification email sent."
             )
         } catch (error) {
-            this.props.showAlert(error.message, "Error")
+            this.props.surfaceSnacky(
+                "error",
+                error.message,
+            )
             this.setState({ loadingVerifyEmail: false })
         }
 
@@ -467,8 +460,13 @@ class Profile extends Component {
                 <LCARSInput
                     className="lcars-input p-t p-b"
                     value={this.props.state.email}
-                    label={this.props.emailVerified ?
-                        "Email" : <span className="unverified">Email</span>}
+                    label={
+                        <span className={this.props.emailVerified ?
+                            "lcars-label-badge verified" :
+                            "lcars-label-badge unverified"
+                        }
+                        >Email</span>
+                    }
                     inputType="text"
                     maxLength="100"
                     autoComplete="off"
@@ -492,11 +490,12 @@ class Profile extends Component {
                     disabled={this.state.loadingUpdateProfile}
                     color="secondary"
                     onClick={this.updateProfile}
+                    style={{ minWidth: "200px" }}
                 >
                     {this.state.loadingUpdateProfile ?
-                        <RequestProgress
-                            label="Update User Data"
+                        <CircularProgress
                             color="secondary"
+                            thickness={4} size={25}
                         /> : "Update User Data"
                     }
                 </Button>
@@ -506,10 +505,12 @@ class Profile extends Component {
                         disabled={this.state.loadingVerifyEmail}
                         color="secondary"
                         onClick={this.verifyEmail}
+                        style={{ minWidth: "200px" }}
                     >
                         {this.state.loadingVerifyEmail ?
-                            <RequestProgress label="Verify Email"
+                            <CircularProgress
                                 color="secondary"
+                                thickness={4} size={25}
                             /> : "Verify Email"
                         }
                     </Button>
@@ -588,10 +589,12 @@ class Profile extends Component {
                     disabled={this.state.loadingUpdatePaymentAddress}
                     color="secondary"
                     onClick={this.updatePaymentData}
+                    style={{ minWidth: "200px" }}
                 >
                     {this.state.loadingUpdatePaymentAddress ?
-                        <RequestProgress label="Update Payment Data"
+                        <CircularProgress
                             color="secondary"
+                            thickness={4} size={25}
                         /> : "Update Payment Data"
                     }
 

@@ -41,6 +41,8 @@ export default createMuiTheme({
         disabledBackgroundColor: rgba(200, 145, 4, 0.3),
         disabledSwitchColor: rgb(110, 80, 3),
 
+        antiFlashWhite: rgb(237, 242, 244),
+
         background: {
             paper: rgb(244, 176, 4),
             default: rgb(15, 46, 83),

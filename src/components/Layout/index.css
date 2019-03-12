@@ -354,22 +354,31 @@ span.red-badge {
     opacity: 0.8
 }
 
-.unverified::after {
-    content: "UNVERIFIED";
-    background-color: rgba(178, 34, 34, 0.8);
+.lcars-label-badge::after {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
     position: relative;
-    left: 4px;
-    top: -5px;
-    font-size: 9px;
+    left: 6px;
+    top: -3px;
+    font-size: 11px;
     padding-top: 2px;
     padding-bottom: 1px;
     padding-left: 3px;
     padding-right: 3px;
-    margin-right: 3px;
+    margin-right: 6px;
     border-radius: 3px;
     opacity: 0.8
+}
+
+.unverified::after {
+    content: "NOT VERIFIED";
+    background-color: rgba(178, 34, 34, 0.8);
+}
+
+.verified::after {
+    content: "VERIFIED";
+    background-color: rgba(27, 94, 32, 1.0);
 }
 
 /* --------- badges --------- */
