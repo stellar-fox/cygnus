@@ -129,6 +129,7 @@
 .verbatim-underlined {
     font-size: 1rem;
     border-bottom: 1px solid rgba(15,46,83,0.5);
+    color: rgb(15, 46, 83);
 }
 
 .ledger-nano-s {
@@ -142,7 +143,7 @@
 
 .ledger-nano-s::before { content: "\e900"; }
 
-.date-picker { border-bottom: 1px solid rgba(15,46,83,0.4); }
+.date-picker { border-bottom: 1px solid rgba(15,46,83,0.4) !important; }
 
 .header-icon > span { font-size: 2rem; }
 

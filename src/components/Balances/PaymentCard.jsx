@@ -1,13 +1,25 @@
 import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
-import { bindActionCreators, compose } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import PropTypes from "prop-types"
 import { string } from "@xcmats/js-toolbox"
 import { BigNumber } from "bignumber.js"
-import { Card, CardActions, CardText } from "material-ui/Card"
-import DatePicker from "material-ui/DatePicker"
-import { amountToText, htmlEntities as he } from "../../lib/utils"
-import { appName, securityMsgPlaceholder, } from "../StellarFox/env"
+import {
+    Card,
+    CardActions,
+    CardText,
+} from "material-ui/Card"
+import {
+    amountToText,
+    htmlEntities as he,
+} from "../../lib/utils"
+import {
+    appName,
+    securityMsgPlaceholder,
+} from "../StellarFox/env"
 import Button from "../../lib/mui-v1/Button"
 import { withAssetManager } from "../AssetManager"
 import { action as BalancesAction } from "../../redux/Balances"
@@ -227,13 +239,25 @@ class PaymentCard extends Component {
                         </div>
 
                     </div>
-                    <DatePicker
+                    <TextField
+                        id="date"
+                        label="Date"
+                        type="text"
+                        disabled
+                        defaultValue={
+                            new Date(
+                                this.props.Balances.today
+                            ).toLocaleDateString()
+                        }
                         className="date-picker"
-                        defaultDate={new Date(this.props.Balances.today)}
-                        floatingLabelText="Date"
-                        minDate={new Date(this.props.Balances.today)}
-                        underlineShow={true}
-                        onChange={this.updateDate}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        InputProps={{
+                            classes: {
+                                disabled: this.props.classes.disabled,
+                            },
+                        }}
                     />
                 </div>
 
@@ -289,13 +313,13 @@ class PaymentCard extends Component {
                         }
                     </div>
                     <div className="flex-box-row items-flex-end content-flex-end">
-                        <Typography noWrap>
+                        <Typography color="primary" noWrap>
                             {this.props.assetManager.getAssetDenomination(
                                 this.props.Account.currency
                             )}
                         </Typography>
-                        <Typography noWrap>
-                            <span className="p-l fade-extreme">
+                        <Typography color="primary" noWrap>
+                            <span className="p-l fade-strong">
                                 {this.props.Account.currency !==
                                 this.props.Balances.payeeCurrency &&
                                     this.displayPayeeAmount()
@@ -402,12 +426,31 @@ class PaymentCard extends Component {
 export default compose(
     withStyles((theme) => ({
         underline: {
+            color: theme.palette.primary.main,
             "&:hover:before": {
                 borderBottomColor: `${theme.palette.primary.main} !important`,
                 borderBottomWidth: "1px !important",
             },
-            "&:before": { borderBottomColor: fade(theme.palette.primary.main, 0.5) },
-            "&:after": { borderBottomColor: theme.palette.primary.main },
+            "&:before": {
+                borderBottomColor: fade(theme.palette.primary.main, 0.5),
+            },
+            "&:after": {
+                borderBottomColor: theme.palette.primary.main,
+            },
+        },
+        disabled: {
+            borderBottomStyle: "none !important",
+            color: theme.palette.primary.main,
+            "&:before": {
+                borderBottomColor: fade(theme.palette.primary.main, 0.5),
+                borderBottomWidth: "1px !important",
+                borderBottomStyle: "none !important",
+            },
+            "&:after": {
+                borderBottomColor: theme.palette.primary.main,
+                borderBottomWidth: "1px !important",
+                borderBottomStyle: "none !important",
+            },
         },
     })),
     withAssetManager,

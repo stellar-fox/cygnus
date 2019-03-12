@@ -107,6 +107,7 @@ const styles = (theme) => ({
         "&:focus" : {
             backgroundColor: theme.palette.secondary.light,
         },
+        opacity: "0.8",
     },
     chipDisabled: {
         backgroundColor: theme.palette.grey[300],
