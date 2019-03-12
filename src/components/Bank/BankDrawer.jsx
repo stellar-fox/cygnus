@@ -22,16 +22,14 @@ const NavBadge = compose(
     withStyles((theme) => ({
 
         badge: {
-            borderRadius: "3px",
             position: "relative",
-            top: 0,
-            left: "-5px",
-            height: "16px",
-            width: "16px",
-            background: theme.palette.secondary.main,
-            padding: "2px",
-            color: theme.palette.primary.main,
+            top: "10px",
+            left: "-15px",
+            background: theme.palette.danger,
+            color: "white",
             fontWeight: 600,
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
+            opacity: "0.8",
         },
     }))
 )(
