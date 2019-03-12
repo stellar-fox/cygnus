@@ -94,6 +94,17 @@ const styles = (theme) => ({
     inputDisabled: {
         width: "400px",
         color: theme.palette.primary.fade,
+        opacity: "0.8",
+        borderBottomStyle: "solid !important",
+        borderBottomColor: `${theme.palette.primary.main} !important`,
+        borderBottomWidth: "0px !important",
+        "&:hover:before": {
+            borderBottomColor: `${theme.palette.primary.main} !important`,
+        },
+        "&:before": {
+            borderBottomStyle: "solid !important",
+            borderBottomColor: theme.palette.primary.main,
+        },
     },
     error: {
         color: theme.palette.error.dark,
@@ -278,7 +289,6 @@ class ContactSuggester extends Component {
 
     // ...
     onSuggestionSelected = (_event, suggestion) => {
-        this.validatePaymentDestination(suggestion.suggestionValue)
         this.setState({
             value: publicKeyValid(suggestion.suggestionValue) ?
                 string.shorten(suggestion.suggestionValue, 13) :
@@ -725,7 +735,7 @@ class ContactSuggester extends Component {
 
 
     // ...
-    shouldRenderSuggestions = () => this.state.value.length >= 1 ? true : false
+    shouldRenderSuggestions = () => this.state.value.length >= 1 && !this.props.payee ? true : false
 
 
     // this is due to the specificity of the Chip component
@@ -761,7 +771,8 @@ class ContactSuggester extends Component {
                         value: this.state.value,
                         onChange: this.handleChange,
                         error: this.state.error,
-                        disabled: this.props.cancelEnabled ? false: true,
+                        disabled: this.props.cancelEnabled ?
+                            (this.props.payee ? true : false) : true,
                     }}
                     shouldRenderSuggestions={this.shouldRenderSuggestions}
                     focusInputOnSuggestionClick={false}
