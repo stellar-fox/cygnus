@@ -107,20 +107,18 @@ class Profile extends Component {
          * Update backend with user info data.
          */
         try {
-            this.setState({ loadingUpdateProfile: true })
-            this.props.setState({
+            await this.setState({ loadingUpdateProfile: true })
+            await this.props.setState({
                 messageUserData: "Preparing data ...",
             })
-
-            this.updateUserDataFingerprint()
-
+            await this.updateUserDataFingerprint()
             await this.updateResource("user",{
                 first_name: this.props.state.firstName,
                 last_name: this.props.state.lastName,
             })
         } catch (error) {
             this.setState({ loadingUpdateProfile: false })
-            this.props.showAlert(error.message, "Error")
+            this.props.surfaceSnacky("error", error.message)
             return
         }
 
@@ -130,7 +128,7 @@ class Profile extends Component {
          */
         if (!this.props.accountId) {
             this.props.surfaceSnacky(
-                "warning",
+                "error",
                 "User data updated without signature."
             )
             this.props.setState({ messageUserData: string.empty() })
@@ -189,7 +187,7 @@ class Profile extends Component {
             this.setState({ loadingUpdateProfile: false })
             this.props.setState({ messageUserData: string.empty() })
             this.props.hideModal()
-            this.props.showAlert(error.message, "Error")
+            this.props.surfaceSnacky("error", error.message)
         }
     }
 
@@ -232,7 +230,7 @@ class Profile extends Component {
 
         } catch (error) {
             this.setState({ loadingUpdatePaymentAddress: false })
-            this.props.showAlert(error.message, "Error")
+            this.props.surfaceSnacky("error", error.message)
             return
 
         }
@@ -243,7 +241,7 @@ class Profile extends Component {
          */
         if (!this.props.accountId) {
             this.props.surfaceSnacky(
-                "warning",
+                "error",
                 "Payment data updated without signature."
             )
             this.props.setState({ messagePaymentData: string.empty() })
@@ -301,7 +299,7 @@ class Profile extends Component {
             this.setState({ loadingUpdatePaymentAddress: false })
             this.props.setState({ messagePaymentData: string.empty() })
             this.props.hideModal()
-            this.props.showAlert(error.message, "Error")
+            this.props.surfaceSnacky("error", error.message)
 
         }
     }
@@ -339,7 +337,7 @@ class Profile extends Component {
 
 
     // ...
-    updateUserDataFingerprint = () => this.props.setState({
+    updateUserDataFingerprint = async () => await this.props.setState({
         fingerprintUserData: dataDigest({
             firstName: this.props.state.firstName,
             lastName: this.props.state.lastName,
