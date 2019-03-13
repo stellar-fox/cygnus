@@ -191,7 +191,7 @@ class LedgerAuthenticator extends Component {
                     }
                     style={{ marginRight: "0px" }}
                 >
-                    Authenticate
+                    Query Device
                 </Button>
                 <LinearProgress
                     variant="indeterminate"
