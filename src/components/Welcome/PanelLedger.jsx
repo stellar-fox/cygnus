@@ -69,6 +69,7 @@ class PanelLedger extends Component {
                 <LedgerAuthenticator
                     onConnected={this.logInViaLedger}
                     className="welcome-lcars-input"
+                    setRedux={true}
                 />
             </div>
         </Panel>

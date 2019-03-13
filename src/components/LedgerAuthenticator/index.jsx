@@ -50,7 +50,7 @@ class LedgerAuthenticator extends Component {
                 status: "Waiting for device ...",
                 inProgress: true,
             })
-            softwareVersion = await this.props.getSoftwareVersion()
+            softwareVersion = await this.props.getSoftwareVersion(this.props.setRedux)
             await this.setState({
                 buttonDisabled: true,
                 status: "Fetching account ...",
@@ -76,8 +76,10 @@ class LedgerAuthenticator extends Component {
             inProgress: false,
         })
 
-        await this.props.setAccountId(publicKey)
-        await this.props.setAccount(this.state.derivationPath)
+        if (this.props.setRedux) {
+            await this.props.setAccountId(publicKey)
+            await this.props.setAccount(this.state.derivationPath)
+        }
 
         this.props.onConnected.call(this, {
             publicKey,

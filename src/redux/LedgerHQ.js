@@ -73,15 +73,17 @@ export const action = {
 
 
     // ...
-    getSoftwareVersion: () =>
+    getSoftwareVersion: (setRedux) =>
         async (dispatch, _getState) => {
             let version = null
             try {
                 dispatch(action.setSoftwareVersion())
                 dispatch(action.setConnected(false))
                 version = await ledgerGetSoftwareVersion()
-                dispatch(action.setSoftwareVersion(version))
-                dispatch(action.setConnected(true))
+                if (setRedux) {
+                    dispatch(action.setSoftwareVersion(version))
+                    dispatch(action.setConnected(true))
+                }
                 return version
             } catch (ex) {
                 dispatch(action.setSoftwareVersion())
