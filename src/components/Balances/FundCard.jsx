@@ -59,7 +59,7 @@ export default compose(
                             following address.
                         </Typography>
                     </Typography>
-                    <div className="p-l p-t-small bg-green">
+                    <div className="p-l p-t-small badge badge-primary-light">
                         {publicKey}
                     </div>
                 </CardText>

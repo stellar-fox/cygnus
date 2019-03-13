@@ -18,6 +18,7 @@ import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
 import { firebaseApp } from "../../components/StellarFox"
 import { action as AlertAction } from "../../redux/Alert"
+import { action as AuthActions } from "../../redux/Auth"
 
 
 
@@ -45,6 +46,7 @@ export default compose(
         (_state) => ({}),
         (dispatch) => bindActionCreators({
             showAlert: AlertAction.showAlert,
+            setSignupComplete: AuthActions.setSignupComplete,
         }, dispatch)
     )
 )(
@@ -145,6 +147,7 @@ export default compose(
                 return
             }
 
+            await this.props.setSignupComplete()
 
             this.props.loginManager.attemptLogin(
                 this.state.emailInputValue,
@@ -190,7 +193,7 @@ export default compose(
                     errorMessage={this.state.passwordInputErrorTextValue}
                     onChange={this.updatePasswordInputValue}
                 />
-                
+
                 <div>
                     <Button
                         onClick={this.loginValidator}
@@ -211,9 +214,9 @@ export default compose(
                         }}
                     />
                 </div>
-                
+
             </div>
-            
+
 
     }
 )

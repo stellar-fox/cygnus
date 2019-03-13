@@ -341,7 +341,7 @@ class Settings extends Component {
                 )
                 .then((_) => {
                     this.props.setState({ discoverable: isInputChecked })
-                    
+
                     this.props.surfaceSnacky(
                         "success",
                         isInputChecked ?
@@ -516,10 +516,10 @@ class Settings extends Component {
             </div>
 
             <div className="account-title p-t-large">
-                Extended Account Identifier:
+                Your Account ID:
             </div>
             <div className="account-subtitle m-t-small">
-                <span className="bg-green">
+                <span className="badge badge-secondary">
                     {this.props.publicKey}
                 </span> {accountIsLocked(
                     this.props.signers,
