@@ -61,6 +61,7 @@ export const clearInputErrorMessages = () =>
     async (dispatch, _getState) => {
         await dispatch(ErrorsActions.clearEmailInputError())
         await dispatch(ErrorsActions.clearPasswordInputError())
+        await dispatch(ErrorsActions.clearOtherError())
     }
 
 

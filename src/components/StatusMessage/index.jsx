@@ -35,19 +35,21 @@ const StatusMessage = ({
     passwordInputErrorMessage,
     signupInProgress,
     signupStatusMessage,
+    otherError,
+    otherErrorMessage,
     style,
 }) => <div style={style} className={`flex-box-row space-around ${className}`}>
-    
+
     {emailInputError &&
         <Typography variant="caption">
             <span className="red">{emailInputErrorMessage}</span>
         </Typography>}
-    
+
     {passwordInputError &&
         <Typography variant="caption">
             <span className="red">{passwordInputErrorMessage}</span>
         </Typography>}
-    
+
     {ledgerauthInProgress && <Typography color="secondary" variant="caption">
         {ledgerauthStatusMessage}
     </Typography>}
@@ -55,6 +57,11 @@ const StatusMessage = ({
     {signupInProgress && <Typography color="secondary" variant="caption">
         {signupStatusMessage}
     </Typography>}
+
+    {otherError && <Typography color="secondary" variant="caption">
+        <span className="red">{otherErrorMessage}</span>
+    </Typography>}
+
 </div>
 
 
@@ -66,6 +73,8 @@ export default func.compose(
         (state) => ({
             emailInputError: state.Errors.emailInputError,
             emailInputErrorMessage: state.Errors.emailInputErrorMessage,
+            otherError: state.Errors.otherError,
+            otherErrorMessage: state.Errors.otherErrorMessage,
             passwordInputError: state.Errors.passwordInputError,
             passwordInputErrorMessage: state.Errors.passwordInputErrorMessage,
             signupInProgress: state.Progress.signup.inProgress,

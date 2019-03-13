@@ -10,6 +10,8 @@ import {
 const initState = {
     emailInputError: false,
     emailInputErrorMessage: string.empty(),
+    otherError: false,
+    otherErrorMessage: string.empty(),
     passwordInputError: false,
     passwordInputErrorMessage: string.empty(),
 }
@@ -18,10 +20,11 @@ const initState = {
 
 
 // ...
-
 export const CLEAR_EMAIL_INPUT_ERROR = "@Errors/CLEAR_EMAIL_INPUT_ERROR"
+export const CLEAR_OTHER_ERROR = "@Errors/CLEAR_OTHER_ERROR"
 export const CLEAR_PASSWORD_INPUT_ERROR = "@Errors/CLEAR_PASSWORD_INPUT_ERROR"
 export const SET_EMAIL_INPUT_ERROR = "@Errors/SET_EMAIL_INPUT_ERROR"
+export const SET_OTHER_ERROR = "@Errors/SET_OTHER_ERROR"
 export const SET_PASSWORD_INPUT_ERROR = "@Errors/SET_PASSWORD_INPUT_ERROR"
 export const SET_STATE = "@Errors/SET_STATE"
 export const RESET_STATE = "@Errors/RESET_STATE"
@@ -39,6 +42,12 @@ export const actions = {
     }),
 
     // ...
+    clearOtherError: (state) => ({
+        type: CLEAR_OTHER_ERROR,
+        state,
+    }),
+
+    // ...
     clearPasswordInputError: (state) => ({
         type: CLEAR_PASSWORD_INPUT_ERROR,
         state,
@@ -47,6 +56,12 @@ export const actions = {
     // ...
     setEmailInputError: (errorMessage) => ({
         type: SET_EMAIL_INPUT_ERROR,
+        errorMessage,
+    }),
+
+    // ...
+    setOtherError: (errorMessage) => ({
+        type: SET_OTHER_ERROR,
         errorMessage,
     }),
 
@@ -81,6 +96,13 @@ export const reducer = createReducer(initState)({
     }),
 
     // ...
+    [CLEAR_OTHER_ERROR]: (state) => ({
+        ...state,
+        otherError: false,
+        otherErrorMessage: string.empty(),
+    }),
+
+    // ...
     [CLEAR_PASSWORD_INPUT_ERROR]: (state) => ({
         ...state,
         passwordInputError: false,
@@ -92,6 +114,13 @@ export const reducer = createReducer(initState)({
         ...state,
         emailInputError: true,
         emailInputErrorMessage: action.errorMessage,
+    }),
+
+    // ...
+    [SET_OTHER_ERROR]: (state, action) => ({
+        ...state,
+        otherError: true,
+        otherErrorMessage: action.errorMessage,
     }),
 
     // ...
