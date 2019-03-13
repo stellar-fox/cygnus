@@ -1,20 +1,80 @@
-import React, { Component } from "react"
+import React from "react"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
-import { bindActionCreators, compose } from "redux"
-import { Typography, withStyles } from "@material-ui/core"
+import PropTypes from "prop-types"
+import { withStyles } from "@material-ui/core/styles"
 import { action as BalancesAction } from "../../redux/Balances"
-import { Card, CardActions, CardHeader, CardText } from "material-ui/Card"
+import {
+    Card,
+    CardActions,
+    CardContent,
+    Typography,
+} from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
-import { withLoginManager } from "../LoginManager"
 
 
 
 
+// ...
+const FundCard = (props) => {
+    const { classes } = props,
+        toggleFundCard = () =>
+            props.setState({
+                fundCardVisible: !props.fundCardVisible,
+            })
+
+    return <Card classes={{ root: classes.root }} className="account">
+        <CardContent>
+            <Typography variant="body1" color="primary" gutterBottom>
+                Fund your account with Stellar Lumens
+            </Typography>
+
+            <Typography style={{ marginTop: "2rem" }}
+                variant="body2" color="inherit"
+            >
+                Send Stellar Lumens to your Account ID:
+            </Typography>
+
+            <div className="badge badge-primary-light">
+                {props.publicKey}
+            </div>
+
+            <Typography style={{ marginTop: "3rem" }}
+                variant="body2" color="inherit"
+            >
+                Funds should show up within 5 seconds.
+                If sending from an exchange, please mind longer transfer times.
+            </Typography>
+        </CardContent>
+        <CardActions classes={{ root: classes.actionsRoot }}>
+            <Button color="primary" onClick={toggleFundCard}>
+                Done
+            </Button>
+        </CardActions>
+    </Card>
+}
+
+FundCard.propTypes = {
+    classes: PropTypes.object.isRequired,
+}
+
+
+
+
+// ...
 export default compose(
-    withLoginManager,
     withStyles({
+        actionsRoot: {
+            marginLeft: "4px",
+        },
         cardActions: {
             padding: "1rem",
+        },
+        root: {
+            borderRadius: "2px",
         },
     }),
     connect(
@@ -27,50 +87,4 @@ export default compose(
             setState: BalancesAction.setState,
         }, dispatch)
     ),
-)(
-
-    class FundCard extends Component {
-
-        // ...
-        toggleFundCard = () =>
-            this.props.setState({
-                fundCardVisible: !this.props.fundCardVisible,
-            })
-
-        // ...
-        render = () => (
-            ({ classes, publicKey }) => <Card className='account'>
-                <CardHeader
-                    title={
-                        <span>
-                            <span>Fund your account.</span>
-                        </span>
-                    }
-                    subtitle="Use available methods below to purchase transfer tokens."
-                    actAsExpander={false}
-                    showExpandableButton={false}
-                />
-
-                <CardText>
-                    <Typography variant="subtitle1" color="inherit">
-                        Fund with Stellar Lumens.
-                        <Typography variant="caption" color="inherit">
-                            Send any amount of Stellar Lumens to the
-                            following address.
-                        </Typography>
-                    </Typography>
-                    <div className="p-l p-t-small badge badge-primary-light">
-                        {publicKey}
-                    </div>
-                </CardText>
-
-                <CardActions classes={{ root: classes.cardActions }}>
-                    <div className="f-e">
-                        <Button color="primary" onClick={this.toggleFundCard}>
-                            Done
-                        </Button>
-                    </div>
-                </CardActions>
-            </Card>)(this.props)
-    }
-)
+)(FundCard)
