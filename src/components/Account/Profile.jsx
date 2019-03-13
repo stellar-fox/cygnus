@@ -103,6 +103,14 @@ class Profile extends Component {
     // ...
     updateProfile = async () => {
 
+        if (!this.props.emailVerified) {
+            this.props.surfaceSnacky(
+                "error",
+                "Please verify your email address first."
+            )
+            return
+        }
+
         /**
          * Update backend with user info data.
          */
@@ -194,6 +202,14 @@ class Profile extends Component {
 
     // ...
     updatePaymentData = async () => {
+
+        if (!this.props.emailVerified) {
+            this.props.surfaceSnacky(
+                "error",
+                "Please verify your email address first."
+            )
+            return
+        }
 
         /**
          * Update backend with user payment data.
