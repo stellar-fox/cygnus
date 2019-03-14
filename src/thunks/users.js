@@ -22,6 +22,68 @@ import { surfaceSnacky } from "../thunks/main"
 
 
 
+
+/**
+ * Helper thunk action authenticates user on the backend and sets login
+ * related Redux tree keys.
+ *
+ * @function doBackendSignIn
+ * @param {String} email
+ * @param {String} password
+ * @returns {Function} thunk action
+ */
+export const doBackendSignIn = (email, password) =>
+    async (dispatch, _getState) => {
+        await dispatch(AuthActions.setSignupComplete())
+
+        const authResp = await Axios
+            .post(`${config.api}/user/authenticate/`, {
+                email,
+                password,
+            })
+
+        await dispatch(LoginManagerAction.setUserId(authResp.data.user_id))
+        await dispatch(LoginManagerAction.setApiToken(authResp.data.token))
+        await dispatch(LedgerHQAction.setBip32Path(authResp.data.bip32Path))
+        await dispatch(LedgerHQAction.setPublicKey(authResp.data.pubkey))
+    }
+
+
+
+
+/**
+ * Signs user in via _Firebase_.
+ *
+ * @function signIn
+ * @param {String} email
+ * @param {String} password
+ * @returns {Function} thunk action
+ */
+export const signIn = (email, password) =>
+    async (dispatch, _getState) => {
+        await dispatch(clearInputErrorMessages())
+        try {
+            await dispatch(ProgressActions.toggleProgress(
+                "signin", "Logging you in ..."
+            ))
+            await firebaseApp.auth("session").signInWithEmailAndPassword(
+                email,
+                password
+            )
+            await dispatch(doBackendSignIn(email, password))
+
+        } catch (error) {
+            await dispatch(setError(error))
+        } finally {
+            await dispatch(ProgressActions.toggleProgress(
+                "signin", string.empty()
+            ))
+        }
+    }
+
+
+
+
 /**
  * Signs user out of the session and clears Redux tree.
  *
@@ -75,14 +137,16 @@ export const clearInputErrorMessages = () =>
  * @returns {Function} thunk action
  */
 export const signUpNewUser = (accountId, account, email, password) =>
-    async (dispatch, _getState) => {
+    async (dispatch, getState) => {
 
         await dispatch(clearInputErrorMessages())
 
 
         try {
             await dispatch(AuthActions.toggleSignupProgress(true))
-            await dispatch(ProgressActions.toggleProgress("signup", "Creating user account ..."))
+            await dispatch(ProgressActions.toggleProgress(
+                "signup", "Creating user account ..."
+            ))
 
             await firebaseApp.auth("session").createUserWithEmailAndPassword(
                 email, password
@@ -105,55 +169,68 @@ export const signUpNewUser = (accountId, account, email, password) =>
                     email_md5: md5(email),
                 })
 
-            const authResp = await Axios
-                .post(`${config.api}/user/authenticate/`, {
-                    email,
-                    password,
-                })
+            await dispatch(doBackendSignIn(email, password))
 
-            await dispatch(LoginManagerAction.setUserId(userResp.data.userid))
-            await dispatch(LoginManagerAction.setApiToken(authResp.data.token))
+            await dispatch(ProgressActions.toggleProgress(
+                "signup", "Almost done ..."
+            ))
 
-            await dispatch(ProgressActions.toggleProgress("signup", "Almost done ..."))
-            await subscribeEmail(
-                userResp.data.userid,
-                authResp.data.token,
-                email
-            )
+
+            const { userId, token } = getState().LoginManager
+            await subscribeEmail(userId, token, email)
 
             await firebaseApp.auth("session")
                 .currentUser.sendEmailVerification()
-            await dispatch(ProgressActions.toggleProgress("signup", string.empty()))
+            await dispatch(ProgressActions.toggleProgress(
+                "signup", string.empty()
+            ))
             await dispatch(AuthActions.setSignupComplete())
         } catch (error) {
-            await dispatch(ProgressActions.toggleProgress("signup", string.empty()))
-
-            if (error.code === "auth/invalid-email") {
-                await dispatch(ErrorsActions.setEmailInputError(error.message))
-                return
-            }
-
-            if (error.code === "auth/email-already-in-use") {
-                await dispatch(ErrorsActions.setEmailInputError(error.message))
-                return
-            }
-
-            if (error.code === "auth/wrong-password") {
-                await dispatch(ErrorsActions.setPasswordInputError("Password is invalid."))
-                return
-            }
-
-            if (error.code === "auth/weak-password") {
-                await dispatch(ErrorsActions.setPasswordInputError(error.message))
-                return
-            }
-
-            // in case of other error - display the code/message
-            await dispatch(ErrorsActions.setEmailInputError(error.code))
-            await dispatch(ErrorsActions.setPasswordInputError(error.message))
-
+            await dispatch(ProgressActions.toggleProgress(
+                "signup", string.empty()
+            ))
+            await dispatch(setError(error))
         } finally {
             await dispatch(AuthActions.toggleSignupProgress(false))
         }
 
+    }
+
+
+
+
+/**
+ * Sets the proper message in Redux tree so the UI element can display it.
+ *
+ * @function setError
+ * @param {Object} error
+ * @returns {Function} thunk action
+ */
+export const setError = (error) =>
+    async (dispatch, _getState) => {
+        if (error.code === "auth/invalid-email") {
+            await dispatch(ErrorsActions.setEmailInputError(error.message))
+            return
+        }
+
+        if (error.code === "auth/email-already-in-use") {
+            await dispatch(ErrorsActions.setEmailInputError(error.message))
+            return
+        }
+
+        if (error.code === "auth/wrong-password") {
+            await dispatch(ErrorsActions.setPasswordInputError(
+                "Password is invalid."
+            ))
+            return
+        }
+
+        if (error.code === "auth/weak-password") {
+            await dispatch(ErrorsActions.setPasswordInputError(error.message))
+            return
+        }
+
+        await dispatch(ErrorsActions.setOtherError(
+            `[${error.code}]: ${error.message}`
+        ))
     }

@@ -33,6 +33,8 @@ const StatusMessage = ({
     ledgerauthStatusMessage,
     passwordInputError,
     passwordInputErrorMessage,
+    signinInProgress,
+    signinStatusMessage,
     signupInProgress,
     signupStatusMessage,
     otherError,
@@ -58,6 +60,10 @@ const StatusMessage = ({
         {signupStatusMessage}
     </Typography>}
 
+    {signinInProgress && <Typography color="secondary" variant="caption">
+        {signinStatusMessage}
+    </Typography>}
+
     {otherError && <Typography color="secondary" variant="caption">
         <span className="red">{otherErrorMessage}</span>
     </Typography>}
@@ -77,6 +83,8 @@ export default func.compose(
             otherErrorMessage: state.Errors.otherErrorMessage,
             passwordInputError: state.Errors.passwordInputError,
             passwordInputErrorMessage: state.Errors.passwordInputErrorMessage,
+            signinInProgress: state.Progress.signin.inProgress,
+            signinStatusMessage: state.Progress.signin.statusMessage,
             signupInProgress: state.Progress.signup.inProgress,
             signupStatusMessage: state.Progress.signup.statusMessage,
             ledgerauthInProgress: state.Progress.ledgerauth.inProgress,

@@ -8,6 +8,10 @@ import {
 
 // <Progress> component state
 const initState = {
+    signin: {
+        inProgress: false,
+        statusMessage: string.empty(),
+    },
     signup: {
         inProgress: false,
         statusMessage: string.empty(),
