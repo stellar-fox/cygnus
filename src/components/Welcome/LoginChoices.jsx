@@ -17,19 +17,26 @@ import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMe
 
 
 
+// ...
 const TabContainer = (props) =>
     <Typography component="div" style={{ padding: 8 * 3 }}>
         {props.children}
     </Typography>
 
 
+
+
+// ...
 TabContainer.propTypes = {
     children: PropTypes.node.isRequired,
 }
 
 
+
+
+// ...
 const useStyles = makeStyles(() => ({
-    root: {  
+    root: {
         flexGrow: 1,
         backgroundColor: theme.palette.primary.light,
         borderRadius: "3px",
@@ -55,6 +62,9 @@ const useStyles = makeStyles(() => ({
 }))
 
 
+
+
+// ...
 const LoginChoices = () => {
     const classes = useStyles(),
         [value, setValue] = React.useState(0),
@@ -64,56 +74,68 @@ const LoginChoices = () => {
         setValue(newValue)
     }
 
-    return (
-        <div style={{ paddingBottom: "3rem" }} className="flex-box-col content-centered items-centered">
-            <div className="flex-box-col content-centered items-centered m-t-large m-b-large">
-                <Typography variant="h4" color="secondary">
-                    Sign in and bank!
-                </Typography>
-                <Typography variant="h5" color="secondary">
-                    Plase choose one of available access methods:
-                </Typography>
-            </div>
-            <div className={isMobile ? classes.rootMobile : classes.root}>
-                <AppBar position="static">
-                    <Tabs value={value} onChange={handleChange}>
-                        <Tab
-                            classes={{
-                                root: isMobile ? classes.labelSmall :
-                                    classes.label,
-                            }}
-                            label="Email/Password"
-                        />
-                        <Tab
-                            style={{ padding: "0 0.5rem" }}
-                            icon={<img
-                                className="img-logo"
-                                src={ledgerhqlogo}
-                                width="72px"
-                                alt="LedgerHQ"
-                            />}
-                        />
-                        <Tab
-                            classes={{
-                                root: isMobile ? classes.labelSmall :
-                                    classes.label,
-                            }}
-                            label="Account Viewer"
-                        />
-                    </Tabs>
-                </AppBar>
-                {value === 0 && <TabContainer>
-                    <PanelLogin />
-                </TabContainer>}
-                {value === 1 && <TabContainer>
-                    <PanelLedger />
-                </TabContainer>}
-                {value === 2 && <TabContainer>
-                    <PanelExplorer />
-                </TabContainer>}
-            </div>
+    return <div
+        style={{ paddingBottom: "3rem" }}
+        className="flex-box-col content-centered items-centered"
+    >
+        <div
+            className="
+                flex-box-col
+                content-centered
+                items-centered
+                m-t-large
+                m-b-large"
+        >
+            <Typography variant="h4" color="secondary">
+                Sign in and bank!
+            </Typography>
+            <Typography variant="h5" color="secondary">
+                Plase choose one of available access methods:
+            </Typography>
         </div>
-    )
+        <div className={isMobile ? classes.rootMobile : classes.root}>
+            <AppBar position="static">
+                <Tabs value={value} onChange={handleChange}>
+                    <Tab
+                        classes={{
+                            root: isMobile ? classes.labelSmall :
+                                classes.label,
+                        }}
+                        label="Email/Password"
+                    />
+                    <Tab
+                        style={{ padding: "0 0.5rem" }}
+                        icon={<img
+                            className="img-logo"
+                            src={ledgerhqlogo}
+                            width="72px"
+                            alt="LedgerHQ"
+                        />}
+                    />
+                    <Tab
+                        classes={{
+                            root: isMobile ? classes.labelSmall :
+                                classes.label,
+                        }}
+                        label="Account Viewer"
+                    />
+                </Tabs>
+            </AppBar>
+            {value === 0 && <TabContainer>
+                <PanelLogin />
+            </TabContainer>}
+            {value === 1 && <TabContainer>
+                <PanelLedger />
+            </TabContainer>}
+            {value === 2 && <TabContainer>
+                <PanelExplorer />
+            </TabContainer>}
+        </div>
+    </div>
 }
 
+
+
+
+// ...
 export default LoginChoices

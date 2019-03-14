@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import {
     func,
-    shorten,
     string,
 } from "@xcmats/js-toolbox"
 import {
@@ -29,6 +28,7 @@ import {
 import StatusMessage from "../StatusMessage"
 import { publicKeyValid } from "../../lib/utils"
 import { actions as ErrorActions } from "../../redux/Errors"
+import CredentialsForm from "../CredentialsForm"
 
 
 
@@ -50,103 +50,6 @@ const TabContainer = (props) =>
     <Typography component="div" style={{ padding: 8 * 3 }}>
         {props.children}
     </Typography>
-
-
-
-
-// ...
-const CredentialsForm = func.compose(
-
-
-    withStyles((theme) => ({
-        linearColorPrimary: {
-            marginTop: "2px",
-            backgroundColor: theme.palette.secondary.light,
-            borderRadius: "3px",
-        },
-        linearBarColorPrimary: {
-            backgroundColor: theme.palette.secondary.dark,
-            borderRadius: "3px",
-        },
-    })),
-
-    connect(
-        (state) => ({
-            emailInputError: state.Errors.emailInputError,
-            passwordInputError: state.Errors.passwordInputError,
-            inProgress: state.Progress.signup.inProgress,
-        }),
-        (dispatch) => bindActionCreators({
-            signUpNewUser,
-            clearInputErrorMessages,
-        }, dispatch),
-    ),
-
-
-)((props) => {
-
-    const [email, setEmail] = React.useState(string.empty()),
-        [password, setPassword] = React.useState(string.empty()),
-        updateEmailInputValue = (event) => setEmail(event.target.value),
-        updatePasswordInputValue = (event) => setPassword(event.target.value),
-        signUp = () => props.signUpNewUser(
-            props.accountId, props.account, email, password
-        )
-
-
-    return <div style={{ minHeight: "350px" }}>
-        <Typography align="center" variant="caption" color="secondary">
-            Signing up with Account ID:
-        </Typography>
-        <div className="m-t-small panel-title">
-            {props.accountId && shorten(props.accountId, 11, shorten.MIDDLE, "-")}
-        </div>
-        <Typography align="center" variant="caption" color="secondary">
-            Account:
-        </Typography>
-        <div className="m-t-small panel-title">
-            {props.account}
-        </div>
-        <div className="flex-box-col items-centered content-centered">
-            <InputField
-                id="email-input"
-                type="email"
-                label="Email"
-                color="secondary"
-                error={props.emailInputError}
-                onChange={updateEmailInputValue}
-            />
-            <InputField
-                id="password-input"
-                type="password"
-                label="Password"
-                color="secondary"
-                error={props.passwordInputError}
-                onChange={updatePasswordInputValue}
-            />
-            <div>
-                <Button
-                    onClick={signUp}
-                    color="secondary"
-                    style={{ marginRight: "0px" }}
-                    disabled={props.inProgress}
-                >Sign Up</Button>
-                <LinearProgress
-                    variant="indeterminate"
-                    classes={{
-                        colorPrimary: props.classes.linearColorPrimary,
-                        barColorPrimary: props.classes.linearBarColorPrimary,
-                    }}
-                    style={{
-                        width: "100%",
-                        opacity: props.inProgress ? 1 : 0,
-                    }}
-                />
-            </div>
-            <StatusMessage className="m-t" style={{ minHeight: "20px" }} />
-        </div>
-    </div>
-})
 
 
 
@@ -184,25 +87,40 @@ const ManualEntryForm = func.compose(
     const [accountId, setAccountId] = React.useState(string.empty()),
         [account, setAccount] = React.useState(),
         [visible, setVisible] = React.useState(false),
-        updateAccountId = (event) => setAccountId(event.target.value),
-        updateAccount = (event) => setAccount(event.target.value),
-        validateInput = () => {
+        [accountIdInputError, setAccountIdInputError] = React.useState(false),
+        [accountInputError, setAccountInputError] = React.useState(false),
 
+        updateAccountId = (event) => {
+            props.clearInputErrorMessages()
+            setAccountId(event.target.value)
+            setAccountIdInputError(false)
+        },
+
+        updateAccount = (event) => {
+            props.clearInputErrorMessages()
+            setAccount(event.target.value)
+            setAccountInputError(false)
+        },
+
+        validateInput = () => {
             if (!publicKeyValid(accountId)) {
+                setAccountIdInputError(true)
                 props.setError("Invalid Account ID")
                 return
             }
 
             if (isNaN(account)) {
+                setAccountInputError(true)
                 props.setError("Invalid Account")
                 return
             }
-            props.clearInputErrorMessages()
+
             setVisible(true)
         }
 
 
-    return visible ? <CredentialsForm accountId={accountId} account={account} /> :
+    return visible ?
+        <CredentialsForm accountId={accountId} account={account} /> :
         <div style={{ minHeight: "350px" }}>
             <div className="m-t-small panel-title">
                 Please provide your Account ID.
@@ -217,7 +135,7 @@ const ManualEntryForm = func.compose(
                     type="text"
                     label="Account ID"
                     color="secondary"
-                    error={props.accountIdInputError}
+                    error={accountIdInputError}
                     onChange={updateAccountId}
                 />
                 <InputField
@@ -225,7 +143,7 @@ const ManualEntryForm = func.compose(
                     type="text"
                     label="Account"
                     color="secondary"
-                    error={props.accountInputError}
+                    error={accountInputError}
                     onChange={updateAccount}
                 />
                 <div>
@@ -250,8 +168,6 @@ const ManualEntryForm = func.compose(
                 <StatusMessage className="m-t" style={{ minHeight: "20px" }} />
             </div>
         </div>
-
-
 
 })
 
@@ -306,8 +222,17 @@ const Signup = ({ classes, clearInputErrorMessages }) => {
 
 
 
-    return <div style={{ paddingBottom: "3rem" }} className="flex-box-col content-centered items-centered">
-        <div className="flex-box-col content-centered items-centered m-t-large m-b-large">
+    return <div
+        style={{ paddingBottom: "3rem" }}
+        className="flex-box-col content-centered items-centered"
+    >
+        <div className="
+            flex-box-col
+            content-centered
+            items-centered
+            m-t-large
+            m-b-large"
+        >
             <Typography variant="h4" color="secondary">
                 Create Account
             </Typography>
@@ -338,15 +263,27 @@ const Signup = ({ classes, clearInputErrorMessages }) => {
             </AppBar>
             {tabValue === 0 && <TabContainer>
                 <Panel title="Sign up with Ledger.">
-                    {visible ? <CredentialsForm accountId={accountId} account={account} /> :
+                    {visible ?
+                        <CredentialsForm
+                            accountId={accountId}
+                            account={account}
+                        /> :
                         <div style={{ minHeight: "350px" }}>
                             <div className="m-t-small panel-title">
-                                Account ID will be provided by your <em>Ledger</em> device.
+                                Account ID will be provided by your <em>
+                                Ledger</em> device.
                             </div>
-                            <Typography align="center" variant="caption" color="secondary">
-                                Connect your Ledger Nano S device and select <i>Stellar</i> application.
-                                Need help? Visit <a target="_blank" rel="noopener noreferrer" href={ledgerSupportLink}>
-                                Ledger Support</a>.
+                            <Typography
+                                align="center"
+                                variant="caption"
+                                color="secondary"
+                            >
+                                Connect your Ledger Nano S device and
+                                select <i>Stellar</i> application.
+                                Need help? Visit <a target="_blank"
+                                    rel="noopener noreferrer"
+                                    href={ledgerSupportLink}
+                                >Ledger Support</a>.
                             </Typography>
                             <LedgerAuthenticator
                                 onConnected={authViaLedger}
