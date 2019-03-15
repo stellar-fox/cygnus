@@ -22,11 +22,11 @@ import {
     insertPathIndex,
     htmlEntities as he,
 } from "../../lib/utils"
-import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
+import { signTransaction } from "../../lib/ledger"
 import clone from "lodash/clone"
 import BigNumber from "bignumber.js"
 import NumberFormat from "react-number-format"
-
+import { queryDevice } from "../../thunks/ledgerhq"
 
 
 
@@ -84,6 +84,7 @@ export default compose(
             resetState: BalancesAction.resetState,
             showModal: ModalAction.showModal,
             hideModal: ModalAction.hideModal,
+            queryDevice,
         }, dispatch)
     ),
     withStyles((theme) => ({
@@ -251,7 +252,7 @@ export default compose(
                 })
 
                 try {
-                    await getSoftwareVersion()
+                    await this.props.queryDevice()
 
                     this.setState({
                         statusMessage: "Awaiting signature ...",

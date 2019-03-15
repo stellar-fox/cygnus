@@ -16,7 +16,7 @@ import LCARSInput from "../../lib/common/LCARSInput"
 import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
-
+import { queryDevice } from "../../thunks/ledgerhq"
 
 
 
@@ -50,7 +50,9 @@ class LedgerAuthenticator extends Component {
                 status: "Waiting for device ...",
                 inProgress: true,
             })
-            softwareVersion = await this.props.getSoftwareVersion(this.props.setRedux)
+
+            softwareVersion = await this.props.queryDevice()
+
             await this.setState({
                 buttonDisabled: true,
                 status: "Fetching account ...",
@@ -241,10 +243,10 @@ export default func.compose(
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
-            getSoftwareVersion: LedgerHQAction.getSoftwareVersion,
             setAccountId: LedgerHQAction.setPublicKey,
             setAccount: LedgerHQAction.setBip32Path,
             resetLedgerState: LedgerHQAction.resetState,
+            queryDevice,
         }, dispatch)
     ),
 )(LedgerAuthenticator)

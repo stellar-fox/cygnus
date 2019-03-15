@@ -18,9 +18,10 @@ import { action as ContactsAction } from "../../redux/Contacts"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
+import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as AlertAction } from "../../redux/Alert"
-import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
+import { signTransaction } from "../../lib/ledger"
 import { listInternal, listRequested, } from "../Contacts/api"
 import {
     augmentAssets,
@@ -60,6 +61,7 @@ import "./index.css"
 import FundCard from "./FundCard"
 import AssetDetails from "./AssetDetails"
 import { surfaceSnacky } from "../../thunks/main"
+import { queryDevice } from "../../thunks/ledgerhq"
 
 
 
@@ -316,7 +318,7 @@ class Balances extends Component {
             message: "Waiting for device ...",
         })
         try {
-            await getSoftwareVersion()
+            await this.props.queryDevice()
             this.buildSendTransaction()
         } catch (ex) {
             this.showError(ex.message)
@@ -465,6 +467,7 @@ export default compose(
             setAssetsState: AssetManagerAction.setState,
             setBalancesState: BalancesAction.setState,
             setContactsState: ContactsAction.setState,
+            setLedgerHQState: LedgerHQAction.setState,
             setStellarAccountState: StellarAccountAction.setState,
             updateAccountTree: StellarAccountAction.loadStellarAccount,
             setStateForBalances: BalancesAction.setState,
@@ -478,6 +481,7 @@ export default compose(
             hideLoadingModal: LoadingModalAction.hideLoadingModal,
             toggleSignupHint: BankActions.toggleSignupHint,
             surfaceSnacky,
+            queryDevice,
         }, dispatch)
     )
 )(Balances)

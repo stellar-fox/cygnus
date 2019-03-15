@@ -29,7 +29,7 @@ import {
 } from "../../lib/stellar-tx"
 import { withLoginManager } from "../LoginManager"
 import { firebaseApp } from "../../components/StellarFox"
-import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
+import { signTransaction } from "../../lib/ledger"
 import { action as AccountAction } from "../../redux/Account"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
@@ -50,6 +50,7 @@ import {
 } from "@material-ui/core"
 import { Animated } from "react-animated-css"
 import { surfaceSnacky } from "../../thunks/main"
+import { queryDevice } from "../../thunks/ledgerhq"
 
 
 
@@ -153,7 +154,7 @@ class Profile extends Component {
                 messageUserData: "Waiting for device ...",
             })
 
-            await getSoftwareVersion()
+            await this.props.queryDevice()
 
             this.props.setState({
                 messageUserData: "Preparing transaction ...",
@@ -274,7 +275,7 @@ class Profile extends Component {
                 messagePaymentData: "Waiting for device ...",
             })
 
-            await getSoftwareVersion()
+            await this.props.queryDevice()
 
             this.props.setState({
                 messagePaymentData: "Preparing transaction ...",
@@ -658,6 +659,7 @@ export default compose(
             showModal: ModalAction.showModal,
             updateAccountTree: StellarAccountAction.loadStellarAccount,
             surfaceSnacky,
+            queryDevice,
         }, dispatch)
     )
 )(Profile)

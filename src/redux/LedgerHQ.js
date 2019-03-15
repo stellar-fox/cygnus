@@ -2,7 +2,6 @@ import {
     createReducer,
     string,
 } from "@xcmats/js-toolbox"
-import { getSoftwareVersion as ledgerGetSoftwareVersion } from "../lib/ledger"
 
 
 
@@ -70,27 +69,6 @@ export const action = {
         type: SET_BIP32_PATH,
         bip32Path,
     }),
-
-
-    // ...
-    getSoftwareVersion: (setRedux) =>
-        async (dispatch, _getState) => {
-            let version = null
-            try {
-                dispatch(action.setSoftwareVersion())
-                dispatch(action.setConnected(false))
-                version = await ledgerGetSoftwareVersion()
-                if (setRedux) {
-                    dispatch(action.setSoftwareVersion(version))
-                    dispatch(action.setConnected(true))
-                }
-                return version
-            } catch (ex) {
-                dispatch(action.setSoftwareVersion())
-                dispatch(action.setConnected(false))
-                throw ex
-            }
-        },
 
 }
 

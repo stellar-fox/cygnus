@@ -40,7 +40,6 @@ import {
 } from "../../lib/utils"
 import {
     signTransaction,
-    getSoftwareVersion
 } from "../../lib/ledger"
 import {
     buildSetDataTx,
@@ -57,6 +56,7 @@ import {
     string,
 } from "@xcmats/js-toolbox"
 import { surfaceSnacky } from "../../thunks/main"
+import { queryDevice } from "../../thunks/ledgerhq"
 
 
 
@@ -178,7 +178,7 @@ class Settings extends Component {
         this.props.showModal("implode")
 
         try {
-            await getSoftwareVersion()
+            await this.props.queryDevice()
             await this.setState({
                 progressMessage: "Preparing transaction ...",
                 completion: 5,
@@ -673,6 +673,7 @@ export default compose(
             resetPaymentsState: PaymentsAction.resetState,
             resetStellarAccountState: StellarAccountAction.resetState,
             surfaceSnacky,
+            queryDevice,
         }, dispatch)
     )
 )(Settings)

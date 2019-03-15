@@ -17,7 +17,6 @@ import {
 } from "../../lib/stellar-tx"
 import {
     signTransaction,
-    getSoftwareVersion,
 } from "../../lib/ledger"
 import { withAssetManager } from "../AssetManager"
 import {
@@ -44,6 +43,7 @@ import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { config } from "../../config"
 import { surfaceSnacky } from "../../thunks/main"
+import { queryDevice } from "../../thunks/ledgerhq"
 
 
 
@@ -120,7 +120,7 @@ class BalancesCard extends Component {
         })
 
         try {
-            await getSoftwareVersion()
+            await this.props.queryDevice()
 
             this.setState({
                 statusMessage: "Awaiting signature ...",
@@ -489,6 +489,7 @@ export default compose(
             showAlert: AlertAction.showAlert,
             updateAccountTree: StellarAccountAction.loadStellarAccount,
             surfaceSnacky,
+            queryDevice,
         }, dispatch)
     )
 )(BalancesCard)
