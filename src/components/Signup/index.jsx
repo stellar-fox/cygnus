@@ -152,7 +152,7 @@ const ManualEntryForm = func.compose(
                         color="secondary"
                         style={{ marginRight: "0px" }}
                         disabled={props.inProgress}
-                    >Sign Up</Button>
+                    >Go</Button>
                     <LinearProgress
                         variant="indeterminate"
                         classes={{
@@ -288,7 +288,6 @@ const Signup = ({ classes, clearInputErrorMessages }) => {
                             <LedgerAuthenticator
                                 onConnected={authViaLedger}
                                 className="welcome-lcars-input"
-                                setRedux={false}
                             />
                         </div>
                     }

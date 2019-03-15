@@ -109,7 +109,8 @@ const CredentialsForm = func.compose(
                     color="secondary"
                     style={{ marginRight: "0px" }}
                     disabled={props.signingUp || props.signingIn}
-                >Sign Up</Button>
+                >{props.accountId && props.account ? "Sign Up" : "Sign In"}
+                </Button>
                 <LinearProgress
                     variant="indeterminate"
                     classes={{
