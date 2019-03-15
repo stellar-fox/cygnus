@@ -34,7 +34,6 @@ import { surfaceSnacky } from "../thunks/main"
  */
 export const doBackendSignIn = (email, password) =>
     async (dispatch, _getState) => {
-        await dispatch(AuthActions.setSignupComplete())
 
         const authResp = await Axios
             .post(`${config.api}/user/authenticate/`, {
@@ -44,8 +43,13 @@ export const doBackendSignIn = (email, password) =>
 
         await dispatch(LoginManagerAction.setUserId(authResp.data.user_id))
         await dispatch(LoginManagerAction.setApiToken(authResp.data.token))
-        await dispatch(LedgerHQAction.setBip32Path(authResp.data.bip32Path))
+        await dispatch(
+            LedgerHQAction.setBip32Path(
+                authResp.data.bip32Path.toString(10)
+            )
+        )
         await dispatch(LedgerHQAction.setPublicKey(authResp.data.pubkey))
+        await dispatch(AuthActions.setSignupComplete())
     }
 
 

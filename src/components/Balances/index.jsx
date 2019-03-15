@@ -24,7 +24,6 @@ import { signTransaction, getSoftwareVersion } from "../../lib/ledger"
 import { listInternal, listRequested, } from "../Contacts/api"
 import {
     augmentAssets,
-    getRegisteredUser,
     getUserData,
     getUserExternalContacts,
     insertPathIndex,
@@ -63,8 +62,11 @@ import AssetDetails from "./AssetDetails"
 import { surfaceSnacky } from "../../thunks/main"
 
 
+
+
 // <Balances> component
 class Balances extends Component {
+
 
     // ...
     static propTypes = {
@@ -112,16 +114,11 @@ class Balances extends Component {
          */
         if (!this.props.StellarAccount.accountId) {
             this.props.showLoadingModal("Searching for account ...")
-            this._tmpQueryHorizon()
-            /**
-             * Query backend to check if the account with given publicKey and
-             * bip32Path has been registered before. TODO: this needs password
-             * as additional authentication since publicKey can be obtained
-             * and bip32Path is usually 0 or can be brut-forced.
-             */
-            this.checkForRegisteredAccount(
-                this.props.publicKey, this.props.bip32Path
-            )
+
+            // Fetch account data from Stellar network.
+            this.queryHorizon()
+            // Fetch user data if this account was already registered.
+            this.checkForRegisteredAccount()
         }
     }
 
@@ -185,14 +182,15 @@ class Balances extends Component {
 
 
     // ...
-    checkForRegisteredAccount = async (publicKey, bip32Path) => {
+    checkForRegisteredAccount = async () => {
         try {
             if (this.props.authenticated) {
-                const
-                    auth = await getRegisteredUser(publicKey, bip32Path),
-                    user = await getUserData(auth.data.user_id, auth.data.token)
 
-                this.props.setState({
+                const user = await getUserData(
+                    this.props.userId, this.props.token
+                )
+
+                await this.props.setAccountState({
                     firstName: user.first_name,
                     lastName: user.last_name,
                     email: user.email,
@@ -201,44 +199,37 @@ class Balances extends Component {
                     memo: user.memo,
                     discoverable: user.visible,
                     currency: user.currency,
-                })
-
-                /**
-                 * When user authenticates check for new contact requests so the badge
-                 * indicator can be activated upon new requests.
-                 */
-
-                this.updateContacts()
-
-                this.props.setState({
-                    currency: user.currency,
                     needsRegistration: false,
                 })
 
-                this.props.assetManager.updateExchangeRate(
-                    user.currency
-                )
+                /**
+                 * When user authenticates check for new contact requests
+                 * so the badge indicator can be activated upon new requests.
+                 */
+                this.updateContacts()
+
+                this.props.assetManager.updateExchangeRate(user.currency)
+
             } else {
-                this.props.setState({ needsRegistration: true })
+                await this.props.setAccountState({ needsRegistration: true })
             }
 
-            
-        } catch (_error) {
-            this.props.setState({ needsRegistration: true })
+        } catch (error) {
+            surfaceSnacky("error", error.message)
         }
     }
 
 
     // ...
-    _tmpQueryHorizon = async () => {
+    queryHorizon = async () => {
         try {
             const account = await loadAccount(
                 this.props.publicKey
             )
             this.updateAccountTree(account)
-            this.props.setState({ exists: true })
+            this.props.setAccountState({ exists: true })
         } catch (error) {
-            this.props.setState({ exists: false })
+            this.props.setAccountState({ exists: false })
         } finally {
             this.props.hideLoadingModal()
         }
@@ -471,7 +462,7 @@ export default compose(
         }),
         // match dispatch to props.
         (dispatch) => bindActionCreators({
-            setState: AccountAction.setState,
+            setAccountState: AccountAction.setState,
             setAssetsState: AssetManagerAction.setState,
             setBalancesState: BalancesAction.setState,
             setContactsState: ContactsAction.setState,
