@@ -19,7 +19,6 @@ import {
     signTransaction,
     getSoftwareVersion,
 } from "../../lib/ledger"
-import { withLoginManager } from "../LoginManager"
 import { withAssetManager } from "../AssetManager"
 import {
     Card,
@@ -411,16 +410,19 @@ class BalancesCard extends Component {
                         </Typography>
                     </Paper> :
                     <Fragment>
+
                         <Button
                             color="success"
                             onClick={this.toggleFundCard}
                         >Fund</Button>
-                        {this.props.loginManager.isPayEnabled() &&
-                            <Button
-                                color="danger"
-                                onClick={this.togglePaymentCard}
-                            >Pay</Button>
+
+                        {this.props.publicKey && this.props.bip32Path &&
+                        <Button
+                            color="danger"
+                            onClick={this.togglePaymentCard}
+                        >Pay</Button>
                         }
+
                     </Fragment>
                 }
             </CardActions>
@@ -466,7 +468,6 @@ class BalancesCard extends Component {
 
 // ...
 export default compose(
-    withLoginManager,
     withAssetManager,
     connect(
         // map state to props.
