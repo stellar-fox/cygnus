@@ -170,3 +170,23 @@
 .svg-tiny {
     height: 21px !important;
 }
+
+
+.blue {
+    color: rgb(46, 80, 119);
+}
+
+.summary-heading {
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.4rem;
+}
+
+.summary {
+    font-size: 1rem;
+    line-height: 1.3rem;
+}
+
+.compact {
+    width: 250px;
+}
