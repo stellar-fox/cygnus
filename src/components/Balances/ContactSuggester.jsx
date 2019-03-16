@@ -274,6 +274,16 @@ const renderSuggestionsContainer = (options) => {
 // ...
 class ContactSuggester extends Component {
 
+    // debounce federation address lookup function
+    constructor (props) {
+        super(props)
+        this.validatePaymentDestination = debounce(
+            this.validatePaymentDestination, 450
+        )
+    }
+
+
+    // ...
     state = {
         value: string.empty(),
         suggestions: [],
