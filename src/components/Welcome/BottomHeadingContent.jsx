@@ -2,7 +2,6 @@ import React from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { func } from "@xcmats/js-toolbox"
-import { baseReserve } from "../StellarFox/env"
 import { nativeToAsset } from "../../logic/assets"
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
 import {
@@ -106,7 +105,7 @@ export default func.compose(
             ),
         }),
         (dispatch) => bindActionCreators({
-            
+
         }, dispatch),
     ),
 )(BottomHeadingContent)
