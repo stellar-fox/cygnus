@@ -9,7 +9,7 @@ import {
 import Button from "../../lib/mui-v1/Button"
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
 import { Link } from "react-router-dom"
-
+import sflogo from "../StellarFox/static/sf.logo.png"
 
 
 
@@ -36,23 +36,30 @@ const TopHeadingContent = () => {
 
     return <div className="flex-box-row space-between">
         <div className={isMobile ? "flex-box-col" : "flex-box-row hero"}>
+            <img
+                style={{ opacity: "0.8", marginRight: "1rem", borderRadius: "2px"}}
+                src={sflogo}
+                width="40px"
+                height="40px"
+                alt="Stellar Fox"
+            />
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
-                <MuiLink href={"#"} underline="none" color="secondary">
+                <MuiLink component={Link} to="/why" underline="none" color="secondary">
                     Why Cygnus
                 </MuiLink>
             </Typography>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
-                <MuiLink href={"#"} underline="none" color="secondary">
+                <MuiLink component={Link} to="/features" underline="none" color="secondary">
                     Features
                 </MuiLink>
             </Typography>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
-                <MuiLink href={"#"} underline="none" color="secondary">
+                <MuiLink component={Link} to="/prices" underline="none" color="secondary">
                     Prices
                 </MuiLink>
             </Typography>
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
-                <MuiLink href={"#"} underline="none" color="secondary">
+                <MuiLink component={Link} to="/support" underline="none" color="secondary">
                     Support
                 </MuiLink>
             </Typography>

@@ -24,6 +24,7 @@ import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import LoginView from "../LoginView"
 import SignupView from "../SignupView"
+import Why from "../Welcome/Why"
 import "./index.css"
 import Snacky from "../../lib/mui-v1/Snacky"
 
@@ -69,6 +70,7 @@ export default compose(
                 "Bank": this.rr("bank/"),
                 "LoginView": this.rr("login/"),
                 "SignupView" : this.rr("signup/"),
+                "Why": this.rr("why/"),
             })
         }
 
@@ -123,6 +125,11 @@ export default compose(
                 <SignupView {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
 
+        // ...
+        renderWhyView = (routeProps) =>
+            !this.props.loggedIn ?
+                <Why {...routeProps} /> :
+                <Redirect to={this.props.staticRouter.getPath("Bank")} />
 
         // ...
         render = () => (
@@ -143,6 +150,9 @@ export default compose(
                         </Route>
                         <Route path={getPath("SignupView")}>
                             {this.renderSignupView}
+                        </Route>
+                        <Route path={getPath("Why")}>
+                            {this.renderWhyView}
                         </Route>
                         <Redirect to={getPath("Welcome")} />
                     </Switch>
