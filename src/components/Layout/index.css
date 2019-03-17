@@ -142,6 +142,8 @@ a.active {
 
 strong { color: rgb(212, 228, 188); }
 
+.blue { color: rgb(46, 80, 119); }
+
 .error { color: rgb(178, 34, 34); }
 
 .green { color: rgb(34, 139, 34); }
@@ -149,6 +151,8 @@ strong { color: rgb(212, 228, 188); }
 .red { color: rgb(211, 47, 47); }
 
 .yellow { color: #c89104; }
+
+.yellow-light { color: rgb(246, 190, 49); }
 
 .fade { opacity: 0.8; }
 
