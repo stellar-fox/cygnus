@@ -290,7 +290,7 @@ class PaymentCard extends Component {
                                         maxLength: 10,
                                     },
                                 }}
-
+                                disabled={!this.props.cancelEnabled}
                                 error={this.state.error}
                                 helperText={this.state.errorMessage}
                                 name="paycheck-payment-amount"
@@ -366,7 +366,7 @@ class PaymentCard extends Component {
                                         maxLength: 28,
                                     },
                                 }}
-
+                                disabled={!this.props.cancelEnabled}
                                 name="paycheck-payment-amount"
                                 type="text"
                                 onChange={this.memoValidator}
@@ -462,6 +462,7 @@ export default compose(
             StellarAccount: state.StellarAccount,
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,
+            cancelEnabled: state.Balances.cancelEnabled,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
