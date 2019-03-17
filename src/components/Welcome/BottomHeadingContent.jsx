@@ -84,7 +84,7 @@ const BottomHeadingContent = ({ usd }) => {
             </div>
             <div className="col-item">
                 <SettingsEthernet className="heading-svg-icon" />
-                100k transactions for {usd} <small>USD</small>
+                100k operations for {usd} <small>USD</small>
             </div>
             <div className="col-item">
                 <Replay className="heading-svg-icon" />
@@ -102,7 +102,7 @@ export default func.compose(
     connect(
         (state) => ({
             usd: nativeToAsset(
-                parseFloat(baseReserve) * 2, state.ExchangeRates.usd.rate
+                1, state.ExchangeRates.usd.rate
             ),
         }),
         (dispatch) => bindActionCreators({

@@ -242,6 +242,12 @@ export const baseReserve = "0.5"
 
 
 // ...
+export const stroop = "0.0000001"
+
+
+
+
+// ...
 export const transactionFetchLimit = 20
 
 
