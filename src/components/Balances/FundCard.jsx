@@ -29,13 +29,13 @@ const FundCard = (props) => {
     return <Card classes={{ root: classes.root }} className="account">
         <CardContent>
             <Typography variant="body1" color="primary" gutterBottom>
-                Fund your account with Stellar Lumens
+                Fund this account with Stellar Lumens
             </Typography>
 
             <Typography style={{ marginTop: "2rem" }}
                 variant="body2" color="inherit"
             >
-                Send Stellar Lumens to your Account ID:
+                Send Stellar Lumens to the following Account ID:
             </Typography>
 
             <div className="badge badge-primary-light">
