@@ -86,6 +86,16 @@
     text-shadow: 0px 0px 30px rgba(212, 228, 188, 0.6);
 }
 
+.about-content-heading {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.about-content-item {
+    font-size: 11px;
+    padding: 5px 0px;
+}
+
 .mui-text-input { margin-top: -0.8rem; }
 
 .panel-title {

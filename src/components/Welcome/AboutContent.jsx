@@ -2,13 +2,17 @@ import React, { Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { func } from "@xcmats/js-toolbox"
-import { Typography } from "@material-ui/core"
+import {
+    Link as MuiLink,
+    Typography,
+} from "@material-ui/core"
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
 import { withStyles } from "@material-ui/core/styles"
 import ledgerhqlogo from "./static/ledgerhqlogo.svg"
 import stellarlogo from "../StellarFox/static/stellar-logo.svg"
 import { stellarFoundationLink } from "../StellarFox/env"
 import sflogo from "../StellarFox/static/sf-logo.svg"
+import { Link } from "react-router-dom"
 
 
 
@@ -35,6 +39,50 @@ const AboutContent = ({ classes }) => {
     const isMobile = useMediaQuery("(max-width:960px)")
 
     return <Fragment>
+        <div style={{ paddingTop: isMobile ? "2rem" : "3rem" }} className={
+            `flex-box-row container ${classes.bg} ${isMobile && "space-between"}`}
+        >
+            <div className={`flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
+                <span className="fade about-content-heading">ABOUT US</span>
+                <MuiLink component={Link} to="/why" underline="none" color="secondary">
+                    <span className="fade-strong about-content-item">Who We Are</span>
+                </MuiLink>
+                <MuiLink target="_blank" rel="noopener noreferrer" href="/tos.txt" underline="none" color="secondary">
+                    <span className="fade-strong about-content-item">Terms of Use</span>
+                </MuiLink>
+                <MuiLink target="_blank" rel="noopener noreferrer" href="/privacy.txt" underline="none" color="secondary">
+                    <span className="fade-strong about-content-item">Privacy Policy</span>
+                </MuiLink>
+            </div>
+            <div className={`flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
+                <span className="fade about-content-heading">HELP</span>
+                <MuiLink component={Link} to="/faq" underline="none" color="secondary">
+                    <span className="fade-strong about-content-item">FAQ</span>
+                </MuiLink>
+                <MuiLink component={Link} to="/pgp" underline="none" color="secondary">
+                    <span className="fade-strong about-content-item">PGP Key</span>
+                </MuiLink>
+            </div>
+            <div className={`flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
+                <span className="fade about-content-heading">CONTACT US</span>
+                <MuiLink target="_blank" rel="noopener noreferrer"
+                    href="mailto:stellarfox.team@protonmail.com?subject=[WEB] Help"
+                    underline="none" color="secondary"
+                >
+                    <span className="fade-strong about-content-item">
+                        Send us an Email
+                    </span>
+                </MuiLink>
+                <MuiLink target="_blank" rel="noopener noreferrer"
+                    href="https://twitter.com/StellarFoxNet" underline="none"
+                    color="secondary"
+                >
+                    <span className="fade-strong about-content-item">
+                        Tweet at us!
+                    </span>
+                </MuiLink>
+            </div>
+        </div>
         {!isMobile && <div className={`p-t p-b ${classes.bg}`}>
             <div className={`flex-box-row content-centered items-centered ${classes.hr}`}></div>
         </div>}
@@ -58,7 +106,7 @@ const AboutContent = ({ classes }) => {
                         Stellar Development Foundation.
                     </a>. All rights reserved.
                 </Typography>
-                
+
             </div>
 
             <div className={`flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
@@ -84,7 +132,7 @@ const AboutContent = ({ classes }) => {
                     <i>Stellar Fox</i> is an independent company not affiliated with
                     Stellar Development Foundation. We build on top
                     of Stellar™ protocol and are using their platform SDK's.
-                </Typography> 
+                </Typography>
                 <Typography color="secondary" noWrap className={classes.disclaimer}>
                     <i>Stellar Fox</i> 2017-2019. All rights reserved.
                 </Typography>
@@ -146,7 +194,7 @@ export default func.compose(
         paddingNormal: {
             padding: "0 5%",
         },
-        
+
     })),
     connect(
         (_state) => ({}),
