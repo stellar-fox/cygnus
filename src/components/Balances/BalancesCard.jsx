@@ -44,7 +44,7 @@ import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { config } from "../../config"
 import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
-
+import { stellarLumenSymbol } from "../StellarFox/env"
 
 
 
@@ -313,27 +313,22 @@ class BalancesCard extends Component {
                         <Typography color="primary" variant="h5"
                             className="fade-extreme tabular-nums"
                         >
-                            <NumberFormat
+                            {stellarLumenSymbol} <NumberFormat
                                 value={this.props.StellarAccount.balance}
                                 displayType={"text"}
                                 thousandSeparator={true}
                                 decimalScale={7}
                                 fixedDecimalScale={true}
-                            /> XLM
+                            />
                         </Typography>
                         <Typography color="primary" variant="h5"
                             className="fade-extreme tabular-nums"
-                        >
-                            1 XLM ≈ <NumberFormat
-                                value={this.props.assetManager
-                                    .convertToAsset("1.0000000")
-                                }
-                                displayType={"text"}
-                                thousandSeparator={true}
-                                decimalScale={2}
-                                fixedDecimalScale={true}
-                            /> {this.props.assetManager.getAssetGlyph(
-                                this.props.Account.currency)}
+                        >{stellarLumenSymbol} 1 ≈ {this.props.assetManager.getAssetGlyph(
+                                this.props.Account.currency)
+                            } <NumberFormat value={this.props.assetManager
+                                .convertToAsset("1.0000000")
+                            } displayType={"text"} thousandSeparator={true} decimalScale={2} fixedDecimalScale={true}
+                            />
                         </Typography>
                     </div>
 
@@ -373,7 +368,7 @@ class BalancesCard extends Component {
                         </Typography>
                         <Typography variant="h5" color="primary">
                             <span className="fade-extreme tabular-nums">
-                                <NumberFormat
+                                {stellarLumenSymbol} <NumberFormat
                                     value={currentAccountReserve(
                                         this.props.StellarAccount.subentryCount
                                     )}
@@ -381,7 +376,7 @@ class BalancesCard extends Component {
                                     thousandSeparator={true}
                                     decimalScale={7}
                                     fixedDecimalScale={true}
-                                /> XLM
+                                />
                             </span>
                         </Typography>
                     </div>

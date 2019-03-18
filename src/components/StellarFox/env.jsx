@@ -20,6 +20,12 @@ export const appCodeName = "Cygnus™"
 
 
 
+// Stellar Lumen symbol
+export const stellarLumenSymbol = "∅"
+
+
+
+
 // application version - taken from package.json
 export const appVersion = version
 

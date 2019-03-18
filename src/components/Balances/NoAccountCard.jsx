@@ -15,7 +15,7 @@ import Button from "../../lib/mui-v1/Button"
 import { action as BalancesAction } from "../../redux/Balances"
 import { Typography } from "@material-ui/core"
 import NumberFormat from "react-number-format"
-
+import { stellarLumenSymbol } from "../StellarFox/env"
 
 
 // <NoAccountCard> component
@@ -79,18 +79,18 @@ class NoAccountCard extends Component {
             <Typography color="primary" variant="h5"
                 className="fade-extreme"
             >
-                <NumberFormat
+                {stellarLumenSymbol} <NumberFormat
                     value={0.0000000}
                     displayType={"text"}
                     thousandSeparator={true}
                     decimalScale={7}
                     fixedDecimalScale={true}
-                /> XLM
+                />
             </Typography>
             <Typography color="primary" variant="h5"
                 className="fade-extreme"
             >
-                1 XLM ≈ <NumberFormat
+                {stellarLumenSymbol} 1 ≈ <NumberFormat
                     value={this.props.assetManager
                         .convertToAsset("1.0000000")
                     }

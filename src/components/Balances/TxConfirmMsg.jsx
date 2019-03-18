@@ -15,13 +15,19 @@ import {
     nextSequenceNumber,
 } from "../../lib/utils"
 import {
-    gravatar, gravatarSize, serviceFee, serviceFeeCurrency,
+    gravatar,
+    gravatarSize,
+    serviceFee,
+    serviceFeeCurrency,
+    stellarLumenSymbol,
 } from "../StellarFox/env"
 import { Typography } from "@material-ui/core"
 import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
 import { liveNetAddr } from "../StellarFox/env"
 import BigNumber from "bignumber.js"
+
+
 
 
 // ...
@@ -169,7 +175,7 @@ class TxConfirmMsg extends Component {
                             </Typography>
 
                             <div className="micro text-primary fade-extreme p-b-small">
-                                {Balances.amountNative || "0.0000000"} XLM
+                                {stellarLumenSymbol} {Balances.amountNative || "0.0000000"}
                             </div>
 
                         </div>
@@ -204,7 +210,7 @@ class TxConfirmMsg extends Component {
                             </Typography>
 
                             <div className="micro text-primary fade-extreme p-b-small">
-                                {Balances.amountNative || "0.0000000"} XLM
+                                {stellarLumenSymbol} {Balances.amountNative || "0.0000000"}
                             </div>
 
                         </div>

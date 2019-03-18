@@ -1,25 +1,43 @@
 import React, { Component, Fragment } from "react"
-import { bindActionCreators, compose } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
 import {
-    CircularProgress, Paper, Table, TableBody, TableCell, TableHead, TableRow,
+    CircularProgress,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TablePagination,
+    TableRow,
     Typography,
 } from "@material-ui/core"
 import {
-    CardGiftcardRounded, MergeTypeRounded, PaymentRounded, TimelineRounded
+    CardGiftcardRounded,
+    MergeTypeRounded,
+    PaymentRounded,
+    TimelineRounded
 } from "@material-ui/icons"
-import TableFooter from "@material-ui/core/TableFooter"
-import TablePagination from "@material-ui/core/TablePagination"
 import PaginatorActions from "./PaginatorActions"
 import { action as PaymentsActions } from "../../redux/Payments"
-import { getArithmeticAmount, getPayments } from "../../lib/stellar/payments"
+import {
+    getArithmeticAmount,
+    getPayments,
+} from "../../lib/stellar/payments"
 import { async } from "@xcmats/js-toolbox"
 import { utcToLocaleDateTime } from "../../lib/utils"
 import { withAssetManager } from "../AssetManager"
 import BigNumber from "bignumber.js"
 import NumberFormat from "react-number-format"
+import { stellarLumenSymbol } from "../StellarFox/env"
+
+
 
 
 // ...
@@ -348,7 +366,7 @@ export default compose(
                                                     <div className="tiny fade-strong">
                                                         {this.colorize(row.amount)}
                                                         <span className="p-l-small">
-                                                            XLM
+                                                            {stellarLumenSymbol}
                                                         </span>
                                                     </div>
                                                 </div>

@@ -18,6 +18,8 @@ import {
     TableRowColumn,
 } from "material-ui/Table"
 import { Typography } from "@material-ui/core"
+import { stellarLumenSymbol } from "../StellarFox/env"
+
 
 
 
@@ -63,13 +65,13 @@ export default connect(
                                 </Typography>
                                 <Typography variant="caption" color="primary">
                                     <span className="fade-extreme">
-                                        <NumberFormat
+                                        {stellarLumenSymbol} <NumberFormat
                                             value={balances.amountNative}
                                             displayType={"text"}
                                             thousandSeparator={true}
                                             decimalScale={7}
                                             fixedDecimalScale={true}
-                                        /> XLM
+                                        />
                                     </span>
                                 </Typography>
                             </div>
