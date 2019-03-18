@@ -44,8 +44,8 @@ const Why = ({ classes }) => {
                     <span className="fade yellow-light summary-heading">
                         Why Cygnus?
                     </span>
-                        
-                    <div className="yellow-light fade-strong m-t summary">
+
+                    <div className={`yellow-light fade-strong m-t summary ${!isMobile && "text-4"}`}>
                         We designed this wallet with two major goals.
                         It had to be simple enough so even your parents could
                         use it and it had to provide enough security for the
@@ -59,7 +59,7 @@ const Why = ({ classes }) => {
                         address is really the address of the person who claims
                         it. With just a click of a button you can add your
                         destination contact and send them money.
-                        
+
                         Your funds are always safe as you sign all your
                         transactions with the hardware key ring, which keeps
                         your keys securely.
@@ -77,7 +77,7 @@ const Why = ({ classes }) => {
                     <span className="fade yellow-light summary-heading">
                         Who we are
                     </span>
-                    <div className="yellow-light fade-strong m-t summary">
+                    <div className={`yellow-light fade-strong m-t summary ${!isMobile && "text-3"}`}>
                         Recognizing the importance of Stellar network from the
                         onset, and understanding the significance of the global
                         protocol for moving value across borders, we developed
