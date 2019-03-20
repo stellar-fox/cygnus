@@ -22,6 +22,7 @@ export default createMuiTheme({
             light: rgb(36, 65, 98),
             dark: rgb(10, 30, 53),
             fade: rgba(15, 46, 83, 0.8),
+            other: rgb(46, 80, 119),
         },
 
         secondary: {

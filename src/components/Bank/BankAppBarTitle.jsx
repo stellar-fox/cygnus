@@ -8,13 +8,14 @@ import {
     appCodeName,
     liveNetAddr,
 } from "../StellarFox/env"
+import cygnusBlue from "../StellarFox/static/cygnusBlue.svg"
 
 
 
 
 // <BankAppBarTitle> component
 export default compose(
-    withStyles({
+    withStyles((theme) => ({
 
         appBarTitle: {
             float: "left",
@@ -25,6 +26,7 @@ export default compose(
         barTitle: {
             lineHeight: "45px",
             fontSize: "1.3rem",
+            color: theme.palette.primary.other,
         },
 
         barSubtitle: {
@@ -40,7 +42,7 @@ export default compose(
             fontSize: "14px",
         },
 
-    }),
+    })),
     connect(
         // map state to props.
         (state) => ({
@@ -52,7 +54,15 @@ export default compose(
     ({ classes, horizon, ledgerConnected, viewName }) =>
         <div>
             <div className={classes.appBarTitle}>
-                <div className={classes.barTitle}>{appCodeName}</div>
+                <div className={classes.barTitle}>
+                    {appCodeName}<img
+                        src={cygnusBlue}
+                        width="25px"
+                        height="25px"
+                        alt="Cygnus"
+                    />
+                </div>
+                
                 <div className={classes.barSubtitle}>{viewName}</div>
             </div>
             <div className={classes.indicatorSetCol}>

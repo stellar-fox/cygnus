@@ -5,9 +5,7 @@ import {
     compose,
 } from "redux"
 import { connect } from "react-redux"
-
 import { action as BankAction } from "../../redux/Bank"
-
 import { withStyles } from "@material-ui/core/styles"
 import {
     AppBar,
@@ -16,7 +14,6 @@ import {
     Typography,
 } from "@material-ui/core"
 import MenuIcon from "@material-ui/icons/Menu"
-
 import BankAppBarTitle from "./BankAppBarTitle"
 import BankAppBarItems from "./BankAppBarItems"
 import UserMenu from "../../lib/mui-v1/UserMenu"

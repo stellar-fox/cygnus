@@ -9,10 +9,8 @@ import {
 import Button from "../../lib/mui-v1/Button"
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
 import { Link } from "react-router-dom"
-import sflogo from "../StellarFox/static/sf.logo.png"
 import { withStyles } from "@material-ui/core/styles"
-
-
+import cygnusYellow from "../StellarFox/static/cygnusYellow.svg"
 
 
 /**
@@ -37,16 +35,18 @@ const TopHeadingContent = ({ classes }) => {
     const isMobile = useMediaQuery("(max-width:960px)")
 
     return <div className="flex-box-row space-between">
-        <div className={isMobile ? "flex-box-col" : "flex-box-row hero"}>
+        <div className={isMobile ? "flex-box-col hero" : "flex-box-row hero"}>
+
             <MuiLink component={Link} to="/">
                 <img
-                    style={{ opacity: "0.8", margin: "0 2rem 0 1rem", borderRadius: "2px"}}
-                    src={sflogo}
+                    style={{ opacity: "0.8", marginRight: "1rem", borderRadius: "2px" }}
+                    src={cygnusYellow}
                     width="40px"
                     height="40px"
-                    alt="Stellar Fox"
+                    alt="Cygnus"
                 />
             </MuiLink>
+
             <Typography className="hero" style={{ fontSize: 14 }} color="secondary">
                 <MuiLink classes={{ underlineNone: classes.underline }}
                     component={Link} to="/why" underline="none" color="secondary"

@@ -202,12 +202,12 @@
 .summary-heading {
     font-size: 1.3rem;
     font-weight: 600;
-    line-height: 1.4rem;
+    line-height: 2rem;
 }
 
 .summary {
     font-size: 1rem;
-    line-height: 1.3rem;
+    line-height: 1.6rem;
 }
 
 .compact {
