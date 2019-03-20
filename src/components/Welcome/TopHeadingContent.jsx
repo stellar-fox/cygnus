@@ -35,7 +35,10 @@ const TopHeadingContent = ({ classes }) => {
     const isMobile = useMediaQuery("(max-width:960px)")
 
     return <div className="flex-box-row space-between">
-        <div className={isMobile ? "flex-box-col hero" : "p-l-large flex-box-row hero"}>
+        <div
+            style={{ paddingLeft: isMobile ? "1rem" : "2rem" }}
+            className={isMobile ? "flex-box-col hero" : "flex-box-row hero"}
+        >
 
             <MuiLink component={Link} to="/">
                 <img
