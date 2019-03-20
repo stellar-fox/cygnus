@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { unregister } from "./lib/caching-service-worker"
-import createHistory from "history/createBrowserHistory"
+import { createBrowserHistory } from "history"
 import StellarFox, { env } from "./components/StellarFox"
 import {
     applyMiddleware,
@@ -40,8 +40,8 @@ import {
 
 
 window.addEventListener("load", () => {
-    
-    const history = createHistory({ /* basename: env.appBasePath, */ })
+
+    const history = createBrowserHistory()
 
     const store = (() => {
         let
