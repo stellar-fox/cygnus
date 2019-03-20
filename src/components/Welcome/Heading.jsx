@@ -37,10 +37,10 @@ class Heading extends Component {
 
                 <div className="m-t-large hero">
                     <Typography variant="h1" color="secondary">
-                        Welcome to Cygnus.
+                        This is Cygnus.
                     </Typography>
                     <div className="title">
-                        Join the financial inclusion.
+                        Welcome to the financial inclusion.
                     </div>
                     <div className="subtitle">
                         Open your <b>own</b> bank today and

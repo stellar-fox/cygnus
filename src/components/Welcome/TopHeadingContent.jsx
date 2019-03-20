@@ -35,14 +35,14 @@ const TopHeadingContent = ({ classes }) => {
     const isMobile = useMediaQuery("(max-width:960px)")
 
     return <div className="flex-box-row space-between">
-        <div className={isMobile ? "flex-box-col hero" : "flex-box-row hero"}>
+        <div className={isMobile ? "flex-box-col hero" : "p-l-large flex-box-row hero"}>
 
             <MuiLink component={Link} to="/">
                 <img
-                    style={{ opacity: "0.8", marginRight: "1rem", borderRadius: "2px" }}
+                    style={{ opacity: "0.9", marginRight: "1rem", borderRadius: "2px" }}
                     src={cygnusYellow}
-                    width="40px"
-                    height="40px"
+                    width="60px"
+                    height="60px"
                     alt="Cygnus"
                 />
             </MuiLink>
