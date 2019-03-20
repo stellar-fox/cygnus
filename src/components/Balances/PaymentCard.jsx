@@ -5,7 +5,10 @@ import {
     compose,
 } from "redux"
 import PropTypes from "prop-types"
-import { string } from "@xcmats/js-toolbox"
+import {
+    handleException,
+    string,
+} from "@xcmats/js-toolbox"
 import { BigNumber } from "bignumber.js"
 import {
     Card,
@@ -19,11 +22,12 @@ import {
 import {
     appName,
     securityMsgPlaceholder,
+    unknownPubKeyAbbr,
 } from "../StellarFox/env"
 import Button from "../../lib/mui-v1/Button"
 import { withAssetManager } from "../AssetManager"
 import { action as BalancesAction } from "../../redux/Balances"
-import sflogo from "../StellarFox/static/sf-logo.svg"
+import cygnusBlue from "../StellarFox/static/cygnusBlue.svg"
 import ContactSuggester from "./ContactSuggester"
 import {
     TextField,
@@ -32,6 +36,7 @@ import {
 import NumberFormat from "react-number-format"
 import { withStyles } from "@material-ui/core/styles"
 import { fade } from "@material-ui/core/styles/colorManipulator"
+import { pubKeyAbbr } from "../../lib/utils"
 
 
 
@@ -229,13 +234,26 @@ class PaymentCard extends Component {
             <CardText>
                 <div className="flex-box-row space-between">
                     <div>
-                        <div>
+                        <div className="flex-box-row">
                             <img
                                 style={{ opacity: "0.2" }}
-                                src={sflogo}
-                                width="140px"
+                                src={cygnusBlue}
+                                width="60px"
                                 alt={appName}
                             />
+                            <div className="sender-heading">
+                                <div style={{ paddingTop: "10px" }}>
+                                    {this.props.Account.firstName} {this.props.Account.lastName}
+                                </div>
+                                <div style={{ paddingTop: "5px", fontSize: "11px" }}>
+                                    {this.props.Account.paymentAddress ? this.props.Account.paymentAddress :
+                                        handleException(
+                                            () => pubKeyAbbr(this.props.publicKey),
+                                            () => unknownPubKeyAbbr
+                                        )
+                                    }
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -460,6 +478,7 @@ export default compose(
             Account: state.Account,
             Balances: state.Balances,
             StellarAccount: state.StellarAccount,
+            publicKey: state.LedgerHQ.publicKey,
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,
             cancelEnabled: state.Balances.cancelEnabled,
