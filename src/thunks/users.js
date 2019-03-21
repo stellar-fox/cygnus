@@ -234,6 +234,11 @@ export const setError = (error) =>
             return
         }
 
+        if (error.code === "auth/user-not-found") {
+            await dispatch(ErrorsActions.setEmailInputError("Email not found."))
+            return
+        }
+
         await dispatch(ErrorsActions.setOtherError(
             `[${error.code}]: ${error.message}`
         ))
