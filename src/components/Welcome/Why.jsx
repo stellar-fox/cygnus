@@ -3,6 +3,7 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { func } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
+import { Typography } from "@material-ui/core"
 import AboutContent from "../Welcome/AboutContent"
 import TopHeadingContent from "../Welcome/TopHeadingContent"
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
@@ -42,26 +43,30 @@ const Why = ({ classes }) => {
         >
             <div className={isMobile ? "flex-box-col" : "flex-box-row"}>
                 <div className={isMobile ? "hero-mobile" : "hero-large"}>
-                    <img
-                        style={{ opacity: "0.4" }}
-                        src={whyCygnus}
-                        width={ isMobile ? "250px" : "350px"}
-                        alt="Why Cygnus?"
-                    />
 
-                    <span style={{ fontSize: "3rem", color: "#c0c8d1" }}
-                        className="fade yellow-light summary-heading"
-                    >
-                        Why Cygnus?
-                    </span>
+                    <div className="flex-box-col m-b-large">
+                        <img
+                            style={{ opacity: "0.4" }}
+                            src={whyCygnus}
+                            width={ isMobile ? "250px" : "350px"}
+                            alt="Why Cygnus?"
+                        />
 
-                    <div
+                        <Typography variant="h1" noWrap>
+                            <span style={{ color: "#c0c8d1", lineHeight: "3.5rem"}}>
+                                Why Cygnus?
+                            </span>
+                        </Typography>
+                        <Typography variant="body2" color="secondary">
+                            20 seconds pitch
+                        </Typography>
+                    </div>
+
+                    <Typography variant="body1"
                         style={{
                             color: "#c0c8d1",
-                            lineHeight: isMobile ? "2rem" : "3rem",
+                            lineHeight: "2rem",
                         }}
-                        className={`m-t-large yellow-light fade-strong m-t
-                            summary ${!isMobile && "text-4"}`}
                     >
                         We designed this wallet with two major goals.
                         It had to be simple enough so even your parents could
@@ -80,7 +85,7 @@ const Why = ({ classes }) => {
                         Your funds are always safe as you sign all your
                         transactions with the hardware key ring, which keeps
                         your keys securely.
-                    </div>
+                    </Typography>
                 </div>
             </div>
         </div>
@@ -91,19 +96,19 @@ const Why = ({ classes }) => {
         >
             <div className={isMobile ? "flex-box-col" : "flex-box-row"}>
                 <div className={isMobile ? "hero-mobile" : "hero-large"}>
-                    <span
-                        style={{ fontSize: "2.5rem", color: "#c0c8d1" }}
-                        className="fade yellow-light summary-heading"
-                    >
-                        Who we are
-                    </span>
-                    <div
+
+                    <div className="flex-box-col m-b-large">
+                        <Typography variant="h1" noWrap>
+                            <span style={{ color: "#c0c8d1", lineHeight: "3.5rem"}}>
+                                Who we are
+                            </span>
+                        </Typography>
+                    </div>
+                    <Typography variant="body1"
                         style={{
                             color: "#c0c8d1",
-                            lineHeight: isMobile ? "2rem" : "3rem",
+                            lineHeight: "2rem",
                         }}
-                        className={`yellow-light fade-strong m-t
-                            summary ${!isMobile && "text-3"}`}
                     >
                         Recognizing the importance of Stellar network from the
                         onset, and understanding the significance of the global
@@ -113,7 +118,7 @@ const Why = ({ classes }) => {
                         wanted for the users to experience for the first time
                         how easy it is to manage and control your investments
                         with this technology.
-                    </div>
+                    </Typography>
                 </div>
             </div>
         </div>
@@ -123,18 +128,20 @@ const Why = ({ classes }) => {
         >
             <div className={isMobile ? "flex-box-col" : "flex-box-row"}>
                 <div className={isMobile ? "hero-mobile" : "hero-large"}>
-                    <div
-                        style={{
-                            lineHeight: isMobile ? "2rem" : "3rem",
-                        }}
-                        className={`yellow fade ${
-                            isMobile ? "mission-mobile" : "mission"}`}
-                    >
-                        Our mission is to accelerate adoption of Stellar
-                        ecosystem and protocol so that you and the
-                        rest of the World can achieve financial inclusion and
-                        true financial freedom.
+
+                    <div className="flex-box-col m-b-large">
+                        <Typography
+                            variant={isMobile ? "h4" : "h1"}
+                            color="secondary"
+                            style={{ lineHeight: 1.3 }}
+                        >
+                            Our mission is to accelerate adoption of Stellar
+                            ecosystem and protocol so that you and the
+                            rest of the World can achieve financial inclusion
+                            and true financial freedom.
+                        </Typography>
                     </div>
+
                 </div>
             </div>
         </div>
