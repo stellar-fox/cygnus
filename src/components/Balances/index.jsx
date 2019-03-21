@@ -46,7 +46,6 @@ import { action as LoadingModalAction } from "../../redux/LoadingModal"
 import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import RegisterCard from "./RegisterCard"
-import BalancesCard from "./BalancesCard"
 import NoAccountCard from "./NoAccountCard"
 import PaymentCard from "./PaymentCard"
 import TxConfirmMsg from "./TxConfirmMsg"
@@ -62,6 +61,7 @@ import FundCard from "./FundCard"
 import AssetDetails from "./AssetDetails"
 import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
+import BalanceSummary from "./BalanceSummary"
 
 
 
@@ -420,7 +420,7 @@ class Balances extends Component {
 
                         {
                             this.props.StellarAccount.accountId ?
-                                <BalancesCard /> : <NoAccountCard />
+                                <BalanceSummary className="m-b" /> : <NoAccountCard />
                         }
 
                         {
