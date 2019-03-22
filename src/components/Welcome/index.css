@@ -211,5 +211,9 @@
 }
 
 .compact {
+    width: 450px;
+}
+
+.compact-mobile {
     width: 250px;
 }
