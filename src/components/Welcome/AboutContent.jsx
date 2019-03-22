@@ -83,12 +83,14 @@ const AboutContent = ({ classes }) => {
                 </MuiLink>
             </div>
         </div>
+
         {!isMobile && <div className={`p-t p-b ${classes.bg}`}>
             <div className={`flex-box-row content-centered items-centered ${classes.hr}`}></div>
         </div>}
+
         <div className={
             isMobile ?
-                `flex-box-col content-centered items-centered container ${classes.bg} ${classes.considerFooter}` :
+                `flex-box-col container ${classes.bg} ${classes.considerFooter}` :
                 `flex-box-row space-around container ${classes.bg}`}
         >
 
