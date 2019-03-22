@@ -11,7 +11,7 @@ import { withStyles } from "@material-ui/core/styles"
 import ledgerhqlogo from "./static/ledgerhqlogo.svg"
 import stellarlogo from "../StellarFox/static/stellar-logo.svg"
 import { stellarFoundationLink } from "../StellarFox/env"
-import sflogo from "../StellarFox/static/sf-logo.svg"
+import sflogo from "../StellarFox/static/sf-logo.png"
 import { Link } from "react-router-dom"
 
 
@@ -126,6 +126,7 @@ const AboutContent = ({ classes }) => {
 
             <div className={`flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
                 <img
+                    style={{ borderRadius: "1px" }}
                     className="footnote-logo"
                     src={sflogo}
                     alt="Stellar Fox"
