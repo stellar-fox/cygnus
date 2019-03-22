@@ -87,7 +87,7 @@ const BottomHeadingContent = ({ usd }) => {
             </div>
             <div className="col-item">
                 <Replay className="heading-svg-icon" />
-                Free recurring payments.
+                Weekly dividend of 1% p.a.
             </div>
         </div>
     </div>

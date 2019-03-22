@@ -18,6 +18,7 @@ import {
     Fade,
     Typography,
 } from "@material-ui/core"
+import cygnusYellow from "../StellarFox/static/cygnusYellow.svg"
 
 
 
@@ -37,6 +38,13 @@ const Loader = ({
         <div>
             <main className={classes.layout}>
                 <div className={classes.rect}>
+                    <img
+                        style={{ opacity: "0.9" }}
+                        src={cygnusYellow}
+                        width="60px"
+                        height="60px"
+                        alt="Cygnus"
+                    />
                     <Typography className={classes.infoMessage}>
                         {infoMessage}
                     </Typography>
