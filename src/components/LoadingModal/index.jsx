@@ -10,15 +10,12 @@ import "./index.css"
 export default connect(
     // map state to props.
     (state) => ({
-        visible: state.LoadingModal.visible,
+        visible: state.StellarAccount.loading,
         text: state.LoadingModal.text,
     })
 )(
     // <LoadingModal> component
-    ({
-        visible,
-        text,
-    }) => visible && <div>
+    ({ visible }) => visible && <div>
         <div className="loading-modal-background" />
         <div className="loading-modal">
             <div className="loading-modal-header">
@@ -29,7 +26,7 @@ export default connect(
                 <CircularProgress color="secondary" />
             </div>
             <div className="loading-modal-content">
-                {text}
+                Loading Account Data
             </div>
             <div className="loading-modal-content">
                 <i className="material-icons">search</i>
