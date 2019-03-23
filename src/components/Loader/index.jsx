@@ -39,10 +39,9 @@ const Loader = ({
             <main className={classes.layout}>
                 <div className={classes.rect}>
                     <img
-                        style={{ opacity: "0.9" }}
+                        style={{ opacity: "0.9", marginBottom: "0.5rem" }}
                         src={cygnusYellow}
                         width="60px"
-                        height="60px"
                         alt="Cygnus"
                     />
                     <Typography className={classes.infoMessage}>
