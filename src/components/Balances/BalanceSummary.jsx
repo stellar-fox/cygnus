@@ -49,7 +49,7 @@ import { nativeToAsset } from "../../logic/assets"
  */
 const BalanceSummary = ({
     accountId, balance, bip32Path, classes, className, currency,
-    fundCardVisible, nativeExchangeRate, payCardVisible,
+    fundCardVisible, preferredRate, payCardVisible,
     publicKey, setBalancesState, signers,
     subentryCount,
 }) => {
@@ -89,7 +89,7 @@ const BalanceSummary = ({
                             <NumberFormat
                                 value={nativeToAsset(
                                     balance,
-                                    nativeExchangeRate
+                                    preferredRate
                                 )}
                                 displayType={"text"}
                                 thousandSeparator={true}
@@ -143,7 +143,7 @@ const BalanceSummary = ({
                             assetGlyph(currency)
                         } <NumberFormat
                             value={
-                                nativeToAsset("1.0000000", nativeExchangeRate)
+                                nativeToAsset("1.0000000", preferredRate)
                             }
                             displayType={"text"}
                             thousandSeparator={true}
@@ -178,7 +178,7 @@ const BalanceSummary = ({
                                 value={
                                     nativeToAsset(currentAccountReserve(
                                         subentryCount
-                                    ), nativeExchangeRate)
+                                    ), preferredRate)
                                 }
                                 displayType={"text"}
                                 thousandSeparator={true}
@@ -277,7 +277,7 @@ export default func.compose(
             publicKey: state.LedgerHQ.publicKey,
             signers: state.StellarAccount.signers,
             subentryCount: state.StellarAccount.subentryCount,
-            nativeExchangeRate: state.ExchangeRates[state.Account.currency].rate,
+            preferredRate: state.ExchangeRates[state.Account.currency].rate,
         }),
         (dispatch) => bindActionCreators({
             setBalancesState: BalancesAction.setState,

@@ -162,7 +162,7 @@ class PaymentCard extends Component {
         // amount is a valid positive number with fixed precision of 2 decimals
         this.props.setState({
             amount,
-            amountNative: assetToNative(amount, this.props.nativeExchangeRate),
+            amountNative: assetToNative(amount, this.props.preferredRate),
             amountIsValid: true,
         })
 
@@ -485,7 +485,7 @@ export default compose(
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,
             cancelEnabled: state.Balances.cancelEnabled,
-            nativeExchangeRate: state.ExchangeRates[state.Account.currency].rate,
+            preferredRate: state.ExchangeRates[state.Account.currency].rate,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({

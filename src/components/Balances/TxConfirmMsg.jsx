@@ -116,7 +116,7 @@ class TxConfirmMsg extends Component {
             const rate = new BigNumber(this.props.assetManager.exchangeRate(
                 1.00, contactCurrency))
 
-            const rateContact = nativeToAsset("1.00", this.props.nativeExchangeRate)
+            const rateContact = nativeToAsset("1.00", this.props.preferredRate)
 
 
             return contactCurrency !== this.props.Account.currency ?
@@ -419,7 +419,7 @@ export default compose (
             horizon: state.StellarAccount.horizon,
             publicKey: state.StellarAccount.accountId,
             sequence: state.StellarAccount.sequence,
-            nativeExchangeRate: state.ExchangeRates[state.Account.currency].rate,
+            preferredRate: state.ExchangeRates[state.Account.currency].rate,
         })
     )
 )(TxConfirmMsg)
