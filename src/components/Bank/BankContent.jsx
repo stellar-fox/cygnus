@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { compose } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import {
     Redirect,
@@ -15,13 +18,17 @@ import {
     resolvePath,
     withStaticRouter,
 } from "../StellarRouter"
-
 import { withStyles } from "@material-ui/core/styles"
-
 import Account from "../Account"
 import Balances from "../Balances"
 import Payments from "../Payments"
 import Contacts from "../Contacts"
+import { fetchStellarAccount } from "../../thunks/stellar"
+import {
+    getUserProfile,
+    surfaceRegistrationCard,
+} from "../../thunks/users"
+
 
 
 
@@ -41,8 +48,18 @@ export default compose(
     }),
     withStaticRouter,
     connect(
-        // map state to props.
-        (state) => ({ drawerVisible: state.Bank.drawerVisible, })
+        // map state to props
+        (state) => ({
+            accountId: state.StellarAccount.accountId,
+            authenticated: state.Auth.authenticated,
+            drawerVisible: state.Bank.drawerVisible,
+        }),
+        // actions to props
+        (dispatch) => bindActionCreators({
+            fetchStellarAccount,
+            getUserProfile,
+            surfaceRegistrationCard,
+        }, dispatch)
     )
 )(
     class extends Component {
@@ -72,13 +89,22 @@ export default compose(
             })
         }
 
-
-        // ...
         state = {}
 
+        componentDidMount = () => {
+            if (!this.props.accountId) {
+                this.props.fetchStellarAccount()
+            }
+
+            this.props.authenticated ?
+                this.props.getUserProfile() :
+                this.props.surfaceRegistrationCard()
+
+        }
+
 
         // ...
-        static getDerivedStateFromProps = ({ drawerVisible, }) => ({
+        static getDerivedStateFromProps = ({ drawerVisible }) => ({
             style: {
                 paddingLeft: drawerVisible ?
                     bankDrawerWidth + contentPaneSeparation :
@@ -89,7 +115,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ style, }, { classes, staticRouter: { getPath, }, }) =>
+            ({ style }, { classes, staticRouter: { getPath } }) =>
                 <div style={style} className={classes.bankContent}>
                     <Switch>
                         <Redirect exact

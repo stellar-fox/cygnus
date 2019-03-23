@@ -13,7 +13,6 @@ import {
     Typography,
 } from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
-import { withAssetManager } from "../AssetManager"
 import {
     accountIsLocked,
     currentAccountReserve,
@@ -21,6 +20,11 @@ import {
 import { stellarLumenSymbol } from "../StellarFox/env"
 import NumberFormat from "react-number-format"
 import { action as BalancesAction } from "../../redux/Balances"
+import {
+    assetDescription,
+    assetGlyph,
+} from "../../lib/asset-utils"
+import { nativeToAsset } from "../../logic/assets"
 
 
 
@@ -44,8 +48,9 @@ import { action as BalancesAction } from "../../redux/Balances"
  * @returns {React.ReactElement}
  */
 const BalanceSummary = ({
-    accountId, assetManager, balance, bip32Path, classes, className, currency,
-    fundCardVisible, payCardVisible, publicKey, setBalancesState, signers,
+    accountId, balance, bip32Path, classes, className, currency,
+    fundCardVisible, nativeExchangeRate, payCardVisible,
+    publicKey, setBalancesState, signers,
     subentryCount,
 }) => {
 
@@ -63,195 +68,188 @@ const BalanceSummary = ({
         })
 
 
+    return <Grow in={true}><Card
+        className={className}
+        classes={{ root: classes.card }}
+    >
+        <CardHeader
+            title="Current Balance"
+            subheader={assetDescription(currency)}
+        />
+        <CardContent>
+            <div className="flex-box-row space-between">
 
-    return <Grow in={true}>
-        <Card className={className} classes={{ root: classes.card }}>
-            <CardHeader
-                title="Current Balance"
-                subheader={assetManager.getAssetDescription(currency)}
-            />
-            <CardContent>
-                <div className="flex-box-row space-between">
-
-                    {/* Left Side Section */}
-                    <div>
-                        <div className="text-primary">
-                            <span className="fade currency-glyph">
-                                {
-                                    assetManager.getAssetGlyph(
-                                        currency
-                                    )
-                                }
-                            </span>
-                            <span className="p-l-medium balance tabular-nums">
-                                <NumberFormat
-                                    value={
-                                        assetManager.convertToAsset(
-                                            balance
-                                        )
-                                    }
-                                    displayType={"text"}
-                                    thousandSeparator={true}
-                                    decimalScale={2}
-                                    fixedDecimalScale={true}
-                                />
-                            </span>
-
-                            {accountIsLocked(signers, accountId) &&
-                                <div className="red"
-                                    style={{
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Icon
-                                        style={{
-                                            marginLeft: "1rem",
-                                            marginBottom: "6px",
-                                            fontSize: "20px",
-                                        }}
-                                    >
-                                    lock
-                                    </Icon>
-                                    <span style={{
-                                        fontSize: "14px",
-                                        marginBottom: "3px",
-                                        marginLeft: "2px",
-                                    }}
-                                    >
-                                        Account Locked
-                                    </span>
-                                </div>
-                            }
-
-                        </div>
-                        <Typography color="primary" variant="h5"
-                            className="fade-extreme tabular-nums"
-                        >
-                            {stellarLumenSymbol} <NumberFormat
-                                value={balance}
+                {/* Left Side Section */}
+                <div>
+                    <div className="text-primary">
+                        <span className="fade currency-glyph">
+                            {assetGlyph(currency)}
+                        </span>
+                        <span className="p-l-medium balance tabular-nums">
+                            <NumberFormat
+                                value={nativeToAsset(
+                                    balance,
+                                    nativeExchangeRate
+                                )}
                                 displayType={"text"}
                                 thousandSeparator={true}
-                                decimalScale={7}
+                                decimalScale={2}
                                 fixedDecimalScale={true}
                             />
-                        </Typography>
-                        <Typography color="primary" variant="h5"
-                            className="fade-extreme tabular-nums"
-                        >{stellarLumenSymbol} 1 ≈ {
-                                assetManager.getAssetGlyph(currency)
-                            } <NumberFormat
+                        </span>
+
+                        {accountIsLocked(signers, accountId) &&
+                            <div className="red"
+                                style={{
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Icon
+                                    style={{
+                                        marginLeft: "1rem",
+                                        marginBottom: "6px",
+                                        fontSize: "20px",
+                                    }}
+                                >
+                                lock
+                                </Icon>
+                                <span style={{
+                                    fontSize: "14px",
+                                    marginBottom: "3px",
+                                    marginLeft: "2px",
+                                }}
+                                >
+                                    Account Locked
+                                </span>
+                            </div>
+                        }
+
+                    </div>
+                    <Typography color="primary" variant="h5"
+                        className="fade-extreme tabular-nums"
+                    >
+                        {stellarLumenSymbol} <NumberFormat
+                            value={balance}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            decimalScale={7}
+                            fixedDecimalScale={true}
+                        />
+                    </Typography>
+                    <Typography color="primary" variant="h5"
+                        className="fade-extreme tabular-nums"
+                    >{stellarLumenSymbol} 1 ≈ {
+                            assetGlyph(currency)
+                        } <NumberFormat
+                            value={
+                                nativeToAsset("1.0000000", nativeExchangeRate)
+                            }
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            decimalScale={2}
+                            fixedDecimalScale={true}
+                        />
+                    </Typography>
+                </div>
+
+
+                {/* Right Side Section */}
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignContent: "center",
+                        alignItems: "flex-end",
+                    }}
+                >
+                    <Typography variant="caption" color="primary">
+                        <span className="fade-strong">Min Balance</span>
+                    </Typography>
+                    <Typography variant="body1" color="primary">
+                        <span
+                            style={{ paddingRight: "3px" }}
+                            className="fade"
+                        >
+                            {assetGlyph(currency)}
+                        </span>
+                        <span className="fade tabular-nums">
+                            <NumberFormat
                                 value={
-                                    assetManager.convertToAsset("1.0000000")
+                                    nativeToAsset(currentAccountReserve(
+                                        subentryCount
+                                    ), nativeExchangeRate)
                                 }
                                 displayType={"text"}
                                 thousandSeparator={true}
                                 decimalScale={2}
                                 fixedDecimalScale={true}
                             />
-                        </Typography>
-                    </div>
-
-
-                    {/* Right Side Section */}
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignContent: "center",
-                            alignItems: "flex-end",
-                        }}
-                    >
-                        <Typography variant="caption" color="primary">
-                            <span className="fade-strong">Min Balance</span>
-                        </Typography>
-                        <Typography variant="body1" color="primary">
-                            <span
-                                style={{ paddingRight: "3px" }}
-                                className="fade"
-                            >
-                                {assetManager.getAssetGlyph(currency)}
-                            </span>
-                            <span className="fade tabular-nums">
-                                <NumberFormat
-                                    value={
-                                        assetManager.convertToAsset(
-                                            currentAccountReserve(
-                                                subentryCount
-                                            )
-                                        )
-                                    }
-                                    displayType={"text"}
-                                    thousandSeparator={true}
-                                    decimalScale={2}
-                                    fixedDecimalScale={true}
-                                />
-                            </span>
-                        </Typography>
-                        <Typography variant="h5" color="primary">
-                            <span className="fade-extreme tabular-nums">
-                                {stellarLumenSymbol} <NumberFormat
-                                    value={
-                                        currentAccountReserve(
-                                            subentryCount
-                                        )
-                                    }
-                                    displayType={"text"}
-                                    thousandSeparator={true}
-                                    decimalScale={7}
-                                    fixedDecimalScale={true}
-                                />
-                            </span>
-                        </Typography>
-                    </div>
+                        </span>
+                    </Typography>
+                    <Typography variant="h5" color="primary">
+                        <span className="fade-extreme tabular-nums">
+                            {stellarLumenSymbol} <NumberFormat
+                                value={
+                                    currentAccountReserve(
+                                        subentryCount
+                                    )
+                                }
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                decimalScale={7}
+                                fixedDecimalScale={true}
+                            />
+                        </span>
+                    </Typography>
                 </div>
-                {accountIsLocked(signers, accountId) &&
-                    <Fragment>
-                        <div className="flex-box-row">
-                            <div className="m-t-medium badge-error">
-                                <Typography variant="h3" color="inherit">
-                                    Account Locked
-                                </Typography>
-                            </div>
-                        </div>
-                        <div className="m-t flex-box-col">
-                            <Typography variant="body1" color="textPrimary">
-                                Warning!
-                            </Typography>
-                            <Typography variant="body2" color="primary">
-                                This account has been locked and this state cannot
-                                be undone. All remaining funds are frozen and final.
-                            </Typography>
-                            <Typography variant="body2" color="primary">
-                                <b>DO NOT</b> deposit
-                                anything onto this account as you will never be
-                                able to recover or withdraw those funds.
+            </div>
+            {accountIsLocked(signers, accountId) &&
+                <Fragment>
+                    <div className="flex-box-row">
+                        <div className="m-t-medium badge-error">
+                            <Typography variant="h3" color="inherit">
+                                Account Locked
                             </Typography>
                         </div>
-                    </Fragment>
-                }
-            </CardContent>
-            <CardActions disableActionSpacing>
-                {!accountIsLocked(signers, accountId) &&
-                    <Fragment>
+                    </div>
+                    <div className="m-t flex-box-col">
+                        <Typography variant="body1" color="textPrimary">
+                            Warning!
+                        </Typography>
+                        <Typography variant="body2" color="primary">
+                            This account has been locked and this state cannot
+                            be undone. All remaining funds are frozen and final.
+                        </Typography>
+                        <Typography variant="body2" color="primary">
+                            <b>DO NOT</b> deposit
+                            anything onto this account as you will never be
+                            able to recover or withdraw those funds.
+                        </Typography>
+                    </div>
+                </Fragment>
+            }
+        </CardContent>
+        <CardActions disableActionSpacing>
+            {!accountIsLocked(signers, accountId) &&
+                <Fragment>
 
-                        <Button
-                            color="success"
-                            onClick={toggleFundCard}
-                        >Fund</Button>
+                    <Button
+                        color="success"
+                        onClick={toggleFundCard}
+                    >Fund</Button>
 
-                        {publicKey && bip32Path &&
-                        <Button
-                            color="danger"
-                            onClick={togglePaymentCard}
-                        >Pay</Button>
-                        }
+                    {publicKey && bip32Path &&
+                    <Button
+                        color="danger"
+                        onClick={togglePaymentCard}
+                    >Pay</Button>
+                    }
 
-                    </Fragment>
-                }
-            </CardActions>
-        </Card>
-    </Grow>
+                </Fragment>
+            }
+        </CardActions>
+    </Card></Grow>
 }
 
 
@@ -259,7 +257,6 @@ const BalanceSummary = ({
 
 // ...
 export default func.compose(
-    withAssetManager,
     withStyles((theme) => ({
         card: {
             boxSizing: "border-box",
@@ -280,6 +277,7 @@ export default func.compose(
             publicKey: state.LedgerHQ.publicKey,
             signers: state.StellarAccount.signers,
             subentryCount: state.StellarAccount.subentryCount,
+            nativeExchangeRate: state.ExchangeRates[state.Account.currency].rate,
         }),
         (dispatch) => bindActionCreators({
             setBalancesState: BalancesAction.setState,

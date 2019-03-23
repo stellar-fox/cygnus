@@ -26,7 +26,7 @@ import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
 import { liveNetAddr } from "../StellarFox/env"
 import BigNumber from "bignumber.js"
-
+import { nativeToAsset } from "../../logic/assets"
 
 
 
@@ -116,11 +116,8 @@ class TxConfirmMsg extends Component {
             const rate = new BigNumber(this.props.assetManager.exchangeRate(
                 1.00, contactCurrency))
 
-            const rateContact = new BigNumber(
-                this.props.assetManager.exchangeRate(
-                    1.00, this.props.Account.currency
-                )
-            )
+            const rateContact = nativeToAsset("1.00", this.props.nativeExchangeRate)
+
 
             return contactCurrency !== this.props.Account.currency ?
                 `${sfee.dividedBy(rate).toFixed(2)} ${
@@ -422,6 +419,7 @@ export default compose (
             horizon: state.StellarAccount.horizon,
             publicKey: state.StellarAccount.accountId,
             sequence: state.StellarAccount.sequence,
+            nativeExchangeRate: state.ExchangeRates[state.Account.currency].rate,
         })
     )
 )(TxConfirmMsg)

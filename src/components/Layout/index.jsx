@@ -20,7 +20,6 @@ import { Null } from "../../lib/utils"
 import { firebaseApp } from "../../components/StellarFox"
 import { action as AuthAction } from "../../redux/Auth"
 import AlertModal from "./AlertModal"
-import LoadingModal from "../LoadingModal"
 import Welcome from "../Welcome"
 import LoginView from "../LoginView"
 import SignupView from "../SignupView"
@@ -137,7 +136,6 @@ export default compose(
                 <Fragment>
                     <Snacky />
                     <AlertModal />
-                    <LoadingModal />
                     <Switch>
                         <Route exact path={getPath("Welcome")}>
                             { this.renderWelcome }

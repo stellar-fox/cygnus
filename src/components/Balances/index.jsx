@@ -32,7 +32,6 @@ import {
 } from "../../lib/utils"
 import { delay } from "@xcmats/js-toolbox"
 import {
-    loadAccount,
     buildCreateAccountTx,
     buildPaymentTx,
     submitTransaction,
@@ -62,6 +61,7 @@ import AssetDetails from "./AssetDetails"
 import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
 import BalanceSummary from "./BalanceSummary"
+import LoadingModal from "../LoadingModal"
 
 
 
@@ -95,6 +95,7 @@ class Balances extends Component {
 
     // ...
     componentDidMount = () => {
+
         this.setState({
             paymentsStreamer: paymentsStreamer(
                 this.props.surfaceSnacky,
@@ -110,17 +111,6 @@ class Balances extends Component {
             ),
         })
 
-        /**
-         * Query Horizon and check if the account exists on Stellar Ledger.
-         */
-        if (!this.props.StellarAccount.accountId) {
-            this.props.showLoadingModal("Searching for account ...")
-
-            // Fetch account data from Stellar network.
-            this.queryHorizon()
-            // Fetch user data if this account was already registered.
-            this.checkForRegisteredAccount()
-        }
     }
 
 
@@ -221,21 +211,6 @@ class Balances extends Component {
     }
 
 
-    // ...
-    queryHorizon = async () => {
-        try {
-            const account = await loadAccount(
-                this.props.publicKey
-            )
-            this.updateAccountTree(account)
-            this.props.setAccountState({ exists: true })
-        } catch (error) {
-            this.props.setAccountState({ exists: false })
-        } finally {
-            this.props.hideLoadingModal()
-        }
-    }
-
 
     // ...
     buildSendTransaction = async () => {
@@ -244,8 +219,7 @@ class Balances extends Component {
             const paymentData = {
                 source: this.props.publicKey,
                 destination: this.props.Balances.payee,
-                amount: this.props.assetManager.convertToNative(
-                    this.props.Balances.amount),
+                amount: this.props.Balances.amountNative,
                 memo: this.props.Balances.memoText,
                 network: this.props.horizon,
             }
@@ -418,14 +392,19 @@ class Balances extends Component {
                             signupHintVisible && <RegisterCard />
                         }
 
-                        {
+
+                        {this.props.StellarAccount.loading ?
+                            <LoadingModal /> :
                             this.props.StellarAccount.accountId ?
-                                <BalanceSummary className="m-b" /> : <NoAccountCard />
+                                <BalanceSummary className="m-b" /> :
+                                <NoAccountCard />
                         }
+
 
                         {
                             Balances.fundCardVisible && <FundCard />
                         }
+
 
                         {
                             Balances.payCardVisible &&

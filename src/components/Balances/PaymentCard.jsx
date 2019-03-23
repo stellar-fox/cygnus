@@ -37,6 +37,7 @@ import NumberFormat from "react-number-format"
 import { withStyles } from "@material-ui/core/styles"
 import { fade } from "@material-ui/core/styles/colorManipulator"
 import { pubKeyAbbr } from "../../lib/utils"
+import { assetToNative } from "../../logic/assets"
 
 
 
@@ -161,7 +162,7 @@ class PaymentCard extends Component {
         // amount is a valid positive number with fixed precision of 2 decimals
         this.props.setState({
             amount,
-            amountNative: this.props.assetManager.convertToNative(amount),
+            amountNative: assetToNative(amount, this.props.nativeExchangeRate),
             amountIsValid: true,
         })
 
@@ -175,7 +176,9 @@ class PaymentCard extends Component {
             transactionAsset: { asset_code: this.props.Account.currency },
         })
 
-        this.enableSignButton()
+        if (this.props.Balances.payee) {
+            this.enableSignButton()
+        }
     }
 
 
@@ -238,14 +241,14 @@ class PaymentCard extends Component {
                             <img
                                 style={{ opacity: "0.2" }}
                                 src={cygnusBlue}
-                                width="60px"
+                                width="40px"
                                 alt={appName}
                             />
                             <div className="sender-heading">
                                 <div style={{ paddingTop: "10px" }}>
                                     {this.props.Account.firstName} {this.props.Account.lastName}
                                 </div>
-                                <div style={{ paddingTop: "5px", fontSize: "11px" }}>
+                                <div style={{ paddingTop: "2px", fontSize: "11px" }}>
                                     {this.props.Account.paymentAddress ? this.props.Account.paymentAddress :
                                         handleException(
                                             () => pubKeyAbbr(this.props.publicKey),
@@ -482,6 +485,7 @@ export default compose(
             token: state.LoginManager.token,
             userId: state.LoginManager.userId,
             cancelEnabled: state.Balances.cancelEnabled,
+            nativeExchangeRate: state.ExchangeRates[state.Account.currency].rate,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
