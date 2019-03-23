@@ -1,9 +1,14 @@
 import { string } from "@xcmats/js-toolbox"
 
+
+
+
 /**
- * Returns utf-8 currency symbol for given asset code
+ * Converts 3 letter currency code to currency glyph.
  *
- * @returns {string}
+ * @function assetGlyph
+ * @param {String} assetCode Lower case ISO 3-letter currency code.
+ * @returns {String} Currency glyph.
  */
 export const assetGlyph = (assetCode) => (
     (codes) => codes[assetCode.toLowerCase()] ?
@@ -14,9 +19,11 @@ export const assetGlyph = (assetCode) => (
 
 
 /**
- * Returns long currency name for a given asset code
+ * Returns long currency name for a given asset code.
  *
- * @returns {string}
+ * @function assetDescription
+ * @param {String} assetCode Lower case ISO 3-letter currency code.
+ * @returns {String} Long currency name.
  */
 export const assetDescription = (assetCode) => (
     (codes) => codes[assetCode.toLowerCase()] ?
@@ -26,9 +33,3 @@ export const assetDescription = (assetCode) => (
     aud: "Australian Dollar", nzd: "New Zealand Dollar",
     thb: "Thai Baht", pln: "Polish Złoty", xlm: "Stellar Lumen",
 })
-
-
-// ...
-export const opAmountisNative = (operation) =>
-    (operation.asset && operation.asset.code === "XLM")
-    || operation.startingBalance
