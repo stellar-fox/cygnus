@@ -1,132 +1,147 @@
-import React, { Component, Fragment } from "react"
-import {
-    bindActionCreators,
-    compose,
-} from "redux"
+import React from "react"
+import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { withAssetManager } from "../AssetManager"
+import { withStyles } from "@material-ui/core/styles"
+import { func } from "@xcmats/js-toolbox"
 import {
+    Grow,
     Card,
     CardActions,
+    CardContent,
     CardHeader,
-    CardText,
-} from "material-ui/Card"
+    Typography,
+} from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
-import { action as BalancesAction } from "../../redux/Balances"
-import { Typography } from "@material-ui/core"
-import NumberFormat from "react-number-format"
 import { stellarLumenSymbol } from "../StellarFox/env"
+import NumberFormat from "react-number-format"
+import { action as BalancesAction } from "../../redux/Balances"
+import {
+    assetDescription,
+    assetGlyph,
+} from "../../lib/asset-utils"
+import { nativeToAsset } from "../../logic/assets"
 
 
-// <NoAccountCard> component
-class NoAccountCard extends Component {
+
+
+/**
+ * Cygnus.
+ *
+ * Balance summary card.
+ *
+ * @module client-ui-components
+ * @license Apache-2.0
+ */
+
+
+
+
+/**
+ * `<NoAccountCard>` component.
+ *
+ * @function NoAccountCard
+ * @returns {React.ReactElement}
+ */
+const NoAccountCard = ({
+    classes, className, currency,fundCardVisible, preferredRate,
+    setBalancesState,
+}) => {
 
     // ...
-    componentDidMount = () => {
-        this.props.assetManager.updateExchangeRate(this.props.Account.currency)
-    }
-
-
-    // ...
-    toggleFundCard = () =>
-        this.props.setState({
-            fundCardVisible: !this.props.Balances.fundCardVisible,
+    const toggleFundCard = () =>
+        setBalancesState({
+            fundCardVisible: !fundCardVisible,
         })
 
 
-    // ...
-    render = () => <Card className="account">
-        <CardHeader
-            title={
-                <Typography variant="subtitle1" color="primary">
-                    Current Balance
-                </Typography>
-            }
-            subtitle={
-                <Fragment>
-                    <Typography variant="subtitle2" color="primary">
-                        {this.props
-                            .assetManager.getAssetDescription(
-                                this.props.Account.currency
-                            )}
-                        <span className="fade-strong currency-iso p-l-medium">
-                            {this.props.Account.currency.toUpperCase()}
-                        </span>
-                    </Typography>
-                </Fragment>
-            }
-            actAsExpander={false}
-            showExpandableButton={false}
-        />
 
-        <CardText>
-            <div className="flex-box-row">
-                <div className="text-primary">
-                    <span className="fade currency-glyph">
-                        {
-                            this.props.assetManager.getAssetGlyph(
-                                this.props.Account.currency
-                            )
-                        }
-                    </span>
-                    <span className="p-l-medium balance tabular-nums">
-                        0.00
-                    </span>
+    return <Grow in={true}><Card
+        className={className}
+        classes={{ root: classes.card }}
+    >
+        <CardHeader
+            title="Current Balance"
+            subheader={assetDescription(currency)}
+        />
+        <CardContent>
+            <div className="flex-box-row space-between">
+
+                {/* Left Side Section */}
+                <div>
+                    <div className="text-primary">
+                        <span className="fade currency-glyph">
+                            {assetGlyph(currency)}
+                        </span>
+                        <span className="p-l-medium balance tabular-nums">
+                            <NumberFormat
+                                value={"0.00"}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                decimalScale={2}
+                                fixedDecimalScale={true}
+                            />
+                        </span>
+
+                    </div>
+                    <Typography color="primary" variant="h5"
+                        className="fade-extreme tabular-nums"
+                    >
+                        {stellarLumenSymbol} <NumberFormat
+                            value={"0.0000000"}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            decimalScale={7}
+                            fixedDecimalScale={true}
+                        />
+                    </Typography>
+                    <Typography color="primary" variant="h5"
+                        className="fade-extreme tabular-nums"
+                    >{stellarLumenSymbol} 1 ≈ {
+                            assetGlyph(currency)
+                        } <NumberFormat
+                            value={nativeToAsset("1.0000000", preferredRate)}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            decimalScale={2}
+                            fixedDecimalScale={true}
+                        />
+                    </Typography>
                 </div>
+
             </div>
 
-
-            <Typography color="primary" variant="h5"
-                className="fade-extreme"
-            >
-                {stellarLumenSymbol} <NumberFormat
-                    value={0.0000000}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    decimalScale={7}
-                    fixedDecimalScale={true}
-                />
-            </Typography>
-            <Typography color="primary" variant="h5"
-                className="fade-extreme"
-            >
-                {stellarLumenSymbol} 1 ≈ <NumberFormat
-                    value={this.props.assetManager
-                        .convertToAsset("1.0000000")
-                    }
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    decimalScale={2}
-                    fixedDecimalScale={true}
-                /> {this.props.assetManager.getAssetGlyph(
-                    this.props.Account.currency)}
-            </Typography>
-
-        </CardText>
-
-        <CardActions>
+        </CardContent>
+        <CardActions disableActionSpacing>
             <Button
-                onClick={this.toggleFundCard}
                 color="success"
+                onClick={toggleFundCard}
             >Fund</Button>
         </CardActions>
-    </Card>
-
+    </Card></Grow>
 }
 
 
+
+
 // ...
-export default compose(
-    withAssetManager,
+export default func.compose(
+    withStyles((theme) => ({
+        card: {
+            boxSizing: "border-box",
+            borderRadius: "2px",
+        },
+        colorTextPrimary: {
+            color: theme.palette.primary.other,
+        },
+    })),
     connect(
-        // map state to props.
         (state) => ({
-            Account: state.Account,
-            Balances: state.Balances,
+            currency: state.Account.currency,
+            fundCardVisible: state.Balances.fundCardVisible,
+            preferredRate: state.ExchangeRates[state.Account.currency].rate,
         }),
-        // map dispatch to props.
         (dispatch) => bindActionCreators({
-            setState: BalancesAction.setState,
-        }, dispatch)
-    )
+            setBalancesState: BalancesAction.setState,
+        }, dispatch),
+    ),
 )(NoAccountCard)
