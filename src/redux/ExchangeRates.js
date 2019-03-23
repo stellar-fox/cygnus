@@ -16,6 +16,22 @@ const initState = {
         rate: string.empty(),
         lastUpdated: string.empty(),
     },
+    aud: {
+        rate: string.empty(),
+        lastUpdated: string.empty(),
+    },
+    nzd: {
+        rate: string.empty(),
+        lastUpdated: string.empty(),
+    },
+    pln: {
+        rate: string.empty(),
+        lastUpdated: string.empty(),
+    },
+    thb: {
+        rate: string.empty(),
+        lastUpdated: string.empty(),
+    },
 }
 
 

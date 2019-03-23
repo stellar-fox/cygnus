@@ -12,7 +12,6 @@ import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
 import { action as AccountAction } from "../../redux/Account"
 import { action as ModalAction } from "../../redux/Modal"
-import { action as AssetsAction } from "../../redux/AssetManager"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
@@ -20,7 +19,6 @@ import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
 import { action as PaymentsAction } from "../../redux/Payments"
 import Modal from "../../lib/common/Modal"
-import { withAssetManager } from "../AssetManager"
 import { accountIsLocked } from "../../lib/utils"
 import {
     Checkbox,
@@ -57,6 +55,7 @@ import {
 } from "@xcmats/js-toolbox"
 import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
+import { getExchangeRate } from "../../thunks/assets"
 
 
 
@@ -286,7 +285,7 @@ class Settings extends Component {
 
     // ...
     changeCurrency = (event) => {
-        this.props.assetManager.updateExchangeRate(event.target.value)
+        this.props.getExchangeRate(event.target.value)
         this.props.setState({ currency: event.target.value })
         this.saveCurrency(event.target.value)
     }
@@ -295,6 +294,7 @@ class Settings extends Component {
     // ...
     saveCurrency = (currency) => {
         if (this.props.authenticated) {
+
             Axios
                 .post(
                     `${config.api}/account/update/`, {
@@ -313,7 +313,10 @@ class Settings extends Component {
                         </Typography>
                     )
                 })
-                .catch((error) => this.props.showAlert(error.message, "Error"))
+                .catch((error) => {
+                    this.props.showAlert(error.message, "Error")
+                })
+
         } else {
             this.props.surfaceSnacky(
                 "success",
@@ -636,7 +639,6 @@ class Settings extends Component {
 // ...
 export default compose(
     withStyles(styles),
-    withAssetManager,
     connect(
         // bind state to props.
         (state) => ({
@@ -658,6 +660,7 @@ export default compose(
         }),
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
+            getExchangeRate,
             setState: AccountAction.setState,
             hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
@@ -665,7 +668,6 @@ export default compose(
             showChoiceAlert: AlertChoiceAction.showAlert,
             hideChoiceAlert: AlertChoiceAction.hideAlert,
             resetAccountState: AccountAction.resetState,
-            resetAssetsState: AssetsAction.resetState,
             resetBalancesState: BalancesAction.resetState,
             resetContactsState: ContactsAction.resetState,
             resetLedgerHQState: LedgerHQAction.resetState,
