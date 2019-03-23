@@ -13,7 +13,7 @@ import { string } from "@xcmats/js-toolbox"
 export const assetGlyph = (assetCode) => (
     (codes) => codes[assetCode.toLowerCase()] ?
         codes[assetCode.toLowerCase()] : string.empty()
-)({ eur: "€", usd: "$", aud: "$", nzd: "$", thb: "฿", pln: "zł", xlm: "∅" })
+)({ eur: "€", usd: "$", aud: "$", nzd: "$", thb: "บาท", pln: "zł", xlm: "∅" })
 
 
 
