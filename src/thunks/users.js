@@ -4,6 +4,7 @@ import { config } from "../config"
 import md5 from "../lib/md5"
 import { subscribeEmail } from "../components/Account/api"
 import { string } from "@xcmats/js-toolbox"
+import { paymentAddress } from "../lib/utils"
 import { action as AccountAction } from "../redux/Account"
 import { action as AuthActions } from "../redux/Auth"
 import { actions as AppActions } from "../redux/App"
@@ -137,7 +138,10 @@ export const clearInputErrorMessages = () =>
  * Signs up a new user via _Firebase_
  *
  * @function signUpNewUser
- * @param {String} tickerSymbol Lower case currency ticker symbol (i.e. usd)
+ * @param {String} accountId Stellar account id.
+ * @param {String} account HD account path index.
+ * @param {String} email
+ * @param {String} password
  * @returns {Function} thunk action
  */
 export const signUpNewUser = (accountId, account, email, password) =>
@@ -243,3 +247,57 @@ export const setError = (error) =>
             `[${error.code}]: ${error.message}`
         ))
     }
+
+
+
+
+/**
+ * Fetches user profile from the back-end and sets appropriate Redux keys.
+ *
+ * @function getUserProfile
+ * @returns {Function} thunk action
+ */
+export const getUserProfile = () =>
+    async (dispatch, getState) => {
+
+        try {
+
+            const userData = (await Axios.post(`${config.api}/user/`, {
+                user_id: getState().LoginManager.userId,
+                token: getState().LoginManager.token,
+            })).data.data
+
+            await dispatch(AccountAction.setState({
+                firstName: userData.first_name,
+                lastName: userData.last_name,
+                email: userData.email,
+                gravatar: userData.email_md5,
+                paymentAddress: paymentAddress(
+                    userData.alias,
+                    userData.domain
+                ),
+                memo: userData.memo,
+                discoverable: userData.visible,
+                currency: userData.currency,
+                needsRegistration: false,
+            }))
+
+        } catch (error) {
+            await dispatch(
+                surfaceSnacky("error", "Could not load user profile.")
+            )
+        }
+
+    }
+
+
+
+/**
+ * Surfaces registration marketing card.
+ *
+ * @function surfaceRegistrationCard
+ * @returns {Function} thunk action
+ */
+export const surfaceRegistrationCard = () =>
+    async (dispatch, _getState) =>
+        await dispatch(AccountAction.setState({ needsRegistration: true }))
