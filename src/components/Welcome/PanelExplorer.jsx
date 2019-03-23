@@ -32,7 +32,7 @@ class PanelExplorer extends Component {
 
     // ...
     updateInputValue = (event) => {
-        this.props.setOtherError("")
+        this.props.clearOtherError()
         this.setState({
             inputValue: event.target.value,
         })
@@ -66,7 +66,7 @@ class PanelExplorer extends Component {
                         type="text"
                         label="Payment Address"
                         color="secondary"
-                        error={this.props.otherErrorMessage}
+                        error={this.props.otherError}
                         onChange={this.updateInputValue}
                     />
                     <Button
@@ -114,12 +114,12 @@ export default func.compose(
         // map state to props.
         (state) => ({
             horizon: state.StellarAccount.horizon,
-            otherErrorMessage: state.Errors.otherErrorMessage,
+            otherError: state.Errors.otherError,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             enterExplorer,
-            setOtherError: ErrorsActions.setOtherError,
+            clearOtherError: ErrorsActions.clearOtherError,
         }, dispatch)
     ),
 )(PanelExplorer)

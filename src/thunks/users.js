@@ -102,7 +102,7 @@ export const signIn = (email, password) =>
 export const enterExplorer = (inputValue) =>
     async (dispatch, _getState) => {
 
-        await dispatch(ErrorsActions.setOtherError(""))
+        await dispatch(ErrorsActions.clearOtherError())
 
         try {
 
@@ -129,7 +129,7 @@ export const enterExplorer = (inputValue) =>
 
         } catch (error) {
 
-            await dispatch(ErrorsActions.setOtherError(""))
+            await dispatch(ErrorsActions.clearOtherError())
 
         } finally {
 
