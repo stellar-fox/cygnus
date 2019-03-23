@@ -3,6 +3,10 @@ import Axios from "axios"
 import { config } from "../config"
 import md5 from "../lib/md5"
 import { subscribeEmail } from "../components/Account/api"
+import {
+    listInternal,
+    listRequested,
+} from "../components/Contacts/api"
 import { string } from "@xcmats/js-toolbox"
 import { paymentAddress } from "../lib/utils"
 import { action as AccountAction } from "../redux/Account"
@@ -22,8 +26,10 @@ import { action as StellarAccountAction } from "../redux/StellarAccount"
 import { surfaceSnacky } from "../thunks/main"
 import {
     fedToPub,
+    getUserExternalContacts,
     invalidPaymentAddressMessage,
 } from "../lib/utils"
+
 
 
 
@@ -345,6 +351,51 @@ export const getUserProfile = () =>
         }
 
     }
+
+
+
+
+/**
+ * Fetches user contacts from the back-end and sets appropriate Redux keys.
+ *
+ * @function getUserContacts
+ * @returns {Function} thunk action
+ */
+export const getUserContacts = () =>
+    async (dispatch, getState) => {
+
+        try {
+            const internal = await listInternal(
+                getState().LoginManager.userId,
+                getState().LoginManager.token
+            )
+
+            internal ? dispatch(ContactsAction.setState({ internal })) :
+                dispatch(ContactsAction.setState({ internal: [] }))
+
+            const requests = await listRequested(
+                getState().LoginManager.userId,
+                getState().LoginManager.token
+            )
+
+            requests ? dispatch(ContactsAction.setState({ requests })) :
+                dispatch(ContactsAction.setState({ requests: [] }))
+
+            const external = await getUserExternalContacts(
+                getState().LoginManager.userId,
+                getState().LoginManager.token
+            )
+
+            external ? dispatch(ContactsAction.setState({ external })) :
+                dispatch(ContactsAction.setState({ external: [] }))
+        } catch (error) {
+            await dispatch(
+                surfaceSnacky("error", "Could not load user contacts.")
+            )
+        }
+
+    }
+
 
 
 
