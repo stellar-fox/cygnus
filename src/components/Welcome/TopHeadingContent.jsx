@@ -44,8 +44,7 @@ const TopHeadingContent = ({ classes }) => {
                 <img
                     style={{ opacity: "0.9", marginRight: "1rem", borderRadius: "2px" }}
                     src={cygnusYellow}
-                    width="60px"
-                    height="60px"
+                    width="40px"
                     alt="Cygnus"
                 />
             </MuiLink>
