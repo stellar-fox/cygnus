@@ -25,6 +25,7 @@ import Payments from "../Payments"
 import Contacts from "../Contacts"
 import { fetchStellarAccount } from "../../thunks/stellar"
 import {
+    getUserContacts,
     getUserProfile,
     surfaceRegistrationCard,
 } from "../../thunks/users"
@@ -57,6 +58,7 @@ export default compose(
         // actions to props
         (dispatch) => bindActionCreators({
             fetchStellarAccount,
+            getUserContacts,
             getUserProfile,
             surfaceRegistrationCard,
         }, dispatch)
@@ -96,9 +98,12 @@ export default compose(
                 this.props.fetchStellarAccount()
             }
 
-            this.props.authenticated ?
-                this.props.getUserProfile() :
+            if (this.props.authenticated) {
+                this.props.getUserProfile()
+                this.props.getUserContacts()
+            } else {
                 this.props.surfaceRegistrationCard()
+            }
 
         }
 

@@ -19,9 +19,10 @@ import Button from "@material-ui/core/Button"
 import Modal from "@material-ui/core/Modal"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
-import { listInternal, listRequested, listPending, statusList, } from "./api"
+import { statusList, } from "./api"
 import {
-    getUserExternalContacts, htmlEntities as he, sortBy,
+    htmlEntities as he,
+    sortBy,
 } from "../../lib/utils"
 import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
@@ -300,97 +301,6 @@ class Contacts extends Component {
 
 
     // ...
-    componentDidMount = () =>
-        this.userContacts(this.state.selectedView)
-
-
-    // ...
-    userContacts = () => {
-
-        // list all user contacts
-        this.state.selectedView === 0 &&
-            listInternal(this.props.userId, this.props.token)
-                .then((results) => {
-                    results ? this.props.setState({
-                        internal: results,
-                    }) : this.props.setState({
-                        internal: [],
-                    })
-                }) &&
-
-            getUserExternalContacts(this.props.userId, this.props.token)
-                .then((results) => {
-                    results ? this.props.setState({
-                        external: results,
-                    }) : this.props.setState({
-                        external: [],
-                    })
-                }) &&
-
-            listRequested(this.props.userId, this.props.token)
-                .then((results) => {
-                    results ? this.props.setState({
-                        requests: results,
-                    }) : this.props.setState({
-                        requests: [],
-                    })
-                }) &&
-
-            listPending(this.props.userId, this.props.token)
-                .then((results) => {
-                    results ? this.props.setState({
-                        pending: results,
-                    }) : this.props.setState({
-                        pending: [],
-                    })
-                })
-
-        // list internal contacts only
-        this.state.selectedView === 1 &&
-            listInternal(this.props.userId, this.props.token)
-                .then((results) => {
-                    results ? this.props.setState({
-                        internal: results,
-                    }) : this.props.setState({
-                        internal: [],
-                    })
-                })
-
-        // list external contacts only
-        this.state.selectedView === 2 &&
-            getUserExternalContacts(this.props.userId, this.props.token)
-                .then((results) => {
-                    results ? this.props.setState({
-                        external: results,
-                    }) : this.props.setState({
-                        external: [],
-                    })
-                })
-
-        // list requested & pending
-        this.state.selectedView === 3 &&
-            listRequested(this.props.userId, this.props.token)
-                .then((results) => {
-                    results ? this.props.setState({
-                        requests: results,
-                    }) : this.props.setState({
-                        requests: [],
-                    })
-                }) &&
-
-            listPending(this.props.userId, this.props.token)
-                .then((results) => {
-                    results ? this.props.setState({
-                        pending: results,
-                    }) : this.props.setState({
-                        pending: [],
-                    })
-                })
-
-    }
-
-
-    // ...
     showAllContacts = () => {
         if (this.props.contactsInternal.length === 0 &&
             this.props.contactsExternal.length === 0) {
@@ -570,11 +480,8 @@ class Contacts extends Component {
 
 
     // ...
-    changeView = (event) => {
-        this.setState({ selectedView: event.target.value }, () => {
-            this.userContacts()
-        })
-    }
+    changeView = (event) =>
+        this.setState({ selectedView: event.target.value })
 
 
     // ...
@@ -721,8 +628,6 @@ class Contacts extends Component {
 export default connect(
     // map state to props
     (state) => ({
-        token: state.LoginManager.token,
-        userId: state.LoginManager.userId,
         Modal: state.Modal,
         contactsInternal: state.Contacts.internal,
         contactsExternal: state.Contacts.external,
