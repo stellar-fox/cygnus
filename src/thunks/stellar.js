@@ -13,11 +13,19 @@ import { getExchangeRate } from "../thunks/assets"
  */
 export const fetchStellarAccount = () =>
     async (dispatch, getState) => {
+
         await dispatch(StellarAccountAction.toggleLoading(true))
 
-        const stellarAccount = await loadAccount(getState().LedgerHQ.publicKey)
-
-        await dispatch(StellarAccountAction.updateAccountAttributes(stellarAccount))
+        try {
+            const stellarAccount = await loadAccount(
+                getState().LedgerHQ.publicKey
+            )
+            await dispatch(StellarAccountAction.updateAccountAttributes(
+                stellarAccount
+            ))
+        } catch (error) {
+            // do nothing - accont was not found on the network
+        }
 
         await dispatch(getExchangeRate(getState().Account.currency))
 

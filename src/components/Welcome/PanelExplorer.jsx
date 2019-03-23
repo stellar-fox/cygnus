@@ -1,24 +1,21 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { string } from "@xcmats/js-toolbox"
-import { Typography } from "@material-ui/core"
 import {
-    fedToPub,
-    invalidPaymentAddressMessage,
-} from "../../lib/utils"
+    func,
+    string,
+} from "@xcmats/js-toolbox"
 import {
-    liveNetAddr,
-    testNetAddr,
-} from "../StellarFox/env"
+    LinearProgress,
+    Typography,
+} from "@material-ui/core"
+import { withStyles } from "@material-ui/core/styles"
+import { actions as ErrorsActions } from "../../redux/Errors"
 import Panel from "../../lib/mui-v1/Panel"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
-// import Switch from "../../lib/mui-v1/Switch"
-import { action as LedgerHQAction } from "../../redux/LedgerHQ"
-import { action as LoadingModalAction } from "../../redux/LoadingModal"
-import { action as StellarAccountAction } from "../../redux/StellarAccount"
-
+import StatusMessage from "../StatusMessage"
+import { enterExplorer } from "../../thunks/users"
 
 
 
@@ -34,60 +31,18 @@ class PanelExplorer extends Component {
 
 
     // ...
-    setNetwork = (_event, value) => (
-        value ? this.props.setHorizon(liveNetAddr) :
-            this.props.setHorizon(testNetAddr)
-    )
-
-
-    // ...
-    compoundFederationValidator = () => (
-        (addressValidity) => addressValidity !== string.empty() ?
-            this.setState({
-                errorMessage: addressValidity,
-                error: true,
-            }) :
-            this.setState({
-                errorMessage: string.empty(),
-                error: false,
-            }, () => {
-                this.enterExplorer()
-            })
-    )(invalidPaymentAddressMessage(this.state.inputValue))
-
-
-    // ...
-    updateInputValue = (event) => this.setState({
-        inputValue: event.target.value,
-    })
-
-
-    // ...
-    enterExplorer = async () => {
-        const textInputValue = this.state.inputValue
-
-        // textInputValue is either VALID federation or VALID pubkey
-        // check for '*' character - if present then it is federation address
-        // otherwise a public key
-        if (textInputValue.match(/\*/)) {
-            try {
-                this.props.showLoadingModal("Looking up Payment Address ...")
-                this.props.setLedgerPublicKey(await fedToPub(textInputValue))
-                this.props.showLoadingModal("Searching for Account ...")
-            } catch (error) {
-                this.props.hideLoadingModal()
-                this.setState({
-                    error: true,
-                    errorMessage: error.message,
-                })
-            }
-
-        // Input is a valid Stellar public key
-        } else {
-            this.props.setLedgerPublicKey(textInputValue)
-        }
-
+    updateInputValue = (event) => {
+        this.props.setOtherError("")
+        this.setState({
+            inputValue: event.target.value,
+        })
     }
+
+
+    // ...
+    handleButtonClick = () => this.props.enterExplorer(this.state.inputValue)
+
+
 
 
     // ...
@@ -104,60 +59,67 @@ class PanelExplorer extends Component {
                     globally distributed ledger.
                 </Typography>
 
-                {/* <div className="m-t f-b space-between">
-                <div>
-                    <div className="account-title">
-                        Use live network
-                    </div>
-                    <div className="text-secondary account-subtitle">
-                        Explore transactions conducted on live network.
-                    </div>
-                </div>
-                <div>
-                    <Switch
-                        checked={this.props.horizon === liveNetAddr}
-                        onChange={this.setNetwork}
-                        color="secondary"
-                    />
-                </div>
-            </div> */}
-
                 <div className="flex-box-col items-centered content-centered">
+
                     <InputField
                         id="payment-address-input"
                         type="text"
                         label="Payment Address"
                         color="secondary"
-                        error={this.state.error}
-                        errorMessage={this.state.errorMessage}
+                        error={this.props.otherErrorMessage}
                         onChange={this.updateInputValue}
                     />
                     <Button
-                        onClick={this.compoundFederationValidator}
+                        onClick={this.handleButtonClick}
                         color="secondary"
                         style={{ marginRight: "0px" }}
                     >
                         Check
                     </Button>
+                    <LinearProgress
+                        variant="indeterminate"
+                        classes={{
+                            colorPrimary: this.props.classes.linearColorPrimary,
+                            barColorPrimary: this.props.classes.linearBarColorPrimary,
+                        }}
+                        style={{
+                            width: "100%",
+                            opacity: this.props.signingIn ? 1 : 0,
+                        }}
+                    />
+                    <StatusMessage className="m-t" style={{ minHeight: "20px" }} />
                 </div>
+
             </div>
-            
+
         </Panel>
 
 }
 
 
 // ...
-export default connect(
-    // map state to props.
-    (state) => ({
-        horizon: state.StellarAccount.horizon,
-    }),
-    // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        setLedgerPublicKey: LedgerHQAction.setPublicKey,
-        showLoadingModal: LoadingModalAction.showLoadingModal,
-        hideLoadingModal: LoadingModalAction.hideLoadingModal,
-        setHorizon: StellarAccountAction.setHorizon,
-    }, dispatch)
+export default func.compose(
+    withStyles((theme) => ({
+        linearColorPrimary: {
+            marginTop: "2px",
+            backgroundColor: theme.palette.secondary.light,
+            borderRadius: "3px",
+        },
+        linearBarColorPrimary: {
+            backgroundColor: theme.palette.secondary.dark,
+            borderRadius: "3px",
+        },
+    })),
+    connect(
+        // map state to props.
+        (state) => ({
+            horizon: state.StellarAccount.horizon,
+            otherErrorMessage: state.Errors.otherErrorMessage,
+        }),
+        // map dispatch to props.
+        (dispatch) => bindActionCreators({
+            enterExplorer,
+            setOtherError: ErrorsActions.setOtherError,
+        }, dispatch)
+    ),
 )(PanelExplorer)

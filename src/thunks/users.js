@@ -20,7 +20,10 @@ import { action as PaymentsAction } from "../redux/Payments"
 import { actions as ProgressActions } from "../redux/Progress"
 import { action as StellarAccountAction } from "../redux/StellarAccount"
 import { surfaceSnacky } from "../thunks/main"
-
+import {
+    fedToPub,
+    invalidPaymentAddressMessage,
+} from "../lib/utils"
 
 
 
@@ -86,6 +89,60 @@ export const signIn = (email, password) =>
         }
     }
 
+
+
+
+/**
+ * Signs user in to explorer only view.
+ *
+ * @function enterExplorer
+ * @param {String} inputValue Account ID or payment address.
+ * @returns {Function} thunk action
+ */
+export const enterExplorer = (inputValue) =>
+    async (dispatch, _getState) => {
+
+        await dispatch(ErrorsActions.setOtherError(""))
+
+        try {
+
+            const inputInvalidMsg = invalidPaymentAddressMessage(inputValue)
+
+            if (inputInvalidMsg) {
+                await dispatch(
+                    ErrorsActions.setOtherError(inputInvalidMsg)
+                )
+                return
+            }
+
+            await dispatch(ProgressActions.toggleProgress(
+                "signin", "Resolving address ..."
+            ))
+
+            if (inputValue.match(/\*/)) {
+                await dispatch(LedgerHQAction.setPublicKey(
+                    await fedToPub(inputValue))
+                )
+            } else {
+                await dispatch(LedgerHQAction.setPublicKey(inputValue))
+            }
+
+        } catch (error) {
+
+            await dispatch(ErrorsActions.setOtherError(""))
+
+        } finally {
+
+            await dispatch(ProgressActions.toggleProgress(
+                "signin", string.empty()
+            ))
+
+        }
+
+
+
+
+    }
 
 
 
@@ -182,7 +239,6 @@ export const signUpNewUser = (accountId, account, email, password) =>
             await dispatch(ProgressActions.toggleProgress(
                 "signup", "Almost done ..."
             ))
-
 
             const { userId, token } = getState().LoginManager
             await subscribeEmail(userId, token, email)
