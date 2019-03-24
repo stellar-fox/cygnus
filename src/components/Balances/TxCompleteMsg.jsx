@@ -1,145 +1,90 @@
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
-import { appName } from "../StellarFox/env"
-import {
-    handleException,
-    string,
-} from "@xcmats/js-toolbox"
+import { string } from "@xcmats/js-toolbox"
 import NumberFormat from "react-number-format"
-import {
-    htmlEntities as he,
-    pubKeyAbbr,
-    rgb,
-} from "../../lib/utils"
-import {
-    Table,
-    TableBody,
-    TableRow,
-    TableRowColumn,
-} from "material-ui/Table"
 import { Typography } from "@material-ui/core"
-import { stellarLumenSymbol } from "../StellarFox/env"
 import { assetGlyph } from "../../lib/asset-utils"
+
 
 
 
 // ...
 export default connect(
     // map state to props.
-    (state) => ({ balances: state.Balances, account: state.Account })
+    (state) => ({
+        balances: state.Balances,
+        currency: state.Account.currency,
+    })
 )(
-    ({ balances, account }) =>
+    ({ balances, currency }) =>
         <Fragment>
-            <Table
-                style={{
-                    backgroundColor: rgb(244,176,4),
-                    marginTop: "0.3rem",
-                    marginBottom: "0.5rem",
-                }}
-                selectable={false}
-            >
-                <TableBody displayRowCheckbox={false}>
-                    <TableRow className="table-row-primary">
-                        <TableRowColumn>
-                            <Typography variant="body1" color="primary">
-                                Amount Sent:
-                            </Typography>
-                        </TableRowColumn>
-                        <TableRowColumn>
-                            <div className="flex-box-row items-flex-end">
-                                <Typography style={{ lineHeight: "1rem" }}
-                                    variant="body1" color="primary"
-                                >
-                                    <span className="small">
-                                        {assetGlyph(account.currency)}
-                                    </span>
-                                    <he.Nbsp />
-                                    <NumberFormat
-                                        value={balances.amount}
-                                        displayType={"text"}
-                                        thousandSeparator={true}
-                                        decimalScale={2}
-                                        fixedDecimalScale={true}
-                                    />
-                                    <he.Nbsp /><he.Nbsp />
-                                </Typography>
-                                <Typography variant="caption" color="primary">
-                                    <span className="fade-extreme">
-                                        {stellarLumenSymbol} <NumberFormat
-                                            value={balances.amountNative}
-                                            displayType={"text"}
-                                            thousandSeparator={true}
-                                            decimalScale={7}
-                                            fixedDecimalScale={true}
-                                        />
-                                    </span>
-                                </Typography>
-                            </div>
-                        </TableRowColumn>
-                    </TableRow>
-                    <TableRow className="table-row-primary">
-                        <TableRowColumn>
-                            <Typography variant="body1" color="primary">
-                                Payee Address:
-                            </Typography>
-                        </TableRowColumn>
-                        <TableRowColumn>
-                            <Typography variant="body1" color="primary">
-                                {string.shorten(balances.payeeAddress, 35)}
-                            </Typography>
-                        </TableRowColumn>
-                    </TableRow>
-                    <TableRow className="table-row-primary">
-                        <TableRowColumn>
-                            <Typography variant="body1" color="primary">
-                                Payee Account:
-                            </Typography>
-                        </TableRowColumn>
-                        <TableRowColumn>
-                            <Typography variant="body1" color="primary">
-                                {handleException(
-                                    () => pubKeyAbbr(balances.payee),
-                                    () => "Not Available")
-                                }
-                            </Typography>
-                        </TableRowColumn>
-                    </TableRow>
-                    <TableRow className="table-row-primary">
-                        <TableRowColumn>
-                            <Typography variant="body1" color="primary">
-                                Memo Text:
-                            </Typography>
-                        </TableRowColumn>
-                        <TableRowColumn>
-                            <Typography variant="body1" color="primary">
-                                {balances.memoText}
-                            </Typography>
-                        </TableRowColumn>
-                    </TableRow>
-                    <TableRow className="table-row-primary">
-                        <TableRowColumn>
-                            <Typography variant="body1" color="primary">
-                                Transaction ID:
-                            </Typography>
-                        </TableRowColumn>
-                        <TableRowColumn>
-                            <Typography variant="caption" color="primary">
-                                {balances.paymentId}
-                            </Typography>
-                        </TableRowColumn>
-                    </TableRow>
-                </TableBody>
-            </Table>
 
-            <div className="flex-box-row space-around">
-                <div className="border-primary glass glass-text">
-                    <Typography variant="body1" color="primary" align="center">
-                        Funds have arrived to the destination account.
+            <div className="m-t flex-box-col content-centered items-centered">
+                <Typography
+                    style={{ lineHeight: "2.5rem" }}
+                    noWrap
+                    variant="h2"
+                    color="primary"
+                >
+                    Transaction Summary
+                </Typography>
+            </div>
+
+            <div className="m-t flex-box-col ledger-display">
+
+                <div className="flex-box-row space-between ledger-display-item">
+                    <Typography noWrap color="primary" variant="caption">
+                        Amount Sent:
                     </Typography>
-                    <Typography variant="caption" color="primary" align="center">
-                        Thank you for using {appName}.
+                    <Typography noWrap color="primary" variant="caption">
+                        {assetGlyph(currency)} <NumberFormat
+                            value={balances.amount}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            decimalScale={2}
+                            fixedDecimalScale={true}
+                        />
                     </Typography>
                 </div>
+
+                <div className="flex-box-row space-between ledger-display-item">
+                    <Typography noWrap color="primary" variant="caption">
+                        Destination Address:
+                    </Typography>
+                    <Typography noWrap color="primary" variant="caption">
+                        {string.shorten(balances.payeeAddress, 35)}
+                    </Typography>
+                </div>
+
+                <div className="flex-box-row space-between ledger-display-item">
+                    <Typography noWrap color="primary" variant="caption">
+                        Memo Text:
+                    </Typography>
+                    <Typography noWrap color="primary" variant="caption">
+                        {balances.memoText}
+                    </Typography>
+                </div>
+
+                <div className="flex-box-row space-between ledger-display-item">
+                    <Typography noWrap color="primary" variant="caption">
+                        Transaction ID:
+                    </Typography>
+                    <Typography noWrap color="primary" variant="caption">
+                        {balances.paymentId}
+                    </Typography>
+                </div>
+
             </div>
+
+            <div className="p-t flex-box-col items-centered">
+                <Typography variant="h5" color="primary" align="center">
+                    Funds have arrived to the destination account.
+                </Typography>
+                <Typography variant="h6" color="primary" noWrap>
+                    Thank you for using Cygnus.
+                </Typography>
+            </div>
+
+
         </Fragment>
 )

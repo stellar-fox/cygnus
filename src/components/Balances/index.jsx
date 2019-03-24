@@ -270,7 +270,6 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "txConfirm" &&
                                 this.props.Modal.visible
                             }
-                            title="In this transaction …"
                         >
                             <TxConfirmMsg assetManager={assetManager} />
                         </Modal>
@@ -280,7 +279,6 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "txBroadcast" &&
                                 this.props.Modal.visible
                             }
-                            title="Transmiting ..."
                         >
                             <TxBroadcastMsg />
                         </Modal>
@@ -290,7 +288,6 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "txComplete" &&
                                 this.props.Modal.visible
                             }
-                            title="Transaction Receipt"
                             actions={[
                                 <Button
                                     onClick={this.props.hideModal}

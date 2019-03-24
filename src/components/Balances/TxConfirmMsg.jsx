@@ -101,8 +101,8 @@ class TxConfirmMsg extends Component {
     // ...
     render = () => (
         ({
-            classes, currency, Balances, maxTime, minTime, payeeCurrency,
-            publicKey, sequence,
+            classes, currency, Balances, maxTime, minTime, payeeAmount,
+            payeeCurrency, publicKey, sequence,
         }) =>
             <Fragment>
 
@@ -128,7 +128,7 @@ class TxConfirmMsg extends Component {
                             </span>
                         </Typography>
 
-                        {payeeCurrency !== currency &&
+                        {payeeCurrency !== currency && payeeAmount &&
                         <Typography variant="h5" color="primary">
                             Exchange Rate: 1{assetGlyph(currency)} ≈ {this.state.exchangeRate}
                         </Typography>
@@ -301,6 +301,7 @@ export default compose (
             Balances: state.Balances,
             Contacts: state.Contacts,
             currency: state.Account.currency,
+            payeeAmount: state.Balances.payeeAmount,
             payeeCurrency: state.Balances.payeeCurrency,
             horizon: state.StellarAccount.horizon,
             publicKey: state.StellarAccount.accountId,

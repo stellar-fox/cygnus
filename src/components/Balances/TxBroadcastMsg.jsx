@@ -5,9 +5,12 @@ import {
     compose,
 } from "redux"
 import { connect } from "react-redux"
-
 import { withStyles } from "@material-ui/core/styles"
-import { LinearProgress, Typography, } from "@material-ui/core"
+import {
+    LinearProgress,
+    Typography,
+} from "@material-ui/core"
+
 
 
 
@@ -16,8 +19,9 @@ export default compose(
     withStyles(theme => ({
         barRoot: {
             height: "5px",
-            borderRadius: "10px",
+            borderRadius: "5px",
             border: `1px solid ${theme.palette.secondary.dark}`,
+            opacity: "0.8",
         },
 
         colorPrimary: {
@@ -50,12 +54,18 @@ export default compose(
             ({ classes }) =>
                 <Fragment>
                     <div className="p-b flex-box-col items-centered">
-                        <Typography variant="body1" color="primary" align="center">
-                            Your money transfer is on its way.
+                        <Typography
+                            variant="h2"
+                            style={{ lineHeight: "2.5rem" }}
+                            color="primary"
+                            noWrap
+                        >
+                            Your transaction is on its way!
                         </Typography>
-                        <Typography variant="caption" color="primary" align="center">
-                            Estimated arrival time: 5 seconds. Thank you for your patience.
+                        <Typography variant="body1" color="primary" noWrap>
+                            Estimated confirmation time: <b>5 seconds</b>.
                         </Typography>
+
                     </div>
 
                     <LinearProgress
@@ -67,6 +77,12 @@ export default compose(
                             barColorPrimary: classes.barColorPrimary,
                         }}
                     />
+
+                    <div className="p-t flex-box-col items-centered">
+                        <Typography variant="h6" color="primary" noWrap>
+                            Thank you for your patience.
+                        </Typography>
+                    </div>
                 </Fragment>
         )(this.props)
 
