@@ -32,11 +32,10 @@ import {
 } from "../../lib/stellar/payments"
 import { async } from "@xcmats/js-toolbox"
 import { utcToLocaleDateTime } from "../../lib/utils"
-import { withAssetManager } from "../AssetManager"
 import BigNumber from "bignumber.js"
 import NumberFormat from "react-number-format"
 import { stellarLumenSymbol } from "../StellarFox/env"
-
+import { nativeToAsset } from "../../logic/assets"
 
 
 
@@ -60,7 +59,6 @@ const CustomTableCell = withStyles((theme) => ({
 
 // <PaymentsTable> component
 export default compose(
-    withAssetManager,
     withStyles((theme) => ({
         root: {
             width: "100%",
@@ -97,6 +95,7 @@ export default compose(
             horizon: state.StellarAccount.horizon,
             publicKey: state.StellarAccount.accountId,
             preferredCurrency: state.Account.currency,
+            preferredRate: state.ExchangeRates[state.Account.currency].rate,
         }),
         (dispatch) => bindActionCreators({
             setCursorRight: PaymentsActions.setCursorRight,
@@ -279,7 +278,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes, page }, { rows, rowsPerPage }) => {
+            ({ classes, page, preferredRate }, { rows, rowsPerPage }) => {
 
                 BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
 
@@ -323,8 +322,9 @@ export default compose(
                                                                 {row.amount.sign}
                                                             </span>
                                                             {<NumberFormat
-                                                                value={this.props.assetManager.convertToAsset(
-                                                                    new BigNumber(row.amount.bestBid).times(row.amount.value).toFixed(2)
+                                                                value={nativeToAsset(
+                                                                    new BigNumber(row.amount.bestBid).times(row.amount.value).toFixed(2),
+                                                                    preferredRate,
                                                                 )}
                                                                 displayType={"text"}
                                                                 thousandSeparator={true}
@@ -351,8 +351,9 @@ export default compose(
                                                             {row.amount.sign}
                                                         </span>
                                                         {<NumberFormat
-                                                            value={this.props.assetManager.convertToAsset(
-                                                                row.amount.value
+                                                            value={nativeToAsset(
+                                                                row.amount.value,
+                                                                preferredRate,
                                                             )}
                                                             displayType={"text"}
                                                             thousandSeparator={true}
