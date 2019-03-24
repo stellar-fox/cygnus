@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
-import { compose } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { withStyles } from "@material-ui/core/styles"
 import {
     handleException,
@@ -9,7 +12,6 @@ import {
 import {
     calculateTxFee,
     findContact,
-    htmlEntities as he,
     pubKeyAbbrLedgerHQ,
     formatFullName,
     nextSequenceNumber,
@@ -17,16 +19,16 @@ import {
 import {
     gravatar,
     gravatarSize,
-    serviceFee,
-    serviceFeeCurrency,
     stellarLumenSymbol,
 } from "../StellarFox/env"
 import { Typography } from "@material-ui/core"
 import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
 import { liveNetAddr } from "../StellarFox/env"
-import BigNumber from "bignumber.js"
-import { nativeToAsset } from "../../logic/assets"
+import { assetToAsset, nativeToAsset } from "../../logic/assets"
+import { getExchangeRate } from "../../thunks/assets"
+import { assetGlyph } from "../../lib/asset-utils"
+
 
 
 
@@ -34,9 +36,9 @@ import { nativeToAsset } from "../../logic/assets"
 const styles = (theme) => ({
     avatar: {
         borderRadius: 3,
-        width: 96,
-        height: 96,
-        border: `2px solid ${theme.palette.primary.fade}`,
+        width: 60,
+        height: 60,
+        border: `1px solid ${theme.palette.primary.fade}`,
         marginBottom: "3px",
     },
     avatarImage: {
@@ -63,363 +65,253 @@ class TxConfirmMsg extends Component {
 
     // ...
     componentDidMount = () => {
-        const found = findContact(
+        const foundContact = findContact(
             this.props.Contacts[this.props.Balances.contactType] || [],
             this.props.Balances.contactId,
             this.props.Balances.contactType === "external" ?
                 true : false
         )
-        this.setState({
-            contact: found ? found : {},
-        })
-    }
 
-
-    // ...
-    sendAmount = () =>
-        `${this.props.Balances.amount || "0.00"} ${
-            this.props.Account.currency.toUpperCase()}`
-
-
-    // ...
-    receiveAmount = () =>
-        this.state.contact.currency &&
-            this.state.contact.currency !== this.props.Account.currency ?
-            `${this.props.assetManager.exchangeRate(
-                this.props.Balances.amount, this.state.contact.currency
-            )
-            } ${this.state.contact.currency.toUpperCase()}` : `${
-                this.props.Balances.amount || "0.00"} ${
-                this.props.Account.currency.toUpperCase()}`
-
-
-    // ...
-    exchangeRate = () =>
-        this.state.contact.currency &&
-            this.state.contact.currency !== this.props.Account.currency ?
-            `1.00 ${this.props.Account.currency.toUpperCase()} ≈ ${
-                this.props.assetManager.exchangeRate(1.00,
-                    this.state.contact.currency
-                )} ${this.state.contact.currency.toUpperCase()}` :
-            "N/A"
-
-
-    /**
-     * Returns service fee string in the following format:
-     * 1.40 THB ≈ 0.55 EUR
-     */
-    serviceFee = (contactCurrency) => {
-
-        const sfee = new BigNumber(serviceFee)
-
-        if (contactCurrency) {
-            const rate = new BigNumber(this.props.assetManager.exchangeRate(
-                1.00, contactCurrency))
-
-            const rateContact = nativeToAsset("1.00", this.props.preferredRate)
-
-
-            return contactCurrency !== this.props.Account.currency ?
-                `${sfee.dividedBy(rate).toFixed(2)} ${
-                    this.props.Account.currency.toUpperCase()} ≈ ${
-                    sfee.dividedBy(rateContact).toFixed(2)} ${
-                    contactCurrency.toUpperCase()}` :
-                `${serviceFee} ${serviceFeeCurrency.toUpperCase()}`
+        if (this.props.payeeCurrency !== this.props.currency) {
+            this.props.getExchangeRate(this.props.payeeCurrency)
+            this.setState({
+                exchangeRate: assetToAsset(
+                    this.props.preferredRate,
+                    this.props.payeeRate
+                ),
+            })
         }
 
-        return `${serviceFee} ${serviceFeeCurrency.toUpperCase()}`
+        if (foundContact) {
+            this.setState({
+                contact: foundContact,
+                receives: nativeToAsset(
+                    this.props.Balances.amountNative,
+                    this.props.payeeRate
+                ),
+                receiverCurrency: assetGlyph(this.props.payeeCurrency),
+            })
+        }
+
     }
+
+
+
 
     // ...
     render = () => (
-        ({ classes, Account, Balances, publicKey, sequence }) =>
+        ({
+            classes, currency, Balances, maxTime, minTime, payeeCurrency,
+            publicKey, sequence,
+        }) =>
             <Fragment>
 
-                <div className="p-t p-b flex-box-row space-between">
-                    <Typography align="center" color="primary" variant="body1">
-                        Payment
-                    </Typography>
+                <div className="m-t m-b flex-box-row content-centered space-around">
+                    <div className="m-t flex-box-col content-centered items-centered">
 
-                    <Typography align="center" color="primary" variant="body1">
-                        Cost Breakdown
-                    </Typography>
-                </div>
+                        <Typography
+                            style={{ lineHeight: "2.5rem" }}
+                            noWrap
+                            variant="h3"
+                            color="primary"
+                        >
+                            You are sending:
+                        </Typography>
 
-                <div className="flex-box-row space-between">
-                    <div className="flex-box-row items-flex-start">
-                        <div className="f-b-col-c">
+                        <Typography noWrap variant="h3" color="primary">
+                            {assetGlyph(currency)} {Balances.amount || "0.00"}
+                        </Typography>
 
-                            <Avatar classes={{
-                                root: classes.avatar, img: classes.avatarImage,
-                            }} src={`${gravatar}${Account.gravatar}?${
-                                gravatarSize}&d=robohash`
-                            }
-                            />
-
-                            <Typography align="center" color="primary"
-                                variant="body1"
-                            >
-                                {formatFullName(
-                                    Account.firstName, Account.lastName
-                                )}
-                            </Typography>
-
-                            <Typography align="center" color="primary"
-                                variant="body1"
-                            >
-                                Sends: {this.sendAmount()}
-
-                            </Typography>
-
-                            <div className="micro text-primary fade-extreme p-b-small">
+                        <Typography>
+                            <span className="micro text-primary fade-extreme">
                                 {stellarLumenSymbol} {Balances.amountNative || "0.0000000"}
-                            </div>
+                            </span>
+                        </Typography>
 
-                        </div>
+                        {payeeCurrency !== currency &&
+                        <Typography variant="h5" color="primary">
+                            Exchange Rate: 1{assetGlyph(currency)} ≈ {this.state.exchangeRate}
+                        </Typography>
+                        }
 
-                        <span className="text-primary" style={{
-                            padding: "0 2rem", paddingBottom: "3rem",
-                            fontSize: "4rem",
-                        }}
-                        >→</span>
-                        <div className="f-b-col-c">
-
-                            <Avatar classes={{
-                                root: classes.avatar, img: classes.avatarImage,
-                            }} src={`${gravatar}${
-                                this.state.contact.email_md5}?${
-                                gravatarSize}&d=robohash`}
-                            />
-
-                            <Typography align="center" color="primary"
-                                variant="body1"
-                            >
-                                {formatFullName(
-                                    this.state.contact.first_name,
-                                    this.state.contact.last_name
-                                )}
-                            </Typography>
-
-                            <Typography align="center" color="primary"
-                                variant="body1"
-                            >
-                                Receives: {this.receiveAmount()}
-                            </Typography>
-
-                            <div className="micro text-primary fade-extreme p-b-small">
-                                {stellarLumenSymbol} {Balances.amountNative || "0.0000000"}
-                            </div>
-
-                        </div>
                     </div>
-                    <div className="flex-box-col">
-                        <div style={{ paddingBottom: 5 }}>
-                            <div className="flex-box-row space-between">
-                                <Typography color="primary" variant="body1">
-                                    Exchange Rate:<he.Nbsp /><he.Nbsp />
-                                </Typography>
-                                <Typography color="primary" variant="body1">
-                                    {this.exchangeRate()}
-                                </Typography>
-                            </div>
-                        </div>
-                        <div style={{ paddingBottom: 5 }}>
-                            <div className="flex-box-row space-between">
-                                <Typography color="primary" variant="body1">
-                                    You Send:<he.Nbsp /><he.Nbsp />
-                                </Typography>
-                                <Typography color="primary" variant="body1">
-                                    {this.sendAmount()}
-                                </Typography>
-                            </div>
-                        </div>
-                        <div style={{ paddingBottom: 5 }}>
-                            <div className="flex-box-row space-between">
-                                <Typography color="primary" variant="body1">
-                                    Payee Receives:<he.Nbsp /><he.Nbsp />
-                                </Typography>
-                                <Typography color="primary" variant="body1">
-                                    {this.receiveAmount()}
-                                </Typography>
-                            </div>
-                        </div>
-                        <div style={{ paddingBottom: 5 }}>
-                            <div className="flex-box-row space-between">
-                                <Typography color="primary" variant="body1">
-                                    Service Fee:<he.Nbsp /><he.Nbsp />
-                                </Typography>
-                                <Typography color="primary" variant="body1">
-                                    {this.serviceFee(
-                                        this.state.contact.currency
-                                    )}
-                                </Typography>
-                            </div>
-                        </div>
+
+
+                    <div className="m-t flex-box-col content-centered items-centered">
+                        <Avatar classes={{
+                            root: classes.avatar, img: classes.avatarImage,
+                        }} src={`${gravatar}${
+                            this.state.contact.email_md5}?${
+                            gravatarSize}&d=robohash`}
+                        />
+
+                        <Typography align="center" color="primary"
+                            variant="body2"
+                        >
+                            {formatFullName(
+                                this.state.contact.first_name,
+                                this.state.contact.last_name
+                            )}
+                        </Typography>
+
+                        <Typography align="center" color="primary"
+                            variant="h4" noWrap
+                        >
+                            Receives: {this.state.receives} {this.state.receiverCurrency}
+                        </Typography>
+
+                        <Typography noWrap>
+                            <span className="micro text-primary fade-extreme">
+                                {stellarLumenSymbol} {Balances.amountNative || "0.0000000"}
+                            </span>
+                        </Typography>
+
                     </div>
                 </div>
 
                 <Divider classes={{ root: classes.divider }} />
 
-                <Typography align="center" color="primary" variant="body1">
-                    Please confirm that the following info is the same on your
-                    device<he.Apos />s screen:
-                </Typography>
-
-                <div className="p-t flex-box-row space-around">
-
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-primary glass">
-                            <div>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >Send</Typography>
-                                <Typography align="center">
-                                    <span className="glass-text">
-                                        {`${Balances.amountNative} XLM`}
-                                    </span>
-                                </Typography>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-primary glass">
-                            <div>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >Destination</Typography>
-                                <Typography align="center">
-                                    <span className="glass-text">{
-                                        handleException(
-                                            () => pubKeyAbbrLedgerHQ(Balances.payee),
-                                            () => "Not Available")}
-                                    </span>
-                                </Typography>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-primary glass">
-                            <div>
-                                <Typography color="primary" align="center"
-                                    variant="caption"
-                                >
-                                    Memo Text
-                                </Typography>
-                                <Typography align="center">
-                                    <span className="glass-text">{
-                                        Balances.memoText === string.empty() ?
-                                            <he.Nbsp /> : Balances.memoText
-                                    }</span>
-                                </Typography>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-primary glass">
-                            <div>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >Fee</Typography>
-                                <Typography align="center">
-                                    <span className="glass-text">
-                                        {calculateTxFee(1)}
-                                    </span>
-                                </Typography>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div className="f-b space-between p-t p-b">
-
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-primary glass">
-                            <div>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >Network</Typography>
-                                <Typography align="center">
-                                    <span className="glass-text">
-                                        {this.props.horizon === liveNetAddr ?
-                                            "Public" : "Test"}
-                                    </span>
-                                </Typography>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-primary glass">
-                            <div>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >Transaction Source</Typography>
-                                <Typography align="center">
-                                    <span className="glass-text">
-                                        {handleException(
-                                            () => string.shorten(publicKey, 13),
-                                            () => "Not Available")}
-                                    </span>
-                                </Typography>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex-box-col items-flex-end">
-                        <div className="flex-box-row items-centered border-primary glass">
-                            <div>
-                                <Typography align="center" color="primary"
-                                    variant="caption"
-                                >Sequence Number</Typography>
-                                <Typography align="center">
-                                    <span className="glass-text">
-                                        {
-                                            string.shorten(
-                                                nextSequenceNumber(sequence),
-                                                13
-                                            )
-                                        }
-                                    </span>
-                                </Typography>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div className="flex-box-row items-centered m-t">
+                <div className="m-t flex-box-col content-centered items-centered m-t">
                     <div className="border-error glass-error glass-error-text">
                         Action Required
                     </div>
-                    <he.Nbsp /><he.Nbsp />
-                    <Typography style={{fontWeight: 600}} color="primary" variant="h5">
-                        When you are sure the info above is correct
-                        press <span style={{fontSize: "1rem"}}>✓</span>
+                    <Typography
+                        style={{ fontWeight: 600, marginTop: "10px" }}
+                        color="primary"
+                        variant="h5"
+                        noWrap
+                    >
+                        Confirm that the information below is the same as on
+                        your device display.
+                    </Typography>
+                    <Typography
+                        style={{ fontWeight: 600 }}
+                        color="primary"
+                        variant="h5"
+                        noWrap
+                    >
+                        Then press <span style={{fontSize: "1rem"}}>✓</span>
                         on the device to sign and send the transaction.
                     </Typography>
                 </div>
 
+                <div className="m-t flex-box-col ledger-display">
+
+                    <div className="flex-box-row space-between ledger-display-item">
+                        <Typography noWrap color="primary" variant="caption">
+                            Send:
+                        </Typography>
+                        <Typography noWrap color="primary" variant="caption">
+                            {`${Balances.amountNative || "0.0000000"} XLM`}
+                        </Typography>
+                    </div>
+
+                    <div className="flex-box-row space-between ledger-display-item">
+                        <Typography noWrap color="primary" variant="caption">
+                            Destination:
+                        </Typography>
+                        <Typography noWrap color="primary" variant="caption">
+                            {handleException(
+                                () => pubKeyAbbrLedgerHQ(Balances.payee),
+                                () => "Not Available")}
+                        </Typography>
+                    </div>
+
+                    <div className="flex-box-row space-between ledger-display-item">
+                        <Typography noWrap color="primary" variant="caption">
+                            Memo Text:
+                        </Typography>
+                        <Typography noWrap color="primary" variant="caption">
+                            {Balances.memoText}
+                        </Typography>
+                    </div>
+
+                    <div className="flex-box-row space-between ledger-display-item">
+                        <Typography noWrap color="primary" variant="caption">
+                            Fee:
+                        </Typography>
+                        <Typography noWrap color="primary" variant="caption">
+                            {calculateTxFee(1)}
+                        </Typography>
+                    </div>
+
+                    <div className="flex-box-row space-between ledger-display-item">
+                        <Typography noWrap color="primary" variant="caption">
+                            Network:
+                        </Typography>
+                        <Typography noWrap color="primary" variant="caption">
+                            {this.props.horizon === liveNetAddr ?
+                                "Public" : "Test"}
+                        </Typography>
+                    </div>
+
+                    <div className="flex-box-row space-between ledger-display-item">
+                        <Typography noWrap color="primary" variant="caption">
+                            Time bounds from:
+                        </Typography>
+                        <Typography noWrap color="primary" variant="caption">
+                            {minTime}
+                        </Typography>
+                    </div>
+
+                    <div className="flex-box-row space-between ledger-display-item">
+                        <Typography noWrap color="primary" variant="caption">
+                            Time bounds to:
+                        </Typography>
+                        <Typography noWrap color="primary" variant="caption">
+                            {maxTime}
+                        </Typography>
+                    </div>
+
+                    <div className="flex-box-row space-between ledger-display-item">
+                        <Typography noWrap color="primary" variant="caption">
+                            Transaction Source:
+                        </Typography>
+                        <Typography noWrap color="primary" variant="caption">
+                            {handleException(
+                                () => string.shorten(publicKey, 13),
+                                () => "Not Available")}
+                        </Typography>
+                    </div>
+
+                    <div className="flex-box-row space-between ledger-display-item">
+                        <Typography noWrap color="primary" variant="caption">
+                            Sequence Number:
+                        </Typography>
+                        <Typography noWrap color="primary" variant="caption">
+                            {string.shorten(
+                                nextSequenceNumber(sequence), 13)}
+                        </Typography>
+                    </div>
+
+                </div>
 
             </Fragment>
     )(this.props)
 }
 
 
+
+
+// ...
 export default compose (
     withStyles(styles),
     connect(
         (state) => ({
-            Account: state.Account,
             Balances: state.Balances,
             Contacts: state.Contacts,
+            currency: state.Account.currency,
+            payeeCurrency: state.Balances.payeeCurrency,
             horizon: state.StellarAccount.horizon,
             publicKey: state.StellarAccount.accountId,
             sequence: state.StellarAccount.sequence,
             preferredRate: state.ExchangeRates[state.Account.currency].rate,
-        })
+            payeeRate: state.ExchangeRates[state.Balances.payeeCurrency].rate,
+            minTime: state.Transaction.timeBounds ? state.Transaction.timeBounds.minTime : "0",
+            maxTime: state.Transaction.timeBounds ? state.Transaction.timeBounds.maxTime : "0",
+        }),
+        (dispatch) => bindActionCreators({
+            getExchangeRate,
+        }, dispatch)
     )
 )(TxConfirmMsg)

@@ -34,3 +34,21 @@ export const assetToNative = (amount, rate) => {
     return amount !== string.empty() ?
         new BigNumber(amount).dividedBy(rate).toFixed(7) : "0.0000000"
 }
+
+
+
+
+/**
+ * Converts quote currency against provided base currency exchange rate.
+ *
+ * @function assetToAsset
+ * @param {Any} quoteRate Rate of quote currency.
+ * @param {Any} baseRate Rate of base currency.
+ * @returns {String}
+ */
+export const assetToAsset = (quoteRate, baseRate) => {
+    BigNumber.config({ DECIMAL_PLACES: 7, ROUNDING_MODE: 4 })
+    const quote = new BigNumber("1.0000000").multipliedBy(quoteRate)
+    const base = new BigNumber("1.0000000").multipliedBy(baseRate)
+    return base.dividedBy(quote).toFixed(2)
+}
