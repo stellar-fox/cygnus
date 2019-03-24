@@ -27,6 +27,12 @@ import clone from "lodash/clone"
 import BigNumber from "bignumber.js"
 import NumberFormat from "react-number-format"
 import { queryDevice } from "../../thunks/ledgerhq"
+import {
+    assetDenomination,
+    assetDescription,
+    assetGlyph,
+} from "../../lib/asset-utils"
+
 
 
 
@@ -311,7 +317,7 @@ export default compose(
 
         // ...
         render = () => (
-            ({ amount, amountText, asset, assetManager, indicatorMessage,
+            ({ amount, amountText, asset, indicatorMessage,
                 indicatorStyle, payeeMemoText, sequence }) =>
                 <Fragment>
                     {asset &&
@@ -324,7 +330,7 @@ export default compose(
                                     textShadow: "0px 0px 2px rgba(15, 46, 83, 0.35)",
                                 }}
                             >
-                                {assetManager.getAssetDescription(
+                                {assetDescription(
                                     asset.asset_code.toLowerCase()
                                 )}
                             </span>
@@ -342,9 +348,7 @@ export default compose(
                                 id="payment-amount"
                                 type="text"
                                 label={`${
-                                    assetManager.getAssetGlyph(
-                                        asset.asset_code.toLowerCase()
-                                    )
+                                    assetGlyph(asset.asset_code.toLowerCase())
                                 } Amount`}
                                 color="primary"
                                 error={this.state.error}
@@ -353,9 +357,9 @@ export default compose(
                             />
                             <Typography variant="caption" color="primary">
                                 Available Balance:<he.Nbsp /><he.Nbsp />
-                                {assetManager.getAssetGlyph(
-                                    asset.asset_code.toLowerCase()
-                                )} <NumberFormat
+                                {
+                                    assetGlyph(asset.asset_code.toLowerCase())
+                                } <NumberFormat
                                     value={this.state.availableBalance}
                                     displayType={"text"}
                                     thousandSeparator={true}
@@ -376,7 +380,7 @@ export default compose(
                         </div>
                         <div>
                             <Typography variant="body1" align="right" color="primary">
-                                {this.props.assetManager.getAssetDenomination(
+                                {assetDenomination(
                                     asset.asset_code.toLowerCase()
                                 )}
                             </Typography>

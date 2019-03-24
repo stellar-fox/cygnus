@@ -19,7 +19,7 @@ import {
 } from "material-ui/Table"
 import { Typography } from "@material-ui/core"
 import { stellarLumenSymbol } from "../StellarFox/env"
-
+import { assetGlyph } from "../../lib/asset-utils"
 
 
 
@@ -28,7 +28,7 @@ export default connect(
     // map state to props.
     (state) => ({ balances: state.Balances, account: state.Account })
 )(
-    ({ balances, account, assetManager }) =>
+    ({ balances, account }) =>
         <Fragment>
             <Table
                 style={{
@@ -51,7 +51,7 @@ export default connect(
                                     variant="body1" color="primary"
                                 >
                                     <span className="small">
-                                        {assetManager.getAssetGlyph(account.currency)}
+                                        {assetGlyph(account.currency)}
                                     </span>
                                     <he.Nbsp />
                                     <NumberFormat
