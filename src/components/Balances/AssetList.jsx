@@ -12,7 +12,6 @@ import {
 import { maximumTrustLimit } from "../StellarFox/env"
 import { withStyles } from "@material-ui/core/styles"
 import { CircularProgress, Grid, Typography } from "@material-ui/core"
-import { withAssetManager } from "../AssetManager"
 import { withLoginManager } from "../LoginManager"
 import Paper from "../../lib/mui-v1/Paper"
 import Avatar from "../../lib/mui-v1/Avatar"
@@ -66,7 +65,6 @@ const RequestProgress = withStyles(styles)(
 
 // <AssetList> component
 export default compose(
-    withAssetManager,
     withLoginManager,
     connect(
         // map state to props

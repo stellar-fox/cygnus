@@ -35,8 +35,10 @@ import MenuItem from "@material-ui/core/MenuItem"
 import Paper from "@material-ui/core/Paper"
 import TextField from "@material-ui/core/TextField"
 import Typography from "@material-ui/core/Typography"
-import { withAssetManager } from "../AssetManager"
 import md5 from "../../lib/md5"
+import { getExchangeRate } from "../../thunks/assets"
+import { nativeToAsset } from "../../logic/assets"
+
 
 
 
@@ -679,14 +681,11 @@ class ContactSuggester extends Component {
          * sender, update the receiver currency and display appropriate rate.
          */
         if (this.props.currency !== this.props.payeeCurrency) {
-            this.props.assetManager.updateExchangeRate(
+            this.props.getExchangeRate(
                 this.props.payeeCurrency
             ).then(() => {
                 this.props.setBalancesState({
-                    payeeCurrencyAmount:
-                        this.props.assetManager.convertToPayeeCurrency(
-                            this.props.amountNative
-                        ),
+                    payeeCurrencyAmount: nativeToAsset(this.props.amountNative),
                 })
             })
         }
@@ -859,7 +858,6 @@ class ContactSuggester extends Component {
 
 // ...
 export default compose(
-    withAssetManager,
     connect(
         // map state to props.
         (state) => ({
@@ -878,6 +876,7 @@ export default compose(
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
+            getExchangeRate,
             setState: ContactsAction.setState,
             setBalancesState: BalancesAction.setState,
         }, dispatch),
