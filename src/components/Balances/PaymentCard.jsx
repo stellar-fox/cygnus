@@ -244,8 +244,9 @@ class PaymentCard extends Component {
         <Card className="payment-card">
             <CardText>
                 <div className="flex-box-row space-between">
+
                     <div>
-                        <div className="flex-box-row">
+                        <div className="flex-box-row items-centered">
                             <img
                                 style={{ opacity: "0.2" }}
                                 src={cygnusBlue}
@@ -266,8 +267,8 @@ class PaymentCard extends Component {
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                     <TextField
                         id="date"
                         label="Date"
@@ -288,6 +289,7 @@ class PaymentCard extends Component {
                             },
                         }}
                     />
+
                 </div>
 
 
