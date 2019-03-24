@@ -62,14 +62,14 @@ export default compose(
                         alt="Cygnus"
                     />
                 </div>
-                
+
                 <div className={classes.barSubtitle}>{viewName}</div>
             </div>
             <div className={classes.indicatorSetCol}>
                 <div
                     className={
                         horizon === liveNetAddr ?
-                            "badge-success" : "badge-error"
+                            "badge-success" : "border-error glass-error glass-error-text"
                     }
                 >
                     { horizon === liveNetAddr ? "Public Net" : "Test Net" }
