@@ -25,7 +25,6 @@ import {
     unknownPubKeyAbbr,
 } from "../StellarFox/env"
 import Button from "../../lib/mui-v1/Button"
-import { withAssetManager } from "../AssetManager"
 import { action as BalancesAction } from "../../redux/Balances"
 import cygnusBlue from "../StellarFox/static/cygnusBlue.svg"
 import ContactSuggester from "./ContactSuggester"
@@ -37,8 +36,16 @@ import NumberFormat from "react-number-format"
 import { withStyles } from "@material-ui/core/styles"
 import { fade } from "@material-ui/core/styles/colorManipulator"
 import { pubKeyAbbr } from "../../lib/utils"
-import { assetToNative } from "../../logic/assets"
-
+import {
+    assetToNative,
+    nativeToAsset,
+} from "../../logic/assets"
+import { getExchangeRate } from "../../thunks/assets"
+import {
+    assetDenomination,
+    assetDescription,
+    assetGlyph,
+} from "../../lib/asset-utils"
 
 
 
@@ -147,13 +154,14 @@ class PaymentCard extends Component {
          * every time the amount is updated.
          */
         if (this.props.Account.currency !== this.props.Balances.payeeCurrency) {
-            this.props.assetManager.updateExchangeRate(
+            this.props.getExchangeRate(
                 this.props.Balances.payeeCurrency
             ).then(() => {
                 this.props.setState({
                     payeeCurrencyAmount:
-                        this.props.assetManager.convertToPayeeCurrency(
-                            this.props.Balances.amountNative
+                        nativeToAsset(
+                            this.props.Balances.amountNative,
+                            this.props.payeeRate,
                         ),
                 })
             })
@@ -198,7 +206,7 @@ class PaymentCard extends Component {
                     fixedDecimalScale={true}
                 /><he.Nbsp />
                 <span>
-                    {this.props.assetManager.getAssetDescription(
+                    {assetDescription(
                         this.props.Balances.payeeCurrency
                     )}
                 </span>
@@ -296,9 +304,7 @@ class PaymentCard extends Component {
 
                     <div className="flex-box-row">
                         <div className="currency-glyph">
-                            {this.props.assetManager.getAssetGlyph(
-                                this.props.Account.currency
-                            )}
+                            {assetGlyph(this.props.Account.currency)}
                         </div>
                         <div>
                             <TextField
@@ -335,7 +341,7 @@ class PaymentCard extends Component {
                     </div>
                     <div className="flex-box-row items-flex-end content-flex-end">
                         <Typography color="primary" noWrap>
-                            {this.props.assetManager.getAssetDenomination(
+                            {assetDenomination(
                                 this.props.Account.currency
                             )}
                         </Typography>
@@ -474,7 +480,6 @@ export default compose(
             },
         },
     })),
-    withAssetManager,
     connect(
         // map state to props.
         (state) => ({
@@ -486,9 +491,11 @@ export default compose(
             userId: state.LoginManager.userId,
             cancelEnabled: state.Balances.cancelEnabled,
             preferredRate: state.ExchangeRates[state.Account.currency].rate,
+            payeeRate: state.ExchangeRates[state.Balances.payeeCurrency].rate,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
+            getExchangeRate,
             setState: BalancesAction.setState,
         }, dispatch)
     )

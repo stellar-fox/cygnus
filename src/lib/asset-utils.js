@@ -8,7 +8,7 @@ import { string } from "@xcmats/js-toolbox"
  *
  * @function assetGlyph
  * @param {String} assetCode Lower case ISO 3-letter currency code.
- * @returns {String} Currency glyph.
+ * @returns {String}
  */
 export const assetGlyph = (assetCode) => (
     (codes) => codes[assetCode.toLowerCase()] ?
@@ -23,7 +23,7 @@ export const assetGlyph = (assetCode) => (
  *
  * @function assetDescription
  * @param {String} assetCode Lower case ISO 3-letter currency code.
- * @returns {String} Long currency name.
+ * @returns {String}
  */
 export const assetDescription = (assetCode) => (
     (codes) => codes[assetCode.toLowerCase()] ?
@@ -32,4 +32,26 @@ export const assetDescription = (assetCode) => (
     eur: "European Union Euro", usd: "United States Dollar",
     aud: "Australian Dollar", nzd: "New Zealand Dollar",
     thb: "Thai Baht", pln: "Polish Złoty", xlm: "Stellar Lumen",
+})
+
+
+
+
+/**
+ * Returns asset denomination string.
+ *
+ * @function assetDenomination
+ * @param {String} assetCode Lower case ISO 3-letter currency code.
+ * @returns {String}
+ */
+export const assetDenomination = (assetCode) => (
+    (codes) => codes[assetCode.toLowerCase()] ?
+        codes[assetCode.toLowerCase()] : string.empty()
+)({
+    eur: "EUROS",
+    usd: "DOLLARS",
+    aud: "AUSTRALIAN DOLLARS",
+    nzd: "NEW ZEALAND DOLLARS",
+    thb: "THAI BAHT บาท",
+    pln: "ZŁOTYCH",
 })

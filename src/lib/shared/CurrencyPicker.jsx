@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import { bindActionCreators, compose, } from "redux"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import { withAssetManager } from "../../components/AssetManager"
 import { withStyles } from "@material-ui/core/styles"
 import {action as BalancesAction } from "../../redux/Balances"
 import Radio from "@material-ui/core/Radio"
@@ -10,6 +9,7 @@ import RadioGroup from "@material-ui/core/RadioGroup"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import FormControl from "@material-ui/core/FormControl"
 import FormLabel from "@material-ui/core/FormLabel"
+
 
 
 
@@ -44,6 +44,8 @@ const styles = (theme) => ({
         fontSize: "1rem",
     },
 })
+
+
 
 
 // ...
@@ -161,6 +163,8 @@ class CurrencyPicker extends Component {
 }
 
 
+
+
 // ...
 CurrencyPicker.propTypes = {
     classes: PropTypes.object.isRequired,
@@ -169,9 +173,10 @@ CurrencyPicker.propTypes = {
 }
 
 
+
+
 // ...
 export default compose(
-    withAssetManager,
     withStyles(styles),
     connect(
         (_state, theme) => ({

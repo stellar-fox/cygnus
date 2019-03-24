@@ -35,7 +35,6 @@ import MenuItem from "@material-ui/core/MenuItem"
 import Paper from "@material-ui/core/Paper"
 import TextField from "@material-ui/core/TextField"
 import Typography from "@material-ui/core/Typography"
-import { withAssetManager } from "../AssetManager"
 import md5 from "../../lib/md5"
 
 
@@ -519,7 +518,7 @@ class ReducedContactSuggester extends Component {
 
             try {
                 const payeeStellarAccount = await loadAccount(publicKey)
-                
+
                 if (payeeStellarAccount.account_id === publicKey) {
                     this.setTransactionType("EXISTING_ACCOUNT")
                     this.updateIndicatorMessage("Existing Account", "green")
@@ -833,7 +832,6 @@ class ReducedContactSuggester extends Component {
 
 // ...
 export default compose(
-    withAssetManager,
     connect(
         // map state to props.
         (state) => ({

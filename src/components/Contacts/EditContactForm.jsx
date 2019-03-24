@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react"
 import { bindActionCreators, compose, } from "redux"
 import { connect } from "react-redux"
 import { string } from "@xcmats/js-toolbox"
-import { withAssetManager } from "../AssetManager"
 import { gravatar, gravatarSize } from "../StellarFox/env"
 import {
     listInternal, listRequested, removeFederated, removeInternal,
@@ -37,6 +36,11 @@ import CircularProgress from "@material-ui/core/CircularProgress"
 import Typography from "@material-ui/core/Typography"
 import md5 from "../../lib/md5"
 import { surfaceSnacky } from "../../thunks/main"
+import {
+    assetDescription,
+    assetGlyph,
+} from "../../lib/asset-utils"
+
 
 
 
@@ -184,7 +188,7 @@ const DeleteContactButton = withStyles(styles)(
 
 // ...
 const ExtContactDetails = withStyles(styles)(
-    ({ classes, details, assetManager, deleteAction, setCurrency, updateMemo,
+    ({ classes, details, deleteAction, setCurrency, updateMemo,
         memoFieldValue, updateFirstName, firstNameFieldValue, updateLastName,
         lastNameFieldValue, updatePaymentAddress,
         paymentAddressFieldValue, currentCurrency, error, errorMessage }) =>
@@ -203,12 +207,10 @@ const ExtContactDetails = withStyles(styles)(
                                 Default Currency:
                             </span>
                         </Typography>
-                        {assetManager.getAssetDescription(
-                            currentCurrency
-                        )}
+                        {assetDescription(currentCurrency)}
                     </Typography>
                     <div className="coin">
-                        {assetManager.getAssetGlyph(currentCurrency)}
+                        {assetGlyph(currentCurrency)}
                     </div>
                 </div>
 
@@ -256,7 +258,7 @@ const ExtContactDetails = withStyles(styles)(
 
 // ...
 const ContactDetails = withStyles(styles)(
-    ({ classes, details, assetManager, deleteAction }) =>
+    ({ classes, details, deleteAction }) =>
         <div className="f-b space-around p-t-large p-b-large">
             <div className="f-b-col">
                 <Avatar className={classes.avatar}
@@ -266,7 +268,7 @@ const ContactDetails = withStyles(styles)(
 
                 <Badge
                     badgeContent={
-                        assetManager.getAssetGlyph(details.contact.currency)
+                        assetGlyph(details.contact.currency)
                     } classes={{ badge: classes.badge }}
                 >
                     <Typography classes={{ root: classes.padded }}
@@ -277,7 +279,7 @@ const ContactDetails = withStyles(styles)(
                                 Default Currency:
                             </span>
                         </Typography>
-                        {assetManager.getAssetDescription(
+                        {assetDescription(
                             details.contact.currency
                         )}
                     </Typography>
@@ -584,13 +586,13 @@ class EditContactForm extends Component {
 
     // ...
     render = () => (
-        ({ details, assetManager }) =>
+        ({ details }) =>
             <Fragment>
                 <AlertChoiceModal onYes={this.deleteContact} />
 
                 {details.external ?
-                    <ExtContactDetails details={details}
-                        assetManager={assetManager}
+                    <ExtContactDetails
+                        details={details}
                         deleteAction={this.deleteContactConfirm}
                         setCurrency={this.setExtContactDefaultCurrency}
                         updateMemo={this.updateMemo}
@@ -605,8 +607,8 @@ class EditContactForm extends Component {
                         error={this.state.error}
                         errorMessage={this.state.errorMessage}
                     /> :
-                    <ContactDetails details={details}
-                        assetManager={assetManager}
+                    <ContactDetails
+                        details={details}
                         deleteAction={this.deleteContactConfirm}
                     />
                 }
@@ -628,7 +630,6 @@ class EditContactForm extends Component {
 
 // ...
 export default compose(
-    withAssetManager,
     connect(
         (state, theme) => ({
             theme,
