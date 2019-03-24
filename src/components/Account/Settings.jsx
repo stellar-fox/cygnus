@@ -573,65 +573,63 @@ class Settings extends Component {
             </RadioButtonGroup>
 
             {this.props.authenticated &&
-                <div className="m-t-large flex-box-row items-centered space-between outline">
-                    <div>
-                        <Typography variant="body1" color="secondary">
-                            Publish account number and payment address.
-                        </Typography>
-                        <Typography variant="caption" color="secondary">
-                            Your account number will be
-                            publicly discoverable and can be
-                            found by others via your payment
-                            address.
-                        </Typography>
+                <div className="m-t-large">
+
+                    <Typography>
+                        <span className="red-badge">
+                            Danger Zone
+                        </span>
+                    </Typography>
+
+                    <div className="m-t flex-box-row items-centered space-between outline">
+                        <div>
+                            <Typography variant="body1" color="secondary">
+                                Change visibility of your payment address.
+                            </Typography>
+                            <Typography variant="caption" color="secondary">
+                                Your payment address will be
+                                publicly discoverable by default.
+                                Unpublish it to drop off the radar.
+                            </Typography>
+                        </div>
+                        <div>
+                            <Switch
+                                checked={this.props.discoverable}
+                                onChange={this.changeAccountDiscoverability}
+                                color="secondary"
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <Switch
-                            checked={this.props.discoverable}
-                            onChange={this.changeAccountDiscoverability}
-                            color="secondary"
-                        />
+
+                    <div className="m-t flex-box-row items-centered space-between outline">
+                        <div>
+                            <Typography variant="body1" color="secondary">
+                                Delete all your data and contact book stored on
+                                our servers.
+                            </Typography>
+                            <Typography variant="caption" color="secondary">
+                                While your personal data is nuked, your funds are
+                                always safe and freely transferable to other similar
+                                services.
+                            </Typography>
+                        </div>
+                        <div>
+                            <Button
+                                disabled={this.state.imploding}
+                                color="secondary"
+                                onClick={this.implodeAccount}
+                            >
+                                {this.state.imploding ?
+                                    <RequestProgress label="Implode"
+                                        color="secondary"
+                                    /> : "Implode"
+                                }
+                            </Button>
+                        </div>
                     </div>
                 </div>
             }
 
-            {this.props.authenticated &&
-            <Fragment>
-                <div style={{marginTop: "1rem"}} className="flex-box-row">
-                    <Typography style={{ padding: "0.5rem 0"}} variant="h5"
-                        color="secondary"
-                    >
-                        <span className="red">Danger Zone</span>
-                    </Typography>
-                </div>
-                <div className="flex-box-row items-centered space-between outline">
-                    <div>
-                        <Typography variant="body1" color="secondary">
-                            Delete all your data and contact book stored on
-                            our servers.
-                        </Typography>
-                        <Typography variant="caption" color="secondary">
-                            While your personal data is nuked, your funds are
-                            always safe and freely transferable to other similar
-                            services.
-                        </Typography>
-                    </div>
-                    <div>
-                        <Button
-                            disabled={this.state.imploding}
-                            color="awesome"
-                            onClick={this.implodeAccount}
-                        >
-                            {this.state.imploding ?
-                                <RequestProgress label="Implode"
-                                    color="secondary"
-                                /> : "Implode"
-                            }
-                        </Button>
-                    </div>
-                </div>
-            </Fragment>
-            }
         </div>
 }
 
