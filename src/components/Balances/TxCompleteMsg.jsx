@@ -70,7 +70,7 @@ export default connect(
                         Transaction ID:
                     </Typography>
                     <Typography noWrap color="primary" variant="caption">
-                        {balances.paymentId}
+                        {string.shorten(balances.paymentId, 20)}
                     </Typography>
                 </div>
 
