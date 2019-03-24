@@ -18,6 +18,7 @@ import { reducer as ProgressReducer } from "./Progress"
 import { reducer as StellarAccountReducer } from "./StellarAccount"
 import { reducer as RouterReducer } from "./StellarRouter"
 import { reducer as SnackyReducer } from "./Snacky"
+import { reducer as TransactionReducer } from "./Transaction"
 
 
 
@@ -44,4 +45,5 @@ export default {
     Router: RouterReducer,
     StellarAccount: StellarAccountReducer,
     Snacky: SnackyReducer,
+    Transaction: TransactionReducer,
 }

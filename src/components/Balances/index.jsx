@@ -21,6 +21,7 @@ import { action as LoginManagerAction } from "../../redux/LoginManager"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as AlertAction } from "../../redux/Alert"
+import { action as TransactionAction } from "../../redux/Transaction"
 import { signTransaction } from "../../lib/ledger"
 import {
     augmentAssets,
@@ -175,6 +176,8 @@ class Balances extends Component {
 
             this.props.showModal("txConfirm")
 
+            this.props.setTransaction(tx)
+
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
                 this.props.publicKey,
@@ -199,11 +202,7 @@ class Balances extends Component {
                 payCardVisible: false,
             })
         } catch (error) {
-            if (error.name === "BadResponseError") {
-                this.showError(`${error.data.title}.`)
-            } else {
-                this.showError(error.message)
-            }
+            this.showError(error.message)
         }
     }
 
@@ -212,13 +211,14 @@ class Balances extends Component {
 
     // ...
     showError = (message) => {
+        this.props.clearTransaction()
         this.props.hideModal()
-        this.props.showAlert(message, "Error")
         this.props.setStateForBalances({
             sendEnabled: true,
             cancelEnabled: true,
             message: null,
         })
+        this.props.surfaceSnacky("error", message)
     }
 
 
@@ -234,8 +234,8 @@ class Balances extends Component {
         try {
             await this.props.queryDevice()
             this.buildSendTransaction()
-        } catch (ex) {
-            this.showError(ex.message)
+        } catch (error) {
+            this.showError(error.message)
         }
     }
 
@@ -270,7 +270,7 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "txConfirm" &&
                                 this.props.Modal.visible
                             }
-                            title="About your transaction …"
+                            title="In this transaction …"
                         >
                             <TxConfirmMsg assetManager={assetManager} />
                         </Modal>
@@ -388,12 +388,14 @@ export default compose(
         }),
         // match dispatch to props.
         (dispatch) => bindActionCreators({
+            clearTransaction: TransactionAction.clearTransaction,
             setAccountState: AccountAction.setState,
             setAssetsState: AssetManagerAction.setState,
             setBalancesState: BalancesAction.setState,
             setContactsState: ContactsAction.setState,
             setLedgerHQState: LedgerHQAction.setState,
             setStellarAccountState: StellarAccountAction.setState,
+            setTransaction: TransactionAction.setTransaction,
             updateAccountTree: StellarAccountAction.loadStellarAccount,
             setStateForBalances: BalancesAction.setState,
             resetBalancesState: BalancesAction.resetState,
