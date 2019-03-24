@@ -22,13 +22,9 @@ import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as AlertAction } from "../../redux/Alert"
 import { signTransaction } from "../../lib/ledger"
-import { listInternal, listRequested, } from "../Contacts/api"
 import {
     augmentAssets,
-    getUserData,
-    getUserExternalContacts,
     insertPathIndex,
-    paymentAddress,
 } from "../../lib/utils"
 import { delay } from "@xcmats/js-toolbox"
 import {
@@ -76,6 +72,8 @@ class Balances extends Component {
     }
 
 
+
+
     // ...
     constructor (props) {
         super(props)
@@ -85,12 +83,16 @@ class Balances extends Component {
     }
 
 
+
+
     // ...
     state = {
         paymentsStreamer: null,
         operationsStreamer: null,
         modalButtonText: "CANCEL",
     }
+
+
 
 
     // ...
@@ -114,12 +116,16 @@ class Balances extends Component {
     }
 
 
+
+
     // ...
     componentWillUnmount = () => {
         this.state.paymentsStreamer.call(this)
         this.state.operationsStreamer.call(this)
         this.props.resetBalancesState()
     }
+
+
 
 
     // ...
@@ -139,76 +145,6 @@ class Balances extends Component {
         })
     }
 
-
-    // ...
-    updateContacts = () => {
-
-        listInternal(this.props.userId, this.props.token)
-            .then((results) => {
-                results ? this.props.setContactsState({
-                    internal: results,
-                }) : this.props.setContactsState({
-                    internal: [],
-                })
-            }) &&
-
-        getUserExternalContacts(this.props.userId, this.props.token)
-            .then((results) => {
-                results ? this.props.setContactsState({
-                    external: results,
-                }) : this.props.setContactsState({
-                    external: [],
-                })
-            })
-
-        listRequested(this.props.userId, this.props.token)
-            .then((results) => {
-                results ? this.props.setContactsState({
-                    requests: results,
-                }) : this.props.setContactsState({
-                    requests: [],
-                })
-            })
-    }
-
-
-    // ...
-    checkForRegisteredAccount = async () => {
-        try {
-            if (this.props.authenticated) {
-
-                const user = await getUserData(
-                    this.props.userId, this.props.token
-                )
-
-                await this.props.setAccountState({
-                    firstName: user.first_name,
-                    lastName: user.last_name,
-                    email: user.email,
-                    gravatar: user.email_md5,
-                    paymentAddress: paymentAddress(user.alias, user.domain),
-                    memo: user.memo,
-                    discoverable: user.visible,
-                    currency: user.currency,
-                    needsRegistration: false,
-                })
-
-                /**
-                 * When user authenticates check for new contact requests
-                 * so the badge indicator can be activated upon new requests.
-                 */
-                this.updateContacts()
-
-                this.props.assetManager.updateExchangeRate(user.currency)
-
-            } else {
-                await this.props.setAccountState({ needsRegistration: true })
-            }
-
-        } catch (error) {
-            surfaceSnacky("error", error.message)
-        }
-    }
 
 
 
@@ -272,6 +208,8 @@ class Balances extends Component {
     }
 
 
+
+
     // ...
     showError = (message) => {
         this.props.hideModal()
@@ -282,6 +220,8 @@ class Balances extends Component {
             message: null,
         })
     }
+
+
 
 
     // ...
@@ -300,6 +240,8 @@ class Balances extends Component {
     }
 
 
+
+
     // ...
     closeAssetDetailsModal = () => {
         this.props.setAssetsState({ selected: null })
@@ -312,6 +254,8 @@ class Balances extends Component {
         })
         this.props.hideModal()
     }
+
+
 
 
     // ...
@@ -418,6 +362,8 @@ class Balances extends Component {
     )(this.props)
 
 }
+
+
 
 
 // ...
