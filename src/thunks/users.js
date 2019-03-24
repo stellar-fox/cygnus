@@ -135,7 +135,11 @@ export const enterExplorer = (inputValue) =>
 
         } catch (error) {
 
-            await dispatch(ErrorsActions.clearOtherError())
+            if (error.response.status === 404) {
+                await dispatch(ErrorsActions.setOtherError("Not found."))
+            } else {
+                await dispatch(ErrorsActions.setOtherError(error.message))
+            }
 
         } finally {
 
