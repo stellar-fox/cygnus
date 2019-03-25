@@ -127,19 +127,6 @@ class Profile extends Component {
             return
         }
 
-        /**
-         * User's account is not on Stellar Ledger so there is no place to
-         * lodge the signature, hence, return from the function at this point.
-         */
-        if (!this.props.accountId) {
-            this.props.surfaceSnacky(
-                "error",
-                "User data updated without signature."
-            )
-            this.props.setState({ messageUserData: string.empty() })
-            this.setState({ loadingUpdateProfile: false })
-            return
-        }
 
         /**
          * Update Stellar Ledger with user info digest hash.
@@ -192,7 +179,10 @@ class Profile extends Component {
             this.setState({ loadingUpdateProfile: false })
             this.props.setState({ messageUserData: string.empty() })
             this.props.hideModal()
-            this.props.surfaceSnacky("error", error.message)
+            this.props.surfaceSnacky(
+                "warning",
+                "User data updated without signature."
+            )
         }
     }
 
@@ -202,7 +192,7 @@ class Profile extends Component {
 
         if (!this.props.emailVerified) {
             this.props.surfaceSnacky(
-                "error",
+                "warning",
                 "Please verify your email address first."
             )
             return
@@ -248,19 +238,6 @@ class Profile extends Component {
 
         }
 
-        /**
-         * User's account is not on Stellar Ledger so there is no place to
-         * lodge the signature, hence, return from the function at this point.
-         */
-        if (!this.props.accountId) {
-            this.props.surfaceSnacky(
-                "error",
-                "Payment data updated without signature."
-            )
-            this.props.setState({ messagePaymentData: string.empty() })
-            this.setState({ loadingUpdatePaymentAddress: false })
-            return
-        }
 
         /**
          * Update Stellar Ledger with user payment data digest hash.
@@ -312,8 +289,10 @@ class Profile extends Component {
             this.setState({ loadingUpdatePaymentAddress: false })
             this.props.setState({ messagePaymentData: string.empty() })
             this.props.hideModal()
-            this.props.surfaceSnacky("error", error.message)
-
+            this.props.surfaceSnacky(
+                "warning",
+                "Payment data updated without signature."
+            )
         }
     }
 
