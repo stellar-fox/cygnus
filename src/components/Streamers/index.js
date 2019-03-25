@@ -9,10 +9,16 @@ import {
 
 // ...
 export const paymentsStreamer = (
-    surfaceSnacky, publicKey, network, updateAccountTree
-) =>
-    payments(network).stream({
+    blinkPayentStreamerLed, streamerPaymentConnected, surfaceSnacky, publicKey,
+    network, updateAccountTree,
+) => {
+
+    streamerPaymentConnected(true)
+
+    return payments(network).stream({
         onmessage: (message) => {
+
+            blinkPayentStreamerLed()
 
             const RECEIVED = [
                 (message.type === "create_account" &&
@@ -41,16 +47,23 @@ export const paymentsStreamer = (
                 )
         },
     })
-
+}
 
 
 
 // ...
 export const operationsStreamer = (
-    surfaceSnacky, publicKey, network, updateAccountTree
-) =>
-    operations(network).stream({
+    blinkOperationStreamerLed, streamerOperationConnected, surfaceSnacky,
+    publicKey, network, updateAccountTree
+) => {
+
+    streamerOperationConnected(true)
+
+    return operations(network).stream({
         onmessage: (message) => {
+
+            blinkOperationStreamerLed()
+
             const HOME_DOMAIN_UPDATE = [
                 (message.type === "set_options" &&
                     message.source_account === publicKey &&
@@ -78,3 +91,4 @@ export const operationsStreamer = (
                     )
         },
     })
+}

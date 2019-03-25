@@ -7,7 +7,10 @@ import {
     Route,
 } from "react-router-dom"
 import "number-to-text/converters/en-us"
-import { string } from "@xcmats/js-toolbox"
+import {
+    delay,
+    string,
+} from "@xcmats/js-toolbox"
 import { action as AccountAction } from "../../redux/Account"
 import { action as AssetManagerAction } from "../../redux/AssetManager"
 import { action as BankActions } from "../../redux/Bank"
@@ -24,7 +27,6 @@ import {
     augmentAssets,
     insertPathIndex,
 } from "../../lib/utils"
-import { delay } from "@xcmats/js-toolbox"
 import {
     buildCreateAccountTx,
     buildPaymentTx,
@@ -55,6 +57,12 @@ import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
 import BalanceSummary from "./BalanceSummary"
 import LoadingModal from "../LoadingModal"
+import {
+    blinkPayentStreamerLed,
+    streamerPaymentConnected,
+    blinkOperationStreamerLed,
+    streamerOperationConnected,
+} from "../../thunks/main"
 
 
 
@@ -97,12 +105,16 @@ class Balances extends Component {
 
         this.setState({
             paymentsStreamer: paymentsStreamer(
+                this.props.blinkPayentStreamerLed,
+                this.props.streamerPaymentConnected,
                 this.props.surfaceSnacky,
                 this.props.publicKey,
                 this.props.horizon,
                 this.updateAccountTree,
             ),
             operationsStreamer: operationsStreamer(
+                this.props.blinkOperationStreamerLed,
+                this.props.streamerOperationConnected,
                 this.props.surfaceSnacky,
                 this.props.publicKey,
                 this.props.horizon,
@@ -118,7 +130,9 @@ class Balances extends Component {
     // ...
     componentWillUnmount = () => {
         this.state.paymentsStreamer.call(this)
+        this.props.streamerPaymentConnected(false)
         this.state.operationsStreamer.call(this)
+        this.props.streamerOperationConnected(false)
         this.props.resetBalancesState()
     }
 
@@ -398,5 +412,9 @@ export default connect(
         toggleSignupHint: BankActions.toggleSignupHint,
         surfaceSnacky,
         queryDevice,
+        blinkPayentStreamerLed,
+        streamerPaymentConnected,
+        blinkOperationStreamerLed,
+        streamerOperationConnected,
     }, dispatch)
 )(Balances)
