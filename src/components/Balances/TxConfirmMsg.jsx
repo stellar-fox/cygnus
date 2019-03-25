@@ -85,13 +85,16 @@ class TxConfirmMsg extends Component {
         if (foundContact) {
             this.setState({
                 contact: foundContact,
-                receives: nativeToAsset(
-                    this.props.Balances.amountNative,
-                    this.props.payeeRate
-                ),
-                receiverCurrency: assetGlyph(this.props.payeeCurrency),
             })
         }
+
+        this.setState({
+            receives: nativeToAsset(
+                this.props.Balances.amountNative,
+                this.props.payeeRate
+            ),
+            receiverCurrency: assetGlyph(this.props.payeeCurrency),
+        })
 
     }
 
@@ -157,7 +160,7 @@ class TxConfirmMsg extends Component {
                         <Typography align="center" color="primary"
                             variant="h4" noWrap
                         >
-                            Receives: {this.state.receives} {this.state.receiverCurrency}
+                            Receives: {this.state.receiverCurrency} {this.state.receives}
                         </Typography>
 
                         <Typography noWrap>
