@@ -6,35 +6,41 @@ import { string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import { action as BalancesAction } from "../../redux/Balances"
 import { action as ContactsAction } from "../../redux/Contacts"
-
 import {
-    federationAddressValid, formatFullName, formatPaymentAddress,
-    getFederationRecord, glyphsDB, htmlEntities as he,
-    invalidPaymentAddressMessage, paymentAddress, pubKeyAbbr, publicKeyValid,
+    federationAddressValid,
+    formatFullName,
+    formatPaymentAddress,
+    getFederationRecord,
+    glyphsDB,
+    htmlEntities as he,
+    invalidPaymentAddressMessage,
+    paymentAddress,
+    pubKeyAbbr,
+    publicKeyValid,
     signatureValid,
 } from "../../lib/utils"
-
 import {
-    gravatar, gravatarSize48, securityMsgPlaceholder
+    gravatar,
+    gravatarSize48,
+    securityMsgPlaceholder,
 } from "../StellarFox/env"
-
 import { loadAccount } from "../../lib/stellar-tx"
-
 import Autosuggest from "react-autosuggest"
 import Fuse from "fuse.js"
 import match from "autosuggest-highlight/match"
 import parse from "autosuggest-highlight/parse"
-
-import Avatar from "@material-ui/core/Avatar"
-import Chip from "@material-ui/core/Chip"
+import {
+    Avatar,
+    Chip,
+    Divider,
+    InputAdornment,
+    MenuItem,
+    Paper,
+    TextField,
+    Typography,
+} from "@material-ui/core"
 import CheckCircle from "@material-ui/icons/CheckCircle"
-import { Divider } from "@material-ui/core"
 import HighlightOff from "@material-ui/icons/HighlightOff"
-import InputAdornment from "@material-ui/core/InputAdornment"
-import MenuItem from "@material-ui/core/MenuItem"
-import Paper from "@material-ui/core/Paper"
-import TextField from "@material-ui/core/TextField"
-import Typography from "@material-ui/core/Typography"
 import md5 from "../../lib/md5"
 import { getExchangeRate } from "../../thunks/assets"
 import { nativeToAsset } from "../../logic/assets"
