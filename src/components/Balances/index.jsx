@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import {
-    bindActionCreators,
-    compose,
-} from "redux"
+import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import {
     Redirect,
@@ -33,7 +30,6 @@ import {
     buildPaymentTx,
     submitTransaction,
 } from "../../lib/stellar-tx"
-import { withAssetManager } from "../AssetManager"
 import {
     ConnectedSwitch as Switch,
     resolvePath,
@@ -260,7 +256,7 @@ class Balances extends Component {
 
     // ...
     render = () => (
-        ({ Balances, assetManager, signupHintVisible }) =>
+        ({ Balances, signupHintVisible }) =>
             <Switch>
                 <Route exact path={this.rr(".")}>
                     <Fragment>
@@ -271,7 +267,7 @@ class Balances extends Component {
                                 this.props.Modal.visible
                             }
                         >
-                            <TxConfirmMsg assetManager={assetManager} />
+                            <TxConfirmMsg />
                         </Modal>
 
                         <Modal
@@ -295,9 +291,7 @@ class Balances extends Component {
                                 >OK</Button>,
                             ]}
                         >
-                            <TxCompleteMsg
-                                assetManager={assetManager}
-                            />
+                            <TxCompleteMsg />
                         </Modal>
 
                         <Modal
@@ -325,7 +319,7 @@ class Balances extends Component {
                             paperClassName="paycheck"
                             bodyClassName="lace"
                         >
-                            <AssetDetails assetManager={this.props.assetManager} />
+                            <AssetDetails />
                         </Modal>
 
                         {
@@ -364,48 +358,45 @@ class Balances extends Component {
 
 
 // ...
-export default compose(
-    withAssetManager,
-    connect(
-        // map state to props.
-        (state) => ({
-            authenticated: state.Auth.authenticated,
-            publicKey: state.LedgerHQ.publicKey,
-            bip32Path: state.LedgerHQ.bip32Path,
-            Account: state.Account,
-            StellarAccount: state.StellarAccount,
-            Balances: state.Balances,
-            Modal: state.Modal,
-            userId: state.LoginManager.userId,
-            token: state.LoginManager.token,
-            horizon: state.StellarAccount.horizon,
-            assets: state.Assets,
-            cancelEnabled: state.Balances.cancelEnabled,
-            signupHintVisible: state.Bank.signupHintVisible,
-        }),
-        // match dispatch to props.
-        (dispatch) => bindActionCreators({
-            clearTransaction: TransactionAction.clearTransaction,
-            setAccountState: AccountAction.setState,
-            setAssetsState: AssetManagerAction.setState,
-            setBalancesState: BalancesAction.setState,
-            setContactsState: ContactsAction.setState,
-            setLedgerHQState: LedgerHQAction.setState,
-            setStellarAccountState: StellarAccountAction.setState,
-            setTransaction: TransactionAction.setTransaction,
-            updateAccountTree: StellarAccountAction.loadStellarAccount,
-            setStateForBalances: BalancesAction.setState,
-            resetBalancesState: BalancesAction.resetState,
-            setApiToken: LoginManagerAction.setApiToken,
-            setUserId: LoginManagerAction.setUserId,
-            hideModal: ModalAction.hideModal,
-            showModal: ModalAction.showModal,
-            showAlert: AlertAction.showAlert,
-            showLoadingModal: LoadingModalAction.showLoadingModal,
-            hideLoadingModal: LoadingModalAction.hideLoadingModal,
-            toggleSignupHint: BankActions.toggleSignupHint,
-            surfaceSnacky,
-            queryDevice,
-        }, dispatch)
-    )
+export default connect(
+    // map state to props.
+    (state) => ({
+        authenticated: state.Auth.authenticated,
+        publicKey: state.LedgerHQ.publicKey,
+        bip32Path: state.LedgerHQ.bip32Path,
+        Account: state.Account,
+        StellarAccount: state.StellarAccount,
+        Balances: state.Balances,
+        Modal: state.Modal,
+        userId: state.LoginManager.userId,
+        token: state.LoginManager.token,
+        horizon: state.StellarAccount.horizon,
+        assets: state.Assets,
+        cancelEnabled: state.Balances.cancelEnabled,
+        signupHintVisible: state.Bank.signupHintVisible,
+    }),
+    // match dispatch to props.
+    (dispatch) => bindActionCreators({
+        clearTransaction: TransactionAction.clearTransaction,
+        setAccountState: AccountAction.setState,
+        setAssetsState: AssetManagerAction.setState,
+        setBalancesState: BalancesAction.setState,
+        setContactsState: ContactsAction.setState,
+        setLedgerHQState: LedgerHQAction.setState,
+        setStellarAccountState: StellarAccountAction.setState,
+        setTransaction: TransactionAction.setTransaction,
+        updateAccountTree: StellarAccountAction.loadStellarAccount,
+        setStateForBalances: BalancesAction.setState,
+        resetBalancesState: BalancesAction.resetState,
+        setApiToken: LoginManagerAction.setApiToken,
+        setUserId: LoginManagerAction.setUserId,
+        hideModal: ModalAction.hideModal,
+        showModal: ModalAction.showModal,
+        showAlert: AlertAction.showAlert,
+        showLoadingModal: LoadingModalAction.showLoadingModal,
+        hideLoadingModal: LoadingModalAction.hideLoadingModal,
+        toggleSignupHint: BankActions.toggleSignupHint,
+        surfaceSnacky,
+        queryDevice,
+    }, dispatch)
 )(Balances)

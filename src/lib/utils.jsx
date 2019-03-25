@@ -667,13 +667,12 @@ export const dynamicImportLibs = async () => {
 // asynchronously load reducers (used in dev. environment)
 export const dynamicImportReducers = async () => {
     let [
-        Account, Alert, AssetManager, Balances, Bank,
+        Account, Alert, Balances, Bank,
         LedgerHQ, LoadingModal, LoginManager, Modal, Payments,
         Snacky, StellarAccount, StellarRouter,
     ] = await Promise.all([
         import("../redux/Account"),
         import("../redux/Alert"),
-        import("../redux/AssetManager"),
         import("../redux/Balances"),
         import("../redux/Bank"),
         import("../redux/LedgerHQ"),
@@ -686,7 +685,7 @@ export const dynamicImportReducers = async () => {
         import("../redux/StellarRouter"),
     ])
     return {
-        Account, Alert, AssetManager, Balances, Bank,
+        Account, Alert, Balances, Bank,
         LedgerHQ, LoadingModal, LoginManager, Modal, Payments,
         Snacky, StellarAccount, StellarRouter,
     }

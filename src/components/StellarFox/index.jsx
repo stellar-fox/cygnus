@@ -14,7 +14,6 @@ import sFoxTheme from "../../lib/sfox-mui-theme"
 import { CssBaseline } from "@material-ui/core"
 import LegacyMuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import sFoxThemeLegacy from "../../lib/sfox-mui-theme.legacy"
-import AssetManager from "../AssetManager"
 import LoginManager from "../LoginManager"
 import Layout from "../Layout"
 import { config } from "../../config"
@@ -40,18 +39,16 @@ export default ({ history, store }) =>
             <MuiThemeProvider theme={sFoxTheme}>
                 <LegacyMuiThemeProvider muiTheme={sFoxThemeLegacy}>
                     <LoginManager>
-                        <AssetManager>
-                            <CssBaseline />
-                            <Switch>
-                                <Route path={env.appBasePath}>
-                                    {
-                                        (routeProps) =>
-                                            <Layout {...routeProps} />
-                                    }
-                                </Route>
-                                <Redirect to={env.appBasePath} />
-                            </Switch>
-                        </AssetManager>
+                        <CssBaseline />
+                        <Switch>
+                            <Route path={env.appBasePath}>
+                                {
+                                    (routeProps) =>
+                                        <Layout {...routeProps} />
+                                }
+                            </Route>
+                            <Redirect to={env.appBasePath} />
+                        </Switch>
                     </LoginManager>
                 </LegacyMuiThemeProvider>
             </MuiThemeProvider>
