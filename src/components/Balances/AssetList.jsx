@@ -332,7 +332,6 @@ export default compose(
                         </div>
 
                         {this.balanceIsZero(trustedAsset) &&
-                            this.props.loginManager.isPayEnabled() &&
                             <Switch
                                 checked={this.isTrustedAsset(baseAsset)}
                                 onChange={this.removeTrustline.bind(

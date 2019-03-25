@@ -5,9 +5,9 @@ import { withStyles } from "@material-ui/core/styles"
 import { IconButton, Menu, MenuItem } from "@material-ui/core"
 import { gravatar, gravatarSize48 } from "../../components/StellarFox/env"
 import Avatar from "@material-ui/core/Avatar"
-import { withLoginManager } from "../../components/LoginManager"
 import PowerIcon from "@material-ui/icons/PowerSettingsNew"
 import { signOut } from "../../thunks/users"
+
 
 
 
@@ -114,5 +114,4 @@ export default compose(
         }, dispatch)
     ),
     withStyles(styles),
-    withLoginManager,
 )(UserMenu)

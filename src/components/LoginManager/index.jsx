@@ -3,8 +3,6 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
 import hoistStatics from "hoist-non-react-statics"
-import { toBool } from "@xcmats/js-toolbox"
-import { authenticate } from "./api"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
 
@@ -35,36 +33,6 @@ export default connect(
     }, dispatch)
 )(
     class extends Component {
-
-        // ...
-        attemptLogin = async (email, password) => {
-            const auth = await authenticate(email, password)
-            if (auth.authenticated) {
-                // consolidate credentials into LedgerHQ
-                this.props.setLedgerBip32Path((auth.bip32Path).toString(10))
-                this.props.setApiToken(auth.token)
-                this.props.setUserId(auth.user_id)
-                this.props.setLedgerPublicKey(auth.pubkey)
-            }
-            return auth
-        }
-
-
-        // LEVEL 1 - public ledger browsing
-        isLoggedIn = () => toBool(this.props.publicKey)
-
-
-        // LEVEL 2 - transactions signing enabled
-        isPayEnabled = () =>
-            this.isLoggedIn()  &&  toBool(this.props.bip32Path)
-
-
-        // LEVEL 3 - allows for backend access and transaction signing
-        isAuthenticated = () =>
-            toBool(this.props.token)  &&
-            toBool(this.props.userId)  &&
-            this.isPayEnabled()
-
 
         // ...
         render = () =>
@@ -113,7 +81,7 @@ export const withLoginManager = (WrappedComponent) => {
         // ...
         forwardRef = (props, ref) =>
             React.createElement(WithLoginManager,
-                { ...props, forwardedRef: ref, }
+                { ...props, forwardedRef: ref }
             )
 
     // ...
