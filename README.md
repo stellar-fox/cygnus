@@ -1,5 +1,4 @@
-<p align="center">
-    <br />
+<p>
     <a title="Learn more about Stellar Fox" href="https://stellarfox.net/" target="_blank">
         <img src="https://raw.githubusercontent.com/stellar-fox/cygnus/master/public/favicon.ico" alt="Stellar Fox Logo" />
         <br />
@@ -7,14 +6,14 @@
     </a>
 </p>
 
-> Next generation, personal micro finance solution, which offers nearly instant and extremely low fee remittance service.
+> Next generation, personal micro finance solutions.
 
 <br />
 
 
+<img src="https://i.imgsafe.org/7d/7d592a173c.png" width="180">
 
-
-# Stellar Fox (frontend)
+# Cygnus - Social Wallet (frontend)
 Moving Value at the Speed of Light
 
 <br />
