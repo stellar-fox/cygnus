@@ -1,35 +1,38 @@
 import React, { Component, Fragment } from "react"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import { string } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
-import { Grid } from "@material-ui/core"
+import {
+    AppBar,
+    Button,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Modal,
+    Select,
+    TextField,
+    Toolbar,
+    Typography,
+} from "@material-ui/core"
+import Fuse from "fuse.js"
 import ContactCard from "../ContactCard"
 import ContactRequestCard from "../ContactCard/requestCard"
 import ContactPendingCard from "../ContactCard/pendingCard"
 import ContactBlockedCard from "../ContactCard/blockedCard"
 import AddContactForm from "./AddContactForm"
 import EditContactForm from "./EditContactForm"
-import AppBar from "@material-ui/core/AppBar"
-import Toolbar from "@material-ui/core/Toolbar"
-import TextField from "@material-ui/core/TextField"
-import Typography from "@material-ui/core/Typography"
-import Fuse from "fuse.js"
-import Button from "@material-ui/core/Button"
-import Modal from "@material-ui/core/Modal"
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
-import { statusList, } from "./api"
-import {
-    htmlEntities as he,
-    sortBy,
-} from "../../lib/utils"
-import FormControl from "@material-ui/core/FormControl"
-import InputLabel from "@material-ui/core/InputLabel"
-import Select from "@material-ui/core/Select"
-import MenuItem from "@material-ui/core/MenuItem"
+import { statusList } from "./api"
+import { sortBy } from "../../lib/utils"
 import Divider from "../../lib/mui-v1/Divider"
 import debounce from "lodash/debounce"
+import { fade } from "@material-ui/core/styles/colorManipulator"
 
 
 
@@ -75,51 +78,47 @@ const styles = (theme) => ({
 
     selectMenu: {
         zIndex: 1001,
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.primary.other,
     },
 
     input: {
-        color: theme.palette.primary.main,
-        borderBottom: `1px solid ${theme.palette.primary.main}`,
-        "&:focus": {
-            color: theme.palette.primary.main,
-            backgroundColor: theme.palette.secondary.main,
-        },
+        borderBottom: `1px solid ${theme.palette.secondary.main}`,
     },
 
     textFieldInput: {
-        color: theme.palette.primary.main,
+        color: theme.palette.secondary.main,
         "&:hover:before": {
-            borderBottomColor: `${theme.palette.primary.main} !important`,
+            borderBottomColor: `${theme.palette.secondary.main} !important`,
             borderBottomWidth: "1px !important",
         },
-        "&:before": { borderBottomColor: theme.palette.primary.main },
-        "&:after": { borderBottomColor: theme.palette.primary.main },
+        "&:before": { borderBottomColor: theme.palette.secondary.main },
+        "&:after": { borderBottomColor: theme.palette.secondary.main },
     },
 
-    inputMargin: {
-        margin: "0px",
+    searchInput: {
+        color: theme.palette.secondary.main,
     },
 
-    inputLabel: {
-        opacity: "0.5",
-        color: theme.palette.primary.main,
-        "&:focus": {
-            color: theme.palette.primary.main,
-            backgroundColor: theme.palette.secondary.main,
-        },
+    inputFocused: {
+        color: `${fade(theme.palette.secondary.main, 0.5)} !important`,
     },
 
     selectIcon: {
-        color: theme.palette.primary.main,
-    },
-
-    select: {
-        borderBottom: `1px solid ${theme.palette.primary.main}`,
+        color: theme.palette.secondary.main,
     },
 
     selectRoot: {
-        backgroundColor: `${theme.palette.secondary.main} !important`,
+        borderBottom: "unset",
+        "&:before": { borderBottom: "unset" },
+        "&:after": { borderBottom: "unset" },
+
+    },
+
+    toolbar: {
+        display: "flex",
+        flexGrow: 1,
+        alignItems: "center",
+        justifyContent: "space-between",
     },
 
 })
@@ -189,7 +188,7 @@ const AddContactButton = withStyles(styles)(
     ({ classes, onClick }) =>
         <Button onClick={onClick} variant="contained"
             color="primary" className={classes.raised}
-        >Request New Contact</Button>
+        >Add Contact</Button>
 )
 
 
@@ -224,13 +223,13 @@ const SearchField = withStyles(styles)(
             classes: {
                 input: classes.textFieldInput,
                 underline: classes.textFieldInput,
+                focused: classes.inputFocused,
             },
         }}
         InputLabelProps={{
             classes: {
-                root: classes.textFieldInput,
-                marginDense: classes.inputMargin,
-                shrink: classes.inputLabel,
+                root: classes.searchInput,
+                shrink: classes.inputFocused,
             },
         }}
     />
@@ -243,13 +242,17 @@ const SearchField = withStyles(styles)(
 const SelectView = withStyles(styles)(
     ({ classes, value, onChange }) =>
         <FormControl className={ classes.formControl }>
-            <InputLabel classes={{ shrink: classes.inputLabel }}
+
+            <InputLabel
+                classes={{
+                    shrink: classes.inputFocused,
+                }}
                 htmlFor="select-view"
             >Select View</InputLabel>
-            <Select
+
+            <Select disableUnderline
                 classes={{
                     icon: classes.selectIcon,
-                    select: classes.select,
                     root: classes.selectRoot,
                 }}
                 MenuProps={{
@@ -262,21 +265,20 @@ const SelectView = withStyles(styles)(
                 inputProps={{
                     name: "view",
                     id: "select-view",
-                    className: classes.input,
                 }}
             >
                 <MenuItem value={0}>
-                    <Typography variant="body1" color="primary">
+                    <Typography variant="body1" color="secondary">
                         Everything
                     </Typography>
                 </MenuItem>
                 <MenuItem value={1}>
-                    <Typography variant="body1" color="primary">
+                    <Typography variant="body1" color="secondary">
                         Contacts
                     </Typography>
                 </MenuItem>
                 <MenuItem value={2}>
-                    <Typography variant="body1" color="primary">
+                    <Typography variant="body1" color="secondary">
                         Requests
                     </Typography>
                 </MenuItem>
@@ -384,8 +386,8 @@ class Contacts extends Component {
             this.props.pending.length === 0) {
             return (
                 <NoCards title="You have no contact requests at the moment."
-                    subtitle="When someone requests you as a contact, it will
-                    be listed here."
+                    subtitle="When someone requests you as a contact, you will
+                    see it here."
                 />
             )
 
@@ -488,39 +490,23 @@ class Contacts extends Component {
     render = () =>
         <Fragment>
 
-            <AppBar style={{ borderRadius: "3px" }} position="static" color="inherit">
-                <Toolbar>
+            <AppBar
+                style={{ borderRadius: "2px" }}
+                position="static"
+                color="inherit"
+            >
+                <Toolbar classes={{ root: this.props.classes.toolbar }}>
 
-                    <div style={{ flex: 1 }} className="f-b-col m-r">
+                    <div className="flex-box-col m-r">
                         <Typography noWrap variant="body1" color="primary">
                             Contact Book
                         </Typography>
                         <Typography noWrap variant="h5" color="primary">
-                                Manage your financial contacts.
+                            Manage your financial contacts.
                         </Typography>
                     </div>
 
-
                     <AddContactButton onClick={this.showModal} />
-
-
-                    <div style={{ marginLeft: "2rem" }}>
-                        <div className="f-e space-between">
-                            <SearchField
-                                label={<Typography variant="body1"
-                                    color="primary"
-                                ><span role="img" aria-label="magnifying glass">
-                                    🔍 Search Contacts</span></Typography>}
-                                onChange={e => this.updateSearchFilter(
-                                    e.target.value
-                                )}
-                            />
-                            <he.Nbsp /><he.Nbsp />
-                            <SelectView value={this.state.selectedView}
-                                onChange={this.changeView}
-                            />
-                        </div>
-                    </div>
 
                 </Toolbar>
 
@@ -535,13 +521,30 @@ class Contacts extends Component {
                 details={this.props.contactDetails}
             />
 
+
+            <div className="m-t flex-box-row space-between">
+                <SearchField
+                    label="Search Contacts"
+                    onChange={e => this.updateSearchFilter(
+                        e.target.value
+                    )}
+                />
+                <SelectView value={this.state.selectedView}
+                    onChange={this.changeView}
+                />
+            </div>
+
+
             {this.state.selectedView === 0 &&
                 <Fragment>
                     <div className="m-t-medium">
                         <Typography variant="body1" color="secondary">
                             Contacts
                         </Typography>
-                        <Divider color="secondary" />
+                        <Divider
+                            style={{ opacity: "0.4" }}
+                            color="secondary"
+                        />
                     </div>
                     <Grid
                         container
@@ -558,7 +561,10 @@ class Contacts extends Component {
                         <Typography variant="body1" color="secondary">
                             Requests
                         </Typography>
-                        <Divider color="secondary" />
+                        <Divider
+                            style={{ opacity: "0.4" }}
+                            color="secondary"
+                        />
                     </div>
                     <Grid
                         container
@@ -580,7 +586,10 @@ class Contacts extends Component {
                         <Typography variant="body1" color="secondary">
                             Contacts
                         </Typography>
-                        <Divider color="secondary" />
+                        <Divider
+                            style={{ opacity: "0.4" }}
+                            color="secondary"
+                        />
                     </div>
                     <Grid
                         container
@@ -602,7 +611,10 @@ class Contacts extends Component {
                         <Typography variant="body1" color="secondary">
                             Requests
                         </Typography>
-                        <Divider color="secondary" />
+                        <Divider
+                            style={{ opacity: "0.4" }}
+                            color="secondary"
+                        />
                     </div>
                     <Grid
                         container
@@ -625,19 +637,21 @@ class Contacts extends Component {
 
 
 // ...
-export default connect(
-    // map state to props
-    (state) => ({
-        Modal: state.Modal,
-        contactsInternal: state.Contacts.internal,
-        contactsExternal: state.Contacts.external,
-        contactRequests: state.Contacts.requests,
-        pending: state.Contacts.pending,
-        contactDetails: state.Contacts.details,
-    }),
-    (dispatch) => bindActionCreators({
-        setState: ContactsAction.setState,
-        hideModal: ModalAction.hideModal,
-        showModal: ModalAction.showModal,
-    }, dispatch)
+export default compose(
+    withStyles(styles),
+    connect(
+        // map state to props
+        (state) => ({
+            Modal: state.Modal,
+            contactsInternal: state.Contacts.internal,
+            contactsExternal: state.Contacts.external,
+            contactRequests: state.Contacts.requests,
+            pending: state.Contacts.pending,
+            contactDetails: state.Contacts.details,
+        }),
+        (dispatch) => bindActionCreators({
+            setState: ContactsAction.setState,
+            hideModal: ModalAction.hideModal,
+            showModal: ModalAction.showModal,
+        }, dispatch))
 )(Contacts)

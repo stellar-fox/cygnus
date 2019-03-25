@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import classNames from "classnames"
-
 import { withStyles } from "@material-ui/core/styles"
 import { Divider } from "@material-ui/core"
 
@@ -35,11 +34,12 @@ export default withStyles((theme) => ({
 
         // ...
         render = () => (
-            ({ classes, color, }) =>
+            ({ classes, color, style }) =>
                 <Divider
                     classes={{
                         root: classNames(classes[color], classes.common),
                     }}
+                    style={style}
                 />
         )(this.props)
 
