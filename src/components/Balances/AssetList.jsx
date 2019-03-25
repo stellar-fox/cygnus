@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { bindActionCreators, compose } from "redux"
+import { bindActionCreators } from "redux"
 import { BigNumber } from "bignumber.js"
 import NumberFormat from "react-number-format"
 import { Asset } from "stellar-sdk"
@@ -12,7 +12,6 @@ import {
 import { maximumTrustLimit } from "../StellarFox/env"
 import { withStyles } from "@material-ui/core/styles"
 import { CircularProgress, Grid, Typography } from "@material-ui/core"
-import { withLoginManager } from "../LoginManager"
 import Paper from "../../lib/mui-v1/Paper"
 import Avatar from "../../lib/mui-v1/Avatar"
 import VerifiedUser from "@material-ui/icons/VerifiedUser"
@@ -64,26 +63,23 @@ const RequestProgress = withStyles(styles)(
 
 
 // <AssetList> component
-export default compose(
-    withLoginManager,
-    connect(
-        // map state to props
-        (state) => ({
-            authenticated: state.Auth.authenticated,
-            awaitingSignature: state.Assets.awaitingSignature,
-            awaitingTrust: state.Assets.awaitingTrust,
-            loading: state.Assets.loading,
-            assets: state.StellarAccount.assets,
-            publicKey: state.StellarAccount.publicKey,
-            horizon: state.StellarAccount.horizon,
-        }),
-        (dispatch) => bindActionCreators({
-            setState: AssetManagerAction.setState,
-            setStellarAccountState: StellarAccountAction.setState,
-            hideModal: ModalAction.hideModal,
-            showModal: ModalAction.showModal,
-        }, dispatch)
-    )
+export default connect(
+    // map state to props
+    (state) => ({
+        authenticated: state.Auth.authenticated,
+        awaitingSignature: state.Assets.awaitingSignature,
+        awaitingTrust: state.Assets.awaitingTrust,
+        loading: state.Assets.loading,
+        assets: state.StellarAccount.assets,
+        publicKey: state.StellarAccount.publicKey,
+        horizon: state.StellarAccount.horizon,
+    }),
+    (dispatch) => bindActionCreators({
+        setState: AssetManagerAction.setState,
+        setStellarAccountState: StellarAccountAction.setState,
+        hideModal: ModalAction.hideModal,
+        showModal: ModalAction.showModal,
+    }, dispatch)
 )(
     class extends Component {
 

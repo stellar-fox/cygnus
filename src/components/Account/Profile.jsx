@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
-import {
-    bindActionCreators,
-    compose,
-} from "redux"
+import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import Axios from "axios"
 import { string } from "@xcmats/js-toolbox"
@@ -27,7 +24,6 @@ import {
     loadAccount,
     submitTransaction,
 } from "../../lib/stellar-tx"
-import { withLoginManager } from "../LoginManager"
 import { firebaseApp } from "../../components/StellarFox"
 import { signTransaction } from "../../lib/ledger"
 import { action as AccountAction } from "../../redux/Account"
@@ -630,36 +626,33 @@ class Profile extends Component {
 
 
 // ...
-export default compose(
-    withLoginManager,
-    connect(
-        // bind state to props.
-        (state) => ({
-            emailVerified: state.Auth.verified,
-            state: state.Account,
-            token: state.LoginManager.token,
-            userId: state.LoginManager.userId,
-            accountId: state.StellarAccount.accountId,
-            network: state.StellarAccount.horizon,
-            publicKey: state.LedgerHQ.publicKey,
-            bip32Path: state.LedgerHQ.bip32Path,
-            Modal: state.Modal,
-            paySig: state.StellarAccount.data ?
-                (state.StellarAccount.data.paySig ?
-                    state.StellarAccount.data.paySig : null) : null,
-            idSig: state.StellarAccount.data ?
-                (state.StellarAccount.data.idSig ?
-                    state.StellarAccount.data.idSig : null) : null,
-        }),
-        // bind dispatch to props.
-        (dispatch) => bindActionCreators({
-            setState: AccountAction.setState,
-            showAlert: AlertAction.showAlert,
-            hideModal: ModalAction.hideModal,
-            showModal: ModalAction.showModal,
-            updateAccountTree: StellarAccountAction.updateAccountAttributes,
-            surfaceSnacky,
-            queryDevice,
-        }, dispatch)
-    )
+export default connect(
+    // bind state to props.
+    (state) => ({
+        emailVerified: state.Auth.verified,
+        state: state.Account,
+        token: state.LoginManager.token,
+        userId: state.LoginManager.userId,
+        accountId: state.StellarAccount.accountId,
+        network: state.StellarAccount.horizon,
+        publicKey: state.LedgerHQ.publicKey,
+        bip32Path: state.LedgerHQ.bip32Path,
+        Modal: state.Modal,
+        paySig: state.StellarAccount.data ?
+            (state.StellarAccount.data.paySig ?
+                state.StellarAccount.data.paySig : null) : null,
+        idSig: state.StellarAccount.data ?
+            (state.StellarAccount.data.idSig ?
+                state.StellarAccount.data.idSig : null) : null,
+    }),
+    // bind dispatch to props.
+    (dispatch) => bindActionCreators({
+        setState: AccountAction.setState,
+        showAlert: AlertAction.showAlert,
+        hideModal: ModalAction.hideModal,
+        showModal: ModalAction.showModal,
+        updateAccountTree: StellarAccountAction.updateAccountAttributes,
+        surfaceSnacky,
+        queryDevice,
+    }, dispatch)
 )(Profile)

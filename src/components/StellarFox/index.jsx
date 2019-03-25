@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { Provider } from "react-redux"
 import {
     ConnectedSwitch as Switch,
@@ -14,7 +14,6 @@ import sFoxTheme from "../../lib/sfox-mui-theme"
 import { CssBaseline } from "@material-ui/core"
 import LegacyMuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import sFoxThemeLegacy from "../../lib/sfox-mui-theme.legacy"
-import LoginManager from "../LoginManager"
 import Layout from "../Layout"
 import { config } from "../../config"
 import firebase from "firebase/app"
@@ -38,7 +37,7 @@ export default ({ history, store }) =>
         <Router history={history}>
             <MuiThemeProvider theme={sFoxTheme}>
                 <LegacyMuiThemeProvider muiTheme={sFoxThemeLegacy}>
-                    <LoginManager>
+                    <Fragment>
                         <CssBaseline />
                         <Switch>
                             <Route path={env.appBasePath}>
@@ -49,7 +48,7 @@ export default ({ history, store }) =>
                             </Route>
                             <Redirect to={env.appBasePath} />
                         </Switch>
-                    </LoginManager>
+                    </Fragment>
                 </LegacyMuiThemeProvider>
             </MuiThemeProvider>
         </Router>
