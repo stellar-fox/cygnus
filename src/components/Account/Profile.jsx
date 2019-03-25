@@ -657,7 +657,7 @@ export default compose(
             showAlert: AlertAction.showAlert,
             hideModal: ModalAction.hideModal,
             showModal: ModalAction.showModal,
-            updateAccountTree: StellarAccountAction.loadStellarAccount,
+            updateAccountTree: StellarAccountAction.updateAccountAttributes,
             surfaceSnacky,
             queryDevice,
         }, dispatch)

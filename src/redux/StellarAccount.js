@@ -14,7 +14,6 @@ const initState = {
 
 
 // ...
-export const LOAD_STELLAR_ACCOUNT = "@StellarAccount/LOAD_STELLAR_ACCOUNT"
 export const SET_PAYMENTS = "@StellarAccount/SET_PAYMENTS"
 export const SET_TRANSACTIONS = "@StellarAccount/SET_TRANSACTIONS"
 export const SET_STATE = "@StellarAccount/SET_STATE"
@@ -28,13 +27,6 @@ export const UPDATE_ACCOUNT_ATTRIBUTES = "@StellarAccount/UPDATE_ACCOUNT_ATTRIBU
 
 // ...
 export const action = {
-
-    // ...
-    loadStellarAccount: (account) => ({
-        type: LOAD_STELLAR_ACCOUNT,
-        account,
-    }),
-
 
     // ...
     setPayments: (payments) => ({
@@ -88,23 +80,6 @@ export const action = {
 
 // ...
 export const reducer = createReducer(initState)({
-
-    // ...
-    [LOAD_STELLAR_ACCOUNT]: (state, action) => ({
-        ...state,
-        sequence: action.account.sequence,
-        accountId: action.account.account_id,
-        balance: action.account.balances.find((current) =>
-            (current.asset_type === "native")).balance,
-        assets: action.account.balances.filter((current) =>
-            (current.asset_type !== "native")),
-        homeDomain: action.account.home_domain ?
-            action.account.home_domain : null,
-        data: action.account.data_attr ? action.account.data_attr : null,
-        subentryCount: action.account.subentry_count,
-        signers: action.account.signers,
-    }),
-
 
     // ...
     [UPDATE_ACCOUNT_ATTRIBUTES]: (state, action) => ({

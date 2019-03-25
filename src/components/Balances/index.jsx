@@ -385,7 +385,7 @@ export default connect(
         setLedgerHQState: LedgerHQAction.setState,
         setStellarAccountState: StellarAccountAction.setState,
         setTransaction: TransactionAction.setTransaction,
-        updateAccountTree: StellarAccountAction.loadStellarAccount,
+        updateAccountTree: StellarAccountAction.updateAccountAttributes,
         setStateForBalances: BalancesAction.setState,
         resetBalancesState: BalancesAction.resetState,
         setApiToken: LoginManagerAction.setApiToken,
