@@ -4,8 +4,7 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
 import { action as SnackyActions } from "../../redux/Snacky"
-import { IconButton, Snackbar, Typography } from "@material-ui/core"
-import { Close } from "@material-ui/icons"
+import { Snackbar } from "@material-ui/core"
 import { string } from "@xcmats/js-toolbox"
 
 
@@ -16,13 +15,16 @@ export default compose(
     withStyles((theme) => ({
         success: {
             backgroundColor: theme.palette.secondary.light,
+            padding: "0px 15px",
         },
         warning: {
-            backgroundColor: theme.palette.warning,
+            backgroundColor: "#FF8C42",
+            padding: "0px 15px",
         },
         error: {
             backgroundColor: theme.palette.danger,
-            color: theme.palette.antiFlashWhite,
+            color: "#D8DCDE",
+            padding: "0px 15px",
         },
     })),
     connect(
@@ -65,32 +67,18 @@ export default compose(
                         vertical: "bottom",
                         horizontal: "left",
                     }}
-                    open={open}
-                    autoHideDuration={6000}
+                    autoHideDuration={2000}
+                    classes={{
+                        root: classes.root,
+                    }}
                     onClose={this.hideSnacky}
                     onExited={this.reset}
-
+                    open={open}
                     ContentProps={{
                         "aria-describedby": "message-id",
                         classes: { root: classes[color] },
                     }}
-                    message={
-                        <span id="message-id">
-                            <Typography variant="body2" color="inherit">
-                                {message}
-                            </Typography>
-                        </span>
-                    }
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            onClick={this.hideSnacky}
-                        >
-                            <Close />
-                        </IconButton>,
-                    ]}
+                    message={message}
                 />
         )(this.props)
 
