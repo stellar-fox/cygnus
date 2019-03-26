@@ -23,27 +23,28 @@ import {
 // ...
 const styles = (theme) => ({
     danger: {
+        borderRadius: "2px",
         color: theme.palette.danger,
         backgroundColor: theme.palette.primary.main,
         "&:hover": {
             backgroundColor: theme.palette.dangerHighlight,
             textShadow: `0px 0px 20px ${theme.palette.danger}`,
         },
-        marginLeft: "1.2rem",
     },
 })
+
+
+
 
 // ...
 const ActionButton = withStyles(styles)(
     ({ classes, onClick, color, label }) =>
         <Button onClick={onClick} variant="contained"
             size="small" className={classes[color]}
-        >
-            <Typography noWrap variant="button" color="inherit">
-                {label}
-            </Typography>
-        </Button>
+        >{label}</Button>
 )
+
+
 
 
 // ...
@@ -61,6 +62,7 @@ export default compose(
     ),
     withStyles((theme) => ({
         root: theme.mixins.gutters({
+            borderRadius: "2px",
             paddingTop: 12,
             paddingBottom: 12,
             paddingLeft: "12px !important",
@@ -135,28 +137,37 @@ export default compose(
                 <Paper elevation={3}
                     className={`${classes.root} pattern-secondary`}
                 >
-                    <div className="f-b space-between">
+                    <div className="flex-box-row space-between">
                         <Avatar className={classes.avatar}
                             src={`${gravatar}${data.email_md5}?${
                                 gravatarSize48}&d=robohash`}
                         />
-                        <div className="f-e-col space-between">
-                            <div className="f-e-col">
-                                <Typography align="right" noWrap>
-                                    {data.first_name} {data.last_name}
-                                </Typography>
-                                <Typography variant="caption" align="right"
-                                    noWrap
-                                >
-                                    {data.alias}*{data.domain}
-                                </Typography>
-                            </div>
-                            <Typography variant="caption" align="right"
-                                noWrap
+
+                        <div className="flex-box-col">
+                            <Typography
+                                variant="body1"
+                                align="right"
+                                color="primary"
+                            >
+                                {data.first_name} {data.last_name}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                align="right"
+                                color="primary"
+                            >
+                                {data.alias}*{data.domain}
+                            </Typography>
+                            <Typography
+                                variant="caption"
+                                align="right"
+                                color="primary"
                             >
                                 {pubKeyAbbr(data.pubkey)}
                             </Typography>
                         </div>
+
+
                     </div>
                     <div className="p-t flex-box-row content-flex-end">
                         <ActionButton

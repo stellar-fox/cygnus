@@ -27,6 +27,7 @@ import {
 const styles = (theme) => ({
 
     success: {
+        borderRadius: "2px",
         color: theme.palette.success,
         backgroundColor: theme.palette.primary.main,
         "&:hover": {
@@ -36,13 +37,13 @@ const styles = (theme) => ({
     },
 
     danger: {
+        borderRadius: "2px",
         color: theme.palette.danger,
         backgroundColor: theme.palette.primary.main,
         "&:hover": {
             backgroundColor: theme.palette.dangerHighlight,
             textShadow: `0px 0px 20px ${theme.palette.danger}`,
         },
-        opacity: 0.9,
     },
 })
 
@@ -51,11 +52,7 @@ const ActionButton = withStyles(styles)(
     ({ classes, onClick, color, label }) =>
         <Button onClick={onClick} variant="contained"
             size="small" className={classes[color]}
-        >
-            <Typography noWrap variant="button" color="inherit">
-                {label}
-            </Typography>
-        </Button>
+        >{label}</Button>
 )
 
 
@@ -74,6 +71,7 @@ export default compose(
     ),
     withStyles((theme) => ({
         root: theme.mixins.gutters({
+            borderRadius: "2px",
             paddingTop: 12,
             paddingBottom: 12,
             paddingLeft: "12px !important",
@@ -84,9 +82,8 @@ export default compose(
 
         avatar: {
             borderRadius: 3,
-            width: 48,
-            height: 48,
-            marginRight: 5,
+            width: 64,
+            height: 64,
             border: `1px solid ${theme.palette.secondary.dark}`,
         },
 
@@ -175,32 +172,41 @@ export default compose(
                 <Paper elevation={3}
                     className={classes.root}
                 >
-                    <div className="f-b space-between">
+                    <div className="flex-box-row space-between">
                         <Avatar className={classes.avatar}
                             src={`${gravatar}${data.email_md5}?${
                                 gravatarSize48}&d=robohash`}
                         />
 
-                        <div className="f-e-col space-between">
-                            <div className="f-e-col">
-                                <Typography align="right" color="primary">
+                        <div>
+                            <div className="flex-box-col">
+                                <Typography
+                                    variant="body1"
+                                    align="right"
+                                    color="primary"
+                                >
                                     {string.shorten(formatFullName(
                                         data.first_name, data.last_name
                                     ), 30, string.shorten.END)}
                                 </Typography>
-                                <Typography variant="caption" align="right"
+                                <Typography
+                                    variant="body2"
+                                    align="right"
                                     color="primary"
                                 >
                                     {string.shorten(formatPaymentAddress(
                                         data.alias, data.domain
                                     ), 30, string.shorten.END)}
                                 </Typography>
+                                <Typography
+                                    variant="caption"
+                                    align="right"
+                                    color="primary"
+                                >
+                                    {pubKeyAbbr(data.pubkey)}
+                                </Typography>
                             </div>
-                            <Typography variant="caption" align="right"
-                                color="primary"
-                            >
-                                {pubKeyAbbr(data.pubkey)}
-                            </Typography>
+
                         </div>
                     </div>
                     <div className="p-t flex-box-row space-between">

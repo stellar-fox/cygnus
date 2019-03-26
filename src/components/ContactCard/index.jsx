@@ -42,6 +42,7 @@ export default compose(
     ),
     withStyles((theme) => ({
         root: theme.mixins.gutters({
+            borderRadius: "2px",
             cursor: "pointer",
             paddingTop: 12,
             paddingBottom: 12,
@@ -52,6 +53,7 @@ export default compose(
         }),
 
         rootAlt: theme.mixins.gutters({
+            borderRadius: "2px",
             cursor: "pointer",
             paddingTop: 12,
             paddingBottom: 12,
@@ -103,27 +105,33 @@ export default compose(
                     className={`${external ? classes.rootAlt : classes.root} ${
                         external ? "bg-ext-contact" : "bg-contact"}`}
                 >
-                    <div className="f-b space-between">
+                    <div className="flex-box-row space-between">
                         <Avatar className={classes.avatar}
                             src={`${gravatar}${external ? md5(data.pubkey) :
                                 data.email_md5}?${gravatarSize48}&d=robohash`}
                         />
-                        <div className="f-e-col space-between">
-                            <div className="f-e-col">
-                                <Typography align="right" color="primary">
-                                    {string.shorten(formatFullName(
-                                        data.first_name, data.last_name
-                                    ), 24, string.shorten.END)}
-                                </Typography>
-                                <Typography variant="h5" align="right"
-                                    color="primary"
-                                >
-                                    {string.shorten(formatPaymentAddress(
-                                        data.alias, data.domain
-                                    ), 30, string.shorten.END)}
-                                </Typography>
-                            </div>
-                            <Typography variant="h6" align="right"
+
+                        <div className="flex-box-col">
+                            <Typography
+                                align="right"
+                                color="primary"
+                            >
+                                {string.shorten(formatFullName(
+                                    data.first_name, data.last_name
+                                ), 24, string.shorten.END)}
+                            </Typography>
+                            <Typography
+                                variant="h5"
+                                align="right"
+                                color="primary"
+                            >
+                                {string.shorten(formatPaymentAddress(
+                                    data.alias, data.domain
+                                ), 30, string.shorten.END)}
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                align="right"
                                 color="primary"
                             >
                                 {pubKeyAbbr(data.pubkey)}
@@ -132,6 +140,8 @@ export default compose(
                                     FEDERATED</strong>}
                             </Typography>
                         </div>
+
+
                     </div>
                 </Paper>
         )(this.props)
