@@ -288,12 +288,12 @@ class Contacts extends Component {
     showFilteredContacts = () => {
         let filteredInternal = new Fuse(this.props.contactsInternal, {
             keys: ["first_name", "last_name", "alias", "domain", "pubkey"],
-            threshold: "0.2",
+            threshold: "0.3",
         }).search(this.state.search)
 
         let filteredExternal = new Fuse(this.props.contactsExternal, {
             keys: ["first_name", "last_name", "alias", "domain", "pubkey"],
-            threshold: "0.2",
+            threshold: "0.3",
         }).search(this.state.search)
 
         if (filteredInternal.length === 0 && filteredExternal.length === 0) {
@@ -473,10 +473,11 @@ class Contacts extends Component {
             <div className="p-l p-r">
                 <div className="m-t flex-box-row space-between">
                     <LCARSInput
+                        autoFocus
                         width="100%"
                         className="lcars-input p-b p-t"
                         label="Search Contacts"
-                        inputType="text"
+                        inputType="search"
                         maxLength="100"
                         autoComplete="off"
                         handleChange={e => this.updateSearchFilter(e.target.value)}
