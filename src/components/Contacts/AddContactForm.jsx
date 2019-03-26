@@ -1,12 +1,19 @@
 import React, { Component, Fragment } from "react"
-import { bindActionCreators } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import Axios from "axios"
 import { string } from "@xcmats/js-toolbox"
 import { config } from "../../config"
 import {
-    listInternal, listPending, listRequested, requestByAccountNumber,
-    requestByEmail, requestByPaymentAddress,
+    listInternal,
+    listPending,
+    listRequested,
+    requestByAccountNumber,
+    requestByEmail,
+    requestByPaymentAddress,
 } from "../Contacts/api"
 import {
     getUserExternalContacts,
@@ -23,13 +30,19 @@ import { action as ModalAction } from "../../redux/Modal"
 import { withStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
 import SwipeableViews from "react-swipeable-views"
-import Button from "@material-ui/core/Button"
-import CircularProgress from "@material-ui/core/CircularProgress"
-import Tab from "@material-ui/core/Tab"
-import Tabs from "@material-ui/core/Tabs"
-import TextField from "@material-ui/core/TextField"
-import Typography from "@material-ui/core/Typography"
-
+import {
+    Button,
+    CircularProgress,
+    Tab,
+    Tabs,
+    TextField,
+    Typography,
+} from "@material-ui/core"
+import {
+    AlternateEmailRounded,
+    AccountBalanceRounded,
+    StarBorderRounded,
+} from "@material-ui/icons"
 
 
 
@@ -53,6 +66,15 @@ const styles = (theme) => ({
         width: 300,
     },
 
+    icon: {
+        color: theme.palette.secondary.light,
+        fontSize: "10rem",
+    },
+
+    indicator: {
+        backgroundColor: theme.palette.primary.other,
+    },
+
     input: {
         color: theme.palette.primary.main,
         "&:hover:before": {
@@ -70,6 +92,16 @@ const styles = (theme) => ({
     progress: {
         marginBottom: "0px",
         marginRight: "10px",
+    },
+
+    tabs: {
+        backgroundColor: theme.palette.secondary.light,
+        borderTopLeftRadius: "3px",
+        borderTopRightRadius: "3px",
+    },
+
+    tab: {
+        color: theme.palette.secondary.dark,
     },
 
 })
@@ -117,16 +149,17 @@ const DoneButton = withStyles(styles)(
 
 // ...
 const SearchInput = withStyles(styles)(
-    ({ classes, label, onChange, value, error, errorMessage }) => <TextField
-        id="seach-by"
+    ({ classes, label, onChange, value, error, errorMessage, id }) => <TextField
+        id={`seach-by-${id}`}
         label={errorMessage || label}
         value={value}
         error={error}
-        type="search"
+        type="text"
         className={classes.textField}
         margin="normal"
         onChange={onChange}
-        autoFocus
+        autoFocus={id === "payment-address" ? true : false }
+        autoComplete="off"
         InputProps={{
             classes: {
                 input: classes.input,
@@ -147,28 +180,20 @@ const SearchInput = withStyles(styles)(
 
 // ...
 const ChoiceTabs = withStyles(styles)(
-    ({ onChange, value }) => <Tabs
+    ({ classes, onChange, value }) => <Tabs
         value={ value }
         onChange={ onChange }
         textColor="primary"
-        indicatorColor="primary"
-        variant="fullWidth"
+
+        classes={{
+            root: classes.tabs,
+            indicator: classes.indicator,
+        }}
     >
-        <Tab disableRipple label="Email Address" />
-        <Tab disableRipple label="Payment Address" />
-        <Tab disableRipple label="Account Number" />
+        <Tab classes={{ root: classes.tab }} label="Payment Address" />
+        <Tab classes={{ root: classes.tab }} label="Account Number" />
+        <Tab classes={{ root: classes.tab }} label="Email Address" />
     </Tabs>
-)
-
-
-
-
-// ...
-const TabContainer = withStyles(styles)(
-    ({ children, dir }) =>
-        <Typography component="div" dir={dir} style={{ paddingTop: "2rem" }}>
-            {children}
-        </Typography>
 )
 
 
@@ -205,7 +230,7 @@ class AddContactForm extends Component {
     requestContact = () => {
 
         // check email address validity
-        if (!emailValid(this.state.input) && this.state.tabSelected === 0) {
+        if (!emailValid(this.state.input) && this.state.tabSelected === 2) {
             this.setState({
                 error: true,
                 errorMessage: "Invalid email address.",
@@ -215,7 +240,7 @@ class AddContactForm extends Component {
 
         // check payment address validity
         if (!federationAddressValid(this.state.input) &&
-            this.state.tabSelected === 1) {
+            this.state.tabSelected === 0) {
             this.setState({
                 error: true,
                 errorMessage: "Invalid payment address.",
@@ -225,7 +250,7 @@ class AddContactForm extends Component {
 
         // check account number validity
         if (!publicKeyValid(this.state.input) &&
-            this.state.tabSelected === 2) {
+            this.state.tabSelected === 1) {
             this.setState({
                 error: true,
                 errorMessage: "Invalid account number.",
@@ -246,7 +271,7 @@ class AddContactForm extends Component {
         })
 
         // try adding a contact based on email address
-        if (this.state.tabSelected === 0) {
+        if (this.state.tabSelected === 2) {
             requestByEmail(
                 this.props.userId, this.props.token, this.state.input,
                 {
@@ -262,7 +287,7 @@ class AddContactForm extends Component {
         }
 
         // try adding a contact based on payment address
-        else if (this.state.tabSelected === 1) {
+        else if (this.state.tabSelected === 0) {
 
             let [alias, domain] = toAliasAndDomain(this.state.input)
 
@@ -296,7 +321,7 @@ class AddContactForm extends Component {
         }
 
         // try adding a contact based on account number
-        else if (this.state.tabSelected === 2) {
+        else if (this.state.tabSelected === 1) {
             requestByAccountNumber(
                 this.props.userId, this.props.token, this.state.input
             ).then((_result) => {
@@ -433,146 +458,190 @@ class AddContactForm extends Component {
     // ...
     render = () =>
         <Fragment>
-            <div className="f-b center p-t-medium">
-                <Typography noWrap variant="body1" color="primary">
-                    Request contact using the following categories:
+            <div className="flex-box-col items-centered p-t-medium">
+                <Typography noWrap variant="h2" color="primary">
+                    Find your new contact.
+                </Typography>
+                <Typography style={{ marginTop: "0.5rem" }} noWrap variant="h5" color="primary">
+                    Contacts can be added by email, payment address or account
+                    number.
+                </Typography>
+                <Typography noWrap variant="h5" color="primary">
+                    Please choose from the options below.
                 </Typography>
             </div>
-            <div className="f-b center p-t">
+
+            <div className="flex-box-col items-centered m-t-large">
                 <ChoiceTabs onChange={this.onTabChange}
                     value={this.state.tabSelected}
                 />
             </div>
+
             <SwipeableViews
                 axis={this.props.theme.direction === "rtl" ? "x-reverse" : "x"}
                 index={this.state.tabSelected}
                 onChangeIndex={this.handleChangeIndex}
             >
-                <TabContainer dir={this.props.theme.direction}>
-                    <Typography align="center" noWrap variant="body1"
-                        color="primary"
-                    >
-                        Enter the email address of the person you want to add
-                        to your contact book.
-                    </Typography>
-                    <div className="m-b" style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "flex-end",
-                        justifyContent: "center",
-                    }}
-                    >
-                        <SearchInput label="Email Address"
-                            onChange={this.handleInputChange}
-                            value={this.state.input}
-                            error={this.state.error}
-                            errorMessage={this.state.errorMessage}
+
+                <div className="swipeable-tab-container">
+                    <div className="flex-box-row space-between items-centered">
+                        <StarBorderRounded
+                            classes={{ root: this.props.classes.icon }}
                         />
-                        <SearchButton buttonText="Request" color="primary"
-                            onClick={this.requestContact}
-                            disabled={this.state.buttonDisabled}
-                        />
+                        <div>
+                            <Typography
+                                align="center"
+                                variant="body1"
+                                color="primary"
+                            >
+                                Enter the payment address of the person you
+                                want to add to your contact book.
+                            </Typography>
+                            <Typography
+                                align="center"
+                                variant="h5"
+                                color="primary"
+                                style={{ marginTop: "1rem" }}
+                            >
+                                We will send an invite if the user already has
+                                an account. Otherwise we will try
+                                to add them as a federated contact.
+                            </Typography>
+                        </div>
                     </div>
-                </TabContainer>
-                <TabContainer dir={this.props.theme.direction}>
-                    <Typography align="center" noWrap variant="body1"
-                        color="primary"
-                    >
-                        Enter the payment address of the person you want to add
-                        to your contact book.
-                    </Typography>
-                    <div className="m-b" style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "flex-end",
-                        justifyContent: "center",
-                    }}
-                    >
+
+                    <div className="flex-box-row content-centered items-flex-end">
                         <SearchInput label="Payment Address"
                             onChange={this.handleInputChange}
                             value={this.state.input}
                             error={this.state.error}
                             errorMessage={this.state.errorMessage}
+                            id="payment-address"
                         />
                         <SearchButton buttonText="Request" color="primary"
                             onClick={this.requestContact}
                             disabled={this.state.buttonDisabled}
                         />
                     </div>
-                </TabContainer>
-                <TabContainer dir={this.props.theme.direction}>
-                    <Fragment>
-                        <Typography align="center" noWrap variant="body1"
-                            color="primary"
-                        >
-                            If you know the extended account number for
-                            your contact, enter it below.
-                        </Typography>
-                        <div className="m-b" style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "flex-end",
-                            justifyContent: "center",
-                        }}
-                        >
-                            <SearchInput label="Extended Account Number"
-                                onChange={this.handleInputChange}
-                                value={this.state.input}
-                                error={this.state.error}
-                                errorMessage={this.state.errorMessage}
-                            />
-                            <SearchButton buttonText="Request" color="primary"
-                                onClick={this.requestContact}
-                                disabled={this.state.buttonDisabled}
-                            />
-                        </div>
-                    </Fragment>
-                </TabContainer>
-            </SwipeableViews>
-
-
-            {!this.state.showProgress && !this.state.showRequestSent &&
-                <div className="p-t"
-                    style={{ height: "150px", paddingLeft: "20px" }}
-                ></div>
-            }
-
-
-            {this.state.showProgress &&
-                <div className="f-b center p-t" style={{ height: "150px" }}>
-                    <RequestProgress />
-                    <Typography noWrap variant="body1" color="primary">
-                        Sending request ...
-                    </Typography>
                 </div>
-            }
 
 
-            {this.state.showRequestSent &&
-                <div className="p-t" style={{ height: "150px" }}>
-                    <div className="f-b center">
-                        <Typography noWrap variant="body1" color="primary">
-                            Request sent to:
-                        </Typography>
-                    </div>
-                    <div className="f-b center">
-                        <div className="tag-success">
-                            <Typography noWrap variant="body1"
-                                color="secondary"
+                <div className="swipeable-tab-container">
+                    <div className="flex-box-row space-between items-centered">
+                        <AccountBalanceRounded
+                            classes={{ root: this.props.classes.icon }}
+                        />
+                        <div>
+                            <Typography
+                                align="center"
+                                variant="body1"
+                                color="primary"
                             >
-                                {this.state.lastInput}
+                                If you know the account number for
+                                your contact, enter it below.
+                            </Typography>
+                            <Typography
+                                align="center"
+                                variant="h5"
+                                color="primary"
+                                style={{ marginTop: "1rem" }}
+                            >
+                                We will send an invite if the user already has
+                                an account. Otherwise we will try
+                                to add them as a federated contact.
                             </Typography>
                         </div>
                     </div>
-                    <div className="f-b center p-t">
-                        <Typography noWrap variant="body1" color="primary">
-                            Go ahead, send another!
-                        </Typography>
+
+                    <div className="flex-box-row content-centered items-flex-end">
+                        <SearchInput label="Account Number"
+                            onChange={this.handleInputChange}
+                            value={this.state.input}
+                            error={this.state.error}
+                            errorMessage={this.state.errorMessage}
+                            id="account-number"
+                        />
+                        <SearchButton buttonText="Request" color="primary"
+                            onClick={this.requestContact}
+                            disabled={this.state.buttonDisabled}
+                        />
                     </div>
                 </div>
-            }
 
-            <div className="f-e">
+
+                <div className="swipeable-tab-container">
+                    <div className="flex-box-row space-between items-centered">
+                        <AlternateEmailRounded
+                            classes={{ root: this.props.classes.icon }}
+                        />
+                        <div>
+                            <Typography
+                                align="center"
+                                variant="body1"
+                                color="primary"
+                            >
+                                Enter the email address of the person you want to add
+                                to your contact book.
+                            </Typography>
+                            <Typography
+                                align="center"
+                                variant="h5"
+                                color="primary"
+                                style={{ marginTop: "1rem" }}
+                            >
+                                We will send an invite if the user is not yet
+                                in our system.
+                            </Typography>
+                        </div>
+                    </div>
+
+                    <div className="flex-box-row content-centered items-flex-end">
+                        <SearchInput label="Email Address"
+                            onChange={this.handleInputChange}
+                            value={this.state.input}
+                            error={this.state.error}
+                            errorMessage={this.state.errorMessage}
+                            id="email"
+                        />
+                        <SearchButton buttonText="Request" color="primary"
+                            onClick={this.requestContact}
+                            disabled={this.state.buttonDisabled}
+                        />
+                    </div>
+                </div>
+
+            </SwipeableViews>
+
+
+            <div className="status-message-area flex-box-row content-centered items-centered">
+
+                {this.state.showProgress &&
+                <Fragment>
+                    <RequestProgress />
+                    <Typography noWrap variant="h5" color="primary">
+                        Sending request ...
+                    </Typography>
+                </Fragment>
+                }
+
+                {this.state.showRequestSent &&
+                <div className="flex-box-col content-centered items-centered">
+                    <Typography noWrap variant="h5" color="primary">
+                        Request sent to:
+                    </Typography>
+                    <Typography noWrap variant="h5" color="primary">
+                        <b>{this.state.lastInput}</b>
+                    </Typography>
+
+                    <Typography noWrap variant="body1" color="primary">
+                        Go ahead, send another!
+                    </Typography>
+                </div>
+                }
+
+            </div>
+
+            <div className="flex-box-row content-flex-end">
                 <DoneButton onClick={this.hideModal} />
             </div>
 
@@ -583,20 +652,23 @@ class AddContactForm extends Component {
 
 
 // ...
-export default connect(
-    // map state to props
-    (state, theme) => ({
-        Modal: state.Modal,
-        theme,
-        userId: state.LoginManager.userId,
-        token: state.LoginManager.token,
-        accountEmail: state.Account.email,
-        accountFirstName: state.Account.firstName,
-        accountLastName: state.Account.lastName,
-    }),
-    (dispatch) => bindActionCreators({
-        setState: ContactsAction.setState,
-        hideModal: ModalAction.hideModal,
-        showAlert: AlertAction.showAlert,
-    }, dispatch)
+export default compose(
+    withStyles(styles),
+    connect(
+        // map state to props
+        (state, theme) => ({
+            Modal: state.Modal,
+            theme,
+            userId: state.LoginManager.userId,
+            token: state.LoginManager.token,
+            accountEmail: state.Account.email,
+            accountFirstName: state.Account.firstName,
+            accountLastName: state.Account.lastName,
+        }),
+        (dispatch) => bindActionCreators({
+            setState: ContactsAction.setState,
+            hideModal: ModalAction.hideModal,
+            showAlert: AlertAction.showAlert,
+        }, dispatch)
+    )
 )(AddContactForm)

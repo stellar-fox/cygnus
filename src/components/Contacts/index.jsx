@@ -118,11 +118,6 @@ const AddContactModal = withStyles(styles)(
             onClose={onClose}
         >
             <div className={classes.paper}>
-                <Typography variant="subtitle1" color="primary"
-                    id="modal-title"
-                >
-                    Request New Contact
-                </Typography>
                 <AddContactForm />
             </div>
         </Modal>
