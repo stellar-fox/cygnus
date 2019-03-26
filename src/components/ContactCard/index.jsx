@@ -1,17 +1,23 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { bindActionCreators, compose } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import PropTypes from "prop-types"
 import { string } from "@xcmats/js-toolbox"
-
 import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
-
 import { withStyles } from "@material-ui/core/styles"
-import Avatar from "@material-ui/core/Avatar"
-import Paper from "@material-ui/core/Paper"
-import Typography from "@material-ui/core/Typography"
-import { gravatar, gravatarSize48 } from "../StellarFox/env"
+import {
+    Avatar,
+    Paper,
+    Typography,
+} from "@material-ui/core"
+import {
+    gravatar,
+    gravatarSize48,
+} from "../StellarFox/env"
 import {
     formatFullName,
     formatPaymentAddress,
