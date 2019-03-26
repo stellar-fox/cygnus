@@ -11,6 +11,7 @@ import {
 } from "../StellarFox/env"
 import {
     listInternal,
+    listPending,
     listRequested,
     removeFederated,
     removeInternal,
@@ -596,6 +597,15 @@ class EditContactForm extends Component {
                     requests: results,
                 }) : this.props.setState({
                     requests: [],
+                })
+            })
+
+        listPending(this.props.userId, this.props.token)
+            .then((results) => {
+                results ? this.props.setState({
+                    pending: results,
+                }) : this.props.setState({
+                    pending: [],
                 })
             })
     }

@@ -5,6 +5,7 @@ import md5 from "../lib/md5"
 import { subscribeEmail } from "../components/Account/api"
 import {
     listInternal,
+    listPending,
     listRequested,
 } from "../components/Contacts/api"
 import { string } from "@xcmats/js-toolbox"
@@ -374,6 +375,14 @@ export const getUserContacts = () =>
 
             internal ? dispatch(ContactsAction.setState({ internal })) :
                 dispatch(ContactsAction.setState({ internal: [] }))
+
+            const pending = await listPending(
+                getState().LoginManager.userId,
+                getState().LoginManager.token
+            )
+
+            pending ? dispatch(ContactsAction.setState({ pending })) :
+                dispatch(ContactsAction.setState({ pendig: [] }))
 
             const requests = await listRequested(
                 getState().LoginManager.userId,
