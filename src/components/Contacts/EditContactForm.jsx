@@ -215,7 +215,7 @@ const ExtContactDetails = withStyles(styles)(
                 </div>
 
                 <CurrencyPicker defaultCurrency={details.contact.currency}
-                    onChange={setCurrency}
+                    onChange={setCurrency} label="Preferred Currency:"
                 />
 
                 <EditContactInfoTextField id="edit-memo"

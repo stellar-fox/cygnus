@@ -15,7 +15,6 @@ import {
     MenuItem,
     Modal,
     Select,
-    TextField,
     Toolbar,
     Typography,
 } from "@material-ui/core"
@@ -33,6 +32,7 @@ import { sortBy } from "../../lib/utils"
 import Divider from "../../lib/mui-v1/Divider"
 import debounce from "lodash/debounce"
 import { fade } from "@material-ui/core/styles/colorManipulator"
+import LCARSInput from "../../lib/common/LCARSInput"
 
 
 
@@ -79,24 +79,6 @@ const styles = (theme) => ({
     selectMenu: {
         zIndex: 1001,
         backgroundColor: theme.palette.primary.other,
-    },
-
-    input: {
-        borderBottom: `1px solid ${theme.palette.secondary.main}`,
-    },
-
-    textFieldInput: {
-        color: theme.palette.secondary.main,
-        "&:hover:before": {
-            borderBottomColor: `${theme.palette.secondary.main} !important`,
-            borderBottomWidth: "1px !important",
-        },
-        "&:before": { borderBottomColor: theme.palette.secondary.main },
-        "&:after": { borderBottomColor: theme.palette.secondary.main },
-    },
-
-    searchInput: {
-        color: theme.palette.secondary.main,
     },
 
     inputFocused: {
@@ -205,34 +187,6 @@ const NoCards = withStyles(styles)(
                 {subtitle}
             </Typography>
         </div>
-)
-
-
-
-
-// ...
-const SearchField = withStyles(styles)(
-    ({ classes, label, onChange, value }) => <TextField
-        id="seach-by"
-        label={label}
-        value={value}
-        type="search"
-        margin="dense"
-        onChange={onChange}
-        InputProps={{
-            classes: {
-                input: classes.textFieldInput,
-                underline: classes.textFieldInput,
-                focused: classes.inputFocused,
-            },
-        }}
-        InputLabelProps={{
-            classes: {
-                root: classes.searchInput,
-                shrink: classes.inputFocused,
-            },
-        }}
-    />
 )
 
 
@@ -522,114 +476,120 @@ class Contacts extends Component {
             />
 
 
-            <div className="m-t flex-box-row space-between">
-                <SearchField
-                    label="Search Contacts"
-                    onChange={e => this.updateSearchFilter(
-                        e.target.value
-                    )}
-                />
-                <SelectView value={this.state.selectedView}
-                    onChange={this.changeView}
-                />
+            <div className="p-l p-r">
+                <div className="m-t flex-box-row space-between">
+                    <LCARSInput
+                        width="100%"
+                        className="lcars-input p-b p-t"
+                        label="Search Contacts"
+                        inputType="text"
+                        maxLength="100"
+                        autoComplete="off"
+                        handleChange={e => this.updateSearchFilter(e.target.value)}
+                        subLabel={`Filter: ${this.state.search ?
+                            this.state.search : "None"}`}
+                    />
+                    <SelectView value={this.state.selectedView}
+                        onChange={this.changeView}
+                    />
+                </div>
+
+
+                {this.state.selectedView === 0 &&
+                <Fragment>
+                    <div className="m-t-medium">
+                        <Typography variant="body1" color="secondary">
+                            Contacts
+                        </Typography>
+                        <Divider
+                            style={{ opacity: "0.4" }}
+                            color="secondary"
+                        />
+                    </div>
+                    <Grid
+                        container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={16}
+                    >
+                        {this.state.search.length > 0 ?
+                            this.showFilteredContacts() :
+                            this.showAllContacts()
+                        }
+                    </Grid>
+                    <div className="m-t-medium">
+                        <Typography variant="body1" color="secondary">
+                            Requests
+                        </Typography>
+                        <Divider
+                            style={{ opacity: "0.4" }}
+                            color="secondary"
+                        />
+                    </div>
+                    <Grid
+                        container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={16}
+                    >
+                        {this.state.search.length > 0 ?
+                            this.showFilteredContactRequests() :
+                            this.showAllContactRequests()
+                        }
+                    </Grid>
+                </Fragment>
+                }
+
+                {this.state.selectedView === 1 &&
+                <Fragment>
+                    <div className="m-t-medium">
+                        <Typography variant="body1" color="secondary">
+                            Contacts
+                        </Typography>
+                        <Divider
+                            style={{ opacity: "0.4" }}
+                            color="secondary"
+                        />
+                    </div>
+                    <Grid
+                        container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={16}
+                    >
+                        {this.state.search.length > 0 ?
+                            this.showFilteredContacts() :
+                            this.showAllContacts()
+                        }
+                    </Grid>
+                </Fragment>
+                }
+
+                {this.state.selectedView === 2 &&
+                <Fragment>
+                    <div className="m-t-medium">
+                        <Typography variant="body1" color="secondary">
+                            Requests
+                        </Typography>
+                        <Divider
+                            style={{ opacity: "0.4" }}
+                            color="secondary"
+                        />
+                    </div>
+                    <Grid
+                        container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={16}
+                    >
+                        {this.state.search.length > 0 ?
+                            this.showFilteredContactRequests() :
+                            this.showAllContactRequests()
+                        }
+                    </Grid>
+                </Fragment>
+                }
             </div>
-
-
-            {this.state.selectedView === 0 &&
-                <Fragment>
-                    <div className="m-t-medium">
-                        <Typography variant="body1" color="secondary">
-                            Contacts
-                        </Typography>
-                        <Divider
-                            style={{ opacity: "0.4" }}
-                            color="secondary"
-                        />
-                    </div>
-                    <Grid
-                        container
-                        alignContent="flex-start"
-                        alignItems="center"
-                        spacing={16}
-                    >
-                        {this.state.search.length > 0 ?
-                            this.showFilteredContacts() :
-                            this.showAllContacts()
-                        }
-                    </Grid>
-                    <div className="m-t-medium">
-                        <Typography variant="body1" color="secondary">
-                            Requests
-                        </Typography>
-                        <Divider
-                            style={{ opacity: "0.4" }}
-                            color="secondary"
-                        />
-                    </div>
-                    <Grid
-                        container
-                        alignContent="flex-start"
-                        alignItems="center"
-                        spacing={16}
-                    >
-                        {this.state.search.length > 0 ?
-                            this.showFilteredContactRequests() :
-                            this.showAllContactRequests()
-                        }
-                    </Grid>
-                </Fragment>
-            }
-
-            {this.state.selectedView === 1 &&
-                <Fragment>
-                    <div className="m-t-medium">
-                        <Typography variant="body1" color="secondary">
-                            Contacts
-                        </Typography>
-                        <Divider
-                            style={{ opacity: "0.4" }}
-                            color="secondary"
-                        />
-                    </div>
-                    <Grid
-                        container
-                        alignContent="flex-start"
-                        alignItems="center"
-                        spacing={16}
-                    >
-                        {this.state.search.length > 0 ?
-                            this.showFilteredContacts() :
-                            this.showAllContacts()
-                        }
-                    </Grid>
-                </Fragment>
-            }
-
-            {this.state.selectedView === 2 &&
-                <Fragment>
-                    <div className="m-t-medium">
-                        <Typography variant="body1" color="secondary">
-                            Requests
-                        </Typography>
-                        <Divider
-                            style={{ opacity: "0.4" }}
-                            color="secondary"
-                        />
-                    </div>
-                    <Grid
-                        container
-                        alignContent="flex-start"
-                        alignItems="center"
-                        spacing={16}
-                    >
-                        {this.state.search.length > 0 ?
-                            this.showFilteredContactRequests() :
-                            this.showAllContactRequests()
-                        }
-                    </Grid>
-                </Fragment>
-            }
-
         </Fragment>
 }
 
