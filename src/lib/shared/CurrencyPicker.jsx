@@ -13,7 +13,7 @@ import {
     FormControl,
     FormControlLabel,
     FormLabel,
-} from "@material-ui/core/Radio"
+} from "@material-ui/core"
 
 
 
@@ -86,14 +86,13 @@ class CurrencyPicker extends Component {
                         focused: classes.formLabelFocused,
                     }}
                     component="legend"
-                >
-                    Select Default Currency:
-                </FormLabel>
+                >{this.props.label}</FormLabel>
+
                 <RadioGroup
                     aria-label="currency-picker"
                     name="currency-picker"
                     className={classes.group}
-                    value={this.state.currency}
+                    defaultValue={this.props.defaultCurrency}
                     onChange={this.handleChange}
                 >
                     <FormControlLabel value="eur"
