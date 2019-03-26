@@ -147,15 +147,9 @@ const EditContactModal = withStyles(styles)(
                     }}
                     className={classes.paper}
                 >
-                    <Typography variant="subtitle1" color="primary" id="modal-title">
-                        Federated Contact Details
-                    </Typography>
                     <EditContactForm />
                 </div> :
                 <div className={classes.paper}>
-                    <Typography variant="subtitle1" color="primary" id="modal-title">
-                        Contact Details
-                    </Typography>
                     <EditContactForm />
                 </div>
             }

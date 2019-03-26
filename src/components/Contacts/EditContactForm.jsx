@@ -1,10 +1,19 @@
 import React, { Component, Fragment } from "react"
-import { bindActionCreators, compose, } from "redux"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import { connect } from "react-redux"
 import { string } from "@xcmats/js-toolbox"
-import { gravatar, gravatarSize } from "../StellarFox/env"
 import {
-    listInternal, listRequested, removeFederated, removeInternal,
+    gravatar,
+    gravatarSize,
+} from "../StellarFox/env"
+import {
+    listInternal,
+    listRequested,
+    removeFederated,
+    removeInternal,
     updateFederated,
 } from "../Contacts/api"
 import {
@@ -28,18 +37,16 @@ import { action as ContactsAction } from "../../redux/Contacts"
 import { action as ModalAction } from "../../redux/Modal"
 import { withStyles } from "@material-ui/core/styles"
 import classNames from "classnames"
-import TextField from "@material-ui/core/TextField"
-import Avatar from "@material-ui/core/Avatar"
-import Badge from "@material-ui/core/Badge"
-import Button from "@material-ui/core/Button"
-import CircularProgress from "@material-ui/core/CircularProgress"
-import Typography from "@material-ui/core/Typography"
+import {
+    Avatar,
+    Button,
+    CircularProgress,
+    TextField,
+    Typography,
+} from "@material-ui/core"
 import md5 from "../../lib/md5"
 import { surfaceSnacky } from "../../thunks/main"
-import {
-    assetDescription,
-    assetGlyph,
-} from "../../lib/asset-utils"
+import { assetDescription } from "../../lib/asset-utils"
 
 
 
@@ -61,7 +68,6 @@ const styles = (theme) => ({
     },
 
     buttonDanger: {
-        margin: "0.5rem 0rem",
         borderRadius: "3px",
         color: theme.palette.secondary.main,
         backgroundColor: theme.palette.error.dark,
@@ -176,11 +182,16 @@ const ModalButton = withStyles(styles)(
 // ...
 const DeleteContactButton = withStyles(styles)(
     ({ classes, onClick }) =>
-        <Button variant="contained" size="small" onClick={onClick}
-            className={classNames(classes.buttonDanger)}
-        >
-            Delete Contact
-        </Button>
+        <div>
+            <Button
+                variant="contained"
+                size="small"
+                onClick={onClick}
+                className={classNames(classes.buttonDanger)}
+            >
+                Delete Contact
+            </Button>
+        </div>
 )
 
 
@@ -192,63 +203,88 @@ const ExtContactDetails = withStyles(styles)(
         memoFieldValue, updateFirstName, firstNameFieldValue, updateLastName,
         lastNameFieldValue, updatePaymentAddress,
         paymentAddressFieldValue, currentCurrency, error, errorMessage }) =>
-        <div className="f-b space-around p-t-large p-b-large">
-            <div className="f-b-col">
+
+        <div className="flex-box-row space-around p-t-large p-b-large">
+
+            <div className="flex-box-col">
                 <Avatar className={classes.avatar}
                     src={`${gravatar}${md5(details.contact.pubkey)}?${
                         gravatarSize}&d=robohash`}
                 />
-                <div className="flex-box-row items-centered">
-                    <Typography classes={{ root: classes.padded }}
-                        variant="body1" noWrap color="primary"
-                    >
-                        <Typography variant="caption" noWrap color="primary">
-                            <span className="fade-strong">
-                                Default Currency:
-                            </span>
-                        </Typography>
+
+                <div className="m-t flex-box-col">
+                    <Typography variant="caption" noWrap color="primary">
+                        <span className="fade">
+                            Preferred Currency:
+                        </span>
+                    </Typography>
+                    <Typography variant="body1" noWrap color="primary">
                         {assetDescription(currentCurrency)}
                     </Typography>
-                    <div className="coin">
-                        {assetGlyph(currentCurrency)}
-                    </div>
+
+
+                    <CurrencyPicker
+                        defaultCurrency={details.contact.currency}
+                        onChange={setCurrency}
+                    />
                 </div>
 
-                <CurrencyPicker defaultCurrency={details.contact.currency}
-                    onChange={setCurrency} label="Preferred Currency:"
-                />
-
-                <EditContactInfoTextField id="edit-memo"
-                    label="Contact Memo"
-                    onChange={updateMemo} value={memoFieldValue}
-                />
+                <div className="m-t flex-box-col">
+                    <Typography variant="caption" noWrap color="primary">
+                        <span className="fade">Account Number:</span>
+                    </Typography>
+                    <Typography variant="body1" noWrap color="primary">
+                        {pubKeyAbbr(details.contact.pubkey)}
+                    </Typography>
+                </div>
 
             </div>
-            <div className="f-b-col">
-                <EditContactInfoTextField id="edit-first-name"
-                    label="First Name"
-                    onChange={updateFirstName} value={firstNameFieldValue}
-                />
-                <EditContactInfoTextField id="edit-last-name"
-                    label="Last Name"
-                    onChange={updateLastName} value={lastNameFieldValue}
-                />
-                <EditContactInfoTextField id="edit-payment-address"
-                    label="Payment Address"
-                    onChange={updatePaymentAddress}
-                    value={paymentAddressFieldValue}
-                    error={error} helperText={errorMessage}
-                />
 
-                <div className="p-t"></div>
 
-                <Typography variant="body1" noWrap color="primary">
-                    <Typography variant="caption" noWrap color="primary">
-                        <span className="fade-strong">Account Number:</span>
-                    </Typography>
-                    {pubKeyAbbr(details.contact.pubkey)}
-                </Typography>
-                <DeleteContactButton onClick={deleteAction} />
+            <div className="flex-box-col">
+
+                <div className="m-t flex-box-col">
+                    <EditContactInfoTextField
+                        id="edit-first-name"
+                        label="First Name"
+                        onChange={updateFirstName}
+                        value={firstNameFieldValue}
+                    />
+                </div>
+
+                <div className="m-t flex-box-col">
+                    <EditContactInfoTextField
+                        id="edit-last-name"
+                        label="Last Name"
+                        onChange={updateLastName}
+                        value={lastNameFieldValue}
+                    />
+                </div>
+
+                <div className="m-t flex-box-col">
+                    <EditContactInfoTextField
+                        id="edit-payment-address"
+                        label="Payment Address"
+                        onChange={updatePaymentAddress}
+                        value={paymentAddressFieldValue}
+                        error={error}
+                        helperText={errorMessage}
+                    />
+                </div>
+
+                <div className="m-t flex-box-col">
+                    <EditContactInfoTextField
+                        id="edit-memo"
+                        label="Contact Memo"
+                        onChange={updateMemo}
+                        value={memoFieldValue}
+                    />
+                </div>
+
+                <div className="m-t-medium flex-box-col">
+                    <DeleteContactButton onClick={deleteAction} />
+                </div>
+
             </div>
         </div>
 )
@@ -259,63 +295,78 @@ const ExtContactDetails = withStyles(styles)(
 // ...
 const ContactDetails = withStyles(styles)(
     ({ classes, details, deleteAction }) =>
-        <div className="f-b space-around p-t-large p-b-large">
-            <div className="f-b-col">
+        <div className="flex-box-row space-around p-t-large p-b-large">
+            <div className="flex-box-col">
                 <Avatar className={classes.avatar}
                     src={`${gravatar}${details.contact.email_md5}?${
                         gravatarSize}&d=robohash`}
                 />
+                <div className="m-t flex-box-col">
+                    <Typography variant="caption" noWrap color="primary">
+                        <span className="fade">
+                            Preferred Currency:
+                        </span>
+                    </Typography>
+                    <Typography variant="body1" noWrap color="primary">
+                        {assetDescription(details.contact.currency)}
+                    </Typography>
+                </div>
 
-                <Badge
-                    badgeContent={
-                        assetGlyph(details.contact.currency)
-                    } classes={{ badge: classes.badge }}
-                >
-                    <Typography classes={{ root: classes.padded }}
-                        variant="body1" noWrap color="primary"
-                    >
-                        <Typography variant="caption" noWrap color="primary">
-                            <span className="fade-strong">
-                                Default Currency:
-                            </span>
-                        </Typography>
-                        {assetDescription(
-                            details.contact.currency
+                <div className="m-t flex-box-col">
+                    <Typography variant="caption" noWrap color="primary">
+                        <span className="fade">
+                            Contact Memo:
+                        </span>
+                    </Typography>
+                    <Typography variant="body1" noWrap color="primary">
+                        {formatMemo(
+                            details.contact.memo_type, details.contact.memo
                         )}
                     </Typography>
-                </Badge>
-                <Typography variant="body1" noWrap color="primary">
-                    <Typography variant="caption" noWrap color="primary">
-                        <span className="fade-strong">Contact Memo:</span>
-                    </Typography>
-                    {formatMemo(
-                        details.contact.memo_type, details.contact.memo
-                    )}
-                </Typography>
+                </div>
+
             </div>
-            <div className="f-b-col">
-                <Typography variant="h6" noWrap color="primary">
+
+
+            <div className="flex-box-col">
+                <Typography
+                    style={{ lineHeight: "2.5rem" }}
+                    variant="h2"
+                    noWrap
+                    color="primary"
+                >
                     {string.shorten(formatFullName(
                         details.contact.first_name, details.contact.last_name
                     ), 30, string.shorten.END)}
                 </Typography>
-                <Typography classes={{ root: classNames(classes.padded) }}
-                    variant="subtitle1" noWrap color="primary"
-                >
+
+                <div className="m-t flex-box-col">
                     <Typography variant="caption" noWrap color="primary">
-                        <span className="fade-strong">Payment Address:</span>
+                        <span className="fade">
+                            Payment Address:
+                        </span>
                     </Typography>
-                    {string.shorten(formatPaymentAddress(
-                        details.contact.alias, details.contact.domain
-                    ), 30, string.shorten.END)}
-                </Typography>
-                <Typography variant="body1" noWrap color="primary">
+                    <Typography variant="body1" noWrap color="primary">
+                        {string.shorten(formatPaymentAddress(
+                            details.contact.alias, details.contact.domain
+                        ), 30, string.shorten.END)}
+                    </Typography>
+                </div>
+
+                <div className="m-t flex-box-col">
                     <Typography variant="caption" noWrap color="primary">
-                        <span className="fade-strong">Account Number:</span>
+                        <span className="fade">
+                            Account Number:
+                        </span>
                     </Typography>
-                    {pubKeyAbbr(details.contact.pubkey)}
-                </Typography>
-                <DeleteContactButton onClick={deleteAction} />
+                    <Typography variant="body1" noWrap color="primary">
+                        {pubKeyAbbr(details.contact.pubkey)}
+                    </Typography>
+                </div>
+
+                <div className="m-t flex-box-col">
+                    <DeleteContactButton onClick={deleteAction} />
+                </div>
             </div>
         </div>
 )
@@ -619,7 +670,10 @@ class EditContactForm extends Component {
                             onClick={this.updateContactInfo} label="Update"
                         />
                     }
-                    <ModalButton onClick={this.hideDetails} label="Cancel" />
+                    <ModalButton
+                        onClick={this.hideDetails}
+                        label={details.external ? "Cancel" : "Close"}
+                    />
                 </div>
             </Fragment>
     )(this.props)
