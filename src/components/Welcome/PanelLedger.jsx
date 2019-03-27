@@ -1,8 +1,6 @@
 import React, { Component } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import axios from "axios"
-import { config } from "../../config"
 import { ledgerSupportLink } from "../StellarFox/env"
 import Panel from "../../lib/mui-v1/Panel"
 import LedgerAuthenticator from "../LedgerAuthenticator"
@@ -17,7 +15,7 @@ import { Typography } from "@material-ui/core"
 class PanelLedger extends Component {
 
     // ...
-    logInViaLedger = (ledgerParams) => {
+    setLedgerInfo = (ledgerParams) => {
 
         if (!ledgerParams.publicKey &&
             !ledgerParams.softwareVersion &&
@@ -28,27 +26,6 @@ class PanelLedger extends Component {
         this.props.setLedgerBip32Path(ledgerParams.bip32Path)
         this.props.setLedgerPublicKey(ledgerParams.publicKey)
 
-        axios
-            .post(
-                `${config.api}/user/ledgerauth/${ledgerParams.publicKey}/${
-                    ledgerParams.bip32Path}`
-            )
-            .then((response) => {
-                this.props.setApiToken(response.data.token)
-                this.props.setUserId(response.data.user_id)
-            })
-            .catch((error) => {
-                // This will happen when back-end is offline.
-                if (!error.response) {
-                    // eslint-disable-next-line no-console
-                    console.log(error.message)
-                    return
-                }
-                // User not found
-                if (error.response.status === 401) {
-                    // do nothing for now
-                }
-            })
     }
 
 
@@ -67,7 +44,7 @@ class PanelLedger extends Component {
                     </a>.
                 </Typography>
                 <LedgerAuthenticator
-                    onConnected={this.logInViaLedger}
+                    onConnected={this.setLedgerInfo}
                     className="welcome-lcars-input"
                 />
             </div>
