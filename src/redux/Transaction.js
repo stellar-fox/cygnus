@@ -12,8 +12,8 @@ const initState = {}
 // ...
 export const SET_TRANSACTION = "@Transaction/SET_TRANSACTION"
 export const CLEAR_TRANSACTION = "@Transaction/CLEAR_TRANSACTION"
-export const SET_STATE = "@StellarAccount/SET_STATE"
-export const RESET_STATE = "@StellarAccount/RESET_STATE"
+export const SET_STATE = "@Transaction/SET_STATE"
+export const RESET_STATE = "@Transaction/RESET_STATE"
 
 
 
