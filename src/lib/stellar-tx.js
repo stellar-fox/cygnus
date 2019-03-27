@@ -61,6 +61,22 @@ export const buildSetDataTx = async (txData) =>
 
 
 // ...
+export const buildClearDataTx = async (source) =>
+    new TransactionBuilder(await loadAccount(source), { fee: BASE_FEE })
+        .addOperation(Operation.manageData({
+            name: "idSig",
+            value: "",
+        }))
+        .addOperation(Operation.manageData({
+            name: "paySig",
+            value: "",
+        }))
+        .setTimeout(10 * timeUnit.second).build()
+
+
+
+
+// ...
 export const buildChangeTrustTx = async (txData) => {
     let txBuilder = new TransactionBuilder(
         await loadAccount(txData.source), { fee: BASE_FEE }
