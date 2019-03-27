@@ -20,6 +20,10 @@ const initState = {
         inProgress: false,
         statusMessage: string.empty(),
     },
+    implosion: {
+        inProgress: false,
+        statusMessage: string.empty(),
+    },
 }
 
 

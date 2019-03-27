@@ -5,10 +5,8 @@ import { createReducer } from "@xcmats/js-toolbox"
 
 // <Modal> component state
 const initState = {
-
     visible: false,
     modalId: null,
-
 }
 
 
@@ -17,6 +15,7 @@ const initState = {
 // ...
 export const MODAL_SHOW = "@Modal/SHOW"
 export const MODAL_HIDE = "@Modal/HIDE"
+export const RESET_STATE = "@Modal/RESET_STATE"
 
 
 
@@ -35,6 +34,10 @@ export const action = {
     hideModal: () => ({
         type: MODAL_HIDE,
     }),
+
+
+    // ...
+    resetState: () => ({ type: RESET_STATE }),
 
 }
 
@@ -58,5 +61,9 @@ export const reducer = createReducer(initState)({
         visible: false,
         modalId: null,
     }),
+
+
+    // ...
+    [RESET_STATE]: () => initState,
 
 })
