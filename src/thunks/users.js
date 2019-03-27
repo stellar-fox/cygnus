@@ -13,6 +13,7 @@ import { paymentAddress } from "../lib/utils"
 import { action as AccountAction } from "../redux/Account"
 import { action as AuthActions } from "../redux/Auth"
 import { actions as AppActions } from "../redux/App"
+import { action as AssetManagerAction } from "../redux/AssetManager"
 import { action as AuthAction } from "../redux/Auth"
 import { action as BalancesAction } from "../redux/Balances"
 import { action as BankAction } from "../redux/Bank"
@@ -20,15 +21,28 @@ import { action as ContactsAction } from "../redux/Contacts"
 import { actions as ErrorsActions } from "../redux/Errors"
 import { action as LedgerHQAction } from "../redux/LedgerHQ"
 import { action as LoginManagerAction } from "../redux/LoginManager"
+import { action as ModalAction } from "../redux/Modal"
 import { action as PaymentsAction } from "../redux/Payments"
 import { actions as ProgressActions } from "../redux/Progress"
 import { action as StellarAccountAction } from "../redux/StellarAccount"
+import { action as TransactionAction } from "../redux/Transaction"
 import { surfaceSnacky } from "../thunks/main"
+import { queryDevice } from "../thunks/ledgerhq"
 import {
     fedToPub,
     getUserExternalContacts,
     invalidPaymentAddressMessage,
 } from "../lib/utils"
+import {
+    buildClearDataTx,
+    submitTransaction,
+} from "../lib/stellar-tx"
+import { insertPathIndex } from "../lib/utils"
+import { signTransaction } from "../lib/ledger"
+import {
+    implodeCloudData,
+    unsubscribeEmail,
+} from "../components/Account/api"
 
 
 
@@ -167,14 +181,19 @@ export const signOut = () =>
         await firebaseApp.auth("session").signOut()
         await dispatch(AccountAction.resetState())
         await dispatch(AppActions.resetState())
+        await dispatch(AssetManagerAction.resetState())
         await dispatch(AuthAction.resetState())
         await dispatch(BalancesAction.resetState())
         await dispatch(BankAction.resetState())
         await dispatch(ContactsAction.resetState())
+        await dispatch(ErrorsActions.resetState())
         await dispatch(LedgerHQAction.resetState())
         await dispatch(LoginManagerAction.resetState())
+        await dispatch(ModalAction.resetState())
         await dispatch(PaymentsAction.resetState())
+        await dispatch(ProgressActions.resetState())
         await dispatch(StellarAccountAction.resetState())
+        await dispatch(TransactionAction.resetState())
         await dispatch(surfaceSnacky(
             "success",
             "You were signed out of your account."
@@ -419,3 +438,132 @@ export const getUserContacts = () =>
 export const surfaceRegistrationCard = () =>
     async (dispatch, _getState) =>
         await dispatch(AccountAction.setState({ needsRegistration: true }))
+
+
+
+
+/**
+ * Deletes user data and user from the cloud. If data entries exist in
+ * the Account then they will also be deleted.
+ *
+ * @function implodeAccount
+ * @param {Object} password object passed from component state
+ * @param {Boolean} keepEmail boolean passed from component state
+ * @returns {Function} thunk action
+ *
+ * */
+export const implodeAccount = (password, keepEmail) =>
+    async (dispatch, getState) => {
+
+        // reset all messages / errors on the UI
+        await dispatch(clearInputErrorMessages())
+        await dispatch(ProgressActions.resetState())
+
+        if (!password) {
+            await dispatch(ErrorsActions.setPasswordInputError(
+                "Please enter your password."
+            ))
+            return
+        }
+
+        // Re-authenticate user with Firebase to confirm password and
+        // update user as recently re-authenticated.
+        try {
+            await dispatch(ProgressActions.toggleProgress(
+                "implosion", "Authenticating ..."
+            ))
+
+            var user = firebaseApp.auth("session").currentUser
+
+            await firebaseApp.auth("session").signInWithEmailAndPassword(
+                user.email,
+                password.password,
+            )
+
+            await dispatch(ProgressActions.toggleProgress(
+                "implosion", string.empty()
+            ))
+
+        } catch (error) {
+            await dispatch(ProgressActions.resetState())
+            await dispatch(ErrorsActions.setPasswordInputError(
+                "Password is invalid."
+            ))
+            return
+        }
+
+
+        try {
+
+            const idSig = getState().StellarAccount.data ?
+                getState().StellarAccount.data.idSig : string.empty()
+            const paySig =  getState().StellarAccount.data ?
+                getState().StellarAccount.data.paySig : string.empty()
+
+            // delete Account data entries if they exist.
+            if (idSig || paySig) {
+                await dispatch(ProgressActions.toggleProgress(
+                    "ledgerauth", "Waiting for device ..."
+                ))
+                await dispatch(queryDevice())
+                await dispatch(ProgressActions.toggleProgress(
+                    "ledgerauth", "Building transaction ..."
+                ))
+
+                const clearDataTx = await buildClearDataTx(
+                    getState().LedgerHQ.publicKey
+                )
+
+                await dispatch(ProgressActions.toggleProgress(
+                    "ledgerauth", "Awaiting signature ..."
+                ))
+
+                const signedClearDataTx = await signTransaction(
+                    insertPathIndex(getState().LedgerHQ.bip32Path),
+                    getState().LedgerHQ.publicKey,
+                    clearDataTx
+                )
+
+                await dispatch(ProgressActions.toggleProgress(
+                    "ledgerauth", "Submitting transaction ..."
+                ))
+                await submitTransaction(signedClearDataTx)
+                await dispatch(ProgressActions.toggleProgress(
+                    "ledgerauth", string.empty()
+                ))
+            }
+
+
+            await dispatch(ProgressActions.toggleProgress(
+                "implosion", "Wiping cloud data ..."
+            ))
+            await implodeCloudData(
+                getState().LoginManager.userId,
+                getState().LoginManager.token
+            )
+
+            if (!keepEmail) {
+                await dispatch(ProgressActions.toggleProgress(
+                    "implosion", "Unsubscribing your email ..."
+                ))
+                await unsubscribeEmail(
+                    getState().LoginManager.userId,
+                    getState().LoginManager.token,
+                    user.email
+                )
+            }
+
+            await dispatch(ProgressActions.toggleProgress(
+                "implosion", "Deleting user ..."
+            ))
+            await user.delete()
+
+            await dispatch(clearInputErrorMessages())
+            await dispatch(signOut())
+
+        } catch (error) {
+            await dispatch(surfaceSnacky("error", error.message))
+            await dispatch(clearInputErrorMessages())
+            return
+        }
+    }
