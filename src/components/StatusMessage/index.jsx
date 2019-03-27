@@ -27,8 +27,11 @@ import { Typography } from "@material-ui/core"
  */
 const StatusMessage = ({
     className,
+    color,
     emailInputError,
     emailInputErrorMessage,
+    implosionInProgress,
+    implosionStatusMessage,
     ledgerauthInProgress,
     ledgerauthStatusMessage,
     passwordInputError,
@@ -52,19 +55,23 @@ const StatusMessage = ({
             <span className="red">{passwordInputErrorMessage}</span>
         </Typography>}
 
-    {ledgerauthInProgress && <Typography color="secondary" variant="caption">
+    {ledgerauthInProgress && <Typography color={color || "secondary"} variant="caption">
         {ledgerauthStatusMessage}
     </Typography>}
 
-    {signupInProgress && <Typography color="secondary" variant="caption">
+    {signupInProgress && <Typography color={color || "secondary"} variant="caption">
         {signupStatusMessage}
     </Typography>}
 
-    {signinInProgress && <Typography color="secondary" variant="caption">
+    {signinInProgress && <Typography color={color || "secondary"} variant="caption">
         {signinStatusMessage}
     </Typography>}
 
-    {otherError && <Typography color="secondary" variant="caption">
+    {implosionInProgress && <Typography color={color || "secondary"} variant="caption">
+        {implosionStatusMessage}
+    </Typography>}
+
+    {otherError && <Typography color={color || "secondary"} variant="caption">
         <span className="red">{otherErrorMessage}</span>
     </Typography>}
 
@@ -89,6 +96,8 @@ export default func.compose(
             signupStatusMessage: state.Progress.signup.statusMessage,
             ledgerauthInProgress: state.Progress.ledgerauth.inProgress,
             ledgerauthStatusMessage: state.Progress.ledgerauth.statusMessage,
+            implosionInProgress: state.Progress.implosion.inProgress,
+            implosionStatusMessage: state.Progress.implosion.statusMessage,
         }),
         (dispatch) => bindActionCreators({}, dispatch),
     ),
