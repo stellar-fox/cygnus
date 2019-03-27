@@ -463,8 +463,8 @@ class AddContactForm extends Component {
                     Find your new contact.
                 </Typography>
                 <Typography style={{ marginTop: "0.5rem" }} noWrap variant="h5" color="primary">
-                    Contacts can be added by email, payment address or account
-                    number.
+                    Contacts can be added by payment address, account
+                    number or invited by email.
                 </Typography>
                 <Typography noWrap variant="h5" color="primary">
                     Please choose from the options below.
@@ -494,8 +494,9 @@ class AddContactForm extends Component {
                                 variant="body1"
                                 color="primary"
                             >
-                                Enter the payment address of the person you
-                                want to add to your contact book.
+                                Enter the payment address of the person or an
+                                institution that you would like to add to your
+                                contact book.
                             </Typography>
                             <Typography
                                 align="center"
@@ -537,8 +538,9 @@ class AddContactForm extends Component {
                                 variant="body1"
                                 color="primary"
                             >
-                                If you know the account number for
-                                your contact, enter it below.
+                                If you know the account number of the person or
+                                institution that you would like to have as a
+                                contact, then enter it below.
                             </Typography>
                             <Typography
                                 align="center"
@@ -580,8 +582,9 @@ class AddContactForm extends Component {
                                 variant="body1"
                                 color="primary"
                             >
-                                Enter the email address of the person you want to add
-                                to your contact book.
+                                Share the good news with your friends and family!
+                                Enter email address of the person you would like
+                                to invite to use this platform.
                             </Typography>
                             <Typography
                                 align="center"
