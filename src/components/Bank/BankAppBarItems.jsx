@@ -1,7 +1,6 @@
 import React  from "react"
 import { connect } from "react-redux"
 import { compose } from "redux"
-
 import { withStyles } from "@material-ui/core/styles"
 import { Typography } from "@material-ui/core"
 import { handleException } from "@xcmats/js-toolbox"

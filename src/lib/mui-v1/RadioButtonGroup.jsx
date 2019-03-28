@@ -20,8 +20,6 @@ export default withStyles((theme) => ({
     },
 
     primary: {
-        fontSize: "0.8rem",
-        fontWeight: 400,
         color: theme.palette.primary.main,
         "&$checked": {
             color: theme.palette.primary.main,
@@ -29,8 +27,6 @@ export default withStyles((theme) => ({
     },
 
     secondary: {
-        fontSize: "0.8rem",
-        fontWeight: 400,
         color: theme.palette.secondary.main,
         "&$checked": {
             color: theme.palette.secondary.main,
@@ -59,14 +55,14 @@ export default withStyles((theme) => ({
                     }}
                     />}
                 label={label}
-                classes={{ label: classes[color], }}
+                classes={{ label: classes[color] }}
                 key={value}
             />
 
 
         // ...
         render = () => (
-            ({ name, onChange, value, children, classes, }) =>
+            ({ name, onChange, value, children, classes }) =>
                 <FormControl component="fieldset" required>
                     <RadioGroup
                         name={name}
