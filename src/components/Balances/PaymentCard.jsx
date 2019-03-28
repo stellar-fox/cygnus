@@ -35,7 +35,10 @@ import {
 import NumberFormat from "react-number-format"
 import { withStyles } from "@material-ui/core/styles"
 import { fade } from "@material-ui/core/styles/colorManipulator"
-import { pubKeyAbbr } from "../../lib/utils"
+import {
+    formatFullName,
+    pubKeyAbbr,
+} from "../../lib/utils"
 import {
     assetToNative,
     nativeToAsset,
@@ -255,7 +258,10 @@ class PaymentCard extends Component {
                             />
                             <div className="sender-heading">
                                 <div style={{ paddingTop: "10px" }}>
-                                    {this.props.Account.firstName} {this.props.Account.lastName}
+                                    {formatFullName(
+                                        this.props.Account.firstName,
+                                        this.props.Account.lastName
+                                    )}
                                 </div>
                                 <div style={{ paddingTop: "2px", fontSize: "11px" }}>
                                     {this.props.Account.paymentAddress ? this.props.Account.paymentAddress :

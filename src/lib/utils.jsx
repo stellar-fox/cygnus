@@ -46,11 +46,11 @@ export const findContactByPublicKey = (contacts, publicKey) =>
 // ...
 export const formatFullName = (firstName, lastName) => (
     firstName && lastName  ?
-        `${firstName} ${lastName}`  :
+        string.shorten(`${firstName} ${lastName}`, 30)  :
         firstName  ?
-            firstName  :
+            string.shorten(firstName, 15)  :
             lastName  ?
-                lastName  :
+                string.shorten(lastName, 15)  :
                 "No Name"
 )
 
