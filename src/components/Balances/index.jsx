@@ -346,7 +346,7 @@ class Balances extends Component {
                             <LoadingModal /> :
                             this.props.StellarAccount.accountId ?
                                 <BalanceSummary className="m-b" /> :
-                                <NoAccountCard />
+                                <NoAccountCard className="m-b" />
                         }
 
 

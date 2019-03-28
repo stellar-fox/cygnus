@@ -62,6 +62,7 @@ class PanelExplorer extends Component {
                 <div className="flex-box-col items-centered content-centered">
 
                     <InputField
+                        autoComplete="off"
                         id="payment-address-input"
                         type="text"
                         label="Payment Address"
