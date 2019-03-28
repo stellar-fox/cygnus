@@ -179,22 +179,22 @@ export const enterExplorer = (inputValue) =>
 export const signOut = () =>
     async (dispatch, _getState) => {
         await firebaseApp.auth("session").signOut()
-        await dispatch(AccountAction.resetState())
-        await dispatch(AppActions.resetState())
-        await dispatch(AssetManagerAction.resetState())
-        await dispatch(AuthAction.resetState())
-        await dispatch(BalancesAction.resetState())
-        await dispatch(BankAction.resetState())
-        await dispatch(ContactsAction.resetState())
-        await dispatch(ErrorsActions.resetState())
-        await dispatch(LedgerHQAction.resetState())
-        await dispatch(LoginManagerAction.resetState())
-        await dispatch(ModalAction.resetState())
-        await dispatch(PaymentsAction.resetState())
-        await dispatch(ProgressActions.resetState())
-        await dispatch(StellarAccountAction.resetState())
-        await dispatch(TransactionAction.resetState())
-        await dispatch(surfaceSnacky(
+        await dispatch(await AccountAction.resetState())
+        await dispatch(await AppActions.resetState())
+        await dispatch(await AssetManagerAction.resetState())
+        await dispatch(await AuthAction.resetState())
+        await dispatch(await BalancesAction.resetState())
+        await dispatch(await BankAction.resetState())
+        await dispatch(await ContactsAction.resetState())
+        await dispatch(await ErrorsActions.resetState())
+        await dispatch(await LedgerHQAction.resetState())
+        await dispatch(await LoginManagerAction.resetState())
+        await dispatch(await ModalAction.resetState())
+        await dispatch(await PaymentsAction.resetState())
+        await dispatch(await ProgressActions.resetState())
+        await dispatch(await StellarAccountAction.resetState())
+        await dispatch(await TransactionAction.resetState())
+        await dispatch(await surfaceSnacky(
             "success",
             "You were signed out of your account."
         ))
@@ -211,9 +211,9 @@ export const signOut = () =>
  */
 export const clearInputErrorMessages = () =>
     async (dispatch, _getState) => {
-        await dispatch(ErrorsActions.clearEmailInputError())
-        await dispatch(ErrorsActions.clearPasswordInputError())
-        await dispatch(ErrorsActions.clearOtherError())
+        await dispatch(await ErrorsActions.clearEmailInputError())
+        await dispatch(await ErrorsActions.clearPasswordInputError())
+        await dispatch(await ErrorsActions.clearOtherError())
     }
 
 
@@ -232,20 +232,24 @@ export const clearInputErrorMessages = () =>
 export const signUpNewUser = (accountId, account, email, password) =>
     async (dispatch, getState) => {
 
-        await dispatch(clearInputErrorMessages())
+        await dispatch(await clearInputErrorMessages())
+        await dispatch(await AuthActions.toggleSignupProgress(true))
+        await dispatch(await ProgressActions.toggleProgress(
+            "signup", "Creating user account ..."
+        ))
 
+
+        // 1. Create user in Firebase and on the backend side.
+
+        let user = null
+        let userResp = null
 
         try {
-            await dispatch(AuthActions.toggleSignupProgress(true))
-            await dispatch(ProgressActions.toggleProgress(
-                "signup", "Creating user account ..."
-            ))
-
-            await firebaseApp.auth("session").createUserWithEmailAndPassword(
+            user = await firebaseApp.auth("session").createUserWithEmailAndPassword(
                 email, password
             )
 
-            const userResp = await Axios.post(
+            userResp = await Axios.post(
                 `${config.apiV2}/user/create/`, {
                     email,
                     password,
@@ -262,28 +266,60 @@ export const signUpNewUser = (accountId, account, email, password) =>
                     email_md5: md5(email),
                 })
 
-            await dispatch(doBackendSignIn(email, password))
-
-            await dispatch(ProgressActions.toggleProgress(
+            await dispatch(await ProgressActions.toggleProgress(
                 "signup", "Almost done ..."
             ))
 
-            const { userId, token } = getState().LoginManager
-            await subscribeEmail(userId, token, email)
+            await firebaseApp.auth("session").currentUser.sendEmailVerification()
 
-            await firebaseApp.auth("session")
-                .currentUser.sendEmailVerification()
-            await dispatch(ProgressActions.toggleProgress(
+        } catch (error) {
+
+            // delete Firebase user.
+            if (user) {
+                await firebaseApp.auth("session").currentUser.delete()
+            }
+
+            // clear backend data
+            if (getState().LoginManager.userId && getState().LoginManager.token) {
+                await implodeCloudData(
+                    getState().LoginManager.userId,
+                    getState().LoginManager.token
+                )
+            }
+
+            await dispatch(await clearInputErrorMessages())
+            await dispatch(await ProgressActions.resetState())
+            await dispatch(await surfaceSnacky("error", error.message))
+            await dispatch(await AuthActions.toggleSignupProgress(false))
+            return
+        }
+
+
+
+        // 2. Subscribe user to mailing list
+        try {
+
+            await subscribeEmail(
+                getState().LoginManager.userId,
+                getState().LoginManager.token,
+                email
+            )
+
+        } catch (error) {
+
+            await dispatch(await surfaceSnacky("error", error.message))
+
+        } finally {
+
+            await dispatch(await ProgressActions.toggleProgress(
                 "signup", string.empty()
             ))
             await dispatch(AuthActions.setSignupComplete())
-        } catch (error) {
-            await dispatch(ProgressActions.toggleProgress(
-                "signup", string.empty()
-            ))
-            await dispatch(setError(error))
-        } finally {
-            await dispatch(AuthActions.toggleSignupProgress(false))
+
+            // sign user in after signup is completed
+            await dispatch(await doBackendSignIn(email, password))
+            await dispatch(await AuthActions.toggleSignupProgress(false))
+
         }
 
     }
@@ -456,11 +492,11 @@ export const implodeAccount = (password, keepEmail) =>
     async (dispatch, getState) => {
 
         // reset all messages / errors on the UI
-        await dispatch(clearInputErrorMessages())
-        await dispatch(ProgressActions.resetState())
+        await dispatch(await clearInputErrorMessages())
+        await dispatch(await ProgressActions.resetState())
 
         if (!password) {
-            await dispatch(ErrorsActions.setPasswordInputError(
+            await dispatch(await ErrorsActions.setPasswordInputError(
                 "Please enter your password."
             ))
             return
@@ -469,7 +505,7 @@ export const implodeAccount = (password, keepEmail) =>
         // Re-authenticate user with Firebase to confirm password and
         // update user as recently re-authenticated.
         try {
-            await dispatch(ProgressActions.toggleProgress(
+            await dispatch(await ProgressActions.toggleProgress(
                 "implosion", "Authenticating ..."
             ))
 
@@ -480,19 +516,20 @@ export const implodeAccount = (password, keepEmail) =>
                 password.password,
             )
 
-            await dispatch(ProgressActions.toggleProgress(
+            await dispatch(await ProgressActions.toggleProgress(
                 "implosion", string.empty()
             ))
 
         } catch (error) {
-            await dispatch(ProgressActions.resetState())
-            await dispatch(ErrorsActions.setPasswordInputError(
+            await dispatch(await ProgressActions.resetState())
+            await dispatch(await ErrorsActions.setPasswordInputError(
                 "Password is invalid."
             ))
             return
         }
 
 
+        // Delete Stellar account entries if they exist.
         try {
 
             const idSig = getState().StellarAccount.data ?
@@ -500,13 +537,12 @@ export const implodeAccount = (password, keepEmail) =>
             const paySig =  getState().StellarAccount.data ?
                 getState().StellarAccount.data.paySig : string.empty()
 
-            // delete Account data entries if they exist.
             if (idSig || paySig) {
-                await dispatch(ProgressActions.toggleProgress(
+                await dispatch(await ProgressActions.toggleProgress(
                     "ledgerauth", "Waiting for device ..."
                 ))
-                await dispatch(queryDevice())
-                await dispatch(ProgressActions.toggleProgress(
+                await dispatch(await queryDevice())
+                await dispatch(await ProgressActions.toggleProgress(
                     "ledgerauth", "Building transaction ..."
                 ))
 
@@ -514,7 +550,7 @@ export const implodeAccount = (password, keepEmail) =>
                     getState().LedgerHQ.publicKey
                 )
 
-                await dispatch(ProgressActions.toggleProgress(
+                await dispatch(await ProgressActions.toggleProgress(
                     "ledgerauth", "Awaiting signature ..."
                 ))
 
@@ -524,46 +560,70 @@ export const implodeAccount = (password, keepEmail) =>
                     clearDataTx
                 )
 
-                await dispatch(ProgressActions.toggleProgress(
+                await dispatch(await ProgressActions.toggleProgress(
                     "ledgerauth", "Submitting transaction ..."
                 ))
                 await submitTransaction(signedClearDataTx)
-                await dispatch(ProgressActions.toggleProgress(
+                await dispatch(await ProgressActions.toggleProgress(
                     "ledgerauth", string.empty()
                 ))
             }
 
 
-            await dispatch(ProgressActions.toggleProgress(
-                "implosion", "Wiping cloud data ..."
-            ))
-            await implodeCloudData(
-                getState().LoginManager.userId,
-                getState().LoginManager.token
-            )
+        } catch (error) {
 
+            await dispatch(await surfaceSnacky("error", error.message))
+            await dispatch(await clearInputErrorMessages())
+            await dispatch(await ProgressActions.resetState())
+            return // Stop right here if declined Ledger action
+
+        }
+
+
+        const { userId, token } = getState().LoginManager
+
+
+        // Delete user from the email subscription list (if desired).
+        try {
             if (!keepEmail) {
-                await dispatch(ProgressActions.toggleProgress(
+                await dispatch(await ProgressActions.toggleProgress(
                     "implosion", "Unsubscribing your email ..."
                 ))
-                await unsubscribeEmail(
-                    getState().LoginManager.userId,
-                    getState().LoginManager.token,
-                    user.email
-                )
-            }
 
-            await dispatch(ProgressActions.toggleProgress(
+                await unsubscribeEmail(userId, token, user.email)
+            }
+        } catch (error) {
+
+            await dispatch(await surfaceSnacky("error", error.message))
+
+        }
+
+
+        // Delete Firebase user and backend data.
+        try {
+
+            await dispatch(await ProgressActions.toggleProgress(
+                "implosion", "Wiping cloud data ..."
+            ))
+
+            await implodeCloudData(userId, token)
+
+            await dispatch(await ProgressActions.toggleProgress(
                 "implosion", "Deleting user ..."
             ))
+
             await user.delete()
 
-            await dispatch(clearInputErrorMessages())
-            await dispatch(signOut())
 
         } catch (error) {
-            await dispatch(surfaceSnacky("error", error.message))
-            await dispatch(clearInputErrorMessages())
-            return
+
+            await dispatch(await surfaceSnacky("error", error.message))
+
+        } finally {
+
+            await dispatch(await signOut())
+            await dispatch(await clearInputErrorMessages())
+            await dispatch(await ProgressActions.resetState())
+
         }
     }
