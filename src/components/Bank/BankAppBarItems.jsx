@@ -3,7 +3,10 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { withStyles } from "@material-ui/core/styles"
 import { Typography } from "@material-ui/core"
-import { handleException } from "@xcmats/js-toolbox"
+import {
+    handleException,
+    shorten,
+} from "@xcmats/js-toolbox"
 import {
     formatFullName,
     rgb,
@@ -84,7 +87,8 @@ export default compose(
                                 <div className="flex-box-col content-centered">
                                     {authenticated ?
                                         <Typography variant="h5" color="primary">
-                                            {paymentAddress ? paymentAddress :
+                                            {paymentAddress ?
+                                                shorten(paymentAddress, 50) :
                                                 handleException(
                                                     () => pubKeyAbbr(publicKey),
                                                     () => unknownPubKeyAbbr
@@ -105,7 +109,8 @@ export default compose(
                                 <div className="flex-box-col content-centered">
                                     {authenticated ?
                                         <Typography variant="h5" color="primary">
-                                            {paymentAddress ? paymentAddress :
+                                            {paymentAddress ?
+                                                shorten(paymentAddress, 50) :
                                                 handleException(
                                                     () => pubKeyAbbr(publicKey),
                                                     () => unknownPubKeyAbbr

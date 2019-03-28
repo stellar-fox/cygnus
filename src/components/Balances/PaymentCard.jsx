@@ -264,7 +264,11 @@ class PaymentCard extends Component {
                                     )}
                                 </div>
                                 <div style={{ paddingTop: "2px", fontSize: "11px" }}>
-                                    {this.props.Account.paymentAddress ? this.props.Account.paymentAddress :
+                                    {this.props.Account.paymentAddress ?
+                                        string.shorten(
+                                            this.props.Account.paymentAddress,
+                                            30
+                                        ) :
                                         handleException(
                                             () => pubKeyAbbr(this.props.publicKey),
                                             () => unknownPubKeyAbbr
