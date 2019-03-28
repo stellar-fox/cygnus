@@ -232,8 +232,16 @@ class Profile extends Component {
             })
 
         } catch (error) {
+
+            if (error.response.data) {
+                this.props.surfaceSnacky("error", error.response.data.error)
+            } else {
+                this.props.surfaceSnacky("error", error.message)
+            }
+
             this.setState({ loadingUpdatePaymentAddress: false })
-            this.props.surfaceSnacky("error", error.message)
+            this.props.setState({ messagePaymentData: string.empty() })
+
             return
 
         }
