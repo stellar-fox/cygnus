@@ -30,12 +30,12 @@ class RegisterCard extends Component {
                         style={{ fontSize: "0.8rem", paddingLeft: "0.5rem" }}
                         color="secondary"
                     >
-                        Hi there, please consider <Link to="/signup">
+                        Hi there, please consider <Link to="#">
                         signing up</Link> for an account with our service.
                         Find out more about <Link to="#">benefits</Link> of
                         registering with our service. Registering with our
                         service is free.
-                    </Typography>    
+                    </Typography>
                     <IconButton onClick={this.dismiss} aria-label="Delete">
                         <ClearIcon fontSize="small" />
                     </IconButton>
