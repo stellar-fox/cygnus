@@ -66,7 +66,7 @@ const AboutContent = ({ classes }) => {
             <div className={`flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
                 <span className="fade about-content-heading">CONTACT US</span>
                 <MuiLink target="_blank" rel="noopener noreferrer"
-                    href="mailto:stellarfox.team@protonmail.com?subject=[WEB] Help"
+                    href="mailto:contact@stellarfox.net?subject=[WEB:Cygnus]"
                     underline="none" color="secondary"
                 >
                     <span className="fade-strong about-content-item">
