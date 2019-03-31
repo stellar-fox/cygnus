@@ -33,7 +33,7 @@ export const appVersion = version
 
 
 // active development period
-export const appCopyDates = "2017-2019"
+export const appCopyDates = `2017-${new Date().getFullYear()}`
 
 
 

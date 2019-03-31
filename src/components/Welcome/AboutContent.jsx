@@ -13,6 +13,7 @@ import stellarlogo from "../StellarFox/static/stellar-logo.svg"
 import { stellarFoundationLink } from "../StellarFox/env"
 import sflogo from "../StellarFox/static/sf-logo.png"
 import { Link } from "react-router-dom"
+import { env } from "../StellarFox"
 
 
 
@@ -137,7 +138,7 @@ const AboutContent = ({ classes }) => {
                     of Stellar™ protocol and are using their platform SDK's.
                 </Typography>
                 <Typography color="secondary" noWrap className={classes.disclaimer}>
-                    <i>Stellar Fox</i> 2017-2019. All rights reserved.
+                    <i>Stellar Fox</i> {env.appCopyDates}. All rights reserved.
                 </Typography>
             </div>
         </div>
