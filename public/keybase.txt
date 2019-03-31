@@ -1,0 +1,68 @@
+==================================================================
+https://keybase.io/syntaxval
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://cygnus.stellarfox.net
+  * I am syntaxval (https://keybase.io/syntaxval) on keybase.
+  * I have a public key with fingerprint 1DFE D048 B070 23A7 D9B9  8029 7FB5 EF4D 9C22 B993
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01014eb8be1332ea2540718c7a6dcad11bc44e9d909f52d6c34273352808c53dba1e0a",
+      "fingerprint": "1dfed048b07023a7d9b980297fb5ef4d9c22b993",
+      "host": "keybase.io",
+      "key_id": "7fb5ef4d9c22b993",
+      "kid": "01014eb8be1332ea2540718c7a6dcad11bc44e9d909f52d6c34273352808c53dba1e0a",
+      "uid": "7d51df6812e7ef5b1f0de14e07f54519",
+      "username": "syntaxval"
+    },
+    "service": {
+      "hostname": "cygnus.stellarfox.net",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1554026184,
+  "expire_in": 157680000,
+  "prev": "7f5b4f1f2a0469e6e219e05b6852bc17ca4c6773750e134ab8e686734e8f9c0b",
+  "seqno": 28,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.1.0
+Comment: https://keybase.io/crypto
+
+yMIyAnicrVJdSBRRGF01lYSiiKiMysaKKJN77/xvYUQEEf2TBGVuc+feWSe3mXVm
+dt1FfLDCin6I/guMMgxLqocy7cHSyAyjsvIp80FcqDCioGD7Ebpj9dZj9+VyP845
+3zmH+3BCViAv49jHTP7oSHpBxpOuxlig7OLRxzUctkmSC9ZwlXTsohFCXS9UaRIu
+yAEIoECxginkeUQ1JApAhoouaxLRNQIh1gWBqkQFqiEiIum8gGSeF5ECFF3kCdYg
+BRpXxBmmFaZO1DEtj8lCYlACBAUDGSBek4mKVQUgVTawSA2BqDpCWFV5RqywXZ/B
+zGHNpcWmzWbsERqz9w/8f/Yd+72HiMyypEBEZWqIGBqAULYAyIYoiFD1gS51LG03
+ZWg3aXlaIq5FuNoijo3jpk79Zv0ofyB6MmzF3GLXo5GI5hh2otiiHlOJOrZn63aE
+QSo8L+oGfQkvGfU51RSH/qiFsGkR1ihjxKnjmrbFBSFD6p7py0ORxUUSVIQijiai
+pkNDpo8QZUkB7Ph7aHysPxELBjSQBgRJpRJFUKVAxJIiIqxDWdcEXZJlXhYBK1LQ
+sEIlRZJ5gSqGqgPM+fmqLJsLIoX51MJ+ejNsaV7MoVztg86ycYGMvEBOdqb/1QJ5
+4yf9/YCfK3JHp/d0bNsuz7hZ8j117dyKErPv/a269i3DV8motwtfAWL1vq2N1fv7
+ClrSJ96GFlct775M7s6/T0Zfr5r16N2PZztfHjwzeOhUd0t4OPVz5Fzi7O6GqqbB
+Ww/abhS27dnQ8iL24fxI/5ns9ECqdH1Tzrx4OH9S4ms4fim46Nvz4NqRhg2FWfHF
+X1qym1c3PYXN24ZqO+tLy0/O3nEnt65nc+uSgdTGe4PX56Y3DW2fuPT9lL2vTqL2
+mfl9ZM2icmdawZz6/RXoS+bm7HRHz5tOeWrPwa7DNWWp3urJAwsLLrYnC3u35C5r
+7zdb5z9sOJLzdeU6vfLw7eMXPtVf6zzQKqw5HZyZ3/gLl7tOXA==
+=VGHC
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/syntaxval
+
+==================================================================
