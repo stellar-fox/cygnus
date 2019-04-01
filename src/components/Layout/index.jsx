@@ -20,11 +20,13 @@ import { Null } from "../../lib/utils"
 import { firebaseApp } from "../../components/StellarFox"
 import { action as AuthAction } from "../../redux/Auth"
 import AlertModal from "./AlertModal"
-import Welcome from "../Welcome"
+import Faq from "../StellarFox/Faq"
 import LoginView from "../LoginView"
+import Pgp from "../StellarFox/Pgp"
 import Privacy from "../StellarFox/Privacy"
 import SignupView from "../SignupView"
 import Terms from "../StellarFox/Terms"
+import Welcome from "../Welcome"
 import Why from "../Welcome/Why"
 import "./index.css"
 import Snacky from "../../lib/mui-v1/Snacky"
@@ -74,6 +76,8 @@ export default compose(
                 "Why": this.rr("why/"),
                 "TermsOfService": this.rr("terms/"),
                 "Privacy": this.rr("privacy/"),
+                "Faq": this.rr("faq/"),
+                "Pgp": this.rr("pgp/"),
             })
         }
 
@@ -145,6 +149,14 @@ export default compose(
 
 
         // ...
+        renderFaq = (routeProps) => <Faq {...routeProps} />
+
+
+        // ...
+        renderPgp = (routeProps) => <Pgp {...routeProps} />
+
+
+        // ...
         render = () => (
             (getPath) =>
                 <Fragment>
@@ -171,6 +183,12 @@ export default compose(
                         </Route>
                         <Route path={getPath("Privacy")}>
                             {this.renderPrivacy}
+                        </Route>
+                        <Route path={getPath("Faq")}>
+                            {this.renderFaq}
+                        </Route>
+                        <Route path={getPath("Pgp")}>
+                            {this.renderPgp}
                         </Route>
                         <Redirect to={getPath("Welcome")} />
                     </Switch>

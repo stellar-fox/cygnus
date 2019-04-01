@@ -47,8 +47,13 @@ const Privacy = ({ classes }) => {
             <div className={isMobile ? "flex-box-col" : "flex-box-row"}>
                 <div className={isMobile ? "hero-mobile" : "hero-large"}>
 
-                    <Typography variant="h1" noWrap>
-                        <span style={{ color: "#c0c8d1", lineHeight: "3.5rem"}}>
+                    <Typography variant={isMobile ? "h3" : "h1"} noWrap>
+                        <span
+                            style={{
+                                color: "#c0c8d1",
+                                lineHeight: isMobile ? "0.5rem" : "3rem",
+                            }}
+                        >
                             Privacy Statement
                         </span>
                     </Typography>
