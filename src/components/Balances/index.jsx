@@ -290,7 +290,9 @@ class Balances extends Component {
                                 this.props.Modal.visible
                             }
                         >
-                            <TxBroadcastMsg />
+                            <TxBroadcastMsg
+                                title="Your transaction is on its way!"
+                            />
                         </Modal>
 
                         <Modal

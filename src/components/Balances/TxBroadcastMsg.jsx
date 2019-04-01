@@ -42,6 +42,7 @@ export default compose(
         // ...
         static propTypes = {
             classes: PropTypes.object.isRequired,
+            title: PropTypes.string.isRequired,
         }
 
 
@@ -51,16 +52,16 @@ export default compose(
 
         // ...
         render = () => (
-            ({ classes }) =>
+            ({ classes, title }) =>
                 <Fragment>
                     <div className="p-b flex-box-col items-centered">
                         <Typography
                             variant="h2"
-                            style={{ lineHeight: "2.5rem" }}
+                            style={{ lineHeight: "3rem" }}
                             color="primary"
                             noWrap
                         >
-                            Your transaction is on its way!
+                            {title}
                         </Typography>
                         <Typography variant="body1" color="primary" noWrap>
                             Estimated confirmation time: <b>5 seconds</b>.

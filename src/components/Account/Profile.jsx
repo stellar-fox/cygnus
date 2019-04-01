@@ -36,7 +36,7 @@ import Divider from "../../lib/mui-v1/Divider"
 import Modal from "../../lib/common/Modal"
 import TxConfirmProfile from "./TxConfirmProfile"
 import TxConfirmPay from "./TxConfirmPay"
-import TxBroadcast from "./TxBroadcast"
+import TxBroadcastMsg from "../Balances/TxBroadcastMsg"
 import MsgBadgeError from "./MsgBadgeError"
 import MsgBadgeSuccess from "./MsgBadgeSuccess"
 import MsgBadgeWarning from "./MsgBadgeWarning"
@@ -406,9 +406,8 @@ class Profile extends Component {
                     this.props.Modal.modalId === "txBroadcast" &&
                     this.props.Modal.visible
                 }
-                title="Lodging ..."
             >
-                <TxBroadcast />
+                <TxBroadcastMsg title="Digital fingerprint is being lodged." />
             </Modal>
 
             <div className="tab-content">
