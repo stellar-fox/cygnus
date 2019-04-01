@@ -22,7 +22,9 @@ import { action as AuthAction } from "../../redux/Auth"
 import AlertModal from "./AlertModal"
 import Welcome from "../Welcome"
 import LoginView from "../LoginView"
+import Privacy from "../StellarFox/Privacy"
 import SignupView from "../SignupView"
+import Terms from "../StellarFox/Terms"
 import Why from "../Welcome/Why"
 import "./index.css"
 import Snacky from "../../lib/mui-v1/Snacky"
@@ -70,6 +72,8 @@ export default compose(
                 "LoginView": this.rr("login/"),
                 "SignupView" : this.rr("signup/"),
                 "Why": this.rr("why/"),
+                "TermsOfService": this.rr("terms/"),
+                "Privacy": this.rr("privacy/"),
             })
         }
 
@@ -124,11 +128,21 @@ export default compose(
                 <SignupView {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
 
+
         // ...
         renderWhyView = (routeProps) =>
             !this.props.loggedIn ?
                 <Why {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
+
+
+        // ...
+        renderTerms = (routeProps) => <Terms {...routeProps} />
+
+
+        // ...
+        renderPrivacy = (routeProps) => <Privacy {...routeProps} />
+
 
         // ...
         render = () => (
@@ -151,6 +165,12 @@ export default compose(
                         </Route>
                         <Route path={getPath("Why")}>
                             {this.renderWhyView}
+                        </Route>
+                        <Route path={getPath("TermsOfService")}>
+                            {this.renderTerms}
+                        </Route>
+                        <Route path={getPath("Privacy")}>
+                            {this.renderPrivacy}
                         </Route>
                         <Redirect to={getPath("Welcome")} />
                     </Switch>

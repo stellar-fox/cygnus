@@ -48,10 +48,10 @@ const AboutContent = ({ classes }) => {
                 <MuiLink component={Link} to="/why" underline="none" color="secondary">
                     <span className="fade-strong about-content-item">Who We Are</span>
                 </MuiLink>
-                <MuiLink target="_blank" rel="noopener noreferrer" href="/tos.txt" underline="none" color="secondary">
+                <MuiLink target="_blank" rel="noopener noreferrer" href="/terms" underline="none" color="secondary">
                     <span className="fade-strong about-content-item">Terms of Use</span>
                 </MuiLink>
-                <MuiLink target="_blank" rel="noopener noreferrer" href="/privacy.txt" underline="none" color="secondary">
+                <MuiLink target="_blank" rel="noopener noreferrer" href="/privacy" underline="none" color="secondary">
                     <span className="fade-strong about-content-item">Privacy Policy</span>
                 </MuiLink>
             </div>
@@ -114,6 +114,7 @@ const AboutContent = ({ classes }) => {
 
             <div className={`flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
                 <img
+                    style={{ opacity: 0.65 }}
                     className="footnote-logo"
                     src={ledgerhqlogo}
                     alt="LedgerHQ"
@@ -125,9 +126,12 @@ const AboutContent = ({ classes }) => {
             </div>
 
 
-            <div className={`flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
+            <div className={`p-b flex-box-col ${isMobile ? classes.paddingMobile : classes.paddingNormal}`}>
                 <img
-                    style={{ borderRadius: "1px" }}
+                    style={{
+                        borderRadius: "1px",
+                        opacity: 0.65,
+                    }}
                     className="footnote-logo"
                     src={sflogo}
                     alt="Stellar Fox"
@@ -143,7 +147,7 @@ const AboutContent = ({ classes }) => {
             </div>
         </div>
 
-        <div className={`flex-box-row items-centered content-centered ${classes.bg} p-b-large`}>
+        <div className={`flex-box-row items-centered content-centered ${classes.socialMediaIcons} p-b p-t`}>
             <a href="https://www.youtube.com/channel/UCaSPZyrynD3Jww80VSfMKFw/" target="_blank" rel="noopener noreferrer">
                 <img
                     src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8dGl0bGUvPgogPGRlc2MvPgoKIDxnPgogIDx0aXRsZT5iYWNrZ3JvdW5kPC90aXRsZT4KICA8cmVjdCBmaWxsPSJub25lIiBpZD0iY2FudmFzX2JhY2tncm91bmQiIGhlaWdodD0iNDAyIiB3aWR0aD0iNTgyIiB5PSItMSIgeD0iLTEiLz4KIDwvZz4KIDxnPgogIDx0aXRsZT5MYXllciAxPC90aXRsZT4KICA8cGF0aCBmaWxsPSIjMGYyZTUzIiBpZD0iRmlsbC0xOTUiIGQ9Im00OC43OTE1OTIsMjIuNzYxNjFjMCwwIC0wLjM3NDk2MiwtMi42NDI2NDEgLTEuNTI0OTksLTMuODA2NzIxYy0xLjQ1NzY3MiwtMS41MjcxMTkgLTMuMDkyNTksLTEuNTM0MzY5IC0zLjg0MjA5MSwtMS42MjM4NWMtNS4zNjYyMjIsLTAuMzg4MTcgLTEzLjQxNTk5MSwtMC4zODgxNyAtMTMuNDE1OTkxLC0wLjM4ODE3bC0wLjAxNzA0LDBjMCwwIC04LjA0OTM0MSwwIC0xMy40MTU5OTEsMC4zODgxN2MtMC43NDk0OTgsMC4wODk0ODEgLTIuMzgzNTcsMC4wOTY3MzEgLTMuODQyMDg5LDEuNjIzODVjLTEuMTUwMDMsMS4xNjQwOCAtMS41MjQxNCwzLjgwNjcyMSAtMS41MjQxNCwzLjgwNjcyMWMwLDAgLTAuMzgzNDgsMy4xMDMyMzkgLTAuMzgzNDgsNi4yMDY0OGwwLDIuOTA5OGMwLDMuMTAyODA4IDAuMzgzNDgsNi4yMDYwNDkgMC4zODM0OCw2LjIwNjA0OWMwLDAgMC4zNzQxMSwyLjY0MjYzOSAxLjUyNDE0LDMuODA2NzMyYzEuNDU4NTE5LDEuNTI3NTM4IDMuMzc0NjU5LDEuNDc4NTM5IDQuMjI4MTMsMS42Mzg3NDhjMy4wNjgzLDAuMjk0NDM0IDEzLjAzODQ2OSwwLjM4NTYyIDEzLjAzODQ2OSwwLjM4NTYyYzAsMCA4LjA1ODI4OSwtMC4wMTIzNiAxMy40MjQ1MTEsLTAuNDAwMTAxYzAuNzQ5NSwtMC4wODk0NzggMi4zODQ0MTgsLTAuMDk2NzI5IDMuODQyMDkxLC0xLjYyNDI2OGMxLjE1MDAyOCwtMS4xNjQwOTMgMS41MjQ5OSwtMy44MDY3MzIgMS41MjQ5OSwtMy44MDY3MzJjMCwwIDAuMzgyNjI5LC0zLjEwMzI0MSAwLjM4MjYyOSwtNi4yMDYwNDlsMCwtMi45MDk4YzAsLTMuMTAzMjQxIC0wLjM4MjYyOSwtNi4yMDY0OCAtMC4zODI2MjksLTYuMjA2NDh6bS0yMi43NTA0MzEsMTIuNjQxMzUybC0wLjAwMTcwMSwtMTAuNzc0NjMybDEwLjM2MTc1Miw1LjQwNTg0OWwtMTAuMzYwMDUsNS4zNjg3ODJ6Ii8+CiA8L2c+Cjwvc3ZnPg=="
@@ -181,10 +185,13 @@ export default func.compose(
         bg: {
             backgroundColor: theme.palette.primary.light,
         },
+        socialMediaIcons: {
+            backgroundColor: theme.palette.secondary.dark,
+        },
         disclaimer: {
             padding: "0.2rem 0",
             fontSize: "9px",
-            opacity: "0.5",
+            opacity: "0.65",
         },
         hr: {
             height: "1px",
