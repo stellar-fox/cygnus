@@ -184,7 +184,7 @@ class TxConfirmMsg extends Component {
                         variant="h5"
                         noWrap
                     >
-                        Confirm that the information below is the same as on
+                        Confirm transaction information on
                         your device display.
                     </Typography>
                     <Typography
@@ -200,25 +200,52 @@ class TxConfirmMsg extends Component {
 
                 <div className="m-t flex-box-col ledger-display">
 
-                    <div className="flex-box-row space-between ledger-display-item">
-                        <Typography noWrap color="primary" variant="caption">
-                            Send:
-                        </Typography>
-                        <Typography noWrap color="primary" variant="caption">
-                            {`${Balances.amountNative || "0.0000000"} XLM`}
-                        </Typography>
-                    </div>
+                    {Balances.newAccount ?
 
-                    <div className="flex-box-row space-between ledger-display-item">
-                        <Typography noWrap color="primary" variant="caption">
-                            Destination:
-                        </Typography>
-                        <Typography noWrap color="primary" variant="caption">
-                            {handleException(
-                                () => pubKeyAbbrLedgerHQ(Balances.payee),
-                                () => "Not Available")}
-                        </Typography>
-                    </div>
+                        <Fragment>
+                            <div className="flex-box-row space-between ledger-display-item">
+                                <Typography noWrap color="primary" variant="caption">
+                                    Create Account:
+                                </Typography>
+                                <Typography noWrap color="primary" variant="caption">
+                                    {handleException(
+                                        () => pubKeyAbbrLedgerHQ(Balances.payee),
+                                        () => "Not Available")}
+                                </Typography>
+                            </div>
+                            <div className="flex-box-row space-between ledger-display-item">
+                                <Typography noWrap color="primary" variant="caption">
+                                    Starting Balance:
+                                </Typography>
+                                <Typography noWrap color="primary" variant="caption">
+                                    {`${Balances.amountNative || "0.0000000"} XLM`}
+                                </Typography>
+                            </div>
+                        </Fragment> :
+
+                        <Fragment>
+                            <div className="flex-box-row space-between ledger-display-item">
+                                <Typography noWrap color="primary" variant="caption">
+                                    Send:
+                                </Typography>
+                                <Typography noWrap color="primary" variant="caption">
+                                    {`${Balances.amountNative || "0.0000000"} XLM`}
+                                </Typography>
+                            </div>
+
+                            <div className="flex-box-row space-between ledger-display-item">
+                                <Typography noWrap color="primary" variant="caption">
+                                    Destination:
+                                </Typography>
+                                <Typography noWrap color="primary" variant="caption">
+                                    {handleException(
+                                        () => pubKeyAbbrLedgerHQ(Balances.payee),
+                                        () => "Not Available")}
+                                </Typography>
+                            </div>
+                        </Fragment>
+
+                    }
 
                     <div className="flex-box-row space-between ledger-display-item">
                         <Typography noWrap color="primary" variant="caption">
