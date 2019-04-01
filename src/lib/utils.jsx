@@ -328,9 +328,9 @@ export const fedToPub = async (fedAddress) =>
 
 // ...
 export const getFederationRecord = async (fedAddress) =>
-    (await axios.get(`${
-        await endpointLookup(fedAddress)
-    }?q=${fedAddress}&type=name`)).data
+    (await axios.get(
+        `${await endpointLookup(fedAddress)}?q=${fedAddress}&type=name`
+    )).data
 
 
 
@@ -344,7 +344,8 @@ export const endpointLookup = (federationAddress) => (
             return toml.parse(
                 (await axios.get(
                     env.federationEndpoint(
-                        devEnv() ? config.federation : array.head(domain)
+                        array.head(domain) === env.domain ?
+                            config.federation : array.head(domain)
                     ))
                 ).data
             ).FEDERATION_SERVER

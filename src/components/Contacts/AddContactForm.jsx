@@ -303,21 +303,24 @@ class AddContactForm extends Component {
                 /**
                  * Search for contact with other federation providers.
                  */
-                getFederationRecord(this.state.input).then((result) => {
-                    Axios.post(`${config.api}/contact/addext`, {
-                        user_id: this.props.userId,
-                        token: this.props.token,
-                        pubkey: result.account_id,
-                        alias: alias,
-                        domain: domain,
-                    }).then((_result) => {
-                        this.requestComplete()
+                getFederationRecord(this.state.input)
+                    .then((result) => {
+
+                        Axios.post(`${config.api}/contact/addext`, {
+                            user_id: this.props.userId,
+                            token: this.props.token,
+                            pubkey: result.account_id,
+                            alias: alias,
+                            domain: domain,
+                        }).then((_result) => {
+                            this.requestComplete()
+                        }).catch((error) => {
+                            this.requestFailed(error)
+                        })
+
                     }).catch((error) => {
                         this.requestFailed(error)
                     })
-                }).catch((error) => {
-                    this.requestFailed(error)
-                })
         }
 
         // try adding a contact based on account number

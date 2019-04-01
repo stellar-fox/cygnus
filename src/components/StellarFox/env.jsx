@@ -171,6 +171,12 @@ export const defaultCurrencyRateUpdateTime = 5 * timeUnit.minute
 
 
 // ...
+export const domain = "stellarfox.net"
+
+
+
+
+// ...
 export const federationEndpoint = (domain) =>
     `https://${domain}/.well-known/stellar.toml`
 

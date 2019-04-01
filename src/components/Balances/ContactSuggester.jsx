@@ -452,60 +452,77 @@ class ContactSuggester extends Component {
                  * stellar account corresponding to the public key that is
                  * currently mapped in to the federation address input
                  */
-                const payeeStellarAccount = await loadAccount(
-                    federationRecord.account_id
-                )
+                let payeeStellarAccount = null
 
-                /**
-                 * Update redux
-                 */
-                this.props.setBalancesState({
-                    payeeStellarAccount,
-                })
+                try {
+                    payeeStellarAccount = await loadAccount(
+                        federationRecord.account_id
+                    )
+                } catch (_error) {
+                    // catch Axios' 404 ...
+                    // federation record can exist without the actual account
+                    // having to exist on Stellar network.
 
-                /**
-                 * The following is a verification procedure for making sure
-                 * that the recipient's info (the mapping of federation address
-                 * to Stellar public key) is authentic.
-                 */
-                const paySig = payeeStellarAccount.data_attr ?
-                    (payeeStellarAccount.data_attr.paySig ?
-                        payeeStellarAccount.data_attr.paySig : null) : null
+                }
 
 
-                /**
-                 * Signature verified successfully.
-                 */
-                if (paySig) {
-                    if (signatureValid({
-                        paymentAddress: federationRecord.stellar_address,
-                        memo,
-                    }, paySig)) {
-                        this.setTransactionType("EXISTING_ACCOUNT")
-                        this.updateIndicatorMessage(
-                            "Payee Verified", "green"
-                        )
-                        memo.length > 0 &&
+                if (payeeStellarAccount) {
+
+                    this.props.setBalancesState({
+                        payeeStellarAccount,
+                    })
+
+                    /**
+                    * The following is a verification procedure for making sure
+                    * that the recipient's info (the mapping of federation address
+                    * to Stellar public key) is authentic.
+                    */
+                    const paySig = payeeStellarAccount.data_attr ?
+                        (payeeStellarAccount.data_attr.paySig ?
+                            payeeStellarAccount.data_attr.paySig : null) : null
+
+
+                    /**
+                    * Signature verified successfully.
+                    */
+                    if (paySig) {
+                        if (signatureValid({
+                            paymentAddress: federationRecord.stellar_address,
+                            memo,
+                        }, paySig)) {
+                            this.setTransactionType("EXISTING_ACCOUNT")
+                            this.updateIndicatorMessage(
+                                "Payee Verified", "green"
+                            )
+                            memo.length > 0 &&
+                                this.props.setBalancesState({
+                                    memoRequired: true,
+                                    payeeMemoText: memo,
+                                })
+                        } else {
+                            this.setTransactionType("EXISTING_ACCOUNT")
+                            this.updateIndicatorMessage(
+                                "Wrong Signature", "red"
+                            )
                             this.props.setBalancesState({
-                                memoRequired: true,
-                                payeeMemoText: memo,
+                                memoRequired: false,
+                                payeeMemoText: string.empty(),
                             })
+                        }
+                    /**
+                    * Signature could not be verified.
+                    */
                     } else {
                         this.setTransactionType("EXISTING_ACCOUNT")
-                        this.updateIndicatorMessage(
-                            "Wrong Signature", "red"
-                        )
-                        this.props.setBalancesState({
-                            memoRequired: false,
-                            payeeMemoText: string.empty(),
-                        })
+                        this.updateIndicatorMessage("Existing Account", "green")
                     }
-                /**
-                 * Signature could not be verified.
-                 */
-                } else {
-                    this.setTransactionType("EXISTING_ACCOUNT")
-                    this.updateIndicatorMessage("Existing Account", "green")
+
+                }
+
+                // Stellar account not found on the network.
+                else {
+                    this.setTransactionType("NEW_ACCOUNT")
+                    this.updateIndicatorMessage("New Account", "yellow")
                 }
 
                 publicKey = federationRecord.account_id
