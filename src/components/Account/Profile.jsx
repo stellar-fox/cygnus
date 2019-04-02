@@ -30,12 +30,12 @@ import { action as AccountAction } from "../../redux/Account"
 import { action as AlertAction } from "../../redux/Alert"
 import { action as ModalAction } from "../../redux/Modal"
 import { action as StellarAccountAction } from "../../redux/StellarAccount"
+import { action as TransactionAction } from "../../redux/Transaction"
 import LCARSInput from "../../lib/common/LCARSInput"
 import Button from "../../lib/mui-v1/Button"
 import Divider from "../../lib/mui-v1/Divider"
 import Modal from "../../lib/common/Modal"
-import TxConfirmProfile from "./TxConfirmProfile"
-import TxConfirmPay from "./TxConfirmPay"
+import TxConfirm from "./TxConfirm"
 import TxBroadcastMsg from "../Balances/TxBroadcastMsg"
 import MsgBadgeError from "./MsgBadgeError"
 import MsgBadgeSuccess from "./MsgBadgeSuccess"
@@ -133,13 +133,13 @@ class Profile extends Component {
          */
         try {
 
-            this.props.setState({
+            await this.props.setState({
                 messageUserData: "Waiting for device ...",
             })
 
             await this.props.queryDevice()
 
-            this.props.setState({
+            await this.props.setState({
                 messageUserData: "Preparing transaction ...",
             })
 
@@ -148,9 +148,11 @@ class Profile extends Component {
                 this.props.state.fingerprintUserData
             )
 
-            this.props.showModal("txConfirmProfile")
+            await this.props.setTransaction(tx)
 
-            this.props.setState({ messageUserData: string.empty() })
+            await this.props.showModal("txConfirmProfile")
+
+            await this.props.setState({ messageUserData: string.empty() })
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
@@ -158,28 +160,31 @@ class Profile extends Component {
                 tx
             )
 
-            this.props.showModal("txBroadcast")
+            await this.props.showModal("txBroadcast")
 
             await submitTransaction(signedTx)
 
-            this.props.hideModal()
+            await this.props.hideModal()
 
-            this.props.updateAccountTree(await loadAccount(
+            await this.props.updateAccountTree(await loadAccount(
                 this.props.publicKey
             ))
 
-            this.setState({ loadingUpdateProfile: false })
+            await this.setState({ loadingUpdateProfile: false })
 
-            this.props.surfaceSnacky(
+            await this.props.surfaceSnacky(
                 "success",
                 "User data has been updated."
             )
 
+            await this.props.clearTransaction()
+
         } catch (error) {
-            this.setState({ loadingUpdateProfile: false })
-            this.props.setState({ messageUserData: string.empty() })
-            this.props.hideModal()
-            this.props.surfaceSnacky(
+            await this.props.clearTransaction()
+            await this.setState({ loadingUpdateProfile: false })
+            await this.props.setState({ messageUserData: string.empty() })
+            await this.props.hideModal()
+            await this.props.surfaceSnacky(
                 "warning",
                 "User data updated without signature."
             )
@@ -202,8 +207,8 @@ class Profile extends Component {
          * Update backend with user payment data.
          */
         try {
-            this.setState({ loadingUpdatePaymentAddress: true })
-            this.props.setState({
+            await this.setState({ loadingUpdatePaymentAddress: true })
+            await this.props.setState({
                 messagePaymentData: "Preparing data ...",
             })
 
@@ -224,7 +229,7 @@ class Profile extends Component {
                 memo,
             })
 
-            this.props.setState({
+            await this.props.setState({
                 paymentAddress: federationIsAliasOnly(
                     this.props.state.paymentAddress
                 ) ? `${this.props.state.paymentAddress}*${appTLD}` :
@@ -234,13 +239,13 @@ class Profile extends Component {
         } catch (error) {
 
             if (error.response.data) {
-                this.props.surfaceSnacky("error", error.response.data.error)
+                await this.props.surfaceSnacky("error", error.response.data.error)
             } else {
-                this.props.surfaceSnacky("error", error.message)
+                await this.props.surfaceSnacky("error", error.message)
             }
 
-            this.setState({ loadingUpdatePaymentAddress: false })
-            this.props.setState({ messagePaymentData: string.empty() })
+            await this.setState({ loadingUpdatePaymentAddress: false })
+            await this.props.setState({ messagePaymentData: string.empty() })
 
             return
 
@@ -252,13 +257,13 @@ class Profile extends Component {
          */
         try {
 
-            this.props.setState({
+            await this.props.setState({
                 messagePaymentData: "Waiting for device ...",
             })
 
             await this.props.queryDevice()
 
-            this.props.setState({
+            await this.props.setState({
                 messagePaymentData: "Preparing transaction ...",
             })
 
@@ -267,9 +272,13 @@ class Profile extends Component {
                 this.props.state.fingerprintPaymentData
             )
 
-            this.props.showModal("txConfirmPay")
+            await this.props.setTransaction(tx)
 
-            this.props.setState({ messagePaymentData: string.empty() })
+            await this.props.showModal("txConfirmPay")
+
+            await this.props.setState({ messagePaymentData: string.empty() })
+
+
 
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
@@ -277,27 +286,31 @@ class Profile extends Component {
                 tx
             )
 
-            this.props.showModal("txBroadcast")
+            await this.props.showModal("txBroadcast")
 
             await submitTransaction(signedTx)
 
-            this.props.hideModal()
+            await this.props.hideModal()
 
-            this.props.updateAccountTree(await loadAccount(
+            await this.props.updateAccountTree(await loadAccount(
                 this.props.publicKey
             ))
-            this.setState({ loadingUpdatePaymentAddress: false })
 
-            this.props.surfaceSnacky(
+            await this.setState({ loadingUpdatePaymentAddress: false })
+
+            await this.props.clearTransaction()
+
+            await this.props.surfaceSnacky(
                 "success",
                 "Payment data has been updated."
             )
 
         } catch (error) {
-            this.setState({ loadingUpdatePaymentAddress: false })
-            this.props.setState({ messagePaymentData: string.empty() })
-            this.props.hideModal()
-            this.props.surfaceSnacky(
+            await this.props.clearTransaction()
+            await this.setState({ loadingUpdatePaymentAddress: false })
+            await this.props.setState({ messagePaymentData: string.empty() })
+            await this.props.hideModal()
+            await this.props.surfaceSnacky(
                 "warning",
                 "Payment data updated without signature."
             )
@@ -383,22 +396,15 @@ class Profile extends Component {
         <Fragment>
             <Modal
                 open={
-                    this.props.Modal.modalId === "txConfirmProfile" &&
+                    (this.props.Modal.modalId === "txConfirmProfile" ||
+                    this.props.Modal.modalId === "txConfirmPay") &&
                     this.props.Modal.visible
                 }
-                title="Confirm on Hardware Device"
             >
-                <TxConfirmProfile />
-            </Modal>
-
-            <Modal
-                open={
-                    this.props.Modal.modalId === "txConfirmPay" &&
-                    this.props.Modal.visible
-                }
-                title="Confirm on Hardware Device"
-            >
-                <TxConfirmPay />
+                <TxConfirm
+                    data={this.props.Modal.modalId === "txConfirmProfile" ?
+                        "idSig" : "paySig"}
+                />
             </Modal>
 
             <Modal
@@ -640,5 +646,7 @@ export default connect(
         updateAccountTree: StellarAccountAction.updateAccountAttributes,
         surfaceSnacky,
         queryDevice,
+        setTransaction: TransactionAction.setTransaction,
+        clearTransaction: TransactionAction.clearTransaction,
     }, dispatch)
 )(Profile)
