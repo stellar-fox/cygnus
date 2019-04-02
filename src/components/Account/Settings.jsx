@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import {
     bindActionCreators,
@@ -88,11 +88,10 @@ class Settings extends Component {
                 .then((_) => {
                     this.props.surfaceSnacky(
                         "success",
-                        <Typography variant="body1" color="primary">
-                            Currency has been changed to <span className="em">
-                                {currency.toUpperCase()}
-                            </span>
-                        </Typography>
+                        <Fragment>Currency has been changed to <span className="em">
+                            {currency.toUpperCase()}
+                        </span></Fragment>
+
                     )
                 })
                 .catch((error) => {
@@ -102,11 +101,9 @@ class Settings extends Component {
         } else {
             this.props.surfaceSnacky(
                 "success",
-                <Typography variant="body1" color="primary">
-                    Currency has been changed to <span className="em">
-                        {currency.toUpperCase()}
-                    </span>
-                </Typography>
+                <Fragment>Currency has been changed to <span className="em">
+                    {currency.toUpperCase()}
+                </span></Fragment>
             )
         }
 
@@ -127,20 +124,23 @@ class Settings extends Component {
                 .then((_) => {
                     this.props.setState({ discoverable: isInputChecked })
 
-                    this.props.surfaceSnacky(
-                        "success",
-                        isInputChecked ?
-                            <Typography variant="body1" color="primary">
+                    isInputChecked ?
+                        this.props.surfaceSnacky(
+                            "success",
+                            <Fragment>
                                 Account is now <span className="em">
                                     discoverable
                                 </span>.
-                            </Typography> :
-                            <Typography variant="body1" color="primary">
+                            </Fragment>
+                        ) :
+                        this.props.surfaceSnacky(
+                            "warning",
+                            <Fragment>
                                 Account is now <span className="em">
                                     hidden
                                 </span> from public search.
-                            </Typography>
-                    )
+                            </Fragment>
+                        )
 
                 })
                 .catch((error) => this.props.showAlert(error.message, "Error"))

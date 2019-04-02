@@ -4,7 +4,10 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
 import { action as SnackyActions } from "../../redux/Snacky"
-import { Snackbar } from "@material-ui/core"
+import {
+    Snackbar,
+    Typography,
+} from "@material-ui/core"
 import { string } from "@xcmats/js-toolbox"
 
 
@@ -14,11 +17,13 @@ import { string } from "@xcmats/js-toolbox"
 export default compose(
     withStyles((theme) => ({
         success: {
-            backgroundColor: theme.palette.secondary.light,
+            backgroundColor: theme.palette.success,
+            color: theme.palette.antiFlashWhite,
             padding: "0px 15px",
         },
         warning: {
-            backgroundColor: "#FF8C42",
+            backgroundColor: theme.palette.secondary.light,
+            color: theme.palette.primary.light,
             padding: "0px 15px",
         },
         error: {
@@ -78,7 +83,9 @@ export default compose(
                         "aria-describedby": "message-id",
                         classes: { root: classes[color] },
                     }}
-                    message={message}
+                    message={<Typography variant="body1" color="inherit">
+                        {message}
+                    </Typography>}
                 />
         )(this.props)
 
