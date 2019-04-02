@@ -27,14 +27,16 @@ class RegisterCard extends Component {
             <CardActions>
                 <div className="flex-box-row space-between items-centered">
                     <Typography
-                        style={{ fontSize: "0.8rem", paddingLeft: "0.5rem" }}
+                        style={{ fontSize: "0.9rem", paddingLeft: "0.5rem", fontWeight: 600 }}
                         color="secondary"
                     >
-                        Hi there, please consider <Link to="#">
-                        signing up</Link> for an account with our service.
-                        Find out more about <Link to="#">benefits</Link> of
-                        registering with our service. Registering with our
-                        service is free.
+                        Consider <Link target="_blank"
+                            rel="noopener noreferrer" to="/signup"
+                        >signing up</Link> for a user account with our service
+                        and get convenience and security out of the box.
+                        Read about the <Link target="_blank"
+                            rel="noopener noreferrer" to="/features"
+                        >benefits</Link> of having a user account.
                     </Typography>
                     <IconButton onClick={this.dismiss} aria-label="Delete">
                         <ClearIcon fontSize="small" />
