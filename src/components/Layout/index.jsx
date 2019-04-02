@@ -24,8 +24,10 @@ import Faq from "../StellarFox/Faq"
 import Features from "../Welcome/Features"
 import LoginView from "../LoginView"
 import Pgp from "../StellarFox/Pgp"
+import Prices from "../StellarFox/Prices"
 import Privacy from "../StellarFox/Privacy"
 import SignupView from "../SignupView"
+import Support from "../StellarFox/Support"
 import Terms from "../StellarFox/Terms"
 import Welcome from "../Welcome"
 import Why from "../Welcome/Why"
@@ -80,6 +82,8 @@ export default compose(
                 "Faq": this.rr("faq/"),
                 "Pgp": this.rr("pgp/"),
                 "Features": this.rr("features/"),
+                "Prices": this.rr("prices/"),
+                "Support": this.rr("support/"),
             })
         }
 
@@ -136,10 +140,7 @@ export default compose(
 
 
         // ...
-        renderWhyView = (routeProps) =>
-            !this.props.loggedIn ?
-                <Why {...routeProps} /> :
-                <Redirect to={this.props.staticRouter.getPath("Bank")} />
+        renderWhyView = (routeProps) => <Why {...routeProps} />
 
 
         // ...
@@ -160,6 +161,14 @@ export default compose(
 
         // ...
         renderFeatures = (routeProps) => <Features {...routeProps} />
+
+
+        // ...
+        renderPrices = (routeProps) => <Prices {...routeProps} />
+
+
+        // ...
+        renderSupport = (routeProps) => <Support {...routeProps} />
 
 
         // ...
@@ -198,6 +207,12 @@ export default compose(
                         </Route>
                         <Route path={getPath("Features")}>
                             {this.renderFeatures}
+                        </Route>
+                        <Route path={getPath("Prices")}>
+                            {this.renderPrices}
+                        </Route>
+                        <Route path={getPath("Support")}>
+                            {this.renderSupport}
                         </Route>
                         <Redirect to={getPath("Welcome")} />
                     </Switch>

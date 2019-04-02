@@ -17,7 +17,7 @@ import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMe
 /**
  * Cygnus.
  *
- * Renders stand-alone Pgp view.
+ * Renders stand-alone Support view.
  *
  * @module client-ui-components
  * @license Apache-2.0
@@ -27,12 +27,12 @@ import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMe
 
 
 /**
- * `<Pgp>` component.
+ * `<Support>` component.
  *
- * @function Pgp
+ * @function Support
  * @returns {React.ReactElement}
  */
-const Pgp = ({ classes }) => {
+const Support = ({ classes }) => {
     const isMobile = useMediaQuery("(max-width:960px)")
 
     return <Fragment>
@@ -53,11 +53,11 @@ const Pgp = ({ classes }) => {
                                 lineHeight: isMobile ? "0.5rem" : "3rem",
                             }}
                         >
-                            PGP Key
+                            Support
                         </span>
                     </Typography>
                     <Typography variant="body2" color="secondary">
-                        Support
+                        Contact Us
                     </Typography>
 
 
@@ -69,22 +69,18 @@ const Pgp = ({ classes }) => {
                             lineHeight: "2rem",
                         }}
                     >
-                        We use PGP (Pretty Good Privacy) data encryption
-                        and Keybase.io for providing privacy and authentication
-                        of our communication with you. We strongly advise you
-                        use this encryption tool or Keybase.io to ensure a
-                        secure delivery of your messages. To download our
-                        public PGP encryption key please follow the link to
-                        our <Link
+                        If you have any issues, comments or need help please
+                        write us at <Link
                             target="_blank"
                             rel="noopener noreferrer"
                             href="/pgp.txt"
                             underline="none"
                             color="secondary"
                         >
-                        PGP Key
+                        contact@stellarfox.net
                         </Link>.
                     </Typography>
+
 
 
 
@@ -118,4 +114,4 @@ export default func.compose(
         (_state) => ({}),
         (dispatch) => bindActionCreators({}, dispatch),
     ),
-)(Pgp)
+)(Support)

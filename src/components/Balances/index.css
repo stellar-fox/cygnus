@@ -226,3 +226,11 @@
     padding: 1px 5px;
     color: rgba(15,46,83,0.8);
 }
+
+.tuple-secondary {
+    margin: 2px 0px;
+    border: 1px solid rgba(246, 190, 49, 0.3);
+    border-radius: 2px;
+    padding: 1px 5px;
+    color: rgba(246, 190, 49, 0.75);
+}
