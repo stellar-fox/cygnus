@@ -21,6 +21,7 @@ import { firebaseApp } from "../../components/StellarFox"
 import { action as AuthAction } from "../../redux/Auth"
 import AlertModal from "./AlertModal"
 import Faq from "../StellarFox/Faq"
+import Features from "../Welcome/Features"
 import LoginView from "../LoginView"
 import Pgp from "../StellarFox/Pgp"
 import Privacy from "../StellarFox/Privacy"
@@ -78,6 +79,7 @@ export default compose(
                 "Privacy": this.rr("privacy/"),
                 "Faq": this.rr("faq/"),
                 "Pgp": this.rr("pgp/"),
+                "Features": this.rr("features/"),
             })
         }
 
@@ -157,6 +159,10 @@ export default compose(
 
 
         // ...
+        renderFeatures = (routeProps) => <Features {...routeProps} />
+
+
+        // ...
         render = () => (
             (getPath) =>
                 <Fragment>
@@ -189,6 +195,9 @@ export default compose(
                         </Route>
                         <Route path={getPath("Pgp")}>
                             {this.renderPgp}
+                        </Route>
+                        <Route path={getPath("Features")}>
+                            {this.renderFeatures}
                         </Route>
                         <Redirect to={getPath("Welcome")} />
                     </Switch>
