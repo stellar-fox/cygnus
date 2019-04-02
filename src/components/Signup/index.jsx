@@ -17,7 +17,10 @@ import { withStyles } from "@material-ui/core/styles"
 import ledgerhqlogo from "../Welcome/static/ledgerhqlogo.svg"
 import Panel from "../../lib/mui-v1/Panel"
 import LedgerAuthenticator from "../LedgerAuthenticator"
-import { ledgerSupportLink } from "../StellarFox/env"
+import {
+    ledgerDocsInfiniteTreeLink,
+    ledgerSupportLink,
+} from "../StellarFox/env"
 import { LinearProgress } from "@material-ui/core"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
@@ -123,11 +126,21 @@ const ManualEntryForm = func.compose(
         <CredentialsForm accountId={accountId} account={account} /> :
         <div style={{ minHeight: "350px" }}>
             <div className="m-t-small panel-title">
-                Please provide your Account ID.
+                Provide your Account ID.
             </div>
             <Typography align="center" variant="caption" color="secondary">
                 Your <em>Account ID</em> has 56 characters and
                 starts with a letter "G".
+            </Typography>
+            <Typography align="center" variant="caption" color="secondary">
+                <em>Account</em> is the path number for accessing it on your
+                Ledger device.
+            </Typography>
+            <Typography align="center" variant="caption" color="secondary">
+                Need help? <a target="_blank"
+                    rel="noopener noreferrer"
+                    href={ledgerDocsInfiniteTreeLink}
+                >Read the Ledger docs</a>.
             </Typography>
             <div className="flex-box-col items-centered content-centered">
                 <InputField
@@ -280,6 +293,12 @@ const Signup = ({ classes, clearInputErrorMessages }) => {
                             >
                                 Connect your Ledger Nano S device and
                                 select <i>Stellar</i> application.
+                            </Typography>
+                            <Typography
+                                align="center"
+                                variant="caption"
+                                color="secondary"
+                            >
                                 Need help? Visit <a target="_blank"
                                     rel="noopener noreferrer"
                                     href={ledgerSupportLink}

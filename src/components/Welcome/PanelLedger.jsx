@@ -34,12 +34,18 @@ class PanelLedger extends Component {
         <Panel title="Login with Ledger Nano S">
             <div style={{ minHeight: "310px" }}>
                 <div className="m-t-small panel-title">
-                    Use the light-weight client to transact
-                    by using your hardware key ring.
+                    Use the light-weight client to sign
+                    transactions with your hardware key ring.
                 </div>
                 <Typography align="center" variant="caption" color="secondary">
-                    Connect your Ledger Nano S device and select <i>Stellar</i> application.
-                    Need help? Visit <a target="_blank" rel="noopener noreferrer" href={ledgerSupportLink}>
+                    Connect your Ledger Nano S device and
+                    select <i>Stellar</i> application.
+                </Typography>
+                <Typography align="center" variant="caption" color="secondary">
+                    Need help? Visit <a target="_blank"
+                        rel="noopener noreferrer"
+                        href={ledgerSupportLink}
+                    >
                         Ledger Support
                     </a>.
                 </Typography>
@@ -50,6 +56,8 @@ class PanelLedger extends Component {
             </div>
         </Panel>
 }
+
+
 
 
 // ...

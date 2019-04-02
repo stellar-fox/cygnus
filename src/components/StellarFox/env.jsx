@@ -119,6 +119,13 @@ export const ledgerSupportLink =
 
 
 // ...
+export const ledgerDocsInfiniteTreeLink =
+    "https://ledger.readthedocs.io/en/latest/background/hd_keys.html#an-infinite-tree"
+
+
+
+
+// ...
 export const TopBarSecurityMessage = () => {
     const isMobile = useMediaQuery("(max-width:960px)")
 
