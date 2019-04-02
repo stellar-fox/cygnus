@@ -70,7 +70,10 @@ const AboutContent = ({ classes }) => {
                     href="mailto:contact@stellarfox.net?subject=[WEB:Cygnus]"
                     underline="none" color="secondary"
                 >
-                    <span className="fade-strong about-content-item">
+                    <span
+                        style={{ whiteSpace: "nowrap" }}
+                        className="fade-strong about-content-item"
+                    >
                         Send us an Email
                     </span>
                 </MuiLink>
@@ -78,7 +81,10 @@ const AboutContent = ({ classes }) => {
                     href="https://twitter.com/StellarFoxNet" underline="none"
                     color="secondary"
                 >
-                    <span className="fade-strong about-content-item">
+                    <span
+                        className="fade-strong about-content-item"
+                        style={{ whiteSpace: "nowrap" }}
+                    >
                         Tweet at us!
                     </span>
                 </MuiLink>
