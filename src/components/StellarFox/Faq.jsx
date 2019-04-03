@@ -3,7 +3,10 @@ import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { func } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
-import { Typography } from "@material-ui/core"
+import {
+    Link,
+    Typography,
+} from "@material-ui/core"
 import AboutContent from "../Welcome/AboutContent"
 import TopHeadingContent from "../Welcome/TopHeadingContent"
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
@@ -57,7 +60,24 @@ const Faq = ({ classes }) => {
                         Support
                     </Typography>
 
-
+                    <Typography
+                        variant="body1"
+                        style={{
+                            marginTop:  "1rem",
+                            color: "#c0c8d1",
+                            lineHeight: "2rem",
+                        }}
+                    >
+                        Visit our <Link
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://github.com/stellar-fox/cygnus/wiki"
+                            underline="none"
+                            color="secondary"
+                        >
+                        wiki page
+                        </Link> to get your answers.
+                    </Typography>
 
 
                 </div>
