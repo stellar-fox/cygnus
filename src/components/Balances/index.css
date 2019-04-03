@@ -134,11 +134,8 @@
 
 .ledger-nano-s {
     color: #1b5e20;
-    display: block;
     font-family: "Ledger Font";
-    font-size: 3.5rem;
-    transform: rotate(90deg);
-    transform-origin: 17px 21px;
+    font-size: 40px;
 }
 
 .ledger-nano-s::before { content: "\e900"; }

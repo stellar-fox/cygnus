@@ -3,10 +3,11 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { rgb } from "../../lib/utils"
 import { withStyles } from "@material-ui/core/styles"
-
+import { fade } from "@material-ui/core/styles/colorManipulator"
+import { Typography } from "@material-ui/core"
 import {
     appCodeName,
-    liveNetAddr,
+    testNetAddr,
 } from "../StellarFox/env"
 import cygnusBlue from "../StellarFox/static/cygnusBlue.svg"
 
@@ -18,28 +19,21 @@ export default compose(
     withStyles((theme) => ({
 
         appBarTitle: {
-            float: "left",
             color: rgb(15, 46, 83),
             fontWeight: "normal",
         },
 
         barTitle: {
-            lineHeight: "45px",
-            fontSize: "1.3rem",
             color: theme.palette.primary.other,
         },
 
         barSubtitle: {
+            position: "relative",
+            top: 3,
+            left: 50,
             lineHeight: "5px",
-            fontSize: "15px",
-        },
-
-        indicatorSetCol: {
-            float: "left",
-            lineHeight: "15px",
-            padding: "10px 0px",
-            marginLeft: "16px",
-            fontSize: "14px",
+            fontSize: "12px",
+            color: fade(theme.palette.primary.other, 0.8),
         },
 
     })),
@@ -52,36 +46,37 @@ export default compose(
     )
 )(
     ({ classes, horizon, ledgerConnected, viewName }) =>
-        <div>
-            <div className={classes.appBarTitle}>
-                <div className={classes.barTitle}>
-                    {appCodeName}<img
+        <div className="flex-box-row items-centered">
+            <div className="flex-box-col">
+                <div className={`flex-box-row ${classes.barTitle}`}>
+                    <Typography variant="h3" color="inherit">
+                        {appCodeName}
+                    </Typography>
+                    <img
                         src={cygnusBlue}
                         width="25px"
                         height="25px"
                         alt="Cygnus"
+                        style={{ position: "relative", top: -7, left: -2 }}
                     />
                 </div>
-
                 <div className={classes.barSubtitle}>{viewName}</div>
             </div>
-            <div className={classes.indicatorSetCol}>
-                <div
-                    className={
-                        horizon === liveNetAddr ?
-                            "badge-success" : "border-error glass-error glass-error-text"
-                    }
-                >
-                    { horizon === liveNetAddr ? "Public Net" : "Test Net" }
+
+            { ledgerConnected &&
+                <div style={{ marginLeft: "10px"}} className="ledger-nano-s">
                 </div>
-                <div className="p-b-small" />
-                <div>
-                    {
-                        ledgerConnected ?
-                            <span className="ledger-nano-s"></span> :
-                            <span>&nbsp;</span>
-                    }
-                </div>
+            }
+
+            { horizon === testNetAddr &&
+            <div
+                style= {{ marginLeft: "10px" }}
+                className={"border-error glass-error glass-error-text"}
+            >
+                Test Net
             </div>
+            }
+
         </div>
+
 )
