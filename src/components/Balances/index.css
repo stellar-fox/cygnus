@@ -133,7 +133,7 @@
 }
 
 .ledger-nano-s {
-    color: #1b5e20;
+    color: rgb(46, 80, 119);
     font-family: "Ledger Font";
     font-size: 40px;
 }
