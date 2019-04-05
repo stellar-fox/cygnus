@@ -272,11 +272,19 @@ export const signUpNewUser = (accountId, account, email, password) =>
 
             await firebaseApp.auth("session").currentUser.sendEmailVerification()
 
+            // sign user in after signup is completed
+            await dispatch(await doBackendSignIn(email, password))
+
         } catch (error) {
 
             // delete Firebase user.
             if (user) {
                 await firebaseApp.auth("session").currentUser.delete()
+            } else {
+                await dispatch(setError(error))
+                await dispatch(await ProgressActions.resetState())
+                await dispatch(await AuthActions.toggleSignupProgress(false))
+                return
             }
 
             // clear backend data
@@ -307,17 +315,16 @@ export const signUpNewUser = (accountId, account, email, password) =>
 
         } catch (error) {
 
-            await dispatch(await surfaceSnacky("error", error.message))
+            // eslint-disable-next-line no-console
+            console.log("Could not add email to subscription list.")
 
         } finally {
 
             await dispatch(await ProgressActions.toggleProgress(
-                "signup", string.empty()
+                "signup",
+                string.empty()
             ))
             await dispatch(AuthActions.setSignupComplete())
-
-            // sign user in after signup is completed
-            await dispatch(await doBackendSignIn(email, password))
             await dispatch(await AuthActions.toggleSignupProgress(false))
 
         }

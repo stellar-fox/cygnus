@@ -76,13 +76,13 @@ const CredentialsForm = func.compose(
             <Typography align="center" variant="caption" color="secondary">
                 Signing up with Account ID:
             </Typography>
-            <div className="m-t-small panel-title">
+            <div className="panel-title">
                 {shorten(props.accountId, 11, shorten.MIDDLE, "-")}
             </div>
             <Typography align="center" variant="caption" color="secondary">
                 Account:
             </Typography>
-            <div className="m-t-small panel-title">
+            <div className="panel-title">
                 {props.account}
             </div>
         </Fragment>}
