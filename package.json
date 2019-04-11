@@ -114,5 +114,5 @@
         "start": "cross-env BROWSER=none react-scripts start",
         "test": "react-scripts test --env=jsdom"
     },
-    "version": "0.1.54"
+    "version": "0.1.55"
 }
