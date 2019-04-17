@@ -18,4 +18,7 @@ export const config = {
         avatar: "https://example.com/.well-known/logo.png",
         type: "asset_type_string",
     },
+    reCaptchaV2: {
+        siteKey: "<Your client site key>",
+    },
 }
