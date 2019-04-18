@@ -238,6 +238,7 @@ export const sendPasswordResetLink = (email) =>
             ))
         } catch (error) {
             await dispatch(setError(error))
+            return Promise.reject(error)
         }
     }
 
