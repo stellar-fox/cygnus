@@ -26,7 +26,15 @@ export default connect(
             </div>
             <CredentialsForm account="" accountId="" />
             <Typography
-                style={{ marginTop: "1rem" }}
+                align="center"
+                variant="caption"
+                color="secondary"
+            >
+                <span>
+                    <b><Link to="/reset">Forgot password?</Link></b>
+                </span>
+            </Typography>
+            <Typography
                 align="center"
                 variant="caption"
                 color="secondary"
@@ -35,6 +43,7 @@ export default connect(
                     <b><Link to="/signup">Sign up!</Link></b>
                 </span>
             </Typography>
+
         </div>
     </Panel>
 })

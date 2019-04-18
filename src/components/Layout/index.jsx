@@ -19,6 +19,7 @@ import {
 import { Null } from "../../lib/utils"
 import { firebaseApp } from "../../components/StellarFox"
 import { action as AuthAction } from "../../redux/Auth"
+import Action from "../StellarFox/Action"
 import AlertModal from "./AlertModal"
 import Faq from "../StellarFox/Faq"
 import Features from "../Welcome/Features"
@@ -26,6 +27,7 @@ import LoginView from "../LoginView"
 import Pgp from "../StellarFox/Pgp"
 import Prices from "../StellarFox/Prices"
 import Privacy from "../StellarFox/Privacy"
+import Reset from "../StellarFox/Reset"
 import SignupView from "../SignupView"
 import Support from "../StellarFox/Support"
 import Terms from "../StellarFox/Terms"
@@ -33,6 +35,7 @@ import Welcome from "../Welcome"
 import Why from "../Welcome/Why"
 import "./index.css"
 import Snacky from "../../lib/mui-v1/Snacky"
+import { clearInputErrorMessages } from "../../thunks/users"
 
 
 
@@ -49,6 +52,7 @@ export default compose(
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
+            clearInputErrorMessages,
             setAuthState: AuthAction.setState,
         }, dispatch)
     )
@@ -73,6 +77,7 @@ export default compose(
             // static paths
             this.props.staticRouter.addPaths({
                 "Welcome": this.rr("."),
+                "Action": this.rr("action/"),
                 "Bank": this.rr("bank/"),
                 "LoginView": this.rr("login/"),
                 "SignupView" : this.rr("signup/"),
@@ -83,6 +88,7 @@ export default compose(
                 "Pgp": this.rr("pgp/"),
                 "Features": this.rr("features/"),
                 "Prices": this.rr("prices/"),
+                "Reset": this.rr("reset/"),
                 "Support": this.rr("support/"),
             })
         }
@@ -116,6 +122,9 @@ export default compose(
             !this.props.loggedIn ?
                 <Welcome {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
+
+        // ...
+        renderAction = (routeProps) => <Action {...routeProps} />
 
 
         // ...
@@ -168,6 +177,13 @@ export default compose(
 
 
         // ...
+        renderReset = (routeProps) => {
+            this.props.clearInputErrorMessages()
+            return <Reset {...routeProps} />
+        }
+
+
+        // ...
         renderSupport = (routeProps) => <Support {...routeProps} />
 
 
@@ -180,6 +196,9 @@ export default compose(
                     <Switch>
                         <Route exact path={getPath("Welcome")}>
                             { this.renderWelcome }
+                        </Route>
+                        <Route path={getPath("Action")}>
+                            { this.renderAction }
                         </Route>
                         <Route path={getPath("Bank")}>
                             { this.renderBank }
@@ -210,6 +229,9 @@ export default compose(
                         </Route>
                         <Route path={getPath("Prices")}>
                             {this.renderPrices}
+                        </Route>
+                        <Route path={getPath("Reset")}>
+                            {this.renderReset}
                         </Route>
                         <Route path={getPath("Support")}>
                             {this.renderSupport}

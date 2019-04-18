@@ -42,6 +42,7 @@
         "material-ui": "^0.20.2",
         "number-to-text": "^0.3.8",
         "prop-types": "^15.7.2",
+        "query-string": "^6.4.2",
         "raf": "^3.4.1",
         "react": "^16.8.6",
         "react-animated-css": "^1.0.5",

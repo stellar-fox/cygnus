@@ -220,6 +220,71 @@ export const clearInputErrorMessages = () =>
 
 
 /**
+ * Sends password reset link to given email.
+ *
+ * @function sendPasswordResetLink
+ * @param {String} email User email.
+ * @returns {Function} Thunk action.
+ *
+*/
+export const sendPasswordResetLink = (email) =>
+    async (dispatch, _getState) => {
+        await dispatch(await ErrorsActions.clearEmailInputError())
+        try {
+            await firebaseApp.auth().sendPasswordResetEmail(email)
+            await dispatch(await surfaceSnacky(
+                "success",
+                "Password reset link sent. Please check your email."
+            ))
+        } catch (error) {
+            await dispatch(setError(error))
+        }
+    }
+
+
+
+
+/**
+ * Validates password reset link.
+ *
+ * @function validateLink
+ * @param {String} actionCode Firebase generated action code.
+ * @returns {Function} Thunk action.
+ *
+*/
+export const validateLink = (actionCode) =>
+    async (_dispatch, _getState) => (
+        await firebaseApp.auth().verifyPasswordResetCode(actionCode)
+    )
+
+
+
+
+/**
+ * Updates user password in Firebase and backend.
+ *
+ * @function updatePassword
+ * @param {String} actionCode Firebase generated action code.
+ * @param {String} email
+ * @param {String} password
+ * @returns {Function} Thunk action.
+ *
+*/
+export const updatePassword = (actionCode, email, password) =>
+    async (_dispatch, _getState) => {
+        await firebaseApp.auth().confirmPasswordReset(actionCode, password)
+        await Axios.post(
+            `${config.apiV2}/user/update-password/`, {
+                email,
+                password,
+            }
+        )
+    }
+
+
+
+
+/**
  * Signs up a new user via _Firebase_
  *
  * @function signUpNewUser
@@ -343,6 +408,12 @@ export const signUpNewUser = (accountId, account, email, password) =>
  */
 export const setError = (error) =>
     async (dispatch, _getState) => {
+
+        if (error.code === "auth/argument-error") {
+            await dispatch(ErrorsActions.setEmailInputError("Please enter valid email."))
+            return
+        }
+
         if (error.code === "auth/invalid-email") {
             await dispatch(ErrorsActions.setEmailInputError(error.message))
             return
