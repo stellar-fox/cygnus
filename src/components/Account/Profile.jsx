@@ -197,7 +197,7 @@ class Profile extends Component {
 
         if (!this.props.emailVerified) {
             this.props.surfaceSnacky(
-                "warning",
+                "error",
                 "Please verify your email address first."
             )
             return
