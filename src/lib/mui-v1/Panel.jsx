@@ -1,5 +1,4 @@
 import React from "react"
-
 import { withStyles } from "@material-ui/core/styles"
 
 
@@ -23,7 +22,7 @@ export default withStyles({
     title: {
         margin: "3px 5px 3px 15px",
         color: "rgba(15, 46, 83, 1.0)",
-        fontSize: "1.2em",
+        fontSize: "1rem",
         textAlign: "left",
     },
 
@@ -33,8 +32,8 @@ export default withStyles({
     },
 
 })(
-    ({ children, classes, title }) =>
-        <article className={classes.root}>
+    ({ children, classes, style, title }) =>
+        <article style={style} className={classes.root}>
             <div className={classes.header}>
                 <p className={classes.title}>{ title }</p>
             </div>

@@ -17,6 +17,7 @@ import { string } from "@xcmats/js-toolbox"
 import InputField from "../../lib/mui-v1/InputField"
 import Button from "../../lib/mui-v1/Button"
 import StatusMessage from "../StatusMessage"
+import { Link } from "react-router-dom"
 
 
 
@@ -249,7 +250,9 @@ export default compose(
                         variant="h5"
                         color="secondary"
                     >
-                        You can now sign in with new password.
+                        You can now <Link target="_blank"
+                            rel="noopener noreferrer" to="/login"
+                        >sign in</Link> with new password.
                     </Typography>
                 </Grid>
                 }
