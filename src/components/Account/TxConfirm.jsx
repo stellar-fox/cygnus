@@ -2,7 +2,11 @@ import React, { Fragment } from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
-import { func } from "@xcmats/js-toolbox"
+import {
+    func,
+    handleException,
+    string,
+} from "@xcmats/js-toolbox"
 import {
     Divider,
     Typography,
@@ -12,10 +16,6 @@ import {
     nextSequenceNumber,
 } from "../../lib/utils"
 import { liveNetAddr } from "../StellarFox/env"
-import {
-    handleException,
-    string,
-} from "@xcmats/js-toolbox"
 
 
 
