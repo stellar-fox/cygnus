@@ -17,6 +17,8 @@ import Button from "../../lib/mui-v1/Button"
 import Switch from "../../lib/mui-v1/Switch"
 import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { queryDevice } from "../../thunks/ledgerhq"
+import { signOutFirebaseUser } from "../../thunks/users"
+
 
 
 
@@ -40,6 +42,9 @@ class LedgerAuthenticator extends Component {
 
     // ...
     initQueryDevice = async () => {
+
+        await this.props.signOutFirebaseUser()
+
         let bip32Path = this.formBip32Path(),
             softwareVersion = null,
             publicKey = null
@@ -247,6 +252,7 @@ export default func.compose(
             setAccount: LedgerHQAction.setBip32Path,
             resetLedgerState: LedgerHQAction.resetState,
             queryDevice,
+            signOutFirebaseUser,
         }, dispatch)
     ),
 )(LedgerAuthenticator)
