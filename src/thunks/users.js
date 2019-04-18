@@ -48,6 +48,22 @@ import {
 
 
 /**
+ * Signs out current user if present in Firebase auth object.
+ *
+ * @function signOutFirebaseUser
+ * @returns {Function} thunk action
+ */
+export const signOutFirebaseUser = () =>
+    async (_dispatch, _getState) => {
+        if (firebaseApp.auth("session").currentUser) {
+            await firebaseApp.auth("session").signOut()
+        }
+    }
+
+
+
+
+/**
  * Helper thunk action authenticates user on the backend and sets login
  * related Redux tree keys.
  *
@@ -122,6 +138,7 @@ export const signIn = (email, password) =>
 export const enterExplorer = (inputValue) =>
     async (dispatch, _getState) => {
 
+        await dispatch(signOutFirebaseUser())
         await dispatch(ErrorsActions.clearOtherError())
 
         try {
@@ -255,7 +272,23 @@ export const sendPasswordResetLink = (email) =>
 */
 export const validateLink = (actionCode) =>
     async (_dispatch, _getState) => (
-        await firebaseApp.auth().verifyPasswordResetCode(actionCode)
+        await firebaseApp.auth("session").verifyPasswordResetCode(actionCode)
+    )
+
+
+
+
+/**
+ * Applies action code from the email verification link.
+ *
+ * @function processActionCode
+ * @param {String} actionCode Firebase generated action code.
+ * @returns {Function} Thunk action.
+ *
+*/
+export const processActionCode = (actionCode) =>
+    async (_dispatch, _getState) => (
+        await firebaseApp.auth("session").applyActionCode(actionCode)
     )
 
 
@@ -298,6 +331,7 @@ export const updatePassword = (actionCode, email, password) =>
 export const signUpNewUser = (accountId, account, email, password) =>
     async (dispatch, getState) => {
 
+        await dispatch(signOutFirebaseUser())
         await dispatch(await clearInputErrorMessages())
         await dispatch(await AuthActions.toggleSignupProgress(true))
         await dispatch(await ProgressActions.toggleProgress(
