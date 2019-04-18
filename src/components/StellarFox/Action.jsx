@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
 import ActionResetPassword from "./ActionResetPassword"
+import ActionVerifyEmail from "./ActionVerifyEmail"
 import queryString from "query-string"
 import { action as AuthActions } from "../../redux/Auth"
 
@@ -42,9 +43,10 @@ export default compose(
         render = () =>
             <Fragment>
                 {this.qs.mode === "resetPassword" &&
-                    <ActionResetPassword oobCode={this.qs.oobCode}
-                        continueUrl={this.qs.continueUrl}
-                    />
+                    <ActionResetPassword oobCode={this.qs.oobCode} />
+                }
+                {this.qs.mode === "verifyEmail" &&
+                    <ActionVerifyEmail oobCode={this.qs.oobCode} />
                 }
             </Fragment>
     }
