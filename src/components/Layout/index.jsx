@@ -124,7 +124,10 @@ export default compose(
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
 
         // ...
-        renderAction = (routeProps) => <Action {...routeProps} />
+        renderAction = (routeProps) => {
+            this.props.clearInputErrorMessages()
+            return <Action {...routeProps} />
+        }
 
 
         // ...
