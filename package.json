@@ -21,8 +21,8 @@
         }
     ],
     "dependencies": {
-        "@ledgerhq/hw-app-str": "^4.50.0",
-        "@ledgerhq/hw-transport-u2f": "^4.50.0",
+        "@ledgerhq/hw-app-str": "^4.54.0",
+        "@ledgerhq/hw-transport-u2f": "^4.54.0",
         "@material-ui/core": "^3.9.3",
         "@material-ui/icons": "^3.0.2",
         "@material-ui/styles": "^3.0.0-alpha.10",
@@ -33,7 +33,7 @@
         "axios": "^0.18.0",
         "bignumber.js": "^8.1.1",
         "classnames": "^2.2.6",
-        "firebase": "^5.9.3",
+        "firebase": "^5.10.0",
         "fuse.js": "^3.4.4",
         "history": "^4.9.0",
         "hoist-non-react-statics": "^3.3.0",
@@ -62,7 +62,7 @@
         "redux-thunk": "^2.3.0",
         "resolve-pathname": "^3.0.0",
         "sha.js": "^2.4.11",
-        "stellar-sdk": "^0.15.0",
+        "stellar-sdk": "^0.15.3",
         "toml": "^3.0.0",
         "typeface-roboto": "0.0.54"
     },
@@ -72,8 +72,8 @@
         "@types/history": "^4.7.2",
         "@types/jss": "^9.5.8",
         "@types/material-ui": "^0.21.6",
-        "@types/prop-types": "^15.7.0",
-        "@types/react-dom": "^16.8.3",
+        "@types/prop-types": "^15.7.1",
+        "@types/react-dom": "^16.8.4",
         "@types/react-redux": "^6.0.10",
         "@types/react-router-dom": "^4.3.1",
         "@types/react-router-redux": "^5.0.18",
@@ -114,5 +114,5 @@
         "start": "cross-env BROWSER=none react-scripts start",
         "test": "react-scripts test --env=jsdom"
     },
-    "version": "0.1.55"
+    "version": "0.1.56"
 }
