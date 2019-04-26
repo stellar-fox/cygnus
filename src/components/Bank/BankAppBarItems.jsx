@@ -1,4 +1,4 @@
-import React  from "react"
+import React, { memo }  from "react"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { withStyles } from "@material-ui/core/styles"
@@ -18,7 +18,7 @@ import { unknownPubKeyAbbr } from "../StellarFox/env"
 
 
 // <BankAppBarItems> component
-export default compose(
+export default memo(compose(
     withStyles({
 
         accountHomeDomain: { fontVariant: "small-caps" },
@@ -128,4 +128,4 @@ export default compose(
                 </div>
             </div>
         </div>
-)
+))

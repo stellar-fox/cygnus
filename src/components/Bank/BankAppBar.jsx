@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { PureComponent } from "react"
 import PropTypes from "prop-types"
 import {
     bindActionCreators,
@@ -52,7 +52,7 @@ export default compose(
         }, dispatch)
     )
 )(
-    class extends Component {
+    class extends PureComponent {
 
         // ...
         static propTypes = {

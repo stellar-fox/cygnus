@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import { compose } from "redux"
 import { withStyles } from "@material-ui/core/styles"
 import { env } from "../StellarFox"
@@ -11,7 +11,7 @@ import StreamerIndicator from "../StreamerIndicator"
 
 
 // <Footer> component
-export default compose(
+export default memo(compose(
     withStyles({
 
         footer: {
@@ -57,4 +57,4 @@ export default compose(
                 </div>
             </div>
         </div>
-)
+))

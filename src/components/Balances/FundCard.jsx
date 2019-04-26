@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import {
     bindActionCreators,
     compose,
@@ -65,7 +65,7 @@ FundCard.propTypes = {
 
 
 // ...
-export default compose(
+export default memo(compose(
     withStyles({
         actionsRoot: {
             marginLeft: "4px",
@@ -87,4 +87,4 @@ export default compose(
             setState: BalancesAction.setState,
         }, dispatch)
     ),
-)(FundCard)
+)(FundCard))

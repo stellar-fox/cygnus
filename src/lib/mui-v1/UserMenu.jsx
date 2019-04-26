@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { PureComponent, Fragment } from "react"
 import { bindActionCreators, compose } from "redux"
 import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
@@ -25,7 +25,7 @@ const styles = theme => ({
 
 
 // ...
-class UserMenu extends Component {
+class UserMenu extends PureComponent {
 
     state = {
         anchorEl: null,

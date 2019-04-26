@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { rgb } from "../../lib/utils"
@@ -15,7 +15,7 @@ import cygnusBlue from "../StellarFox/static/cygnusBlue.svg"
 
 
 // <BankAppBarTitle> component
-export default compose(
+export default memo(compose(
     withStyles((theme) => ({
 
         appBarTitle: {
@@ -78,5 +78,4 @@ export default compose(
             }
 
         </div>
-
-)
+))
