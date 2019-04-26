@@ -15,7 +15,7 @@ export default withStyles((theme) => ({
         width: 42,
         height: 42,
     },
-    primary: { backgroundColor: theme.palette.primary.main, },
+    primary: { backgroundColor: theme.palette.primary.main },
 
 }))(
     class extends Component {
@@ -26,7 +26,7 @@ export default withStyles((theme) => ({
         }
 
         render = () => (
-            ({ classes, color, src, }) =>
+            ({ classes, color, src }) =>
                 <Avatar
                     classes={{
                         root: classes[color],

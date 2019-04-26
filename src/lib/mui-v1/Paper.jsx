@@ -13,9 +13,9 @@ export default withStyles((theme) => ({
     root: theme.mixins.gutters({
         paddingTop: 5,
         paddingBottom: 5,
-        paddingLeft: "5px !important",
-        paddingRight: "15px !important",
-        borderRadius: "3px",
+        paddingLeft: "10px !important",
+        paddingRight: "10px !important",
+        borderRadius: "2px",
     }),
 
     primaryMaxWidth: {
@@ -33,7 +33,7 @@ export default withStyles((theme) => ({
 
         // ...
         render = () => (
-            ({ children, classes, color, }) =>
+            ({ children, classes, color }) =>
                 <Paper
                     classes={{
                         root: classes[color],

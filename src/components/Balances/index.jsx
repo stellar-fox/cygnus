@@ -55,6 +55,7 @@ import FundCard from "./FundCard"
 import AssetDetails from "./AssetDetails"
 import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
+import AssetGrid from "./AssetGrid"
 import BalanceSummary from "./BalanceSummary"
 import LoadingModal from "../LoadingModal"
 import {
@@ -361,6 +362,11 @@ class Balances extends Component {
                             Balances.payCardVisible &&
                             <PaymentCard onSignTransaction={this.sendPayment} />
                         }
+
+                        {
+                            !this.props.StellarAccount.loading && <AssetGrid />
+                        }
+
 
                     </Fragment>
                 </Route>
