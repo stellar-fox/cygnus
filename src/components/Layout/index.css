@@ -132,6 +132,10 @@ div.p-b-small-block::after {
     line-height: 1.6rem;
 }
 
+.asset-code {
+    font-size: 1rem;
+}
+
 /* --------- fonts / sizes --------- */
 
 

@@ -50,7 +50,7 @@ export default func.compose(
     })),
     connect(
         (state) => ({
-            assets: state.StellarAccount.assets,
+            assets: state.StellarAccount.assets || [],
         }),
         (dispatch) => bindActionCreators({
 

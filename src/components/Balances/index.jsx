@@ -364,7 +364,9 @@ class Balances extends Component {
                         }
 
                         {
-                            !this.props.StellarAccount.loading && <AssetGrid />
+                            !this.props.StellarAccount.loading &&
+                            this.props.StellarAccount.assets &&
+                            <AssetGrid />
                         }
 
 

@@ -13,6 +13,7 @@ import {
 import Avatar from "../../lib/mui-v1/Avatar"
 import Paper from "../../lib/mui-v1/Paper"
 import Trianglify from "trianglify"
+import NumberFormat from "react-number-format"
 
 
 
@@ -36,6 +37,7 @@ const makePattern = (seed) => {
         width: 300,
         cell_size: 30,
         variance: 1,
+        stroke_width: 0,
         seed,
     })
     return pattern.png()
@@ -54,6 +56,7 @@ const Asset = ({ data }) =>
     <Grid item key={`${data.asset_issuer}-${data.asset_code}`} zeroMinWidth>
         <Paper color="secondary" style={{
             background: `url(${makePattern(data.asset_issuer)})`,
+            backgroundSize: "cover",
         }}
         >
             <div className="flex-box-row space-between items-centered">
@@ -61,7 +64,18 @@ const Asset = ({ data }) =>
                 <div className="m-l flex-box-col space-between">
                     <Typography variant="h4">
                         <span className="balance-text">
-                            {data.balance} {data.asset_code}
+                            <NumberFormat
+                                value={data.balance}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                decimalScale={7}
+                                fixedDecimalScale={true}
+                            />
+                        </span>
+                        <span className="asset-code"
+                            style={{marginLeft: "0.5em"}}
+                        >
+                            {data.asset_code}
                         </span>
                     </Typography>
                     <Typography color="textPrimary">
