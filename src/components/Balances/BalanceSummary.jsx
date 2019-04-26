@@ -159,7 +159,7 @@ const BalanceSummary = ({
                     style={{
                         display: "flex",
                         flexDirection: "column",
-                        alignContent: "center",
+                        alignContent: "flex-start",
                         alignItems: "flex-end",
                     }}
                 >
