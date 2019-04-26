@@ -39,8 +39,8 @@ import { liveNetAddr } from "../StellarFox/env"
  * @returns {React.ReactElement}
  */
 const TxConfirm = ({
-    classes, data, fingerprintUserData, horizon, maxTime, minTime, publicKey,
-    sequence,
+    classes, data, fingerprintPaymentData, fingerprintUserData, horizon,
+    maxTime, minTime, publicKey, sequence,
 }) => {
 
     return <Fragment>
@@ -58,7 +58,10 @@ const TxConfirm = ({
 
                 <div className="flex-box-row space-between ledger-display-item">
                     <Typography noWrap color="primary" variant="caption">
-                        {btoa(fingerprintUserData)}
+                        {data === "idSig" ?
+                            btoa(fingerprintUserData) :
+                            btoa(fingerprintPaymentData)
+                        }
                     </Typography>
                 </div>
 
@@ -118,7 +121,9 @@ const TxConfirm = ({
                 </Typography>
                 <Typography noWrap color="primary" variant="caption">
                     {string.shorten(
-                        btoa(fingerprintUserData),
+                        data === "idSig" ?
+                            btoa(fingerprintUserData) :
+                            btoa(fingerprintPaymentData),
                         25
                     )}
                 </Typography>
@@ -221,6 +226,7 @@ export default func.compose(
             minTime: state.Transaction.timeBounds ? state.Transaction.timeBounds.minTime : "0",
             maxTime: state.Transaction.timeBounds ? state.Transaction.timeBounds.maxTime : "0",
             fingerprintUserData: state.Account.fingerprintUserData,
+            fingerprintPaymentData: state.Account.fingerprintPaymentData,
         }),
         (dispatch) => bindActionCreators({
 
