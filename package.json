@@ -64,6 +64,7 @@
         "sha.js": "^2.4.11",
         "stellar-sdk": "^0.15.3",
         "toml": "^3.0.0",
+        "trianglify": "^2.0.0",
         "typeface-roboto": "0.0.54"
     },
     "description": "Stellar Fox (frontend)",

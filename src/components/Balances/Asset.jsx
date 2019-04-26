@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core"
 import Avatar from "../../lib/mui-v1/Avatar"
 import Paper from "../../lib/mui-v1/Paper"
+import Trianglify from "trianglify"
 
 
 
@@ -19,11 +20,26 @@ import Paper from "../../lib/mui-v1/Paper"
 /**
  * Cygnus.
  *
- * Balance summary card.
+ * Asset component.
  *
  * @module client-ui-components
  * @license Apache-2.0
  */
+
+
+
+
+// ...
+const makePattern = (seed) => {
+    const pattern = Trianglify({
+        height: 300,
+        width: 300,
+        cell_size: 30,
+        variance: 1,
+        seed,
+    })
+    return pattern.png()
+}
 
 
 
@@ -36,9 +52,12 @@ import Paper from "../../lib/mui-v1/Paper"
  */
 const Asset = ({ data }) =>
     <Grid item key={`${data.asset_issuer}-${data.asset_code}`} zeroMinWidth>
-        <Paper color="secondary">
+        <Paper color="secondary" style={{
+            background: `url(${makePattern(data.asset_issuer)})`,
+        }}
+        >
             <div className="flex-box-row space-between items-centered">
-                <Avatar />
+                <Avatar src="/img/logo.png" />
                 <div className="m-l flex-box-col space-between">
                     <Typography variant="h4">
                         <span className="balance-text">

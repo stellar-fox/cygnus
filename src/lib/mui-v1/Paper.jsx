@@ -33,13 +33,14 @@ export default withStyles((theme) => ({
 
         // ...
         render = () => (
-            ({ children, classes, color }) =>
+            ({ children, classes, color, style }) =>
                 <Paper
                     classes={{
                         root: classes[color],
                     }}
                     className={classes.root}
                     elevation={3}
+                    style={style}
                 >
                     { children }
                 </Paper>
