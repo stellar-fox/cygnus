@@ -135,14 +135,17 @@ export const getArithmeticAmount = async (
         let retVal = {}
 
         if (record.asset_code) {
-            const bids = (await getOffers(
+
+            const offers = (await getOffers(
                 new Asset(record.asset_code, record.asset_issuer),
                 new Asset.native(),
                 {horizon}
-            )).bids
+            ))
 
-            if (bids[0]) {
-                retVal.bestBid = bids[0].price
+            const asks = offers.asks
+
+            if (asks[0] && offers.counter.asset_type === "native") {
+                retVal.bestBid = asks[0].price
             } else {
                 retVal.bestBid = "0.0000000"
             }
