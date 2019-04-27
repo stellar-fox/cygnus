@@ -1,7 +1,10 @@
 import React from "react"
 import { bindActionCreators } from "redux"
 import { connect } from "react-redux"
-import { Grid } from "@material-ui/core"
+import {
+    Grow,
+    Grid,
+} from "@material-ui/core"
 import { withStyles } from "@material-ui/core/styles"
 import { func } from "@xcmats/js-toolbox"
 import Asset from "./Asset"
@@ -27,7 +30,7 @@ import Asset from "./Asset"
  * @function AssetGrid
  * @returns {React.ReactElement}
  */
-const AssetGrid = ({ assets }) => <Grid
+const AssetGrid = ({ assets }) => <Grow in={true}><Grid
     container
     alignContent="flex-start"
     alignItems="center"
@@ -36,7 +39,7 @@ const AssetGrid = ({ assets }) => <Grid
     {assets.map((asset) =>
         <Asset data={asset} />
     )}
-</Grid>
+</Grid></Grow>
 
 
 

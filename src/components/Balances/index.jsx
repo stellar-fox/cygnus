@@ -365,6 +365,7 @@ class Balances extends Component {
 
                         {
                             !this.props.StellarAccount.loading &&
+                            !Balances.payCardVisible &&
                             this.props.StellarAccount.assets &&
                             <AssetGrid />
                         }
