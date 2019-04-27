@@ -33,6 +33,7 @@ import {
     Typography,
 } from "@material-ui/core"
 import NumberFormat from "react-number-format"
+import { Grow } from "@material-ui/core"
 import { withStyles } from "@material-ui/core/styles"
 import { fade } from "@material-ui/core/styles/colorManipulator"
 import {
@@ -243,7 +244,7 @@ class PaymentCard extends Component {
 
 
     // ...
-    render = () =>
+    render = () => <Grow in={true}>
         <Card className="payment-card">
             <CardText>
                 <div className="flex-box-row space-between">
@@ -457,7 +458,7 @@ class PaymentCard extends Component {
                     this.props.Balances.message : <he.Nbsp />
             }</div>
         </Card>
-
+    </Grow>
 }
 
 
