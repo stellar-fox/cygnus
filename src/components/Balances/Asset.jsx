@@ -53,7 +53,7 @@ const makePattern = (seed) => {
  * @returns {React.ReactElement}
  */
 const Asset = ({ data }) =>
-    <Grid item key={`${data.asset_issuer}-${data.asset_code}`} zeroMinWidth>
+    <Grid item zeroMinWidth>
         <Paper color="secondary" style={{
             background: `url(${makePattern(data.asset_issuer)})`,
             backgroundSize: "cover",

@@ -37,7 +37,7 @@ const AssetGrid = ({ assets }) => <Grow in={true}><Grid
     spacing={16}
 >
     {assets.map((asset) =>
-        <Asset data={asset} />
+        <Asset key={`${asset.asset_issuer}-${asset.asset_code}`} data={asset} />
     )}
 </Grid></Grow>
 
