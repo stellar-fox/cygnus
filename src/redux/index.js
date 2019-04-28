@@ -15,8 +15,9 @@ import { reducer as LoginMangerReducer } from "./LoginManager"
 import { reducer as ModalReducer } from "./Modal"
 import { reducer as PaymentsReducer } from "./Payments"
 import { reducer as ProgressReducer } from "./Progress"
-import { reducer as StellarAccountReducer } from "./StellarAccount"
 import { reducer as RouterReducer } from "./StellarRouter"
+import { reducer as SocketReducer } from "./Socket"
+import { reducer as StellarAccountReducer } from "./StellarAccount"
 import { reducer as SnackyReducer } from "./Snacky"
 import { reducer as TransactionReducer } from "./Transaction"
 
@@ -43,6 +44,7 @@ export default {
     Payments: PaymentsReducer,
     Progress: ProgressReducer,
     Router: RouterReducer,
+    Socket: SocketReducer,
     StellarAccount: StellarAccountReducer,
     Snacky: SnackyReducer,
     Transaction: TransactionReducer,
