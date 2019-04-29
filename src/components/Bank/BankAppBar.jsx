@@ -17,6 +17,11 @@ import MenuIcon from "@material-ui/icons/Menu"
 import BankAppBarTitle from "./BankAppBarTitle"
 import BankAppBarItems from "./BankAppBarItems"
 import UserMenu from "../../lib/mui-v1/UserMenu"
+import krakenSocket from "../KrakenSocket"
+import {
+    setSocket,
+    updateExchangeRate,
+} from "../../thunks/assets"
 
 
 
@@ -44,11 +49,14 @@ export default compose(
     connect(
         // map state to props.
         (state) => ({
+            currency: state.Account.currency,
             currentView: state.Router.currentView,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({
             toggleDrawer: BankAction.toggleDrawer,
+            setSocket,
+            updateExchangeRate,
         }, dispatch)
     )
 )(
@@ -59,6 +67,31 @@ export default compose(
             classes: PropTypes.object.isRequired,
             currentView: PropTypes.string.isRequired,
             toggleDrawer: PropTypes.func.isRequired,
+        }
+
+
+        // ...
+        state = {
+            socket: null,
+        }
+
+
+        // ...
+        componentDidMount = () => {
+            const fnModule = {
+                updateExchangeRate: this.props.updateExchangeRate,
+                setSocket: this.props.setSocket,
+            }
+            this.setState({
+                socket: krakenSocket(this.props.currency, fnModule),
+            })
+        }
+
+
+        // ...
+        componentWillUnmount = () => {
+            this.state.socket.close()
+            this.setState({socket: null})
         }
 
 
