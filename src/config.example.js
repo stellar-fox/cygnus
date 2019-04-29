@@ -21,4 +21,5 @@ export const config = {
     reCaptchaV2: {
         siteKey: "<Your client site key>",
     },
+    krakenSocket: "wss://ws-beta.kraken.com",
 }
