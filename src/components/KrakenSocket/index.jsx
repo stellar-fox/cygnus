@@ -1,5 +1,5 @@
 import { isArray } from "@xcmats/js-toolbox"
-
+import { config } from "../../config"
 
 
 
@@ -17,7 +17,7 @@ export default (currency, fnModule) => {
         status: STATUS.connecting,
     })
 
-    const socket = new WebSocket("wss://ws-beta.kraken.com")
+    const socket = new WebSocket(config.krakenSocket)
 
 
     socket.onmessage = function (event) {
