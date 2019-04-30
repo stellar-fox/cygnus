@@ -7,26 +7,12 @@ import {
     Route,
 } from "react-router-dom"
 import "number-to-text/converters/en-us"
-import {
-    delay,
-    string,
-} from "@xcmats/js-toolbox"
-import { action as AccountAction } from "../../redux/Account"
-import { action as AssetManagerAction } from "../../redux/AssetManager"
-import { action as BankActions } from "../../redux/Bank"
-import { action as ContactsAction } from "../../redux/Contacts"
-import { action as StellarAccountAction } from "../../redux/StellarAccount"
+import { string } from "@xcmats/js-toolbox"
 import { action as BalancesAction } from "../../redux/Balances"
-import { action as LoginManagerAction } from "../../redux/LoginManager"
-import { action as LedgerHQAction } from "../../redux/LedgerHQ"
 import { action as ModalAction } from "../../redux/Modal"
-import { action as AlertAction } from "../../redux/Alert"
 import { action as TransactionAction } from "../../redux/Transaction"
 import { signTransaction } from "../../lib/ledger"
-import {
-    augmentAssets,
-    insertPathIndex,
-} from "../../lib/utils"
+import { insertPathIndex } from "../../lib/utils"
 import {
     buildCreateAccountTx,
     buildPaymentTx,
@@ -36,7 +22,6 @@ import {
     ConnectedSwitch as Switch,
     resolvePath,
 } from "../StellarRouter"
-import { action as LoadingModalAction } from "../../redux/LoadingModal"
 import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import RegisterCard from "./RegisterCard"
@@ -46,10 +31,6 @@ import TxConfirmMsg from "./TxConfirmMsg"
 import TxBroadcastMsg from "./TxBroadcastMsg"
 import TxCompleteMsg from "./TxCompleteMsg"
 import TxCustomAssetCompleteMsg from "./TxCustomAssetCompleteMsg"
-import {
-    operationsStreamer,
-    paymentsStreamer
-} from "../Streamers"
 import "./index.css"
 import FundCard from "./FundCard"
 import AssetDetails from "./AssetDetails"
@@ -58,12 +39,6 @@ import { queryDevice } from "../../thunks/ledgerhq"
 import AssetGrid from "./AssetGrid"
 import BalanceSummary from "./BalanceSummary"
 import LoadingModal from "../LoadingModal"
-import {
-    blinkPayentStreamerLed,
-    streamerPaymentConnected,
-    blinkOperationStreamerLed,
-    streamerOperationConnected,
-} from "../../thunks/main"
 
 
 
@@ -93,8 +68,6 @@ class Balances extends Component {
 
     // ...
     state = {
-        paymentsStreamer: null,
-        operationsStreamer: null,
         modalButtonText: "CANCEL",
     }
 
@@ -102,60 +75,7 @@ class Balances extends Component {
 
 
     // ...
-    componentDidMount = () => {
-
-        this.setState({
-            paymentsStreamer: paymentsStreamer(
-                this.props.blinkPayentStreamerLed,
-                this.props.streamerPaymentConnected,
-                this.props.surfaceSnacky,
-                this.props.publicKey,
-                this.props.horizon,
-                this.updateAccountTree,
-            ),
-            operationsStreamer: operationsStreamer(
-                this.props.blinkOperationStreamerLed,
-                this.props.streamerOperationConnected,
-                this.props.surfaceSnacky,
-                this.props.publicKey,
-                this.props.horizon,
-                this.updateAccountTree,
-            ),
-        })
-
-    }
-
-
-
-
-    // ...
-    componentWillUnmount = () => {
-        this.state.paymentsStreamer.call(this)
-        this.props.streamerPaymentConnected(false)
-        this.state.operationsStreamer.call(this)
-        this.props.streamerOperationConnected(false)
-        this.props.resetBalancesState()
-    }
-
-
-
-
-    // ...
-    updateAccountTree = (account) => {
-        this.props.setAssetsState({ loading: true })
-        this.props.updateAccountTree(account)
-        delay(300).then(() => {
-            augmentAssets(
-                this.props.StellarAccount.assets
-            ).then((augmentedAssets) => {
-                this.props.setStellarAccountState({
-                    assets: augmentedAssets,
-                })
-                this.props.setAssetsState({ loading: false })
-            })
-
-        })
-    }
+    componentWillUnmount = () => this.props.resetBalancesState()
 
 
 
@@ -248,22 +168,6 @@ class Balances extends Component {
         } catch (error) {
             this.showError(error.message)
         }
-    }
-
-
-
-
-    // ...
-    closeAssetDetailsModal = () => {
-        this.props.setAssetsState({ selected: null })
-        this.props.setBalancesState({
-            amount: string.empty(),
-            payee: null,
-            paymentAddress: null,
-            payeeStellarAccount: null,
-            transactionAsset: null,
-        })
-        this.props.hideModal()
     }
 
 
@@ -386,15 +290,12 @@ class Balances extends Component {
 export default connect(
     // map state to props.
     (state) => ({
-        authenticated: state.Auth.authenticated,
         publicKey: state.LedgerHQ.publicKey,
         bip32Path: state.LedgerHQ.bip32Path,
         Account: state.Account,
         StellarAccount: state.StellarAccount,
         Balances: state.Balances,
         Modal: state.Modal,
-        userId: state.LoginManager.userId,
-        token: state.LoginManager.token,
         horizon: state.StellarAccount.horizon,
         assets: state.Assets,
         cancelEnabled: state.Balances.cancelEnabled,
@@ -403,29 +304,13 @@ export default connect(
     // match dispatch to props.
     (dispatch) => bindActionCreators({
         clearTransaction: TransactionAction.clearTransaction,
-        setAccountState: AccountAction.setState,
-        setAssetsState: AssetManagerAction.setState,
         setBalancesState: BalancesAction.setState,
-        setContactsState: ContactsAction.setState,
-        setLedgerHQState: LedgerHQAction.setState,
-        setStellarAccountState: StellarAccountAction.setState,
         setTransaction: TransactionAction.setTransaction,
-        updateAccountTree: StellarAccountAction.updateAccountAttributes,
         setStateForBalances: BalancesAction.setState,
         resetBalancesState: BalancesAction.resetState,
-        setApiToken: LoginManagerAction.setApiToken,
-        setUserId: LoginManagerAction.setUserId,
         hideModal: ModalAction.hideModal,
         showModal: ModalAction.showModal,
-        showAlert: AlertAction.showAlert,
-        showLoadingModal: LoadingModalAction.showLoadingModal,
-        hideLoadingModal: LoadingModalAction.hideLoadingModal,
-        toggleSignupHint: BankActions.toggleSignupHint,
         surfaceSnacky,
         queryDevice,
-        blinkPayentStreamerLed,
-        streamerPaymentConnected,
-        blinkOperationStreamerLed,
-        streamerOperationConnected,
     }, dispatch)
 )(Balances)
