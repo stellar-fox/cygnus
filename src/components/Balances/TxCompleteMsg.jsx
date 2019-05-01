@@ -52,7 +52,7 @@ export default connect(
                         Destination Address:
                     </Typography>
                     <Typography noWrap color="primary" variant="caption">
-                        {string.shorten(balances.payeeAddress, 35)}
+                        {string.shorten(balances.payeeAddress || "", 35)}
                     </Typography>
                 </div>
 
@@ -70,7 +70,7 @@ export default connect(
                         Transaction ID:
                     </Typography>
                     <Typography noWrap color="primary" variant="caption">
-                        {string.shorten(balances.paymentId, 20)}
+                        {string.shorten(balances.paymentId || "", 20)}
                     </Typography>
                 </div>
 
