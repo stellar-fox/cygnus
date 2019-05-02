@@ -30,10 +30,8 @@ import PaymentCard from "./PaymentCard"
 import TxConfirmMsg from "./TxConfirmMsg"
 import TxBroadcastMsg from "./TxBroadcastMsg"
 import TxCompleteMsg from "./TxCompleteMsg"
-import TxCustomAssetCompleteMsg from "./TxCustomAssetCompleteMsg"
 import "./index.css"
 import FundCard from "./FundCard"
-import AssetDetails from "./AssetDetails"
 import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
 import AssetGrid from "./AssetGrid"
@@ -213,34 +211,6 @@ class Balances extends Component {
                             ]}
                         >
                             <TxCompleteMsg />
-                        </Modal>
-
-                        <Modal
-                            open={
-                                this.props.Modal.modalId === "txCustomAssetComplete" &&
-                                this.props.Modal.visible
-                            }
-                            title="Transaction Receipt"
-                            actions={[
-                                <Button
-                                    onClick={this.props.hideModal}
-                                    color="primary"
-                                >OK</Button>,
-                            ]}
-                        >
-                            <TxCustomAssetCompleteMsg />
-                        </Modal>
-
-                        <Modal
-                            open={
-                                this.props.Modal.modalId === "assetDetails" &&
-                                this.props.Modal.visible
-                            }
-                            title={string.empty()}
-                            paperClassName="paycheck"
-                            bodyClassName="lace"
-                        >
-                            <AssetDetails />
                         </Modal>
 
                         {
