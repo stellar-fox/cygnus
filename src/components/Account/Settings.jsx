@@ -20,7 +20,10 @@ import {
 import { action as AlertAction } from "../../redux/Alert"
 import { withStyles } from "@material-ui/core/styles"
 import { surfaceSnacky } from "../../thunks/main"
-import { getExchangeRate } from "../../thunks/assets"
+import {
+    getCoinHistory,
+    getExchangeRate,
+} from "../../thunks/assets"
 import ImplodeAccountModal from "./ImplodeAccountModal"
 
 
@@ -66,6 +69,7 @@ class Settings extends Component {
     // ...
     changeCurrency = (event) => {
         this.props.getExchangeRate(event.target.value)
+        this.props.getCoinHistory(event.target.value)
         this.props.setState({ currency: event.target.value })
         this.saveCurrency(event.target.value)
     }
@@ -298,6 +302,7 @@ export default compose(
         }),
         // bind dispatch to props.
         (dispatch) => bindActionCreators({
+            getCoinHistory,
             getExchangeRate,
             setState: AccountAction.setState,
             showModal: ModalAction.showModal,

@@ -34,6 +34,7 @@ import "./index.css"
 import FundCard from "./FundCard"
 import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
+import { getCoinHistory } from "../../thunks/assets"
 import AssetGrid from "./AssetGrid"
 import BalanceSummary from "./BalanceSummary"
 import LoadingModal from "../LoadingModal"
@@ -70,6 +71,11 @@ class Balances extends Component {
     }
 
 
+    // ...
+    componentDidMount = () =>
+        this.props.getCoinHistory(
+            this.props.Account.currency
+        )
 
 
     // ...
@@ -221,9 +227,11 @@ class Balances extends Component {
 
                         {this.props.StellarAccount.loading ?
                             <LoadingModal /> :
-                            this.props.StellarAccount.accountId ?
-                                <BalanceSummary className="m-b" /> :
-                                <NoAccountCard className="m-b" />
+                            !Balances.payCardVisible && (
+                                this.props.StellarAccount.accountId ?
+                                    <BalanceSummary className="m-b" /> :
+                                    <NoAccountCard className="m-b" />
+                            )
                         }
 
 
@@ -274,6 +282,7 @@ export default connect(
     // match dispatch to props.
     (dispatch) => bindActionCreators({
         clearTransaction: TransactionAction.clearTransaction,
+        getCoinHistory,
         setBalancesState: BalancesAction.setState,
         setTransaction: TransactionAction.setTransaction,
         setStateForBalances: BalancesAction.setState,
