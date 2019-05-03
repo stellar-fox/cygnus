@@ -262,3 +262,9 @@ export const transactionFetchLimit = 20
 
 // ...
 export const transactionFee = 100
+
+
+
+
+// ...
+export const coinRankingBase = "https://api.coinranking.com/v1/public/coin/"

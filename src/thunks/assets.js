@@ -1,6 +1,9 @@
 import Axios from "axios"
 import { config } from "../config"
-import { defaultCurrencyRateUpdateTime } from "../components/StellarFox/env"
+import {
+    coinRankingBase,
+    defaultCurrencyRateUpdateTime,
+} from "../components/StellarFox/env"
 import { action as ExchangeRatesActions } from "../redux/ExchangeRates"
 import { action as SocketActions } from "../redux/Socket"
 
@@ -60,7 +63,7 @@ export const updateExchangeRate = (tickerSymbol, rate) =>
 
 
 /**
- * Fetches the exchange rate (throttled)
+ * Fetches the live exchange rate from Kraken.
  *
  * @function setSocket
  * @param {String} socketData Socket state data.
@@ -69,3 +72,16 @@ export const updateExchangeRate = (tickerSymbol, rate) =>
 export const setSocket = (socketData) =>
     async (dispatch, _getState) =>
         dispatch(SocketActions.setState(socketData))
+
+
+
+
+export const getCoinHistory = (base="eur", timePeriod = "30d", coinId = "6") =>
+    async (dispatch, _getState) => {
+        const coinData = (await Axios.get(
+            `${coinRankingBase}/${coinId}?base=${
+                base.toUpperCase()}&timePeriod=${timePeriod}`
+        )).data.data
+
+        dispatch(ExchangeRatesActions.setRate({coinData}))
+    }

@@ -32,6 +32,7 @@ const initState = {
         rate: string.empty(),
         lastUpdated: string.empty(),
     },
+    coinData: null,
 }
 
 
