@@ -12,7 +12,7 @@ import BalanceSummaryHeader from "./BalanceSummaryHeader"
 import BalanceSummaryFooter from "./BalanceSummaryFooter"
 import LockedAccount from "./LockedAccount"
 import NativeBalance from "./NativeBalance"
-
+import AreaLine from "../Charts/AreaLine"
 
 
 
@@ -35,7 +35,7 @@ import NativeBalance from "./NativeBalance"
  * @function BalanceSummary
  * @returns {React.ReactElement}
  */
-const BalanceSummary = ({ accountId, classes, className, signers }) => {
+const BalanceSummary = ({ accountId, classes, className, data, signers }) => {
 
 
     return <Grow in={true}><Card
@@ -45,8 +45,15 @@ const BalanceSummary = ({ accountId, classes, className, signers }) => {
         <BalanceSummaryHeader />
 
         <CardContent>
-            <NativeBalance />
+            <div className="flex-box-row">
+                <NativeBalance />
+                <div className="chart-coin-history">
+                    <AreaLine id="foo" width="800" height="230" data={data} />
+                </div>
+            </div>
+
             {accountIsLocked(signers, accountId) && <LockedAccount />}
+
         </CardContent>
 
         <BalanceSummaryFooter />
@@ -68,6 +75,7 @@ export default func.compose(
     connect(
         (state) => ({
             accountId: state.StellarAccount.accountId,
+            data: state.ExchangeRates.coinData.coin.history,
             signers: state.StellarAccount.signers,
         })
     ),

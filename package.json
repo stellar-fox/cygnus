@@ -33,6 +33,7 @@
         "axios": "^0.18.0",
         "bignumber.js": "^8.1.1",
         "classnames": "^2.2.6",
+        "d3": "^5.9.2",
         "firebase": "^5.10.0",
         "fuse.js": "^3.4.4",
         "history": "^4.9.0",

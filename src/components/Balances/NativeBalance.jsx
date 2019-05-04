@@ -17,7 +17,7 @@ import CurrencyBalance from "./CurrencyBalance"
  */
 const NativeBalance = ({ balance, currency, preferredRate }) => {
 
-    return <div>
+    return <div style={{ zIndex: "1" }}>
         <div className="text-primary">
             <span className="fade currency-glyph">
                 {assetGlyph(currency)}

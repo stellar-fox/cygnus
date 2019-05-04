@@ -16,6 +16,7 @@ import ReserveInfo from "./ReserveInfo"
  */
 const BalanceSummaryHeader = memo(({ currency }) =>
     <CardHeader
+        style={{ zIndex: 1 }}
         title="Current Balance"
         subheader={assetDescription(currency)}
         action={<ReserveInfo />}

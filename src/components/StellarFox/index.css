@@ -142,3 +142,24 @@ select:-webkit-autofill:focus {
     box-shadow: 0 0 0 0 rgb(15, 46, 83) inset;
     transition: background-color 5000s ease-in-out 0s;
 }
+
+
+.axis line{
+  stroke: rgba(36, 65, 98, 0.7);
+}
+
+.axis path {
+  stroke: rgba(36, 65, 98, 0.7);
+}
+
+.axis text {
+  fill: rgba(36, 65, 98, 0.7);
+}
+
+.chart-coin-history {
+    opacity: 0.85;
+    position: absolute;
+    top: 5px;
+    right: 0px;
+    z-index: 0;
+}
