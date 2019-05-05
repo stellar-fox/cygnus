@@ -11,6 +11,7 @@ import {
     scaleLinear,
     scaleTime,
     select,
+    timeFormat,
 } from "d3"
 import BigNumber from "bignumber.js"
 
@@ -34,11 +35,7 @@ class AreaLine extends Component {
 
         const transformedData = this.props.data.reverse().map(
             (el, idx) => ({
-                date: new Date(
-                    today.getFullYear(),
-                    today.getMonth(),
-                    today.getDay() - idx
-                ),
+                date: new Date(new Date().setDate(today.getDate() - idx)),
                 value: el,
             })).reverse()
 
@@ -65,6 +62,7 @@ class AreaLine extends Component {
                 axisBottom(x)
                     .ticks(this.props.width / 80)
                     .tickSizeOuter(0)
+                    .tickFormat(timeFormat("%m/%d"))
             )
 
         const yAxis = g => g
