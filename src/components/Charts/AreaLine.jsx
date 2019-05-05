@@ -33,11 +33,15 @@ class AreaLine extends Component {
 
     componentDidMount () {
         this.setState({
-            data: this.props.data.reverse().map(
+            data: this.props.data.map(
                 (el, idx) => ({
-                    date: new Date(new Date().setDate(today.getDate() - idx)),
+                    date: new Date(
+                        new Date().setDate(
+                            today.getDate() - (this.props.data.length - 1 - idx)
+                        )
+                    ),
                     value: el,
-                })).reverse(),
+                })),
         }, () => {
             this.drawChart()
         })
