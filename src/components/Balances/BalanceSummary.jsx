@@ -48,7 +48,12 @@ const BalanceSummary = ({ accountId, classes, className, data, signers }) => {
             <div className="flex-box-row">
                 <NativeBalance />
                 <div className="chart-coin-history">
-                    <AreaLine id="foo" width="800" height="230" data={data} />
+                    <AreaLine
+                        id="chart-30d-change"
+                        width="800"
+                        height="230"
+                        data={data}
+                    />
                 </div>
             </div>
 

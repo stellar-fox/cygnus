@@ -1,16 +1,32 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import * as d3 from "d3"
+import {
+    area,
+    axisBottom,
+    axisLeft,
+    extent,
+    format,
+    max,
+    min,
+    scaleLinear,
+    scaleTime,
+    select,
+} from "d3"
 import BigNumber from "bignumber.js"
 
+
+
+
+/**
+ * `<AreaLine>` component.
+ *
+ * @function AreaLine
+ * @returns {React.ReactElement}
+ */
 class AreaLine extends Component {
+
     componentDidMount () {
         this.drawChart()
-    }
-
-
-    topHeaderText () {
-        return <div>{this.props.baseSymbol}/{this.props.coinSymbol} fuuuuuuuuu</div>
     }
 
     drawChart () {
@@ -28,14 +44,14 @@ class AreaLine extends Component {
 
         const margin = ({top: 20, right: 20, bottom: 30, left: 30})
 
-        const x = d3.scaleTime()
-            .domain(d3.extent(transformedData, d => d.date))
+        const x = scaleTime()
+            .domain(extent(transformedData, d => d.date))
             .range([margin.left, this.props.width - margin.right])
 
-        const y = d3.scaleLinear()
+        const y = scaleLinear()
             .domain([
-                d3.min(transformedData, d => d.value),
-                d3.max(transformedData, d => d.value),
+                min(transformedData, d => d.value),
+                max(transformedData, d => d.value),
             ])
             .nice()
             .range([this.props.height - margin.bottom, margin.top])
@@ -46,14 +62,16 @@ class AreaLine extends Component {
                 `translate(0,${this.props.height - margin.bottom})`
             )
             .call(
-                d3.axisBottom(x)
+                axisBottom(x)
                     .ticks(this.props.width / 80)
                     .tickSizeOuter(0)
             )
 
         const yAxis = g => g
             .attr("transform", `translate(${margin.left}, 0)`)
-            .call(d3.axisLeft(y))
+            .call(axisLeft(y)
+                .ticks(5)
+                .tickFormat(format(",.2f")))
             .call(g => g.select(".domain").remove())
             .call(g => g.select(".tick:last-of-type text").clone()
                 .attr("x", 3)
@@ -73,12 +91,12 @@ class AreaLine extends Component {
                 } % THIS MONTH`)
             )
 
-        const area = d3.area()
+        const areaUnderCurve = area()
             .x(d => x(d.date))
             .y0(y(y.domain()[0]))
             .y1(d => y(d.value))
 
-        let svg = d3.select(`#${this.props.id}`)
+        let svg = select(`#${this.props.id}`)
             .attr("width", this.props.width)
             .attr("height", this.props.height)
             .style("margin-left", 100)
@@ -96,7 +114,7 @@ class AreaLine extends Component {
             .attr("class", "start")
             .attr("offset", "0%")
             .attr("stop-color", "rgb(246, 190, 49)")
-            .attr("stop-opacity", 1)
+            .attr("stop-opacity", 0.7)
 
         gradient.append("stop")
             .attr("class", "end")
@@ -108,7 +126,7 @@ class AreaLine extends Component {
             .datum(transformedData)
             .attr("stroke", "url(#svgGradient)")
             .attr("fill", "url(#svgGradient)")
-            .attr("d", area)
+            .attr("d", areaUnderCurve)
 
         svg.append("g")
             .attr("class", "axis")
@@ -124,6 +142,10 @@ class AreaLine extends Component {
     }
 }
 
+
+
+
+// ...
 export default connect(
     (state) => ({
         athDate: state.ExchangeRates.coinData.coin.allTimeHigh.timestamp || "",
@@ -134,4 +156,3 @@ export default connect(
         coinSymbol: state.ExchangeRates.coinData.coin.symbol || "",
     })
 )(AreaLine)
-
