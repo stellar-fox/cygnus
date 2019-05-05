@@ -16,6 +16,7 @@ import {
 import BigNumber from "bignumber.js"
 
 
+const today = new Date()
 
 
 /**
@@ -26,29 +27,34 @@ import BigNumber from "bignumber.js"
  */
 class AreaLine extends Component {
 
+    state = {
+        data: [],
+    }
+
     componentDidMount () {
-        this.drawChart()
+        this.setState({
+            data: this.props.data.reverse().map(
+                (el, idx) => ({
+                    date: new Date(new Date().setDate(today.getDate() - idx)),
+                    value: el,
+                })).reverse(),
+        }, () => {
+            this.drawChart()
+        })
     }
 
     drawChart () {
-        const today = new Date()
-
-        const transformedData = this.props.data.reverse().map(
-            (el, idx) => ({
-                date: new Date(new Date().setDate(today.getDate() - idx)),
-                value: el,
-            })).reverse()
 
         const margin = ({top: 20, right: 20, bottom: 30, left: 30})
 
         const x = scaleTime()
-            .domain(extent(transformedData, d => d.date))
+            .domain(extent(this.state.data, d => d.date))
             .range([margin.left, this.props.width - margin.right])
 
         const y = scaleLinear()
             .domain([
-                min(transformedData, d => d.value),
-                max(transformedData, d => d.value),
+                min(this.state.data, d => d.value),
+                max(this.state.data, d => d.value),
             ])
             .nice()
             .range([this.props.height - margin.bottom, margin.top])
@@ -120,7 +126,7 @@ class AreaLine extends Component {
             .attr("stop-opacity", 1)
 
         svg.append("path")
-            .datum(transformedData)
+            .datum(this.state.data)
             .attr("stroke", "url(#svgGradient)")
             .attr("fill", "url(#svgGradient)")
             .attr("d", areaUnderCurve)
