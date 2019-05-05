@@ -1,11 +1,13 @@
-import React, { memo } from "react"
+import React, { Fragment, memo } from "react"
 import { compose } from "redux"
+import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
 import { env } from "../StellarFox"
 import {
     htmlEntities as he,
 } from "../../lib/utils"
 import StreamerIndicator from "../StreamerIndicator"
+import SocketIndicator from "../Indicators/SocketIndicator"
 
 
 
@@ -13,7 +15,6 @@ import StreamerIndicator from "../StreamerIndicator"
 // <Footer> component
 export default memo(compose(
     withStyles({
-
         footer: {
             backgroundColor: "#091b31",
             borderTop: "1px solid rgba(212, 228, 188, 0.4)",
@@ -34,10 +35,14 @@ export default memo(compose(
             verticalAlign: "middle",
             color: "rgba(255, 255, 255, 0.5)",
         },
-
     }),
+    connect(
+        (state) => ({
+            accountId: state.LedgerHQ.publicKey,
+        }),
+    ),
 )(
-    ({ classes }) =>
+    ({ accountId, classes }) =>
         <div className={classes.footer}>
             <div className="flex-box-row space-between">
                 <div>
@@ -53,7 +58,11 @@ export default memo(compose(
                 </div>
                 <div className="flex-box-row items-centered content-centered">
                     <div>ver. <b>{env.appVersion}</b></div>
-                    <StreamerIndicator />
+                    {accountId && <Fragment>
+                        <SocketIndicator />
+                        <StreamerIndicator />
+                    </Fragment>}
+
                 </div>
             </div>
         </div>
