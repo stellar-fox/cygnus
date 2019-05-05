@@ -145,15 +145,15 @@ select:-webkit-autofill:focus {
 
 
 .axis line{
-  stroke: rgba(36, 65, 98, 0.7);
+  stroke: rgba(36, 65, 98, 0.5);
 }
 
 .axis path {
-  stroke: rgba(36, 65, 98, 0.7);
+  stroke: rgba(36, 65, 98, 0.3);
 }
 
 .axis text {
-  fill: rgba(36, 65, 98, 0.7);
+  fill: rgba(36, 65, 98, 0.6);
 }
 
 .chart-coin-history {

@@ -73,7 +73,6 @@ class AreaLine extends Component {
             .call(g => g.select(".domain").remove())
             .call(g => g.select(".tick:last-of-type text").clone()
                 .attr("x", 3)
-                .attr("fill", "steelblue")
                 .attr("text-anchor", "start")
                 .attr("font-weight", "bold")
                 .text(`${
@@ -86,7 +85,7 @@ class AreaLine extends Component {
                     new BigNumber(this.props.athPrice).toFixed(2)
                 }  | ${
                     this.props.change
-                } % THIS MONTH`)
+                }% THIS MONTH`)
             )
 
         const areaUnderCurve = area()
