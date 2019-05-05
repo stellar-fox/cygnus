@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
 import { func } from "@xcmats/js-toolbox"
@@ -19,6 +19,28 @@ import { Tooltip } from "@material-ui/core"
 
 
 
+// ...
+const toTitle = (status) => ((translator) => translator[status])({
+    0: "red",
+    1: "blue",
+    2: "yellow",
+    3: "green",
+    4: "gray",
+})
+
+
+// ...
+const toTextStatus = (status) => ((translator) => translator[status])({
+    0: "Connecting",
+    1: "Opened",
+    2: "Online",
+    3: "Socket Connected",
+    4: "Socket Disconnected",
+})
+
+
+
+
 /**
  * `<SocketIndicator>` component.
  *
@@ -26,23 +48,6 @@ import { Tooltip } from "@material-ui/core"
  * @returns {React.ReactElement}
  */
 const SocketIndicator = ({ classes, socketStatus }) => {
-
-    const toTitle = (status) => ((translator) => translator[status])({
-        0: "red",
-        1: "blue",
-        2: "yellow",
-        3: "green",
-        4: "gray",
-    })
-
-    const toTextStatus = (status) => ((translator) => translator[status])({
-        0: "Connecting",
-        1: "Opened",
-        2: "Online",
-        3: "Socket Connected",
-        4: "Socket Disconnected",
-    })
-
 
     return <div style={{marginLeft: "5px"}}
         className={`${classes.led} ${classes[toTitle(socketStatus)]}`}
@@ -61,7 +66,7 @@ const SocketIndicator = ({ classes, socketStatus }) => {
 
 
 // ...
-export default func.compose(
+export default memo(func.compose(
     withStyles((theme) => ({
         led: {
             fontSize: "1.2rem",
@@ -94,4 +99,4 @@ export default func.compose(
             socketStatus: state.Socket.status,
         }),
     ),
-)(SocketIndicator)
+)(SocketIndicator))

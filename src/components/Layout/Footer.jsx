@@ -6,7 +6,7 @@ import { env } from "../StellarFox"
 import {
     htmlEntities as he,
 } from "../../lib/utils"
-import StreamerIndicator from "../StreamerIndicator"
+import StreamerIndicator from "../Indicators/StreamerIndicator"
 import SocketIndicator from "../Indicators/SocketIndicator"
 
 
@@ -39,10 +39,17 @@ export default memo(compose(
     connect(
         (state) => ({
             accountId: state.LedgerHQ.publicKey,
+            streamerPaymentLedOn: state.Bank.streamerPaymentLedOn,
+            streamerPaymentConnected: state.Bank.streamerPaymentConnected,
+            streamerOperationLedOn: state.Bank.streamerOperationLedOn,
+            streamerOperationConnected: state.Bank.streamerOperationConnected,
         }),
     ),
 )(
-    ({ accountId, classes }) =>
+    ({
+        accountId, classes, streamerPaymentLedOn, streamerPaymentConnected,
+        streamerOperationLedOn, streamerOperationConnected,
+    }) =>
         <div className={classes.footer}>
             <div className="flex-box-row space-between">
                 <div>
@@ -58,9 +65,19 @@ export default memo(compose(
                 </div>
                 <div className="flex-box-row items-centered content-centered">
                     <div>ver. <b>{env.appVersion}</b></div>
+
                     {accountId && <Fragment>
                         <SocketIndicator />
-                        <StreamerIndicator />
+                        <StreamerIndicator
+                            title="Operation"
+                            streamerConnected={streamerOperationConnected}
+                            streamerLedOn={streamerOperationLedOn}
+                        />
+                        <StreamerIndicator
+                            title="Payment"
+                            streamerConnected={streamerPaymentConnected}
+                            streamerLedOn={streamerPaymentLedOn}
+                        />
                     </Fragment>}
 
                 </div>
