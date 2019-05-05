@@ -11,6 +11,7 @@ export default (currency, fnModule) => {
         online:     2,
         subscribed: 3,
         closed:     4,
+        error:      5,
     }
 
     fnModule.setSocket({

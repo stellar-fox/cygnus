@@ -26,16 +26,20 @@ const toTitle = (status) => ((translator) => translator[status])({
     2: "yellow",
     3: "green",
     4: "gray",
+    5: "red",
 })
 
 
 // ...
-const toTextStatus = (status) => ((translator) => translator[status])({
+const toTextStatus = (status) => ((translator) => {
+    return translator[status]
+})({
     0: "Connecting",
     1: "Opened",
     2: "Online",
     3: "Socket Connected",
     4: "Socket Disconnected",
+    5: "Subscription Error",
 })
 
 
