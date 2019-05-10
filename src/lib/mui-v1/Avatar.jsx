@@ -33,6 +33,7 @@ export default withStyles((theme) => ({
                     }}
                     className={classes.avatar}
                     src={src}
+                    style={this.props.style}
                 />
         )(this.props)
     }
