@@ -133,7 +133,9 @@ div.p-b-small-block::after {
 }
 
 .asset-code {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(15, 46, 83, 0.7);
 }
 
 /* --------- fonts / sizes --------- */
