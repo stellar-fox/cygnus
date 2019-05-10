@@ -80,7 +80,7 @@ export default func.compose(
     connect(
         (state) => ({
             accountId: state.StellarAccount.accountId,
-            data: state.ExchangeRates.coinData.coin.history,
+            data: state.ExchangeRates.coinData.coin.history || [],
             signers: state.StellarAccount.signers,
         })
     ),

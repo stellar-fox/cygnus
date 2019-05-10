@@ -14,6 +14,7 @@ import Avatar from "../../lib/mui-v1/Avatar"
 import Paper from "../../lib/mui-v1/Paper"
 import Trianglify from "trianglify"
 import NumberFormat from "react-number-format"
+import { getAssetInfo } from "../../thunks/assets"
 
 
 
@@ -52,15 +53,38 @@ const makePattern = (seed) => {
  * @function Asset
  * @returns {React.ReactElement}
  */
-const Asset = ({ data }) =>
-    <Grid item zeroMinWidth>
+const Asset = ({ assetCollection, data, getAssetInfo }) => {
+
+    React.useEffect(() => {
+        getAssetInfo(data.asset_issuer)
+    }, [])
+
+    const assetInfo = assetCollection[Object.keys(assetCollection).find((el) => {
+        return assetCollection[el].issuer === data.asset_issuer &&
+            assetCollection[el].code === data.asset_code
+    })]
+
+    let assetData = {
+        assetCode: data.asset_code,
+        assetImage: "/img/logo.png",
+        assetDecimals: "7",
+    }
+
+    if (assetInfo) {
+        assetInfo.code && (assetData.assetCode = assetInfo.code)
+        assetInfo.image && (assetData.assetImage = assetInfo.image)
+        assetInfo.display_decimals && (assetData.assetDecimals = assetInfo.display_decimals)
+    }
+
+
+    return <Grid item zeroMinWidth>
         <Paper color="secondary" style={{
             background: `url(${makePattern(data.asset_issuer)})`,
             backgroundSize: "cover",
         }}
         >
             <div className="flex-box-row space-between items-centered">
-                <Avatar src="/img/logo.png" />
+                <Avatar style={{ opacity: 0.5 }} src={assetData.assetImage} />
                 <div className="m-l flex-box-col space-between">
                     <Typography variant="h4">
                         <span className="balance-text">
@@ -68,14 +92,14 @@ const Asset = ({ data }) =>
                                 value={data.balance}
                                 displayType={"text"}
                                 thousandSeparator={true}
-                                decimalScale={7}
+                                decimalScale={parseInt(assetData.assetDecimals, 10)}
                                 fixedDecimalScale={true}
                             />
                         </span>
                         <span className="asset-code"
                             style={{marginLeft: "0.5em"}}
                         >
-                            {data.asset_code}
+                            {assetData.assetCode}
                         </span>
                     </Typography>
                     <Typography color="textPrimary">
@@ -92,7 +116,7 @@ const Asset = ({ data }) =>
             </div>
         </Paper>
     </Grid>
-
+}
 
 
 
@@ -107,11 +131,11 @@ export default func.compose(
         },
     })),
     connect(
-        (_state) => ({
-
+        (state, ownProps) => ({
+            assetCollection: state.Asset[ownProps.data.asset_issuer] || {},
         }),
         (dispatch) => bindActionCreators({
-
+            getAssetInfo,
         }, dispatch),
     ),
 )(Asset)

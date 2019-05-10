@@ -4,8 +4,13 @@ import {
     coinRankingBase,
     defaultCurrencyRateUpdateTime,
 } from "../components/StellarFox/env"
+import { action as AssetAction } from "../redux/Asset"
 import { action as ExchangeRatesActions } from "../redux/ExchangeRates"
 import { action as SocketActions } from "../redux/Socket"
+import toml from "toml"
+import { loadAccount } from "../lib/stellar-tx"
+import { surfaceSnacky } from "../thunks/main"
+
 
 
 
@@ -76,6 +81,15 @@ export const setSocket = (socketData) =>
 
 
 
+/**
+ * Fetches the historical trade data from Coinrank.
+ *
+ * @function getCoinHistory
+ * @param {String} base base currency symbol
+ * @param {String} timePeriod time period for a window of data (i.e. 30d, 1y)
+ * @param {String} coinId internal Coinrank id of a coin
+ * @returns {Function} thunk action
+ */
 export const getCoinHistory = (base="eur", timePeriod = "30d", coinId = "6") =>
     async (dispatch, _getState) => {
         const coinData = (await Axios.get(
@@ -84,4 +98,40 @@ export const getCoinHistory = (base="eur", timePeriod = "30d", coinId = "6") =>
         )).data.data
 
         dispatch(ExchangeRatesActions.setRate({coinData}))
+    }
+
+
+
+
+/**
+ * Fetches asset's issuer meta data.
+ *
+ * @function getAssetInfo
+ * @param {String} base issuingAccountId
+ * @returns {Function} thunk action
+ */
+export const getAssetInfo = (issuingAccountId) =>
+    async (dispatch, _getState) => {
+        try {
+            const issuingAccount = (await loadAccount(
+                issuingAccountId
+            ))
+
+            if (issuingAccount.home_domain) {
+                const currencies = toml.parse(
+                    (await Axios.get(
+                        `https://${issuingAccount.home_domain}/.well-known/stellar.toml`
+                    )).data
+                ).CURRENCIES
+
+                dispatch(AssetAction.setState({
+                    [issuingAccountId]: {...currencies},
+                }))
+            }
+        } catch (error) {
+            await dispatch(await surfaceSnacky(
+                "warning",
+                "Could not load custom asset meta-data."
+            ))
+        }
     }

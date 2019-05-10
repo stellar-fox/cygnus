@@ -30,17 +30,22 @@ import Asset from "./Asset"
  * @function AssetGrid
  * @returns {React.ReactElement}
  */
-const AssetGrid = ({ assets }) => <Grow in={true}><Grid
-    container
-    alignContent="flex-start"
-    alignItems="center"
-    spacing={16}
->
-    {assets.map((asset) =>
-        <Asset key={`${asset.asset_issuer}-${asset.asset_code}`} data={asset} />
-    )}
-</Grid></Grow>
+const AssetGrid = ({ assets }) => {
 
+    return <Grow in={true}><Grid
+        container
+        alignContent="flex-start"
+        alignItems="center"
+        spacing={16}
+    >
+        {assets.map((asset) =>
+            <Asset
+                key={`${asset.asset_issuer}-${asset.asset_code}`}
+                data={asset}
+            />
+        )}
+    </Grid></Grow>
+}
 
 
 

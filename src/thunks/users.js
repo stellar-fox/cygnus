@@ -13,6 +13,7 @@ import { paymentAddress } from "../lib/utils"
 import { action as AccountAction } from "../redux/Account"
 import { action as AuthActions } from "../redux/Auth"
 import { actions as AppActions } from "../redux/App"
+import { action as AssetAction } from "../redux/Asset"
 import { action as AssetManagerAction } from "../redux/AssetManager"
 import { action as AuthAction } from "../redux/Auth"
 import { action as BalancesAction } from "../redux/Balances"
@@ -198,6 +199,7 @@ export const signOut = () =>
         await firebaseApp.auth("session").signOut()
         await dispatch(await AccountAction.resetState())
         await dispatch(await AppActions.resetState())
+        await dispatch(await AssetAction.resetState())
         await dispatch(await AssetManagerAction.resetState())
         await dispatch(await AuthAction.resetState())
         await dispatch(await BalancesAction.resetState())

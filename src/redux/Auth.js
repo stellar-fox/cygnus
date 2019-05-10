@@ -15,7 +15,7 @@ const initState = {
 
 // ...
 export const SET_SIGNUP_COMPLETE = "@Auth/SET_SIGNUP_COMPLETE"
-export const SET_STATE = "@Auth/SET_USER_ID"
+export const SET_STATE = "@Auth/SET_STATE"
 export const RESET_STATE = "@Auth/RESET_STATE"
 export const TOGGLE_SIGNUP_PROGRESS = "@Auth/TOGGLE_SIGNUP_PROGRESS"
 
@@ -72,7 +72,7 @@ export const reducer = createReducer(initState)({
     [SET_SIGNUP_COMPLETE]: (state) => ({
         ...state,
         signupComplete: true,
-    }), 
+    }),
 
 
     // ...
