@@ -114,7 +114,9 @@
         "lint": "eslint ./src/",
         "shambhala:link": "rimraf ./src/lib/shambhala.client.js && ln -s ../../../shambhala/dist.lib/shambhala.client.js ./src/lib/shambhala.client.js",
         "start": "cross-env BROWSER=none react-scripts start",
-        "test": "react-scripts test --env=jsdom"
+        "test": "react-scripts test --env=jsdom",
+        "dev": "rimraf ./src/config.js && ln -s ./config.localhost.js ./src/config.js",
+        "prod": "rimraf ./src/config.js && ln -s ./config.production.js ./src/config.js"
     },
     "version": "0.1.57"
 }
