@@ -26,14 +26,15 @@ import { Tooltip } from "@material-ui/core"
  */
 const StreamerIndicator = ({
     classes, streamerConnected, streamerLedOn, title,
-}) => <div className={`${classes.led} ${streamerLedOn ?
-    classes.ledOn : ""} ${streamerConnected ?
-    classes.ledConnected : ""}`}
->
-    <Tooltip title={title} aria-label={title}>
-        <FiberManualRecordRounded style={{ fontSize: "16px" }} />
-    </Tooltip>
-</div>
+}) =>
+    <div className={`${classes.led} ${streamerLedOn ?
+        classes.ledOn : ""} ${streamerConnected ?
+        classes.ledConnected : ""}`}
+    >
+        <Tooltip title={title} aria-label={title}>
+            <FiberManualRecordRounded style={{ fontSize: "16px" }} />
+        </Tooltip>
+    </div>
 
 
 
