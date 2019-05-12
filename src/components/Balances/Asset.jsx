@@ -1,9 +1,6 @@
 import React from "react"
-import { bindActionCreators } from "redux"
-import { connect } from "react-redux"
 import { withStyles } from "@material-ui/core/styles"
 import {
-    func,
     shorten,
 } from "@xcmats/js-toolbox"
 import {
@@ -14,7 +11,6 @@ import Avatar from "../../lib/mui-v1/Avatar"
 import Paper from "../../lib/mui-v1/Paper"
 import Trianglify from "trianglify"
 import NumberFormat from "react-number-format"
-import { getAssetInfo } from "../../thunks/assets"
 
 
 
@@ -53,16 +49,8 @@ const makePattern = (seed) => {
  * @function Asset
  * @returns {React.ReactElement}
  */
-const Asset = ({ assetCollection, data, getAssetInfo }) => {
+const Asset = ({ data }) => {
 
-    React.useEffect(() => {
-        getAssetInfo(data.asset_issuer)
-    }, [])
-
-    const assetInfo = assetCollection[Object.keys(assetCollection).find((el) => {
-        return assetCollection[el].issuer === data.asset_issuer &&
-            assetCollection[el].code === data.asset_code
-    })]
 
     let assetData = {
         assetCode: data.asset_code,
@@ -70,11 +58,6 @@ const Asset = ({ assetCollection, data, getAssetInfo }) => {
         assetDecimals: "7",
     }
 
-    if (assetInfo) {
-        assetInfo.code && (assetData.assetCode = assetInfo.code)
-        assetInfo.image && (assetData.assetImage = assetInfo.image)
-        assetInfo.display_decimals && (assetData.assetDecimals = assetInfo.display_decimals)
-    }
 
 
     return <Grid item zeroMinWidth>
@@ -121,21 +104,11 @@ const Asset = ({ assetCollection, data, getAssetInfo }) => {
 
 
 // ...
-export default func.compose(
-    withStyles((theme) => ({
-        colorTextPrimary: {
-            color: theme.palette.primary.light,
-        },
-        colorTextSecondary: {
-            color: theme.palette.secondary.light,
-        },
-    })),
-    connect(
-        (state, ownProps) => ({
-            assetCollection: state.Asset[ownProps.data.asset_issuer] || {},
-        }),
-        (dispatch) => bindActionCreators({
-            getAssetInfo,
-        }, dispatch),
-    ),
-)(Asset)
+export default withStyles((theme) => ({
+    colorTextPrimary: {
+        color: theme.palette.primary.light,
+    },
+    colorTextSecondary: {
+        color: theme.palette.secondary.light,
+    },
+}))(Asset)
