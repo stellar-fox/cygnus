@@ -1,0 +1,16 @@
+html body {
+    font-family: Roboto, "sans-serif";
+    background-color: rgb(15, 46, 83);
+    color: rgb(244, 176, 4);
+}
+
+.centered {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.off {
+  display: none;
+}
