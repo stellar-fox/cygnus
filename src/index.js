@@ -37,7 +37,13 @@ import {
     dynamicImportReducers,
 } from "./lib/utils"
 
-
+// hide main loading spinner the moment custom fonts have loaded
+document.fonts.ready.then(
+    setTimeout(() => document
+        .getElementById("pre-flight-loader")
+        .className = "off", 300
+    )
+)
 
 window.addEventListener("load", () => {
 
