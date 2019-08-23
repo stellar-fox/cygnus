@@ -49,7 +49,7 @@ class AreaLine extends Component {
 
     drawChart () {
 
-        const margin = ({top: 20, right: 20, bottom: 30, left: 30})
+        const margin = ({top: 20, right: 20, bottom: 30, left: 50})
 
         const x = scaleTime()
             .domain(extent(this.state.data, d => d.date))
@@ -79,7 +79,7 @@ class AreaLine extends Component {
             .attr("transform", `translate(${margin.left}, 0)`)
             .call(axisLeft(y)
                 .ticks(5)
-                .tickFormat(format(",.2f")))
+                .tickFormat(format(",.3f")))
             .call(g => g.select(".domain").remove())
             .call(g => g.select(".tick:last-of-type text").clone()
                 .attr("x", 3)
