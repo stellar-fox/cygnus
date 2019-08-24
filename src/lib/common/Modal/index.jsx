@@ -34,6 +34,8 @@ export default ({ open, hideModal, children }) => {
         className={classes.modal}
         open={open}
         onClose={hideModal}
+        onBackdropClick={hideModal}
+        onEscapeKeyDown={hideModal}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{

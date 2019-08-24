@@ -30,7 +30,7 @@ export default connect(
                 </Typography>
             </div>
 
-            <div className="m-t flex-box-col ledger-display">
+            <div className="m-t flex-box-col">
 
                 <div className="flex-box-row space-between ledger-display-item">
                     <Typography noWrap color="primary" variant="caption">
@@ -52,7 +52,7 @@ export default connect(
                         Destination Address:
                     </Typography>
                     <Typography noWrap color="primary" variant="caption">
-                        {string.shorten(balances.payeeAddress || "", 35)}
+                        {string.shorten(balances.payeeAddress || "", 13)}
                     </Typography>
                 </div>
 
@@ -89,7 +89,6 @@ export default connect(
                     Thank you for using Cygnus.
                 </Typography>
             </div>
-
 
         </Fragment>
 )

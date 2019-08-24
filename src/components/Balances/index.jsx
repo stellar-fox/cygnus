@@ -22,7 +22,6 @@ import {
     ConnectedSwitch as Switch,
     resolvePath,
 } from "../StellarRouter"
-import Button from "../../lib/mui-v1/Button"
 import Modal from "../../lib/common/Modal"
 import RegisterCard from "./RegisterCard"
 import NoAccountCard from "./NoAccountCard"
@@ -209,12 +208,7 @@ class Balances extends Component {
                                 this.props.Modal.modalId === "txComplete" &&
                                 this.props.Modal.visible
                             }
-                            actions={[
-                                <Button
-                                    onClick={this.props.hideModal}
-                                    color="primary"
-                                >OK</Button>,
-                            ]}
+                            hideModal={this.props.hideModal}
                         >
                             <TxCompleteMsg />
                         </Modal>

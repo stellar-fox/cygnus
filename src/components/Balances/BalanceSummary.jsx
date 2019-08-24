@@ -42,27 +42,23 @@ const BalanceSummary = ({ accountId, classes, className, data, signers }) => {
         className={className}
         classes={{ root: classes.card }}
     >
-        <BalanceSummaryHeader />
 
+        <BalanceSummaryHeader />
         <CardContent>
-            <div className="flex-box-row space-between">
+            <div className="flex-box-row items-centered space-between">
                 <NativeBalance />
                 <div className="chart-coin-history">
                     <AreaLine
                         id="chart-30d-change"
                         width="800"
-                        height="230"
+                        height="240"
                         data={data}
                     />
                 </div>
             </div>
-
             {accountIsLocked(signers, accountId) && <LockedAccount />}
-
         </CardContent>
-
         <BalanceSummaryFooter />
-
     </Card></Grow>
 }
 

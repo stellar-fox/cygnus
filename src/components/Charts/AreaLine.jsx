@@ -13,7 +13,6 @@ import {
     select,
     timeFormat,
 } from "d3"
-import BigNumber from "bignumber.js"
 
 
 const today = new Date()
@@ -49,7 +48,7 @@ class AreaLine extends Component {
 
     drawChart () {
 
-        const margin = ({top: 20, right: 20, bottom: 30, left: 50})
+        const margin = ({top: 5, right: 30, bottom: 30, left: 50})
 
         const x = scaleTime()
             .domain(extent(this.state.data, d => d.date))
@@ -81,22 +80,6 @@ class AreaLine extends Component {
                 .ticks(5)
                 .tickFormat(format(",.3f")))
             .call(g => g.select(".domain").remove())
-            .call(g => g.select(".tick:last-of-type text").clone()
-                .attr("x", 3)
-                .attr("text-anchor", "start")
-                .attr("font-weight", "bold")
-                .text(`${
-                    this.props.baseSymbol
-                }/${
-                    this.props.coinSymbol
-                } | ATH: ${
-                    this.props.baseSign
-                } ${
-                    new BigNumber(this.props.athPrice).toFixed(2)
-                }  | ${
-                    this.props.change
-                }% THIS MONTH`)
-            )
 
         const areaUnderCurve = area()
             .x(d => x(d.date))
@@ -106,7 +89,6 @@ class AreaLine extends Component {
         let svg = select(`#${this.props.id}`)
             .attr("width", this.props.width)
             .attr("height", this.props.height)
-            .style("margin-left", 100)
 
         let defs = svg.append("defs")
 

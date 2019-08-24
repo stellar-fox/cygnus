@@ -157,5 +157,8 @@ select:-webkit-autofill:focus {
 }
 
 .chart-coin-history {
-    opacity: 0.85;
+    opacity: 0.55;
+    /* position: absolute; */
+    /* right: 0; */
+    /* z-index: 0; */
 }

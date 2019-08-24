@@ -204,7 +204,7 @@ class TxConfirmMsg extends Component {
                     </Typography>
                 </div>
 
-                <div className="m-t flex-box-col ledger-display">
+                <div className="m-t flex-box-col">
 
                     {Balances.newAccount ?
 
