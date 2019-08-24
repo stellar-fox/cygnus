@@ -51,7 +51,10 @@ export const operations = () =>
 // ...
 export const buildSetDataTx = async (txData) =>
     new TransactionBuilder(
-        await loadAccount(txData.source), { fee: BASE_FEE }
+        await loadAccount(txData.source), {
+            fee: BASE_FEE,
+            networkPassphrase: config.network,
+        }
     ).addOperation(Operation.manageData({
         name: txData.name,
         value: txData.value,
@@ -62,7 +65,11 @@ export const buildSetDataTx = async (txData) =>
 
 // ...
 export const buildClearDataTx = async (source) =>
-    new TransactionBuilder(await loadAccount(source), { fee: BASE_FEE })
+    new TransactionBuilder(
+        await loadAccount(source), {
+            fee: BASE_FEE,
+            networkPassphrase: config.network,
+        })
         .addOperation(Operation.manageData({
             name: "idSig",
             value: "",
@@ -79,7 +86,10 @@ export const buildClearDataTx = async (source) =>
 // ...
 export const buildChangeTrustTx = async (txData) => {
     let txBuilder = new TransactionBuilder(
-        await loadAccount(txData.source), { fee: BASE_FEE }
+        await loadAccount(txData.source), {
+            fee: BASE_FEE,
+            networkPassphrase: config.network,
+        }
     )
 
     txData.assets.forEach(asset => {
@@ -106,7 +116,10 @@ export const buildChangeTrustTx = async (txData) => {
 // ...
 export const buildCreateAccountTx = async (txData) =>
     new TransactionBuilder(
-        await loadAccount(txData.source), { fee: BASE_FEE }
+        await loadAccount(txData.source), {
+            fee: BASE_FEE,
+            networkPassphrase: config.network,
+        }
     ).addOperation(Operation.createAccount({
         destination: txData.destination,
         startingBalance: txData.amount,
@@ -118,7 +131,10 @@ export const buildCreateAccountTx = async (txData) =>
 // ...
 export const buildPaymentTx = async (txData) => {
     return new TransactionBuilder(
-        await loadAccount(txData.source), { fee: BASE_FEE }
+        await loadAccount(txData.source), {
+            fee: BASE_FEE,
+            networkPassphrase: config.network,
+        }
     ).addOperation(Operation.payment({
         destination: txData.destination,
         asset: Asset.native(),
@@ -131,7 +147,10 @@ export const buildPaymentTx = async (txData) => {
 // ...
 export const buildAssetPaymentTx = async (txData) =>
     new TransactionBuilder(
-        await loadAccount(txData.source), { fee: BASE_FEE }
+        await loadAccount(txData.source), {
+            fee: BASE_FEE,
+            networkPassphrase: config.network,
+        }
     ).addOperation(Operation.payment({
         destination: txData.destination,
         asset: new Asset(txData.assetCode, txData.assetIssuer),
