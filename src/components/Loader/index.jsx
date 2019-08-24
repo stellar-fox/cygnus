@@ -66,32 +66,32 @@ Loader.propTypes = {
 
 // ...
 export default func.compose(
-    withStyles((t) => ({
+    withStyles((theme) => ({
         circle: {
-            color: t.palette.primary.main,
+            color: theme.palette.primary.main,
         },
         circularProgress: {
             opacity: "0.95",
         },
         layout: {
             position: "absolute",
-            width: t.spacing.unit * 32,
-            height: t.spacing.unit * 16,
+            width: theme.spacing(32),
+            height: theme.spacing(16),
             left: "50%",
             top: "50%",
-            marginLeft: -1 * t.spacing.unit * 16,
-            marginTop: -1 * t.spacing.unit * 8,
+            marginLeft: -1 * theme.spacing(16),
+            marginTop: -1 * theme.spacing(8),
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "column",
         },
 
-        rect: { padding: 2 * t.spacing.unit },
+        rect: { padding: 2 * theme.spacing(1) },
 
         infoMessage: {
             textAlign: "center",
-            color: t.palette.secondary.main,
+            color: theme.palette.secondary.main,
         },
     })),
 )(Loader)

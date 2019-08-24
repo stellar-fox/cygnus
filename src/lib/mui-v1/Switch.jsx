@@ -10,17 +10,12 @@ import { Switch } from "@material-ui/core"
 // <CustomSwitch> component
 export default withStyles((theme) => ({
 
-    bar: {},
-
     checked: {},
 
     primary: {
         color: theme.palette.primary.main,
         "&$checked": {
             color: theme.palette.primary.main,
-            "& + $bar": {
-                backgroundColor: theme.palette.primary.light,
-            },
         },
     },
 
@@ -28,9 +23,6 @@ export default withStyles((theme) => ({
         color: theme.palette.secondary.main,
         "&$checked": {
             color: theme.palette.secondary.main,
-            "& + $bar": {
-                backgroundColor: theme.palette.secondary.light,
-            },
         },
     },
 
@@ -58,7 +50,6 @@ export default withStyles((theme) => ({
                         colorPrimary: classes.primary,
                         colorSecondary: classes.secondary,
                         checked: classes.checked,
-                        bar: classes.bar,
                         disabled: classes.disabled,
                     }}
                     color={color}

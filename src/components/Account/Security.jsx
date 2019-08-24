@@ -22,8 +22,8 @@ export default  () =>
             </div>
         </div>
 
-        <div className="m-t-large f-b space-between outline">
-            <div>
+        <div className="m-t-large flex-box-row space-between outline">
+            <div className="flex-box-col">
                 <Typography variant="body1" color="secondary">
                     Enable two-factor authentication. (2FA)
                 </Typography>
@@ -31,7 +31,7 @@ export default  () =>
                     Confirm your account transations
                     with second authentication factor.
                 </Typography>
-                <NotImplementedBadge />
+                <div><NotImplementedBadge /></div>
             </div>
             <div>
                 <Switch
@@ -44,7 +44,7 @@ export default  () =>
         </div>
 
         <div className="m-t-large f-b space-between outline">
-            <div>
+            <div className="flex-box-col">
                 <Typography variant="body1" color="secondary">
                     Add co-signers to your account.
                 </Typography>
@@ -52,7 +52,7 @@ export default  () =>
                     Multisignature account requires two or
                     more signatures in order to send the transaction.
                 </Typography>
-                <NotImplementedBadge />
+                <div><NotImplementedBadge /></div>
             </div>
             <div>
                 <Switch
