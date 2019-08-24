@@ -41,10 +41,10 @@ import MsgBadgeError from "./MsgBadgeError"
 import MsgBadgeSuccess from "./MsgBadgeSuccess"
 import MsgBadgeWarning from "./MsgBadgeWarning"
 import {
+    Fade,
     CircularProgress,
     Typography,
 } from "@material-ui/core"
-import { Animated } from "react-animated-css"
 import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
 
@@ -523,11 +523,12 @@ class Profile extends Component {
                     className="f-b p-t-small tiny"
                 >
                     {this.props.state.messageUserData.length > 0 ?
-                        <Animated animationIn="fadeInDown"
-                            animationOut="fadeOutUp"
-                            isVisible={true}
-                        >{this.props.state.messageUserData}
-                        </Animated> : <he.Nbsp />}
+                        <Fade in={true} out={true}>
+                            <span className="yellow-light">
+                                {this.props.state.messageUserData}
+                            </span>
+                        </Fade> : <he.Nbsp />
+                    }
                 </div>
 
                 <Divider color="secondary" />
@@ -605,12 +606,11 @@ class Profile extends Component {
 
                 <div className="f-b p-t-small tiny">{
                     this.props.state.messagePaymentData.length > 0 ?
-                        <Animated animationIn="fadeInDown"
-                            animationOut="fadeOutUp"
-                            isVisible={true}
-                        >
-                            {this.props.state.messagePaymentData}
-                        </Animated> : <he.Nbsp />
+                        <Fade in={true} out={true}>
+                            <span className="yellow-light">
+                                {this.props.state.messagePaymentData}
+                            </span>
+                        </Fade> : <he.Nbsp />
                 }</div>
             </div>
         </Fragment>
