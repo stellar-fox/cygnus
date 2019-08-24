@@ -448,7 +448,7 @@ export default connect(
                 container
                 alignContent="flex-start"
                 alignItems="center"
-                spacing={10}
+                spacing={2}
             >
                 { this.formatAssets(this.props.assets) }
             </Grid>

@@ -58,7 +58,6 @@ class PanelExplorer extends Component {
                     display="block"
                     variant="caption"
                     color="secondary"
-                    display="block"
                 >
                     Account transactions and balances are
                     always publicly visible on the

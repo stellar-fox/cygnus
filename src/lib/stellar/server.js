@@ -8,7 +8,7 @@
 
 
 
-import { Network, Server } from "stellar-sdk"
+import { Server } from "stellar-sdk"
 
 
 
@@ -44,11 +44,13 @@ export const testNet = "https://horizon-testnet.stellar.org"
  * @param {String} horizon Horizon end point URL.
  * @returns {Object} Server instance.
  */
-export const createServer = (horizon) => {
-    if (horizon === liveNet) {
-        Network.usePublicNetwork()
-        return new Server(liveNet)
-    }
-    Network.useTestNetwork()
-    return new Server(testNet)
-}
+export const createServer = (horizon) =>
+    horizon === liveNet ?
+        new Server(liveNet) : new Server(testNet)
+
+// {
+//     if (horizon === liveNet) {
+//         return new Server(Networks.PUBLIC)
+//     }
+//     return new Server(Networks.TESTNET)
+// }

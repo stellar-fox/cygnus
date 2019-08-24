@@ -501,7 +501,7 @@ class Contacts extends Component {
                         container
                         alignContent="flex-start"
                         alignItems="center"
-                        spacing={10}
+                        spacing={2}
                     >
                         {this.state.search.length > 0 ?
                             this.showFilteredContacts() :
@@ -521,7 +521,7 @@ class Contacts extends Component {
                         container
                         alignContent="flex-start"
                         alignItems="center"
-                        spacing={10}
+                        spacing={2}
                     >
                         {this.state.search.length > 0 ?
                             this.showFilteredContactRequests() :
@@ -546,7 +546,7 @@ class Contacts extends Component {
                         container
                         alignContent="flex-start"
                         alignItems="center"
-                        spacing={10}
+                        spacing={2}
                     >
                         {this.state.search.length > 0 ?
                             this.showFilteredContacts() :
@@ -571,7 +571,7 @@ class Contacts extends Component {
                         container
                         alignContent="flex-start"
                         alignItems="center"
-                        spacing={10}
+                        spacing={2}
                     >
                         {this.state.search.length > 0 ?
                             this.showFilteredContactRequests() :

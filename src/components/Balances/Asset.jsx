@@ -69,32 +69,26 @@ const Asset = ({ data }) => {
             <div className="flex-box-row space-between items-centered">
                 <Avatar style={{ opacity: 0.5 }} src={assetData.assetImage} />
                 <div className="m-l flex-box-col space-between">
-                    <Typography variant="h4">
-                        <span className="balance-text">
-                            <NumberFormat
-                                value={data.balance}
-                                displayType={"text"}
-                                thousandSeparator={true}
-                                decimalScale={parseInt(assetData.assetDecimals, 10)}
-                                fixedDecimalScale={true}
-                            />
-                        </span>
-                        <span className="asset-code"
-                            style={{marginLeft: "0.5em"}}
-                        >
-                            {assetData.assetCode}
-                        </span>
+                    <Typography className="asset-code" variant="body1">
+                        {assetData.assetCode}
                     </Typography>
-                    <Typography color="textPrimary">
-                        <span className="micro fade-strong">
-                            {shorten(
-                                data.asset_issuer,
-                                13,
-                                shorten.MIDDLE,
-                                "-"
-                            )}
-                        </span>
+                    <Typography className="balance-text" variant="h4">
+                        <NumberFormat
+                            value={data.balance}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            decimalScale={parseInt(assetData.assetDecimals, 10)}
+                            fixedDecimalScale={true}
+                        />
                     </Typography>
+                    <span className="micro fade-strong">
+                        {shorten(
+                            data.asset_issuer,
+                            13,
+                            shorten.MIDDLE,
+                            "-"
+                        )}
+                    </span>
                 </div>
             </div>
         </Paper>

@@ -78,7 +78,6 @@ const CredentialsForm = func.compose(
                 display="block"
                 variant="caption"
                 color="secondary"
-                display="block"
             >
                 Signing up with Account ID:
             </Typography>
@@ -90,7 +89,6 @@ const CredentialsForm = func.compose(
                 display="block"
                 variant="caption"
                 color="secondary"
-                display="block"
             >
                 Account:
             </Typography>
