@@ -70,6 +70,7 @@ const TxConfirm = ({
                     variant="h5"
                     color="primary"
                     align="center"
+                    display="block"
                 >
                     This fingerprint corresponds to your user profile data and
                     ensures that your profile is tamper proof.
@@ -209,7 +210,7 @@ export default func.compose(
     withStyles((theme) => ({
         divider: {
             backgroundColor: theme.palette.primary.fade,
-            marginBottom: theme.spacing.unit,
+            marginBottom: theme.spacing(1),
         },
     })),
     connect(

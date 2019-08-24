@@ -37,11 +37,21 @@ class PanelLedger extends Component {
                     Use the light-weight client to sign
                     transactions with your hardware key ring.
                 </div>
-                <Typography align="center" variant="caption" color="secondary">
+                <Typography
+                    align="center"
+                    variant="caption"
+                    color="secondary"
+                    display="block"
+                >
                     Connect your Ledger Nano S device and
                     select <i>Stellar</i> application.
                 </Typography>
-                <Typography align="center" variant="caption" color="secondary">
+                <Typography
+                    align="center"
+                    variant="caption"
+                    color="secondary"
+                    display="block"
+                >
                     Need help? Visit <a target="_blank"
                         rel="noopener noreferrer"
                         href={ledgerSupportLink}

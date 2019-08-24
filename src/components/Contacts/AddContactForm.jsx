@@ -49,7 +49,7 @@ import {
 // ...
 const styles = (theme) => ({
     button: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         borderRadius: "3px",
     },
 
@@ -496,6 +496,7 @@ class AddContactForm extends Component {
                                 align="center"
                                 variant="body1"
                                 color="primary"
+                                display="block"
                             >
                                 Enter the payment address of the person or an
                                 institution that you would like to add to your
@@ -503,6 +504,7 @@ class AddContactForm extends Component {
                             </Typography>
                             <Typography
                                 align="center"
+                                display="block"
                                 variant="h5"
                                 color="primary"
                                 style={{ marginTop: "1rem" }}
@@ -538,6 +540,7 @@ class AddContactForm extends Component {
                         <div>
                             <Typography
                                 align="center"
+                                display="block"
                                 variant="body1"
                                 color="primary"
                             >
@@ -547,6 +550,7 @@ class AddContactForm extends Component {
                             </Typography>
                             <Typography
                                 align="center"
+                                display="block"
                                 variant="h5"
                                 color="primary"
                                 style={{ marginTop: "1rem" }}
@@ -582,6 +586,7 @@ class AddContactForm extends Component {
                         <div>
                             <Typography
                                 align="center"
+                                display="block"
                                 variant="body1"
                                 color="primary"
                             >
@@ -591,6 +596,7 @@ class AddContactForm extends Component {
                             </Typography>
                             <Typography
                                 align="center"
+                                display="block"
                                 variant="h5"
                                 color="primary"
                                 style={{ marginTop: "1rem" }}

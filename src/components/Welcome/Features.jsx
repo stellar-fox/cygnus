@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core"
 import AboutContent from "./AboutContent"
 import TopHeadingContent from "./TopHeadingContent"
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 
 

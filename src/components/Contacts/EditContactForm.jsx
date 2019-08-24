@@ -55,7 +55,7 @@ import { assetDescription } from "../../lib/asset-utils"
 // ...
 const styles = (theme) => ({
     button: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         borderRadius: "3px",
     },
 

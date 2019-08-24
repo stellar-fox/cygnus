@@ -5,7 +5,7 @@ import { func } from "@xcmats/js-toolbox"
 import { withStyles } from "@material-ui/core/styles"
 import AboutContent from "../Welcome/AboutContent"
 import TopHeadingContent from "../Welcome/TopHeadingContent"
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 import Panel from "../../lib/mui-v1/Panel"
 import {
     LinearProgress,
@@ -80,10 +80,21 @@ const Reset = ({ classes, emailInputError, sendPasswordResetLink, surfaceSnacky 
                     >
                         { complete ?
                             <Fragment>
-                                <Typography style={{ marginTop: "1rem" }} color="secondary" variant="body1" align="center">
+                                <Typography
+                                    style={{ marginTop: "1rem" }}
+                                    color="secondary"
+                                    variant="body1"
+                                    align="center"
+                                    display="block"
+                                >
                                     Your password reset link is on the way.
                                 </Typography>
-                                <Typography color="secondary" variant="body2" align="center">
+                                <Typography
+                                    color="secondary"
+                                    variant="body2"
+                                    align="center"
+                                    display="block"
+                                >
                                     Please check your mailbox.
                                 </Typography>
                             </Fragment> :

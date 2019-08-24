@@ -21,7 +21,7 @@ import {
 // ...
 const styles = (theme) => ({
     group: {
-        margin: `${theme.spacing.unit}px 0`,
+        margin: `${theme.spacing(1)}px 0`,
     },
     root: {
         color: theme.palette.primary.main,

@@ -73,13 +73,25 @@ const CredentialsForm = func.compose(
     return <div>
         {props.accountId && props.account &&
         <Fragment>
-            <Typography align="center" variant="caption" color="secondary">
+            <Typography
+                align="center"
+                display="block"
+                variant="caption"
+                color="secondary"
+                display="block"
+            >
                 Signing up with Account ID:
             </Typography>
             <div className="panel-title">
                 {shorten(props.accountId, 11, shorten.MIDDLE, "-")}
             </div>
-            <Typography align="center" variant="caption" color="secondary">
+            <Typography
+                align="center"
+                display="block"
+                variant="caption"
+                color="secondary"
+                display="block"
+            >
                 Account:
             </Typography>
             <div className="panel-title">

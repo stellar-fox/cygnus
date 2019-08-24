@@ -71,12 +71,15 @@ export default memo(compose(
             <div className={classes.appBarTitle}>
                 <div className={classes.barTitleAccount}>
                     {authenticated ?
-                        <Typography align="center" variant="body1"
+                        <Typography
+                            align="center"
+                            variant="body1"
+                            display="block"
                             noWrap color="primary"
                         >
                             {formatFullName(firstName, lastName)}
                         </Typography> : <Typography align="center"
-                            variant="h5" color="primary"
+                            variant="h5" color="primary" display="block"
                         >Account</Typography>
                     }
                 </div>

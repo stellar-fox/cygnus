@@ -12,7 +12,7 @@ import PanelExplorer from "./PanelExplorer"
 import PanelLedger from "./PanelLedger"
 import PanelLogin from "./PanelLogin"
 import ledgerhqlogo from "./static/ledgerhqlogo.svg"
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 
 

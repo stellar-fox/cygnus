@@ -24,7 +24,7 @@ class RegisterCard extends Component {
     // ...
     render = () => (({ classes }) =>
         <Card classes={{ root: classes.card }} className="welcome-card">
-            <CardActions className={classes.actions} disableActionSpacing>
+            <CardActions className={classes.actions}>
 
                 <Typography
                     style={{ paddingLeft: "0.5rem" }}

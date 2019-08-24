@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core"
 import AboutContent from "../Welcome/AboutContent"
 import TopHeadingContent from "../Welcome/TopHeadingContent"
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 
 

@@ -175,9 +175,10 @@ class Settings extends Component {
                 </div>
             </div>
 
-            <div className="account-title p-t-large">
-                Your Account ID:
-            </div>
+            <Typography variant="h4" color="secondary" className="p-t-large">
+                Your Account ID
+            </Typography>
+
             <div className="account-subtitle m-t-small">
                 <span className="badge badge-secondary">
                     {this.props.publicKey}
@@ -198,13 +199,16 @@ class Settings extends Component {
             ) && <Typography variant="caption" color="inherit">
                     Warning: This account is locked!
             </Typography>}
-            <div className="account-title p-t-large">
-                Preferred Currency:
-            </div>
-            <div className="account-subtitle">
+
+            <Typography variant="h4" color="secondary" className="p-t-large">
+                Preferred Currency
+            </Typography>
+
+            <Typography variant="h5" color="secondary" className="p-b">
                 Choose the currency that you prefer to use for this
                 account.
-            </div>
+            </Typography>
+
             <RadioButtonGroup
                 name="currencySelect"
                 value={this.props.currency}

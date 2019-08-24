@@ -16,7 +16,7 @@ import {
 export default withStyles((theme) => ({
 
     group: {
-        margin: `0 ${theme.spacing.unit}px 0 0`,
+        margin: `0 ${theme.spacing(1)}px 0 0`,
     },
 
     primary: {

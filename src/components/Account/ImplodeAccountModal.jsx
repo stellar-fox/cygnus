@@ -150,6 +150,7 @@ const ImplodeAccountModal = ({
                     color="primary"
                     variant="h5"
                     align="center"
+                    display="block"
                 >
                     <span className="red-badge">
                         You will need your Ledger device connected before you can proceed.

@@ -77,7 +77,12 @@ export default connect(
             </div>
 
             <div className="p-t flex-box-col items-centered">
-                <Typography variant="h5" color="primary" align="center">
+                <Typography
+                    variant="h5"
+                    color="primary"
+                    align="center"
+                    display="block"
+                >
                     Funds have arrived to the destination account.
                 </Typography>
                 <Typography variant="h6" color="primary" noWrap>

@@ -48,7 +48,7 @@ const styles = (theme) => ({
     },
     divider: {
         backgroundColor: theme.palette.primary.fade,
-        marginBottom: theme.spacing.unit,
+        marginBottom: theme.spacing(1),
     },
 })
 
@@ -148,8 +148,11 @@ class TxConfirmMsg extends Component {
                             gravatarSize}&d=robohash`}
                         />
 
-                        <Typography align="center" color="primary"
+                        <Typography
+                            align="center"
+                            color="primary"
                             variant="body2"
+                            display="block"
                         >
                             {formatFullName(
                                 this.state.contact.first_name,
@@ -157,7 +160,10 @@ class TxConfirmMsg extends Component {
                             )}
                         </Typography>
 
-                        <Typography align="center" color="primary"
+                        <Typography
+                            align="center"
+                            color="primary"
+                            display="block"
                             variant="h4" noWrap
                         >
                             Receives: {this.state.receiverCurrency} {this.state.receives}

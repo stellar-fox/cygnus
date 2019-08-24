@@ -29,18 +29,18 @@ export default connect(
                 align="center"
                 variant="caption"
                 color="secondary"
+                display="block"
             >
-                <span>
-                    <b><Link to="/reset">Forgot password?</Link></b>
-                </span>
+                <Link to="/reset">Forgot password?</Link>
             </Typography>
             <Typography
                 align="center"
                 variant="caption"
                 color="secondary"
+                display="block"
             >
                 Don't have an account yet? <span>
-                    <b><Link to="/signup">Sign up!</Link></b>
+                    <Link to="/signup">Sign up.</Link>
                 </span>
             </Typography>
 

@@ -4,7 +4,7 @@ import {
     version,
 } from "../../../package.json"
 import { timeUnit } from "@xcmats/js-toolbox"
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 
 

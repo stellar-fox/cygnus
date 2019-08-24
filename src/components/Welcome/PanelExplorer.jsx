@@ -53,7 +53,13 @@ class PanelExplorer extends Component {
                     To view public account record enter <em>
                     Payment Address</em> or <em>Account Number</em>.
                 </div>
-                <Typography align="center" variant="caption" color="secondary">
+                <Typography
+                    align="center"
+                    display="block"
+                    variant="caption"
+                    color="secondary"
+                    display="block"
+                >
                     Account transactions and balances are
                     always publicly visible on the
                     globally distributed ledger.

@@ -17,7 +17,7 @@ export default compose(
         root: {
             flexShrink: 0,
             color: theme.palette.primary.main,
-            marginLeft: theme.spacing.unit * 2.5,
+            marginLeft: theme.spacing(2.5),
         },
     }), { withTheme: true }),
     connect(

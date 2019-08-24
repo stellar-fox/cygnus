@@ -11,7 +11,12 @@ export default () =>
         <Typography variant="body1" color="secondary">
             Payment History
         </Typography>
-        <Typography variant="caption" color="secondary">
+        <Typography
+            display="block"
+            className="p-b"
+            variant="caption"
+            color="secondary"
+        >
             Newest transactions shown as first.
         </Typography>
         <PaymentsTable />

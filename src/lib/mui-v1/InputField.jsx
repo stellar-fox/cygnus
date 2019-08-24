@@ -38,7 +38,7 @@ export default withStyles((theme) => ({
     },
 
     root: {
-        color: "rgba(212,228,188,0.6)",
+        color: "rgba(212,228,188,0.6) !important",
     },
     shrink: { color: "rgba(212,228,188,0.4) !important" },
     rootPrimary: { color: "rgba(15, 46, 83, 0.8)" },
@@ -75,9 +75,7 @@ export default withStyles((theme) => ({
                     <InputLabel
                         classes={{
                             shrink: color === "secondary" ? classes.shrink : classes.shrinkPrimary,
-                        }}
-                        FormLabelClasses={{
-                            root: color === "secondary" ? classes.root : classes.rootPrimary,
+                            formControl: classes.root,
                             focused: classes.focused,
                         }}
                     >

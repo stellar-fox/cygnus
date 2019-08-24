@@ -1,14 +1,14 @@
 import React from "react"
 import VerifiedUser from "@material-ui/icons/VerifiedUser"
-
+import { Typography } from "@material-ui/core"
 
 
 
 // ...
 export default () =>
-    <div className="f-b p-b">
+    <div className="flex-box-row items-centered p-b">
         <VerifiedUser className="svg-margin svg-success svg-tiny" />
-        <span className="small">
+        <Typography variant="body1" color="secondary">
             Data integrity signature verified.
-        </span>
+        </Typography>
     </div>

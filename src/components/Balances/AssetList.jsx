@@ -41,10 +41,10 @@ const baseAssets = config.assets.codes.map(
 const styles = theme => ({
     progress: {
         color: theme.palette.secondary.main,
-        marginRight: theme.spacing.unit,
-        marginBottom: theme.spacing.unit / 1.10,
-        marginTop: theme.spacing.unit / 1.10,
-        padding: theme.spacing.unit,
+        marginRight: theme.spacing(1),
+        marginBottom: theme.spacing(0.9091),
+        marginTop: theme.spacing(0.9091),
+        padding: theme.spacing(1),
     },
 })
 
@@ -448,7 +448,7 @@ export default connect(
                 container
                 alignContent="flex-start"
                 alignItems="center"
-                spacing={16}
+                spacing={10}
             >
                 { this.formatAssets(this.props.assets) }
             </Grid>

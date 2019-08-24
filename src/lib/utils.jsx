@@ -609,7 +609,8 @@ export const htmlEntities = {
 export const shallowEquals = (objA, objB) => {
     if (Object.keys(objA).length !== Object.keys(objB).length)
         return false
-    for (let k in objA)
+    let k
+    for (k in objA)
         if (!(k in objB) || objA[k] !== objB[k])
             return false
     return true

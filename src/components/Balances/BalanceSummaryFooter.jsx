@@ -25,17 +25,17 @@ const BalanceSummaryFooter = memo(({
         setBalancesState({
             fundCardVisible: !fundCardVisible,
         })
-    }, [fundCardVisible])
+    }, [fundCardVisible, setBalancesState])
 
 
     const togglePaymentCard = React.useCallback(() => {
         setBalancesState({
             payCardVisible: !payCardVisible,
         })
-    }, [payCardVisible])
+    }, [payCardVisible, setBalancesState])
 
 
-    return <CardActions disableActionSpacing>
+    return <CardActions>
         {!accountIsLocked(signers, accountId) &&
             <Fragment>
                 <Button

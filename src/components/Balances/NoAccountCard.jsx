@@ -111,7 +111,7 @@ const NoAccountCard = ({
             </div>
 
         </CardContent>
-        <CardActions disableActionSpacing>
+        <CardActions>
             <Button
                 color="success"
                 onClick={toggleFundCard}

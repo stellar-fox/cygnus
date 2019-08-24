@@ -127,6 +127,7 @@ export default compose(
                 <Grid item>
                     <Typography
                         align="center"
+                        display="block"
                         variant="body1"
                         color="secondary"
                     >
@@ -148,12 +149,14 @@ export default compose(
                     <Typography
                         style={{ fontWeight: 600 }}
                         align="center"
+                        display="block"
                         variant="body1"
                     >
                         <span className="red">Error</span>
                     </Typography>
                     <Typography
                         align="center"
+                        display="block"
                         variant="h5"
                         color="secondary"
                     >
@@ -166,6 +169,7 @@ export default compose(
                 <Grid item>
                     <Typography
                         align="center"
+                        display="block"
                         variant="body1"
                         color="secondary"
                     >
@@ -173,6 +177,7 @@ export default compose(
                     </Typography>
                     <Typography
                         align="center"
+                        display="block"
                         variant="h5"
                         color="secondary"
                     >

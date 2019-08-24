@@ -36,7 +36,7 @@ const AssetGrid = ({ assets }) => {
         container
         alignContent="flex-start"
         alignItems="center"
-        spacing={16}
+        spacing={10}
     >
         {assets.map((asset) =>
             <Asset

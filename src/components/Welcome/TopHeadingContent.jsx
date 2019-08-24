@@ -7,7 +7,7 @@ import {
     Typography,
 } from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 import { Link } from "react-router-dom"
 import { withStyles } from "@material-ui/core/styles"
 import cygnusYellow from "../StellarFox/static/cygnusYellow.svg"

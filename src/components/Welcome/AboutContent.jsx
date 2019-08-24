@@ -6,7 +6,7 @@ import {
     Link as MuiLink,
     Typography,
 } from "@material-ui/core"
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 import { withStyles } from "@material-ui/core/styles"
 import ledgerhqlogo from "./static/ledgerhqlogo.svg"
 import stellarlogo from "../StellarFox/static/stellar-logo.svg"

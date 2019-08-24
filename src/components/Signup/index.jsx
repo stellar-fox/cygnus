@@ -12,7 +12,7 @@ import {
     Tabs,
     Typography,
 } from "@material-ui/core"
-import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery"
+import useMediaQuery from "@material-ui/core/useMediaQuery"
 import { withStyles } from "@material-ui/core/styles"
 import ledgerhqlogo from "../Welcome/static/ledgerhqlogo.svg"
 import Panel from "../../lib/mui-v1/Panel"
@@ -128,15 +128,30 @@ const ManualEntryForm = func.compose(
             <div className="m-t-small panel-title">
                 Provide your Account ID.
             </div>
-            <Typography align="center" variant="caption" color="secondary">
+            <Typography
+                align="center"
+                display="block"
+                variant="caption"
+                color="secondary"
+            >
                 Your <em>Account ID</em> has 56 characters and
                 starts with a letter "G".
             </Typography>
-            <Typography align="center" variant="caption" color="secondary">
+            <Typography
+                align="center"
+                variant="caption"
+                color="secondary"
+                display="block"
+            >
                 <em>Account</em> is the path number for accessing it on your
                 Ledger device.
             </Typography>
-            <Typography align="center" variant="caption" color="secondary">
+            <Typography
+                align="center"
+                variant="caption"
+                color="secondary"
+                display="block"
+            >
                 Need help? <a target="_blank"
                     rel="noopener noreferrer"
                     href={ledgerDocsInfiniteTreeLink}
@@ -288,6 +303,7 @@ const Signup = ({ classes, clearInputErrorMessages }) => {
                             </div>
                             <Typography
                                 align="center"
+                                display="block"
                                 variant="caption"
                                 color="secondary"
                             >
@@ -296,6 +312,7 @@ const Signup = ({ classes, clearInputErrorMessages }) => {
                             </Typography>
                             <Typography
                                 align="center"
+                                display="block"
                                 variant="caption"
                                 color="secondary"
                             >

@@ -158,8 +158,4 @@ select:-webkit-autofill:focus {
 
 .chart-coin-history {
     opacity: 0.85;
-    position: absolute;
-    top: 5px;
-    right: 0px;
-    z-index: 0;
 }

@@ -45,7 +45,7 @@ const BalanceSummary = ({ accountId, classes, className, data, signers }) => {
         <BalanceSummaryHeader />
 
         <CardContent>
-            <div className="flex-box-row">
+            <div className="flex-box-row space-between">
                 <NativeBalance />
                 <div className="chart-coin-history">
                     <AreaLine

@@ -41,17 +41,18 @@ import LCARSInput from "../../lib/common/LCARSInput"
 const styles = (theme) => ({
 
     nocards: {
+        display: "block",
         color: theme.palette.secondary.dark,
-        paddingLeft: "0.5rem",
-        paddingTop: "0.5rem",
+        paddingLeft: "2.5rem",
+        paddingTop: "2.5rem",
     },
 
     paper: {
         position: "absolute",
-        width: theme.spacing.unit * 80,
+        width: theme.spacing(80),
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[24],
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
@@ -72,7 +73,7 @@ const styles = (theme) => ({
     },
 
     formControl: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         minWidth: "150px",
     },
 
@@ -169,10 +170,10 @@ const AddContactButton = withStyles(styles)(
 const NoCards = withStyles(styles)(
     ({ classes, title, subtitle }) =>
         <div className={classes.nocards}>
-            <Typography noWrap  variant="body1" color="inherit">
+            <Typography variant="body1" color="inherit">
                 {title}
             </Typography>
-            <Typography noWrap  variant="caption" color="inherit">
+            <Typography variant="caption" color="inherit">
                 {subtitle}
             </Typography>
         </div>
@@ -500,14 +501,14 @@ class Contacts extends Component {
                         container
                         alignContent="flex-start"
                         alignItems="center"
-                        spacing={16}
+                        spacing={10}
                     >
                         {this.state.search.length > 0 ?
                             this.showFilteredContacts() :
                             this.showAllContacts()
                         }
                     </Grid>
-                    <div className="m-t-medium">
+                    <div className="m-t-x-large">
                         <Typography variant="body1" color="secondary">
                             Requests
                         </Typography>
@@ -520,7 +521,7 @@ class Contacts extends Component {
                         container
                         alignContent="flex-start"
                         alignItems="center"
-                        spacing={16}
+                        spacing={10}
                     >
                         {this.state.search.length > 0 ?
                             this.showFilteredContactRequests() :
@@ -545,7 +546,7 @@ class Contacts extends Component {
                         container
                         alignContent="flex-start"
                         alignItems="center"
-                        spacing={16}
+                        spacing={10}
                     >
                         {this.state.search.length > 0 ?
                             this.showFilteredContacts() :
@@ -570,7 +571,7 @@ class Contacts extends Component {
                         container
                         alignContent="flex-start"
                         alignItems="center"
-                        spacing={16}
+                        spacing={10}
                     >
                         {this.state.search.length > 0 ?
                             this.showFilteredContactRequests() :

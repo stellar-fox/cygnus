@@ -8,7 +8,6 @@ import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
 import {
     CircularProgress,
-    Paper,
     Table,
     TableBody,
     TableCell,
@@ -46,6 +45,12 @@ const CustomTableCell = withStyles((theme) => ({
         color: theme.palette.primary.main,
         borderBottom: `1px solid ${theme.palette.primary.fade}`,
         fontSize: "1rem",
+        "&:first-child": {
+            borderTopLeftRadius: "2px",
+        },
+        "&:last-child": {
+            borderTopRightRadius: "2px",
+        },
     },
     body: {
         fontSize: "0.9rem",
@@ -62,13 +67,20 @@ export default compose(
     withStyles((theme) => ({
         root: {
             width: "100%",
-            marginTop: theme.spacing.unit * 3,
+            marginTop: theme.spacing(3),
             overflowX: "auto",
-            borderRadiusTop: "3px",
-            borderRadiusBottom: "0px",
         },
         table: {
             minWidth: 700,
+        },
+        tableBody: {
+            backgroundColor: theme.palette.secondary.main,
+        },
+        tableFooter: {
+            backgroundColor: theme.palette.secondary.main,
+        },
+        TablePagination: {
+            border: 0,
         },
         row: {
             "&:nth-of-type(odd)": {
@@ -285,74 +297,45 @@ export default compose(
                 let emptyRows = rowsPerPage - Math.min(
                     rowsPerPage, rows.length - page * rowsPerPage)
 
-                return <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <CustomTableCell>Date</CustomTableCell>
-                                <CustomTableCell>Transaction Details</CustomTableCell>
-                                <CustomTableCell align="right">Amount</CustomTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-                                return (
-                                    <TableRow className={classes.row} key={row.pagingToken}>
-                                        <CustomTableCell>
-                                            {row.dateTime}
-                                        </CustomTableCell>
-                                        <CustomTableCell>
+
+                return <Table className={classes.table}>
+                    <TableHead>
+                        <TableRow>
+                            <CustomTableCell>Date</CustomTableCell>
+                            <CustomTableCell>Transaction Details</CustomTableCell>
+                            <CustomTableCell align="right">Amount</CustomTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody className={classes.tableBody}>
+                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
+                            return (
+                                <TableRow className={classes.row} key={row.pagingToken}>
+                                    <CustomTableCell>
+                                        {row.dateTime}
+                                    </CustomTableCell>
+                                    <CustomTableCell>
+                                        <div className="flex-box-col">
+                                            {this.titleizeType(row.type)}
+                                            <span className="tiny fade-extreme">
+                                                {row.transactionHash}
+                                            </span>
+                                        </div>
+                                    </CustomTableCell>
+                                    <CustomTableCell align="right">
+                                        {row.assetCode ?
                                             <div className="flex-box-col">
-                                                {this.titleizeType(row.type)}
-                                                <span className="tiny fade-extreme">
-                                                    {row.transactionHash}
-                                                </span>
-                                            </div>
-                                        </CustomTableCell>
-                                        <CustomTableCell align="right">
-                                            {row.assetCode ?
-                                                <div className="flex-box-col">
-                                                    { new BigNumber(row.amount.bestBid).isEqualTo(0) ?
-                                                        <div className="tiny fade-strong">
-                                                            Price Not Available
-                                                        </div> :
-
-                                                        <div className={row.amount.sign === "+" ? "green" : "red"}>
-                                                            <span className="p-r-tiny">
-                                                                {row.amount.sign}
-                                                            </span>
-                                                            {<NumberFormat
-                                                                value={nativeToAsset(
-                                                                    new BigNumber(row.amount.bestBid).times(row.amount.value).toFixed(2),
-                                                                    preferredRate,
-                                                                )}
-                                                                displayType={"text"}
-                                                                thousandSeparator={true}
-                                                                decimalScale={2}
-                                                                fixedDecimalScale={true}
-                                                            />}
-                                                            <span className="p-l-small">
-                                                                {this.props.preferredCurrency.toUpperCase()}
-                                                            </span>
-                                                        </div>
-                                                    }
-
-
+                                                { new BigNumber(row.amount.bestBid).isEqualTo(0) ?
                                                     <div className="tiny fade-strong">
-                                                        {this.colorize(row.amount)}
-                                                        <span className="p-l-small">
-                                                            {row.assetCode}
-                                                        </span>
-                                                    </div>
-                                                </div> :
-                                                <div className="flex-box-col">
+                                                        Price Not Available
+                                                    </div> :
+
                                                     <div className={row.amount.sign === "+" ? "green" : "red"}>
                                                         <span className="p-r-tiny">
                                                             {row.amount.sign}
                                                         </span>
                                                         {<NumberFormat
                                                             value={nativeToAsset(
-                                                                row.amount.value,
+                                                                new BigNumber(row.amount.bestBid).times(row.amount.value).toFixed(2),
                                                                 preferredRate,
                                                             )}
                                                             displayType={"text"}
@@ -364,89 +347,118 @@ export default compose(
                                                             {this.props.preferredCurrency.toUpperCase()}
                                                         </span>
                                                     </div>
-                                                    <div className="tiny fade-strong">
-                                                        {this.colorize(row.amount)}
-                                                        <span className="p-l-small">
-                                                            {stellarLumenSymbol}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </CustomTableCell>
-                                    </TableRow>
-                                )
-                            })}
-                            {emptyRows > 0 && (
-                                <TableRow className={classes.row}
-                                    style={{ height: 48 * emptyRows }}
-                                >
-                                    <CustomTableCell colSpan={3}>
-                                        <div style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            alignContent: "flex-start",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                        }}
-                                        >
-                                            {this.state.loading &&
-                                                <CircularProgress className={classes.progress}
-                                                    thickness={4} size={40}
-                                                />
-                                            }
-                                            {this.state.error &&
-                                                (<Fragment>
-                                                    <Typography color="primary" variant="h6">
-                                                        <span className="fade-extreme">
-                                                            Hmm. We're having trouble fetching this data.
-                                                        </span>
-                                                    </Typography>
-                                                    <Typography color="primary" variant="caption">
-                                                        <span className="fade-extreme">
-                                                            {this.state.errorMessage}
-                                                        </span>
-                                                    </Typography>
-                                                </Fragment>)
-                                            }
-                                            {!this.state.error && !this.state.loading &&
-                                            <Typography color="primary" variant="h6">
-                                                <span className="fade-extreme">
-                                                    That's it. No more records.
-                                                </span>
-                                            </Typography>
-                                            }
+                                                }
 
-                                        </div>
+
+                                                <div className="tiny fade-strong">
+                                                    {this.colorize(row.amount)}
+                                                    <span className="p-l-small">
+                                                        {row.assetCode}
+                                                    </span>
+                                                </div>
+                                            </div> :
+                                            <div className="flex-box-col">
+                                                <div className={row.amount.sign === "+" ? "green" : "red"}>
+                                                    <span className="p-r-tiny">
+                                                        {row.amount.sign}
+                                                    </span>
+                                                    {<NumberFormat
+                                                        value={nativeToAsset(
+                                                            row.amount.value,
+                                                            preferredRate,
+                                                        )}
+                                                        displayType={"text"}
+                                                        thousandSeparator={true}
+                                                        decimalScale={2}
+                                                        fixedDecimalScale={true}
+                                                    />}
+                                                    <span className="p-l-small">
+                                                        {this.props.preferredCurrency.toUpperCase()}
+                                                    </span>
+                                                </div>
+                                                <div className="tiny fade-strong">
+                                                    {this.colorize(row.amount)}
+                                                    <span className="p-l-small">
+                                                        {stellarLumenSymbol}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        }
                                     </CustomTableCell>
                                 </TableRow>
-                            )}
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TablePagination
-                                    colSpan={3}
-                                    count={rows.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onChangePage={this.handleChangePage}
-                                    rowsPerPageOptions={[ 5, 10, 15 ]}
-                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                    ActionsComponent={PaginatorActions}
-                                    labelDisplayedRows={
-                                        ({ from, to, count }) =>
-                                            `Showing: ${from}-${to} of ${count}`
-                                    }
-                                    classes={{
-                                        selectIcon: classes.selectIcon,
-                                        caption: classes.caption,
-                                        select: classes.pagination,
-                                        selectRoot: classes.selectRoot,
+                            )
+                        })}
+                        {emptyRows > 0 && (
+                            <TableRow className={classes.row}
+                                style={{ height: 48 * emptyRows }}
+                            >
+                                <CustomTableCell colSpan={3}>
+                                    <div style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignContent: "flex-start",
+                                        justifyContent: "center",
+                                        alignItems: "center",
                                     }}
-                                />
+                                    >
+                                        {this.state.loading &&
+                                            <CircularProgress className={classes.progress}
+                                                thickness={4} size={40}
+                                            />
+                                        }
+                                        {this.state.error &&
+                                            (<Fragment>
+                                                <Typography color="primary" variant="h6">
+                                                    <span className="fade-extreme">
+                                                        Hmm. We're having trouble fetching this data.
+                                                    </span>
+                                                </Typography>
+                                                <Typography color="primary" variant="caption">
+                                                    <span className="fade-extreme">
+                                                        {this.state.errorMessage}
+                                                    </span>
+                                                </Typography>
+                                            </Fragment>)
+                                        }
+                                        {!this.state.error && !this.state.loading &&
+                                        <Typography color="primary" variant="h4">
+                                            <span className="fade-extreme">
+                                                That's it. No more records.
+                                            </span>
+                                        </Typography>
+                                        }
+
+                                    </div>
+                                </CustomTableCell>
                             </TableRow>
-                        </TableFooter>
-                    </Table>
-                </Paper>
+                        )}
+                    </TableBody>
+                    <TableFooter className={classes.tableFooter}>
+                        <TableRow>
+                            <TablePagination
+                                colSpan={3}
+                                count={rows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onChangePage={this.handleChangePage}
+                                rowsPerPageOptions={[ 5, 10, 15 ]}
+                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                ActionsComponent={PaginatorActions}
+                                labelDisplayedRows={
+                                    ({ from, to, count }) =>
+                                        `Showing: ${from}-${to} of ${count}`
+                                }
+                                classes={{
+                                    root: classes.TablePagination,
+                                    selectIcon: classes.selectIcon,
+                                    caption: classes.caption,
+                                    select: classes.pagination,
+                                    selectRoot: classes.selectRoot,
+                                }}
+                            />
+                        </TableRow>
+                    </TableFooter>
+                </Table>
             }
         )(this.props, this.state)
 
