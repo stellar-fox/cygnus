@@ -47,10 +47,3 @@ export const testNet = "https://horizon-testnet.stellar.org"
 export const createServer = (horizon) =>
     horizon === liveNet ?
         new Server(liveNet) : new Server(testNet)
-
-// {
-//     if (horizon === liveNet) {
-//         return new Server(Networks.PUBLIC)
-//     }
-//     return new Server(Networks.TESTNET)
-// }
