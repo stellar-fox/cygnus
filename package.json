@@ -40,7 +40,6 @@
         "hoist-non-react-statics": "^3.3.0",
         "jss": "^9.8.7",
         "lodash": "^4.17.15",
-        "material-ui": "^0.20.2",
         "number-to-text": "^0.3.8",
         "prop-types": "^15.7.2",
         "query-string": "^6.8.2",

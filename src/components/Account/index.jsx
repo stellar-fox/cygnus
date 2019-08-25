@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import {
     bindActionCreators,
@@ -16,13 +16,14 @@ import {
     withDynamicRoutes,
     withStaticRouter,
 } from "../StellarRouter"
-import { rgba } from "../../lib/utils"
 import { action as AccountAction } from "../../redux/Account"
 import { action as LoginManagerAction } from "../../redux/LoginManager"
+import SwipeableViews from "react-swipeable-views"
 import {
     Tab,
     Tabs,
-} from "material-ui/Tabs"
+} from "@material-ui/core"
+import { withStyles } from "@material-ui/core/styles"
 import Profile from "./Profile"
 import Settings from "./Settings"
 import Security from "./Security"
@@ -32,21 +33,66 @@ import "./index.css"
 
 
 // ...
-const styles = {
-    tab: {
-        backgroundColor: "#2e5077",
-        borderRadius: "3px",
-        color: rgba(244, 176, 4, 0.9),
+const styles = (theme) => ({
+    tabs: {
+        backgroundColor: theme.palette.primary.other,
+        borderTopLeftRadius: "2px",
+        borderTopRightRadius: "2px",
     },
-    inkBar: {
-        backgroundColor: rgba(244, 176, 4, 0.8),
-    },
-    container: {
-        backgroundColor: "#2e5077",
-        borderRadius: "3px",
-    },
-}
 
+    tab: {
+        color: theme.palette.secondary.main,
+    },
+
+    indicator: {
+        backgroundColor: theme.palette.secondary.main,
+    },
+
+    tabSelected: {
+        color: theme.palette.secondary.light,
+    },
+})
+
+
+
+const ChoiceTabs = withStyles(styles)(
+    ({ authenticated, classes, onChange, value }) =>
+        <Tabs
+            variant="fullWidth"
+            value={ value }
+            onChange={ onChange }
+            classes={{
+                root: classes.tabs,
+                indicator: classes.indicator,
+            }}
+        >
+            <Tab
+                classes={{
+                    root: classes.tab,
+                    selected: classes.tabSelected,
+                }}
+                label="Settings"
+            />
+            {authenticated &&
+                <Tab
+                    classes={{
+                        root: classes.tab,
+                        selected: classes.tabSelected,
+                    }}
+                    label="Profile"
+                />
+            }
+            {authenticated &&
+                <Tab
+                    classes={{
+                        root: classes.tab,
+                        selected: classes.tabSelected,
+                    }}
+                    label="Security"
+                />
+            }
+        </Tabs>
+)
 
 
 
@@ -81,15 +127,15 @@ class Account extends Component {
 
 
     // ...
-    handleTabSelect = (value) => {
-        this.props.setState({ tabSelected: value })
-        this.props.staticRouter.pushByView(value)
+    handleTabSelect = (_event, value) => {
+        this.props.setState({ tabSelected: this.validTabNames[value] })
+        this.props.staticRouter.pushByView(this.validTabNames[value])
     }
 
 
     // ...
     render = () => (
-        ({ 
+        ({
             authenticated, currentView, staticRouter: { getPath }, tabSelected,
         }) =>
             <Switch>
@@ -104,46 +150,30 @@ class Account extends Component {
                             getPath(currentView) : getPath(tabSelected)
                     }
                 >
-                    <Tabs
-                        tabItemContainerStyle={styles.container}
-                        inkBarStyle={styles.inkBar}
-                        value={
-                            this.validTabNames
-                                .indexOf(currentView) !== -1 ?
-                                currentView :
-                                tabSelected
-                        }
-                        onChange={this.handleTabSelect}
-                        className="tabs-container"
-                    >
-                        <Tab
-                            style={styles.tab}
-                            label={this.validTabNames[0]}
-                            value={this.validTabNames[0]}
+                    <Fragment>
+                        <ChoiceTabs
+                            authenticated={authenticated}
+                            onChange={this.handleTabSelect}
+                            value={this.validTabNames
+                                .indexOf(currentView)}
+                        />
+
+                        <SwipeableViews
+                            axis={this.props.theme.direction === "rtl" ? "x-reverse" : "x"}
+                            index={this.validTabNames.indexOf(currentView)}
                         >
-                            <Settings />
-                        </Tab>
-                        {
-                            authenticated ?
-                                <Tab
-                                    style={styles.tab}
-                                    label={this.validTabNames[1]}
-                                    value={this.validTabNames[1]}
-                                >
-                                    <Profile />
-                                </Tab> : null
-                        }
-                        {
-                            authenticated ?
-                                <Tab
-                                    style={styles.tab}
-                                    label={this.validTabNames[2]}
-                                    value={this.validTabNames[2]}
-                                >
-                                    <Security />
-                                </Tab> : null
-                        }
-                    </Tabs>
+                            <div className="swipeable-tab-container">
+                                <Settings />
+                            </div>
+                            <div className="swipeable-tab-container">
+                                <Profile />
+                            </div>
+                            <div className="swipeable-tab-container">
+                                <Security />
+                            </div>
+                        </SwipeableViews>
+                    </Fragment>
+
                 </Route>
                 <Redirect exact to={getPath(tabSelected)} />
             </Switch>
@@ -158,11 +188,12 @@ export default compose(
     withDynamicRoutes,
     connect(
         // map state to props.
-        (state) => ({
+        (state, theme) => ({
             authenticated: state.Auth.authenticated,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
             tabSelected: state.Account.tabSelected,
+            theme,
         }),
         // map dispatch to props.
         (dispatch) => bindActionCreators({

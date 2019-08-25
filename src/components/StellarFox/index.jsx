@@ -12,8 +12,6 @@ import * as env from "./env"
 import { MuiThemeProvider } from "@material-ui/core/styles"
 import sFoxTheme from "../../lib/sfox-mui-theme"
 import { CssBaseline } from "@material-ui/core"
-import LegacyMuiThemeProvider from "material-ui/styles/MuiThemeProvider"
-import sFoxThemeLegacy from "../../lib/sfox-mui-theme.legacy"
 import Layout from "../Layout"
 import { config } from "../../config"
 import firebase from "firebase/app"
@@ -36,20 +34,18 @@ export default ({ history, store }) =>
     <Provider store={store}>
         <Router history={history}>
             <MuiThemeProvider theme={sFoxTheme}>
-                <LegacyMuiThemeProvider muiTheme={sFoxThemeLegacy}>
-                    <Fragment>
-                        <CssBaseline />
-                        <Switch>
-                            <Route path={env.appBasePath}>
-                                {
-                                    (routeProps) =>
-                                        <Layout {...routeProps} />
-                                }
-                            </Route>
-                            <Redirect to={env.appBasePath} />
-                        </Switch>
-                    </Fragment>
-                </LegacyMuiThemeProvider>
+                <Fragment>
+                    <CssBaseline />
+                    <Switch>
+                        <Route path={env.appBasePath}>
+                            {
+                                (routeProps) =>
+                                    <Layout {...routeProps} />
+                            }
+                        </Route>
+                        <Redirect to={env.appBasePath} />
+                    </Switch>
+                </Fragment>
             </MuiThemeProvider>
         </Router>
     </Provider>
