@@ -10,11 +10,9 @@ import {
     string,
 } from "@xcmats/js-toolbox"
 import { BigNumber } from "bignumber.js"
-import {
-    Card,
-    CardActions,
-    CardText,
-} from "material-ui/Card"
+import Card from "@material-ui/core/Card"
+import CardActions from "@material-ui/core/CardActions"
+import CardContent from "@material-ui/core/CardContent"
 import {
     amountToText,
     htmlEntities as he,
@@ -245,8 +243,10 @@ class PaymentCard extends Component {
 
     // ...
     render = () => <Grow in={true}>
-        <Card className="payment-card">
-            <CardText>
+        <Card classes={{root: this.props.classes.card}}>
+
+
+            <CardContent>
                 <div className="flex-box-row space-between">
 
                     <div>
@@ -429,8 +429,9 @@ class PaymentCard extends Component {
                     </div>
 
                 </div>
-            </CardText>
-            <CardActions>
+            </CardContent>
+
+            <CardActions classes={{root: this.props.classes.cardActions}}>
                 <div className="f-e space-between">
                     <div className="p-l nowrap fade-extreme">
                         <span className="bigger">
@@ -453,6 +454,7 @@ class PaymentCard extends Component {
                 </div>
 
             </CardActions>
+
             <div className="f-e p-b-small tiny">{
                 this.props.Balances.message ?
                     this.props.Balances.message : <he.Nbsp />
@@ -492,6 +494,17 @@ export default compose(
                 borderBottomStyle: "none !important",
             },
         },
+        card: {
+            padding: "0 0.7rem",
+            borderRadius: "2px",
+            color: "rgb(15,46,83)",
+            backgroundColor: "#eceff1",
+        },
+        cardActions: {
+            display: "block",
+        },
+
+
     })),
     connect(
         // map state to props.
