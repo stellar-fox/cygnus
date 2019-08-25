@@ -1,6 +1,9 @@
 import React, { Component } from "react"
+import {
+    bindActionCreators,
+    compose,
+} from "redux"
 import PropTypes from "prop-types"
-import { compose } from "redux"
 import { connect } from "react-redux"
 import { NavLink } from "react-router-dom"
 import { toBool } from "@xcmats/js-toolbox"
@@ -10,11 +13,12 @@ import {
 } from "../StellarRouter"
 import { Null } from "../../lib/utils"
 import { bankDrawerWidth } from "../StellarFox/env"
-
+import { action as BankAction } from "../../redux/Bank"
 import { withStyles } from "@material-ui/core/styles"
 import Badge from "@material-ui/core/Badge"
-import Drawer from "material-ui/Drawer"
+import Drawer from "@material-ui/core/Drawer"
 import Divider from "../../lib/mui-v1/Divider"
+
 
 
 
@@ -120,24 +124,23 @@ const ContactsNavLink = ({ show, showBadge, badgeContent }) =>
 
 
 
-// ...
-const bankDrawerStyle = {
-    width: bankDrawerWidth,
-    height: "calc(100% - 94px)",
-    top: 65,
-    borderTop: "1px solid #052f5f",
-    borderBottom: "1px solid #052f5f",
-    borderLeft: "1px solid #052f5f",
-    borderTopRightRadius: "3px",
-    borderBottomRightRadius: "3px",
-    backgroundColor: "#2e5077",
-}
-
-
-
-
 // <BankDrawer> component
 export default compose(
+    withStyles((theme) => ({
+        paper: {
+            color: theme.palette.primary.other,
+            borderTop: "1px solid #052f5f",
+            borderBottom: "1px solid #052f5f",
+            borderLeft: "1px solid #052f5f",
+            borderTopRightRadius: "3px",
+            borderBottomRightRadius: "3px",
+            backgroundColor: "#2e5077",
+            height: "calc(100% - 94px)",
+            top: 65,
+            width: bankDrawerWidth,
+        },
+
+    })),
     connect(
         // map state to props.
         (state) => ({
@@ -147,7 +150,12 @@ export default compose(
             contactRequests: state.Contacts.requests,
             publicKey: state.LedgerHQ.publicKey,
             bip32Path: state.LedgerHQ.bip32Path,
-        })
+        }),
+        (dispatch) => bindActionCreators({
+
+            toggleDrawer: BankAction.toggleDrawer,
+
+        }, dispatch)
     )
 )(
     class extends Component {
@@ -161,10 +169,18 @@ export default compose(
 
         // ...
         render = () => (
-            ({ authenticated, drawerVisible, accountExists, contactRequests }) =>
+            ({
+                authenticated, classes, drawerVisible, accountExists,
+                contactRequests, toggleDrawer,
+            }) =>
                 <Drawer
-                    containerStyle={bankDrawerStyle}
+                    variant="persistent"
+                    classes={{
+                        paper: classes.paper,
+
+                    }}
                     open={drawerVisible}
+                    onClose={toggleDrawer}
                 >
                     <BalancesNavLink />
                     <PaymentsNavLink show={accountExists} />
@@ -175,6 +191,7 @@ export default compose(
                         showBadge={contactRequests.length > 0}
                         badgeContent={contactRequests.length}
                     />
+
                 </Drawer>
         )(this.props)
 
