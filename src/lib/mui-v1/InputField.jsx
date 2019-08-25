@@ -75,7 +75,7 @@ export default withStyles((theme) => ({
                     <InputLabel
                         classes={{
                             shrink: color === "secondary" ? classes.shrink : classes.shrinkPrimary,
-                            formControl: classes.root,
+                            formControl: color === "secondary" ? classes.root : classes.rootPrimary,
                             focused: classes.focused,
                         }}
                     >
