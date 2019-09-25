@@ -4,7 +4,6 @@ import toml from "toml"
 import {
     array,
     async,
-    devEnv,
     handleException,
     string,
     struct,
@@ -787,51 +786,3 @@ export const calculateTxFee = (opsNum) => {
 // display sequence number for the next/current??? transaction
 export const nextSequenceNumber = (sequenceNumber) =>
     new BigNumber(sequenceNumber).plus(1).toString()
-
-
-
-
-// dev. only - shambhala integration testing
-export const shambhalaTesting = devEnv() ? {
-    init: async () => {
-        let
-            logger = console,
-            context = {},
-            {
-                inspectTSP,
-                signTSP,
-                Shambhala,
-                shambhalaTestingModule,
-            } = await import("./shambhala.client"),
-            testing = shambhalaTestingModule(logger, context)
-
-        // expose to dev. namespace
-        if (type.isObject(window.sf)) {
-            window.sf.Shambhala = Shambhala
-            window.sf.context = context
-            window.sf.testing = testing
-            window.sf.txops = { inspectTSP, signTSP }
-        }
-
-        // prepare test environment
-        await testing.setEnv()
-        await testing.instantiate(
-            "https://secrets.localhost/shambhala/shambhala.html"
-        )
-        await context.shambhala.open()
-
-        // instruct what to do next
-        logger.info(
-            `Try one of these:${string.nl()}`,
-            Object.keys(testing.scenario).map(
-                (n) => `sf.testing.scenario.${n}()`
-            ).join(`${string.nl()}${string.space()}`)
-        )
-
-        return { Shambhala, context, testing }
-    },
-} : {
-    init: () => {
-        throw new Error("Sorry. Not in the production.")
-    },
-}
