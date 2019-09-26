@@ -5,11 +5,7 @@ import { connect } from "react-redux"
 import Axios from "axios"
 import { string } from "@xcmats/js-toolbox"
 import { config } from "../../config"
-import {
-    gravatar,
-    gravatarSize,
-    appTLD
-} from "../StellarFox/env"
+import { gravatar, gravatarSize, appTLD } from "../StellarFox/env"
 import {
     dataDigest,
     emailValid,
@@ -24,7 +20,10 @@ import {
     loadAccount,
     submitTransaction,
 } from "../../lib/stellar-tx"
-import { firebaseApp } from "../../components/StellarFox"
+
+import firebaseApp from "../../firebase"
+
+// import { firebaseApp } from "../../components/StellarFox"
 import { signTransaction } from "../../lib/ledger"
 import { action as AccountAction } from "../../redux/Account"
 import { action as AlertAction } from "../../redux/Alert"
@@ -40,25 +39,16 @@ import TxBroadcastMsg from "../Balances/TxBroadcastMsg"
 import MsgBadgeError from "./MsgBadgeError"
 import MsgBadgeSuccess from "./MsgBadgeSuccess"
 import MsgBadgeWarning from "./MsgBadgeWarning"
-import {
-    Fade,
-    CircularProgress,
-    Typography,
-} from "@material-ui/core"
+import { Fade, CircularProgress, Typography } from "@material-ui/core"
 import { surfaceSnacky } from "../../thunks/main"
 import { queryDevice } from "../../thunks/ledgerhq"
 
-
-
-
 // <Profile> component
 class Profile extends Component {
-
     // ...
     static propTypes = {
         setState: PropTypes.func.isRequired,
     }
-
 
     // ...
     state = {
@@ -66,7 +56,6 @@ class Profile extends Component {
         loadingUpdateProfile: false,
         loadingUpdatePaymentAddress: false,
     }
-
 
     // ...
     buildTransaction = async (name, value) => {
@@ -79,27 +68,23 @@ class Profile extends Component {
         return await buildSetDataTx(txData)
     }
 
-
     // ...
-    showError = (message) => {
+    showError = message => {
         this.props.hideModal()
         this.props.showAlert(message, "Error")
         this.props.setState({ message: string.empty() })
     }
 
-
     // ...
-    updateResource = async (resource, attr) => Axios
-        .post(`${config.api}/${resource}/update/`, {
+    updateResource = async (resource, attr) =>
+        Axios.post(`${config.api}/${resource}/update/`, {
             ...attr,
             user_id: this.props.userId,
             token: this.props.token,
         })
 
-
     // ...
     updateProfile = async () => {
-
         if (!this.props.emailVerified) {
             this.props.surfaceSnacky(
                 "error",
@@ -112,27 +97,25 @@ class Profile extends Component {
          * Update backend with user info data.
          */
         try {
-            await this.setState({ loadingUpdateProfile: true })
+            this.setState({ loadingUpdateProfile: true })
             await this.props.setState({
                 messageUserData: "Preparing data ...",
             })
             await this.updateUserDataFingerprint()
-            await this.updateResource("user",{
+            await this.updateResource("user", {
                 first_name: this.props.state.firstName,
                 last_name: this.props.state.lastName,
             })
         } catch (error) {
             this.setState({ loadingUpdateProfile: false })
-            this.props.surfaceSnacky("error", error.message)
+            await this.props.surfaceSnacky("error", error.message)
             return
         }
-
 
         /**
          * Update Stellar Ledger with user info digest hash.
          */
         try {
-
             await this.props.setState({
                 messageUserData: "Waiting for device ...",
             })
@@ -166,11 +149,11 @@ class Profile extends Component {
 
             await this.props.hideModal()
 
-            await this.props.updateAccountTree(await loadAccount(
-                this.props.publicKey
-            ))
+            await this.props.updateAccountTree(
+                await loadAccount(this.props.publicKey)
+            )
 
-            await this.setState({ loadingUpdateProfile: false })
+            this.setState({ loadingUpdateProfile: false })
 
             await this.props.surfaceSnacky(
                 "success",
@@ -178,10 +161,9 @@ class Profile extends Component {
             )
 
             await this.props.clearTransaction()
-
         } catch (error) {
             await this.props.clearTransaction()
-            await this.setState({ loadingUpdateProfile: false })
+            this.setState({ loadingUpdateProfile: false })
             await this.props.setState({ messageUserData: string.empty() })
             await this.props.hideModal()
             await this.props.surfaceSnacky(
@@ -191,10 +173,8 @@ class Profile extends Component {
         }
     }
 
-
     // ...
     updatePaymentData = async () => {
-
         if (!this.props.emailVerified) {
             this.props.surfaceSnacky(
                 "error",
@@ -207,20 +187,17 @@ class Profile extends Component {
          * Update backend with user payment data.
          */
         try {
-            await this.setState({ loadingUpdatePaymentAddress: true })
+            this.setState({ loadingUpdatePaymentAddress: true })
             await this.props.setState({
                 messagePaymentData: "Preparing data ...",
             })
 
             this.updatePaymentDataFingerprint()
 
-            const
-                alias = this.props.state.paymentAddress.match(/\*/) ?
-                    (this.props.state.paymentAddress) :
-                    (`${this.props.state.paymentAddress}*${appTLD}`),
-
+            const alias = this.props.state.paymentAddress.match(/\*/)
+                    ? this.props.state.paymentAddress
+                    : `${this.props.state.paymentAddress}*${appTLD}`,
                 memo_type = this.props.state.memo.length > 0 ? "text" : null,
-
                 memo = this.props.state.memo
 
             await this.updateResource("account", {
@@ -232,31 +209,30 @@ class Profile extends Component {
             await this.props.setState({
                 paymentAddress: federationIsAliasOnly(
                     this.props.state.paymentAddress
-                ) ? `${this.props.state.paymentAddress}*${appTLD}` :
-                    this.props.state.paymentAddress,
+                )
+                    ? `${this.props.state.paymentAddress}*${appTLD}`
+                    : this.props.state.paymentAddress,
             })
-
         } catch (error) {
-
             if (error.response.data) {
-                await this.props.surfaceSnacky("error", error.response.data.error)
+                await this.props.surfaceSnacky(
+                    "error",
+                    error.response.data.error
+                )
             } else {
                 await this.props.surfaceSnacky("error", error.message)
             }
 
-            await this.setState({ loadingUpdatePaymentAddress: false })
+            this.setState({ loadingUpdatePaymentAddress: false })
             await this.props.setState({ messagePaymentData: string.empty() })
 
             return
-
         }
-
 
         /**
          * Update Stellar Ledger with user payment data digest hash.
          */
         try {
-
             await this.props.setState({
                 messagePaymentData: "Waiting for device ...",
             })
@@ -278,8 +254,6 @@ class Profile extends Component {
 
             await this.props.setState({ messagePaymentData: string.empty() })
 
-
-
             const signedTx = await signTransaction(
                 insertPathIndex(this.props.bip32Path),
                 this.props.publicKey,
@@ -292,11 +266,11 @@ class Profile extends Component {
 
             await this.props.hideModal()
 
-            await this.props.updateAccountTree(await loadAccount(
-                this.props.publicKey
-            ))
+            await this.props.updateAccountTree(
+                await loadAccount(this.props.publicKey)
+            )
 
-            await this.setState({ loadingUpdatePaymentAddress: false })
+            this.setState({ loadingUpdatePaymentAddress: false })
 
             await this.props.clearTransaction()
 
@@ -304,10 +278,9 @@ class Profile extends Component {
                 "success",
                 "Payment data has been updated."
             )
-
         } catch (error) {
             await this.props.clearTransaction()
-            await this.setState({ loadingUpdatePaymentAddress: false })
+            this.setState({ loadingUpdatePaymentAddress: false })
             await this.props.setState({ messagePaymentData: string.empty() })
             await this.props.hideModal()
             await this.props.surfaceSnacky(
@@ -317,29 +290,23 @@ class Profile extends Component {
         }
     }
 
-
     // ...
-    changeFirstName = (event) =>
+    changeFirstName = event =>
         this.props.setState({ firstName: event.target.value })
 
-
     // ...
-    changeLastName = (event) =>
+    changeLastName = event =>
         this.props.setState({ lastName: event.target.value })
 
-
     // ...
-    changePaymentAddress = (event) =>
+    changePaymentAddress = event =>
         this.props.setState({ paymentAddress: event.target.value })
 
+    // ...
+    changeMemo = event => this.props.setState({ memo: event.target.value })
 
     // ...
-    changeMemo = (event) =>
-        this.props.setState({ memo: event.target.value })
-
-
-    // ...
-    changeEmail = (event) => {
+    changeEmail = event => {
         if (emailValid(event.target.value)) {
             this.props.setState({
                 gravatarPath: this.setGravatarPath(event.target.value),
@@ -348,62 +315,60 @@ class Profile extends Component {
         this.props.setState({ email: event.target.value })
     }
 
+    // ...
+    updateUserDataFingerprint = async () =>
+        await this.props.setState({
+            fingerprintUserData: dataDigest({
+                firstName: this.props.state.firstName,
+                lastName: this.props.state.lastName,
+                email: this.props.state.email,
+            }),
+        })
 
     // ...
-    updateUserDataFingerprint = async () => await this.props.setState({
-        fingerprintUserData: dataDigest({
-            firstName: this.props.state.firstName,
-            lastName: this.props.state.lastName,
-            email: this.props.state.email,
-        }),
-    })
-
-
-    // ...
-    updatePaymentDataFingerprint = () => this.props.setState({
-        fingerprintPaymentData: dataDigest({
-            paymentAddress: federationIsAliasOnly(this.props.state.paymentAddress) ?
-                `${this.props.state.paymentAddress}*${appTLD}` :
-                this.props.state.paymentAddress,
-            memo: this.props.state.memo,
-        }),
-    })
-
+    updatePaymentDataFingerprint = () =>
+        this.props.setState({
+            fingerprintPaymentData: dataDigest({
+                paymentAddress: federationIsAliasOnly(
+                    this.props.state.paymentAddress
+                )
+                    ? `${this.props.state.paymentAddress}*${appTLD}`
+                    : this.props.state.paymentAddress,
+                memo: this.props.state.memo,
+            }),
+        })
 
     // ...
     verifyEmail = async () => {
         try {
-            await this.setState({ loadingVerifyEmail: true })
-            await firebaseApp.auth("session").currentUser.sendEmailVerification()
-            await this.setState({ loadingVerifyEmail: false })
-            this.props.surfaceSnacky(
-                "success",
-                "Verification email sent."
-            )
+            this.setState({ loadingVerifyEmail: true })
+            await firebaseApp
+                .auth("session")
+                .currentUser.sendEmailVerification()
+            this.setState({ loadingVerifyEmail: false })
+            this.props.surfaceSnacky("success", "Verification email sent.")
         } catch (error) {
-            this.props.surfaceSnacky(
-                "error",
-                error.message,
-            )
+            this.props.surfaceSnacky("error", error.message)
             this.setState({ loadingVerifyEmail: false })
         }
-
     }
 
-
     // ...
-    render = () =>
+    render = () => (
         <Fragment>
             <Modal
                 open={
                     (this.props.Modal.modalId === "txConfirmProfile" ||
-                    this.props.Modal.modalId === "txConfirmPay") &&
+                        this.props.Modal.modalId === "txConfirmPay") &&
                     this.props.Modal.visible
                 }
             >
                 <TxConfirm
-                    data={this.props.Modal.modalId === "txConfirmProfile" ?
-                        "idSig" : "paySig"}
+                    data={
+                        this.props.Modal.modalId === "txConfirmProfile"
+                            ? "idSig"
+                            : "paySig"
+                    }
                 />
             </Modal>
 
@@ -417,7 +382,6 @@ class Profile extends Component {
             </Modal>
 
             <div className="tab-content">
-
                 <div className="flex-box-row space-between">
                     <div>
                         <Typography variant="body1" color="secondary">
@@ -431,9 +395,7 @@ class Profile extends Component {
                     <div>
                         <img
                             className="image"
-                            src={`${gravatar}${this.props.state.gravatar}?${
-                                gravatarSize}&d=robohash`
-                            }
+                            src={`${gravatar}${this.props.state.gravatar}?${gravatarSize}&d=robohash`}
                             alt="Gravatar"
                         />
                     </div>
@@ -464,11 +426,15 @@ class Profile extends Component {
                     className="lcars-input p-t p-b"
                     value={this.props.state.email}
                     label={
-                        <span className={this.props.emailVerified ?
-                            "lcars-label-badge verified" :
-                            "lcars-label-badge unverified"
-                        }
-                        >Email</span>
+                        <span
+                            className={
+                                this.props.emailVerified
+                                    ? "lcars-label-badge verified"
+                                    : "lcars-label-badge unverified"
+                            }
+                        >
+                            Email
+                        </span>
                     }
                     inputType="text"
                     maxLength="100"
@@ -478,16 +444,22 @@ class Profile extends Component {
                     disabled
                 />
 
-                {this.props.idSig ?
-                    (signatureValid({
-                        firstName: this.props.state.firstName,
-                        lastName: this.props.state.lastName,
-                        email: this.props.state.email,
-                    }, this.props.idSig) ?
-                        <MsgBadgeSuccess /> :
-                        <MsgBadgeError />) :
+                {this.props.idSig ? (
+                    signatureValid(
+                        {
+                            firstName: this.props.state.firstName,
+                            lastName: this.props.state.lastName,
+                            email: this.props.state.email,
+                        },
+                        this.props.idSig
+                    ) ? (
+                        <MsgBadgeSuccess />
+                    ) : (
+                        <MsgBadgeError />
+                    )
+                ) : (
                     <MsgBadgeWarning />
-                }
+                )}
 
                 <Button
                     disabled={this.state.loadingUpdateProfile}
@@ -495,40 +467,47 @@ class Profile extends Component {
                     onClick={this.updateProfile}
                     style={{ minWidth: "200px" }}
                 >
-                    {this.state.loadingUpdateProfile ?
+                    {this.state.loadingUpdateProfile ? (
                         <CircularProgress
                             color="secondary"
-                            thickness={4} size={25}
-                        /> : "Update User Data"
-                    }
+                            thickness={4}
+                            size={25}
+                        />
+                    ) : (
+                        "Update User Data"
+                    )}
                 </Button>
-                <he.Nbsp /><he.Nbsp />
-                {!this.props.emailVerified &&
+                <he.Nbsp />
+                <he.Nbsp />
+                {!this.props.emailVerified && (
                     <Button
                         disabled={this.state.loadingVerifyEmail}
                         color="secondary"
                         onClick={this.verifyEmail}
                         style={{ minWidth: "200px" }}
                     >
-                        {this.state.loadingVerifyEmail ?
+                        {this.state.loadingVerifyEmail ? (
                             <CircularProgress
                                 color="secondary"
-                                thickness={4} size={25}
-                            /> : "Verify Email"
-                        }
+                                thickness={4}
+                                size={25}
+                            />
+                        ) : (
+                            "Verify Email"
+                        )}
                     </Button>
-                }
+                )}
 
-                <div style={{ height: "2rem" }}
-                    className="f-b p-t-small tiny"
-                >
-                    {this.props.state.messageUserData.length > 0 ?
+                <div style={{ height: "2rem" }} className="f-b p-t-small tiny">
+                    {this.props.state.messageUserData.length > 0 ? (
                         <Fade in={true} out={true}>
                             <span className="yellow-light">
                                 {this.props.state.messageUserData}
                             </span>
-                        </Fade> : <he.Nbsp />
-                    }
+                        </Fade>
+                    ) : (
+                        <he.Nbsp />
+                    )}
                 </div>
 
                 <Divider color="secondary" />
@@ -555,14 +534,8 @@ class Profile extends Component {
                     handleChange={this.changePaymentAddress}
                     subLabel={
                         federationIsAliasOnly(this.props.state.paymentAddress)
-                            ? `Payment Address: ${
-                                this.props.state
-                                    .paymentAddress
-                            }*${appTLD}`
-                            : `Payment Address: ${
-                                this.props.state
-                                    .paymentAddress
-                            }`
+                            ? `Payment Address: ${this.props.state.paymentAddress}*${appTLD}`
+                            : `Payment Address: ${this.props.state.paymentAddress}`
                     }
                 />
                 <LCARSInput
@@ -576,18 +549,25 @@ class Profile extends Component {
                     subLabel={`Memo: ${this.props.state.memo}`}
                 />
 
-                {this.props.paySig ?
-                    (signatureValid({
-                        paymentAddress: federationIsAliasOnly(
-                            this.props.state.paymentAddress
-                        ) ? `${this.props.state.paymentAddress}*${appTLD}` :
-                            this.props.state.paymentAddress,
-                        memo: this.props.state.memo,
-                    }, this.props.paySig) ?
-                        <MsgBadgeSuccess /> :
-                        <MsgBadgeError />) :
+                {this.props.paySig ? (
+                    signatureValid(
+                        {
+                            paymentAddress: federationIsAliasOnly(
+                                this.props.state.paymentAddress
+                            )
+                                ? `${this.props.state.paymentAddress}*${appTLD}`
+                                : this.props.state.paymentAddress,
+                            memo: this.props.state.memo,
+                        },
+                        this.props.paySig
+                    ) ? (
+                        <MsgBadgeSuccess />
+                    ) : (
+                        <MsgBadgeError />
+                    )
+                ) : (
                     <MsgBadgeWarning />
-                }
+                )}
 
                 <Button
                     disabled={this.state.loadingUpdatePaymentAddress}
@@ -595,32 +575,37 @@ class Profile extends Component {
                     onClick={this.updatePaymentData}
                     style={{ minWidth: "200px" }}
                 >
-                    {this.state.loadingUpdatePaymentAddress ?
+                    {this.state.loadingUpdatePaymentAddress ? (
                         <CircularProgress
                             color="secondary"
-                            thickness={4} size={25}
-                        /> : "Update Payment Data"
-                    }
-
+                            thickness={4}
+                            size={25}
+                        />
+                    ) : (
+                        "Update Payment Data"
+                    )}
                 </Button>
 
-                <div className="f-b p-t-small tiny">{
-                    this.props.state.messagePaymentData.length > 0 ?
+                <div className="f-b p-t-small tiny">
+                    {this.props.state.messagePaymentData.length > 0 ? (
                         <Fade in={true} out={true}>
                             <span className="yellow-light">
                                 {this.props.state.messagePaymentData}
                             </span>
-                        </Fade> : <he.Nbsp />
-                }</div>
+                        </Fade>
+                    ) : (
+                        <he.Nbsp />
+                    )}
+                </div>
             </div>
         </Fragment>
+    )
 }
-
 
 // ...
 export default connect(
     // bind state to props.
-    (state) => ({
+    state => ({
         emailVerified: state.Auth.verified,
         state: state.Account,
         token: state.LoginManager.token,
@@ -630,23 +615,31 @@ export default connect(
         publicKey: state.LedgerHQ.publicKey,
         bip32Path: state.LedgerHQ.bip32Path,
         Modal: state.Modal,
-        paySig: state.StellarAccount.data ?
-            (state.StellarAccount.data.paySig ?
-                state.StellarAccount.data.paySig : null) : null,
-        idSig: state.StellarAccount.data ?
-            (state.StellarAccount.data.idSig ?
-                state.StellarAccount.data.idSig : null) : null,
+        paySig: state.StellarAccount.data
+            ? state.StellarAccount.data.paySig
+                ? state.StellarAccount.data.paySig
+                : null
+            : null,
+        idSig: state.StellarAccount.data
+            ? state.StellarAccount.data.idSig
+                ? state.StellarAccount.data.idSig
+                : null
+            : null,
     }),
     // bind dispatch to props.
-    (dispatch) => bindActionCreators({
-        setState: AccountAction.setState,
-        showAlert: AlertAction.showAlert,
-        hideModal: ModalAction.hideModal,
-        showModal: ModalAction.showModal,
-        updateAccountTree: StellarAccountAction.updateAccountAttributes,
-        surfaceSnacky,
-        queryDevice,
-        setTransaction: TransactionAction.setTransaction,
-        clearTransaction: TransactionAction.clearTransaction,
-    }, dispatch)
+    dispatch =>
+        bindActionCreators(
+            {
+                setState: AccountAction.setState,
+                showAlert: AlertAction.showAlert,
+                hideModal: ModalAction.hideModal,
+                showModal: ModalAction.showModal,
+                updateAccountTree: StellarAccountAction.updateAccountAttributes,
+                surfaceSnacky,
+                queryDevice,
+                setTransaction: TransactionAction.setTransaction,
+                clearTransaction: TransactionAction.clearTransaction,
+            },
+            dispatch
+        )
 )(Profile)

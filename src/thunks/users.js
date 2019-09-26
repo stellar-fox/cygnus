@@ -1,4 +1,4 @@
-import { firebaseApp } from "../components/StellarFox"
+import firebaseApp from "../firebase"
 import Axios from "axios"
 import { config } from "../config"
 import md5 from "../lib/md5"
@@ -34,19 +34,10 @@ import {
     getUserExternalContacts,
     invalidPaymentAddressMessage,
 } from "../lib/utils"
-import {
-    buildClearDataTx,
-    submitTransaction,
-} from "../lib/stellar-tx"
+import { buildClearDataTx, submitTransaction } from "../lib/stellar-tx"
 import { insertPathIndex } from "../lib/utils"
 import { signTransaction } from "../lib/ledger"
-import {
-    implodeCloudData,
-    unsubscribeEmail,
-} from "../components/Account/api"
-
-
-
+import { implodeCloudData, unsubscribeEmail } from "../components/Account/api"
 
 /**
  * Signs out current user if present in Firebase auth object.
@@ -54,15 +45,11 @@ import {
  * @function signOutFirebaseUser
  * @returns {Function} thunk action
  */
-export const signOutFirebaseUser = () =>
-    async (_dispatch, _getState) => {
-        if (firebaseApp.auth("session").currentUser) {
-            await firebaseApp.auth("session").signOut()
-        }
+export const signOutFirebaseUser = () => async (_dispatch, _getState) => {
+    if (firebaseApp.auth("session").currentUser) {
+        await firebaseApp.auth("session").signOut()
     }
-
-
-
+}
 
 /**
  * Helper thunk action authenticates user on the backend and sets login
@@ -73,28 +60,23 @@ export const signOutFirebaseUser = () =>
  * @param {String} password
  * @returns {Function} thunk action
  */
-export const doBackendSignIn = (email, password) =>
-    async (dispatch, _getState) => {
+export const doBackendSignIn = (email, password) => async (
+    dispatch,
+    _getState
+) => {
+    const authResp = await Axios.post(`${config.api}/user/authenticate/`, {
+        email,
+        password,
+    })
 
-        const authResp = await Axios
-            .post(`${config.api}/user/authenticate/`, {
-                email,
-                password,
-            })
-
-        await dispatch(LoginManagerAction.setUserId(authResp.data.user_id))
-        await dispatch(LoginManagerAction.setApiToken(authResp.data.token))
-        await dispatch(
-            LedgerHQAction.setBip32Path(
-                authResp.data.bip32Path.toString(10)
-            )
-        )
-        await dispatch(LedgerHQAction.setPublicKey(authResp.data.pubkey))
-        await dispatch(AuthActions.setSignupComplete())
-    }
-
-
-
+    await dispatch(LoginManagerAction.setUserId(authResp.data.user_id))
+    await dispatch(LoginManagerAction.setApiToken(authResp.data.token))
+    await dispatch(
+        LedgerHQAction.setBip32Path(authResp.data.bip32Path.toString(10))
+    )
+    await dispatch(LedgerHQAction.setPublicKey(authResp.data.pubkey))
+    await dispatch(AuthActions.setSignupComplete())
+}
 
 /**
  * Signs user in via _Firebase_.
@@ -104,30 +86,22 @@ export const doBackendSignIn = (email, password) =>
  * @param {String} password
  * @returns {Function} thunk action
  */
-export const signIn = (email, password) =>
-    async (dispatch, _getState) => {
-        await dispatch(clearInputErrorMessages())
-        try {
-            await dispatch(ProgressActions.toggleProgress(
-                "signin", "Logging you in ..."
-            ))
-            await firebaseApp.auth("session").signInWithEmailAndPassword(
-                email,
-                password
-            )
-            await dispatch(doBackendSignIn(email, password))
-
-        } catch (error) {
-            await dispatch(setError(error))
-        } finally {
-            await dispatch(ProgressActions.toggleProgress(
-                "signin", string.empty()
-            ))
-        }
+export const signIn = (email, password) => async (dispatch, _getState) => {
+    await dispatch(clearInputErrorMessages())
+    try {
+        await dispatch(
+            ProgressActions.toggleProgress("signin", "Logging you in ...")
+        )
+        await firebaseApp
+            .auth("session")
+            .signInWithEmailAndPassword(email, password)
+        await dispatch(doBackendSignIn(email, password))
+    } catch (error) {
+        await dispatch(setError(error))
+    } finally {
+        await dispatch(ProgressActions.toggleProgress("signin", string.empty()))
     }
-
-
-
+}
 
 /**
  * Signs user in to explorer only view.
@@ -136,57 +110,39 @@ export const signIn = (email, password) =>
  * @param {String} inputValue Account ID or payment address.
  * @returns {Function} thunk action
  */
-export const enterExplorer = (inputValue) =>
-    async (dispatch, _getState) => {
+export const enterExplorer = inputValue => async (dispatch, _getState) => {
+    await dispatch(signOutFirebaseUser())
+    await dispatch(ErrorsActions.clearOtherError())
 
-        await dispatch(signOutFirebaseUser())
-        await dispatch(ErrorsActions.clearOtherError())
+    try {
+        const inputInvalidMsg = invalidPaymentAddressMessage(inputValue)
 
-        try {
-
-            const inputInvalidMsg = invalidPaymentAddressMessage(inputValue)
-
-            if (inputInvalidMsg) {
-                await dispatch(
-                    ErrorsActions.setOtherError(inputInvalidMsg)
-                )
-                return
-            }
-
-            await dispatch(ProgressActions.toggleProgress(
-                "signin", "Resolving address ..."
-            ))
-
-            if (inputValue.match(/\*/)) {
-                await dispatch(LedgerHQAction.setPublicKey(
-                    await fedToPub(inputValue))
-                )
-            } else {
-                await dispatch(LedgerHQAction.setPublicKey(inputValue))
-            }
-
-        } catch (error) {
-
-            if (error.response.status === 404) {
-                await dispatch(ErrorsActions.setOtherError("Not found."))
-            } else {
-                await dispatch(ErrorsActions.setOtherError(error.message))
-            }
-
-        } finally {
-
-            await dispatch(ProgressActions.toggleProgress(
-                "signin", string.empty()
-            ))
-
+        if (inputInvalidMsg) {
+            await dispatch(ErrorsActions.setOtherError(inputInvalidMsg))
+            return
         }
 
+        await dispatch(
+            ProgressActions.toggleProgress("signin", "Resolving address ...")
+        )
 
-
-
+        if (inputValue.match(/\*/)) {
+            await dispatch(
+                LedgerHQAction.setPublicKey(await fedToPub(inputValue))
+            )
+        } else {
+            await dispatch(LedgerHQAction.setPublicKey(inputValue))
+        }
+    } catch (error) {
+        if (error.response.status === 404) {
+            await dispatch(ErrorsActions.setOtherError("Not found."))
+        } else {
+            await dispatch(ErrorsActions.setOtherError(error.message))
+        }
+    } finally {
+        await dispatch(ProgressActions.toggleProgress("signin", string.empty()))
     }
-
-
+}
 
 /**
  * Signs user out of the session and clears Redux tree.
@@ -194,33 +150,28 @@ export const enterExplorer = (inputValue) =>
  * @function signOut
  * @returns {Function} thunk action
  */
-export const signOut = () =>
-    async (dispatch, _getState) => {
-        await firebaseApp.auth("session").signOut()
-        await dispatch(await AccountAction.resetState())
-        await dispatch(await AppActions.resetState())
-        await dispatch(await AssetAction.resetState())
-        await dispatch(await AssetManagerAction.resetState())
-        await dispatch(await AuthAction.resetState())
-        await dispatch(await BalancesAction.resetState())
-        await dispatch(await BankAction.resetState())
-        await dispatch(await ContactsAction.resetState())
-        await dispatch(await ErrorsActions.resetState())
-        await dispatch(await LedgerHQAction.resetState())
-        await dispatch(await LoginManagerAction.resetState())
-        await dispatch(await ModalAction.resetState())
-        await dispatch(await PaymentsAction.resetState())
-        await dispatch(await ProgressActions.resetState())
-        await dispatch(await StellarAccountAction.resetState())
-        await dispatch(await TransactionAction.resetState())
-        await dispatch(await surfaceSnacky(
-            "success",
-            "You were signed out of your account."
-        ))
-    }
-
-
-
+export const signOut = () => async (dispatch, _getState) => {
+    await firebaseApp.auth("session").signOut()
+    await dispatch(AccountAction.resetState())
+    await dispatch(AppActions.resetState())
+    await dispatch(AssetAction.resetState())
+    await dispatch(AssetManagerAction.resetState())
+    await dispatch(AuthAction.resetState())
+    await dispatch(BalancesAction.resetState())
+    await dispatch(BankAction.resetState())
+    await dispatch(ContactsAction.resetState())
+    await dispatch(ErrorsActions.resetState())
+    await dispatch(LedgerHQAction.resetState())
+    await dispatch(LoginManagerAction.resetState())
+    await dispatch(ModalAction.resetState())
+    await dispatch(PaymentsAction.resetState())
+    await dispatch(ProgressActions.resetState())
+    await dispatch(StellarAccountAction.resetState())
+    await dispatch(TransactionAction.resetState())
+    await dispatch(
+        surfaceSnacky("success", "You were signed out of your account.")
+    )
+}
 
 /**
  * Clears errors from email/password inputs.
@@ -228,15 +179,11 @@ export const signOut = () =>
  * @function clearInputErrorMessages
  * @returns {Function} thunk action
  */
-export const clearInputErrorMessages = () =>
-    async (dispatch, _getState) => {
-        await dispatch(await ErrorsActions.clearEmailInputError())
-        await dispatch(await ErrorsActions.clearPasswordInputError())
-        await dispatch(await ErrorsActions.clearOtherError())
-    }
-
-
-
+export const clearInputErrorMessages = () => async (dispatch, _getState) => {
+    await dispatch(ErrorsActions.clearEmailInputError())
+    await dispatch(ErrorsActions.clearPasswordInputError())
+    await dispatch(ErrorsActions.clearOtherError())
+}
 
 /**
  * Sends password reset link to given email.
@@ -245,24 +192,22 @@ export const clearInputErrorMessages = () =>
  * @param {String} email User email.
  * @returns {Function} Thunk action.
  *
-*/
-export const sendPasswordResetLink = (email) =>
-    async (dispatch, _getState) => {
-        await dispatch(await ErrorsActions.clearEmailInputError())
-        try {
-            await firebaseApp.auth().sendPasswordResetEmail(email)
-            await dispatch(await surfaceSnacky(
+ */
+export const sendPasswordResetLink = email => async (dispatch, _getState) => {
+    await dispatch(await ErrorsActions.clearEmailInputError())
+    try {
+        await firebaseApp.auth().sendPasswordResetEmail(email)
+        await dispatch(
+            surfaceSnacky(
                 "success",
                 "Password reset link sent. Please check your email."
-            ))
-        } catch (error) {
-            await dispatch(setError(error))
-            return Promise.reject(error)
-        }
+            )
+        )
+    } catch (error) {
+        await dispatch(setError(error))
+        return Promise.reject(error)
     }
-
-
-
+}
 
 /**
  * Validates password reset link.
@@ -271,14 +216,9 @@ export const sendPasswordResetLink = (email) =>
  * @param {String} actionCode Firebase generated action code.
  * @returns {Function} Thunk action.
  *
-*/
-export const validateLink = (actionCode) =>
-    async (_dispatch, _getState) => (
-        await firebaseApp.auth("session").verifyPasswordResetCode(actionCode)
-    )
-
-
-
+ */
+export const validateLink = actionCode => async (_dispatch, _getState) =>
+    await firebaseApp.auth("session").verifyPasswordResetCode(actionCode)
 
 /**
  * Applies action code from the email verification link.
@@ -287,14 +227,9 @@ export const validateLink = (actionCode) =>
  * @param {String} actionCode Firebase generated action code.
  * @returns {Function} Thunk action.
  *
-*/
-export const processActionCode = (actionCode) =>
-    async (_dispatch, _getState) => (
-        await firebaseApp.auth("session").applyActionCode(actionCode)
-    )
-
-
-
+ */
+export const processActionCode = actionCode => async (_dispatch, _getState) =>
+    await firebaseApp.auth("session").applyActionCode(actionCode)
 
 /**
  * Updates user password in Firebase and backend.
@@ -305,20 +240,17 @@ export const processActionCode = (actionCode) =>
  * @param {String} password
  * @returns {Function} Thunk action.
  *
-*/
-export const updatePassword = (actionCode, email, password) =>
-    async (_dispatch, _getState) => {
-        await firebaseApp.auth().confirmPasswordReset(actionCode, password)
-        await Axios.post(
-            `${config.apiV2}/user/update-password/`, {
-                email,
-                password,
-            }
-        )
-    }
-
-
-
+ */
+export const updatePassword = (actionCode, email, password) => async (
+    _dispatch,
+    _getState
+) => {
+    await firebaseApp.auth().confirmPasswordReset(actionCode, password)
+    await Axios.post(`${config.apiV2}/user/update-password/`, {
+        email,
+        password,
+    })
+}
 
 /**
  * Signs up a new user via _Firebase_
@@ -330,111 +262,90 @@ export const updatePassword = (actionCode, email, password) =>
  * @param {String} password
  * @returns {Function} thunk action
  */
-export const signUpNewUser = (accountId, account, email, password) =>
-    async (dispatch, getState) => {
+export const signUpNewUser = (accountId, account, email, password) => async (
+    dispatch,
+    getState
+) => {
+    await dispatch(signOutFirebaseUser())
+    await dispatch(clearInputErrorMessages())
+    await dispatch(AuthActions.toggleSignupProgress(true))
+    await dispatch(
+        ProgressActions.toggleProgress("signup", "Creating user account ...")
+    )
 
-        await dispatch(signOutFirebaseUser())
-        await dispatch(await clearInputErrorMessages())
-        await dispatch(await AuthActions.toggleSignupProgress(true))
-        await dispatch(await ProgressActions.toggleProgress(
-            "signup", "Creating user account ..."
-        ))
+    // 1. Create user in Firebase and on the backend side.
 
+    let user = null
+    let userResp = null
 
-        // 1. Create user in Firebase and on the backend side.
+    try {
+        user = await firebaseApp
+            .auth("session")
+            .createUserWithEmailAndPassword(email, password)
 
-        let user = null
-        let userResp = null
+        userResp = await Axios.post(`${config.apiV2}/user/create/`, {
+            email,
+            password,
+            token: await firebaseApp.auth("session").currentUser.getIdToken(),
+        })
 
-        try {
-            user = await firebaseApp.auth("session").createUserWithEmailAndPassword(
-                email, password
-            )
+        await Axios.post(`${config.api}/account/create/`, {
+            user_id: userResp.data.userid,
+            pubkey: accountId,
+            path: account,
+            email_md5: md5(email),
+        })
 
-            userResp = await Axios.post(
-                `${config.apiV2}/user/create/`, {
-                    email,
-                    password,
-                    token: (await firebaseApp.auth("session")
-                        .currentUser.getIdToken()),
-                }
-            )
+        await dispatch(
+            ProgressActions.toggleProgress("signup", "Almost done ...")
+        )
 
-            await Axios
-                .post(`${config.api}/account/create/`, {
-                    user_id: userResp.data.userid,
-                    pubkey: accountId,
-                    path: account,
-                    email_md5: md5(email),
-                })
+        await firebaseApp.auth("session").currentUser.sendEmailVerification()
 
-            await dispatch(await ProgressActions.toggleProgress(
-                "signup", "Almost done ..."
-            ))
-
-            await firebaseApp.auth("session").currentUser.sendEmailVerification()
-
-            // sign user in after signup is completed
-            await dispatch(await doBackendSignIn(email, password))
-
-        } catch (error) {
-
-            // delete Firebase user.
-            if (user) {
-                await firebaseApp.auth("session").currentUser.delete()
-            } else {
-                await dispatch(setError(error))
-                await dispatch(await ProgressActions.resetState())
-                await dispatch(await AuthActions.toggleSignupProgress(false))
-                return
-            }
-
-            // clear backend data
-            if (getState().LoginManager.userId && getState().LoginManager.token) {
-                await implodeCloudData(
-                    getState().LoginManager.userId,
-                    getState().LoginManager.token
-                )
-            }
-
-            await dispatch(await clearInputErrorMessages())
-            await dispatch(await ProgressActions.resetState())
-            await dispatch(await surfaceSnacky("error", error.message))
-            await dispatch(await AuthActions.toggleSignupProgress(false))
+        // sign user in after signup is completed
+        await dispatch(doBackendSignIn(email, password))
+    } catch (error) {
+        // delete Firebase user.
+        if (user) {
+            await firebaseApp.auth("session").currentUser.delete()
+        } else {
+            await dispatch(setError(error))
+            await dispatch(ProgressActions.resetState())
+            await dispatch(AuthActions.toggleSignupProgress(false))
             return
         }
 
-
-
-        // 2. Subscribe user to mailing list
-        try {
-
-            await subscribeEmail(
+        // clear backend data
+        if (getState().LoginManager.userId && getState().LoginManager.token) {
+            await implodeCloudData(
                 getState().LoginManager.userId,
-                getState().LoginManager.token,
-                email
+                getState().LoginManager.token
             )
-
-        } catch (error) {
-
-            // eslint-disable-next-line no-console
-            console.log("Could not add email to subscription list.")
-
-        } finally {
-
-            await dispatch(await ProgressActions.toggleProgress(
-                "signup",
-                string.empty()
-            ))
-            await dispatch(AuthActions.setSignupComplete())
-            await dispatch(await AuthActions.toggleSignupProgress(false))
-
         }
 
+        await dispatch(clearInputErrorMessages())
+        await dispatch(ProgressActions.resetState())
+        await dispatch(surfaceSnacky("error", error.message))
+        await dispatch(AuthActions.toggleSignupProgress(false))
+        return
     }
 
-
-
+    // 2. Subscribe user to mailing list
+    try {
+        await subscribeEmail(
+            getState().LoginManager.userId,
+            getState().LoginManager.token,
+            email
+        )
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log("Could not add email to subscription list.")
+    } finally {
+        await dispatch(ProgressActions.toggleProgress("signup", string.empty()))
+        await dispatch(AuthActions.setSignupComplete())
+        await dispatch(AuthActions.toggleSignupProgress(false))
+    }
+}
 
 /**
  * Sets the proper message in Redux tree so the UI element can display it.
@@ -443,48 +354,45 @@ export const signUpNewUser = (accountId, account, email, password) =>
  * @param {Object} error
  * @returns {Function} thunk action
  */
-export const setError = (error) =>
-    async (dispatch, _getState) => {
-
-        if (error.code === "auth/argument-error") {
-            await dispatch(ErrorsActions.setEmailInputError("Please enter valid email."))
-            return
-        }
-
-        if (error.code === "auth/invalid-email") {
-            await dispatch(ErrorsActions.setEmailInputError(error.message))
-            return
-        }
-
-        if (error.code === "auth/email-already-in-use") {
-            await dispatch(ErrorsActions.setEmailInputError(error.message))
-            return
-        }
-
-        if (error.code === "auth/wrong-password") {
-            await dispatch(ErrorsActions.setPasswordInputError(
-                "Password is invalid."
-            ))
-            return
-        }
-
-        if (error.code === "auth/weak-password") {
-            await dispatch(ErrorsActions.setPasswordInputError(error.message))
-            return
-        }
-
-        if (error.code === "auth/user-not-found") {
-            await dispatch(ErrorsActions.setEmailInputError("Email not found."))
-            return
-        }
-
-        await dispatch(ErrorsActions.setOtherError(
-            `[${error.code}]: ${error.message}`
-        ))
+export const setError = error => async (dispatch, _getState) => {
+    if (error.code === "auth/argument-error") {
+        await dispatch(
+            ErrorsActions.setEmailInputError("Please enter valid email.")
+        )
+        return
     }
 
+    if (error.code === "auth/invalid-email") {
+        await dispatch(ErrorsActions.setEmailInputError(error.message))
+        return
+    }
 
+    if (error.code === "auth/email-already-in-use") {
+        await dispatch(ErrorsActions.setEmailInputError(error.message))
+        return
+    }
 
+    if (error.code === "auth/wrong-password") {
+        await dispatch(
+            ErrorsActions.setPasswordInputError("Password is invalid.")
+        )
+        return
+    }
+
+    if (error.code === "auth/weak-password") {
+        await dispatch(ErrorsActions.setPasswordInputError(error.message))
+        return
+    }
+
+    if (error.code === "auth/user-not-found") {
+        await dispatch(ErrorsActions.setEmailInputError("Email not found."))
+        return
+    }
+
+    await dispatch(
+        ErrorsActions.setOtherError(`[${error.code}]: ${error.message}`)
+    )
+}
 
 /**
  * Fetches user profile from the back-end and sets appropriate Redux keys.
@@ -492,41 +400,30 @@ export const setError = (error) =>
  * @function getUserProfile
  * @returns {Function} thunk action
  */
-export const getUserProfile = () =>
-    async (dispatch, getState) => {
+export const getUserProfile = () => async (dispatch, getState) => {
+    try {
+        const userData = (await Axios.post(`${config.api}/user/`, {
+            user_id: getState().LoginManager.userId,
+            token: getState().LoginManager.token,
+        })).data.data
 
-        try {
-
-            const userData = (await Axios.post(`${config.api}/user/`, {
-                user_id: getState().LoginManager.userId,
-                token: getState().LoginManager.token,
-            })).data.data
-
-            await dispatch(AccountAction.setState({
+        await dispatch(
+            AccountAction.setState({
                 firstName: userData.first_name,
                 lastName: userData.last_name,
                 email: userData.email,
                 gravatar: userData.email_md5,
-                paymentAddress: paymentAddress(
-                    userData.alias,
-                    userData.domain
-                ),
+                paymentAddress: paymentAddress(userData.alias, userData.domain),
                 memo: userData.memo,
                 discoverable: userData.visible,
                 currency: userData.currency,
                 needsRegistration: false,
-            }))
-
-        } catch (error) {
-            await dispatch(
-                surfaceSnacky("error", "Could not load user profile.")
-            )
-        }
-
+            })
+        )
+    } catch (error) {
+        await dispatch(surfaceSnacky("error", "Could not load user profile."))
     }
-
-
-
+}
 
 /**
  * Fetches user contacts from the back-end and sets appropriate Redux keys.
@@ -534,51 +431,47 @@ export const getUserProfile = () =>
  * @function getUserContacts
  * @returns {Function} thunk action
  */
-export const getUserContacts = () =>
-    async (dispatch, getState) => {
+export const getUserContacts = () => async (dispatch, getState) => {
+    try {
+        const internal = await listInternal(
+            getState().LoginManager.userId,
+            getState().LoginManager.token
+        )
 
-        try {
-            const internal = await listInternal(
-                getState().LoginManager.userId,
-                getState().LoginManager.token
-            )
+        internal
+            ? dispatch(ContactsAction.setState({ internal }))
+            : dispatch(ContactsAction.setState({ internal: [] }))
 
-            internal ? dispatch(ContactsAction.setState({ internal })) :
-                dispatch(ContactsAction.setState({ internal: [] }))
+        const pending = await listPending(
+            getState().LoginManager.userId,
+            getState().LoginManager.token
+        )
 
-            const pending = await listPending(
-                getState().LoginManager.userId,
-                getState().LoginManager.token
-            )
+        pending
+            ? dispatch(ContactsAction.setState({ pending }))
+            : dispatch(ContactsAction.setState({ pendig: [] }))
 
-            pending ? dispatch(ContactsAction.setState({ pending })) :
-                dispatch(ContactsAction.setState({ pendig: [] }))
+        const requests = await listRequested(
+            getState().LoginManager.userId,
+            getState().LoginManager.token
+        )
 
-            const requests = await listRequested(
-                getState().LoginManager.userId,
-                getState().LoginManager.token
-            )
+        requests
+            ? dispatch(ContactsAction.setState({ requests }))
+            : dispatch(ContactsAction.setState({ requests: [] }))
 
-            requests ? dispatch(ContactsAction.setState({ requests })) :
-                dispatch(ContactsAction.setState({ requests: [] }))
+        const external = await getUserExternalContacts(
+            getState().LoginManager.userId,
+            getState().LoginManager.token
+        )
 
-            const external = await getUserExternalContacts(
-                getState().LoginManager.userId,
-                getState().LoginManager.token
-            )
-
-            external ? dispatch(ContactsAction.setState({ external })) :
-                dispatch(ContactsAction.setState({ external: [] }))
-        } catch (error) {
-            await dispatch(
-                surfaceSnacky("error", "Could not load user contacts.")
-            )
-        }
-
+        external
+            ? dispatch(ContactsAction.setState({ external }))
+            : dispatch(ContactsAction.setState({ external: [] }))
+    } catch (error) {
+        await dispatch(surfaceSnacky("error", "Could not load user contacts."))
     }
-
-
-
+}
 
 /**
  * Surfaces registration marketing card.
@@ -586,12 +479,8 @@ export const getUserContacts = () =>
  * @function surfaceRegistrationCard
  * @returns {Function} thunk action
  */
-export const surfaceRegistrationCard = () =>
-    async (dispatch, _getState) =>
-        await dispatch(AccountAction.setState({ needsRegistration: true }))
-
-
-
+export const surfaceRegistrationCard = () => async (dispatch, _getState) =>
+    await dispatch(AccountAction.setState({ needsRegistration: true }))
 
 /**
  * Deletes user data and user from the cloud. If data entries exist in
@@ -603,142 +492,142 @@ export const surfaceRegistrationCard = () =>
  * @returns {Function} thunk action
  *
  * */
-export const implodeAccount = (password, keepEmail) =>
-    async (dispatch, getState) => {
+export const implodeAccount = (password, keepEmail) => async (
+    dispatch,
+    getState
+) => {
+    // reset all messages / errors on the UI
+    await dispatch(await clearInputErrorMessages())
+    await dispatch(await ProgressActions.resetState())
 
-        // reset all messages / errors on the UI
-        await dispatch(await clearInputErrorMessages())
-        await dispatch(await ProgressActions.resetState())
-
-        if (!password) {
-            await dispatch(await ErrorsActions.setPasswordInputError(
+    if (!password) {
+        await dispatch(
+            await ErrorsActions.setPasswordInputError(
                 "Please enter your password."
-            ))
-            return
-        }
+            )
+        )
+        return
+    }
 
-        // Re-authenticate user with Firebase to confirm password and
-        // update user as recently re-authenticated.
-        try {
-            await dispatch(await ProgressActions.toggleProgress(
-                "implosion", "Authenticating ..."
-            ))
+    // Re-authenticate user with Firebase to confirm password and
+    // update user as recently re-authenticated.
+    try {
+        await dispatch(
+            ProgressActions.toggleProgress("implosion", "Authenticating ...")
+        )
 
-            var user = firebaseApp.auth("session").currentUser
+        var user = firebaseApp.auth("session").currentUser
 
-            await firebaseApp.auth("session").signInWithEmailAndPassword(
-                user.email,
-                password.password,
+        await firebaseApp
+            .auth("session")
+            .signInWithEmailAndPassword(user.email, password.password)
+
+        await dispatch(
+            ProgressActions.toggleProgress("implosion", string.empty())
+        )
+    } catch (error) {
+        await dispatch(ProgressActions.resetState())
+        await dispatch(
+            ErrorsActions.setPasswordInputError("Password is invalid.")
+        )
+        return
+    }
+
+    // Delete Stellar account entries if they exist.
+    try {
+        const idSig = getState().StellarAccount.data
+            ? getState().StellarAccount.data.idSig
+            : string.empty()
+        const paySig = getState().StellarAccount.data
+            ? getState().StellarAccount.data.paySig
+            : string.empty()
+
+        if (idSig || paySig) {
+            await dispatch(
+                ProgressActions.toggleProgress(
+                    "ledgerauth",
+                    "Waiting for device ..."
+                )
+            )
+            await dispatch(queryDevice())
+            await dispatch(
+                ProgressActions.toggleProgress(
+                    "ledgerauth",
+                    "Building transaction ..."
+                )
             )
 
-            await dispatch(await ProgressActions.toggleProgress(
-                "implosion", string.empty()
-            ))
+            const clearDataTx = await buildClearDataTx(
+                getState().LedgerHQ.publicKey
+            )
 
-        } catch (error) {
-            await dispatch(await ProgressActions.resetState())
-            await dispatch(await ErrorsActions.setPasswordInputError(
-                "Password is invalid."
-            ))
-            return
-        }
-
-
-        // Delete Stellar account entries if they exist.
-        try {
-
-            const idSig = getState().StellarAccount.data ?
-                getState().StellarAccount.data.idSig : string.empty()
-            const paySig =  getState().StellarAccount.data ?
-                getState().StellarAccount.data.paySig : string.empty()
-
-            if (idSig || paySig) {
-                await dispatch(await ProgressActions.toggleProgress(
-                    "ledgerauth", "Waiting for device ..."
-                ))
-                await dispatch(await queryDevice())
-                await dispatch(await ProgressActions.toggleProgress(
-                    "ledgerauth", "Building transaction ..."
-                ))
-
-                const clearDataTx = await buildClearDataTx(
-                    getState().LedgerHQ.publicKey
+            await dispatch(
+                ProgressActions.toggleProgress(
+                    "ledgerauth",
+                    "Awaiting signature ..."
                 )
+            )
 
-                await dispatch(await ProgressActions.toggleProgress(
-                    "ledgerauth", "Awaiting signature ..."
-                ))
+            const signedClearDataTx = await signTransaction(
+                insertPathIndex(getState().LedgerHQ.bip32Path),
+                getState().LedgerHQ.publicKey,
+                clearDataTx
+            )
 
-                const signedClearDataTx = await signTransaction(
-                    insertPathIndex(getState().LedgerHQ.bip32Path),
-                    getState().LedgerHQ.publicKey,
-                    clearDataTx
+            await dispatch(
+                ProgressActions.toggleProgress(
+                    "ledgerauth",
+                    "Submitting transaction ..."
                 )
-
-                await dispatch(await ProgressActions.toggleProgress(
-                    "ledgerauth", "Submitting transaction ..."
-                ))
-                await submitTransaction(signedClearDataTx)
-                await dispatch(await ProgressActions.toggleProgress(
-                    "ledgerauth", string.empty()
-                ))
-            }
-
-
-        } catch (error) {
-
-            await dispatch(await surfaceSnacky("error", error.message))
-            await dispatch(await clearInputErrorMessages())
-            await dispatch(await ProgressActions.resetState())
-            return // Stop right here if declined Ledger action
-
+            )
+            await submitTransaction(signedClearDataTx)
+            await dispatch(
+                ProgressActions.toggleProgress("ledgerauth", string.empty())
+            )
         }
-
-
-        const { userId, token } = getState().LoginManager
-
-
-        // Delete user from the email subscription list (if desired).
-        try {
-            if (!keepEmail) {
-                await dispatch(await ProgressActions.toggleProgress(
-                    "implosion", "Unsubscribing your email ..."
-                ))
-
-                await unsubscribeEmail(userId, token, user.email)
-            }
-        } catch (error) {
-
-            await dispatch(await surfaceSnacky("error", error.message))
-
-        }
-
-
-        // Delete Firebase user and backend data.
-        try {
-
-            await dispatch(await ProgressActions.toggleProgress(
-                "implosion", "Wiping cloud data ..."
-            ))
-
-            await implodeCloudData(userId, token)
-
-            await dispatch(await ProgressActions.toggleProgress(
-                "implosion", "Deleting user ..."
-            ))
-
-            await user.delete()
-
-
-        } catch (error) {
-
-            await dispatch(await surfaceSnacky("error", error.message))
-
-        } finally {
-
-            await dispatch(await signOut())
-            await dispatch(await clearInputErrorMessages())
-            await dispatch(await ProgressActions.resetState())
-
-        }
+    } catch (error) {
+        await dispatch(surfaceSnacky("error", error.message))
+        await dispatch(clearInputErrorMessages())
+        await dispatch(ProgressActions.resetState())
+        return // Stop right here if declined Ledger action
     }
+
+    const { userId, token } = getState().LoginManager
+
+    // Delete user from the email subscription list (if desired).
+    try {
+        if (!keepEmail) {
+            await dispatch(
+                ProgressActions.toggleProgress(
+                    "implosion",
+                    "Unsubscribing your email ..."
+                )
+            )
+
+            await unsubscribeEmail(userId, token, user.email)
+        }
+    } catch (error) {
+        await dispatch(surfaceSnacky("error", error.message))
+    }
+
+    // Delete Firebase user and backend data.
+    try {
+        await dispatch(
+            ProgressActions.toggleProgress("implosion", "Wiping cloud data ...")
+        )
+
+        await implodeCloudData(userId, token)
+
+        await dispatch(
+            ProgressActions.toggleProgress("implosion", "Deleting user ...")
+        )
+
+        await user.delete()
+    } catch (error) {
+        await dispatch(surfaceSnacky("error", error.message))
+    } finally {
+        await dispatch(signOut())
+        await dispatch(clearInputErrorMessages())
+        await dispatch(ProgressActions.resetState())
+    }
+}
