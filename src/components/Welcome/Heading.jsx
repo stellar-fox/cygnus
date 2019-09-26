@@ -4,32 +4,25 @@ import { connect } from "react-redux"
 import { TopBarSecurityMessage } from "../StellarFox/env"
 import { Typography } from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
-import { getExchangeRate } from "../../thunks/assets"
+import { getThrottledExchangeRate } from "../../thunks/firestore"
 import BottomHeadingContent from "./BottomHeadingContent"
 import TopHeadingContent from "./TopHeadingContent"
 import { Link } from "react-router-dom"
 
-
-
-
 // <Heading> component
 class Heading extends Component {
-
     // ...
     state = {
         loginButtonDisabled: true,
         loginObj: null,
     }
 
+    // ...
+    componentDidMount = () => this.props.getThrottledExchangeRate("usd")
 
     // ...
-    componentDidMount = () => this.props.getExchangeRate("usd")
-
-
-    // ...
-    render = () =>
+    render = () => (
         <Fragment>
-
             <TopBarSecurityMessage />
 
             <div className="faded-image cash">
@@ -43,17 +36,13 @@ class Heading extends Component {
                         Welcome to the financial inclusion.
                     </div>
                     <div className="subtitle">
-                        Open your <b>own</b> bank today and
-                        reserve secure and personalized payment address.
+                        Open your <b>own</b> bank today and reserve secure and
+                        personalized payment address.
                     </div>
                 </div>
 
                 <div className="flex-row-centered">
-                    <Button
-                        color="awesome"
-                        component={Link}
-                        to="/signup"
-                    >
+                    <Button color="awesome" component={Link} to="/signup">
                         Open Free Account
                     </Button>
                 </div>
@@ -63,15 +52,19 @@ class Heading extends Component {
                 </div>
             </div>
         </Fragment>
+    )
 }
-
 
 // ...
 export default connect(
     // map state to props.
-    (_state) => ({}),
+    _state => ({}),
     // map dispatch to props.
-    (dispatch) => bindActionCreators({
-        getExchangeRate,
-    }, dispatch)
+    dispatch =>
+        bindActionCreators(
+            {
+                getThrottledExchangeRate,
+            },
+            dispatch
+        )
 )(Heading)
