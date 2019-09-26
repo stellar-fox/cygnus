@@ -31,39 +31,47 @@
                 "functions": "ignore"
             }
         ],
-        "indent": ["error", 4, { "SwitchCase": 1 }],
         "linebreak-style": ["error", "unix"],
         "no-console": "warn",
         "no-unexpected-multiline": "error",
-        "no-unused-vars": [2, {"args": "all", "argsIgnorePattern": "^_"}],
+        "no-unused-vars": [2, { "args": "all", "argsIgnorePattern": "^_" }],
         "quotes": ["error", "double"],
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": "error",
         "react/jsx-closing-bracket-location": [2, "line-aligned"],
         "react/jsx-indent-props": [2, 4],
         "react/jsx-no-duplicate-props": [0, { "ignoreCase": false }],
-        "react/sort-prop-types": [0, {
-            "ignoreCase": false,
-            "callbacksLast": true,
-            "requiredFirst": true
-        }],
+        "react/sort-prop-types": [
+            0,
+            {
+                "ignoreCase": false,
+                "callbacksLast": true,
+                "requiredFirst": true
+            }
+        ],
         "react/no-deprecated": 1,
         "react/no-direct-mutation-state": 0,
         "react/react-in-jsx-scope": 2,
         "react/jsx-tag-spacing": [2, { "beforeSelfClosing": "always" }],
-        "react/sort-comp": [2, {
-            "order": [
-                "static-methods",
-                "lifecycle",
-                "/^on.+$/",
-                "/^(get|set)(?!(InitialState$|DefaultProps$)).+$/",
-                "everything-else",
-                "/^render.+$/",
-                "render"
-            ]
-        }],
+        "react/sort-comp": [
+            2,
+            {
+                "order": [
+                    "static-methods",
+                    "lifecycle",
+                    "/^on.+$/",
+                    "/^(get|set)(?!(InitialState$|DefaultProps$)).+$/",
+                    "everything-else",
+                    "/^render.+$/",
+                    "render"
+                ]
+            }
+        ],
         "semi": ["error", "never"],
-        "space-before-function-paren": ["error", "always"],
+        "space-before-function-paren": [
+            "error",
+            { "anonymous": "always", "named": "never", "asyncArrow": "always" }
+        ],
         "strict": 0
     }
 }
