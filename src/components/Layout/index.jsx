@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component, Fragment, lazy, Suspense } from "react"
 import PropTypes from "prop-types"
 import {
     compose,
@@ -21,23 +21,23 @@ import { firebaseApp } from "../../components/StellarFox"
 import { action as AuthAction } from "../../redux/Auth"
 import Action from "../StellarFox/Action"
 import AlertModal from "./AlertModal"
-import Faq from "../StellarFox/Faq"
-import Features from "../Welcome/Features"
-import LoginView from "../LoginView"
-import Pgp from "../StellarFox/Pgp"
-import Prices from "../StellarFox/Prices"
-import Privacy from "../StellarFox/Privacy"
-import Reset from "../StellarFox/Reset"
-import SignupView from "../SignupView"
-import Support from "../StellarFox/Support"
-import Terms from "../StellarFox/Terms"
 import Welcome from "../Welcome"
-import Why from "../Welcome/Why"
 import "./index.css"
 import Snacky from "../../lib/mui-v1/Snacky"
 import { clearInputErrorMessages } from "../../thunks/users"
+import SuspenseLoader from "../Layout/SuspenseLoader"
 
-
+const Faq = lazy(() => import("../StellarFox/Faq"))
+const Features = lazy(() => import("../Welcome/Features"))
+const LoginView = lazy(() => import("../LoginView"))
+const Pgp = lazy(() => import("../StellarFox/Pgp"))
+const Prices = lazy(() => import("../StellarFox/Prices"))
+const Privacy = lazy(() => import("../StellarFox/Privacy"))
+const Reset = lazy(() => import("../StellarFox/Reset"))
+const SignupView = lazy(() => import("../SignupView"))
+const Support = lazy(() => import("../StellarFox/Support"))
+const Terms = lazy(() => import("../StellarFox/Terms"))
+const Why = lazy(() => import("../Welcome/Why"))
 
 
 // <Layout> component
@@ -123,6 +123,7 @@ export default compose(
                 <Welcome {...routeProps} /> :
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
 
+        
         // ...
         renderAction = (routeProps) => {
             this.props.clearInputErrorMessages()
@@ -140,54 +141,84 @@ export default compose(
         // ...
         renderLoginView = (routeProps) =>
             !this.props.loggedIn ?
-                <LoginView {...routeProps} /> :
+                <Suspense fallback={<SuspenseLoader />}>
+                    <LoginView {...routeProps} />
+                </Suspense> :
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
 
 
         // ...
         renderSignupView = (routeProps) =>
             !this.props.signupComplete ?
-                <SignupView {...routeProps} /> :
+                <Suspense fallback={<SuspenseLoader />}>
+                    <SignupView {...routeProps} />
+                </Suspense> :
                 <Redirect to={this.props.staticRouter.getPath("Bank")} />
 
 
         // ...
-        renderWhyView = (routeProps) => <Why {...routeProps} />
+        renderWhyView = (routeProps) =>
+            <Suspense fallback={<SuspenseLoader />}>
+                <Why {...routeProps} />
+            </Suspense>
 
 
         // ...
-        renderTerms = (routeProps) => <Terms {...routeProps} />
+        renderTerms = (routeProps) => 
+            <Suspense fallback={<SuspenseLoader />}>
+                <Terms {...routeProps} />
+            </Suspense>
 
 
         // ...
-        renderPrivacy = (routeProps) => <Privacy {...routeProps} />
+        renderPrivacy = (routeProps) => 
+            <Suspense fallback={<SuspenseLoader />}>
+                <Privacy {...routeProps} />
+            </Suspense>
 
 
         // ...
-        renderFaq = (routeProps) => <Faq {...routeProps} />
+        renderFaq = (routeProps) => 
+            <Suspense fallback={<SuspenseLoader />}>
+                <Faq {...routeProps} />
+            </Suspense>
 
 
         // ...
-        renderPgp = (routeProps) => <Pgp {...routeProps} />
+        renderPgp = (routeProps) => 
+            <Suspense fallback={<SuspenseLoader />}>
+                <Pgp {...routeProps} />
+            </Suspense>
 
 
         // ...
-        renderFeatures = (routeProps) => <Features {...routeProps} />
+        renderFeatures = (routeProps) =>
+            <Suspense fallback={<SuspenseLoader />}>
+                <Features {...routeProps} />
+            </Suspense>
 
 
         // ...
-        renderPrices = (routeProps) => <Prices {...routeProps} />
+        renderPrices = (routeProps) =>
+            <Suspense fallback={<SuspenseLoader />}>
+                <Prices {...routeProps} />
+            </Suspense>
 
 
         // ...
         renderReset = (routeProps) => {
             this.props.clearInputErrorMessages()
-            return <Reset {...routeProps} />
+            return <Suspense fallback={<SuspenseLoader />}>
+                <Reset {...routeProps} />
+            </Suspense>
         }
 
 
         // ...
-        renderSupport = (routeProps) => <Support {...routeProps} />
+        renderSupport = (routeProps) =>
+            <Suspense fallback={<SuspenseLoader />}>
+                <Support {...routeProps} />
+            </Suspense>
 
 
         // ...
