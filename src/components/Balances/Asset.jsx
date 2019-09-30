@@ -62,7 +62,7 @@ const Asset = ({ data }) => {
                 if (data.display_decimals) setDecimals(data.display_decimals)
             }
         })
-    }, [])
+    }, [data.asset_code, data.asset_issuer])
 
     return (
         <Grid item zeroMinWidth>
