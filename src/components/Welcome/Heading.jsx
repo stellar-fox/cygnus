@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import { TopBarSecurityMessage } from "../StellarFox/env"
 import { Typography } from "@material-ui/core"
 import Button from "../../lib/mui-v1/Button"
-import { getThrottledExchangeRate } from "../../thunks/firestore"
+import { getTickerInfo } from "../../thunks/assets"
 import BottomHeadingContent from "./BottomHeadingContent"
 import TopHeadingContent from "./TopHeadingContent"
 import { Link } from "react-router-dom"
@@ -18,7 +18,7 @@ class Heading extends Component {
     }
 
     // ...
-    componentDidMount = () => this.props.getThrottledExchangeRate("usd")
+    componentDidMount = () => this.props.getTickerInfo("usd")
 
     // ...
     render = () => (
@@ -63,7 +63,7 @@ export default connect(
     dispatch =>
         bindActionCreators(
             {
-                getThrottledExchangeRate,
+                getTickerInfo,
             },
             dispatch
         )
