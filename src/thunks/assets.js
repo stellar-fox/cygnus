@@ -151,10 +151,7 @@ export const getAssetInfo = issuingAccountId => async (dispatch, _getState) => {
         }
     } catch (error) {
         await dispatch(
-            await surfaceSnacky(
-                "warning",
-                "Could not load custom asset meta-data."
-            )
+            surfaceSnacky("warning", "Could not load custom asset meta-data.")
         )
     }
 }
